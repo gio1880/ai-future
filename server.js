@@ -36,8 +36,14 @@ app.use('/codelab/api', (req, res, next) => {
 	req.url = `/api${req.url}`;
 	codeLabApp(req, res, next);
 });
-app.use('/api', (req, res, next) => codeLabApp(req, res, next));
-app.use('/fll-assets', (req, res, next) => codeLabApp(req, res, next));
+app.use('/api', (req, res, next) => {
+	req.url = `/api${req.url}`;
+	codeLabApp(req, res, next);
+});
+app.use('/fll-assets', (req, res, next) => {
+	req.url = `/fll-assets${req.url}`;
+	codeLabApp(req, res, next);
+});
 
 // Static files for existing pages and assets
 app.use(express.static(path.join(__dirname), { index: false }));
