@@ -40,6 +40,7 @@ app.get('/code-lab/dashboard', (req, res) => res.redirect(301, '/codelab/dashboa
 app.get('/code-lab/dashboard.html', (req, res) => res.redirect(301, '/codelab/dashboard'));
 app.get('/code-lab/login', (req, res) => res.redirect(301, '/codelab/login'));
 app.get('/code-lab/signup', (req, res) => res.redirect(301, '/codelab/signup'));
+app.get('/code-lab/admin', (req, res) => res.redirect(301, '/codelab/admin'));
 app.get('/code-lab/lesson/:slug', (req, res) => res.redirect(301, `/codelab/lesson/${encodeURIComponent(req.params.slug)}`));
 app.get('/code-lab/lesson/:slug.html', (req, res) => res.redirect(301, `/codelab/lesson/${encodeURIComponent(req.params.slug)}`));
 
@@ -69,6 +70,7 @@ if (hasPyLearnOrigin) {
   app.use('/codelab/signup', requirePyLearnOrigin);
   app.use('/codelab/dashboard', requirePyLearnOrigin);
   app.use('/codelab/lesson', requirePyLearnOrigin);
+  app.get('/codelab/admin', (req, res) => res.redirect(302, '/code-lab/admin.html'));
   app.use('/codelab/admin', requirePyLearnOrigin);
   app.use('/codelab/api', requirePyLearnOrigin);
   app.use('/fll-assets', requirePyLearnOrigin);
