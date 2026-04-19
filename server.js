@@ -21,6 +21,8 @@ app.get('/code-lab/dashboard.html', (req, res) => res.redirect(301, '/codelab/da
 app.get('/code-lab/login', (req, res) => res.redirect(301, '/codelab/login'));
 app.get('/code-lab/signup', (req, res) => res.redirect(301, '/codelab/signup'));
 app.get('/code-lab/admin', (req, res) => res.redirect(301, '/codelab/admin'));
+app.get('/code-lab/dev', (req, res) => res.redirect(301, '/dev'));
+app.get('/code-lab/dev/*', (req, res) => res.redirect(301, `/dev/${req.params[0]}`));
 app.get('/admin', (req, res, next) => codeLabApp(req, res, next));
 app.get('/admin/', (req, res, next) => codeLabApp(req, res, next));
 app.get('/code-lab/lesson/:slug', (req, res) => res.redirect(301, `/codelab/lesson/${encodeURIComponent(req.params.slug)}`));
@@ -32,6 +34,16 @@ app.get('/codelab/signup', (req, res) => res.redirect(302, '/codelab/app'));
 app.get('/codelab/dashboard', (req, res) => res.redirect(302, '/codelab/app#page-home'));
 app.get('/codelab/lesson/:slug', (req, res) => res.redirect(302, '/codelab/app'));
 app.get('/codelab/admin', (req, res) => res.redirect(302, '/admin'));
+app.get('/codelab/dev', (req, res) => res.redirect(302, '/dev'));
+app.get('/codelab/dev/*', (req, res) => res.redirect(302, `/dev/${req.params[0]}`));
+app.get('/dev', (req, res, next) => {
+	req.url = '/dev';
+	codeLabApp(req, res, next);
+});
+app.get('/dev/*', (req, res, next) => {
+	req.url = `/dev/${req.params[0]}`;
+	codeLabApp(req, res, next);
+});
 app.use('/codelab/api', (req, res, next) => {
 	req.url = `/api${req.url}`;
 	codeLabApp(req, res, next);

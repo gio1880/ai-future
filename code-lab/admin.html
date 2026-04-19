@@ -3,20 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PyLearn Admin Panel</title>
+  <title>AI Future Code Lab Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --color-primary: #4F46E5;
-      --color-secondary: #06B6D4;
-      --color-success: #10B981;
+      --color-primary: #2563FF;
+      --color-secondary: #D9DA26;
+      --color-success: #22C55E;
       --color-warning: #F59E0B;
       --color-error: #EF4444;
-      --color-dark-bg: #0F172A;
-      --color-card-bg: #1E293B;
-      --color-border: #334155;
-      --color-text-primary: #F1F5F9;
-      --color-text-muted: #94A3B8;
-      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --color-dark-bg: #001B3F;
+      --color-card-bg: #0A2E5C;
+      --color-border: #244A7C;
+      --color-text-primary: #F5EDC4;
+      --color-text-muted: #B7CAE3;
+      --font-sans: 'Inter', 'Segoe UI', Roboto, sans-serif;
       --transition-normal: 300ms ease-in-out;
       --radius-md: 0.5rem;
     }
@@ -28,7 +31,10 @@
     }
 
     body {
-      background-color: var(--color-dark-bg);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(37, 99, 255, 0.12), transparent 38%),
+        radial-gradient(circle at 92% 6%, rgba(217, 218, 38, 0.1), transparent 32%),
+        var(--color-dark-bg);
       color: var(--color-text-primary);
       font-family: var(--font-sans);
       font-size: 16px;
@@ -67,7 +73,7 @@
     }
 
     .logout-btn:hover {
-      background-color: #DC2626;
+      background-color: #D33939;
     }
 
     .login-container {
@@ -115,7 +121,7 @@
     .form-group select:focus {
       outline: none;
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      box-shadow: 0 0 0 3px rgba(37, 99, 255, 0.15);
     }
 
     .btn {
@@ -131,7 +137,7 @@
     }
 
     .btn:hover {
-      background-color: #4338CA;
+      background-color: #1E4FD6;
     }
 
     .btn-small {
@@ -144,7 +150,7 @@
     }
 
     .btn-danger:hover {
-      background-color: #DC2626;
+      background-color: #D33939;
     }
 
     .btn-success {
@@ -152,7 +158,7 @@
     }
 
     .btn-success:hover {
-      background-color: #059669;
+      background-color: #17A04A;
     }
 
     .alert {
@@ -243,7 +249,7 @@
     }
 
     tbody tr:hover {
-      background-color: rgba(79, 70, 229, 0.05);
+      background-color: rgba(37, 99, 255, 0.08);
     }
 
     .action-buttons {
@@ -325,7 +331,7 @@
     }
 
     @keyframes activityPulse {
-      0% { background: rgba(79, 70, 229, 0.15); transform: translateX(-4px); }
+      0% { background: rgba(37, 99, 255, 0.15); transform: translateX(-4px); }
       100% { background: var(--color-dark-bg); transform: translateX(0); }
     }
 
@@ -341,9 +347,9 @@
       margin-top: 2px;
     }
 
-    .activity-icon.login { background: rgba(79, 70, 229, 0.2); }
-    .activity-icon.lesson { background: rgba(16, 185, 129, 0.2); }
-    .activity-icon.quiz { background: rgba(6, 182, 212, 0.2); }
+    .activity-icon.login { background: rgba(37, 99, 255, 0.2); }
+    .activity-icon.lesson { background: rgba(34, 197, 94, 0.2); }
+    .activity-icon.quiz { background: rgba(217, 218, 38, 0.25); }
 
     .activity-details {
       flex: 1;
@@ -505,7 +511,7 @@
     }
 
     .btn-secondary:hover {
-      background-color: #475569;
+      background-color: #315E94;
     }
 
     .credentials-table {
@@ -522,7 +528,7 @@
     }
 
     .credentials-table th {
-      background-color: rgba(0, 0, 0, 0.2);
+      background-color: rgba(37, 99, 255, 0.12);
       color: var(--color-text-muted);
       font-weight: 600;
       font-size: 0.875rem;
@@ -530,6 +536,57 @@
 
     .credentials-table tr:last-child td {
       border-bottom: none;
+    }
+
+    .muted-text {
+      color: var(--color-text-muted);
+    }
+
+    .center-pad {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .mt-1 {
+      margin-top: 1rem;
+    }
+
+    .helper-text {
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+
+    .inline-code {
+      background: var(--color-dark-bg);
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+    }
+
+    .table-loading {
+      text-align: center;
+      color: var(--color-text-muted);
+    }
+
+    .row-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .section-title-inline {
+      margin-bottom: 0 !important;
+    }
+
+    .btn-compact {
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .center-status {
+      color: var(--color-text-muted);
+      text-align: center;
+      padding: 1rem;
     }
   </style>
 </head>
@@ -549,7 +606,7 @@
         </div>
         <button type="submit" class="btn">Login</button>
       </form>
-      <div id="loginError" class="alert alert-error hidden" style="margin-top: 1rem;"></div>
+      <div id="loginError" class="alert alert-error hidden mt-1"></div>
     </div>
 
     <!-- Admin Section -->
@@ -557,8 +614,8 @@
       <!-- Header -->
       <div class="header">
         <div>
-          <h1>PyLearn Admin Panel</h1>
-          <p style="color: var(--color-text-muted);">Welcome, <strong id="teacherName"></strong></p>
+          <h1>AI Future Code Lab Admin</h1>
+          <p class="muted-text">Welcome, <strong id="teacherName"></strong></p>
         </div>
         <button class="logout-btn" onclick="logout()">Logout</button>
       </div>
@@ -595,7 +652,7 @@
           </div>
         </div>
         <div id="activityFeed" class="activity-feed">
-          <p style="color: var(--color-text-muted); text-align: center; padding: 2rem;">Loading activity...</p>
+            <p class="muted-text center-pad">Loading activity...</p>
         </div>
       </div>
 
@@ -611,14 +668,14 @@
             <input type="text" id="newStudentLastName" placeholder="Last Name" required>
             <button type="submit" class="btn btn-success">Add</button>
           </form>
-          <div id="singleStudentResult" class="hidden" style="margin-top: 1rem;"></div>
+          <div id="singleStudentResult" class="hidden mt-1"></div>
         </div>
 
         <!-- Bulk Import -->
         <div class="form-section">
           <h3>Bulk Import Students</h3>
-          <p style="color: var(--color-text-muted); margin-bottom: 1rem; font-size: 0.875rem;">
-            Enter one student per line in format: <code style="background: var(--color-dark-bg); padding: 0.25rem 0.5rem; border-radius: 0.25rem;">FirstName LastName</code> or <code style="background: var(--color-dark-bg); padding: 0.25rem 0.5rem; border-radius: 0.25rem;">FirstName,LastName</code>
+          <p class="muted-text helper-text">
+            Enter one student per line in format: <code class="inline-code">FirstName LastName</code> or <code class="inline-code">FirstName,LastName</code>
           </p>
           <form id="bulkImportForm">
             <div class="form-group">
@@ -626,7 +683,7 @@
             </div>
             <button type="submit" class="btn btn-success">Import Students</button>
           </form>
-          <div id="bulkStudentResult" class="hidden" style="margin-top: 1rem;"></div>
+          <div id="bulkStudentResult" class="hidden mt-1"></div>
         </div>
       </div>
 
@@ -645,7 +702,7 @@
               </tr>
             </thead>
             <tbody id="studentTableBody">
-              <tr><td colspan="5" style="text-align: center; color: var(--color-text-muted);">Loading...</td></tr>
+              <tr><td colspan="5" class="table-loading">Loading...</td></tr>
             </tbody>
           </table>
         </div>
@@ -670,7 +727,7 @@
               </tr>
             </thead>
             <tbody id="progressTableBody">
-              <tr><td colspan="9" style="text-align: center; color: var(--color-text-muted);">Loading...</td></tr>
+              <tr><td colspan="9" class="table-loading">Loading...</td></tr>
             </tbody>
           </table>
         </div>
@@ -678,11 +735,11 @@
 
       <!-- Student Tickets / Issue Reports -->
       <div class="section">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-          <h2 style="margin-bottom:0;">Student Reports</h2>
-          <button class="btn btn-secondary" onclick="loadTickets()" style="padding:0.4rem 1rem;font-size:0.85rem;">Refresh</button>
+        <div class="row-between">
+          <h2 class="section-title-inline">Student Reports</h2>
+          <button class="btn btn-secondary btn-compact" onclick="loadTickets()">Refresh</button>
         </div>
-        <div id="ticketsContainer" style="color:var(--color-text-muted);text-align:center;padding:1rem;">Loading tickets...</div>
+        <div id="ticketsContainer" class="center-status">Loading tickets...</div>
       </div>
     </div>
   </div>
@@ -835,7 +892,7 @@
         const lastLogin = student.lastLogin ? new Date(student.lastLogin).toLocaleDateString() : 'Never';
         row.innerHTML = `
           <td><strong>${escapeHtml(student.name)}</strong></td>
-          <td><code style="background: var(--color-dark-bg); padding: 0.25rem 0.5rem; border-radius: 0.25rem;">${escapeHtml(student.username)}</code></td>
+          <td><code class="inline-code">${escapeHtml(student.username)}</code></td>
           <td>${student.lessonsCompleted}</td>
           <td>${lastLogin}</td>
           <td>
@@ -918,7 +975,7 @@
         const otherTestsTotal = 4;
         row.innerHTML = `
           <td><strong>${escapeHtml(progress.name)}</strong></td>
-          <td><code style="background: var(--color-dark-bg); padding: 0.25rem 0.5rem; border-radius: 0.25rem;">${escapeHtml(progress.username)}</code></td>
+          <td><code class="inline-code">${escapeHtml(progress.username)}</code></td>
           <td>${progress.lessonsCompleted}/${TOTAL_LESSONS}</td>
           <td>${pyTestHtml}</td>
           <td style="color:var(--color-text-muted);">${otherTestsPassed}/${otherTestsTotal}</td>
@@ -1369,7 +1426,7 @@
       if (!container) return;
 
       if (events.length === 0) {
-        container.innerHTML = '<p style="color: var(--color-text-muted); text-align: center; padding: 2rem;">No activity yet. Events will appear here when students log in or complete lessons.</p>';
+        container.innerHTML = '<p class="muted-text center-pad">No activity yet. Events will appear here when students log in or complete lessons.</p>';
         return;
       }
 
