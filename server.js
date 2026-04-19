@@ -44,24 +44,36 @@ app.get('/code-lab/lesson/:slug', (req, res) => res.redirect(301, `/codelab/less
 app.get('/code-lab/lesson/:slug.html', (req, res) => res.redirect(301, `/codelab/lesson/${encodeURIComponent(req.params.slug)}`));
 
 // Canonical auth + app routes (proxied to revised PyLearn)
-app.use('/codelab/login', requirePyLearnOrigin, makeProxy({ from: /^\/codelab\/login(?:\/.*)?$/, to: '/' }));
-app.use('/codelab/signup', requirePyLearnOrigin, makeProxy({ from: /^\/codelab\/signup(?:\/.*)?$/, to: '/' }));
-app.use('/codelab/dashboard', requirePyLearnOrigin, makeProxy({ from: /^\/codelab\/dashboard(?:\/.*)?$/, to: '/' }));
-app.use('/codelab/lesson', requirePyLearnOrigin, makeProxy({ from: /^\/codelab\/lesson(?:\/.*)?$/, to: '/' }));
-app.use('/codelab/admin', requirePyLearnOrigin, makeProxy({ from: /^\/codelab\/admin(?:\/.*)?$/, to: '/admin' }));
-app.use('/codelab/api', requirePyLearnOrigin, makeProxy({ from: /^\/codelab\/api/, to: '/api' }));
+if (hasPyLearnOrigin) {
+  app.use('/codelab/login', makeProxy({ from: /^\/codelab\/login(?:\/.*)?$/, to: '/' }));
+  app.use('/codelab/signup', makeProxy({ from: /^\/codelab\/signup(?:\/.*)?$/, to: '/' }));
+  app.use('/codelab/dashboard', makeProxy({ from: /^\/codelab\/dashboard(?:\/.*)?$/, to: '/' }));
+  app.use('/codelab/lesson', makeProxy({ from: /^\/codelab\/lesson(?:\/.*)?$/, to: '/' }));
+  app.use('/codelab/admin', makeProxy({ from: /^\/codelab\/admin(?:\/.*)?$/, to: '/admin' }));
+  app.use('/codelab/api', makeProxy({ from: /^\/codelab\/api/, to: '/api' }));
 
-// PyLearn serves FLL assessment images from /fll-assets.
-app.use('/fll-assets', requirePyLearnOrigin, makeProxy({ from: /^\/fll-assets/, to: '/fll-assets' }));
+  // PyLearn serves FLL assessment images from /fll-assets.
+  app.use('/fll-assets', makeProxy({ from: /^\/fll-assets/, to: '/fll-assets' }));
 
-// PyLearn frontend calls /api/*, so forward those requests to PyLearn too.
-app.use('/api', requirePyLearnOrigin, createProxyMiddleware({
-  target: PYLEARN_ORIGIN,
-  changeOrigin: true,
-  xfwd: true,
-  cookieDomainRewrite: '',
-  pathRewrite: (pathName) => (pathName.startsWith('/api') ? pathName : `/api${pathName}`)
-}));
+  // PyLearn frontend calls /api/*, so forward those requests to PyLearn too.
+  app.use('/api', createProxyMiddleware({
+    target: PYLEARN_ORIGIN,
+    changeOrigin: true,
+    xfwd: true,
+    cookieDomainRewrite: '',
+    pathRewrite: (pathName) => (pathName.startsWith('/api') ? pathName : `/api${pathName}`)
+  }));
+} else {
+  console.warn('PYLEARN_ORIGIN is not set. PyLearn proxy routes are disabled and will return 503.');
+  app.use('/codelab/login', requirePyLearnOrigin);
+  app.use('/codelab/signup', requirePyLearnOrigin);
+  app.use('/codelab/dashboard', requirePyLearnOrigin);
+  app.use('/codelab/lesson', requirePyLearnOrigin);
+  app.use('/codelab/admin', requirePyLearnOrigin);
+  app.use('/codelab/api', requirePyLearnOrigin);
+  app.use('/fll-assets', requirePyLearnOrigin);
+  app.use('/api', requirePyLearnOrigin);
+}
 
 // Static files for existing pages and assets
 app.use(express.static(path.join(__dirname), { index: false }));
