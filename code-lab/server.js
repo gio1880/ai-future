@@ -1018,7 +1018,11 @@ app.use((err, req, res, next) => {
 
 initializeDataFiles();
 
-app.listen(PORT, () => {
-  console.log(`\n✓ PyLearn Server running at http://localhost:${PORT}`);
-  console.log(`  Admin panel: http://localhost:${PORT}/admin\n`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`\n✓ PyLearn Server running at http://localhost:${PORT}`);
+    console.log(`  Admin panel: http://localhost:${PORT}/admin\n`);
+  });
+}
+
+module.exports = app;
