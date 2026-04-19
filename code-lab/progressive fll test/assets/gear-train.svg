@@ -1,0 +1,56 @@
+<svg viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="280" fill="white"/>
+
+  <!-- Title -->
+  <text x="200" y="30" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">Gear Train</text>
+
+  <!-- Driver gear (8T - small) -->
+  <g>
+    <circle cx="80" cy="120" r="28" fill="#2196F3" stroke="#333" stroke-width="3"/>
+    <!-- Simplified teeth -->
+    <rect x="76" y="60" width="8" height="16" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <rect x="76" y="152" width="8" height="16" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <rect x="52" y="80" width="16" height="8" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <rect x="112" y="80" width="16" height="8" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <rect x="52" y="152" width="16" height="8" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <rect x="112" y="152" width="16" height="8" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <!-- Center hole -->
+    <circle cx="80" cy="120" r="8" fill="white" stroke="#333" stroke-width="2"/>
+    <!-- Rotation arrow -->
+    <path d="M 52 95 A 28 28 0 0 0 76 62" fill="none" stroke="#FF9800" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+    <text x="80" y="205" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">Driver</text>
+    <text x="80" y="225" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#2196F3">8 Teeth</text>
+  </g>
+
+  <!-- Driven gear (24T - large) -->
+  <g>
+    <circle cx="280" cy="120" r="50" fill="#FF9800" stroke="#333" stroke-width="3"/>
+    <!-- Simplified teeth -->
+    <rect x="271" y="40" width="10" height="20" fill="#FF9800" stroke="#333" stroke-width="2"/>
+    <rect x="271" y="160" width="10" height="20" fill="#FF9800" stroke="#333" stroke-width="2"/>
+    <rect x="230" y="75" width="20" height="10" fill="#FF9800" stroke="#333" stroke-width="2"/>
+    <rect x="200" y="75" width="20" height="10" fill="#FF9800" stroke="#333" stroke-width="2"/>
+    <rect x="230" y="155" width="20" height="10" fill="#FF9800" stroke="#333" stroke-width="2"/>
+    <rect x="200" y="155" width="20" height="10" fill="#FF9800" stroke="#333" stroke-width="2"/>
+    <!-- Center hole -->
+    <circle cx="280" cy="120" r="10" fill="white" stroke="#333" stroke-width="2"/>
+    <!-- Rotation arrow (slower, same direction due to external gearing) -->
+    <path d="M 235 85 A 50 50 0 0 1 271 62" fill="none" stroke="#FF9800" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+    <text x="280" y="205" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">Driven</text>
+    <text x="280" y="225" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#FF9800">24 Teeth</text>
+  </g>
+
+  <!-- Arrow between gears -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#FF9800"/>
+    </marker>
+  </defs>
+
+  <line x1="115" y1="120" x2="215" y2="120" stroke="#666" stroke-width="2" stroke-dasharray="5,5"/>
+
+  <!-- Ratio box -->
+  <rect x="120" y="250" width="160" height="22" fill="#f0f0f0" stroke="#333" stroke-width="2" rx="3"/>
+  <text x="200" y="267" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">Ratio: 24 ÷ 8 = 3:1</text>
+</svg>

@@ -1,0 +1,53 @@
+<svg viewBox="0 0 350 280" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="350" height="280" fill="white"/>
+
+  <!-- Title -->
+  <text x="175" y="30" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">Worm Gear Reduction</text>
+
+  <!-- Worm gear (left side) -->
+  <g>
+    <ellipse cx="70" cy="120" rx="22" ry="40" fill="#4CAF50" stroke="#333" stroke-width="3" transform="rotate(-15 70 120)"/>
+    <!-- Spiral thread lines -->
+    <path d="M 55 80 Q 60 95 55 110 Q 60 125 55 140" fill="none" stroke="#333" stroke-width="2"/>
+    <path d="M 70 75 Q 75 90 70 105 Q 75 120 70 145" fill="none" stroke="#333" stroke-width="2"/>
+    <path d="M 85 80 Q 90 95 85 110 Q 90 125 85 140" fill="none" stroke="#333" stroke-width="2"/>
+    <!-- Center hole -->
+    <circle cx="70" cy="120" r="6" fill="white" stroke="#333" stroke-width="2"/>
+    <!-- Rotation arrow -->
+    <path d="M 50 90 A 25 25 0 0 0 65 75" fill="none" stroke="#FF9800" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+    <text x="70" y="210" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">Worm</text>
+    <text x="70" y="230" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#4CAF50">High Speed</text>
+  </g>
+
+  <!-- Spur gear (right side) -->
+  <g>
+    <circle cx="270" cy="120" r="50" fill="#2196F3" stroke="#333" stroke-width="3"/>
+    <!-- Teeth -->
+    <rect x="260" y="40" width="12" height="24" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <rect x="260" y="156" width="12" height="24" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <rect x="220" y="70" width="24" height="12" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <rect x="176" y="70" width="24" height="12" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <rect x="220" y="158" width="24" height="12" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <rect x="176" y="158" width="24" height="12" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <!-- Center hole -->
+    <circle cx="270" cy="120" r="10" fill="white" stroke="#333" stroke-width="2"/>
+    <!-- Rotation arrow (very slow) -->
+    <path d="M 220 85 A 50 50 0 0 0 265 55" fill="none" stroke="#2196F3" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+    <text x="270" y="210" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">Spur Gear</text>
+    <text x="270" y="230" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#2196F3">Low Speed</text>
+  </g>
+
+  <!-- Connection line -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#FF9800"/>
+    </marker>
+  </defs>
+
+  <line x1="95" y1="120" x2="215" y2="120" stroke="#666" stroke-width="2" stroke-dasharray="4,4"/>
+
+  <!-- Reduction note -->
+  <rect x="30" y="250" width="290" height="22" fill="#f0f0f0" stroke="#333" stroke-width="2" rx="3"/>
+  <text x="175" y="267" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">High Reduction Ratio: Great for Torque</text>
+</svg>

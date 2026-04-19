@@ -1,0 +1,100 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366F1;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#22D3EE;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="eyeGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#22D3EE;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#06B6D4;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background circle with glow -->
+  <circle cx="200" cy="200" r="180" fill="none" stroke="#6366F1" stroke-width="0.5" opacity="0.3"/>
+  <circle cx="200" cy="200" r="190" fill="none" stroke="#22D3EE" stroke-width="0.5" opacity="0.2"/>
+
+  <!-- Head -->
+  <rect x="140" y="60" width="120" height="120" rx="20" fill="url(#bodyGradient)" filter="url(#glow)"/>
+
+  <!-- Left Eye -->
+  <rect x="160" y="85" width="28" height="35" rx="8" fill="url(#eyeGlow)" class="glow" filter="url(#softGlow)">
+    <animate attributeName="opacity" values="1;0.7;1" dur="3s" repeatCount="indefinite"/>
+  </rect>
+  <circle cx="174" cy="103" r="6" fill="#0F172A"/>
+
+  <!-- Right Eye -->
+  <rect x="212" y="85" width="28" height="35" rx="8" fill="url(#eyeGlow)" class="glow" filter="url(#softGlow)">
+    <animate attributeName="opacity" values="1;0.7;1" dur="3s" repeatCount="indefinite"/>
+  </rect>
+  <circle cx="226" cy="103" r="6" fill="#0F172A"/>
+
+  <!-- Antenna left -->
+  <line x1="155" y1="55" x2="145" y2="30" stroke="#22D3EE" stroke-width="3" stroke-linecap="round" class="float">
+    <animate attributeName="y1" values="55;50;55" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="y2" values="30;25;30" dur="3s" repeatCount="indefinite"/>
+  </line>
+  <circle cx="145" cy="30" r="4" fill="#22D3EE" filter="url(#softGlow)"/>
+
+  <!-- Antenna right -->
+  <line x1="245" y1="55" x2="255" y2="30" stroke="#6366F1" stroke-width="3" stroke-linecap="round" class="float">
+    <animate attributeName="y1" values="55;50;55" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="y2" values="30;25;30" dur="3s" repeatCount="indefinite"/>
+  </line>
+  <circle cx="255" cy="30" r="4" fill="#6366F1" filter="url(#softGlow)"/>
+
+  <!-- Body -->
+  <rect x="120" y="190" width="160" height="130" rx="15" fill="url(#bodyGradient)" filter="url(#glow)"/>
+
+  <!-- Center panel -->
+  <rect x="155" y="205" width="90" height="100" rx="10" fill="none" stroke="#22D3EE" stroke-width="2" opacity="0.6"/>
+  <circle cx="200" cy="225" r="6" fill="#22D3EE" class="pulse" filter="url(#softGlow)">
+    <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Circuit lines on body -->
+  <path d="M 160 250 Q 180 255 200 250 Q 220 245 240 250" stroke="#6366F1" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <circle cx="160" cy="250" r="2" fill="#6366F1"/>
+  <circle cx="200" cy="250" r="2" fill="#22D3EE"/>
+  <circle cx="240" cy="250" r="2" fill="#6366F1"/>
+
+  <!-- Left Arm -->
+  <rect x="80" y="210" width="40" height="50" rx="12" fill="#6366F1" filter="url(#glow)" class="float">
+    <animate attributeName="x" values="80;75;80" dur="2.5s" repeatCount="indefinite"/>
+  </rect>
+  <circle cx="95" cy="265" r="8" fill="#22D3EE" filter="url(#softGlow)"/>
+
+  <!-- Right Arm -->
+  <rect x="280" y="210" width="40" height="50" rx="12" fill="#22D3EE" filter="url(#glow)" class="float">
+    <animate attributeName="x" values="280;285;280" dur="2.5s" repeatCount="indefinite"/>
+  </rect>
+  <circle cx="305" cy="265" r="8" fill="#6366F1" filter="url(#softGlow)"/>
+
+  <!-- Left Leg -->
+  <rect x="155" y="330" width="32" height="50" rx="8" fill="#6366F1" filter="url(#glow)"/>
+  <rect x="148" y="380" width="46" height="12" rx="6" fill="#22D3EE" filter="url(#softGlow)"/>
+
+  <!-- Right Leg -->
+  <rect x="213" y="330" width="32" height="50" rx="8" fill="#22D3EE" filter="url(#glow)"/>
+  <rect x="206" y="380" width="46" height="12" rx="6" fill="#6366F1" filter="url(#softGlow)"/>
+
+  <!-- Decorative accent lines -->
+  <line x1="130" y1="200" x2="145" y2="215" stroke="#22D3EE" stroke-width="1.5" opacity="0.4"/>
+  <line x1="270" y1="200" x2="255" y2="215" stroke="#6366F1" stroke-width="1.5" opacity="0.4"/>
+</svg>

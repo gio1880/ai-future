@@ -1,0 +1,67 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="white"/>
+
+  <!-- Title -->
+  <text x="200" y="25" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">FLL Field Layout</text>
+
+  <!-- Field boundary -->
+  <rect x="30" y="50" width="340" height="220" fill="#e8f5e9" stroke="#333" stroke-width="3"/>
+
+  <!-- Zone dividers -->
+  <line x1="130" y1="50" x2="130" y2="270" stroke="#666" stroke-width="2" stroke-dasharray="4,4"/>
+  <line x1="270" y1="50" x2="270" y2="270" stroke="#666" stroke-width="2" stroke-dasharray="4,4"/>
+
+  <!-- Base/Launch Area (left zone) -->
+  <g>
+    <rect x="30" y="50" width="100" height="220" fill="#2196F3" opacity="0.1" stroke="none"/>
+    <text x="80" y="120" font-family="Arial, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#333">Base/</text>
+    <text x="80" y="140" font-family="Arial, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#333">Launch</text>
+    <text x="80" y="160" font-family="Arial, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#333">Area</text>
+  </g>
+
+  <!-- Near Field (middle zone) -->
+  <g>
+    <rect x="130" y="50" width="140" height="220" fill="#FF9800" opacity="0.1" stroke="none"/>
+    <text x="200" y="115" font-family="Arial, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#333">Near</text>
+    <text x="200" y="135" font-family="Arial, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#333">Field</text>
+    <text x="200" y="155" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#666">Closer to</text>
+    <text x="200" y="170" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#666">base</text>
+  </g>
+
+  <!-- Far Field (right zone) -->
+  <g>
+    <rect x="270" y="50" width="100" height="220" fill="#4CAF50" opacity="0.1" stroke="none"/>
+    <text x="320" y="120" font-family="Arial, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#333">Far</text>
+    <text x="320" y="140" font-family="Arial, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#333">Field</text>
+    <text x="320" y="160" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#666">Farthest</text>
+    <text x="320" y="175" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#666">zone</text>
+  </g>
+
+  <!-- Mission models (small colored squares) -->
+  <!-- Near field models -->
+  <rect x="155" y="90" width="18" height="18" fill="#FF6B6B" stroke="#333" stroke-width="1" rx="2"/>
+  <rect x="155" y="140" width="18" height="18" fill="#FF6B6B" stroke="#333" stroke-width="1" rx="2"/>
+  <rect x="220" y="100" width="18" height="18" fill="#FFA726" stroke="#333" stroke-width="1" rx="2"/>
+
+  <!-- Far field models -->
+  <rect x="285" y="75" width="18" height="18" fill="#AB47BC" stroke="#333" stroke-width="1" rx="2"/>
+  <rect x="310" y="120" width="18" height="18" fill="#AB47BC" stroke="#333" stroke-width="1" rx="2"/>
+  <rect x="285" y="210" width="18" height="18" fill="#AB47BC" stroke="#333" stroke-width="1" rx="2"/>
+
+  <!-- Legend -->
+  <g>
+    <text x="30" y="290" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#333">Models:</text>
+    <rect x="88" y="278" width="12" height="12" fill="#FF6B6B" stroke="#333" stroke-width="1" rx="1"/>
+    <text x="105" y="287" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#333">Near</text>
+
+    <rect x="145" y="278" width="12" height="12" fill="#FFA726" stroke="#333" stroke-width="1" rx="1"/>
+    <text x="162" y="287" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#333">Mid</text>
+
+    <rect x="200" y="278" width="12" height="12" fill="#AB47BC" stroke="#333" stroke-width="1" rx="1"/>
+    <text x="217" y="287" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#333">Far</text>
+  </g>
+
+  <!-- Instruction note -->
+  <text x="260" y="290" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#666">Harder missions are farther away!</text>
+</svg>

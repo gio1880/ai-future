@@ -1,0 +1,80 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="robotGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#22D3EE;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#06B6D4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#22D3EE;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="gearGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366F1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#22D3EE;stop-opacity:1" />
+    </linearGradient>
+    <filter id="robotGlow">
+      <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Outer circle -->
+  <circle cx="32" cy="32" r="30" fill="none" stroke="#22D3EE" stroke-width="1" opacity="0.3"/>
+
+  <!-- Head -->
+  <rect x="24" y="8" width="16" height="16" rx="3" fill="url(#robotGradient)" filter="url(#robotGlow)"/>
+
+  <!-- Eyes -->
+  <circle cx="28" cy="14" r="2" fill="#0F172A"/>
+  <circle cx="36" cy="14" r="2" fill="#0F172A"/>
+
+  <!-- Antenna -->
+  <line x1="32" y1="8" x2="32" y2="2" stroke="#6366F1" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="32" cy="1" r="1.5" fill="#6366F1"/>
+
+  <!-- Body/Chest -->
+  <rect x="20" y="26" width="24" height="20" rx="4" fill="url(#robotGradient)" filter="url(#robotGlow)"/>
+
+  <!-- Chest panel -->
+  <rect x="26" y="30" width="12" height="12" rx="2" fill="none" stroke="#6366F1" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- Central gear/mechanism -->
+  <circle cx="32" cy="36" r="6" fill="none" stroke="url(#gearGradient)" stroke-width="1.5"/>
+  <circle cx="32" cy="36" r="4" fill="none" stroke="#22D3EE" stroke-width="1" opacity="0.5"/>
+
+  <!-- Gear teeth/points around center -->
+  <g fill="#6366F1" opacity="0.7">
+    <rect x="30" y="28" width="4" height="3" rx="1"/>
+    <rect x="34" y="32" width="3" height="4" rx="1"/>
+    <rect x="30" y="36" width="4" height="3" rx="1"/>
+    <rect x="27" y="32" width="3" height="4" rx="1"/>
+  </g>
+
+  <!-- Left Arm -->
+  <g>
+    <rect x="12" y="32" width="8" height="8" rx="2" fill="#22D3EE" filter="url(#robotGlow)"/>
+    <circle cx="13" cy="36" r="1.5" fill="#6366F1"/>
+  </g>
+
+  <!-- Right Arm -->
+  <g>
+    <rect x="44" y="32" width="8" height="8" rx="2" fill="#22D3EE" filter="url(#robotGlow)"/>
+    <circle cx="51" cy="36" r="1.5" fill="#6366F1"/>
+  </g>
+
+  <!-- Left Leg -->
+  <g>
+    <rect x="24" y="48" width="6" height="12" rx="2" fill="url(#robotGradient)" filter="url(#robotGlow)"/>
+    <rect x="23" y="60" width="8" height="3" rx="1" fill="#6366F1"/>
+  </g>
+
+  <!-- Right Leg -->
+  <g>
+    <rect x="34" y="48" width="6" height="12" rx="2" fill="url(#robotGradient)" filter="url(#robotGlow)"/>
+    <rect x="33" y="60" width="8" height="3" rx="1" fill="#6366F1"/>
+  </g>
+
+  <!-- Accent nodes on body -->
+  <circle cx="24" cy="32" r="1.5" fill="#6366F1" opacity="0.7"/>
+  <circle cx="40" cy="32" r="1.5" fill="#6366F1" opacity="0.7"/>
+</svg>

@@ -1,0 +1,88 @@
+<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="emptyRobotBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366F1;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#22D3EE;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
+    </linearGradient>
+    <filter id="emptyGlow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Floating background circles (curiosity theme) -->
+  <circle cx="250" cy="40" r="25" fill="#6366F1" opacity="0.08"/>
+  <circle cx="50" cy="160" r="30" fill="#22D3EE" opacity="0.08"/>
+  <circle cx="280" cy="150" r="20" fill="#6366F1" opacity="0.06"/>
+
+  <!-- Robot head -->
+  <rect x="110" y="25" width="80" height="75" rx="12" fill="url(#emptyRobotBody)" filter="url(#emptyGlow)"/>
+
+  <!-- Robot face panel -->
+  <rect x="120" y="35" width="60" height="55" rx="8" fill="none" stroke="#22D3EE" stroke-width="2" opacity="0.5"/>
+
+  <!-- Curious expression - question mark eyes -->
+  <!-- Left eye (question mark shape) -->
+  <g transform="translate(135, 50)">
+    <path d="M 0 2 Q 0 0 2 0 Q 4 0 4 2 Q 4 5 2 5 Q 0 5 0 2" stroke="#22D3EE" stroke-width="1.5" fill="none"/>
+    <circle cx="2" cy="8" r="1" fill="#22D3EE"/>
+  </g>
+
+  <!-- Right eye (question mark shape) -->
+  <g transform="translate(165, 50)">
+    <path d="M 0 2 Q 0 0 2 0 Q 4 0 4 2 Q 4 5 2 5 Q 0 5 0 2" stroke="#22D3EE" stroke-width="1.5" fill="none"/>
+    <circle cx="2" cy="8" r="1" fill="#22D3EE"/>
+  </g>
+
+  <!-- Antenna left (tilted with curiosity) -->
+  <line x1="125" y1="20" x2="110" y2="5" stroke="#22D3EE" stroke-width="3" stroke-linecap="round" filter="url(#emptyGlow)"/>
+  <circle cx="110" cy="5" r="3" fill="#22D3EE" filter="url(#emptyGlow)"/>
+
+  <!-- Antenna right (tilted up) -->
+  <line x1="175" y1="20" x2="190" y2="5" stroke="#6366F1" stroke-width="3" stroke-linecap="round" filter="url(#emptyGlow)"/>
+  <circle cx="190" cy="5" r="3" fill="#6366F1" filter="url(#emptyGlow)"/>
+
+  <!-- Smile/curious mouth -->
+  <path d="M 130 72 Q 150 80 170 72" stroke="#22D3EE" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.8"/>
+
+  <!-- Body -->
+  <rect x="115" y="105" width="70" height="60" rx="10" fill="url(#emptyRobotBody)" filter="url(#emptyGlow)"/>
+
+  <!-- Chest curiosity symbol (lightbulb) -->
+  <g transform="translate(150, 130)">
+    <!-- Bulb -->
+    <ellipse cx="0" cy="-5" rx="6" ry="8" fill="#FBBF24" opacity="0.7"/>
+    <!-- Base -->
+    <rect x="-2" y="3" width="4" height="3" fill="#6366F1" opacity="0.6"/>
+  </g>
+
+  <!-- Left arm reaching out -->
+  <rect x="85" y="120" width="30" height="18" rx="8" fill="#6366F1" filter="url(#emptyGlow)" transform="rotate(-15 100 129)"/>
+  <circle cx="75" cy="125" r="5" fill="#22D3EE" filter="url(#emptyGlow)"/>
+
+  <!-- Right arm reaching out -->
+  <rect x="185" y="120" width="30" height="18" rx="8" fill="#22D3EE" filter="url(#emptyGlow)" transform="rotate(15 200 129)"/>
+  <circle cx="225" cy="125" r="5" fill="#6366F1" filter="url(#emptyGlow)"/>
+
+  <!-- Legs -->
+  <rect x="130" y="165" width="12" height="25" rx="6" fill="#6366F1" filter="url(#emptyGlow)"/>
+  <rect x="158" y="165" width="12" height="25" rx="6" fill="#22D3EE" filter="url(#emptyGlow)"/>
+
+  <!-- Feet -->
+  <rect x="125" y="188" width="22" height="6" rx="3" fill="#22D3EE" opacity="0.8"/>
+  <rect x="153" y="188" width="22" height="6" rx="3" fill="#6366F1" opacity="0.8"/>
+
+  <!-- Accent detail: floating thought/discovery bubble -->
+  <circle cx="250" cy="50" r="12" fill="none" stroke="#22D3EE" stroke-width="1.5" opacity="0.6"/>
+  <circle cx="260" cy="40" r="5" fill="none" stroke="#22D3EE" stroke-width="1" opacity="0.5"/>
+  <circle cx="270" cy="35" r="3" fill="none" stroke="#22D3EE" stroke-width="1" opacity="0.4"/>
+
+  <!-- Decorative circuit dots -->
+  <circle cx="90" cy="45" r="2" fill="#6366F1" opacity="0.4"/>
+  <circle cx="280" cy="85" r="2" fill="#22D3EE" opacity="0.4"/>
+  <circle cx="60" cy="120" r="2" fill="#6366F1" opacity="0.4"/>
+</svg>

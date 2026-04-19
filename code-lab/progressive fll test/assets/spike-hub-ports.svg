@@ -1,0 +1,40 @@
+<svg viewBox="0 0 350 350" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="350" height="350" fill="white"/>
+
+  <!-- Center hub display -->
+  <circle cx="175" cy="175" r="60" fill="#f0f0f0" stroke="#333" stroke-width="3"/>
+  <rect x="155" y="155" width="40" height="40" fill="#2196F3" stroke="#333" stroke-width="2" rx="4"/>
+  <text x="175" y="182" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="white">SPIKE</text>
+
+  <!-- Port mounting circles around hub -->
+  <!-- Port A (top) -->
+  <circle cx="175" cy="80" r="20" fill="#FF9800" stroke="#333" stroke-width="3"/>
+  <text x="175" y="90" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">A</text>
+  <text x="175" y="45" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">Port A</text>
+
+  <!-- Port B (top-right) -->
+  <circle cx="268" cy="107" r="20" fill="#FF9800" stroke="#333" stroke-width="3"/>
+  <text x="268" y="117" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">B</text>
+  <text x="295" y="100" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">Port B</text>
+
+  <!-- Port C (right) -->
+  <circle cx="295" cy="175" r="20" fill="#FF9800" stroke="#333" stroke-width="3"/>
+  <text x="295" y="185" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">C</text>
+  <text x="330" y="182" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">Port C</text>
+
+  <!-- Port D (bottom-right) -->
+  <circle cx="268" cy="243" r="20" fill="#FF9800" stroke="#333" stroke-width="3"/>
+  <text x="268" y="253" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">D</text>
+  <text x="295" y="275" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">Port D</text>
+
+  <!-- Port E (bottom-left) -->
+  <circle cx="82" cy="243" r="20" fill="#FF9800" stroke="#333" stroke-width="3"/>
+  <text x="82" y="253" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">E</text>
+  <text x="55" y="275" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">Port E</text>
+
+  <!-- Port F (left) -->
+  <circle cx="55" cy="175" r="20" fill="#FF9800" stroke="#333" stroke-width="3"/>
+  <text x="55" y="185" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">F</text>
+  <text x="20" y="182" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">Port F</text>
+</svg>

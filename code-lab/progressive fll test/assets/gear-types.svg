@@ -1,0 +1,49 @@
+<svg viewBox="0 0 350 250" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="350" height="250" fill="white"/>
+
+  <!-- Spur Gear -->
+  <g>
+    <circle cx="60" cy="100" r="35" fill="#2196F3" stroke="#333" stroke-width="3"/>
+    <!-- Teeth -->
+    <rect x="55" y="30" width="10" height="20" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <rect x="55" y="150" width="10" height="20" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <rect x="30" y="55" width="20" height="10" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <rect x="110" y="55" width="20" height="10" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <rect x="35" y="135" width="20" height="10" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <rect x="105" y="135" width="20" height="10" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <!-- Center hole -->
+    <circle cx="60" cy="100" r="8" fill="white" stroke="#333" stroke-width="2"/>
+    <text x="60" y="220" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">Spur Gear</text>
+  </g>
+
+  <!-- Bevel Gear -->
+  <g>
+    <circle cx="175" cy="100" r="35" fill="#FF9800" stroke="#333" stroke-width="3"/>
+    <!-- Angled teeth pattern -->
+    <path d="M 175 65 L 200 65 L 200 75 L 175 75 Z" fill="#FF9800" stroke="#333" stroke-width="2"/>
+    <path d="M 175 65 L 180 40 L 190 40 L 185 65 Z" fill="#FF9800" stroke="#333" stroke-width="2"/>
+    <path d="M 175 135 L 200 135 L 200 145 L 175 145 Z" fill="#FF9800" stroke="#333" stroke-width="2"/>
+    <path d="M 175 135 L 180 160 L 190 160 L 185 135 Z" fill="#FF9800" stroke="#333" stroke-width="2"/>
+    <path d="M 140 100 L 140 125 L 150 125 L 150 100 Z" fill="#FF9800" stroke="#333" stroke-width="2"/>
+    <path d="M 140 100 L 115 110 L 115 120 L 150 100 Z" fill="#FF9800" stroke="#333" stroke-width="2"/>
+    <!-- Center hole -->
+    <circle cx="175" cy="100" r="8" fill="white" stroke="#333" stroke-width="2"/>
+    <text x="175" y="220" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">Bevel Gear</text>
+  </g>
+
+  <!-- Worm Gear -->
+  <g>
+    <ellipse cx="290" cy="100" rx="20" ry="35" fill="#4CAF50" stroke="#333" stroke-width="3"/>
+    <!-- Spiral thread lines -->
+    <path d="M 280 70 Q 285 80 280 90 Q 285 100 280 110 Q 285 120 280 130" fill="none" stroke="#333" stroke-width="2"/>
+    <path d="M 290 70 Q 295 80 290 90 Q 295 100 290 110 Q 295 120 290 130" fill="none" stroke="#333" stroke-width="2"/>
+    <path d="M 300 70 Q 305 80 300 90 Q 305 100 300 110 Q 305 120 300 130" fill="none" stroke="#333" stroke-width="2"/>
+    <!-- Center hole -->
+    <circle cx="290" cy="100" r="6" fill="white" stroke="#333" stroke-width="2"/>
+    <text x="290" y="220" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">Worm Gear</text>
+  </g>
+
+  <!-- Title -->
+  <text x="175" y="25" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">Gear Types</text>
+</svg>

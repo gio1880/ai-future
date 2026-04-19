@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyLearn Admin Panel</title>
+  <style>
+    :root {
+      --color-primary: #4F46E5;
+      --color-secondary: #06B6D4;
+      --color-success: #10B981;
+      --color-warning: #F59E0B;
+      --color-error: #EF4444;
+      --color-dark-bg: #0F172A;
+      --color-card-bg: #1E293B;
+      --color-border: #334155;
+      --color-text-primary: #F1F5F9;
+      --color-text-muted: #94A3B8;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --transition-normal: 300ms ease-in-out;
+      --radius-md: 0.5rem;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--color-dark-bg);
+      color: var(--color-text-primary);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      color: var(--color-primary);
+    }
+
+    .logout-btn {
+      background-color: var(--color-error);
+      color: white;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color var(--transition-normal);
+    }
+
+    .logout-btn:hover {
+      background-color: #DC2626;
+    }
+
+    .login-container {
+      max-width: 400px;
+      margin: 5rem auto;
+      background-color: var(--color-card-bg);
+      padding: 2rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+    }
+
+    .login-container h2 {
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: var(--color-primary);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--color-text-primary);
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: var(--color-dark-bg);
+      color: var(--color-text-primary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      transition: border-color var(--transition-normal);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .btn {
+      background-color: var(--color-primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color var(--transition-normal);
+      font-weight: 500;
+    }
+
+    .btn:hover {
+      background-color: #4338CA;
+    }
+
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    .btn-danger {
+      background-color: var(--color-error);
+    }
+
+    .btn-danger:hover {
+      background-color: #DC2626;
+    }
+
+    .btn-success {
+      background-color: var(--color-success);
+    }
+
+    .btn-success:hover {
+      background-color: #059669;
+    }
+
+    .alert {
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 1rem;
+    }
+
+    .alert-error {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: #FCA5A5;
+      border: 1px solid var(--color-error);
+    }
+
+    .alert-success {
+      background-color: rgba(16, 185, 129, 0.1);
+      color: #86EFAC;
+      border: 1px solid var(--color-success);
+    }
+
+    .section {
+      margin-bottom: 3rem;
+    }
+
+    .section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--color-secondary);
+      border-bottom: 2px solid var(--color-border);
+      padding-bottom: 0.5rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background-color: var(--color-card-bg);
+      padding: 1.5rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+    }
+
+    .stat-card h3 {
+      color: var(--color-text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-card .value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      background-color: var(--color-card-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    th {
+      padding: 1rem;
+      text-align: left;
+      color: var(--color-text-primary);
+      font-weight: 600;
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    tbody tr:hover {
+      background-color: rgba(79, 70, 229, 0.05);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .form-section {
+      background-color: var(--color-card-bg);
+      padding: 1.5rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+
+    .form-section h3 {
+      margin-bottom: 1rem;
+      color: var(--color-primary);
+    }
+
+    .inline-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 1rem;
+      align-items: end;
+    }
+
+    @media (max-width: 768px) {
+      .inline-form {
+        grid-template-columns: 1fr;
+      }
+
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Activity Feed Styles */
+    .activity-feed {
+      max-height: 400px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .activity-feed::-webkit-scrollbar {
+      width: 6px;
+    }
+    .activity-feed::-webkit-scrollbar-thumb {
+      background: var(--color-border);
+      border-radius: 3px;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: var(--color-dark-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      transition: border-color 0.2s;
+    }
+
+    .activity-item:hover {
+      border-color: var(--color-primary);
+    }
+
+    .activity-item.new-item {
+      animation: activityPulse 0.6s ease-out;
+    }
+
+    @keyframes activityPulse {
+      0% { background: rgba(79, 70, 229, 0.15); transform: translateX(-4px); }
+      100% { background: var(--color-dark-bg); transform: translateX(0); }
+    }
+
+    .activity-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .activity-icon.login { background: rgba(79, 70, 229, 0.2); }
+    .activity-icon.lesson { background: rgba(16, 185, 129, 0.2); }
+    .activity-icon.quiz { background: rgba(6, 182, 212, 0.2); }
+
+    .activity-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .activity-details .activity-text {
+      font-size: 0.9rem;
+      color: var(--color-text-primary);
+      line-height: 1.4;
+    }
+
+    .activity-details .activity-text strong {
+      color: var(--color-primary);
+    }
+
+    .activity-details .activity-time {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-top: 2px;
+    }
+
+    .activity-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .activity-header h2 {
+      margin-bottom: 0 !important;
+      border-bottom: none !important;
+      padding-bottom: 0 !important;
+    }
+
+    .activity-controls {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.65rem;
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--color-success);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-success);
+      animation: livePulse 2s ease-in-out infinite;
+    }
+
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--color-border);
+      border-top-color: var(--color-primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Credentials Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal {
+      background-color: var(--color-card-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal h2 {
+      color: var(--color-primary);
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+    .credentials-block {
+      background-color: var(--color-dark-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .credential-item {
+      margin-bottom: 1rem;
+    }
+
+    .credential-item label {
+      display: block;
+      color: var(--color-text-muted);
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .credential-item .value {
+      color: var(--color-text-primary);
+      font-weight: 600;
+      font-size: 1.1rem;
+      word-break: break-all;
+    }
+
+    .credential-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .modal-buttons .btn {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .btn-secondary {
+      background-color: var(--color-border);
+      color: var(--color-text-primary);
+    }
+
+    .btn-secondary:hover {
+      background-color: #475569;
+    }
+
+    .credentials-table {
+      width: 100%;
+      margin-top: 1rem;
+      border-collapse: collapse;
+    }
+
+    .credentials-table th,
+    .credentials-table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .credentials-table th {
+      background-color: rgba(0, 0, 0, 0.2);
+      color: var(--color-text-muted);
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .credentials-table tr:last-child td {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Login Section -->
+    <div id="loginSection" class="login-container">
+      <h2>Teacher Login</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginUsername">Username</label>
+          <input type="text" id="loginUsername" name="username" required>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" name="password" required>
+        </div>
+        <button type="submit" class="btn">Login</button>
+      </form>
+      <div id="loginError" class="alert alert-error hidden" style="margin-top: 1rem;"></div>
+    </div>
+
+    <!-- Admin Section -->
+    <div id="adminSection" class="hidden">
+      <!-- Header -->
+      <div class="header">
+        <div>
+          <h1>PyLearn Admin Panel</h1>
+          <p style="color: var(--color-text-muted);">Welcome, <strong id="teacherName"></strong></p>
+        </div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+
+      <!-- Success/Error Messages -->
+      <div id="message" class="alert hidden"></div>
+
+      <!-- Overview Section -->
+      <div class="section">
+        <h2>Class Overview</h2>
+        <div class="stats">
+          <div class="stat-card">
+            <h3>Total Students</h3>
+            <div class="value" id="statTotalStudents">0</div>
+          </div>
+          <div class="stat-card">
+            <h3>Average Lessons Completed</h3>
+            <div class="value" id="statAvgLessons">0</div>
+          </div>
+          <div class="stat-card">
+            <h3>Class Total Time</h3>
+            <div class="value" id="statTotalTime">0h</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Feed Section -->
+      <div class="section">
+        <div class="activity-header">
+          <h2>Activity Feed</h2>
+          <div class="activity-controls">
+            <span class="live-badge"><span class="live-dot"></span> Live</span>
+            <button class="btn btn-small btn-secondary" onclick="loadActivity()">Refresh</button>
+          </div>
+        </div>
+        <div id="activityFeed" class="activity-feed">
+          <p style="color: var(--color-text-muted); text-align: center; padding: 2rem;">Loading activity...</p>
+        </div>
+      </div>
+
+      <!-- Add Student Section -->
+      <div class="section">
+        <h2>Add Students</h2>
+
+        <!-- Single Student -->
+        <div class="form-section">
+          <h3>Add Single Student</h3>
+          <form id="addStudentForm" class="inline-form">
+            <input type="text" id="newStudentFirstName" placeholder="First Name" required>
+            <input type="text" id="newStudentLastName" placeholder="Last Name" required>
+            <button type="submit" class="btn btn-success">Add</button>
+          </form>
+          <div id="singleStudentResult" class="hidden" style="margin-top: 1rem;"></div>
+        </div>
+
+        <!-- Bulk Import -->
+        <div class="form-section">
+          <h3>Bulk Import Students</h3>
+          <p style="color: var(--color-text-muted); margin-bottom: 1rem; font-size: 0.875rem;">
+            Enter one student per line in format: <code style="background: var(--color-dark-bg); padding: 0.25rem 0.5rem; border-radius: 0.25rem;">FirstName LastName</code> or <code style="background: var(--color-dark-bg); padding: 0.25rem 0.5rem; border-radius: 0.25rem;">FirstName,LastName</code>
+          </p>
+          <form id="bulkImportForm">
+            <div class="form-group">
+              <textarea id="bulkStudentData" placeholder="Maria Garcia&#10;James Wilson&#10;Sofia Chen" style="min-height: 150px;"></textarea>
+            </div>
+            <button type="submit" class="btn btn-success">Import Students</button>
+          </form>
+          <div id="bulkStudentResult" class="hidden" style="margin-top: 1rem;"></div>
+        </div>
+      </div>
+
+      <!-- Students List Section -->
+      <div class="section">
+        <h2>Student Management</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Lessons Completed</th>
+                <th>Last Login</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="studentTableBody">
+              <tr><td colspan="5" style="text-align: center; color: var(--color-text-muted);">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Progress Overview Section -->
+      <div class="section">
+        <h2>Student Progress Details</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Lessons</th>
+                <th>Python Unit Test</th>
+                <th>Other Unit Tests</th>
+                <th>FLL Assessment</th>
+                <th>Certificates</th>
+                <th>Last Login</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="progressTableBody">
+              <tr><td colspan="9" style="text-align: center; color: var(--color-text-muted);">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Student Tickets / Issue Reports -->
+      <div class="section">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+          <h2 style="margin-bottom:0;">Student Reports</h2>
+          <button class="btn btn-secondary" onclick="loadTickets()" style="padding:0.4rem 1rem;font-size:0.85rem;">Refresh</button>
+        </div>
+        <div id="ticketsContainer" style="color:var(--color-text-muted);text-align:center;padding:1rem;">Loading tickets...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Credentials Modal -->
+  <div id="credentialsModal" class="modal-overlay hidden">
+    <div class="modal">
+      <h2>Student Created Successfully</h2>
+      <div id="credentialsContent"></div>
+      <div class="modal-buttons">
+        <button class="btn" onclick="copyCredentials()">Copy All</button>
+        <button class="btn" onclick="printCredentials()">Print</button>
+        <button class="btn" onclick="exportCSV()">Export CSV</button>
+        <button class="btn btn-secondary" onclick="closeCredentialsModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = '/api';
+    let currentUser = null;
+    let studentsList = [];
+    let currentCredentials = [];
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+
+    async function init() {
+      // Check if already logged in
+      try {
+        const response = await fetch(`${API_BASE}/me`, { credentials: 'same-origin' });
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.user.role === 'teacher') {
+            currentUser = result.user;
+            showAdminPanel();
+            await loadStudents();
+            return;
+          }
+        }
+      } catch (err) {
+        console.error('Init error:', err);
+      }
+
+      // Not logged in, show login form
+      document.getElementById('loginSection').classList.remove('hidden');
+    }
+
+    // ============================================
+    // AUTH FUNCTIONS
+    // ============================================
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const response = await fetch(`${API_BASE}/login`, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const result = await response.json();
+
+        if (result.success && result.user.role === 'teacher') {
+          currentUser = result.user;
+          document.getElementById('loginSection').classList.add('hidden');
+          showAdminPanel();
+          await loadStudents();
+          loadTickets();
+          startActivityPolling();
+        } else {
+          showError('loginError', result.error || 'Login failed');
+        }
+      } catch (err) {
+        showError('loginError', 'Network error');
+        console.error('Login error:', err);
+      }
+    });
+
+    async function logout() {
+      try {
+        stopActivityPolling();
+        await fetch(`${API_BASE}/logout`, { method: 'POST', credentials: 'same-origin' });
+        currentUser = null;
+        document.getElementById('adminSection').classList.add('hidden');
+        document.getElementById('loginSection').classList.remove('hidden');
+        document.getElementById('loginUsername').value = '';
+        document.getElementById('loginPassword').value = '';
+      } catch (err) {
+        console.error('Logout error:', err);
+      }
+    }
+
+    function showAdminPanel() {
+      document.getElementById('adminSection').classList.remove('hidden');
+      document.getElementById('teacherName').textContent = currentUser.name;
+    }
+
+    // ============================================
+    // LOAD AND DISPLAY STUDENTS
+    // ============================================
+
+    async function loadStudents() {
+      try {
+        const response = await fetch(`${API_BASE}/admin/students`, { credentials: 'same-origin' });
+        const result = await response.json();
+
+        if (result.success) {
+          studentsList = result.data;
+          await loadProgress();
+          displayStudents();
+          updateStats();
+        }
+      } catch (err) {
+        console.error('Load students error:', err);
+      }
+    }
+
+    let progressData = [];
+
+    async function loadProgress() {
+      try {
+        const response = await fetch(`${API_BASE}/admin/progress`, { credentials: 'same-origin' });
+        const result = await response.json();
+
+        if (result.success) {
+          progressData = result.data;
+        }
+      } catch (err) {
+        console.error('Load progress error:', err);
+      }
+    }
+
+    function displayStudents() {
+      const tbody = document.getElementById('studentTableBody');
+      tbody.innerHTML = '';
+
+      if (studentsList.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--color-text-muted);">No students yet</td></tr>';
+        return;
+      }
+
+      studentsList.forEach(student => {
+        const row = document.createElement('tr');
+        const lastLogin = student.lastLogin ? new Date(student.lastLogin).toLocaleDateString() : 'Never';
+        row.innerHTML = `
+          <td><strong>${escapeHtml(student.name)}</strong></td>
+          <td><code style="background: var(--color-dark-bg); padding: 0.25rem 0.5rem; border-radius: 0.25rem;">${escapeHtml(student.username)}</code></td>
+          <td>${student.lessonsCompleted}</td>
+          <td>${lastLogin}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn btn-small" onclick="showResetPasswordModal('${student.id}', '${escapeHtml(student.name)}')">Reset Password</button>
+              <button class="btn btn-small btn-danger" onclick="deleteStudent('${student.id}', '${escapeHtml(student.name)}')">Delete</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    const UNIT_TEST_IDS = ['unit-test-python', 'unit-test-pybricks', 'unit-test-measurements', 'unit-test-setup', 'unit-test-filestructure'];
+    const TOTAL_LESSONS = 37;
+
+    function getUnitTestStatus(lessonProgress) {
+      if (!lessonProgress) return { passed: 0, total: 5, details: {} };
+      let passed = 0;
+      const details = {};
+      UNIT_TEST_IDS.forEach(id => {
+        const d = lessonProgress[id];
+        if (d && d.passed) passed++;
+        if (d && (d.attempts > 0 || d.bestScore > 0)) {
+          details[id] = {
+            passed: d.passed || false,
+            bestScore: d.bestScore || d.score || 0,
+            attempts: d.attempts || 1
+          };
+        }
+      });
+      return { passed, total: 5, details };
+    }
+
+    function getPythonTestHtml(details) {
+      const d = details['unit-test-python'];
+      if (!d) return '<span style="color:var(--color-text-muted);">Not taken</span>';
+      const scoreColor = d.bestScore >= 80 ? 'var(--color-success)' : d.bestScore >= 60 ? 'var(--color-warning)' : 'var(--color-error)';
+      const passedBadge = d.passed
+        ? '<span style="background:rgba(16,185,129,0.15);color:var(--color-success);padding:0.15rem 0.5rem;border-radius:999px;font-size:0.75rem;font-weight:600;margin-left:0.4rem;">PASSED</span>'
+        : '';
+      return '<span style="color:' + scoreColor + ';font-weight:600;">' + d.bestScore + '%</span>' + passedBadge +
+             '<span style="color:var(--color-text-muted);font-size:0.8rem;margin-left:0.4rem;">(' + d.attempts + ' ' + (d.attempts === 1 ? 'try' : 'tries') + ')</span>';
+    }
+
+    function getFllStatus(fllResults) {
+      if (!fllResults || !fllResults.length) return '<span style="color:var(--color-text-muted);">—</span>';
+      const latest = fllResults[fllResults.length - 1];
+      const score = latest.overallScore || 0;
+      const placement = latest.placement ? latest.placement.label : 'N/A';
+      const color = score >= 80 ? '#10B981' : score >= 60 ? '#06B6D4' : score >= 40 ? '#F59E0B' : '#EF4444';
+      return '<span style="color:' + color + ';" title="' + placement + '">' + score + '% (' + fllResults.length + ' taken)</span>';
+    }
+
+    function getCertStatus(lessonsCompleted, unitTestsPassed) {
+      const allLessons = lessonsCompleted >= TOTAL_LESSONS;
+      const allTests = unitTestsPassed >= 5;
+      if (allLessons && allTests) return '<span style="color:#10B981;">🏆 Mastery</span>';
+      if (allLessons) return '<span style="color:#06B6D4;">🎓 Completion</span>';
+      return '<span style="color:var(--color-text-muted);">—</span>';
+    }
+
+    function displayProgress() {
+      const tbody = document.getElementById('progressTableBody');
+      tbody.innerHTML = '';
+
+      if (progressData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: var(--color-text-muted);">No progress data</td></tr>';
+        return;
+      }
+
+      progressData.forEach(progress => {
+        const row = document.createElement('tr');
+        const lastLogin = progress.lastLogin ? new Date(progress.lastLogin).toLocaleDateString() : 'Never';
+        const utStatus = getUnitTestStatus(progress.lessonProgress);
+        const certHtml = getCertStatus(progress.lessonsCompleted, utStatus.passed);
+        const fllHtml = getFllStatus(progress.fllResults);
+        const pyTestHtml = getPythonTestHtml(utStatus.details);
+        const otherTestsPassed = utStatus.passed - (utStatus.details['unit-test-python']?.passed ? 1 : 0);
+        const otherTestsTotal = 4;
+        row.innerHTML = `
+          <td><strong>${escapeHtml(progress.name)}</strong></td>
+          <td><code style="background: var(--color-dark-bg); padding: 0.25rem 0.5rem; border-radius: 0.25rem;">${escapeHtml(progress.username)}</code></td>
+          <td>${progress.lessonsCompleted}/${TOTAL_LESSONS}</td>
+          <td>${pyTestHtml}</td>
+          <td style="color:var(--color-text-muted);">${otherTestsPassed}/${otherTestsTotal}</td>
+          <td>${fllHtml}</td>
+          <td>${certHtml}</td>
+          <td>${lastLogin}</td>
+          <td>
+            <button class="btn btn-small btn-danger" onclick="resetProgress('${progress.id}', '${escapeHtml(progress.name)}')">Reset Progress</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // ============================================
+    // ADD STUDENT FUNCTIONS
+    // ============================================
+
+    document.getElementById('addStudentForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const firstName = document.getElementById('newStudentFirstName').value.trim();
+      const lastName = document.getElementById('newStudentLastName').value.trim();
+
+      try {
+        const response = await fetch(`${API_BASE}/admin/students`, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ firstName, lastName })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          showMessage('error', errorData.error || `Server error (${response.status})`);
+          return;
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+          currentCredentials = [result.data];
+          showCredentialsModal('Single Student');
+          document.getElementById('addStudentForm').reset();
+          await loadStudents();
+        } else {
+          showMessage('error', result.error || 'Failed to add student');
+        }
+      } catch (err) {
+        showMessage('error', 'Network error: ' + err.message);
+        console.error('Add student error:', err);
+      }
+    });
+
+    document.getElementById('bulkImportForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const bulkData = document.getElementById('bulkStudentData').value.trim();
+      if (!bulkData) {
+        showMessage('error', 'Please enter student data');
+        return;
+      }
+
+      const students = bulkData.split('\n')
+        .map(line => line.trim())
+        .filter(line => line);
+
+      try {
+        const response = await fetch(`${API_BASE}/admin/students/bulk`, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ students })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          showMessage('error', errorData.error || `Server error (${response.status})`);
+          return;
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+          currentCredentials = result.data.created;
+          showCredentialsModal('Bulk Import');
+          document.getElementById('bulkImportForm').reset();
+          await loadStudents();
+        } else {
+          const errors = (result.data && result.data.errors) || [];
+          const created = (result.data && result.data.created) || [];
+          const errorCount = errors.length;
+          const createdCount = created.length;
+          const errorMsg = errorCount > 0
+            ? `: ${errors.map(e => `Line ${e.index + 1}: ${e.error}`).join(', ')}`
+            : '';
+          showMessage('error', result.error || `Created ${createdCount}, Failed ${errorCount}${errorMsg}`);
+          if (createdCount > 0) {
+            currentCredentials = created;
+            showCredentialsModal('Bulk Import (Partial)');
+          }
+          await loadStudents();
+        }
+      } catch (err) {
+        showMessage('error', 'Network error: ' + err.message);
+        console.error('Bulk import error:', err);
+      }
+    });
+
+    // ============================================
+    // CREDENTIALS MODAL FUNCTIONS
+    // ============================================
+
+    function showCredentialsModal(title) {
+      const contentDiv = document.getElementById('credentialsContent');
+
+      if (currentCredentials.length === 1) {
+        const cred = currentCredentials[0];
+        contentDiv.innerHTML = `
+          <div class="credentials-block">
+            <div class="credential-item">
+              <label>Student Name</label>
+              <div class="value">${escapeHtml(cred.name)}</div>
+            </div>
+            <div class="credential-item">
+              <label>Username</label>
+              <div class="value">${escapeHtml(cred.username)}</div>
+            </div>
+            <div class="credential-item">
+              <label>Password</label>
+              <div class="value">${escapeHtml(cred.password)}</div>
+            </div>
+          </div>
+        `;
+      } else {
+        let tableHtml = '<table class="credentials-table"><thead><tr><th>Name</th><th>Username</th><th>Password</th></tr></thead><tbody>';
+        currentCredentials.forEach(cred => {
+          tableHtml += `<tr><td>${escapeHtml(cred.name)}</td><td>${escapeHtml(cred.username)}</td><td>${escapeHtml(cred.password)}</td></tr>`;
+        });
+        tableHtml += '</tbody></table>';
+        contentDiv.innerHTML = tableHtml;
+      }
+
+      document.getElementById('credentialsModal').classList.remove('hidden');
+    }
+
+    function closeCredentialsModal() {
+      document.getElementById('credentialsModal').classList.add('hidden');
+      currentCredentials = [];
+    }
+
+    function copyCredentials() {
+      let text = '';
+      if (currentCredentials.length === 1) {
+        const cred = currentCredentials[0];
+        text = `Student: ${cred.name}\nUsername: ${cred.username}\nPassword: ${cred.password}`;
+      } else {
+        text = currentCredentials.map(c => `${c.name}\t${c.username}\t${c.password}`).join('\n');
+      }
+
+      navigator.clipboard.writeText(text).then(() => {
+        showMessage('success', 'Credentials copied to clipboard!');
+      }).catch(err => {
+        console.error('Copy failed:', err);
+        showMessage('error', 'Failed to copy credentials');
+      });
+    }
+
+    function printCredentials() {
+      let html = '<html><head><title>Student Credentials</title><style>body{font-family:Arial,sans-serif;margin:20px;} table{border-collapse:collapse;width:100%;} th,td{border:1px solid #ccc;padding:8px;text-align:left;}</style></head><body>';
+
+      if (currentCredentials.length === 1) {
+        const cred = currentCredentials[0];
+        html += `<h2>Student Credentials</h2><p><strong>Name:</strong> ${escapeHtml(cred.name)}</p><p><strong>Username:</strong> ${escapeHtml(cred.username)}</p><p><strong>Password:</strong> ${escapeHtml(cred.password)}</p>`;
+      } else {
+        html += '<h2>Student Credentials</h2><table><tr><th>Name</th><th>Username</th><th>Password</th></tr>';
+        currentCredentials.forEach(cred => {
+          html += `<tr><td>${escapeHtml(cred.name)}</td><td>${escapeHtml(cred.username)}</td><td>${escapeHtml(cred.password)}</td></tr>`;
+        });
+        html += '</table>';
+      }
+
+      html += '</body></html>';
+      const printWindow = window.open('', '', 'height=600,width=800');
+      printWindow.document.write(html);
+      printWindow.document.close();
+      printWindow.print();
+    }
+
+    function exportCSV() {
+      let csv = 'Name,Username,Password\n';
+      currentCredentials.forEach(cred => {
+        csv += `"${cred.name}","${cred.username}","${cred.password}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'student-credentials.csv';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }
+
+    // ============================================
+    // DELETE AND RESET FUNCTIONS
+    // ============================================
+
+    async function deleteStudent(id, name) {
+      if (!confirm(`Are you sure you want to delete ${name}? This cannot be undone.`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/admin/students/${id}`, {
+          method: 'DELETE',
+          credentials: 'same-origin'
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showMessage('success', `Student ${name} deleted successfully!`);
+          await loadStudents();
+        } else {
+          showMessage('error', result.error || 'Failed to delete student');
+        }
+      } catch (err) {
+        showMessage('error', 'Network error');
+        console.error('Delete student error:', err);
+      }
+    }
+
+    function showResetPasswordModal(id, name) {
+      const newPassword = prompt(`Enter new password for ${name}:`);
+      if (newPassword) {
+        resetPassword(id, name, newPassword);
+      }
+    }
+
+    async function resetPassword(id, name, password) {
+      try {
+        const response = await fetch(`${API_BASE}/admin/students/${id}/reset-password`, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showMessage('success', `Password for ${name} reset successfully!`);
+          await loadStudents();
+        } else {
+          showMessage('error', result.error || 'Failed to reset password');
+        }
+      } catch (err) {
+        showMessage('error', 'Network error');
+        console.error('Reset password error:', err);
+      }
+    }
+
+    async function resetProgress(id, name) {
+      if (!confirm(`Reset all progress for ${name}?`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/admin/reset-progress/${id}`, {
+          method: 'POST',
+          credentials: 'same-origin'
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showMessage('success', `Progress for ${name} reset successfully!`);
+          await loadStudents();
+        } else {
+          showMessage('error', result.error || 'Failed to reset progress');
+        }
+      } catch (err) {
+        showMessage('error', 'Network error');
+        console.error('Reset progress error:', err);
+      }
+    }
+
+    // ============================================
+    // STATS FUNCTIONS
+    // ============================================
+
+    function updateStats() {
+      document.getElementById('statTotalStudents').textContent = studentsList.length;
+
+      if (progressData.length === 0) {
+        document.getElementById('statAvgLessons').textContent = '0';
+        document.getElementById('statTotalTime').textContent = '0h';
+      } else {
+        const totalLessons = progressData.reduce((sum, p) => sum + p.lessonsCompleted, 0);
+        const avgLessons = (totalLessons / progressData.length).toFixed(1);
+        document.getElementById('statAvgLessons').textContent = avgLessons;
+
+        const totalTime = progressData.reduce((sum, p) => sum + (p.totalTime || 0), 0);
+        const hours = (totalTime / 60).toFixed(1);
+        document.getElementById('statTotalTime').textContent = `${hours}h`;
+      }
+
+      displayProgress();
+    }
+
+    // ============================================
+    // UTILITY FUNCTIONS
+    // ============================================
+
+    function showMessage(type, message) {
+      const messageEl = document.getElementById('message');
+      messageEl.textContent = message;
+      messageEl.className = `alert alert-${type}`;
+      messageEl.classList.remove('hidden');
+
+      setTimeout(() => {
+        messageEl.classList.add('hidden');
+      }, 5000);
+    }
+
+    function showError(elementId, message) {
+      const el = document.getElementById(elementId);
+      el.textContent = message;
+      el.classList.remove('hidden');
+    }
+
+    function escapeHtml(text) {
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // ============================================
+    // TICKET SYSTEM
+    // ============================================
+
+    async function loadTickets() {
+      const container = document.getElementById('ticketsContainer');
+      if (!container) return;
+
+      try {
+        const response = await fetch(API_BASE + '/admin/tickets', { credentials: 'same-origin' });
+        if (!response.ok) {
+          container.innerHTML = '<p style="color:var(--color-text-muted);">Could not load tickets.</p>';
+          return;
+        }
+        const result = await response.json();
+        const tickets = result.data || [];
+
+        if (tickets.length === 0) {
+          container.innerHTML = '<p style="color:var(--color-text-muted);text-align:center;padding:1rem;">No reports yet. Students can submit issues using the help button.</p>';
+          return;
+        }
+
+        const typeLabels = { bug: 'Bug', answer: 'Answer Issue', confusing: 'Confusing', other: 'Other' };
+        const typeColors = { bug: 'var(--color-error)', answer: 'var(--color-warning)', confusing: 'var(--color-secondary)', other: 'var(--color-text-muted)' };
+
+        let html = '<div style="display:flex;flex-direction:column;gap:0.75rem;">';
+        tickets.forEach(t => {
+          const statusBadge = t.status === 'open'
+            ? '<span style="background:rgba(239,68,68,0.15);color:var(--color-error);padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;font-weight:600;">Open</span>'
+            : t.status === 'resolved'
+            ? '<span style="background:rgba(16,185,129,0.15);color:var(--color-success);padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;font-weight:600;">Resolved</span>'
+            : '<span style="background:rgba(148,163,184,0.15);color:var(--color-text-muted);padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;font-weight:600;">Dismissed</span>';
+
+          const date = new Date(t.created_at);
+          const timeStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+          const isIPad = (t.userAgent || '').includes('iPad') || (t.userAgent || '').includes('iPhone');
+          const deviceBadge = isIPad ? ' (iPad/iPhone)' : '';
+
+          html += '<div style="background:var(--color-dark-bg);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:1rem;">';
+          html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">';
+          html += '<div style="display:flex;align-items:center;gap:0.5rem;">';
+          html += '<span style="color:' + (typeColors[t.type] || 'var(--color-text-muted)') + ';font-weight:600;font-size:0.85rem;">' + escapeHtml(typeLabels[t.type] || t.type) + '</span>';
+          html += statusBadge;
+          html += '</div>';
+          html += '<span style="font-size:0.75rem;color:var(--color-text-muted);">' + timeStr + '</span>';
+          html += '</div>';
+          html += '<p style="margin-bottom:0.5rem;font-size:0.9rem;line-height:1.5;">' + escapeHtml(t.description) + '</p>';
+          html += '<div style="display:flex;justify-content:space-between;align-items:center;font-size:0.8rem;color:var(--color-text-muted);">';
+          html += '<span>' + escapeHtml(t.student || 'anonymous') + deviceBadge + ' &middot; ' + escapeHtml(t.page || '') + '</span>';
+          if (t.status === 'open') {
+            html += '<div style="display:flex;gap:0.5rem;">';
+            html += '<button onclick="updateTicketStatus(\'' + t.id + '\',\'resolved\')" style="background:var(--color-success);color:white;border:none;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.75rem;">Resolve</button>';
+            html += '<button onclick="updateTicketStatus(\'' + t.id + '\',\'dismissed\')" style="background:var(--color-border);color:var(--color-text-primary);border:none;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.75rem;">Dismiss</button>';
+            html += '</div>';
+          }
+          html += '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
+        container.innerHTML = html;
+      } catch (err) {
+        container.innerHTML = '<p style="color:var(--color-text-muted);">Could not load tickets.</p>';
+      }
+    }
+
+    async function updateTicketStatus(ticketId, status) {
+      try {
+        const response = await fetch(API_BASE + '/admin/tickets/' + ticketId + '/status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ status })
+        });
+        if (response.ok) {
+          loadTickets(); // Refresh
+        }
+      } catch (err) {
+        console.error('Failed to update ticket:', err);
+      }
+    }
+
+    // ============================================
+    // ACTIVITY FEED
+    // ============================================
+
+    let lastActivityIds = new Set();
+    let activityInterval = null;
+
+    async function loadActivity() {
+      try {
+        const response = await fetch(`${API_BASE}/admin/activity?limit=50`, { credentials: 'same-origin' });
+        if (!response.ok) return;
+        const result = await response.json();
+        if (!result.success) return;
+        displayActivity(result.data || []);
+      } catch (err) {
+        console.error('Load activity error:', err);
+      }
+    }
+
+    function displayActivity(events) {
+      const container = document.getElementById('activityFeed');
+      if (!container) return;
+
+      if (events.length === 0) {
+        container.innerHTML = '<p style="color: var(--color-text-muted); text-align: center; padding: 2rem;">No activity yet. Events will appear here when students log in or complete lessons.</p>';
+        return;
+      }
+
+      const newIds = new Set(events.map(e => e.id));
+      let html = '';
+
+      events.forEach(event => {
+        const isNew = lastActivityIds.size > 0 && !lastActivityIds.has(event.id);
+        const iconClass = event.type === 'login' ? 'login' : event.type === 'quiz_passed' ? 'quiz' : 'lesson';
+        const icon = event.type === 'login' ? '🔑' : event.type === 'quiz_passed' ? '🏆' : '✅';
+        const timeAgo = getTimeAgo(new Date(event.timestamp));
+
+        let actionText = '';
+        if (event.type === 'login') {
+          actionText = 'logged in';
+        } else if (event.type === 'lesson_complete') {
+          const lessonName = formatLessonId(event.details);
+          actionText = lessonName;
+        } else if (event.type === 'quiz_passed') {
+          const lessonName = formatLessonId(event.details);
+          actionText = lessonName;
+        } else {
+          actionText = event.details || event.type;
+        }
+
+        html += '<div class="activity-item' + (isNew ? ' new-item' : '') + '">';
+        html += '<div class="activity-icon ' + iconClass + '">' + icon + '</div>';
+        html += '<div class="activity-details">';
+        html += '<div class="activity-text"><strong>' + escapeHtml(event.studentName) + '</strong> ' + escapeHtml(actionText) + '</div>';
+        html += '<div class="activity-time">' + timeAgo + '</div>';
+        html += '</div></div>';
+      });
+
+      container.innerHTML = html;
+      lastActivityIds = newIds;
+    }
+
+    function formatLessonId(details) {
+      if (!details) return '';
+      // "Completed py-05" → "completed Lesson 5"
+      // "Passed quiz for py-08" → "passed the quiz for Lesson 8"
+      return details
+        .replace(/Completed (py-(\d+))/, (_, id, num) => 'completed Lesson ' + parseInt(num))
+        .replace(/Passed quiz for (py-(\d+))/, (_, id, num) => 'passed the quiz for Lesson ' + parseInt(num));
+    }
+
+    function getTimeAgo(date) {
+      const now = new Date();
+      const diffMs = now - date;
+      const diffSec = Math.floor(diffMs / 1000);
+      const diffMin = Math.floor(diffSec / 60);
+      const diffHr = Math.floor(diffMin / 60);
+      const diffDay = Math.floor(diffHr / 24);
+
+      if (diffSec < 30) return 'Just now';
+      if (diffSec < 60) return diffSec + 's ago';
+      if (diffMin < 60) return diffMin + 'm ago';
+      if (diffHr < 24) return diffHr + 'h ago';
+      if (diffDay === 1) return 'Yesterday';
+      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function startActivityPolling() {
+      if (activityInterval) clearInterval(activityInterval);
+      loadActivity();
+      // Auto-refresh every 15 seconds
+      activityInterval = setInterval(loadActivity, 15000);
+    }
+
+    function stopActivityPolling() {
+      if (activityInterval) {
+        clearInterval(activityInterval);
+        activityInterval = null;
+      }
+    }
+
+    // Initialize on page load
+    init();
+
+    // Also load tickets and start activity feed when admin dashboard loads
+    setTimeout(() => {
+      if (currentUser) {
+        loadTickets();
+        startActivityPolling();
+      }
+    }, 1500);
+  </script>
+</html>

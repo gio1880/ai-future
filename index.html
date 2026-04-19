@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Future — Building Future Innovators · Robotics, Code Lab & STEM</title>
+  <meta name="description" content="AI Future empowers students with robotics, coding, and STEM education. Explore Robotics Lab, Code Lab, and Summer Camp programs." />
+  <link rel="icon" href="../ai future logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/design-system.css" />
+  <style>
+    /* ── Hero ──────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #FAFAF6 0%, #EEF4FF 50%, #F5EDC4 100%);
+      padding: 5rem 0 4rem;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -80px; right: -80px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(37,99,255,.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      max-width: var(--max-w);
+      margin-inline: auto;
+      padding-inline: var(--sp-xl);
+    }
+    .hero__eyebrow {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(254,206,0,.15); color: #8B6800;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      padding: 0.35rem 1rem; border-radius: 9999px;
+      margin-bottom: 1.25rem;
+    }
+    .hero__title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--af-deep-navy);
+      margin-bottom: 1.25rem;
+    }
+    .hero__title span { color: var(--af-blue); }
+    .hero__sub {
+      font-size: 1.1rem; color: var(--af-muted);
+      max-width: 520px; line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+    .hero__trust {
+      display: flex; align-items: center; gap: 1.25rem;
+      margin-top: 1.5rem; flex-wrap: wrap;
+    }
+    .hero__trust-item {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.85rem; color: var(--af-slate); font-weight: 500;
+    }
+    .hero__trust-item i { color: var(--af-yellow); }
+    .hero__trust-divider { width: 1px; height: 20px; background: var(--af-border); }
+
+    .hero__visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero__video-wrap {
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow-xl);
+      background: var(--af-deep-navy);
+      width: 100%;
+      max-width: 460px;
+      aspect-ratio: 4/3;
+      position: relative;
+    }
+    .hero__video-wrap video {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .hero__video-fallback {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      padding: 2rem;
+    }
+    .hero__float-card {
+      position: absolute;
+      background: #fff;
+      border-radius: 14px;
+      padding: 0.75rem 1rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 0.8rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .hero__float-card--tl { top: -16px; left: -24px; color: var(--af-navy); font-weight: 600; }
+    .hero__float-card--br { bottom: -16px; right: -24px; color: var(--af-purple); font-weight: 600; }
+    .hero__float-card i { font-size: 1rem; }
+
+    /* ── Two Pathways ──────────────────────────────────────── */
+    .pathways-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-xl);
+    }
+    .pathway-big-card {
+      border-radius: var(--r-2xl);
+      padding: 2.5rem;
+      display: flex; flex-direction: column; gap: 1.25rem;
+      position: relative; overflow: hidden;
+      transition: transform var(--t-normal), box-shadow var(--t-normal);
+    }
+    .pathway-big-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-xl); }
+    .pathway-big-card--robotics {
+      background: linear-gradient(135deg, var(--af-navy) 0%, #0a4e96 100%);
+      color: #fff;
+    }
+    .pathway-big-card--code {
+      background: linear-gradient(135deg, #1e0a4e 0%, var(--af-purple) 100%);
+      color: #fff;
+    }
+    .pathway-big-card__tag {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: rgba(255,255,255,.55); margin-bottom: -0.5rem;
+    }
+    .pathway-big-card__title { font-size: 1.5rem; font-weight: 800; line-height: 1.2; }
+    .pathway-big-card__desc { font-size: 0.95rem; color: rgba(255,255,255,.75); line-height: 1.65; }
+    .pathway-big-card__bg {
+      position: absolute; right: -20px; bottom: -20px;
+      font-size: 8rem; opacity: .06; pointer-events: none;
+    }
+    .checklist--card li::before { color: var(--af-yellow); }
+    .checklist--card li { color: rgba(255,255,255,.85); }
+
+    /* ── Summer Camp ───────────────────────────────────────── */
+    .summer-section { background: #FFF8E1; }
+    .summer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+    .summer-camps { display: grid; grid-template-columns: 1fr; gap: var(--sp-md); }
+    .camp-card {
+      background: #fff;
+      border-radius: var(--r-lg);
+      padding: 1.25rem;
+      display: flex; align-items: flex-start; gap: 1rem;
+      border: 1px solid rgba(254,206,0,.3);
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--t-normal), transform var(--t-normal);
+    }
+    .camp-card:hover { box-shadow: var(--shadow-md); transform: translateX(4px); }
+    .camp-icon {
+      width: 44px; height: 44px; border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+    .camp-icon--robot { background: rgba(7,62,119,.1); color: var(--af-navy); }
+    .camp-icon--code { background: rgba(109,74,255,.1); color: var(--af-purple); }
+    .camp-icon--stem { background: rgba(34,197,94,.1); color: #16a34a; }
+    .camp-age {
+      display: inline-block; margin-top: 0.25rem;
+      font-size: 0.7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+      background: rgba(254,206,0,.2); color: #8B6800;
+      padding: 0.15rem 0.6rem; border-radius: 9999px;
+    }
+    .summer-image {
+      border-radius: var(--r-2xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-xl);
+      aspect-ratio: 4/5;
+    }
+    .summer-image img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ── Why Section ───────────────────────────────────────── */
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--sp-lg);
+    }
+    .why-card {
+      text-align: center; padding: 1.75rem 1rem;
+      border-radius: var(--r-xl);
+      background: #fff;
+      border: 1px solid var(--af-border);
+      transition: transform var(--t-normal), box-shadow var(--t-normal);
+    }
+    .why-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .why-icon {
+      width: 56px; height: 56px; border-radius: var(--r-full);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin: 0 auto var(--sp-md);
+    }
+
+    /* ── Testimonials ──────────────────────────────────────── */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-xl);
+    }
+
+    /* ── Final CTA ─────────────────────────────────────────── */
+    .final-cta {
+      background: var(--af-deep-navy);
+      padding: 5rem 0;
+      position: relative; overflow: hidden;
+    }
+    .final-cta::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 70% at 20% 50%, rgba(37,99,255,.12) 0%, transparent 70%);
+    }
+    .final-cta__inner {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1fr auto;
+      align-items: center; gap: 3rem;
+      max-width: var(--max-w); margin-inline: auto; padding-inline: var(--sp-xl);
+    }
+
+    @media (max-width: 1023px) {
+      .why-grid { grid-template-columns: repeat(3, 1fr); }
+      .testimonials-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 767px) {
+      .hero__inner { grid-template-columns: 1fr; }
+      .pathways-grid { grid-template-columns: 1fr; }
+      .summer-grid { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: repeat(2, 1fr); }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .final-cta__inner { grid-template-columns: 1fr; text-align: center; }
+      .final-cta__inner .btn-group { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Announcement Bar -->
+<div class="announce-bar" role="banner" aria-label="Summer Camp announcement">
+  <span>☀ Summer Camp 2025 enrollment is open! Robotics, Coding, and STEM camps for ages 6–14.</span>
+  <a href="#summer-camp">View Summer Camp →</a>
+  <button class="announce-bar__dismiss" aria-label="Dismiss announcement">✕</button>
+</div>
+
+<!-- Navigation -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="navbar__inner">
+    <a href="index.html" class="navbar__logo">
+      <img src="../ai future logo.png" alt="AI Future Logo" />
+      <div>
+        <div class="navbar__logo-text">AI FUTURE</div>
+        <div class="navbar__logo-sub">Building Future Innovators</div>
+      </div>
+    </a>
+    <ul class="navbar__links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="robotics lab/robotics-lab.html">Robotics Lab</a></li>
+      <li><a href="code-lab/code-lab.html">Code Lab</a></li>
+      <li><a href="robotics lab/robotics-lab.html#programs">Programs</a></li>
+      <li><a href="#summer-camp" style="color:var(--af-navy)">Summer Camp ☀</a></li>
+      <li><a href="robotics lab/robotics-lab.html#competitions">Competitions</a></li>
+      <li><a href="#contact">About</a></li>
+    </ul>
+    <a href="#contact" class="btn btn--primary navbar__cta desktop-only">Book a Free Trial</a>
+    <button class="navbar__hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="nav-overlay"></div>
+<nav class="nav-mobile" aria-label="Mobile navigation">
+  <button class="nav-mobile__close" aria-label="Close menu">✕</button>
+  <a href="index.html" class="active">Home</a>
+  <a href="robotics lab/robotics-lab.html">Robotics Lab</a>
+  <a href="code-lab/code-lab.html">Code Lab</a>
+  <a href="robotics lab/robotics-lab.html#programs">Programs</a>
+  <a href="#summer-camp">Summer Camp ☀</a>
+  <a href="robotics lab/robotics-lab.html#competitions">Competitions</a>
+  <a href="#contact">About</a>
+  <a href="#contact" class="btn btn--primary" style="margin-top:1rem; text-align:center;">Book a Free Trial</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero__inner">
+    <div class="hero__content">
+      <div class="hero__eyebrow"><i class="fa-solid fa-star"></i> Trusted by 500+ Families</div>
+      <h1 class="hero__title">Building Future<br><span>Innovators</span></h1>
+      <p class="hero__sub">AI Future empowers students with robotics, coding, and STEM education that builds skills, confidence, and a mindset for the future.</p>
+      <div class="btn-group">
+        <a href="robotics lab/robotics-lab.html" class="btn btn--navy btn--lg"><i class="fa-solid fa-robot"></i> Explore Robotics Lab</a>
+        <a href="code-lab/code-lab.html" class="btn btn--primary btn--lg"><i class="fa-solid fa-code"></i> Explore Code Lab</a>
+      </div>
+      <div class="btn-group" style="margin-top:0.75rem;">
+        <a href="#summer-camp" class="btn btn--outline btn--sm" style="border-color:var(--af-yellow); color:#8B6800; background:rgba(254,206,0,.1);">☀ View Summer Camp 2025</a>
+        <a href="#contact" class="btn btn--ghost btn--sm"><i class="fa-solid fa-play" style="font-size:.75rem"></i> Watch Our Story</a>
+      </div>
+      <div class="hero__trust">
+        <div class="hero__trust-item"><i class="fa-solid fa-users"></i> 500+ Students</div>
+        <div class="hero__trust-divider"></div>
+        <div class="hero__trust-item"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> 4.9/5</div>
+        <div class="hero__trust-divider"></div>
+        <div class="hero__trust-item"><i class="fa-solid fa-trophy"></i> 25+ Competitions</div>
+      </div>
+    </div>
+    <div class="hero__visual">
+      <div class="hero__video-wrap">
+        <video autoplay muted loop playsinline poster="../ai future logo.png">
+          <source src="assets/video/grit-animation.mp4" type="video/mp4" />
+          <div class="hero__video-fallback">
+            <img src="../ai future logo.png" alt="AI Future" style="max-width:200px; opacity:.8;" />
+          </div>
+        </video>
+      </div>
+      <div class="hero__float-card hero__float-card--tl">
+        <i class="fa-solid fa-robot" style="color:var(--af-navy)"></i>
+        <span>Robotics Lab</span>
+      </div>
+      <div class="hero__float-card hero__float-card--br">
+        <i class="fa-solid fa-code" style="color:var(--af-purple)"></i>
+        <span>Code Lab</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Two Pathways -->
+<section class="section" style="background:var(--af-white)">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">Our Programs</p>
+      <h2 class="section-heading">Our Two Powerful Pathways</h2>
+      <p class="section-sub section-sub--center">Different paths. One mission: prepare students for the future.</p>
+    </div>
+    <div class="pathways-grid">
+      <a href="robotics lab/robotics-lab.html" class="pathway-big-card pathway-big-card--robotics reveal">
+        <div class="pathway-big-card__tag">Sub-brand</div>
+        <h3 class="pathway-big-card__title">AI Future Robotics Lab</h3>
+        <p class="pathway-big-card__desc">Hands-on robotics programs that teach students to design, build, code, and compete in real-world robotics challenges.</p>
+        <ul class="checklist checklist--card">
+          <li>Hands-on Learning</li>
+          <li>Competition Preparation</li>
+          <li>Engineering &amp; Design</li>
+          <li>Teamwork &amp; Leadership</li>
+        </ul>
+        <div style="margin-top:auto;">
+          <span class="btn btn--outline-white btn--sm">Learn More <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+        <div class="pathway-big-card__bg"><i class="fa-solid fa-robot"></i></div>
+      </a>
+      <a href="code-lab/code-lab.html" class="pathway-big-card pathway-big-card--code reveal reveal--delay-2">
+        <div class="pathway-big-card__tag">Sub-brand</div>
+        <h3 class="pathway-big-card__title">AI Future Code Lab</h3>
+        <p class="pathway-big-card__desc">An interactive online coding platform where students learn, practice, and build real projects through engaging lessons.</p>
+        <ul class="checklist checklist--card">
+          <li>Interactive Lessons</li>
+          <li>Code Challenges</li>
+          <li>Real Projects</li>
+          <li>Certificates &amp; Badges</li>
+        </ul>
+        <div style="margin-top:auto;">
+          <span class="btn btn--outline-white btn--sm">Explore Code Lab <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+        <div class="pathway-big-card__bg"><i class="fa-solid fa-laptop-code"></i></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Summer Camp -->
+<section class="section summer-section" id="summer-camp">
+  <div class="container">
+    <div class="summer-grid">
+      <div>
+        <p class="section-label">Seasonal</p>
+        <h2 class="section-heading">Summer Camp at AI Future ☀</h2>
+        <p class="section-sub">A hands-on summer experience where students build robots, learn coding, create projects, and grow confidence through fun STEM challenges.</p>
+        <div class="btn-group" style="margin-bottom:2rem;">
+          <a href="#contact" class="btn btn--primary">Explore All Summer Camps</a>
+          <a href="#contact" class="btn btn--outline">Download Brochure</a>
+        </div>
+        <div class="summer-camps">
+          <div class="camp-card reveal">
+            <div class="camp-icon camp-icon--robot"><i class="fa-solid fa-robot"></i></div>
+            <div>
+              <strong style="font-size:.95rem; color:var(--af-deep-navy)">Robotics Camp</strong>
+              <p style="font-size:.85rem; color:var(--af-muted); margin:.2rem 0 .4rem">Build, code, and test robots through hands-on engineering challenges.</p>
+              <span class="camp-age">Ages 8–14</span>
+            </div>
+          </div>
+          <div class="camp-card reveal reveal--delay-1">
+            <div class="camp-icon camp-icon--code"><i class="fa-solid fa-code"></i></div>
+            <div>
+              <strong style="font-size:.95rem; color:var(--af-deep-navy)">Coding Camp</strong>
+              <p style="font-size:.85rem; color:var(--af-muted); margin:.2rem 0 .4rem">Create games, animations, and Python projects in AI Future Code Lab.</p>
+              <span class="camp-age">Ages 8–14</span>
+            </div>
+          </div>
+          <div class="camp-card reveal reveal--delay-2">
+            <div class="camp-icon camp-icon--stem"><i class="fa-solid fa-flask"></i></div>
+            <div>
+              <strong style="font-size:.95rem; color:var(--af-deep-navy)">STEM Maker Camp</strong>
+              <p style="font-size:.85rem; color:var(--af-muted); margin:.2rem 0 .4rem">Explore circuits, 3D design, engineering, and creative technology.</p>
+              <span class="camp-age">Ages 6–14</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="summer-image reveal">
+        <img src="../25_summer_pictures/IMG_0521.jpg" alt="Students at summer STEM camp" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why AI Future -->
+<section class="section" style="background:#fff">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">Why Choose Us</p>
+      <h2 class="section-heading">Why Families Choose AI Future</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <div class="why-icon" style="background:rgba(37,99,255,.1)"><i class="fa-solid fa-chalkboard-user" style="color:var(--af-blue)"></i></div>
+        <h3 style="font-size:1rem; font-weight:700; color:var(--af-deep-navy); margin-bottom:.4rem">Expert Instructors</h3>
+        <p style="font-size:.85rem; color:var(--af-muted)">Passionate mentors who inspire students to achieve more.</p>
+      </div>
+      <div class="why-card reveal reveal--delay-1">
+        <div class="why-icon" style="background:rgba(34,197,94,.1)"><i class="fa-solid fa-shield-heart" style="color:#16a34a"></i></div>
+        <h3 style="font-size:1rem; font-weight:700; color:var(--af-deep-navy); margin-bottom:.4rem">Safe &amp; Supportive</h3>
+        <p style="font-size:.85rem; color:var(--af-muted)">A positive environment where students learn, grow, and belong.</p>
+      </div>
+      <div class="why-card reveal reveal--delay-2">
+        <div class="why-icon" style="background:rgba(254,206,0,.15)"><i class="fa-solid fa-chart-line" style="color:#8B6800"></i></div>
+        <h3 style="font-size:1rem; font-weight:700; color:var(--af-deep-navy); margin-bottom:.4rem">Proven Results</h3>
+        <p style="font-size:.85rem; color:var(--af-muted)">Building confidence, leadership, and real-world success.</p>
+      </div>
+      <div class="why-card reveal reveal--delay-3">
+        <div class="why-icon" style="background:rgba(109,74,255,.1)"><i class="fa-solid fa-microchip" style="color:var(--af-purple)"></i></div>
+        <h3 style="font-size:1rem; font-weight:700; color:var(--af-deep-navy); margin-bottom:.4rem">Future-Ready Skills</h3>
+        <p style="font-size:.85rem; color:var(--af-muted)">Coding, robotics, critical thinking, creativity, and problem solving.</p>
+      </div>
+      <div class="why-card reveal reveal--delay-4">
+        <div class="why-icon" style="background:rgba(239,68,68,.1)"><i class="fa-solid fa-trophy" style="color:#dc2626"></i></div>
+        <h3 style="font-size:1rem; font-weight:700; color:var(--af-deep-navy); margin-bottom:.4rem">Competition Focused</h3>
+        <p style="font-size:.85rem; color:var(--af-muted)">Students prepared for local, state, and national competitions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Band -->
+<section class="stats-band" data-count="true">
+  <div class="container">
+    <div class="stats-band__grid">
+      <div class="stat-item">
+        <div class="stat-item__icon">🎓</div>
+        <div class="stat-item__number" data-count="500" data-suffix="+">500+</div>
+        <div class="stat-item__label">Students Empowered</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-item__icon">🏆</div>
+        <div class="stat-item__number" data-count="25" data-suffix="+">25+</div>
+        <div class="stat-item__label">Competitions Participated</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-item__icon">🤖</div>
+        <div class="stat-item__number" data-count="1000" data-suffix="+">1,000+</div>
+        <div class="stat-item__label">Robots Built</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-item__icon">💻</div>
+        <div class="stat-item__number" data-count="240" data-suffix="+">240+</div>
+        <div class="stat-item__label">Coding Projects Created</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-item__icon">📈</div>
+        <div class="stat-item__number" data-count="100" data-suffix="%">100%</div>
+        <div class="stat-item__label">Growth in Confidence</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section" style="background:var(--af-white)">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">Stories</p>
+      <h2 class="section-heading">Student Success Stories</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-card__stars">★★★★★</div>
+        <p class="testimonial-card__text">"AI Future helped me learn real skills and build my first robot! I can't wait to compete this season."</p>
+        <div class="testimonial-card__author">
+          <div class="testimonial-card__avatar">E</div>
+          <div>
+            <div class="testimonial-card__name">Ethan, Age 12</div>
+            <div class="testimonial-card__role">Robotics Lab Student</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal reveal--delay-1">
+        <div class="testimonial-card__stars">★★★★★</div>
+        <p class="testimonial-card__text">"I love coding games and seeing my ideas come to life in Code Lab. The lessons are so fun and the instructor always helps!"</p>
+        <div class="testimonial-card__author">
+          <div class="testimonial-card__avatar" style="background:var(--af-purple)">M</div>
+          <div>
+            <div class="testimonial-card__name">Maya, Age 11</div>
+            <div class="testimonial-card__role">Code Lab Student</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal reveal--delay-2">
+        <div class="testimonial-card__stars">★★★★★</div>
+        <p class="testimonial-card__text">"Our teamwork and hard work paid off at the FLL competition. We brought home 1st place in Robot Design!"</p>
+        <div class="testimonial-card__author">
+          <div class="testimonial-card__avatar" style="background:var(--af-success)">🏆</div>
+          <div>
+            <div class="testimonial-card__name">AI Future FLL Team</div>
+            <div class="testimonial-card__role">NYC Championship Winners</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:2rem;">
+      <a href="robotics lab/robotics-lab.html#outcomes" class="btn btn--outline">See More Stories</a>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="final-cta" id="contact">
+  <div class="final-cta__inner">
+    <div>
+      <p style="font-size:.8rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--af-yellow); margin-bottom:.5rem">☀ Limited Spots Available</p>
+      <h2 style="font-size:clamp(1.75rem,3vw,2.5rem); font-weight:800; color:#fff; margin-bottom:.75rem">Summer spots are filling fast!</h2>
+      <p style="color:rgba(255,255,255,.7); max-width:540px; margin-bottom:1.5rem">Give your child a summer of robotics, coding, creativity, and confidence. Join hundreds of families who trust AI Future.</p>
+      <div class="btn-group">
+        <a href="#contact" class="btn btn--primary btn--lg">Book Summer Camp</a>
+        <a href="mailto:info@aifuture.com" class="btn btn--outline-white btn--lg">Contact Us</a>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:center; gap:1rem; flex-shrink:0;">
+      <svg class="grit-mascot grit-float" viewBox="0 0 120 145" width="160" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="60,6 18,20 60,34 102,20" fill="#FECE00"/>
+        <rect x="35" y="20" width="50" height="9" rx="3" fill="#FECE00"/>
+        <line x1="102" y1="20" x2="102" y2="36" stroke="#FECE00" stroke-width="2.5"/>
+        <circle cx="102" cy="40" r="5" fill="#FECE00"/>
+        <rect x="22" y="40" width="76" height="74" rx="22" fill="#D9DA26"/>
+        <circle cx="60" cy="70" r="18" fill="white"/>
+        <circle cx="60" cy="70" r="11" fill="#073E77"/>
+        <circle cx="65" cy="65" r="4" fill="white"/>
+        <path d="M 44 93 Q 60 105 76 93" stroke="#073E77" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <circle cx="35" cy="81" r="6" fill="#C4C51A" opacity="0.6"/>
+        <circle cx="85" cy="81" r="6" fill="#C4C51A" opacity="0.6"/>
+        <rect x="0" y="60" width="20" height="14" rx="7" fill="#D9DA26"/>
+        <rect x="100" y="60" width="20" height="14" rx="7" fill="#D9DA26"/>
+        <rect x="38" y="110" width="16" height="22" rx="8" fill="#D9DA26"/>
+        <rect x="66" y="110" width="16" height="22" rx="8" fill="#D9DA26"/>
+        <line x1="60" y1="40" x2="60" y2="26" stroke="#073E77" stroke-width="3"/>
+        <circle cx="60" cy="23" r="5" fill="#fff" opacity=".6"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <img src="../ai future logo.png" alt="AI Future Logo" />
+        <div class="footer__brand-name">AI Future</div>
+        <div class="footer__tagline">Building Future Innovators</div>
+        <div class="footer__social">
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Explore</div>
+        <a href="robotics lab/robotics-lab.html">Robotics Lab</a>
+        <a href="code-lab/code-lab.html">Code Lab</a>
+        <a href="#summer-camp">Summer Camp</a>
+        <a href="robotics lab/robotics-lab.html#programs">Programs</a>
+        <a href="robotics lab/robotics-lab.html#competitions">Competitions</a>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">About Us</div>
+        <a href="#contact">Our Story</a>
+        <a href="#contact">Our Team</a>
+        <a href="#contact">Careers</a>
+        <a href="#contact">News</a>
+        <a href="mailto:info@aifuture.com">Contact Us</a>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Stay Connected</div>
+        <p style="font-size:.85rem; margin-bottom:.75rem; color:rgba(255,255,255,.5)">Get updates on programs, competitions, and events.</p>
+        <div class="footer__subscribe">
+          <input type="email" placeholder="Your email address" aria-label="Email address" />
+          <button type="button">Subscribe</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2025 AI Future. All rights reserved.</span>
+      <span>Flushing, Queens, NY · <a href="mailto:info@aifuture.com" style="color:rgba(255,255,255,.4)">info@aifuture.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="lightbulbGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EC4899;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#7C3AED;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#A78BFA;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#EC4899;stop-opacity:0.6" />
+    </linearGradient>
+    <filter id="bulbGlow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Outer circle -->
+  <circle cx="32" cy="32" r="30" fill="none" stroke="#A78BFA" stroke-width="1" opacity="0.3"/>
+
+  <!-- Glow aura around bulb -->
+  <circle cx="32" cy="26" r="14" fill="url(#glowGradient)" opacity="0.3" filter="url(#bulbGlow)"/>
+
+  <!-- Lightbulb glass (round top) -->
+  <ellipse cx="32" cy="22" rx="10" ry="12" fill="url(#lightbulbGradient)" filter="url(#bulbGlow)"/>
+
+  <!-- Highlight on bulb -->
+  <ellipse cx="28" cy="16" rx="4" ry="6" fill="#F8D7F0" opacity="0.4"/>
+
+  <!-- Bulb base (threading) -->
+  <rect x="28" y="33" width="8" height="4" rx="1" fill="#7C3AED"/>
+  <rect x="27" y="37" width="10" height="2" fill="#EC4899"/>
+  <rect x="26" y="39" width="12" height="2" fill="#7C3AED"/>
+
+  <!-- Socket -->
+  <rect x="28" y="41" width="8" height="3" rx="1.5" fill="#A78BFA"/>
+
+  <!-- Wire down -->
+  <line x1="32" y1="44" x2="32" y2="52" stroke="#6366F1" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Contact points on wire -->
+  <circle cx="32" cy="48" r="1.5" fill="#EC4899"/>
+
+  <!-- Light rays emanating from bulb (geometric style) -->
+  <g stroke="#EC4899" stroke-width="1.5" opacity="0.6" stroke-linecap="round">
+    <!-- Top rays -->
+    <line x1="32" y1="8" x2="32" y2="2"/>
+    <!-- Top-left ray -->
+    <line x1="22" y1="12" x2="16" y2="6"/>
+    <!-- Top-right ray -->
+    <line x1="42" y1="12" x2="48" y2="6"/>
+  </g>
+
+  <!-- Side accent beams (thinner) -->
+  <g stroke="#A78BFA" stroke-width="1" opacity="0.4" stroke-linecap="round">
+    <line x1="18" y1="24" x2="10" y2="24"/>
+    <line x1="46" y1="24" x2="54" y2="24"/>
+    <!-- Bottom side rays -->
+    <line x1="20" y1="36" x2="14" y2="42"/>
+    <line x1="44" y1="36" x2="50" y2="42"/>
+  </g>
+
+  <!-- Inner glow circles around bulb -->
+  <circle cx="32" cy="22" r="11.5" fill="none" stroke="#EC4899" stroke-width="0.5" opacity="0.4"/>
+  <circle cx="32" cy="22" r="9" fill="none" stroke="#A78BFA" stroke-width="0.5" opacity="0.3"/>
+
+  <!-- Small geometric accents -->
+  <polygon points="32,10 34,14 30,14" fill="#EC4899" opacity="0.5"/>
+</svg>

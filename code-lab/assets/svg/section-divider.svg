@@ -1,0 +1,121 @@
+<svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="dividerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366F1;stop-opacity:0.8" />
+      <stop offset="25%" style="stop-color:#22D3EE;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#6366F1;stop-opacity:0.8" />
+      <stop offset="75%" style="stop-color:#22D3EE;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:0.8" />
+    </linearGradient>
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#22D3EE;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:0.6" />
+    </linearGradient>
+    <filter id="dividerGlow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="softDividerGlow">
+      <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Main wave curve - primary -->
+  <path d="M 0,50 Q 120,20 240,50 T 480,50 T 720,50 T 960,50 T 1200,50 T 1440,50"
+        stroke="url(#dividerGradient)" stroke-width="3" fill="none" stroke-linecap="round" filter="url(#dividerGlow)"/>
+
+  <!-- Secondary wave - offset, creates depth -->
+  <path d="M 0,55 Q 120,35 240,55 T 480,55 T 720,55 T 960,55 T 1200,55 T 1440,55"
+        stroke="url(#accentGradient)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6" filter="url(#softDividerGlow)"/>
+
+  <!-- Tertiary subtle wave -->
+  <path d="M 0,60 Q 120,45 240,60 T 480,60 T 720,60 T 960,60 T 1200,60 T 1440,60"
+        stroke="#22D3EE" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.4"/>
+
+  <!-- Geometric accent points along main wave -->
+  <g fill="#6366F1" opacity="0.6" filter="url(#softDividerGlow)">
+    <circle cx="120" cy="20" r="2.5"/>
+    <circle cx="360" cy="20" r="2.5"/>
+    <circle cx="600" cy="20" r="2.5"/>
+    <circle cx="840" cy="20" r="2.5"/>
+    <circle cx="1080" cy="20" r="2.5"/>
+    <circle cx="1320" cy="20" r="2.5"/>
+  </g>
+
+  <!-- Bottom accent points (inverted) -->
+  <g fill="#22D3EE" opacity="0.5">
+    <circle cx="240" cy="65" r="2"/>
+    <circle cx="480" cy="65" r="2"/>
+    <circle cx="720" cy="65" r="2"/>
+    <circle cx="960" cy="65" r="2"/>
+    <circle cx="1200" cy="65" r="2"/>
+  </g>
+
+  <!-- Connecting circuit lines below main wave -->
+  <g stroke="#6366F1" stroke-width="1" fill="none" opacity="0.3">
+    <line x1="120" y1="20" x2="120" y2="40"/>
+    <line x1="360" y1="20" x2="360" y2="40"/>
+    <line x1="600" y1="20" x2="600" y2="40"/>
+    <line x1="840" y1="20" x2="840" y2="40"/>
+    <line x1="1080" y1="20" x2="1080" y2="40"/>
+    <line x1="1320" y1="20" x2="1320" y2="40"/>
+  </g>
+
+  <!-- Connecting circuit lines for bottom points -->
+  <g stroke="#22D3EE" stroke-width="1" fill="none" opacity="0.3">
+    <line x1="240" y1="65" x2="240" y2="75"/>
+    <line x1="480" y1="65" x2="480" y2="75"/>
+    <line x1="720" y1="65" x2="720" y2="75"/>
+    <line x1="960" y1="65" x2="960" y2="75"/>
+    <line x1="1200" y1="65" x2="1200" y2="75"/>
+  </g>
+
+  <!-- Horizontal connecting lines for circuit pattern -->
+  <g stroke="#6366F1" stroke-width="0.5" fill="none" opacity="0.25">
+    <line x1="120" y1="40" x2="240" y2="40"/>
+    <line x1="360" y1="40" x2="480" y2="40"/>
+    <line x1="600" y1="40" x2="720" y2="40"/>
+    <line x1="840" y1="40" x2="960" y2="40"/>
+    <line x1="1080" y1="40" x2="1200" y2="40"/>
+  </g>
+
+  <!-- Gradient fill area under curves for visual interest -->
+  <defs>
+    <linearGradient id="fillGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366F1;stop-opacity:0.15" />
+      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:0" />
+    </linearGradient>
+  </defs>
+
+  <path d="M 0,50 Q 120,20 240,50 T 480,50 T 720,50 T 960,50 T 1200,50 T 1440,50 L 1440,80 L 0,80 Z"
+        fill="url(#fillGradient)"/>
+
+  <!-- Floating particles for movement suggestion -->
+  <g opacity="0.4" filter="url(#softDividerGlow)">
+    <circle cx="80" cy="35" r="1" fill="#22D3EE">
+      <animate attributeName="cy" values="35;45;35" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="300" cy="45" r="1" fill="#6366F1">
+      <animate attributeName="cy" values="45;55;45" dur="4.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="540" cy="40" r="1" fill="#22D3EE">
+      <animate attributeName="cy" values="40;50;40" dur="4.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="780" cy="48" r="1" fill="#6366F1">
+      <animate attributeName="cy" values="48;58;48" dur="4.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1020" cy="42" r="1" fill="#22D3EE">
+      <animate attributeName="cy" values="42;52;42" dur="4.3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1260" cy="46" r="1" fill="#6366F1">
+      <animate attributeName="cy" values="46;56;46" dur="4.6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>

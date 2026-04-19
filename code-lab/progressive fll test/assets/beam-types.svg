@@ -1,0 +1,88 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="white"/>
+
+  <!-- Title -->
+  <text x="200" y="30" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">LEGO Technic Beam Sizes</text>
+
+  <!-- 3-hole beam -->
+  <g>
+    <rect x="15" y="70" width="50" height="25" fill="#2196F3" stroke="#333" stroke-width="2" rx="3"/>
+    <!-- Holes -->
+    <circle cx="25" cy="82" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="40" cy="82" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="55" cy="82" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <text x="40" y="125" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">3-hole</text>
+  </g>
+
+  <!-- 5-hole beam -->
+  <g>
+    <rect x="90" y="70" width="80" height="25" fill="#2196F3" stroke="#333" stroke-width="2" rx="3"/>
+    <!-- Holes -->
+    <circle cx="100" cy="82" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="120" cy="82" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="140" cy="82" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="160" cy="82" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="180" cy="82" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <text x="140" y="125" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">5-hole</text>
+  </g>
+
+  <!-- 7-hole beam -->
+  <g>
+    <rect x="195" y="70" width="110" height="25" fill="#FF9800" stroke="#333" stroke-width="2" rx="3"/>
+    <!-- Holes -->
+    <circle cx="205" cy="82" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="225" cy="82" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="245" cy="82" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="265" cy="82" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="285" cy="82" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="305" cy="82" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="325" cy="82" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <text x="265" y="125" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">7-hole</text>
+  </g>
+
+  <!-- 11-hole beam -->
+  <g>
+    <rect x="15" y="170" width="170" height="25" fill="#4CAF50" stroke="#333" stroke-width="2" rx="3"/>
+    <!-- Holes -->
+    <circle cx="25" cy="182" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="45" cy="182" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="65" cy="182" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="85" cy="182" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="105" cy="182" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="125" cy="182" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="145" cy="182" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="165" cy="182" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="185" cy="182" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="205" cy="182" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="225" cy="182" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <text x="120" y="225" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">11-hole</text>
+  </g>
+
+  <!-- 15-hole beam -->
+  <g>
+    <rect x="15" y="250" width="230" height="25" fill="#2196F3" stroke="#333" stroke-width="2" rx="3"/>
+    <!-- Holes -->
+    <circle cx="25" cy="262" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="45" cy="262" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="65" cy="262" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="85" cy="262" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="105" cy="262" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="125" cy="262" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="145" cy="262" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="165" cy="262" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="185" cy="262" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="205" cy="262" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="225" cy="262" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="245" cy="262" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="265" cy="262" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="285" cy="262" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <circle cx="305" cy="262" r="4" fill="white" stroke="#333" stroke-width="1"/>
+    <text x="160" y="290" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">15-hole</text>
+  </g>
+
+  <!-- Note -->
+  <text x="350" y="180" font-family="Arial, sans-serif" font-size="10" font-weight="bold" text-anchor="start" fill="#666">Each hole</text>
+  <text x="350" y="195" font-family="Arial, sans-serif" font-size="10" font-weight="bold" text-anchor="start" fill="#666">is 8mm</text>
+  <text x="350" y="210" font-family="Arial, sans-serif" font-size="10" font-weight="bold" text-anchor="start" fill="#666">apart</text>
+</svg>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Future Robotics Lab — Build Like an Engineer. Compete Like a Champion.</title>
+  <meta name="description" content="Hands-on robotics programs for students. FLL, FTC, VEX IQ, VEX V5 and more. Design, build, code, and compete." />
+  <link rel="icon" href="../ai future logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/design-system.css" />
+  <style>
+    /* ── Hero ──────────────────────────────────────────────── */
+    .rl-hero {
+      background: linear-gradient(135deg, #FAFAF6 0%, #EEF8FF 60%, #F0F9F0 100%);
+      padding: 5rem 0 4rem;
+      overflow: hidden;
+      position: relative;
+    }
+    .rl-hero::before {
+      content: '';
+      position: absolute; top: 0; right: 0;
+      width: 55%; height: 100%;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600' opacity='.04'%3E%3Ccircle cx='300' cy='300' r='200' fill='none' stroke='%23073E77' stroke-width='1'/%3E%3Ccircle cx='300' cy='300' r='140' fill='none' stroke='%23073E77' stroke-width='1'/%3E%3Ccircle cx='300' cy='300' r='80' fill='none' stroke='%23073E77' stroke-width='1'/%3E%3Cline x1='0' y1='300' x2='600' y2='300' stroke='%23073E77' stroke-width='0.5'/%3E%3Cline x1='300' y1='0' x2='300' y2='600' stroke='%23073E77' stroke-width='0.5'/%3E%3C/svg%3E") center / cover no-repeat;
+      pointer-events: none;
+    }
+    .rl-hero__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      max-width: var(--max-w);
+      margin-inline: auto;
+      padding-inline: var(--sp-xl);
+      position: relative; z-index: 1;
+    }
+    .rl-hero__label {
+      font-size: 0.75rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--af-blue); margin-bottom: 0.5rem;
+    }
+    .rl-hero__title {
+      font-size: clamp(3rem, 6vw, 5rem);
+      font-weight: 900;
+      line-height: 1;
+      color: var(--af-deep-navy);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+    }
+    .rl-hero__sub {
+      font-size: 1.3rem; font-weight: 700;
+      color: var(--af-navy);
+      line-height: 1.3;
+      margin-bottom: 1.25rem;
+    }
+    .rl-hero__desc { font-size: 1rem; color: var(--af-muted); max-width: 460px; line-height: 1.7; margin-bottom: 2rem; }
+
+    .rl-hero__visual {
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .rl-hero__photo {
+      border-radius: var(--r-2xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-xl);
+      max-width: 420px;
+      width: 100%;
+      aspect-ratio: 4/3;
+      position: relative;
+    }
+    .rl-hero__photo img { width: 100%; height: 100%; object-fit: cover; }
+    .rl-grit {
+      position: absolute;
+      bottom: -20px; right: -30px;
+      background: white;
+      border-radius: 50%;
+      padding: 0.5rem;
+      box-shadow: var(--shadow-lg);
+      width: 120px; height: 120px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── Feature Band ──────────────────────────────────────── */
+    .feature-band {
+      background: var(--af-deep-navy);
+      padding: 2.5rem 0;
+    }
+    .feature-band__grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--sp-lg);
+      max-width: var(--max-w);
+      margin-inline: auto;
+      padding-inline: var(--sp-xl);
+    }
+    .feature-band-item {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      border-right: 1px solid rgba(255,255,255,.07);
+    }
+    .feature-band-item:last-child { border-right: none; }
+    .feature-band-item__icon {
+      font-size: 1.6rem; color: var(--af-yellow);
+      margin-bottom: 0.75rem;
+    }
+    .feature-band-item__title {
+      font-size: 0.75rem; font-weight: 800; letter-spacing: .08em;
+      text-transform: uppercase; color: #fff;
+      margin-bottom: 0.4rem;
+    }
+    .feature-band-item__desc { font-size: 0.8rem; color: rgba(255,255,255,.55); line-height: 1.5; }
+
+    /* ── Programs ──────────────────────────────────────────── */
+    .programs-heading {
+      font-size: 0.75rem; font-weight: 800; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--af-blue);
+      text-align: center; margin-bottom: 0.5rem;
+    }
+    .programs-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--sp-lg);
+    }
+
+    /* ── Journey ───────────────────────────────────────────── */
+    .journey-section { background: #F8FAFC; }
+    .journey-steps {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      position: relative;
+    }
+    .journey-steps::before {
+      content: '';
+      position: absolute;
+      top: 36px; left: 10%; right: 10%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--af-navy), var(--af-blue), var(--af-success));
+      z-index: 0;
+    }
+    .journey-step {
+      text-align: center;
+      padding: 1rem 0.5rem 1.5rem;
+      position: relative; z-index: 1;
+    }
+    .journey-step__icon {
+      width: 72px; height: 72px;
+      border-radius: var(--r-full);
+      background: var(--af-navy);
+      color: #fff;
+      font-size: 1.4rem;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1rem;
+      border: 3px solid #fff;
+      box-shadow: var(--shadow-md);
+      transition: background var(--t-normal), transform var(--t-normal);
+    }
+    .journey-step:hover .journey-step__icon { background: var(--af-blue); transform: scale(1.1); }
+    .journey-step__num {
+      font-size: 0.65rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--af-blue); margin-bottom: 0.25rem;
+    }
+    .journey-step__title { font-size: 1rem; font-weight: 800; color: var(--af-deep-navy); margin-bottom: 0.4rem; }
+    .journey-step__desc { font-size: 0.8rem; color: var(--af-muted); line-height: 1.5; max-width: 140px; margin-inline: auto; }
+
+    /* ── Tools ─────────────────────────────────────────────── */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--sp-md);
+    }
+    .tool-chip {
+      display: flex; align-items: center; gap: 0.75rem;
+      background: #fff;
+      border-radius: var(--r-md);
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--af-border);
+      box-shadow: var(--shadow-sm);
+      font-size: 0.875rem; font-weight: 600; color: var(--af-slate);
+      transition: border-color var(--t-normal), box-shadow var(--t-normal), transform var(--t-normal);
+    }
+    .tool-chip:hover { border-color: var(--af-navy); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .tool-chip__icon {
+      width: 36px; height: 36px;
+      border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    /* ── Outcomes ──────────────────────────────────────────── */
+    .outcomes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      align-items: stretch;
+    }
+    .outcomes-card {
+      background: #fff;
+      border-radius: var(--r-2xl);
+      padding: 2.5rem;
+      border: 1px solid var(--af-border);
+      box-shadow: var(--shadow-md);
+    }
+    .outcomes-photo {
+      border-radius: var(--r-2xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-xl);
+    }
+    .outcomes-photo img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4/3; }
+
+    /* ── CTA ───────────────────────────────────────────────── */
+    .rl-cta {
+      background: var(--af-deep-navy);
+      padding: 5rem 0;
+      position: relative; overflow: hidden;
+    }
+    .rl-cta::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 10% 50%, rgba(217,218,38,.06) 0%, transparent 70%);
+    }
+    .rl-cta__inner {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: auto 1fr;
+      gap: 3rem; align-items: center;
+      max-width: var(--max-w); margin-inline: auto; padding-inline: var(--sp-xl);
+    }
+
+    /* Responsive */
+    @media (max-width: 1023px) {
+      .feature-band__grid { grid-template-columns: repeat(3, 1fr); }
+      .programs-grid { grid-template-columns: repeat(3, 1fr); }
+      .journey-steps { grid-template-columns: repeat(3, 1fr); }
+      .journey-steps::before { display: none; }
+      .tools-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 767px) {
+      .rl-hero__inner { grid-template-columns: 1fr; }
+      .feature-band__grid { grid-template-columns: repeat(2, 1fr); }
+      .feature-band-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,.07); }
+      .programs-grid { grid-template-columns: 1fr 1fr; }
+      .journey-steps { grid-template-columns: 1fr; }
+      .tools-grid { grid-template-columns: 1fr 1fr; }
+      .outcomes-grid { grid-template-columns: 1fr; }
+      .rl-cta__inner { grid-template-columns: 1fr; text-align: center; }
+      .rl-cta__inner .btn-group { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Announcement Bar -->
+<div class="announce-bar">
+  <span>☀ Summer Camp 2025 enrollment is open! Robotics, Coding, and STEM camps for ages 6–14.</span>
+  <a href="#contact">View Summer Camp →</a>
+  <button class="announce-bar__dismiss" aria-label="Dismiss">✕</button>
+</div>
+
+<!-- Navigation -->
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="../index.html" class="navbar__logo">
+      <img src="../ai future logo.png" alt="AI Future Logo" />
+      <div>
+        <div class="navbar__logo-text">AI FUTURE</div>
+        <div class="navbar__logo-sub">Building Future Innovators</div>
+      </div>
+    </a>
+    <ul class="navbar__links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="robotics-lab.html" class="active">Robotics Lab</a></li>
+      <li><a href="../code-lab/code-lab.html">Code Lab</a></li>
+      <li><a href="#programs">Programs</a></li>
+      <li><a href="#competitions">Competitions</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="btn btn--primary navbar__cta desktop-only">Book a Free Trial</a>
+    <button class="navbar__hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="nav-overlay"></div>
+<nav class="nav-mobile">
+  <button class="nav-mobile__close">✕</button>
+  <a href="../index.html">Home</a>
+  <a href="robotics-lab.html" class="active">Robotics Lab</a>
+  <a href="../code-lab/code-lab.html">Code Lab</a>
+  <a href="#programs">Programs</a>
+  <a href="#competitions">Competitions</a>
+  <a href="#contact" class="btn btn--primary" style="margin-top:1rem;text-align:center">Book a Free Trial</a>
+</nav>
+
+<!-- Hero -->
+<section class="rl-hero">
+  <div class="rl-hero__inner">
+    <div>
+      <div class="rl-hero__label">AI Future</div>
+      <h1 class="rl-hero__title">Robotics<br>Lab</h1>
+      <div class="rl-hero__sub">Build Like an Engineer.<br>Compete Like a Champion.</div>
+      <p class="rl-hero__desc">Our Robotics Lab gives students the tools, training, and hands-on experience to design, build, code, and compete with robots in real-world challenges.</p>
+      <div class="btn-group">
+        <a href="#programs" class="btn btn--navy btn--lg"><i class="fa-solid fa-robot"></i> View Robotics Programs</a>
+        <a href="#contact" class="btn btn--outline btn--lg">Join a Competition Team</a>
+      </div>
+    </div>
+    <div class="rl-hero__visual reveal">
+      <div class="rl-hero__photo">
+        <img src="../FLL Teams/25_26_season_pictures/IMG_5092.jpg" alt="Students competing in FLL robotics" loading="lazy" />
+      </div>
+      <div class="rl-grit">
+        <svg class="grit-mascot grit-float" viewBox="0 0 120 145" width="90" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="60,6 18,20 60,34 102,20" fill="#FECE00"/>
+          <rect x="35" y="20" width="50" height="9" rx="3" fill="#FECE00"/>
+          <line x1="102" y1="20" x2="102" y2="36" stroke="#FECE00" stroke-width="2.5"/>
+          <circle cx="102" cy="40" r="5" fill="#FECE00"/>
+          <rect x="22" y="40" width="76" height="74" rx="22" fill="#D9DA26"/>
+          <circle cx="60" cy="70" r="18" fill="white"/>
+          <circle cx="60" cy="70" r="11" fill="#073E77"/>
+          <circle cx="65" cy="65" r="4" fill="white"/>
+          <path d="M 44 93 Q 60 105 76 93" stroke="#073E77" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <circle cx="35" cy="81" r="6" fill="#C4C51A" opacity="0.6"/>
+          <circle cx="85" cy="81" r="6" fill="#C4C51A" opacity="0.6"/>
+          <rect x="0" y="60" width="20" height="14" rx="7" fill="#D9DA26"/>
+          <!-- Wrench in right hand -->
+          <rect x="100" y="58" width="20" height="14" rx="7" fill="#D9DA26"/>
+          <rect x="114" y="46" width="5" height="20" rx="2.5" fill="#888" transform="rotate(30 114 46)"/>
+          <rect x="108" y="42" width="12" height="5" rx="2" fill="#888"/>
+          <rect x="108" y="56" width="12" height="5" rx="2" fill="#888"/>
+          <rect x="36" y="108" width="16" height="22" rx="8" fill="#D9DA26"/>
+          <rect x="66" y="108" width="16" height="22" rx="8" fill="#D9DA26"/>
+          <line x1="60" y1="40" x2="60" y2="26" stroke="#073E77" stroke-width="3"/>
+          <circle cx="60" cy="23" r="5" fill="#fff" opacity=".6"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Feature Band -->
+<section class="feature-band">
+  <div class="feature-band__grid">
+    <div class="feature-band-item reveal">
+      <div class="feature-band-item__icon"><i class="fa-solid fa-gears"></i></div>
+      <div class="feature-band-item__title">Hands-On Engineering</div>
+      <div class="feature-band-item__desc">Students build real robots and learn by doing.</div>
+    </div>
+    <div class="feature-band-item reveal reveal--delay-1">
+      <div class="feature-band-item__icon"><i class="fa-solid fa-code"></i></div>
+      <div class="feature-band-item__title">Coding &amp; Control</div>
+      <div class="feature-band-item__desc">Program robots using block coding, Python, and advanced controls.</div>
+    </div>
+    <div class="feature-band-item reveal reveal--delay-2">
+      <div class="feature-band-item__icon"><i class="fa-solid fa-trophy"></i></div>
+      <div class="feature-band-item__title">Competition Ready</div>
+      <div class="feature-band-item__desc">Prepare for FLL, FTC, VEX IQ, VEX V5 and more.</div>
+    </div>
+    <div class="feature-band-item reveal reveal--delay-3">
+      <div class="feature-band-item__icon"><i class="fa-solid fa-people-group"></i></div>
+      <div class="feature-band-item__title">Teamwork &amp; Leadership</div>
+      <div class="feature-band-item__desc">Build communication, strategy, and leadership as a team.</div>
+    </div>
+    <div class="feature-band-item reveal reveal--delay-4">
+      <div class="feature-band-item__icon"><i class="fa-solid fa-chart-line"></i></div>
+      <div class="feature-band-item__title">Engineering Mindset</div>
+      <div class="feature-band-item__desc">Design, test, iterate, and improve — just like real engineers.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Programs -->
+<section class="section" id="programs">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">What We Offer</p>
+      <h2 class="section-heading">Robotics Programs We Offer</h2>
+      <p class="section-sub section-sub--center">From building blocks to competition-level engineering.</p>
+    </div>
+    <div class="programs-grid">
+      <div class="program-card reveal">
+        <div class="program-card__img">
+          <img src="../FLL Teams/25_26_season_pictures/IMG_5080.jpg" alt="LEGO SPIKE Robotics" loading="lazy" />
+        </div>
+        <div class="program-card__body">
+          <div class="program-card__grade">Grades K–5</div>
+          <div class="program-card__title">LEGO SPIKE Robotics</div>
+          <div class="program-card__desc">Build and code using LEGO SPIKE Essential &amp; Prime.</div>
+          <div class="program-card__arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        </div>
+      </div>
+      <div class="program-card reveal reveal--delay-1">
+        <div class="program-card__img">
+          <img src="../FLL Teams/25_26_season_pictures/IMG_5287.jpg" alt="FIRST LEGO League" loading="lazy" />
+        </div>
+        <div class="program-card__body">
+          <div class="program-card__grade">Grades 4–8</div>
+          <div class="program-card__title">FIRST LEGO League (FLL)</div>
+          <div class="program-card__desc">Design, build, code, and create solutions to real-world problems.</div>
+          <div class="program-card__arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        </div>
+      </div>
+      <div class="program-card reveal reveal--delay-2">
+        <div class="program-card__img" style="display:flex;align-items:center;justify-content:center">
+          <i class="fa-solid fa-robot" style="font-size:3rem;color:rgba(255,255,255,.4)"></i>
+        </div>
+        <div class="program-card__body">
+          <div class="program-card__grade">Grades 4–8</div>
+          <div class="program-card__title">VEX IQ</div>
+          <div class="program-card__desc">Build advanced robots and compete in exciting VEX challenges.</div>
+          <div class="program-card__arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        </div>
+      </div>
+      <div class="program-card reveal reveal--delay-3">
+        <div class="program-card__img">
+          <img src="../FTC Pictures/ftc_25_26_pictures/IMG_4478.jpg" alt="FIRST Tech Challenge" loading="lazy" />
+        </div>
+        <div class="program-card__body">
+          <div class="program-card__grade">Grades 7–12</div>
+          <div class="program-card__title">FIRST Tech Challenge (FTC)</div>
+          <div class="program-card__desc">Build, program, and compete at the high school level.</div>
+          <div class="program-card__arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        </div>
+      </div>
+      <div class="program-card reveal reveal--delay-4">
+        <div class="program-card__img" style="display:flex;align-items:center;justify-content:center">
+          <i class="fa-solid fa-microchip" style="font-size:3rem;color:rgba(255,255,255,.4)"></i>
+        </div>
+        <div class="program-card__body">
+          <div class="program-card__grade">Grades 9–12</div>
+          <div class="program-card__title">VEX V5</div>
+          <div class="program-card__desc">Design high-performance robots for advanced competition.</div>
+          <div class="program-card__arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Robotics Journey -->
+<section class="section journey-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">Student Path</p>
+      <h2 class="section-heading">The Robotics Journey</h2>
+      <p class="section-sub section-sub--center">Every student progresses through a meaningful journey from discovery to leadership.</p>
+    </div>
+    <div class="journey-steps">
+      <div class="journey-step reveal">
+        <div class="journey-step__icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <div class="journey-step__num">Step 1</div>
+        <div class="journey-step__title">Explore</div>
+        <div class="journey-step__desc">Discover robotics through fun and engaging challenges.</div>
+      </div>
+      <div class="journey-step reveal reveal--delay-1">
+        <div class="journey-step__icon"><i class="fa-solid fa-cubes"></i></div>
+        <div class="journey-step__num">Step 2</div>
+        <div class="journey-step__title">Build</div>
+        <div class="journey-step__desc">Learn to build strong mechanisms and smart designs.</div>
+      </div>
+      <div class="journey-step reveal reveal--delay-2">
+        <div class="journey-step__icon"><i class="fa-solid fa-code"></i></div>
+        <div class="journey-step__num">Step 3</div>
+        <div class="journey-step__title">Code</div>
+        <div class="journey-step__desc">Program your robot to think, move, and solve problems.</div>
+      </div>
+      <div class="journey-step reveal reveal--delay-3">
+        <div class="journey-step__icon"><i class="fa-solid fa-trophy"></i></div>
+        <div class="journey-step__num">Step 4</div>
+        <div class="journey-step__title">Compete</div>
+        <div class="journey-step__desc">Test your skills in local and regional competitions.</div>
+      </div>
+      <div class="journey-step reveal reveal--delay-4">
+        <div class="journey-step__icon"><i class="fa-solid fa-star"></i></div>
+        <div class="journey-step__num">Step 5</div>
+        <div class="journey-step__title">Lead</div>
+        <div class="journey-step__desc">Become a confident leader and inspire others.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tools & Technology -->
+<section class="section" style="background:#fff">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">Equipment</p>
+      <h2 class="section-heading">Tools &amp; Technology We Use</h2>
+      <p class="section-sub section-sub--center">Industry-standard tools to prepare students for real engineering challenges.</p>
+    </div>
+    <div class="tools-grid">
+      <div class="tool-chip reveal"><div class="tool-chip__icon" style="background:rgba(7,62,119,.08)"><i class="fa-solid fa-cubes" style="color:var(--af-navy)"></i></div>LEGO SPIKE Prime &amp; Essential</div>
+      <div class="tool-chip reveal reveal--delay-1"><div class="tool-chip__icon" style="background:rgba(37,99,255,.1)"><i class="fa-solid fa-robot" style="color:var(--af-blue)"></i></div>VEX IQ</div>
+      <div class="tool-chip reveal reveal--delay-2"><div class="tool-chip__icon" style="background:rgba(109,74,255,.1)"><i class="fa-solid fa-microchip" style="color:var(--af-purple)"></i></div>VEX V5</div>
+      <div class="tool-chip reveal reveal--delay-3"><div class="tool-chip__icon" style="background:rgba(34,197,94,.1)"><i class="fa-solid fa-gears" style="color:#16a34a"></i></div>REV Robotics</div>
+      <div class="tool-chip reveal"><div class="tool-chip__icon" style="background:rgba(249,115,22,.1)"><i class="fa-solid fa-pen-ruler" style="color:#ea580c"></i></div>Onshape CAD</div>
+      <div class="tool-chip reveal reveal--delay-1"><div class="tool-chip__icon" style="background:rgba(217,70,239,.1)"><i class="fa-solid fa-object-group" style="color:#c026d3"></i></div>BrickLink Studio</div>
+      <div class="tool-chip reveal reveal--delay-2"><div class="tool-chip__icon" style="background:rgba(239,68,68,.1)"><i class="fa-solid fa-print" style="color:#dc2626"></i></div>3D Printing (Bambu Lab)</div>
+      <div class="tool-chip reveal reveal--delay-3"><div class="tool-chip__icon" style="background:rgba(234,179,8,.1)"><i class="fa-solid fa-bolt" style="color:#ca8a04"></i></div>Soldering &amp; Electronics</div>
+    </div>
+  </div>
+</section>
+
+<!-- Student Outcomes -->
+<section class="section" id="outcomes" style="background:var(--af-white)">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">Results</p>
+      <h2 class="section-heading">Student Outcomes</h2>
+    </div>
+    <div class="outcomes-grid">
+      <div class="outcomes-card reveal">
+        <h3 style="font-size:1.1rem; font-weight:800; color:var(--af-deep-navy); margin-bottom:1.25rem; text-transform:uppercase; letter-spacing:.06em">What Our Students Gain</h3>
+        <ul class="checklist" style="gap:.85rem">
+          <li>Strong problem-solving and critical thinking skills</li>
+          <li>Real engineering and programming experience</li>
+          <li>Confidence in public speaking and presentations</li>
+          <li>Teamwork, leadership, and time management</li>
+          <li>A competitive edge for the future</li>
+        </ul>
+        <div style="margin-top:2rem; padding:1.25rem; background:linear-gradient(135deg, rgba(7,62,119,.06), rgba(217,218,38,.08)); border-radius:var(--r-lg); border:1px solid rgba(7,62,119,.1)">
+          <div style="display:flex; gap:1rem; flex-wrap:wrap">
+            <div style="text-align:center; flex:1">
+              <div style="font-size:1.75rem; font-weight:800; color:var(--af-navy)">1st</div>
+              <div style="font-size:.75rem; color:var(--af-muted)">NYC Robot Design</div>
+            </div>
+            <div style="text-align:center; flex:1">
+              <div style="font-size:1.75rem; font-weight:800; color:var(--af-navy)">3rd</div>
+              <div style="font-size:.75rem; color:var(--af-muted)">NYC Championship</div>
+            </div>
+            <div style="text-align:center; flex:1">
+              <div style="font-size:1.75rem; font-weight:800; color:var(--af-navy)">1st</div>
+              <div style="font-size:.75rem; color:var(--af-muted)">HV Qualifier</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="outcomes-photo reveal reveal--delay-2">
+        <img src="../FLL Teams/hudson valley qualifier championship winners.jpg" alt="AI Future FLL championship winners" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Competition Gallery Strip -->
+<section class="section--sm" style="background:#fff; overflow:hidden" id="gallery">
+  <div class="container">
+    <p class="section-label" style="text-align:center; margin-bottom:1.25rem">Competition Gallery</p>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:var(--sp-sm); border-radius:var(--r-xl); overflow:hidden">
+      <img src="../FLL Teams/25_26_season_pictures/IMG_5084.jpg" alt="FLL team" style="width:100%;aspect-ratio:1;object-fit:cover" loading="lazy" />
+      <img src="../FLL Teams/25_26_season_pictures/IMG_5097.jpg" alt="FLL competition" style="width:100%;aspect-ratio:1;object-fit:cover" loading="lazy" />
+      <img src="../FLL Teams/nyc champs 1st place robot design.jpg" alt="1st place robot design" style="width:100%;aspect-ratio:1;object-fit:cover" loading="lazy" />
+      <img src="../FLL Teams/25_26_season_pictures/IMG_5280.jpg" alt="FLL students" style="width:100%;aspect-ratio:1;object-fit:cover" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="stats-band" data-count="true">
+  <div class="container">
+    <div class="stats-band__grid">
+      <div class="stat-item"><div class="stat-item__icon">🏆</div><div class="stat-item__number" data-count="25" data-suffix="+">25+</div><div class="stat-item__label">Competitions</div></div>
+      <div class="stat-item"><div class="stat-item__icon">🤖</div><div class="stat-item__number" data-count="1000" data-suffix="+">1,000+</div><div class="stat-item__label">Robots Built</div></div>
+      <div class="stat-item"><div class="stat-item__icon">👨‍🎓</div><div class="stat-item__number" data-count="500" data-suffix="+">500+</div><div class="stat-item__label">Students</div></div>
+      <div class="stat-item"><div class="stat-item__icon">🥇</div><div class="stat-item__number" data-count="12" data-suffix="+">12+</div><div class="stat-item__label">Awards Won</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="rl-cta" id="contact">
+  <div class="rl-cta__inner">
+    <svg class="grit-mascot grit-float" viewBox="0 0 120 145" width="140" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="60,6 18,20 60,34 102,20" fill="#FECE00"/>
+      <rect x="35" y="20" width="50" height="9" rx="3" fill="#FECE00"/>
+      <line x1="102" y1="20" x2="102" y2="36" stroke="#FECE00" stroke-width="2.5"/>
+      <circle cx="102" cy="40" r="5" fill="#FECE00"/>
+      <rect x="22" y="40" width="76" height="74" rx="22" fill="#D9DA26"/>
+      <circle cx="60" cy="70" r="18" fill="white"/>
+      <circle cx="60" cy="70" r="11" fill="#073E77"/>
+      <circle cx="65" cy="65" r="4" fill="white"/>
+      <path d="M 44 93 Q 60 105 76 93" stroke="#073E77" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="35" cy="81" r="6" fill="#C4C51A" opacity="0.6"/>
+      <circle cx="85" cy="81" r="6" fill="#C4C51A" opacity="0.6"/>
+      <rect x="0" y="60" width="20" height="14" rx="7" fill="#D9DA26"/>
+      <rect x="100" y="58" width="20" height="14" rx="7" fill="#D9DA26"/>
+      <rect x="114" y="46" width="5" height="20" rx="2.5" fill="#aaa" transform="rotate(30 114 46)"/>
+      <rect x="108" y="42" width="12" height="5" rx="2" fill="#aaa"/>
+      <rect x="108" y="56" width="12" height="5" rx="2" fill="#aaa"/>
+      <rect x="36" y="108" width="16" height="22" rx="8" fill="#D9DA26"/>
+      <rect x="66" y="108" width="16" height="22" rx="8" fill="#D9DA26"/>
+      <line x1="60" y1="40" x2="60" y2="26" stroke="#073E77" stroke-width="3"/>
+      <circle cx="60" cy="23" r="5" fill="#fff" opacity=".6"/>
+    </svg>
+    <div>
+      <p style="font-size:.75rem; font-weight:800; letter-spacing:.15em; text-transform:uppercase; color:var(--af-green); margin-bottom:.5rem">Ready to Build the Future?</p>
+      <h2 style="font-size:clamp(1.75rem,3vw,2.5rem); font-weight:800; color:#fff; margin-bottom:.75rem">Join AI Future Robotics Lab</h2>
+      <p style="color:rgba(255,255,255,.7); max-width:520px; margin-bottom:1.5rem">Give your child the skills, confidence, and experience to lead tomorrow. Enroll in our hands-on robotics programs today.</p>
+      <div class="btn-group">
+        <a href="mailto:info@aifuture.com" class="btn btn--primary btn--lg">Book a Free Trial <i class="fa-solid fa-arrow-right"></i></a>
+        <a href="mailto:info@aifuture.com" class="btn btn--outline-white btn--lg">Contact Us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <img src="../ai future logo.png" alt="AI Future Logo" />
+        <div class="footer__brand-name">AI Future</div>
+        <div class="footer__tagline">Building Future Innovators</div>
+        <div class="footer__social">
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Explore</div>
+        <a href="../index.html">Home</a>
+        <a href="robotics-lab.html">Robotics Lab</a>
+        <a href="../code-lab/code-lab.html">Code Lab</a>
+        <a href="../index.html#summer-camp">Summer Camp</a>
+        <a href="#programs">Programs</a>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">About Us</div>
+        <a href="../index.html#about">Our Story</a>
+        <a href="../index.html#team">Our Team</a>
+        <a href="mailto:info@aifuture.com">Contact Us</a>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Stay Connected</div>
+        <p style="font-size:.85rem;color:rgba(255,255,255,.5);margin-bottom:.75rem">Get competition and program updates.</p>
+        <div class="footer__subscribe">
+          <input type="email" placeholder="Your email" />
+          <button>Subscribe</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2025 AI Future. All rights reserved.</span>
+      <span>Flushing, Queens, NY</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

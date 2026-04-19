@@ -1,0 +1,17 @@
+{
+  "name": "ai-future-platform",
+  "version": "1.0.0",
+  "description": "AI Future — Robotics Lab, Code Lab & STEM education platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "http-proxy-middleware": "^3.0.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

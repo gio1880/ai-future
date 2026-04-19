@@ -1,0 +1,75 @@
+<svg viewBox="0 0 350 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="350" height="300" fill="white"/>
+
+  <!-- Title -->
+  <text x="175" y="30" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">Motor with Encoder Feedback</text>
+
+  <!-- Motor body (left side) -->
+  <g>
+    <rect x="20" y="80" width="70" height="95" fill="#666" stroke="#333" stroke-width="3" rx="5"/>
+
+    <!-- Output shaft -->
+    <rect x="50" y="40" width="20" height="45" fill="#999" stroke="#333" stroke-width="2" rx="3"/>
+    <circle cx="60" cy="40" r="8" fill="#666" stroke="#333" stroke-width="2"/>
+
+    <!-- Rotating wheel on shaft -->
+    <circle cx="60" cy="65" r="25" fill="#2196F3" stroke="#333" stroke-width="3"/>
+    <!-- Wheel rotation marker -->
+    <path d="M 60 40 L 80 65" stroke="#FF9800" stroke-width="2"/>
+    <path d="M 60 90 L 35 65" stroke="#FF9800" stroke-width="2"/>
+
+    <!-- Rotation arrow -->
+    <path d="M 50 55 A 25 25 0 0 0 70 50" fill="none" stroke="#FF9800" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+
+    <!-- Port connection -->
+    <rect x="35" y="185" width="50" height="18" fill="#FF9800" stroke="#333" stroke-width="2" rx="3"/>
+
+    <!-- Label -->
+    <text x="55" y="230" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">Motor</text>
+  </g>
+
+  <!-- Encoder gauge (right side) -->
+  <g>
+    <!-- Gauge background circle -->
+    <circle cx="260" cy="130" r="55" fill="none" stroke="#666" stroke-width="3"/>
+
+    <!-- Gauge scale markers -->
+    <g stroke="#333" stroke-width="2">
+      <line x1="260" y1="75" x2="260" y2="65"/>
+      <line x1="302" y1="130" x2="312" y2="130"/>
+      <line x1="260" y1="185" x2="260" y2="195"/>
+      <line x1="218" y1="130" x2="208" y2="130"/>
+    </g>
+
+    <!-- Needle showing rotation -->
+    <line x1="260" y1="130" x2="290" y2="100" stroke="#FF9800" stroke-width="4" stroke-linecap="round"/>
+
+    <!-- Center pivot -->
+    <circle cx="260" cy="130" r="6" fill="#333" stroke="#333" stroke-width="2"/>
+
+    <!-- Digital readout box -->
+    <rect x="190" y="195" width="140" height="45" fill="#f0f0f0" stroke="#333" stroke-width="2" rx="4"/>
+    <text x="260" y="212" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#333">Encoder Value</text>
+    <text x="260" y="230" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#2196F3">360°</text>
+
+    <!-- Label -->
+    <text x="260" y="65" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#333">Encoder</text>
+    <text x="260" y="80" font-family="Arial, sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#666">Feedback</text>
+  </g>
+
+  <!-- Arrow marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#FF9800"/>
+    </marker>
+  </defs>
+
+  <!-- Connection arrow -->
+  <path d="M 95 130 Q 140 130 190 130" fill="none" stroke="#666" stroke-width="2" stroke-dasharray="4,4"/>
+
+  <!-- Info box -->
+  <rect x="20" y="260" width="310" height="35" fill="#f0f0f0" stroke="#333" stroke-width="2" rx="4"/>
+  <text x="175" y="278" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#333">Encoder tracks motor rotation to measure distance/position</text>
+  <text x="175" y="293" font-family="Arial, sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#666">Values increase with each rotation (360° = 1 full turn)</text>
+</svg>

@@ -1,0 +1,149 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="trophyGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FBBF24;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#F59E0B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#D97706;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="cupHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FEF3C7;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#FBBF24;stop-opacity:0.4" />
+    </linearGradient>
+    <filter id="celebrationGlow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="sparkle">
+      <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Trophy Cup (main body) -->
+  <g filter="url(#celebrationGlow)">
+    <!-- Left handle -->
+    <path d="M 60 70 Q 40 70 40 90 Q 40 110 60 110" stroke="url(#trophyGold)" stroke-width="8" fill="none" stroke-linecap="round"/>
+
+    <!-- Right handle -->
+    <path d="M 140 70 Q 160 70 160 90 Q 160 110 140 110" stroke="url(#trophyGold)" stroke-width="8" fill="none" stroke-linecap="round"/>
+
+    <!-- Cup body -->
+    <path d="M 70 60 L 60 90 Q 60 110 100 115 Q 140 110 140 90 L 130 60 Z" fill="url(#trophyGold)"/>
+
+    <!-- Cup highlight -->
+    <ellipse cx="95" cy="75" rx="18" ry="12" fill="url(#cupHighlight)"/>
+
+    <!-- Cup rim -->
+    <ellipse cx="100" cy="58" rx="32" ry="8" fill="url(#trophyGold)" opacity="0.9"/>
+    <ellipse cx="100" cy="56" rx="32" ry="6" fill="#FEF3C7" opacity="0.5"/>
+  </g>
+
+  <!-- Base -->
+  <g filter="url(#celebrationGlow)">
+    <rect x="80" y="115" width="40" height="8" rx="2" fill="url(#trophyGold)"/>
+    <rect x="75" y="123" width="50" height="6" rx="2" fill="#F59E0B"/>
+    <rect x="78" y="129" width="44" height="4" rx="1" fill="#D97706" opacity="0.8"/>
+  </g>
+
+  <!-- Confetti burst - colorful celebratory elements -->
+
+  <!-- Top-left red confetti -->
+  <g class="confetti" filter="url(#sparkle)">
+    <polygon points="40,25 48,30 45,40 37,35" fill="#EF4444" opacity="0.85">
+      <animate attributeName="opacity" values="1;0.3;1" dur="2.5s" repeatCount="indefinite"/>
+    </polygon>
+    <polygon points="25,35 32,38 30,48 23,45" fill="#F87171" opacity="0.75">
+      <animate attributeName="opacity" values="0.8;0.2;0.8" dur="2.8s" repeatCount="indefinite"/>
+    </polygon>
+  </g>
+
+  <!-- Top-center blue confetti -->
+  <g class="confetti" filter="url(#sparkle)">
+    <polygon points="100,10 106,18 100,26 94,18" fill="#3B82F6" opacity="0.85">
+      <animate attributeName="opacity" values="1;0.3;1" dur="2.2s" repeatCount="indefinite"/>
+    </polygon>
+    <circle cx="100" cy="35" r="4" fill="#60A5FA" opacity="0.8">
+      <animate attributeName="opacity" values="0.9;0.2;0.9" dur="2.6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Top-right purple confetti -->
+  <g class="confetti" filter="url(#sparkle)">
+    <polygon points="160,20 168,26 165,36 157,30" fill="#A855F7" opacity="0.85">
+      <animate attributeName="opacity" values="1;0.3;1" dur="2.4s" repeatCount="indefinite"/>
+    </polygon>
+    <polygon points="175,35 182,42 178,52 171,45" fill="#D8B4FE" opacity="0.75">
+      <animate attributeName="opacity" values="0.8;0.2;0.8" dur="2.7s" repeatCount="indefinite"/>
+    </polygon>
+  </g>
+
+  <!-- Left side green confetti -->
+  <g class="confetti" filter="url(#sparkle)">
+    <polygon points="15,80 22,85 20,95 13,90" fill="#10B981" opacity="0.8">
+      <animate attributeName="opacity" values="0.9;0.2;0.9" dur="2.3s" repeatCount="indefinite"/>
+    </polygon>
+    <circle cx="25" cy="110" r="3.5" fill="#34D399" opacity="0.75">
+      <animate attributeName="opacity" values="0.8;0.15;0.8" dur="2.9s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Right side pink confetti -->
+  <g class="confetti" filter="url(#sparkle)">
+    <polygon points="185,75 193,82 189,92 181,85" fill="#EC4899" opacity="0.85">
+      <animate attributeName="opacity" values="1;0.3;1" dur="2.5s" repeatCount="indefinite"/>
+    </polygon>
+    <circle cx="180" cy="105" r="4" fill="#F472B6" opacity="0.8">
+      <animate attributeName="opacity" values="0.9;0.2;0.9" dur="2.6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Bottom-left yellow confetti -->
+  <g class="confetti" filter="url(#sparkle)">
+    <polygon points="50,155 58,160 55,170 47,165" fill="#FBBF24" opacity="0.8">
+      <animate attributeName="opacity" values="0.85;0.2;0.85" dur="2.4s" repeatCount="indefinite"/>
+    </polygon>
+  </g>
+
+  <!-- Bottom-right cyan confetti -->
+  <g class="confetti" filter="url(#sparkle)">
+    <polygon points="155,160 163,167 160,177 152,170" fill="#22D3EE" opacity="0.85">
+      <animate attributeName="opacity" values="1;0.3;1" dur="2.7s" repeatCount="indefinite"/>
+    </polygon>
+  </g>
+
+  <!-- Stars/sparkles around trophy -->
+  <g filter="url(#sparkle)">
+    <circle cx="70" cy="40" r="2" fill="#FFD700" opacity="0.7">
+      <animate attributeName="opacity" values="1;0.2;1" dur="1.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="130" cy="35" r="2" fill="#FFD700" opacity="0.7">
+      <animate attributeName="opacity" values="0.8;0.2;0.8" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="100" cy="50" r="1.5" fill="#FBBF24" opacity="0.6">
+      <animate attributeName="opacity" values="0.7;0.1;0.7" dur="1.6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="140" cy="135" r="2" fill="#FFD700" opacity="0.7">
+      <animate attributeName="opacity" values="1;0.2;1" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="60" cy="140" r="2" fill="#FFD700" opacity="0.7">
+      <animate attributeName="opacity" values="0.9;0.2;0.9" dur="2.1s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Victory streak lines (indigo/cyan accent) -->
+  <g stroke="#6366F1" stroke-width="1.5" opacity="0.5" stroke-linecap="round">
+    <line x1="100" y1="40" x2="95" y2="25"/>
+    <line x1="100" y1="40" x2="105" y2="20"/>
+  </g>
+
+  <g stroke="#22D3EE" stroke-width="1.5" opacity="0.5" stroke-linecap="round">
+    <line x1="100" y1="150" x2="90" y2="165"/>
+    <line x1="100" y1="150" x2="110" y2="170"/>
+  </g>
+</svg>

@@ -1,0 +1,144 @@
+=====================================================
+   PyLearn - Student Platform Setup Instructions
+=====================================================
+
+WHAT YOU NEED:
+- A computer with Node.js installed (download from https://nodejs.org)
+- The "pybricks lesson website" folder with all its files
+
+-----------------------------------------------------
+STEP 1: Install Dependencies
+-----------------------------------------------------
+1. Open a Terminal (Mac) or Command Prompt (Windows)
+2. Navigate to the website folder:
+
+   cd "path/to/pybricks lesson website"
+
+3. Run:
+
+   npm install
+
+   This installs Express and Express-Session automatically.
+
+-----------------------------------------------------
+STEP 2: Start the Server
+-----------------------------------------------------
+Run:
+
+   npm start
+
+You should see:
+   PyLearn Server running!
+   Student site: http://localhost:3000
+   Admin panel:  http://localhost:3000/admin
+
+-----------------------------------------------------
+STEP 3: Log Into the Admin Panel
+-----------------------------------------------------
+1. Open your browser and go to: http://localhost:3000/admin
+2. Log in with:
+   Username: teacher
+   Password: pylearn2026
+
+-----------------------------------------------------
+STEP 4: Add Your Students
+-----------------------------------------------------
+
+OPTION A - Add One Student:
+   In the admin panel, fill in:
+   - First Name (e.g., "Maria")
+   - Last Name (e.g., "Garcia")
+   Click "Add"
+
+   The system auto-generates a username (e.g., "mgarcia")
+   and a kid-friendly password (e.g., "star472").
+
+   A popup will show the credentials with buttons to:
+   - Copy All (copies to clipboard)
+   - Print (opens print dialog)
+   - Export CSV (downloads a spreadsheet file)
+
+OPTION B - Bulk Import (Paste a List):
+   In the "Bulk Import" section, paste names like:
+
+   Maria Garcia
+   James Wilson
+   Sofia Chen
+
+   Or comma-separated: Maria,Garcia
+
+   Click "Import Students"
+
+   A popup will show ALL generated usernames and
+   passwords in a table you can copy, print, or export.
+
+-----------------------------------------------------
+STEP 5: Give Students Their Logins
+-----------------------------------------------------
+Students go to: http://localhost:3000
+They enter their username and password to log in.
+Their progress is saved on the server automatically.
+
+-----------------------------------------------------
+STEP 6: View Student Progress
+-----------------------------------------------------
+In the admin panel (http://localhost:3000/admin), you can:
+- See all students and their progress
+- See how many lessons each student has completed
+- Reset a student's password if they forget it
+- Reset a student's progress if needed
+- Delete student accounts
+
+=====================================================
+   DEFAULT ACCOUNTS
+=====================================================
+
+Teacher:    username=teacher     password=pylearn2026
+Developer:  username=developer   password=devreview2026
+
+The developer account is for reviewing lessons. When
+logged in as developer:
+- All lessons are unlocked (no prerequisite gates)
+- Exercises show the correct answer
+- Quizzes show the full answer key
+- "Skip" buttons let you move through quickly
+- No progress is saved (review-only mode)
+
+=====================================================
+   TIPS & NOTES
+=====================================================
+
+- Students can log in from ANY device on the same network
+  (use your computer's IP address instead of localhost,
+   e.g., http://192.168.1.100:3000)
+
+- Student progress syncs to the server in real-time.
+  If a student logs in from a different device, their
+  progress carries over.
+
+- If the server is NOT running, the website still works!
+  Students can use it without logging in, but progress
+  will only be saved locally in their browser.
+
+- All data is stored in the "data" folder:
+  data/students.json  = student accounts
+  data/progress.json  = all student progress
+  Back up these files to keep your data safe.
+
+- To run on a different port:
+  PORT=8080 npm start
+
+=====================================================
+   DEPLOYING TO RENDER (for online access)
+=====================================================
+
+1. Push code to GitHub
+2. Go to render.com, create a Web Service
+3. Connect your GitHub repo
+4. Set:
+   Language: Node
+   Build Command: npm install
+   Start Command: node server.js
+5. Select Free tier and deploy
+6. Your site will be at https://your-app.onrender.com
+   Admin panel at https://your-app.onrender.com/admin

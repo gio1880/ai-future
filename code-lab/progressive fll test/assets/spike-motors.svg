@@ -1,0 +1,51 @@
+<svg viewBox="0 0 350 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="350" height="300" fill="white"/>
+
+  <!-- Title -->
+  <text x="175" y="30" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">SPIKE Prime Motors</text>
+
+  <!-- Small Motor (Left) -->
+  <g>
+    <!-- Motor body -->
+    <rect x="30" y="70" width="65" height="95" fill="#666" stroke="#333" stroke-width="3" rx="4"/>
+
+    <!-- Output shaft -->
+    <rect x="52" y="35" width="21" height="40" fill="#999" stroke="#333" stroke-width="2" rx="2"/>
+    <circle cx="62" cy="35" r="8" fill="#666" stroke="#333" stroke-width="2"/>
+
+    <!-- Port connection -->
+    <rect x="45" y="175" width="35" height="18" fill="#FF9800" stroke="#333" stroke-width="2" rx="3"/>
+
+    <!-- Labels -->
+    <text x="62" y="205" font-family="Arial, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#333">Small Motor</text>
+    <text x="62" y="225" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#2196F3">Medium Power</text>
+    <text x="62" y="243" font-family="Arial, sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#666">~60 RPM (no gear)</text>
+  </g>
+
+  <!-- Large Motor (Right) -->
+  <g>
+    <!-- Motor body -->
+    <rect x="255" y="70" width="80" height="95" fill="#666" stroke="#333" stroke-width="3" rx="4"/>
+
+    <!-- Output shaft (larger) -->
+    <rect x="270" y="35" width="28" height="40" fill="#999" stroke="#333" stroke-width="2" rx="2"/>
+    <circle cx="284" cy="35" r="10" fill="#666" stroke="#333" stroke-width="2"/>
+
+    <!-- Port connection -->
+    <rect x="265" y="175" width="40" height="18" fill="#FF9800" stroke="#333" stroke-width="2" rx="3"/>
+
+    <!-- Labels -->
+    <text x="295" y="205" font-family="Arial, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#333">Large Motor</text>
+    <text x="295" y="225" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#FF9800">High Torque</text>
+    <text x="295" y="243" font-family="Arial, sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#666">~40 RPM (no gear)</text>
+  </g>
+
+  <!-- Size comparison -->
+  <g>
+    <line x1="95" y1="260" x2="255" y2="260" stroke="#666" stroke-width="2"/>
+    <line x1="95" y1="255" x2="95" y2="265" stroke="#666" stroke-width="2"/>
+    <line x1="255" y1="255" x2="255" y2="265" stroke="#666" stroke-width="2"/>
+    <text x="175" y="285" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#666">Large motor is bigger and heavier</text>
+  </g>
+</svg>

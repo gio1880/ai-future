@@ -1,0 +1,61 @@
+<svg viewBox="0 0 350 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="350" height="300" fill="white"/>
+
+  <!-- Title -->
+  <text x="175" y="30" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">Wheel Sizes</text>
+
+  <!-- Small wheel (43.2mm diameter) -->
+  <g>
+    <!-- Outer circle -->
+    <circle cx="60" cy="120" r="30" fill="#2196F3" stroke="#333" stroke-width="3"/>
+    <!-- Tire tread lines -->
+    <circle cx="60" cy="120" r="24" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="4,2"/>
+    <!-- Center hole -->
+    <circle cx="60" cy="120" r="6" fill="white" stroke="#333" stroke-width="2"/>
+    <!-- Axle -->
+    <rect x="55" y="130" width="10" height="30" fill="#666" stroke="#333" stroke-width="2"/>
+    <!-- Labels -->
+    <text x="60" y="170" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">Small</text>
+    <text x="60" y="190" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#2196F3">43.2mm</text>
+  </g>
+
+  <!-- Medium wheel (62.4mm diameter) -->
+  <g>
+    <!-- Outer circle -->
+    <circle cx="175" cy="120" r="42" fill="#FF9800" stroke="#333" stroke-width="3"/>
+    <!-- Tire tread lines -->
+    <circle cx="175" cy="120" r="35" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="4,2"/>
+    <!-- Center hole -->
+    <circle cx="175" cy="120" r="7" fill="white" stroke="#333" stroke-width="2"/>
+    <!-- Axle -->
+    <rect x="169" y="130" width="12" height="35" fill="#666" stroke="#333" stroke-width="2"/>
+    <!-- Labels -->
+    <text x="175" y="175" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">Medium</text>
+    <text x="175" y="195" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#FF9800">62.4mm</text>
+  </g>
+
+  <!-- Large wheel (81.6mm diameter) -->
+  <g>
+    <!-- Outer circle -->
+    <circle cx="290" cy="120" r="54" fill="#4CAF50" stroke="#333" stroke-width="3"/>
+    <!-- Tire tread lines -->
+    <circle cx="290" cy="120" r="46" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="4,2"/>
+    <!-- Center hole -->
+    <circle cx="290" cy="120" r="8" fill="white" stroke="#333" stroke-width="2"/>
+    <!-- Axle -->
+    <rect x="283" y="130" width="14" height="40" fill="#666" stroke="#333" stroke-width="2"/>
+    <!-- Labels -->
+    <text x="290" y="175" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">Large</text>
+    <text x="290" y="195" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#4CAF50">81.6mm</text>
+  </g>
+
+  <!-- Comparison info -->
+  <g>
+    <text x="175" y="230" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">Larger wheels = faster, longer distance per rotation</text>
+    <text x="175" y="250" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">Smaller wheels = slower, better for precision</text>
+
+    <rect x="20" y="260" width="310" height="30" fill="#f0f0f0" stroke="#333" stroke-width="2" rx="4"/>
+    <text x="175" y="282" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#333">Robot speed depends on wheel size AND motor gearing</text>
+  </g>
+</svg>

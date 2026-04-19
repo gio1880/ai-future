@@ -1,0 +1,78 @@
+<svg viewBox="0 0 380 320" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="380" height="320" fill="white"/>
+
+  <!-- Title -->
+  <text x="190" y="25" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">FLL Mission Field</text>
+
+  <!-- Base/Start Area (left side) -->
+  <rect x="15" y="60" width="90" height="110" fill="#4CAF50" stroke="#333" stroke-width="2" rx="5"/>
+  <text x="60" y="110" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">Base/</text>
+  <text x="60" y="127" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">Start</text>
+
+  <!-- Near missions (middle-left zone) -->
+  <!-- Mission 1 -->
+  <rect x="125" y="65" width="65" height="50" fill="#FF9800" stroke="#333" stroke-width="2" rx="3"/>
+  <text x="157" y="96" font-family="Arial, sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="white">M1</text>
+
+  <!-- Mission 2 -->
+  <rect x="125" y="125" width="65" height="50" fill="#FF9800" stroke="#333" stroke-width="2" rx="3"/>
+  <text x="157" y="156" font-family="Arial, sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="white">M2</text>
+
+  <!-- Far missions (middle-right zone) -->
+  <!-- Mission 3 -->
+  <rect x="210" y="65" width="65" height="50" fill="#9C27B0" stroke="#333" stroke-width="2" rx="3"/>
+  <text x="242" y="96" font-family="Arial, sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="white">M3</text>
+
+  <!-- Mission 4 -->
+  <rect x="210" y="125" width="65" height="50" fill="#9C27B0" stroke="#333" stroke-width="2" rx="3"/>
+  <text x="242" y="156" font-family="Arial, sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="white">M4</text>
+
+  <!-- Far missions (right side - highest difficulty) -->
+  <!-- Mission 5 -->
+  <rect x="295" y="65" width="65" height="50" fill="#F44336" stroke="#333" stroke-width="2" rx="3"/>
+  <text x="327" y="96" font-family="Arial, sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="white">M5</text>
+
+  <!-- Mission 6 -->
+  <rect x="295" y="125" width="65" height="50" fill="#F44336" stroke="#333" stroke-width="2" rx="3"/>
+  <text x="327" y="156" font-family="Arial, sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="white">M6</text>
+
+  <!-- Possible routes -->
+  <!-- Route arrow 1 -->
+  <path d="M 105 115 L 125 90" fill="none" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)" stroke-dasharray="3,3"/>
+
+  <!-- Route arrow 2 -->
+  <path d="M 105 115 L 125 150" fill="none" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)" stroke-dasharray="3,3"/>
+
+  <!-- Route arrow 3 -->
+  <path d="M 190 90 L 210 90" fill="none" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)" stroke-dasharray="3,3"/>
+
+  <!-- Route arrow 4 -->
+  <path d="M 275 90 L 295 90" fill="none" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)" stroke-dasharray="3,3"/>
+
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- Legend -->
+  <g>
+    <text x="15" y="210" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#333">Difficulty:</text>
+
+    <rect x="15" y="220" width="20" height="20" fill="#FF9800" stroke="#333" stroke-width="1" rx="2"/>
+    <text x="40" y="235" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#333">Easy (Near)</text>
+
+    <rect x="140" y="220" width="20" height="20" fill="#9C27B0" stroke="#333" stroke-width="1" rx="2"/>
+    <text x="165" y="235" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#333">Medium</text>
+
+    <rect x="265" y="220" width="20" height="20" fill="#F44336" stroke="#333" stroke-width="1" rx="2"/>
+    <text x="290" y="235" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#333">Hard (Far)</text>
+  </g>
+
+  <!-- Instruction -->
+  <rect x="15" y="260" width="345" height="50" fill="#f0f0f0" stroke="#333" stroke-width="1" rx="3"/>
+  <text x="25" y="278" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#333">Plan your route: Start at base, complete missions</text>
+  <text x="25" y="300" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#333">Try easy ones first, then harder ones farther away</text>
+</svg>

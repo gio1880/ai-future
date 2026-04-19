@@ -1,0 +1,162 @@
+[
+  {
+    "id": "teacher-default",
+    "name": "Teacher",
+    "username": "teacher",
+    "password_hash": "d8a4b1c24145b77af7abe99f42ab5e45:6a35e37f9f87e604341c3352f522e8c874a856d92c3499900d561ce2eb3d88f1c9da1449e6e9661069a3765ef09cc485b2e807a92c1b717168ed0c64454d6796",
+    "role": "teacher",
+    "created_at": "2026-03-28T04:19:58.377Z"
+  },
+  {
+    "id": "developer-default",
+    "name": "Developer",
+    "username": "developer",
+    "password_hash": "d2c04c0cbe9af6db272c2dcc74510a06:3098ff5d170ee541fc5e202fb87eb8adf9c0763abe8268ec03aaa210d307ebd03a86d8f34fe0e0d4e7b0bfd30d93389098ca6981cc8983944db227fc95d075dd",
+    "role": "developer",
+    "created_at": "2026-03-28T04:19:58.560Z"
+  },
+  {
+    "id": "student-1774671598562-464w5j",
+    "name": "Anthony Zhu",
+    "username": "azhu",
+    "password_hash": "7061cf106cea001f5d53cb9a44f91f02:69e4c2ab23d1a8cf31ead587a128e57fd7491ea20b3cf1c7e9c04a3b8129a45be466a7152fc02e0c89ee59f509b36414dafdb46acc6644738bfbbe70819f2999",
+    "role": "student",
+    "created_at": "2026-03-28T04:19:58.667Z"
+  },
+  {
+    "id": "student-1774671598667-04opuh",
+    "name": "Kyle Tao",
+    "username": "ktao",
+    "password_hash": "28cfb4f6c8dcaa71ee4b93e74c54b8d8:68ed8b30d30205ffe4e12a198b22aae829691cebd843a1f8834f3dd02be44329d02c53b1e6e39126d3fa53c29de450a2ac690d13ee2ae6d7f8ee3e7d03c9397a",
+    "role": "student",
+    "created_at": "2026-03-28T04:19:58.952Z"
+  },
+  {
+    "id": "student-1774671598952-eak4a6",
+    "name": "Brian Zeng",
+    "username": "bzeng",
+    "password_hash": "7e61a943a25d878cad96460e3f65583a:2f9655d45822770d2d4d2a1e6c0c2df34ab56ae06b2df74dec8918010acef410d79a33e0709a912cf94a427a1157422674ff48faffc832e0c6999401a061e38d",
+    "role": "student",
+    "created_at": "2026-03-28T04:19:59.038Z"
+  },
+  {
+    "id": "student-1774671599038-gz7juj",
+    "name": "Jonathan Gu",
+    "username": "jgu",
+    "password_hash": "1bedd5e66ae7a45cc4af460f204f50b1:d6c6e0a2ad897f07d8cca85355b9d2bf9c9addecb5f7fdcb7dcc193e7612865ce9f88af39ab551f59aa1c97e8d277dd2ecc71f3d0d8e19b5a4a9005e5ef792cd",
+    "role": "student",
+    "created_at": "2026-03-28T04:19:59.153Z"
+  },
+  {
+    "id": "student-1774671599153-83tmkg",
+    "name": "Julisa Leung",
+    "username": "jleung",
+    "password_hash": "d4f08d97146c2b8dfeafd94924bae8f1:ed0f560bb402d0d0d82168c82aa465faea1d9990ecaa15aadf010306516ef781bc5f9b04bbc4c2bc12035e51dc2d8b4f132b8de1fa4583a026c9619d494c7c87",
+    "role": "student",
+    "created_at": "2026-03-28T04:19:59.242Z"
+  },
+  {
+    "id": "student-1774671599243-ewobpk",
+    "name": "Isabella Zhu",
+    "username": "izhu",
+    "password_hash": "cfe9f4965fcbab95814fa2cf9f787522:084b79521318acef944b0dfc803379b259bb2802d35925e9b5fda96a6daed8cf45f4cd71ed1b595662f8200620f3de5c8d3b252ec08dcc07d716c09afc8e547b",
+    "role": "student",
+    "created_at": "2026-03-28T04:19:59.328Z"
+  },
+  {
+    "id": "student-1774671599328-cjv12z",
+    "name": "Cailey Lian",
+    "username": "clian",
+    "password_hash": "a409e4fff4fce0dff3a3e2eef69f521c:eb0bc546598a1d7bed7d7fc4bf3c2e5d7b29838e3c860eb8b92b8257a1ccdce547eb2e54581ae3a3932681ba2f0eb333eb9da7b7c6caa53417a91e9ad8930357",
+    "role": "student",
+    "created_at": "2026-03-28T04:19:59.415Z"
+  },
+  {
+    "id": "student-1774671599415-80gytp",
+    "name": "Sam Mao",
+    "username": "smao",
+    "password_hash": "ca5ed9260c2fa13dbf86980dde7bc511:ed31f2b9c8eed11a1eaf715a57d749cfcb65d9d9a18a9e60e516465edb36857b193932a6d037acfa0128ec3381182cb58bbdcb8d01a8e22a28383796f828fffb",
+    "role": "student",
+    "created_at": "2026-03-28T04:19:59.504Z"
+  },
+  {
+    "id": "student-1774671599504-mzynh4",
+    "name": "Jasper Zheng",
+    "username": "jzheng",
+    "password_hash": "dc8830efef4e6b3bf5035d0f7d0a2d75:0197a9333b6a0660c458aefee3c6e25fa1e436b8e3ee2dcdfbd71eaca2b0b261af206accb53cd35bbc16fb9b38ff7ed82a240f0ec325c61561652f25c9839d78",
+    "role": "student",
+    "created_at": "2026-03-28T04:19:59.594Z"
+  },
+  {
+    "id": "student-1774671599595-lb8rjk",
+    "name": "Owen Zou",
+    "username": "ozou",
+    "password_hash": "2583b9842a56161df91fe91c1680f554:de0edddae170444e9d19c1c8d0f9163396ca96901eb5da7398b259c195af0752f1c023df2aa037c6a4e0bd3ab698c8d13b436a4a1996a6cab2bf431b9fb3263c",
+    "role": "student",
+    "created_at": "2026-03-28T04:19:59.681Z"
+  },
+  {
+    "id": "student-1774671599681-3o11se",
+    "name": "Hwijun Ryu",
+    "username": "hryu",
+    "password_hash": "d48e37bea75fe1b8ec7d979791a77f2c:bd8ed93e2bba88b1b19f7767781c7b88b709a4203eff64d975a4994a52ed90a183cd29ffa00088c7ee41e852138571b528b4b840b260d31aa7ee50fb0fbc440c",
+    "role": "student",
+    "created_at": "2026-03-28T04:19:59.770Z"
+  },
+  {
+    "id": "student-1774671599770-p6piya",
+    "name": "Jaydan Chen",
+    "username": "jchen",
+    "password_hash": "dcd17c893a4da67f46e4b42c9a552944:3f467e52724c343e8a8c8bc42fa339d16acbbda3b986fc7ae3692e3a3a720eada48d6ab8649df081b17f127ca851529bc321974b37622a77a7e7cc810824d229",
+    "role": "student",
+    "created_at": "2026-03-28T04:19:59.857Z"
+  },
+  {
+    "id": "student-1774671599857-fb5ut4",
+    "name": "Eason Yang",
+    "username": "eyang",
+    "password_hash": "fce5fa0ba9d15fd0c869c54ff66cb0b6:08d6974bc14c83225973256297539814446aa51d8be85d98b2b5c6e2dfef97b0b299e2075fa008f9a0e801b7ec940b950312a23132db4dd680010deb17628da9",
+    "role": "student",
+    "created_at": "2026-03-28T04:19:59.953Z"
+  },
+  {
+    "id": "student-1774671599953-1mg6c9",
+    "name": "Frankie Zhang",
+    "username": "fzhang",
+    "password_hash": "648ef19c620e7c57300e98ac11e68131:5fbc33c18b35e0d76a2998fe05fafeb15813dc4b05534935f7e0fdc02306626dccfbf6a035dc30aaa6e21423647276ab94fda55b67d21a3be98d58c5d4f9c9ce",
+    "role": "student",
+    "created_at": "2026-03-28T04:20:00.066Z"
+  },
+  {
+    "id": "student-1774671600067-epmhlq",
+    "name": "Marcus Chen",
+    "username": "mchen",
+    "password_hash": "7a01f0dec5992eb4afed92879a6b1bab:979d3aefe89f0d2f94ad89d0a4c5165c25167060c744c515420553f82c0400b1112084548311417d4f2488d80422e9af551821256e731f0b69bea7347508e57c",
+    "role": "student",
+    "created_at": "2026-03-28T04:20:00.152Z"
+  },
+  {
+    "id": "student-1774671600152-mioztf",
+    "name": "Jayden Xiong",
+    "username": "jxiong",
+    "password_hash": "26878048d6a7c995fa3b4cac9f8a2ede:bac2d80d6ef0c3c37c239bd9c3ccbe12cf1f4b73b5293a467c1cce77c416c075ed30772f666b2ac47c7b8448b09e8fb1f852f6f1dd1bd46b855860a8f3a55513",
+    "role": "student",
+    "created_at": "2026-03-28T04:20:00.236Z"
+  },
+  {
+    "id": "student-1774671600236-ackmlo",
+    "name": "Ariel Ou",
+    "username": "aou",
+    "password_hash": "4af78e0feab0db910af354e5592cd70d:e4d3d903c3dd4c20bc04e93fe110da9c46712d45dad59d6ad06e21f51603837e193156fb966cd68d0da0a6f52a9e7c8ad85e00c8079d3a3177e36bde59c2da96",
+    "role": "student",
+    "created_at": "2026-03-28T04:20:00.318Z"
+  },
+  {
+    "id": "student-1774726903978-1grvvb",
+    "name": "Melvin Lin",
+    "username": "mlin",
+    "password_hash": "a806c5cd0f95b6b057f9e057eab98aa8:5d97763acaeb9499f58c95f0ee2fb68045f0b3636b6da96f7a99fc536e583d5e4248dfd17f31367f651938e645df1d5ef8127b82feded5324fcd41a1f3196e89",
+    "role": "student",
+    "created_at": "2026-03-28T12:00:00.000Z"
+  }
+]

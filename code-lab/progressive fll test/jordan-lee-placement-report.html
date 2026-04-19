@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>FLL Placement Report – Jordan Lee</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:13px;color:#1e293b;background:#f1f5f9}
+    .page{max-width:980px;margin:0 auto;padding:24px 24px 56px;background:#fff}
+    .rpt-header{background:linear-gradient(135deg,#1e3a8a 0%,#1d4ed8 100%);color:#fff;padding:28px 32px;border-radius:14px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+    .rpt-header .prog-name{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;opacity:.75;margin-bottom:4px}
+    .rpt-header h1{font-size:21px;font-weight:800;letter-spacing:-.3px;line-height:1.2;margin-bottom:16px}
+    .stu-grid{display:flex;flex-wrap:wrap;gap:20px}
+    .stu-field strong{display:block;font-size:15px;font-weight:700}
+    .stu-field span{font-size:11px;opacity:.7;text-transform:uppercase;letter-spacing:.6px}
+    .score-badge{background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.35);border-radius:12px;padding:14px 20px;text-align:center;min-width:100px;flex-shrink:0}
+    .score-badge .big{font-size:36px;font-weight:900;line-height:1}
+    .score-badge .lbl{font-size:10px;opacity:.7;text-transform:uppercase;letter-spacing:.8px;margin-top:3px}
+    .strip{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+    .strip-card{border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;background:#fff}
+    .strip-card .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:#64748b;margin-bottom:5px;font-weight:700}
+    .strip-card .val{font-size:16px;font-weight:800;line-height:1.2}
+    .strip-card .sub{font-size:11px;color:#64748b;margin-top:4px;line-height:1.4}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+    .card{border:1px solid #e2e8f0;border-radius:10px;padding:18px 20px;background:#fff}
+    .card h3,.card-wide h3{font-size:11px;text-transform:uppercase;letter-spacing:.9px;color:#64748b;margin-bottom:14px;font-weight:700}
+    .card-wide{border:1px solid #e2e8f0;border-radius:10px;padding:18px 20px;background:#fff;margin-bottom:14px}
+    .ch-200{position:relative;height:200px}.ch-380{position:relative;height:390px}.ch-230{position:relative;height:230px}
+    .findings{list-style:none}
+    .findings li{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid #f1f5f9;font-size:12px;line-height:1.4}
+    .findings li:last-child{border-bottom:none}
+    .tag{display:inline-block;border-radius:4px;padding:2px 7px;font-size:10px;font-weight:800;white-space:nowrap;flex-shrink:0}
+    .tag-g{background:#dcfce7;color:#15803d}.tag-y{background:#fef3c7;color:#92400e}.tag-b{background:#dbeafe;color:#1e40af}
+    .sbox{border-left:4px solid #1d4ed8;background:#f8fafc;border-radius:0 8px 8px 0;padding:14px 16px;margin-bottom:12px}
+    .sbox.green{border-left-color:#16a34a}
+    .sbox h4{font-size:10px;text-transform:uppercase;letter-spacing:.9px;color:#64748b;font-weight:700;margin-bottom:6px}
+    .sbox p{font-size:12.5px;line-height:1.7;color:#334155}
+    .hist-wrap{overflow-x:auto;margin-top:4px}
+    table{width:100%;border-collapse:collapse}
+    thead th{background:#1e3a8a;color:#fff;padding:9px 10px;text-align:left;font-size:11px;font-weight:700}
+    tbody td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+    .print-bar{display:flex;gap:10px;justify-content:flex-end;margin-bottom:18px}
+    .btn-p{background:#1d4ed8;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer}
+    .btn-p:hover{background:#1e40af}
+    .btn-o{background:#fff;color:#475569;border:1px solid #cbd5e1;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer}
+    .btn-o:hover{background:#f8fafc}
+    .rpt-footer{text-align:center;margin-top:32px;padding-top:16px;border-top:1px solid #e2e8f0;font-size:11px;color:#94a3b8}
+    .legend{display:flex;gap:16px;font-size:11px;color:#64748b;margin-top:10px}
+    .legend span{display:flex;align-items:center;gap:5px}
+    .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+    @media print{body{background:#fff}.page{padding:0;max-width:100%}.print-bar{display:none!important}.rpt-header{border-radius:0;print-color-adjust:exact;-webkit-print-color-adjust:exact}.card,.card-wide,.strip-card{break-inside:avoid}.hist-section{break-before:page}}
+  </style>
+</head>
+<body><div class="page">
+
+<div class="print-bar">
+  <button class="btn-o" onclick="window.close()">✕ Close</button>
+  <button class="btn-p" onclick="window.print()">🖨️ Print / Save as PDF</button>
+</div>
+
+<div class="rpt-header">
+  <div>
+    <div class="prog-name">FLL Robotics Program</div>
+    <h1>SPIKE Prime + FLL<br>Adaptive Placement Report</h1>
+    <div class="stu-grid">
+      <div class="stu-field"><strong>Jordan Lee</strong><span>Student</span></div>
+      <div class="stu-field"><strong>5</strong><span>Grade</span></div>
+      <div class="stu-field"><strong>Robotics Team B</strong><span>Team / Class</span></div>
+      <div class="stu-field"><strong>March 19, 2026</strong><span>Completed</span></div>
+    </div>
+  </div>
+  <div class="score-badge"><div class="big">62%</div><div class="lbl">Weighted<br>Score</div></div>
+</div>
+
+<div class="strip">
+  <div class="strip-card" style="border-top:4px solid #6b7280">
+    <div class="lbl">Recommended Placement</div>
+    <div class="val" style="font-size:14px;color:#6b7280">Level 1 Early Foundations</div>
+    <div class="sub">Needs foundational support and scaffolded practice before advanced tasks.</div>
+  </div>
+  <div class="strip-card" style="border-top:4px solid #b45309">
+    <div class="lbl">Overall Weighted Score</div>
+    <div class="val" style="color:#b45309">62%</div>
+    <div class="sub">69 correct out of 110 questions (63% accuracy)</div>
+  </div>
+  <div class="strip-card" style="border-top:4px solid #6366f1">
+    <div class="lbl">Recommended Next Step</div>
+    <div class="val" style="font-size:11.5px;font-weight:600;color:#334155;line-height:1.45">Place in SPIKE Prime Block Coding Foundations with guided practice in Drivetrain &amp; Wheels and Pybricks / Python Coding.</div>
+  </div>
+</div>
+
+<div class="two-col">
+  <div class="card"><h3>Overall Accuracy</h3><div class="ch-200"><canvas id="doughnutChart"></canvas></div></div>
+  <div class="card"><h3>Track Readiness — All 4 Tracks</h3><div class="ch-200"><canvas id="trackChart"></canvas></div></div>
+</div>
+
+<div class="card-wide">
+  <h3>Domain Performance — All 15 Subject Areas</h3>
+  <div class="ch-380"><canvas id="domainChart"></canvas></div>
+  <div class="legend">
+    <span><span class="dot" style="background:#22c55e"></span>Strong (70%+)</span>
+    <span><span class="dot" style="background:#f59e0b"></span>Developing (45–69%)</span>
+    <span><span class="dot" style="background:#ef4444"></span>Needs Practice (&lt;45%)</span>
+  </div>
+</div>
+
+<div class="two-col">
+  <div class="card"><h3>Subject Area Balance</h3><div class="ch-230"><canvas id="radarChart"></canvas></div></div>
+  <div class="card">
+    <h3>Key Findings</h3>
+    <ul class="findings">
+      <li><span class="tag tag-g">★ Strong</span>Programming Fundamentals</li><li><span class="tag tag-g">★ Strong</span>FLL Competition Strategy</li><li><span class="tag tag-g">★ Strong</span>Safety &amp; Kit Care</li>
+      <li><span class="tag tag-y">▲ Practice</span>Drivetrain &amp; Wheels</li><li><span class="tag tag-y">▲ Practice</span>Pybricks / Python Coding</li><li><span class="tag tag-y">▲ Practice</span>Robotics Math</li>
+      <li><span class="tag tag-b">→ Next</span>Place in SPIKE Prime Block Coding Foundations with guided practice in Drivetrain &amp; Wheels and Pybricks / Python Coding.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="sbox"><h4>Teacher Summary</h4><p>Jordan Lee (Grade 5) completed 110 adaptive questions with an overall weighted score of 62%. Recommended placement: Level 1 Early Foundations. Strongest domains: Programming Fundamentals and FLL Competition Strategy. Developing domains: Attachments and Robot Building Fundamentals. General Robotics readiness is developing (62.5%). SPIKE Prime Block Coding readiness is ready (75.7%). Pybricks / Python readiness is developing (66.4%). FLL Competition readiness is emerging (48.4%). Use keyed quick-swap mounts with alignment guides for faster and more reliable transitions. Improve chassis stability, center of gravity, and bracing for repeatable runs.</p></div>
+<div class="sbox green"><h4>Family-Friendly Summary</h4><p>Jordan Lee is currently placed at Level 1 Early Foundations with a score of 62%. They are showing strong progress in Programming Fundamentals and FLL Competition Strategy, and the next growth focus is Attachments and Robot Building Fundamentals. This placement helps build confidence while preparing for higher-level SPIKE Prime and FLL challenges.</p></div>
+
+<div class="hist-section" style="margin-top:28px">
+  <div class="card-wide" style="padding-top:16px">
+    <h3>Question-by-Question Answer History</h3>
+    <div class="hist-wrap">
+      <table>
+        <thead><tr><th style="width:36px">#</th><th>Domain</th><th>Subtopic</th><th style="width:48px">Level</th><th style="width:44px">Result</th><th>Student's Answer</th><th>Correct Answer</th><th style="width:48px">Time</th></tr></thead>
+        <tbody><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">1</td>
+    <td style="font-size:11px">Safety &amp; Kit Care</td>
+    <td style="font-size:11px;color:#64748b">Motor Care</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">Ignore it and keep using the motor</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Stop using it and inspect for debris or damage</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">25s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">2</td>
+    <td style="font-size:11px">Pybricks / Python Coding</td>
+    <td style="font-size:11px;color:#64748b">While Loops</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">No, the loop does not run</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">No, the loop does not run</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">34s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">3</td>
+    <td style="font-size:11px">Gears &amp; Mechanisms</td>
+    <td style="font-size:11px;color:#64748b">Bevel Gear</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Transfer power between shafts at an angle</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Transfer power between shafts at an angle</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">35s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">4</td>
+    <td style="font-size:11px">SPIKE Prime Hardware &amp; Sensors</td>
+    <td style="font-size:11px;color:#64748b">Gyro Sensor</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">How fast the robot is rotating and in which direction (rotation rate and angle)</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">How fast the robot is rotating and in which direction (rotation rate and angle)</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">34s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">5</td>
+    <td style="font-size:11px">Drivetrain &amp; Wheels</td>
+    <td style="font-size:11px;color:#64748b">Drift Diagnosis</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">The left wheel has lower traction or the left motor is weaker, or the left axle is bent causing higher friction</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">The left wheel has lower traction or the left motor is weaker, or the left axle is bent causing higher friction</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">23s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">6</td>
+    <td style="font-size:11px">Debugging &amp; Code Analysis</td>
+    <td style="font-size:11px;color:#64748b">Off By One</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Nothing; it prints 0, 1, 2, 3, 4, then Done</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Nothing; it prints 0, 1, 2, 3, 4, then Done</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">23s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">7</td>
+    <td style="font-size:11px">Programming Fundamentals</td>
+    <td style="font-size:11px;color:#64748b">Loops</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">4</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">4</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">4s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">8</td>
+    <td style="font-size:11px">Robot Behavior Prediction</td>
+    <td style="font-size:11px;color:#64748b">Encoder Counts</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">100 times</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">100 times</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">12s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">9</td>
+    <td style="font-size:11px">SPIKE Prime Block Coding</td>
+    <td style="font-size:11px;color:#64748b">Parallel Flow</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Both run at the same time without waiting for each other</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Both run at the same time without waiting for each other</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">25s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">10</td>
+    <td style="font-size:11px">Robotics Math</td>
+    <td style="font-size:11px;color:#64748b">Rpm Calculation</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">300 rotations</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">300 rotations</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">22s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">11</td>
+    <td style="font-size:11px">Teamwork &amp; Innovation Project</td>
+    <td style="font-size:11px;color:#64748b">Research Methods</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Interviewing people affected by the problem</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Interviewing people affected by the problem</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">31s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">12</td>
+    <td style="font-size:11px">FLL Competition Strategy</td>
+    <td style="font-size:11px;color:#64748b">Run Planning</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">No, testing is pointless</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Only if you've tested it at least 20 times with 80%+ success rate</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">18s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">13</td>
+    <td style="font-size:11px">Engineering Process &amp; GitHub</td>
+    <td style="font-size:11px;color:#64748b">Version Control</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">It tracks who changed what, when, and why; prevents conflicting changes</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">It tracks who changed what, when, and why; prevents conflicting changes</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">19s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">14</td>
+    <td style="font-size:11px">Robot Building Fundamentals</td>
+    <td style="font-size:11px;color:#64748b">Bracing</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">Only if the motor is weak</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">When the frame feels loose or flexes under load, or when the robot carries heavy attachments</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">34s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">15</td>
+    <td style="font-size:11px">Attachments</td>
+    <td style="font-size:11px;color:#64748b">Force Transmission</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">Either ratio works equally well</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">High gear ratio (slow and powerful) to grip without crushing the object</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">26s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">16</td>
+    <td style="font-size:11px">Safety &amp; Kit Care</td>
+    <td style="font-size:11px;color:#64748b">Storage</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Remove batteries and store them separately at room temperature</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Remove batteries and store them separately at room temperature</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">19s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">17</td>
+    <td style="font-size:11px">Pybricks / Python Coding</td>
+    <td style="font-size:11px;color:#64748b">Conditionals</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Nothing happens; the if block is skipped</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Nothing happens; the if block is skipped</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">31s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">18</td>
+    <td style="font-size:11px">Gears &amp; Mechanisms</td>
+    <td style="font-size:11px;color:#64748b">Gear Ratio</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">The 16T gear spins 0.5x as fast</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">The 16T gear spins 2x faster</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">19s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">19</td>
+    <td style="font-size:11px">SPIKE Prime Hardware &amp; Sensors</td>
+    <td style="font-size:11px;color:#64748b">Color Sensor Modes</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Color mode (detects specific color names)</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Color mode (detects specific color names)</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">8s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">20</td>
+    <td style="font-size:11px">Drivetrain &amp; Wheels</td>
+    <td style="font-size:11px;color:#64748b">Traction</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">A smooth, worn wheel; a slippery field surface; or insufficient wheel pressure on the ground</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">A smooth, worn wheel; a slippery field surface; or insufficient wheel pressure on the ground</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">21s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">21</td>
+    <td style="font-size:11px">Debugging &amp; Code Analysis</td>
+    <td style="font-size:11px;color:#64748b">Sensor Threshold</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">The sensor is not plugged in</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">The condition uses &gt; instead of &lt;, so it only stops when distance is greater than 30</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">4s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">22</td>
+    <td style="font-size:11px">Programming Fundamentals</td>
+    <td style="font-size:11px;color:#64748b">Loops</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">8</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">8</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">21s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">23</td>
+    <td style="font-size:11px">Robot Behavior Prediction</td>
+    <td style="font-size:11px;color:#64748b">Pid Behavior</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Overshoot the target and oscillate back and forth</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Overshoot the target and oscillate back and forth</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">20s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">24</td>
+    <td style="font-size:11px">SPIKE Prime Block Coding</td>
+    <td style="font-size:11px;color:#64748b">Motor Blocks</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">Motor Start block</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Motor Turn block with 180 degrees</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">13s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">25</td>
+    <td style="font-size:11px">Robotics Math</td>
+    <td style="font-size:11px;color:#64748b">Gear Ratio Calculation</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">3:1</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">3:1</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">4s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">26</td>
+    <td style="font-size:11px">Teamwork &amp; Innovation Project</td>
+    <td style="font-size:11px;color:#64748b">Presentation</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">The problem you identified, your research, your solution, and what you learned</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">The problem you identified, your research, your solution, and what you learned</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">11s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">27</td>
+    <td style="font-size:11px">FLL Competition Strategy</td>
+    <td style="font-size:11px;color:#64748b">Time Management</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">5 missions</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">5 missions</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">6s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">28</td>
+    <td style="font-size:11px">Engineering Process &amp; GitHub</td>
+    <td style="font-size:11px;color:#64748b">Version Control</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Saving a snapshot of your code with a description of what changed</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Saving a snapshot of your code with a description of what changed</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">12s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">29</td>
+    <td style="font-size:11px">Robot Building Fundamentals</td>
+    <td style="font-size:11px;color:#64748b">Structural Integrity</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">Add more weight to the arm</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Add a shorter, angled beam from the motor to the end of the arm to brace it</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">17s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">30</td>
+    <td style="font-size:11px">Attachments</td>
+    <td style="font-size:11px;color:#64748b">Quick Swap</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Add a secondary locking mechanism (pin, clamp, or magnetic catch) to prevent accidental release</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Add a secondary locking mechanism (pin, clamp, or magnetic catch) to prevent accidental release</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">8s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">31</td>
+    <td style="font-size:11px">Safety &amp; Kit Care</td>
+    <td style="font-size:11px;color:#64748b">Firmware Safety</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Review your code, test it in simulation, then upload to the robot</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Review your code, test it in simulation, then upload to the robot</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">15s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">32</td>
+    <td style="font-size:11px">Pybricks / Python Coding</td>
+    <td style="font-size:11px;color:#64748b">Motor Control</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">360</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">360</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">9s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">33</td>
+    <td style="font-size:11px">Gears &amp; Mechanisms</td>
+    <td style="font-size:11px;color:#64748b">Torque Speed Tradeoff</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">Torque doubles</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Torque decreases 5 times</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">17s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">34</td>
+    <td style="font-size:11px">SPIKE Prime Hardware &amp; Sensors</td>
+    <td style="font-size:11px;color:#64748b">Motor Encoders</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">1,105 mm</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">552 mm</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">27s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">35</td>
+    <td style="font-size:11px">Drivetrain &amp; Wheels</td>
+    <td style="font-size:11px;color:#64748b">Drift Diagnosis</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Load-induced drift: the robot carries game pieces that add weight to the right side, or the right side has less traction under load</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Load-induced drift: the robot carries game pieces that add weight to the right side, or the right side has less traction under load</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">29s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">36</td>
+    <td style="font-size:11px">Debugging &amp; Code Analysis</td>
+    <td style="font-size:11px;color:#64748b">Off By One</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">The loop runs correctly 10 times; no problem</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">It prints 'Rotated 9 times' instead of 'Rotated 10 times'</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">10s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">37</td>
+    <td style="font-size:11px">Programming Fundamentals</td>
+    <td style="font-size:11px;color:#64748b">Events</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">A variable that stores the button value</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">An event listener that triggers code when the button is pressed</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">9s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">38</td>
+    <td style="font-size:11px">Robot Behavior Prediction</td>
+    <td style="font-size:11px;color:#64748b">Encoder Counts</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">5 meters</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">5 meters</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">23s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">39</td>
+    <td style="font-size:11px">SPIKE Prime Block Coding</td>
+    <td style="font-size:11px;color:#64748b">Sensor Blocks</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">How far an object is from the sensor in centimeters or inches</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">How far an object is from the sensor in centimeters or inches</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">21s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">40</td>
+    <td style="font-size:11px">Robotics Math</td>
+    <td style="font-size:11px;color:#64748b">Encoder Counts</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">175</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">1750</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">31s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">41</td>
+    <td style="font-size:11px">Teamwork &amp; Innovation Project</td>
+    <td style="font-size:11px;color:#64748b">Problem Identification</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">It's too specific</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">It's too vague; it doesn't describe a specific, researchable issue</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">14s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">42</td>
+    <td style="font-size:11px">FLL Competition Strategy</td>
+    <td style="font-size:11px;color:#64748b">Points Optimization</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Mission B (20 expected points)</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Mission B (20 expected points)</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">5s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">43</td>
+    <td style="font-size:11px">Engineering Process &amp; GitHub</td>
+    <td style="font-size:11px;color:#64748b">Documentation</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">To impress the judges</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">So you can remember what changed, test if it helped, and undo it if it didn't</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">27s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">44</td>
+    <td style="font-size:11px">Robot Building Fundamentals</td>
+    <td style="font-size:11px;color:#64748b">Four Bar Linkage</td>
+    <td style="text-align:center;font-size:11px">Lv 1</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Keeps the end piece pointing in a consistent direction as the arm moves</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Keeps the end piece pointing in a consistent direction as the arm moves</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">27s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">45</td>
+    <td style="font-size:11px">Attachments</td>
+    <td style="font-size:11px;color:#64748b">Stall Prevention</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">The gripper is too weak</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">The motor is overloaded by the gripping force; add a limit switch or sensor to stop the motor before stall occurs</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">20s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">46</td>
+    <td style="font-size:11px">Safety &amp; Kit Care</td>
+    <td style="font-size:11px;color:#64748b">Battery Care</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Stop using it immediately, do not charge it, and store it away from other equipment</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Stop using it immediately, do not charge it, and store it away from other equipment</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">6s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">47</td>
+    <td style="font-size:11px">Pybricks / Python Coding</td>
+    <td style="font-size:11px;color:#64748b">Functions</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">motor.run(300)</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">move_forward(300)</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">7s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">48</td>
+    <td style="font-size:11px">Gears &amp; Mechanisms</td>
+    <td style="font-size:11px;color:#64748b">Gear Ratio</td>
+    <td style="text-align:center;font-size:11px">Lv 1</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">Two gears with one tooth each</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">One gear is twice as fast as the other</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">21s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">49</td>
+    <td style="font-size:11px">SPIKE Prime Hardware &amp; Sensors</td>
+    <td style="font-size:11px;color:#64748b">Motor Encoders</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">3 rotations</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">3 rotations</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">10s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">50</td>
+    <td style="font-size:11px">Drivetrain &amp; Wheels</td>
+    <td style="font-size:11px;color:#64748b">Calibration</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Reduce the encoder degree value in your distance formula by about 10%, or re-measure the wheel circumference</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Reduce the encoder degree value in your distance formula by about 10%, or re-measure the wheel circumference</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">25s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">51</td>
+    <td style="font-size:11px">Debugging &amp; Code Analysis</td>
+    <td style="font-size:11px;color:#64748b">Syntax Errors</td>
+    <td style="text-align:center;font-size:11px">Lv 1</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">A mistake in the grammar or structure of code that prevents it from running</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">A mistake in the grammar or structure of code that prevents it from running</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">28s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">52</td>
+    <td style="font-size:11px">Programming Fundamentals</td>
+    <td style="font-size:11px;color:#64748b">Tracing</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">7</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">7</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">5s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">53</td>
+    <td style="font-size:11px">Robot Behavior Prediction</td>
+    <td style="font-size:11px;color:#64748b">Gyro Drift</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">Sensor failure</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Gyro drift</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">20s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">54</td>
+    <td style="font-size:11px">SPIKE Prime Block Coding</td>
+    <td style="font-size:11px;color:#64748b">Event Handling</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">The attached stack runs immediately when the distance sensor detects an object</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">The attached stack runs immediately when the distance sensor detects an object</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">5s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">55</td>
+    <td style="font-size:11px">Robotics Math</td>
+    <td style="font-size:11px;color:#64748b">Distance Calculation</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">1750 mm</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">3500 mm</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">10s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">56</td>
+    <td style="font-size:11px">Teamwork &amp; Innovation Project</td>
+    <td style="font-size:11px;color:#64748b">Core Values</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Lend them the part if you can spare it</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Lend them the part if you can spare it</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">20s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">57</td>
+    <td style="font-size:11px">FLL Competition Strategy</td>
+    <td style="font-size:11px;color:#64748b">Points Optimization</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Take the 10 points</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Take the 10 points</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">20s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">58</td>
+    <td style="font-size:11px">Engineering Process &amp; GitHub</td>
+    <td style="font-size:11px;color:#64748b">Data Tables</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">102 cm</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">100 cm</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">20s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">59</td>
+    <td style="font-size:11px">Robot Building Fundamentals</td>
+    <td style="font-size:11px;color:#64748b">Bracing</td>
+    <td style="text-align:center;font-size:11px">Lv 1</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">To reduce friction</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">To add strength and prevent the frame from twisting or bending under load</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">31s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">60</td>
+    <td style="font-size:11px">Attachments</td>
+    <td style="font-size:11px;color:#64748b">Gear Powered Attachment</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">A low gear ratio (large motor gear, small output gear)</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">A high gear ratio (many small teeth on motor gear, few large teeth on output gear)</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">31s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">61</td>
+    <td style="font-size:11px">Pybricks / Python Coding</td>
+    <td style="font-size:11px;color:#64748b">Sensor Reading</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Far</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Far</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">30s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">62</td>
+    <td style="font-size:11px">Gears &amp; Mechanisms</td>
+    <td style="font-size:11px;color:#64748b">Gear Ratio</td>
+    <td style="text-align:center;font-size:11px">Lv 1</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">The small gear</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">The small gear</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">20s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">63</td>
+    <td style="font-size:11px">SPIKE Prime Hardware &amp; Sensors</td>
+    <td style="font-size:11px;color:#64748b">Gyro Sensor</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Gyro drift: the gyro's internal calibration has drifted slightly over time</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Gyro drift: the gyro's internal calibration has drifted slightly over time</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">9s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">64</td>
+    <td style="font-size:11px">Debugging &amp; Code Analysis</td>
+    <td style="font-size:11px;color:#64748b">Logic Errors</td>
+    <td style="text-align:center;font-size:11px">Lv 1</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Code that runs but produces wrong results because the logic is flawed</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Code that runs but produces wrong results because the logic is flawed</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">18s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">65</td>
+    <td style="font-size:11px">Programming Fundamentals</td>
+    <td style="font-size:11px;color:#64748b">Tracing</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">3</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">3</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">20s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">66</td>
+    <td style="font-size:11px">Robot Behavior Prediction</td>
+    <td style="font-size:11px;color:#64748b">Graph Reading</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">The robot drove toward the wall</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">The robot drove toward the wall</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">9s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">67</td>
+    <td style="font-size:11px">SPIKE Prime Block Coding</td>
+    <td style="font-size:11px;color:#64748b">Pid Block</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">PID runs the motor backward</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">PID automatically adjusts motor power to reach and maintain a target speed or position accurately</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">25s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">68</td>
+    <td style="font-size:11px">Robotics Math</td>
+    <td style="font-size:11px;color:#64748b">Data Tables</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">100 cm</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">100 cm</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">23s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">69</td>
+    <td style="font-size:11px">Teamwork &amp; Innovation Project</td>
+    <td style="font-size:11px;color:#64748b">Research Methods</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">Read a website about sports</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Survey or interview students about how often they lose equipment and how long it takes to find</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">13s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">70</td>
+    <td style="font-size:11px">Engineering Process &amp; GitHub</td>
+    <td style="font-size:11px;color:#64748b">Design Cycle</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Define the problem</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Define the problem</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">16s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">71</td>
+    <td style="font-size:11px">Robot Building Fundamentals</td>
+    <td style="font-size:11px;color:#64748b">Stability</td>
+    <td style="text-align:center;font-size:11px">Lv 1</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">The strength of the motors</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">The ability of the robot to stay upright and not tip over easily</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">29s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">72</td>
+    <td style="font-size:11px">Attachments</td>
+    <td style="font-size:11px;color:#64748b">Gear Powered Attachment</td>
+    <td style="text-align:center;font-size:11px">Lv 1</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">An attachment that only uses motors (no gears)</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">An attachment with gears inside it that transmit motion and torque from a motor to perform an action</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">34s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">73</td>
+    <td style="font-size:11px">Gears &amp; Mechanisms</td>
+    <td style="font-size:11px;color:#64748b">Idler Gear</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">To hold the gears in place</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">To change the direction of rotation</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">22s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">74</td>
+    <td style="font-size:11px">Debugging &amp; Code Analysis</td>
+    <td style="font-size:11px;color:#64748b">Wrong Port</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">The program crashes with an error because Port.B motor was not defined</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">The program crashes with an error because Port.B motor was not defined</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">15s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">75</td>
+    <td style="font-size:11px">SPIKE Prime Block Coding</td>
+    <td style="font-size:11px;color:#64748b">My Blocks</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">40 blocks</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">40 blocks</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">30s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">76</td>
+    <td style="font-size:11px">Robotics Math</td>
+    <td style="font-size:11px;color:#64748b">Data Tables</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">101%</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">100%</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">12s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">77</td>
+    <td style="font-size:11px">Teamwork &amp; Innovation Project</td>
+    <td style="font-size:11px;color:#64748b">Ip Cycle</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Explain what you learned from the attempt and discuss improvements</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Explain what you learned from the attempt and discuss improvements</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">14s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">78</td>
+    <td style="font-size:11px">Engineering Process &amp; GitHub</td>
+    <td style="font-size:11px;color:#64748b">Data Tables</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">46</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">46</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">26s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">79</td>
+    <td style="font-size:11px">Robot Building Fundamentals</td>
+    <td style="font-size:11px;color:#64748b">Center Of Gravity</td>
+    <td style="text-align:center;font-size:11px">Lv 1</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">The point where all the robot's weight is effectively concentrated</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">The point where all the robot's weight is effectively concentrated</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">9s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">80</td>
+    <td style="font-size:11px">Attachments</td>
+    <td style="font-size:11px;color:#64748b">Attachment Design</td>
+    <td style="text-align:center;font-size:11px">Lv 1</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">A sensor that reads colors</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">A specialized tool (like a gripper, arm, or basket) that is added to the robot to perform game tasks</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">17s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">81</td>
+    <td style="font-size:11px">Safety &amp; Kit Care</td>
+    <td style="font-size:11px;color:#64748b">Cable Management</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Carefully inspect for exposed wires, replace if unsafe, or repair with proper insulation</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Carefully inspect for exposed wires, replace if unsafe, or repair with proper insulation</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">21s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">82</td>
+    <td style="font-size:11px">Drivetrain &amp; Wheels</td>
+    <td style="font-size:11px;color:#64748b">Wheel Circumference</td>
+    <td style="text-align:center;font-size:11px">Lv 4</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">1,105 mm</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">552 mm</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">13s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">83</td>
+    <td style="font-size:11px">FLL Competition Strategy</td>
+    <td style="font-size:11px;color:#64748b">Points Optimization</td>
+    <td style="text-align:center;font-size:11px">Lv 4</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Both missions (35 × 0.70 = 24.5 pts expected)</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Both missions (35 × 0.70 = 24.5 pts expected)</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">14s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">84</td>
+    <td style="font-size:11px">Pybricks / Python Coding</td>
+    <td style="font-size:11px;color:#64748b">While Loops</td>
+    <td style="text-align:center;font-size:11px">Lv 4</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">The motor runs forward forever</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">The motor runs until the sensor reads less than 50 cm, then stops</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">8s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">85</td>
+    <td style="font-size:11px">SPIKE Prime Hardware &amp; Sensors</td>
+    <td style="font-size:11px;color:#64748b">Force Sensor</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">The force sensor's maximum reading is being reached, or the condition to stop closing is not being checked properly</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">The force sensor's maximum reading is being reached, or the condition to stop closing is not being checked properly</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">28s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">86</td>
+    <td style="font-size:11px">Programming Fundamentals</td>
+    <td style="font-size:11px;color:#64748b">Conditionals</td>
+    <td style="text-align:center;font-size:11px">Lv 4</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">An if-else statement</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">An if-else statement</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">35s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">87</td>
+    <td style="font-size:11px">Robot Behavior Prediction</td>
+    <td style="font-size:11px;color:#64748b">Graph Reading</td>
+    <td style="text-align:center;font-size:11px">Lv 4</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">200 RPM</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">400 RPM</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">5s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">88</td>
+    <td style="font-size:11px">SPIKE Prime Block Coding</td>
+    <td style="font-size:11px;color:#64748b">Motor Blocks</td>
+    <td style="text-align:center;font-size:11px">Lv 4</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">The distance sensor reads a value less than or equal to 20 cm</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">The distance sensor reads a value less than or equal to 20 cm</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">13s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">89</td>
+    <td style="font-size:11px">Teamwork &amp; Innovation Project</td>
+    <td style="font-size:11px;color:#64748b">Ip Cycle</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Plan how to share your findings with others</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Plan how to share your findings with others</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">17s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">90</td>
+    <td style="font-size:11px">Engineering Process &amp; GitHub</td>
+    <td style="font-size:11px;color:#64748b">Engineering Notebook</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">You should use a computer instead</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">It doesn't say what changed or what the result was</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">30s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">91</td>
+    <td style="font-size:11px">Safety &amp; Kit Care</td>
+    <td style="font-size:11px;color:#64748b">Workspace Safety</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Move your robot away from the drill and the work area</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Move your robot away from the drill and the work area</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">7s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">92</td>
+    <td style="font-size:11px">Drivetrain &amp; Wheels</td>
+    <td style="font-size:11px;color:#64748b">Encoder Counts</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">1,659 mm</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">829 mm</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">35s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">93</td>
+    <td style="font-size:11px">FLL Competition Strategy</td>
+    <td style="font-size:11px;color:#64748b">Time Management</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Both (Area Y then Area X if time allows)</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Both (Area Y then Area X if time allows)</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">29s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">94</td>
+    <td style="font-size:11px">Pybricks / Python Coding</td>
+    <td style="font-size:11px;color:#64748b">Variable Scope</td>
+    <td style="text-align:center;font-size:11px">Lv 4</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">Only if you print x inside the function</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">No, x is local to the function and does not exist outside it</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">17s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">95</td>
+    <td style="font-size:11px">SPIKE Prime Hardware &amp; Sensors</td>
+    <td style="font-size:11px;color:#64748b">Distance Sensor</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">if distance &gt; 30: keep moving; if distance &lt;= 30: stop</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">if distance &gt; 30: keep moving; if distance &lt;= 30: stop</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">20s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">96</td>
+    <td style="font-size:11px">Programming Fundamentals</td>
+    <td style="font-size:11px;color:#64748b">Tracing</td>
+    <td style="text-align:center;font-size:11px">Lv 4</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Loop runs 1 time</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Loop runs 1 time</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">31s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">97</td>
+    <td style="font-size:11px">Robot Behavior Prediction</td>
+    <td style="font-size:11px;color:#64748b">Path Prediction</td>
+    <td style="text-align:center;font-size:11px">Lv 4</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">About 67 cm (using Pythagorean theorem)</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">About 67 cm (using Pythagorean theorem)</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">33s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">98</td>
+    <td style="font-size:11px">SPIKE Prime Block Coding</td>
+    <td style="font-size:11px;color:#64748b">Sensor Blocks</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Color mode</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Color mode</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">31s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">99</td>
+    <td style="font-size:11px">Teamwork &amp; Innovation Project</td>
+    <td style="font-size:11px;color:#64748b">Core Values</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Showing respect, appreciation, and kindness even when competing against other teams</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Showing respect, appreciation, and kindness even when competing against other teams</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">13s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">100</td>
+    <td style="font-size:11px">Engineering Process &amp; GitHub</td>
+    <td style="font-size:11px;color:#64748b">Design Cycle</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">Test a different robot</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Go back to the Plan or Build step and try a different approach</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">17s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">101</td>
+    <td style="font-size:11px">Safety &amp; Kit Care</td>
+    <td style="font-size:11px;color:#64748b">Sensor Cleaning</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Use a dry, soft cloth or compressed air</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Use a dry, soft cloth or compressed air</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">8s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">102</td>
+    <td style="font-size:11px">Drivetrain &amp; Wheels</td>
+    <td style="font-size:11px;color:#64748b">Wheel Circumference</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">13.4 rotations</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">10.1 rotations</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">34s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">103</td>
+    <td style="font-size:11px">FLL Competition Strategy</td>
+    <td style="font-size:11px;color:#64748b">Mission Selection</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">112 points</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">112 points</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">23s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">104</td>
+    <td style="font-size:11px">Pybricks / Python Coding</td>
+    <td style="font-size:11px;color:#64748b">While Loops</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">9</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">12</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">24s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">105</td>
+    <td style="font-size:11px">SPIKE Prime Hardware &amp; Sensors</td>
+    <td style="font-size:11px;color:#64748b">Gyro Sensor</td>
+    <td style="text-align:center;font-size:11px">Lv 2</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">Ignore it; 2 degrees is negligible</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Re-zero the gyro and drive again, or apply a small correction to the motor powers to bring the robot back to straight</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">22s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">106</td>
+    <td style="font-size:11px">Programming Fundamentals</td>
+    <td style="font-size:11px;color:#64748b">Tracing</td>
+    <td style="text-align:center;font-size:11px">Lv 4</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">15</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">15</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">27s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">107</td>
+    <td style="font-size:11px">Robot Behavior Prediction</td>
+    <td style="font-size:11px;color:#64748b">Sensor Response</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">During the third loop when RED is detected</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">During the third loop when RED is detected</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">12s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">108</td>
+    <td style="font-size:11px">SPIKE Prime Block Coding</td>
+    <td style="font-size:11px;color:#64748b">Wait Timing</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">After 2 seconds plus the time for the Motor Turn block</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">After 2 seconds plus the time for the Motor Turn block</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">12s</td>
+  </tr><tr style="background:#f0fdf4">
+    <td style="text-align:center;font-weight:700;color:#64748b">109</td>
+    <td style="font-size:11px">Teamwork &amp; Innovation Project</td>
+    <td style="font-size:11px;color:#64748b">Ip Cycle</td>
+    <td style="text-align:center;font-size:11px">Lv 1</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#16a34a">✓</td>
+    <td style="font-size:11px;max-width:180px">Identify → Research → Create → Share</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Identify → Research → Create → Share</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">16s</td>
+  </tr><tr style="background:#fff7f7">
+    <td style="text-align:center;font-weight:700;color:#64748b">110</td>
+    <td style="font-size:11px">Engineering Process &amp; GitHub</td>
+    <td style="font-size:11px;color:#64748b">Iterative Testing</td>
+    <td style="text-align:center;font-size:11px">Lv 3</td>
+    <td style="text-align:center;font-weight:800;font-size:14px;color:#dc2626">✗</td>
+    <td style="font-size:11px;max-width:180px">Add more weight</td>
+    <td style="font-size:11px;color:#16a34a;max-width:180px">Change the motor speed slightly and test pickup rate again</td>
+    <td style="text-align:center;color:#94a3b8;font-size:11px">24s</td>
+  </tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="rpt-footer">FLL Robotics Program &nbsp;•&nbsp; SPIKE Prime + FLL Adaptive Placement Assessment &nbsp;•&nbsp; Generated March 19, 2026 &nbsp;•&nbsp; Offline-capable</div>
+</div>
+
+<script>const D={"domainLabels":["Programming Fundamentals","FLL Competition Strategy","Safety & Kit Care","SPIKE Prime Block Coding","SPIKE Prime Hardware & Sensors","Teamwork & Innovation Project","Robot Behavior Prediction","Debugging & Code Analysis","Drivetrain & Wheels","Pybricks / Python Coding","Robotics Math","Engineering Process & GitHub","Gears & Mechanisms","Robot Building Fundamentals","Attachments"],"domainScores":[88,88,87,79,75,74,72,64,53,45,44,39,32,30,18],"domainCorrects":[7,6,6,7,6,7,6,4,4,4,3,4,2,2,1],"domainAnswered":[8,7,7,9,8,9,8,6,7,8,6,9,6,6,6],"domainColors":["#22c55e","#22c55e","#22c55e","#22c55e","#22c55e","#22c55e","#22c55e","#f59e0b","#f59e0b","#f59e0b","#ef4444","#ef4444","#ef4444","#ef4444","#ef4444"],"trackLabels":["SPIKE Prime Block Coding","Pybricks / Python","General Robotics","FLL Competition"],"trackScores":[75.7,66.4,62.5,48.4],"trackColors":["#3b82f6","#f59e0b","#f59e0b","#ef4444"],"trackBands":["Ready","Developing","Developing","Emerging"],"radarScores":[65,49,67],"correctCount":69,"incorrectCount":41,"totalQuestions":110};</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+  Chart.defaults.font.family="-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif";
+  Chart.defaults.font.size=11; Chart.defaults.color="#475569";
+  new Chart(document.getElementById("doughnutChart"),{type:"doughnut",data:{labels:["Correct","Needs Review"],datasets:[{data:[D.correctCount,D.incorrectCount],backgroundColor:["#22c55e","#f87171"],borderWidth:3,borderColor:"#fff",hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:"68%",plugins:{legend:{position:"bottom",labels:{padding:14}},tooltip:{callbacks:{label:(c)=>c.label+": "+c.raw+" questions ("+Math.round(c.raw/D.totalQuestions*100)+"%)"}}}},plugins:[{id:"center",afterDraw(chart){const{ctx}=chart;const m=chart.getDatasetMeta(0);if(!m.data.length)return;const cx=m.data[0].x,cy=m.data[0].y;ctx.save();ctx.textAlign="center";ctx.fillStyle="#1e293b";ctx.font="bold 26px -apple-system,Arial,sans-serif";ctx.fillText(D.correctCount+"/"+D.totalQuestions,cx,cy-2);ctx.font="12px -apple-system,Arial,sans-serif";ctx.fillStyle="#64748b";ctx.fillText("Correct",cx,cy+16);ctx.restore();}}]});
+  new Chart(document.getElementById("trackChart"),{type:"bar",data:{labels:D.trackLabels,datasets:[{data:D.trackScores,backgroundColor:D.trackColors,borderRadius:6,borderSkipped:false}]},options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,scales:{x:{min:0,max:100,grid:{color:"#f1f5f9"},ticks:{callback:(v)=>v+"%"}},y:{grid:{display:false}}},plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>D.trackBands[c.dataIndex]+" — "+c.raw+"%"}}}}});
+  new Chart(document.getElementById("domainChart"),{type:"bar",data:{labels:D.domainLabels,datasets:[{data:D.domainScores,backgroundColor:D.domainColors,borderRadius:5,borderSkipped:false}]},options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,scales:{x:{min:0,max:100,grid:{color:"#f1f5f9"},ticks:{callback:(v)=>v+"%"}},y:{grid:{display:false},ticks:{font:{size:11}}}},plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>c.raw+"% — "+D.domainCorrects[c.dataIndex]+"/"+D.domainAnswered[c.dataIndex]+" correct"}}}}});
+  new Chart(document.getElementById("radarChart"),{type:"radar",data:{labels:["Programming\n& Math","Mechanical\n& Hardware","Competition\n& Teamwork"],datasets:[{label:"Band Score",data:D.radarScores,backgroundColor:"rgba(29,78,216,0.12)",borderColor:"#1d4ed8",borderWidth:2.5,pointBackgroundColor:"#1d4ed8",pointRadius:5,pointHoverRadius:7}]},options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:100,ticks:{stepSize:25,font:{size:10},callback:(v)=>v+"%"},grid:{color:"#e2e8f0"},pointLabels:{font:{size:11,weight:"600"},color:"#334155"}}},plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>c.raw+"% avg"}}}}});
+});
+</script>
+</body></html>

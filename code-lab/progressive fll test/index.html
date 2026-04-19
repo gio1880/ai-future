@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adaptive FLL Placement Assessment</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">School Robotics Assessment</p>
+        <h1>Adaptive FLL Placement Assessment</h1>
+        <p class="subtitle">Domain-aware SPIKE Prime and FLL placement tool for programming, building, mechanisms, strategy, and prediction readiness.</p>
+      </div>
+      <div class="header-meta">
+        <span id="session-status-pill" class="pill muted">Not Started</span>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section id="setup-view" class="view">
+        <article class="card">
+          <h2>Student Setup</h2>
+          <p class="card-intro">Enter student details and begin an adaptive three-phase placement assessment. Questions adjust automatically to each student's level — shorter for beginners, deeper for advanced learners.</p>
+
+          <div id="resume-banner" class="banner hidden" role="status" aria-live="polite">
+            <div>
+              <strong>Previous in-progress session found.</strong>
+              <p>You can resume where you left off or start a new assessment.</p>
+            </div>
+            <div class="banner-actions">
+              <button id="resume-btn" class="btn secondary" type="button">Resume Session</button>
+              <button id="start-new-btn" class="btn ghost" type="button">Start New</button>
+            </div>
+          </div>
+
+          <form id="setup-form" class="setup-form">
+            <label>
+              Student Name
+              <input id="student-name" name="studentName" type="text" required maxlength="80" placeholder="e.g., Maya Chen">
+            </label>
+            <label>
+              Grade
+              <input id="student-grade" name="studentGrade" type="text" maxlength="30" placeholder="e.g., 6">
+            </label>
+            <label>
+              Team / Class
+              <input id="student-team" name="studentTeam" type="text" maxlength="60" placeholder="e.g., Team Neutrinos">
+            </label>
+            <button id="start-assessment-btn" class="btn primary" type="submit">Start Assessment</button>
+          </form>
+        </article>
+      </section>
+
+      <section id="assessment-view" class="view hidden" aria-live="polite">
+
+        <!-- Phase indicator -->
+        <div class="phase-indicator" id="phase-indicator">
+          <div class="phase-step active" id="phase-step-1">
+            <span class="phase-step-num">1</span>
+            <span class="phase-step-label">Screener</span>
+          </div>
+          <span class="phase-arrow">›</span>
+          <div class="phase-step" id="phase-step-2">
+            <span class="phase-step-num">2</span>
+            <span class="phase-step-label">Deep Dive</span>
+          </div>
+          <span class="phase-arrow">›</span>
+          <div class="phase-step" id="phase-step-3">
+            <span class="phase-step-num">3</span>
+            <span class="phase-step-label">Mastery Check</span>
+          </div>
+          <span id="phase-detail-label" class="phase-detail-label">0 of 15 domains screened</span>
+        </div>
+
+        <article class="card status-card">
+          <div class="status-row">
+            <div>
+              <p class="status-label">Progress</p>
+              <p id="progress-label" class="status-value">Question 1 of 24</p>
+            </div>
+            <div>
+              <p class="status-label">Current Domain</p>
+              <p id="current-domain-label" class="status-value">Programming Fundamentals</p>
+            </div>
+            <div>
+              <p class="status-label">Domain Difficulty</p>
+              <p id="domain-difficulty-label" class="status-value">Level 2</p>
+            </div>
+            <div id="timer-container" class="timer-container">
+              <p class="status-label">Time Remaining</p>
+              <p id="timer-display" class="status-value timer-value">75:00</p>
+            </div>
+          </div>
+          <div class="progress-track" aria-hidden="true">
+            <div id="progress-fill" class="progress-fill"></div>
+          </div>
+        </article>
+
+        <article class="card question-card">
+          <div class="question-head">
+            <span id="question-type-pill" class="pill">MCQ</span>
+            <span id="question-track-pill" class="pill muted">Track: General</span>
+            <span id="question-level-pill" class="pill muted">Level 2 Developing Builder</span>
+          </div>
+          <p id="question-meta-line" class="question-meta-line">Domain: Programming Fundamentals • Subtopic: Sequencing</p>
+
+          <h2 id="question-prompt">Question prompt appears here.</h2>
+
+          <figure id="question-image-wrap" class="question-image hidden">
+            <img id="question-image" alt="">
+            <figcaption id="question-image-caption"></figcaption>
+          </figure>
+
+          <pre id="question-code-wrap" class="question-code hidden"><code id="question-code"></code></pre>
+
+          <div id="options-list" class="options-list" role="listbox" aria-label="Answer options"></div>
+
+          <div class="hint-panel">
+            <button id="hint-toggle-btn" class="btn ghost" type="button">Show Hint</button>
+            <p id="hint-text" class="hint-text hidden"></p>
+          </div>
+
+          <div id="feedback-panel" class="feedback hidden"></div>
+
+          <div class="question-actions">
+            <button id="submit-answer-btn" class="btn primary" type="button" disabled>Submit Answer</button>
+            <button id="next-question-btn" class="btn secondary hidden" type="button">Next Question</button>
+          </div>
+        </article>
+      </section>
+
+      <section id="results-view" class="view hidden">
+        <div id="timeout-notice" class="timeout-notice hidden">
+          ⏱️ Time's up! The 75-minute limit was reached — your results are based on questions answered so far.
+        </div>
+        <article class="card">
+          <h2>Placement Results</h2>
+          <div class="result-grid">
+            <div>
+              <p class="status-label">Student</p>
+              <p id="result-student-name" class="placement-label">-</p>
+            </div>
+            <div>
+              <p class="status-label">Date Completed</p>
+              <p id="result-date-completed" class="placement-label">-</p>
+            </div>
+            <div>
+              <p class="status-label">Focus Track Preference</p>
+              <p id="result-track" class="placement-label">General</p>
+            </div>
+            <div>
+              <p class="status-label">Overall Weighted Score</p>
+              <p id="overall-score" class="big-score">0%</p>
+            </div>
+            <div>
+              <p class="status-label">Recommended Placement</p>
+              <p id="placement-recommendation" class="placement-label">Level 1 Early Foundations</p>
+            </div>
+          </div>
+          <div class="strength-grid">
+            <div>
+              <p class="status-label">Strongest Domains</p>
+              <p id="strongest-domains" class="placement-label">-</p>
+            </div>
+            <div>
+              <p class="status-label">Weakest Domains</p>
+              <p id="weakest-domains" class="placement-label">-</p>
+            </div>
+          </div>
+          <div>
+            <p class="status-label">Domains Needing Practice</p>
+            <p id="domains-needing-practice" class="placement-label">-</p>
+          </div>
+          <div>
+            <p class="status-label">Track Readiness</p>
+            <div id="track-readiness-list" class="readiness-list"></div>
+          </div>
+          <p id="teacher-summary" class="teacher-summary"></p>
+          <div class="result-actions">
+            <button id="html-report-btn" class="btn primary" type="button">📄 View Full Report</button>
+            <button id="export-json-btn" class="btn secondary" type="button">Export JSON</button>
+            <button id="export-csv-btn" class="btn secondary" type="button">Export CSV</button>
+            <button id="restart-btn" class="btn ghost" type="button">Start New Assessment</button>
+          </div>
+        </article>
+
+        <article id="printable-report" class="card report-print-surface">
+          <div class="report-head">
+            <h3>End-of-Assessment Report</h3>
+            <p class="card-intro">Student- and parent-friendly summary for placement planning.</p>
+          </div>
+
+          <div class="report-grid">
+            <div>
+              <p class="status-label">Student Name</p>
+              <p id="report-student-name" class="placement-label">-</p>
+            </div>
+            <div>
+              <p class="status-label">Date Completed</p>
+              <p id="report-date-completed" class="placement-label">-</p>
+            </div>
+            <div>
+              <p class="status-label">Focus Track Preference</p>
+              <p id="report-track" class="placement-label">-</p>
+            </div>
+            <div>
+              <p class="status-label">Overall Placement Level</p>
+              <p id="report-placement" class="placement-label">-</p>
+            </div>
+            <div>
+              <p class="status-label">Weighted Score</p>
+              <p id="report-score" class="placement-label">-</p>
+            </div>
+            <div>
+              <p class="status-label">Recommended Next Placement / Class</p>
+              <p id="report-next-placement" class="placement-label">-</p>
+            </div>
+          </div>
+
+          <div class="strength-grid">
+            <div>
+              <p class="status-label">Strongest Domains</p>
+              <p id="report-strongest-domains" class="placement-label">-</p>
+            </div>
+            <div>
+              <p class="status-label">Weakest Domains</p>
+              <p id="report-weakest-domains" class="placement-label">-</p>
+            </div>
+          </div>
+
+          <div>
+            <p class="status-label">Domains Needing Practice</p>
+            <p id="report-needing-practice" class="placement-label">-</p>
+          </div>
+
+          <div>
+            <p class="status-label">Track Readiness</p>
+            <div id="report-track-readiness-list" class="readiness-list"></div>
+          </div>
+
+          <div>
+            <p class="status-label">Teacher Summary</p>
+            <p id="report-teacher-summary" class="teacher-summary"></p>
+          </div>
+
+          <div>
+            <p class="status-label">Family-Friendly Summary</p>
+            <p id="report-family-summary" class="teacher-summary"></p>
+          </div>
+
+          <div class="result-actions print-controls">
+            <button id="print-report-btn" class="btn primary" type="button">Print Report</button>
+            <button id="save-report-btn" class="btn secondary" type="button">Save Report to Local History</button>
+          </div>
+
+          <p id="report-save-feedback" class="report-save-feedback hidden"></p>
+
+          <div class="saved-report-wrap">
+            <p class="status-label">Saved Local Report History</p>
+            <ul id="saved-report-list" class="saved-report-list"></ul>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Domain Performance Profiles</h3>
+          <div id="domain-profiles" class="domain-profiles"></div>
+        </article>
+
+        <article class="card">
+          <h3>Question History</h3>
+          <div class="history-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Domain</th>
+                  <th>Subtopic</th>
+                  <th>Difficulty</th>
+                  <th>Track</th>
+                  <th>Result</th>
+                  <th>Student Answer</th>
+                  <th>Correct Answer</th>
+                </tr>
+              </thead>
+              <tbody id="history-body"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="teacher-tools">
+        <details class="teacher-sim-details">
+          <summary>Teacher Simulation Mode</summary>
+          <article class="card teacher-sim-card">
+            <h3>Simulation Controls</h3>
+            <p class="card-intro">Run synthetic students through the same adaptive engine to preview placement outcomes.</p>
+
+            <div class="teacher-sim-grid">
+              <label>
+                Simulation Profile
+                <select id="sim-profile-select">
+                  <option value="beginner">Beginner</option>
+                  <option value="strong-coder-weak-builder">Strong Coder / Weak Builder</option>
+                  <option value="strong-builder-weak-coder">Strong Builder / Weak Coder</option>
+                  <option value="competition-ready">Competition Ready</option>
+                  <option value="pybricks-ready">Pybricks Ready</option>
+                </select>
+              </label>
+
+              <label>
+                Number of Simulated Students
+                <input id="sim-student-count" type="number" min="1" max="250" step="1" value="20">
+              </label>
+            </div>
+
+            <div class="question-actions">
+              <button id="run-single-sim-btn" class="btn secondary" type="button">Run Single Simulation</button>
+              <button id="run-batch-sim-btn" class="btn primary" type="button">Run Batch Simulation</button>
+            </div>
+
+            <div id="sim-summary-panel" class="sim-summary-panel hidden">
+              <h4>Simulation Summary</h4>
+              <p id="sim-summary-line" class="teacher-summary"></p>
+              <div id="sim-placement-distribution" class="sim-distribution"></div>
+              <p id="sim-domain-insights" class="teacher-summary"></p>
+              <p id="sim-track-readiness" class="teacher-summary"></p>
+            </div>
+          </article>
+        </details>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <span>Adaptive FLL Placement Tool</span>
+      <span>Offline-capable • Local storage enabled</span>
+    </footer>
+  </div>
+
+  <script src="questions.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

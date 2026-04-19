@@ -1,0 +1,81 @@
+<svg viewBox="0 0 350 350" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="350" height="350" fill="white"/>
+
+  <!-- Title -->
+  <text x="175" y="30" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">Bevel Gears - 90° Power Transmission</text>
+
+  <!-- Vertical axis line -->
+  <line x1="175" y1="60" x2="175" y2="220" stroke="#666" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <!-- Horizontal axis line -->
+  <line x1="60" y1="140" x2="290" y2="140" stroke="#666" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <!-- Upper bevel gear (driven by horizontal shaft) -->
+  <g>
+    <!-- Cone shape outline -->
+    <path d="M 110 140 L 175 80 L 240 140 Z" fill="none" stroke="#333" stroke-width="2"/>
+
+    <!-- Gear body -->
+    <ellipse cx="175" cy="110" rx="50" ry="20" fill="#FF9800" stroke="#333" stroke-width="3"/>
+
+    <!-- Angled teeth -->
+    <path d="M 165 85 L 175 70 L 185 85 Z" fill="#FF9800" stroke="#333" stroke-width="2"/>
+    <path d="M 135 105 L 125 95 L 135 90 Z" fill="#FF9800" stroke="#333" stroke-width="2"/>
+    <path d="M 215 105 L 225 95 L 215 90 Z" fill="#FF9800" stroke="#333" stroke-width="2"/>
+
+    <!-- Center hole -->
+    <circle cx="175" cy="110" r="6" fill="white" stroke="#333" stroke-width="2"/>
+
+    <!-- Rotation arrow -->
+    <path d="M 150 95 A 30 30 0 0 0 175 75" fill="none" stroke="#FF9800" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+
+    <text x="175" y="55" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">Bevel Gear 1</text>
+  </g>
+
+  <!-- Right bevel gear (driven by vertical shaft) -->
+  <g>
+    <!-- Cone shape outline -->
+    <path d="M 240 140 L 290 105 L 240 70 Z" fill="none" stroke="#333" stroke-width="2"/>
+
+    <!-- Gear body -->
+    <ellipse cx="260" cy="105" rx="20" ry="45" fill="#2196F3" stroke="#333" stroke-width="3"/>
+
+    <!-- Angled teeth -->
+    <path d="M 265 80 L 280 75 L 275 65 Z" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <path d="M 255 75 L 260 55 L 255 60 Z" fill="#2196F3" stroke="#333" stroke-width="2"/>
+    <path d="M 265 130 L 280 135 L 275 145 Z" fill="#2196F3" stroke="#333" stroke-width="2"/>
+
+    <!-- Center hole -->
+    <circle cx="260" cy="105" r="6" fill="white" stroke="#333" stroke-width="2"/>
+
+    <!-- Rotation arrow -->
+    <path d="M 270 80 A 30 30 0 0 0 285 105" fill="none" stroke="#2196F3" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+
+    <text x="310" y="110" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">Bevel</text>
+    <text x="310" y="127" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">Gear 2</text>
+  </g>
+
+  <!-- Power direction arrows -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#FF9800"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#2196F3"/>
+    </marker>
+  </defs>
+
+  <!-- Input power arrow (horizontal) -->
+  <line x1="20" y1="140" x2="60" y2="140" stroke="#FF9800" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="25" y="165" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#666">Input</text>
+
+  <!-- Output power arrow (vertical) -->
+  <line x1="175" y1="230" x2="175" y2="270" stroke="#2196F3" stroke-width="3" marker-end="url(#arrowBlue)"/>
+  <text x="185" y="255" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#666">Output</text>
+
+  <!-- Description box -->
+  <rect x="20" y="290" width="310" height="50" fill="#f0f0f0" stroke="#333" stroke-width="2" rx="4"/>
+  <text x="175" y="310" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">Transmits power at 90° angles</text>
+  <text x="175" y="330" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#666">Changes rotation direction while meshing</text>
+</svg>

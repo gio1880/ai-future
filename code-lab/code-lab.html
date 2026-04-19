@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Future Code Lab — Learn. Code. Build. Succeed.</title>
+  <meta name="description" content="AI Future Code Lab — interactive coding platform for students. Lessons, projects, quizzes, and certificates. Formerly PyLearn." />
+  <link rel="icon" href="../ai future logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/design-system.css" />
+  <style>
+    /* ── Hero ──────────────────────────────────────────────── */
+    .cl-hero {
+      background: linear-gradient(135deg, #0D0A2E 0%, #1A0F4E 50%, #0A1A3E 100%);
+      padding: 5rem 0 4rem;
+      overflow: hidden;
+      position: relative;
+      color: #fff;
+    }
+    .cl-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 50% 60% at 80% 40%, rgba(109,74,255,.25) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(37,99,255,.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .cl-hero__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      max-width: var(--max-w);
+      margin-inline: auto;
+      padding-inline: var(--sp-xl);
+      position: relative; z-index: 1;
+    }
+    .cl-hero__pill {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: rgba(109,74,255,.3); border: 1px solid rgba(109,74,255,.5);
+      color: #C4B5FD; font-size: .75rem; font-weight: 700; letter-spacing: .06em;
+      padding: .3rem .9rem; border-radius: 9999px;
+      margin-bottom: 1rem;
+    }
+    .cl-hero__title {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      line-height: 1;
+      color: #fff;
+      letter-spacing: -.02em;
+      text-transform: uppercase;
+      margin-bottom: .75rem;
+    }
+    .cl-hero__sub {
+      font-size: 1.35rem; font-weight: 700;
+      background: linear-gradient(90deg, var(--af-yellow), #FBBF24);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+    }
+    .cl-hero__desc { font-size: 1rem; color: rgba(255,255,255,.7); line-height: 1.7; max-width: 480px; margin-bottom: 2rem; }
+    .cl-hero__minifeat {
+      display: flex; gap: 1.5rem; flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+    .cl-hero__minifeat-item {
+      display: flex; align-items: center; gap: .4rem;
+      font-size: .82rem; color: rgba(255,255,255,.6); font-weight: 500;
+    }
+    .cl-hero__minifeat-item i { color: var(--af-green); }
+
+    /* App mockup */
+    .cl-mockup {
+      background: #1A1F42;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(109,74,255,.2);
+      max-width: 520px;
+      width: 100%;
+    }
+    .cl-mockup__bar {
+      background: #0E1225;
+      padding: .6rem 1rem;
+      display: flex; align-items: center; gap: .5rem;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .cl-mockup__dot { width: 10px; height: 10px; border-radius: 50%; }
+    .cl-mockup__bar-title { font-size: .75rem; color: rgba(255,255,255,.3); margin-left: .5rem; font-family: var(--font-mono); }
+    .cl-mockup__body { display: grid; grid-template-columns: 160px 1fr; min-height: 300px; }
+    .cl-mockup__sidebar { background: #0A0D1A; padding: .75rem .5rem; border-right: 1px solid rgba(255,255,255,.06); }
+    .cl-mockup__nav-item {
+      display: flex; align-items: center; gap: .4rem;
+      padding: .45rem .6rem; border-radius: 6px;
+      font-size: .72rem; color: rgba(255,255,255,.45); margin-bottom: .1rem;
+    }
+    .cl-mockup__nav-item.active { background: rgba(109,74,255,.25); color: #C4B5FD; font-weight: 600; }
+    .cl-mockup__content { padding: .75rem; display: flex; flex-direction: column; gap: .6rem; }
+    .cl-mockup__progress {
+      background: rgba(255,255,255,.04); border-radius: 10px; padding: .75rem;
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .cl-mockup__progress-title { font-size: .7rem; font-weight: 700; color: rgba(255,255,255,.5); margin-bottom: .4rem; text-transform: uppercase; letter-spacing: .06em; }
+    .cl-mockup__progress-name { font-size: .8rem; font-weight: 600; color: #fff; margin-bottom: .5rem; }
+    .cl-code-mini {
+      background: #0A0D18; border-radius: 8px;
+      padding: .6rem .75rem; font-family: var(--font-mono);
+      font-size: .7rem; color: #E6EDF3; line-height: 1.5;
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .cl-code-mini .kw { color: #FF7B72; }
+    .cl-code-mini .st { color: #A5D6FF; }
+    .cl-code-mini .fn { color: #D2A8FF; }
+    .cl-code-mini .cm { color: rgba(255,255,255,.3); }
+    .run-mini {
+      display: inline-flex; align-items: center; gap: .3rem;
+      background: var(--af-success); color: #fff;
+      padding: .3rem .75rem; border-radius: 6px;
+      font-size: .72rem; font-weight: 700; cursor: pointer;
+      border: none;
+    }
+
+    /* ── Why Cards ─────────────────────────────────────────── */
+    .why-lab-section { background: var(--af-deep-navy); }
+    .why-lab-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-lg);
+    }
+    .why-lab-card {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: var(--r-xl);
+      padding: 1.75rem;
+      transition: background var(--t-normal), border-color var(--t-normal), transform var(--t-normal);
+    }
+    .why-lab-card:hover { background: rgba(255,255,255,.08); border-color: rgba(109,74,255,.3); transform: translateY(-4px); }
+    .why-lab-icon {
+      width: 48px; height: 48px; border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; margin-bottom: 1rem;
+    }
+    .why-lab-card__title { font-size: .95rem; font-weight: 700; color: #fff; margin-bottom: .4rem; }
+    .why-lab-card__desc { font-size: .875rem; color: rgba(255,255,255,.55); line-height: 1.6; }
+
+    /* ── Pathways ──────────────────────────────────────────── */
+    .pathways-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-lg);
+    }
+    .pathway-lab-card {
+      background: #fff;
+      border-radius: var(--r-xl);
+      padding: 1.5rem;
+      border: 2px solid var(--af-border);
+      position: relative;
+      transition: border-color var(--t-normal), box-shadow var(--t-normal), transform var(--t-normal);
+      display: flex; flex-direction: column; gap: .6rem;
+    }
+    .pathway-lab-card:hover { border-color: var(--af-purple); box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+    .pathway-lab-card__num {
+      font-size: .65rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--af-purple);
+    }
+    .pathway-lab-card__title { font-size: 1rem; font-weight: 800; color: var(--af-deep-navy); }
+    .pathway-lab-card__grade {
+      display: inline-block;
+      font-size: .7rem; font-weight: 600;
+      background: rgba(109,74,255,.1); color: var(--af-purple);
+      padding: .15rem .6rem; border-radius: 9999px;
+    }
+    .pathway-lab-card__desc { font-size: .85rem; color: var(--af-muted); line-height: 1.5; }
+
+    /* ── Feature Grid (Powerful Learning Experience) ────────── */
+    .power-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.8fr 1fr;
+      gap: var(--sp-lg);
+    }
+    .power-side { display: flex; flex-direction: column; gap: var(--sp-lg); }
+    .power-panel {
+      background: #fff;
+      border-radius: var(--r-xl);
+      padding: 1.5rem;
+      border: 1px solid var(--af-border);
+      box-shadow: var(--shadow-sm);
+    }
+    .power-panel__title { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--af-blue); margin-bottom: .75rem; }
+    .lesson-row {
+      display: flex; align-items: center; gap: .6rem;
+      padding: .4rem 0; font-size: .82rem;
+      border-bottom: 1px solid var(--af-border);
+    }
+    .lesson-row:last-child { border-bottom: none; }
+    .lesson-row.active { color: var(--af-blue); font-weight: 600; }
+    .lesson-row.done { color: var(--af-success); }
+    .lesson-row.locked { color: var(--af-gray); }
+    .quiz-option {
+      display: flex; align-items: center; gap: .6rem;
+      padding: .5rem .75rem; border-radius: var(--r-sm);
+      font-size: .82rem; margin-bottom: .4rem;
+      border: 1px solid var(--af-border); cursor: pointer;
+      transition: background var(--t-fast), border-color var(--t-fast);
+    }
+    .quiz-option.correct { background: rgba(34,197,94,.1); border-color: var(--af-success); color: #15803d; }
+    .quiz-option:not(.correct):hover { background: rgba(37,99,255,.05); border-color: var(--af-blue); }
+
+    /* ── Audience Cards ────────────────────────────────────── */
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-xl);
+    }
+    .audience-card {
+      border-radius: var(--r-2xl);
+      padding: 2rem;
+      display: flex; flex-direction: column; gap: .75rem;
+    }
+    .audience-card--student { background: linear-gradient(135deg, #EEF4FF, #F0E7FF); border: 1px solid rgba(109,74,255,.15); }
+    .audience-card--teacher { background: linear-gradient(135deg, #ECFDF5, #EEF4FF); border: 1px solid rgba(34,197,94,.15); }
+    .audience-card--cert { background: var(--af-deep-navy); color: #fff; }
+    .audience-card__icon { font-size: 2rem; margin-bottom: .25rem; }
+    .audience-card__title { font-size: 1.1rem; font-weight: 800; color: var(--af-deep-navy); }
+    .audience-card--cert .audience-card__title { color: #fff; }
+    .cert-preview {
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+      border-radius: var(--r-lg); padding: 1.25rem; text-align: center;
+      margin-top: .5rem;
+    }
+    .cert-preview__title { font-size: .65rem; letter-spacing: .1em; text-transform: uppercase; color: var(--af-yellow); margin-bottom: .25rem; }
+    .cert-preview__name { font-size: 1rem; font-weight: 800; color: #fff; }
+    .cert-preview__course { font-size: .75rem; color: rgba(255,255,255,.5); }
+
+    /* ── Trust Bar ─────────────────────────────────────────── */
+    .trust-bar { background: #F1F5F9; border-top: 1px solid var(--af-border); padding: 2rem 0; }
+    .trust-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--sp-lg); text-align: center; }
+    .trust-stat__num { font-size: 1.5rem; font-weight: 800; color: var(--af-purple); }
+    .trust-stat__label { font-size: .75rem; color: var(--af-muted); }
+
+    /* Responsive */
+    @media (max-width: 1023px) {
+      .power-grid { grid-template-columns: 1fr 1fr; }
+      .power-grid > .power-side:last-child { grid-column: span 2; flex-direction: row; }
+      .why-lab-grid { grid-template-columns: repeat(2, 1fr); }
+      .trust-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 767px) {
+      .cl-hero__inner { grid-template-columns: 1fr; }
+      .why-lab-grid { grid-template-columns: 1fr; }
+      .pathways-row { grid-template-columns: 1fr; }
+      .power-grid { grid-template-columns: 1fr; }
+      .power-grid > .power-side:last-child { flex-direction: column; }
+      .audience-grid { grid-template-columns: 1fr; }
+      .trust-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Announcement Bar -->
+<div class="announce-bar">
+  <span>☀ Summer Camp 2025 — Coding Camp for ages 8–14 now open!</span>
+  <a href="../index.html#summer-camp">View Summer Camp →</a>
+  <button class="announce-bar__dismiss" aria-label="Dismiss">✕</button>
+</div>
+
+<!-- Navigation -->
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="../index.html" class="navbar__logo">
+      <img src="../ai future logo.png" alt="AI Future Logo" />
+      <div>
+        <div class="navbar__logo-text">AI FUTURE</div>
+        <div class="navbar__logo-sub">Building Future Innovators</div>
+      </div>
+    </a>
+    <ul class="navbar__links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../robotics lab/robotics-lab.html">Robotics Lab</a></li>
+      <li><a href="code-lab.html" class="active active--blue">Code Lab</a></li>
+      <li><a href="../robotics lab/robotics-lab.html#programs">Programs</a></li>
+      <li><a href="../index.html#summer-camp">Summer Camp</a></li>
+      <li><a href="../index.html#contact">About</a></li>
+    </ul>
+    <div style="display:flex; gap:.5rem; flex-shrink:0;" class="desktop-only">
+      <a href="index.html" class="btn btn--outline btn--sm">Login</a>
+      <a href="index.html" class="btn btn--primary btn--sm">Sign Up Free</a>
+    </div>
+    <button class="navbar__hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="nav-overlay"></div>
+<nav class="nav-mobile">
+  <button class="nav-mobile__close">✕</button>
+  <a href="../index.html">Home</a>
+  <a href="../robotics lab/robotics-lab.html">Robotics Lab</a>
+  <a href="code-lab.html" class="active">Code Lab</a>
+  <a href="index.html" class="btn btn--outline" style="margin-top:1rem;text-align:center">Login</a>
+  <a href="index.html" class="btn btn--primary" style="text-align:center">Sign Up Free</a>
+</nav>
+
+<!-- Hero -->
+<section class="cl-hero">
+  <div class="cl-hero__inner">
+    <div>
+      <div class="cl-hero__pill"><i class="fa-solid fa-rotate"></i> Formerly PyLearn</div>
+      <h1 class="cl-hero__title">AI Future<br>Code Lab</h1>
+      <div class="cl-hero__sub">Learn. Code. Build. Succeed.</div>
+      <p class="cl-hero__desc">An interactive online coding platform where students learn by doing. Master real coding skills through hands-on lessons, quizzes, and fun projects.</p>
+      <div class="btn-group">
+        <a href="index.html" class="btn btn--primary btn--lg"><i class="fa-solid fa-play"></i> Start Learning Now</a>
+        <a href="#pathways" class="btn btn--outline-white btn--lg">Explore Courses</a>
+      </div>
+      <div class="cl-hero__minifeat">
+        <div class="cl-hero__minifeat-item"><i class="fa-solid fa-check-circle"></i> Interactive Lessons</div>
+        <div class="cl-hero__minifeat-item"><i class="fa-solid fa-check-circle"></i> Built-in Code Editor</div>
+        <div class="cl-hero__minifeat-item"><i class="fa-solid fa-check-circle"></i> Track Your Progress</div>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="cl-mockup">
+        <div class="cl-mockup__bar">
+          <div class="cl-mockup__dot" style="background:#ff5f57"></div>
+          <div class="cl-mockup__dot" style="background:#febc2e"></div>
+          <div class="cl-mockup__dot" style="background:#28c840"></div>
+          <span class="cl-mockup__bar-title">AI Future Code Lab</span>
+        </div>
+        <div class="cl-mockup__body">
+          <div class="cl-mockup__sidebar">
+            <div style="font-size:.6rem;font-weight:700;letter-spacing:.08em;color:rgba(255,255,255,.25);text-transform:uppercase;padding:.3rem .6rem .5rem;margin-bottom:.25rem">CODE LAB</div>
+            <div class="cl-mockup__nav-item active"><i class="fa-solid fa-gauge" style="font-size:.7rem"></i> Dashboard</div>
+            <div class="cl-mockup__nav-item"><i class="fa-solid fa-book" style="font-size:.7rem"></i> Courses</div>
+            <div class="cl-mockup__nav-item"><i class="fa-solid fa-code" style="font-size:.7rem"></i> Playground</div>
+            <div class="cl-mockup__nav-item"><i class="fa-solid fa-trophy" style="font-size:.7rem"></i> Achievements</div>
+            <div style="margin-top:1rem">
+              <div style="font-size:.55rem;text-align:center;color:rgba(255,255,255,.25);margin-bottom:.5rem">Progress</div>
+              <svg viewBox="0 0 60 60" width="52" style="display:block;margin:0 auto">
+                <circle cx="30" cy="30" r="24" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="5"/>
+                <circle cx="30" cy="30" r="24" fill="none" stroke="#6D4AFF" stroke-width="5"
+                  stroke-dasharray="150.8" stroke-dashoffset="40" stroke-linecap="round"
+                  transform="rotate(-90 30 30)"/>
+                <text x="30" y="35" text-anchor="middle" font-size="11" font-weight="700" fill="white">72%</text>
+              </svg>
+            </div>
+          </div>
+          <div class="cl-mockup__content">
+            <div class="cl-mockup__progress">
+              <div class="cl-mockup__progress-title">Current Lesson</div>
+              <div class="cl-mockup__progress-name">Variables and Output</div>
+              <div style="height:4px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden">
+                <div style="width:75%;height:100%;background:var(--af-purple);border-radius:4px"></div>
+              </div>
+              <div style="font-size:.65rem;color:rgba(255,255,255,.4);margin-top:.3rem">75% Complete</div>
+            </div>
+            <div class="cl-code-mini">
+              <span class="cm"># Create variables</span><br>
+              <span class="kw">name</span> = <span class="st">"AI Future"</span><br>
+              <span class="kw">age</span> = <span class="st">10</span><br>
+              <span class="fn">print</span>(<span class="st">"Name:"</span>, <span class="kw">name</span>)<br>
+              <span class="fn">print</span>(<span class="st">"Age:"</span>, <span class="kw">age</span>)
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <button class="run-mini"><i class="fa-solid fa-play" style="font-size:.6rem"></i> Run</button>
+              <div style="font-size:.65rem;color:var(--af-green);font-weight:600">✓ 1250 XP  🔥 7 days</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Students Love Code Lab -->
+<section class="section why-lab-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label section-label--white">Features</p>
+      <h2 class="section-heading section-heading--white">Why Students Love Code Lab</h2>
+    </div>
+    <div class="why-lab-grid">
+      <div class="why-lab-card reveal">
+        <div class="why-lab-icon" style="background:rgba(37,99,255,.2)"><i class="fa-solid fa-laptop-code" style="color:#60A5FA"></i></div>
+        <div class="why-lab-card__title">Learn by Doing</div>
+        <div class="why-lab-card__desc">Interactive lessons and real code practice — not just videos.</div>
+      </div>
+      <div class="why-lab-card reveal reveal--delay-1">
+        <div class="why-lab-icon" style="background:rgba(34,197,94,.2)"><i class="fa-solid fa-bolt" style="color:#4ADE80"></i></div>
+        <div class="why-lab-card__title">Instant Feedback</div>
+        <div class="why-lab-card__desc">Run your code and see results instantly in the built-in editor.</div>
+      </div>
+      <div class="why-lab-card reveal reveal--delay-2">
+        <div class="why-lab-icon" style="background:rgba(109,74,255,.2)"><i class="fa-solid fa-chart-line" style="color:#A78BFA"></i></div>
+        <div class="why-lab-card__title">Track Progress</div>
+        <div class="why-lab-card__desc">Monitor your growth and see how far you've come.</div>
+      </div>
+      <div class="why-lab-card reveal reveal--delay-1">
+        <div class="why-lab-icon" style="background:rgba(254,206,0,.2)"><i class="fa-solid fa-medal" style="color:#FBBF24"></i></div>
+        <div class="why-lab-card__title">Earn Achievements</div>
+        <div class="why-lab-card__desc">Unlock badges and earn certificates to celebrate progress.</div>
+      </div>
+      <div class="why-lab-card reveal reveal--delay-2">
+        <div class="why-lab-icon" style="background:rgba(239,68,68,.2)"><i class="fa-solid fa-rocket" style="color:#F87171"></i></div>
+        <div class="why-lab-card__title">Build Real Projects</div>
+        <div class="why-lab-card__desc">Apply your skills with exciting, hands-on coding projects.</div>
+      </div>
+      <div class="why-lab-card reveal reveal--delay-3">
+        <div class="why-lab-icon" style="background:rgba(34,197,94,.2)"><i class="fa-solid fa-shield-heart" style="color:#4ADE80"></i></div>
+        <div class="why-lab-card__title">Safe &amp; Supportive</div>
+        <div class="why-lab-card__desc">A secure, encouraging environment for every learner.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Learning Pathways -->
+<section class="section" id="pathways" style="background:var(--af-white)">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">Curriculum</p>
+      <h2 class="section-heading">Learning Pathways</h2>
+      <p class="section-sub section-sub--center">From beginner to advanced. From concepts to real-world creations.</p>
+    </div>
+    <div class="pathways-row">
+      <div class="pathway-lab-card reveal">
+        <div class="pathway-lab-card__num">Pathway 1</div>
+        <div class="pathway-lab-card__title">Scratch</div>
+        <span class="pathway-lab-card__grade">Grades 3–6</span>
+        <div class="pathway-lab-card__desc">Create stories, games, and animations with visual block coding.</div>
+        <a href="index.html" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Start Learning</a>
+      </div>
+      <div class="pathway-lab-card reveal reveal--delay-1">
+        <div class="pathway-lab-card__num">Pathway 2</div>
+        <div class="pathway-lab-card__title">Python Foundations</div>
+        <span class="pathway-lab-card__grade">Grades 5–10</span>
+        <div class="pathway-lab-card__desc">Learn Python from the basics to build strong programming skills.</div>
+        <a href="index.html" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Start Learning</a>
+      </div>
+      <div class="pathway-lab-card reveal reveal--delay-2">
+        <div class="pathway-lab-card__num">Pathway 3</div>
+        <div class="pathway-lab-card__title">Pybricks Robotics</div>
+        <span class="pathway-lab-card__grade">Grades 6–12</span>
+        <div class="pathway-lab-card__desc">Code LEGO robots using Python with Pybricks MicroPython.</div>
+        <a href="index.html" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Start Learning</a>
+      </div>
+      <div class="pathway-lab-card reveal">
+        <div class="pathway-lab-card__num">Pathway 4</div>
+        <div class="pathway-lab-card__title">Robotics Challenges</div>
+        <span class="pathway-lab-card__grade">Grades 6–12</span>
+        <div class="pathway-lab-card__desc">Solve real robotics missions and engineering coding challenges.</div>
+        <a href="index.html" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Start Learning</a>
+      </div>
+      <div class="pathway-lab-card reveal reveal--delay-1">
+        <div class="pathway-lab-card__num">Pathway 5</div>
+        <div class="pathway-lab-card__title">Advanced Projects</div>
+        <span class="pathway-lab-card__grade">Grades 8–12</span>
+        <div class="pathway-lab-card__desc">Build advanced projects and expand your coding portfolio.</div>
+        <a href="index.html" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Start Learning</a>
+      </div>
+      <div class="pathway-lab-card reveal reveal--delay-2">
+        <div class="pathway-lab-card__num">Pathway 6</div>
+        <div class="pathway-lab-card__title">Future Tech</div>
+        <span class="pathway-lab-card__grade">Grades 8–12</span>
+        <div class="pathway-lab-card__desc">Explore AI, data, and emerging technologies through code.</div>
+        <a href="index.html" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Start Learning</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Powerful Learning Experience -->
+<section class="section" style="background:#F8FAFC">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">The Platform</p>
+      <h2 class="section-heading">A Powerful Learning Experience</h2>
+    </div>
+    <div class="power-grid">
+      <!-- Left side -->
+      <div class="power-side">
+        <div class="power-panel reveal">
+          <div class="power-panel__title">Lesson Progress</div>
+          <div style="font-weight:700;font-size:.95rem;color:var(--af-deep-navy);margin-bottom:.5rem">Loops in Python</div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:.5rem"><span style="font-size:.8rem;color:var(--af-muted)">Progress</span><span style="font-size:.8rem;font-weight:700;color:var(--af-blue)">7/10</span></div>
+          <div class="progress-bar-wrap" style="margin-bottom:.75rem"><div class="progress-bar-fill" style="width:70%"></div></div>
+          <div class="lesson-row done"><i class="fa-solid fa-check-circle" style="color:var(--af-success)"></i> What is a Loop?</div>
+          <div class="lesson-row done"><i class="fa-solid fa-check-circle" style="color:var(--af-success)"></i> For Loops</div>
+          <div class="lesson-row active"><i class="fa-solid fa-play-circle" style="color:var(--af-blue)"></i> While Loops</div>
+          <div class="lesson-row"><i class="fa-regular fa-circle"></i> Loop with Condition</div>
+          <div class="lesson-row locked"><i class="fa-solid fa-lock" style="font-size:.75rem"></i> Practice Time</div>
+        </div>
+        <div class="power-panel reveal reveal--delay-1">
+          <div class="power-panel__title">Quiz Checkpoint</div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--af-slate);margin-bottom:.6rem">What will the following code output?</div>
+          <div class="cl-code-mini" style="margin-bottom:.75rem;background:#0A0D18">
+            <span style="color:#FF7B72">for</span> <span style="color:#E6EDF3">i</span> <span style="color:#FF7B72">in</span> <span style="color:#D2A8FF">range</span>(<span style="color:#79C0FF">3</span>):<br>
+            &nbsp;&nbsp;<span style="color:#D2A8FF">print</span>(<span style="color:#A5D6FF">"Hello"</span>)
+          </div>
+          <div class="quiz-option">Hello (once)</div>
+          <div class="quiz-option correct"><i class="fa-solid fa-check-circle" style="color:var(--af-success)"></i> Hello (three times)</div>
+          <div class="quiz-option">Hello (zero times)</div>
+          <button class="btn btn--navy btn--sm" style="margin-top:.5rem;width:100%">Next Question →</button>
+        </div>
+      </div>
+      <!-- Center editor -->
+      <div class="reveal">
+        <div class="code-editor-panel" style="height:100%;min-height:400px">
+          <div class="code-editor-header">
+            <div class="code-tab">main.py</div>
+            <div style="margin-left:auto;display:flex;gap:.4rem">
+              <span style="font-size:.7rem;color:rgba(255,255,255,.3);padding:.2rem .5rem;background:rgba(255,255,255,.05);border-radius:4px">Python 3</span>
+            </div>
+          </div>
+          <div class="code-editor-area">
+            <div class="code-line-nums">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8</div>
+            <div style="padding:var(--sp-md);flex:1;font-family:var(--font-mono);font-size:.88rem;color:#E6EDF3;line-height:1.6;overflow:auto">
+              <span style="color:rgba(255,255,255,.3)"># Create a variable called 'name'</span><br>
+              <span style="color:#E6EDF3">name</span> = <span style="color:#A5D6FF">"AI Future"</span><br>
+              <br>
+              <span style="color:rgba(255,255,255,.3)"># Create a variable called 'age'</span><br>
+              <span style="color:#E6EDF3">age</span> = <span style="color:#79C0FF">10</span><br>
+              <br>
+              <span style="color:#D2A8FF">print</span>(<span style="color:#A5D6FF">"Name:"</span>, name)<br>
+              <span style="color:#D2A8FF">print</span>(<span style="color:#A5D6FF">"Age:"</span>, age)
+            </div>
+          </div>
+          <div style="background:#161B22;padding:.75rem var(--sp-md);border-top:1px solid #30363D">
+            <div style="font-size:.75rem;font-weight:600;color:rgba(255,255,255,.4);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em">Output</div>
+            <div style="font-family:var(--font-mono);font-size:.82rem;color:#4ADE80;line-height:1.6">Name: AI Future<br>Age: 10</div>
+          </div>
+          <div class="code-editor-footer">
+            <button class="reset-btn">↺ Reset</button>
+            <button class="run-btn"><i class="fa-solid fa-play" style="font-size:.75rem"></i> Run Code</button>
+          </div>
+        </div>
+      </div>
+      <!-- Right side -->
+      <div class="power-side">
+        <div class="power-panel reveal">
+          <div class="power-panel__title">Your Achievement</div>
+          <div style="text-align:center;padding:1rem 0">
+            <div style="font-size:3rem;margin-bottom:.5rem">🏆</div>
+            <div style="font-size:.95rem;font-weight:800;color:var(--af-deep-navy)">Loop Master</div>
+            <div style="font-size:.8rem;color:var(--af-muted);margin:.3rem 0 .75rem">Complete all loop lessons</div>
+            <div style="display:inline-block;background:rgba(109,74,255,.1);color:var(--af-purple);font-size:.75rem;font-weight:700;padding:.3rem .75rem;border-radius:9999px">+200 XP</div>
+          </div>
+          <button class="btn btn--outline btn--sm" style="width:100%">View All Badges</button>
+        </div>
+        <div class="power-panel reveal reveal--delay-1" style="background:var(--af-deep-navy);border-color:transparent">
+          <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--af-yellow);margin-bottom:.6rem">Keep Going!</div>
+          <div style="font-size:.9rem;font-weight:700;color:#fff;margin-bottom:.4rem">Great Job! Well Done.</div>
+          <div style="font-size:.8rem;color:rgba(255,255,255,.55);margin-bottom:1rem">You've earned the Loop Master badge. Keep going to unlock more!</div>
+          <a href="index.html" class="btn btn--primary btn--sm" style="width:100%;justify-content:center">Continue Lesson →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Audience Cards -->
+<section class="section" style="background:#fff">
+  <div class="container">
+    <div class="audience-grid">
+      <div class="audience-card audience-card--student reveal">
+        <div class="audience-card__icon">🎓</div>
+        <div class="audience-card__title">Perfect for Students</div>
+        <ul class="checklist">
+          <li>Self-paced learning</li>
+          <li>Beginner friendly</li>
+          <li>Fun coding challenges</li>
+          <li>Build confidence</li>
+          <li>Certificates of completion</li>
+        </ul>
+        <a href="index.html" class="btn btn--primary btn--sm" style="margin-top:auto;align-self:flex-start">Start Learning</a>
+      </div>
+      <div class="audience-card audience-card--teacher reveal reveal--delay-1">
+        <div class="audience-card__icon">👩‍🏫</div>
+        <div class="audience-card__title">Powerful for Teachers</div>
+        <ul class="checklist">
+          <li>Assign lessons to students</li>
+          <li>Track student progress</li>
+          <li>View quiz results</li>
+          <li>Identify learning gaps</li>
+          <li>Manage classrooms easily</li>
+        </ul>
+        <a href="#contact" class="btn btn--outline btn--sm" style="margin-top:auto;align-self:flex-start">Request Access</a>
+      </div>
+      <div class="audience-card audience-card--cert reveal reveal--delay-2">
+        <div class="audience-card__icon" style="color:var(--af-yellow)">🏅</div>
+        <div class="audience-card__title">Earn Certificates</div>
+        <p style="font-size:.875rem;color:rgba(255,255,255,.6);line-height:1.6">Complete courses and projects to earn personalized certificates you can share.</p>
+        <div class="cert-preview">
+          <div class="cert-preview__title">Certificate of Completion</div>
+          <div class="cert-preview__name">Alex Johnson</div>
+          <div class="cert-preview__course">Python Foundations · AI Future Code Lab</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.5rem;margin-top:auto">
+          <svg class="grit-mascot" viewBox="0 0 120 145" width="44" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="60,6 18,20 60,34 102,20" fill="#FECE00"/>
+            <rect x="35" y="20" width="50" height="9" rx="3" fill="#FECE00"/>
+            <rect x="22" y="40" width="76" height="74" rx="22" fill="#D9DA26"/>
+            <circle cx="60" cy="70" r="18" fill="white"/>
+            <circle cx="60" cy="70" r="11" fill="#073E77"/>
+            <circle cx="65" cy="65" r="4" fill="white"/>
+            <path d="M 44 93 Q 60 105 76 93" stroke="#073E77" stroke-width="3" fill="none" stroke-linecap="round"/>
+          </svg>
+          <span style="font-size:.8rem;color:rgba(255,255,255,.5)">Grit says: Great work! 🎉</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section" id="contact">
+  <div class="container cta-section__inner">
+    <p class="section-label section-label--yellow">Get Started</p>
+    <h2 class="section-heading section-heading--white" style="margin-bottom:.75rem">Ready to start your coding journey?</h2>
+    <p class="section-sub section-sub--white section-sub--center">Join students learning to code on AI Future Code Lab — interactive, fun, and built for the future.</p>
+    <div class="btn-group" style="justify-content:center">
+      <a href="index.html" class="btn btn--primary btn--lg"><i class="fa-solid fa-play"></i> Start Learning Now</a>
+      <a href="#pathways" class="btn btn--outline-white btn--lg">View Courses</a>
+    </div>
+  </div>
+</section>
+
+<!-- Trust Bar -->
+<div class="trust-bar">
+  <div class="container">
+    <div class="trust-grid">
+      <div class="trust-stat"><div class="trust-stat__num">50+</div><div class="trust-stat__label">Interactive Lessons</div></div>
+      <div class="trust-stat"><div class="trust-stat__num">5,000+</div><div class="trust-stat__label">Students Learning</div></div>
+      <div class="trust-stat"><div class="trust-stat__num">1,200+</div><div class="trust-stat__label">Projects Built</div></div>
+      <div class="trust-stat"><div class="trust-stat__num">2,000+</div><div class="trust-stat__label">Certificates Issued</div></div>
+      <div class="trust-stat"><div class="trust-stat__num">25+</div><div class="trust-stat__label">Countries Reached</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <img src="../ai future logo.png" alt="AI Future Logo" />
+        <div class="footer__brand-name">AI Future</div>
+        <div class="footer__tagline">Building Future Innovators</div>
+        <div class="footer__social">
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Code Lab</div>
+        <a href="index.html#page-home">Dashboard</a>
+        <a href="#pathways">Courses</a>
+        <a href="index.html">Sample Lesson</a>
+        <a href="index.html#/certificates">Certificates</a>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">AI Future</div>
+        <a href="../index.html">Home</a>
+        <a href="../robotics lab/robotics-lab.html">Robotics Lab</a>
+        <a href="../index.html#summer-camp">Summer Camp</a>
+        <a href="../index.html#contact">About</a>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Stay Connected</div>
+        <p style="font-size:.85rem;color:rgba(255,255,255,.5);margin-bottom:.75rem">Get coding tips and new lesson alerts.</p>
+        <div class="footer__subscribe">
+          <input type="email" placeholder="Your email" />
+          <button>Subscribe</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2025 AI Future. All rights reserved.</span>
+      <span>AI Future Code Lab — formerly PyLearn</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
