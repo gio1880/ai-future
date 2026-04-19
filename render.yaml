@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: ai-future
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true          # Render generates a secure random value once
+      - key: DATA_DIR
+        value: /var/data
+    disk:
+      name: code-lab-data
+      mountPath: /var/data
+      sizeGB: 1
