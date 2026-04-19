@@ -41,6 +41,8 @@ app.get('/code-lab/dashboard.html', (req, res) => res.redirect(301, '/codelab/da
 app.get('/code-lab/login', (req, res) => res.redirect(301, '/codelab/login'));
 app.get('/code-lab/signup', (req, res) => res.redirect(301, '/codelab/signup'));
 app.get('/code-lab/admin', (req, res) => res.redirect(301, '/codelab/admin'));
+app.get('/admin', (req, res) => res.redirect(301, '/codelab/admin'));
+app.get('/admin/', (req, res) => res.redirect(301, '/codelab/admin'));
 app.get('/code-lab/lesson/:slug', (req, res) => res.redirect(301, `/codelab/lesson/${encodeURIComponent(req.params.slug)}`));
 app.get('/code-lab/lesson/:slug.html', (req, res) => res.redirect(301, `/codelab/lesson/${encodeURIComponent(req.params.slug)}`));
 
