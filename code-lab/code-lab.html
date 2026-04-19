@@ -239,6 +239,29 @@
     .trust-stat__num { font-size: 1.5rem; font-weight: 800; color: var(--af-purple); }
     .trust-stat__label { font-size: .75rem; color: var(--af-muted); }
 
+    .student-photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-lg);
+    }
+    .student-photo-card {
+      border-radius: var(--r-xl);
+      overflow: hidden;
+      border: 1px solid var(--af-border);
+      box-shadow: var(--shadow-md);
+      background: #fff;
+    }
+    .student-photo-card img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+    }
+    .student-photo-card p {
+      padding: .75rem .9rem;
+      font-size: .82rem;
+      color: var(--af-muted);
+    }
+
     /* Responsive */
     @media (max-width: 1023px) {
       .power-grid { grid-template-columns: 1fr 1fr; }
@@ -253,6 +276,7 @@
       .power-grid { grid-template-columns: 1fr; }
       .power-grid > .power-side:last-child { flex-direction: column; }
       .audience-grid { grid-template-columns: 1fr; }
+      .student-photo-grid { grid-template-columns: 1fr; }
       .trust-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
@@ -409,6 +433,31 @@
         <div class="why-lab-icon" style="background:rgba(34,197,94,.2)"><i class="fa-solid fa-shield-heart" style="color:#4ADE80"></i></div>
         <div class="why-lab-card__title">Safe &amp; Supportive</div>
         <div class="why-lab-card__desc">A secure, encouraging environment for every learner.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Student Coding Moments -->
+<section class="section" style="background:#fff;">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">In Action</p>
+      <h2 class="section-heading">Students Learning by Building</h2>
+      <p class="section-sub section-sub--center">Snapshots from real sessions where students code, test, and present their work.</p>
+    </div>
+    <div class="student-photo-grid">
+      <div class="student-photo-card reveal">
+        <img src="../robotics lab/25_summer_pictures/IMG_0521.jpg" alt="Students focused during coding camp" loading="lazy" />
+        <p>Pair programming and guided support during coding blocks.</p>
+      </div>
+      <div class="student-photo-card reveal reveal--delay-1">
+        <img src="../robotics lab/25_summer_pictures/IMG_0902.jpg" alt="Student team discussing a project" loading="lazy" />
+        <p>Collaborative project time to solve real coding challenges.</p>
+      </div>
+      <div class="student-photo-card reveal reveal--delay-2">
+        <img src="../robotics lab/FLL Teams/25_26_season_pictures/IMG_5097.jpg" alt="Students showcasing project results" loading="lazy" />
+        <p>Presentation day where students demo and explain their work.</p>
       </div>
     </div>
   </div>
@@ -684,6 +733,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js"></script>
+<script src="../assets/js/main.js"></script>
 </body>
 </html>

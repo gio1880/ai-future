@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Future Summer Leads Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f4f8ff;
+      --card: #ffffff;
+      --text: #10203c;
+      --muted: #60708e;
+      --line: #dbe4f3;
+      --brand: #0b5ed7;
+      --brand-2: #073e77;
+      --good: #0f8a43;
+      --bad: #b3261e;
+      --shadow: 0 10px 28px rgba(16, 32, 60, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Manrope', 'Segoe UI', sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 10% 0%, #dbe9ff 0%, transparent 32%), var(--bg);
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 20px 40px;
+    }
+
+    .hero {
+      background: linear-gradient(140deg, var(--brand-2) 0%, #1458bc 100%);
+      color: #fff;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.35rem, 2.8vw, 1.9rem);
+      font-weight: 800;
+    }
+
+    .hero p {
+      margin: 0;
+      color: rgba(255,255,255,0.84);
+      font-size: 0.95rem;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    input[type="search"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: inherit;
+      color: var(--text);
+      background: #fff;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 120ms ease, opacity 120ms ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-primary { background: var(--brand); color: #fff; }
+    .btn-outline { background: #fff; color: var(--brand-2); border: 1px solid var(--line); }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .status {
+      margin-top: 10px;
+      min-height: 1.2em;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .status.good { color: var(--good); }
+    .status.bad { color: var(--bad); }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1000px;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    th {
+      background: #f6f9ff;
+      color: #28406a;
+      font-size: 0.79rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tbody tr:hover { background: #f9fbff; }
+
+    .notes {
+      max-width: 320px;
+      white-space: pre-wrap;
+      color: #324b73;
+    }
+
+    @media (max-width: 860px) {
+      .controls {
+        grid-template-columns: 1fr 1fr;
+      }
+      .controls .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Summer Leads Dashboard</h1>
+      <p>Protected view for camp inquiry follow-up and export.</p>
+    </section>
+
+    <section class="panel">
+      <div class="controls">
+        <input id="search" type="search" placeholder="Search name, email, phone, program, preferred week" />
+        <button class="btn btn-primary" id="refresh-btn" type="button">Refresh</button>
+        <a class="btn btn-outline" href="/api/summer-inquiry/export" id="export-csv">Export CSV</a>
+        <a class="btn btn-outline" href="/api/summer-inquiry/export?format=json" id="export-json">Export JSON</a>
+      </div>
+      <div class="meta">
+        <span id="count-label">Leads: 0</span>
+        <span id="updated-label">Last updated: -</span>
+      </div>
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="panel">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Submitted</th>
+              <th>Parent</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Age</th>
+              <th>Program</th>
+              <th>Preferred Week</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="leads-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      const searchInput = document.getElementById('search');
+      const refreshBtn = document.getElementById('refresh-btn');
+      const countLabel = document.getElementById('count-label');
+      const updatedLabel = document.getElementById('updated-label');
+      const status = document.getElementById('status');
+      const tbody = document.getElementById('leads-body');
+
+      let allLeads = [];
+
+      function setStatus(message, kind) {
+        status.textContent = message || '';
+        status.className = 'status';
+        if (kind) {
+          status.classList.add(kind);
+        }
+      }
+
+      function sanitize(text) {
+        return String(text == null ? '' : text)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function formatDate(iso) {
+        if (!iso) return '-';
+        const date = new Date(iso);
+        if (Number.isNaN(date.getTime())) return sanitize(iso);
+        return date.toLocaleString();
+      }
+
+      function renderRows(rows) {
+        if (!rows.length) {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#60708e;padding:18px;">No leads found.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = rows.map((lead) => `
+          <tr>
+            <td>${sanitize(formatDate(lead.submittedAt))}</td>
+            <td>${sanitize(lead.parentName)}</td>
+            <td>${sanitize(lead.email)}</td>
+            <td>${sanitize(lead.phone)}</td>
+            <td>${sanitize(lead.childAge)}</td>
+            <td>${sanitize(lead.programInterest)}</td>
+            <td>${sanitize(lead.preferredWeek)}</td>
+            <td class="notes">${sanitize(lead.notes)}</td>
+          </tr>
+        `).join('');
+      }
+
+      function applyFilter() {
+        const term = (searchInput.value || '').trim().toLowerCase();
+        if (!term) {
+          renderRows(allLeads);
+          countLabel.textContent = `Leads: ${allLeads.length}`;
+          return;
+        }
+
+        const filtered = allLeads.filter((lead) => {
+          const haystack = [
+            lead.parentName,
+            lead.email,
+            lead.phone,
+            lead.childAge,
+            lead.programInterest,
+            lead.preferredWeek,
+            lead.notes,
+            lead.submittedAt
+          ].join(' ').toLowerCase();
+          return haystack.includes(term);
+        });
+
+        renderRows(filtered);
+        countLabel.textContent = `Leads: ${filtered.length} of ${allLeads.length}`;
+      }
+
+      async function loadLeads() {
+        setStatus('Loading leads...', '');
+
+        try {
+          const response = await fetch('/api/summer-inquiry/list', { method: 'GET' });
+          if (!response.ok) {
+            throw new Error(`Failed with status ${response.status}`);
+          }
+
+          const payload = await response.json();
+          const leads = Array.isArray(payload.data) ? payload.data : [];
+          allLeads = leads.sort((a, b) => {
+            const da = new Date(a.submittedAt).getTime() || 0;
+            const db = new Date(b.submittedAt).getTime() || 0;
+            return db - da;
+          });
+
+          applyFilter();
+          updatedLabel.textContent = `Last updated: ${new Date().toLocaleString()}`;
+          setStatus('Leads loaded successfully.', 'good');
+        } catch (err) {
+          renderRows([]);
+          countLabel.textContent = 'Leads: 0';
+          setStatus('Could not load leads. Confirm admin authentication and try again.', 'bad');
+        }
+      }
+
+      refreshBtn.addEventListener('click', loadLeads);
+      searchInput.addEventListener('input', applyFilter);
+
+      loadLeads();
+    })();
+  </script>
+</body>
+</html>

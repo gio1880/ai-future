@@ -78,6 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { threshold: 0.3 });
 
   document.querySelectorAll('[data-count]').forEach(el => statObserver.observe(el));
+
+  /* ── Image Fallbacks ───────────────────────────────────── */
+  initImageFallbacks();
 });
 
 function animateStats(container) {
@@ -120,3 +123,23 @@ document.addEventListener('DOMContentLoaded', () => {
     initProgressCircle(el, pct, color);
   });
 });
+
+function initImageFallbacks() {
+  const defaultFallback = '/robotics%20lab/25_summer_pictures/IMG_0521.jpg';
+
+  document.querySelectorAll('img').forEach((img) => {
+    if (img.dataset.fallbackBound === '1') return;
+    img.dataset.fallbackBound = '1';
+
+    img.addEventListener('error', () => {
+      if (img.dataset.fallbackApplied === '1') return;
+
+      img.dataset.fallbackApplied = '1';
+      img.src = img.dataset.fallbackSrc || defaultFallback;
+
+      if (!img.alt || !img.alt.trim()) {
+        img.alt = 'AI Future student activity photo';
+      }
+    });
+  });
+}

@@ -80,6 +80,35 @@ const ACTIVITY_FILE = path.join(DATA_DIR, 'activity.json');
 let writeLocks = {};
 
 // ============================================
+// LIVE-CLASSROOM PRESENCE (in-memory, ephemeral)
+// Tracks per-student last ping, current lesson, and whether they've flagged
+// themselves as stuck. Resets on server restart — that's intentional; it's
+// only "who is actively in the app right now."
+// ============================================
+const presence = new Map(); // studentId -> { name, username, lastPing, currentLessonId, currentStep, stuckSince }
+const ONLINE_WINDOW_MS = 2 * 60 * 1000; // 2 minutes without a heartbeat = offline
+
+function touchPresence(student, patch) {
+  const prev = presence.get(student.id) || {};
+  presence.set(student.id, {
+    name: student.name,
+    username: student.username,
+    lastPing: Date.now(),
+    ...prev,
+    ...patch,
+    name: student.name,       // ensure latest name wins
+    username: student.username
+  });
+}
+
+function clearStuck(studentId) {
+  const prev = presence.get(studentId);
+  if (prev && prev.stuckSince) {
+    presence.set(studentId, { ...prev, stuckSince: null });
+  }
+}
+
+// ============================================
 // INITIALIZATION & HELPERS
 // ============================================
 
@@ -385,6 +414,9 @@ app.post('/api/login', async (req, res) => {
 
       // Log activity
       logActivity('login', student.name, student.username, 'Logged in').catch(err => console.error('Activity log error:', err));
+
+      // Seed presence so the classroom dashboard shows them immediately
+      touchPresence(student, { stuckSince: null });
     }
 
     res.json({
@@ -402,6 +434,10 @@ app.post('/api/login', async (req, res) => {
  * Logout the current user
  */
 app.post('/api/logout', (req, res) => {
+  // Drop presence so the classroom view marks them offline right away
+  if (req.session && req.session.user && req.session.user.id) {
+    presence.delete(req.session.user.id);
+  }
   req.session.destroy(err => {
     if (err) {
       return res.status(500).json({ success: false, error: 'Logout failed' });
@@ -416,6 +452,103 @@ app.post('/api/logout', (req, res) => {
  */
 app.get('/api/me', requireAuth, (req, res) => {
   res.json({ success: true, user: req.session.user });
+});
+
+// ============================================
+// LIVE-CLASSROOM API ENDPOINTS
+// ============================================
+
+/**
+ * POST /api/heartbeat
+ * Student pings this every ~15s while the app is open so the teacher's
+ * live-classroom dashboard can show who is actively working and on which lesson.
+ * In-memory only — cheap, no disk writes.
+ */
+app.post('/api/heartbeat', requireAuth, (req, res) => {
+  if (req.session.user.role !== 'student') {
+    return res.json({ success: true, stuck: false, ignored: true });
+  }
+  const { lessonId, currentStep } = req.body || {};
+  touchPresence(req.session.user, {
+    currentLessonId: typeof lessonId === 'string' ? lessonId : null,
+    currentStep: typeof currentStep === 'string' ? currentStep : null
+  });
+  const p = presence.get(req.session.user.id);
+  res.json({ success: true, stuck: !!(p && p.stuckSince) });
+});
+
+/**
+ * POST /api/stuck
+ * Student toggles the "I'm stuck" flag. Lights up on the teacher's dashboard.
+ */
+app.post('/api/stuck', requireAuth, (req, res) => {
+  if (req.session.user.role !== 'student') {
+    return res.json({ success: false, error: 'Only students can flag stuck' });
+  }
+  const on = !!(req.body && req.body.on);
+  touchPresence(req.session.user, { stuckSince: on ? Date.now() : null });
+  // Log stuck events so they also appear in the admin activity feed
+  if (on) {
+    logActivity('stuck', req.session.user.name, req.session.user.username,
+      'Asked for help' + (req.body && req.body.lessonId ? ` on ${req.body.lessonId}` : ''))
+      .catch(err => console.error('Activity log error:', err));
+  }
+  res.json({ success: true, stuck: on });
+});
+
+/**
+ * GET /api/admin/classroom
+ * Snapshot of who's online, what lesson they're on, and whether they're stuck.
+ * Teacher-only. Polled by the admin UI every ~10 seconds.
+ */
+app.get('/api/admin/classroom', requireAuth, requireTeacher, (req, res) => {
+  try {
+    const now = Date.now();
+    const students = readStudents().filter(s => s.role === 'student');
+    const progress = readProgress();
+
+    const roster = students.map(s => {
+      const p = presence.get(s.id) || {};
+      const prog = progress[s.id] || {};
+      const lessonProgress = prog.lessonProgress || {};
+      const lessonsCompleted = Object.values(lessonProgress).filter(x => x && x.completed).length;
+      const online = p.lastPing && (now - p.lastPing) < ONLINE_WINDOW_MS;
+      return {
+        id: s.id,
+        name: s.name,
+        username: s.username,
+        online: !!online,
+        lastPing: p.lastPing ? new Date(p.lastPing).toISOString() : null,
+        currentLessonId: p.currentLessonId || null,
+        currentStep: p.currentStep || null,
+        stuckSince: p.stuckSince ? new Date(p.stuckSince).toISOString() : null,
+        lessonsCompleted,
+        lastLogin: prog.lastLogin || null
+      };
+    });
+
+    // Sort: stuck first, then online, then by last activity
+    roster.sort((a, b) => {
+      if (!!a.stuckSince !== !!b.stuckSince) return a.stuckSince ? -1 : 1;
+      if (a.online !== b.online) return a.online ? -1 : 1;
+      const at = a.lastPing ? Date.parse(a.lastPing) : 0;
+      const bt = b.lastPing ? Date.parse(b.lastPing) : 0;
+      return bt - at;
+    });
+
+    res.json({
+      success: true,
+      data: {
+        generated_at: new Date().toISOString(),
+        online_count: roster.filter(r => r.online).length,
+        stuck_count: roster.filter(r => r.stuckSince).length,
+        roster
+      }
+    });
+  } catch (err) {
+    console.error('Classroom snapshot error:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
 });
 
 // ============================================
@@ -968,6 +1101,174 @@ app.get('/api/admin/activity', requireAuth, requireTeacher, (req, res) => {
   } catch (err) {
     console.error('Get activity error:', err);
     res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+/**
+ * GET /api/admin/backup
+ * One-click backup of all four JSON data files. Teacher-only.
+ * Returns a single JSON blob with timestamp + file contents, served as a download.
+ * This is the insurance policy against the Render Disk getting wiped.
+ */
+app.get('/api/admin/backup', requireAuth, requireTeacher, (req, res) => {
+  try {
+    const safeRead = (filePath) => {
+      try {
+        if (!fs.existsSync(filePath)) return null;
+        return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      } catch (e) {
+        return { _error: 'Failed to parse ' + path.basename(filePath), message: e.message };
+      }
+    };
+
+    const payload = {
+      meta: {
+        exported_at: new Date().toISOString(),
+        exported_by: req.session.user.username,
+        data_dir: DATA_DIR,
+        app: 'code-lab',
+        version: 1
+      },
+      students: safeRead(STUDENTS_FILE),
+      progress: safeRead(PROGRESS_FILE),
+      tickets: safeRead(TICKETS_FILE),
+      activity: safeRead(ACTIVITY_FILE)
+    };
+
+    // Filename like code-lab-backup-2026-04-19T14-22-05.json (safe for Windows too)
+    const stamp = new Date().toISOString().replace(/[:]/g, '-').replace(/\..+$/, '');
+    const filename = `code-lab-backup-${stamp}.json`;
+
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.send(JSON.stringify(payload, null, 2));
+  } catch (err) {
+    console.error('Backup error:', err);
+    res.status(500).json({ success: false, error: 'Backup failed' });
+  }
+});
+
+// ============================================
+// AI TUTOR (Socratic, never hands out full solutions)
+// POST /api/tutor/chat  {lessonId, lessonTitle, studentCode, errorMessage, question, history}
+// Requires ANTHROPIC_API_KEY env var. If not set, returns a structured hint
+// response so the UI can still show something useful.
+// ============================================
+const TUTOR_SYSTEM_PROMPT = [
+  "You are Code Lab's friendly AI tutor for students in grades 5-8 learning Python.",
+  "",
+  "RULES (follow strictly):",
+  "- NEVER give the full answer or a complete working code block for the current exercise.",
+  "- Nudge with one small question or one specific hint at a time.",
+  "- If the student shares code, point at ONE thing to try next — not a full rewrite.",
+  "- If they ask you to \"just tell me the answer\" or \"give me the code\", kindly decline and explain you're here to help them figure it out.",
+  "- Use plain language. Short paragraphs. A concrete analogy when it helps.",
+  "- If they're stuck on syntax, you may show a tiny 1-2 line snippet that illustrates the concept — but NOT the solution to their exercise.",
+  "- If they seem frustrated, acknowledge it warmly before the hint.",
+  "- Keep each reply under about 120 words.",
+  "- If the student asks for help OUTSIDE programming (homework in another subject, personal topics, etc.), gently steer back to the lesson.",
+  "",
+  "You know the student's current lesson and (if they share it) their current code and any error message. Use that context."
+].join('\n');
+
+function tutorFallback(payload) {
+  // Offline / no-key fallback — still useful
+  const { errorMessage, studentCode } = payload || {};
+  const hints = [];
+  if (errorMessage) {
+    hints.push("Your error says: **" + String(errorMessage).slice(0, 160) + "**");
+    if (/SyntaxError|invalid syntax/i.test(errorMessage)) {
+      hints.push("Syntax errors usually mean a missing colon `:`, quote `\"`, or parenthesis `)`. Re-read the line right before the error arrow.");
+    } else if (/NameError/.test(errorMessage)) {
+      hints.push("A NameError means Python doesn't recognize that word. Did you spell a variable the same both times? Did you create it before using it?");
+    } else if (/IndentationError/.test(errorMessage)) {
+      hints.push("Indentation matters in Python. Lines inside `if` or `while` or `for` need the same number of spaces at the start.");
+    } else if (/TypeError/.test(errorMessage)) {
+      hints.push("A TypeError often means you mixed types (like adding a number to a string). Try `print(type(your_variable))` to check.");
+    }
+  } else if (studentCode) {
+    hints.push("Read your code out loud, line by line. Say exactly what each line is telling the computer to do. The bug usually shows up when the words don't match your intent.");
+  } else {
+    hints.push("Try writing what you want the program to do in plain English first. Then turn each English sentence into one line of code.");
+  }
+  hints.push("_(AI tutor is offline right now — these are built-in hints. Your teacher can enable the AI tutor by setting ANTHROPIC_API_KEY.)_");
+  return hints.join('\n\n');
+}
+
+app.post('/api/tutor/chat', requireAuth, async (req, res) => {
+  try {
+    const { lessonId, lessonTitle, studentCode, errorMessage, question, history } = req.body || {};
+    const userQuestion = (question || '').toString().slice(0, 1200);
+    const safeCode = (studentCode || '').toString().slice(0, 4000);
+    const safeError = (errorMessage || '').toString().slice(0, 800);
+    const safeTitle = (lessonTitle || lessonId || '').toString().slice(0, 120);
+
+    if (!userQuestion.trim()) {
+      return res.status(400).json({ success: false, error: 'Please type a question for the tutor.' });
+    }
+
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if (!apiKey) {
+      return res.json({
+        success: true,
+        offline: true,
+        reply: tutorFallback({ errorMessage: safeError, studentCode: safeCode }),
+      });
+    }
+
+    // Build the user-turn content combining context + the student question
+    const contextBlock = [
+      safeTitle ? `CURRENT LESSON: ${safeTitle}` : null,
+      safeCode ? `STUDENT'S CURRENT CODE:\n\`\`\`python\n${safeCode}\n\`\`\`` : null,
+      safeError ? `ERROR MESSAGE:\n\`\`\`\n${safeError}\n\`\`\`` : null,
+      `STUDENT QUESTION: ${userQuestion}`,
+    ].filter(Boolean).join('\n\n');
+
+    // Build messages with limited prior history (last 6 turns max)
+    const priorMessages = Array.isArray(history) ? history.slice(-6) : [];
+    const messages = [];
+    priorMessages.forEach(turn => {
+      if (!turn || !turn.role || !turn.content) return;
+      if (turn.role !== 'user' && turn.role !== 'assistant') return;
+      messages.push({ role: turn.role, content: String(turn.content).slice(0, 2000) });
+    });
+    messages.push({ role: 'user', content: contextBlock });
+
+    const body = {
+      model: process.env.ANTHROPIC_TUTOR_MODEL || 'claude-haiku-4-5-20251001',
+      max_tokens: 400,
+      system: TUTOR_SYSTEM_PROMPT,
+      messages,
+    };
+
+    // Node 18+ has global fetch
+    const anth = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!anth.ok) {
+      const errText = await anth.text().catch(() => '');
+      console.error('Tutor API error:', anth.status, errText.slice(0, 400));
+      // Graceful fallback so the student still gets *something* helpful
+      return res.json({
+        success: true,
+        offline: true,
+        reply: tutorFallback({ errorMessage: safeError, studentCode: safeCode }),
+      });
+    }
+    const data = await anth.json();
+    const reply = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n').trim()
+               || 'I\'m not sure what to say. Can you rephrase your question?';
+    res.json({ success: true, offline: false, reply });
+  } catch (err) {
+    console.error('Tutor endpoint error:', err);
+    res.status(500).json({ success: false, error: 'Tutor is temporarily unavailable.' });
   }
 });
 

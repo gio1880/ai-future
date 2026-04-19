@@ -617,7 +617,10 @@
           <h1>AI Future Code Lab Admin</h1>
           <p class="muted-text">Welcome, <strong id="teacherName"></strong></p>
         </div>
-        <button class="logout-btn" onclick="logout()">Logout</button>
+        <div style="display:flex;gap:0.5rem;align-items:center;">
+          <button class="btn btn-small btn-secondary" onclick="downloadBackup()" title="Download a full backup of students, progress, tickets, and activity.">⬇ Backup</button>
+          <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
       </div>
 
       <!-- Success/Error Messages -->
@@ -640,6 +643,34 @@
             <div class="value" id="statTotalTime">0h</div>
           </div>
         </div>
+      </div>
+
+      <!-- Live Classroom Section -->
+      <div class="section">
+        <div class="activity-header">
+          <h2>Live Classroom</h2>
+          <div class="activity-controls">
+            <span class="live-badge"><span class="live-dot"></span> Live</span>
+            <span class="muted-text" id="classroomSummary" style="margin-right:0.5rem;"></span>
+            <button class="btn btn-small btn-secondary" onclick="loadClassroom()">Refresh</button>
+          </div>
+        </div>
+        <div id="classroomGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;">
+          <p class="muted-text center-pad">Loading classroom…</p>
+        </div>
+        <style>
+          .cl-card { padding: 0.75rem; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); transition: border-color .2s; }
+          .cl-card.online { border-color: rgba(34,197,94,0.45); background: rgba(34,197,94,0.06); }
+          .cl-card.stuck  { border-color: #ef4444; background: rgba(239,68,68,0.10); box-shadow: 0 0 0 2px rgba(239,68,68,0.15); }
+          .cl-name { font-weight: 600; font-size: 0.95rem; }
+          .cl-sub  { font-size: 0.78rem; color: var(--af-muted, #94a3b8); margin-top: 2px; }
+          .cl-row  { display: flex; align-items: center; justify-content: space-between; margin-top: 0.35rem; }
+          .cl-pill { font-size: 0.7rem; padding: 2px 8px; border-radius: 999px; background: rgba(255,255,255,0.06); color: var(--af-muted, #94a3b8); }
+          .cl-pill.on  { background: rgba(34,197,94,0.18); color: #86efac; }
+          .cl-pill.off { background: rgba(148,163,184,0.15); color: #94a3b8; }
+          .cl-pill.help { background: #ef4444; color: white; font-weight: 700; }
+          .cl-lesson { font-family: ui-monospace, SFMono-Regular, monospace; font-size: 0.78rem; color: #cbd5e1; }
+        </style>
       </div>
 
       <!-- Activity Feed Section -->
@@ -827,6 +858,7 @@
     async function logout() {
       try {
         stopActivityPolling();
+        stopClassroomPolling();
         await fetch(`${API_BASE}/logout`, { method: 'POST', credentials: 'same-origin' });
         currentUser = null;
         document.getElementById('adminSection').classList.add('hidden');
@@ -835,6 +867,31 @@
         document.getElementById('loginPassword').value = '';
       } catch (err) {
         console.error('Logout error:', err);
+      }
+    }
+
+    // Download full backup of students, progress, tickets, activity as one JSON file.
+    async function downloadBackup() {
+      try {
+        const resp = await fetch(`${API_BASE}/admin/backup`, { credentials: 'same-origin' });
+        if (!resp.ok) {
+          showMessage('error', 'Backup failed (' + resp.status + ')');
+          return;
+        }
+        // Extract filename from Content-Disposition if present
+        const cd = resp.headers.get('Content-Disposition') || '';
+        const match = cd.match(/filename="?([^";]+)"?/);
+        const filename = match ? match[1] : `code-lab-backup-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
+        const blob = await resp.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = filename;
+        document.body.appendChild(a); a.click();
+        setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 100);
+        showMessage('success', 'Backup downloaded: ' + filename);
+      } catch (err) {
+        console.error('Backup error:', err);
+        showMessage('error', 'Backup failed: ' + err.message);
       }
     }
 
@@ -1503,14 +1560,87 @@
       }
     }
 
+    // ============================================
+    // LIVE CLASSROOM POLLING
+    // ============================================
+
+    let classroomInterval = null;
+
+    function fmtAgo(iso) {
+      if (!iso) return '—';
+      const ms = Date.now() - new Date(iso).getTime();
+      if (ms < 60000) return 'just now';
+      if (ms < 3600000) return Math.floor(ms / 60000) + 'm ago';
+      if (ms < 86400000) return Math.floor(ms / 3600000) + 'h ago';
+      return Math.floor(ms / 86400000) + 'd ago';
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+    }
+
+    async function loadClassroom() {
+      const grid = document.getElementById('classroomGrid');
+      const summary = document.getElementById('classroomSummary');
+      try {
+        const resp = await fetch(`${API_BASE}/admin/classroom`, { credentials: 'same-origin' });
+        const result = await resp.json();
+        if (!result.success) {
+          grid.innerHTML = '<p class="muted-text center-pad">Failed to load classroom.</p>';
+          return;
+        }
+        const { roster, online_count, stuck_count } = result.data;
+        summary.textContent = `${online_count} online · ${stuck_count} need help`;
+        if (!roster.length) {
+          grid.innerHTML = '<p class="muted-text center-pad">No students yet — add some on the Add Students panel below.</p>';
+          return;
+        }
+        grid.innerHTML = roster.map(r => {
+          const cls = r.stuckSince ? 'cl-card stuck' : (r.online ? 'cl-card online' : 'cl-card');
+          const statusPill = r.stuckSince
+            ? `<span class="cl-pill help">🙋 NEEDS HELP</span>`
+            : (r.online ? '<span class="cl-pill on">● online</span>' : '<span class="cl-pill off">offline</span>');
+          const lessonLine = r.currentLessonId
+            ? `<span class="cl-lesson">${escapeHtml(r.currentLessonId)}${r.currentStep ? ' · ' + escapeHtml(r.currentStep) : ''}</span>`
+            : '<span class="cl-sub">no lesson open</span>';
+          return `
+            <div class="${cls}">
+              <div class="cl-name">${escapeHtml(r.name)}</div>
+              <div class="cl-sub">@${escapeHtml(r.username)} · ${r.lessonsCompleted} lessons done</div>
+              <div class="cl-row">${lessonLine}${statusPill}</div>
+              <div class="cl-sub" style="margin-top:6px;">last seen ${fmtAgo(r.lastPing)}${r.stuckSince ? ' · stuck since ' + fmtAgo(r.stuckSince) : ''}</div>
+            </div>`;
+        }).join('');
+      } catch (err) {
+        console.error('Classroom load error:', err);
+        grid.innerHTML = '<p class="muted-text center-pad">Network error — will retry.</p>';
+      }
+    }
+
+    function startClassroomPolling() {
+      if (classroomInterval) clearInterval(classroomInterval);
+      loadClassroom();
+      // Snappier than activity feed since this is the "what's happening right now" view
+      classroomInterval = setInterval(loadClassroom, 10000);
+    }
+
+    function stopClassroomPolling() {
+      if (classroomInterval) {
+        clearInterval(classroomInterval);
+        classroomInterval = null;
+      }
+    }
+
     // Initialize on page load
     init();
 
-    // Also load tickets and start activity feed when admin dashboard loads
+    // Also load tickets and start activity + classroom feeds when admin dashboard loads
     setTimeout(() => {
       if (currentUser) {
         loadTickets();
         startActivityPolling();
+        startClassroomPolling();
       }
     }, 1500);
   </script>

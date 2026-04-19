@@ -11,6 +11,14 @@ services:
         generateValue: true          # Render generates a secure random value once
       - key: DATA_DIR
         value: /var/data
+      # AI Tutor (optional). When unset, the tutor panel still works but returns
+      # built-in hints instead of LLM-generated ones. Set this in the Render
+      # dashboard (sync: false keeps it out of this committed file).
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      # Optional model override (defaults to claude-haiku-4-5-20251001)
+      - key: ANTHROPIC_TUTOR_MODEL
+        sync: false
     disk:
       name: code-lab-data
       mountPath: /var/data

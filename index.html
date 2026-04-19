@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Future — Building Future Innovators · Robotics, Code Lab & STEM</title>
   <meta name="description" content="AI Future empowers students with robotics, coding, and STEM education. Explore Robotics Lab, Code Lab, and Summer Camp programs." />
-  <link rel="icon" href="../ai future logo.png" type="image/png" />
+  <link rel="icon" href="ai future logo.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet" />
@@ -179,6 +179,102 @@
     }
     .summer-image img { width: 100%; height: 100%; object-fit: cover; }
 
+    .student-gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--sp-md);
+    }
+    .student-gallery-grid img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* ── Inquiry Form ─────────────────────────────────────── */
+    .inquiry-section {
+      background: linear-gradient(180deg, #fff 0%, #f8fbff 100%);
+    }
+    .inquiry-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+    .inquiry-card {
+      background: #fff;
+      border: 1px solid var(--af-border);
+      border-radius: var(--r-xl);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+    }
+    .inquiry-meta {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-md);
+      margin: 1rem 0 1.25rem;
+    }
+    .inquiry-pill {
+      background: #fff;
+      border: 1px solid var(--af-border);
+      border-radius: var(--r-md);
+      padding: 0.75rem 0.9rem;
+      font-size: 0.88rem;
+      color: var(--af-slate);
+    }
+    .inquiry-pill strong {
+      display: block;
+      color: var(--af-deep-navy);
+      font-size: 0.78rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+    .inquiry-form {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.85rem;
+    }
+    .inquiry-form .full { grid-column: 1 / -1; }
+    .inquiry-form label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--af-slate);
+    }
+    .inquiry-form input,
+    .inquiry-form select,
+    .inquiry-form textarea {
+      width: 100%;
+      border: 1px solid var(--af-border);
+      border-radius: 10px;
+      padding: 0.65rem 0.75rem;
+      background: #fff;
+      color: var(--af-text);
+    }
+    .inquiry-form input:focus,
+    .inquiry-form select:focus,
+    .inquiry-form textarea:focus {
+      outline: 2px solid rgba(37,99,255,.28);
+      border-color: var(--af-blue);
+    }
+    .inquiry-note {
+      font-size: 0.78rem;
+      color: var(--af-muted);
+      margin-top: 0.75rem;
+    }
+    .inquiry-status {
+      margin-top: 0.75rem;
+      font-size: 0.84rem;
+      font-weight: 600;
+      min-height: 1.2em;
+    }
+    .inquiry-status.success { color: #15803d; }
+    .inquiry-status.error { color: #b91c1c; }
+
     /* ── Why Section ───────────────────────────────────────── */
     .why-grid {
       display: grid;
@@ -232,6 +328,10 @@
       .hero__inner { grid-template-columns: 1fr; }
       .pathways-grid { grid-template-columns: 1fr; }
       .summer-grid { grid-template-columns: 1fr; }
+      .student-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .inquiry-grid { grid-template-columns: 1fr; }
+      .inquiry-meta { grid-template-columns: 1fr; }
+      .inquiry-form { grid-template-columns: 1fr; }
       .why-grid { grid-template-columns: repeat(2, 1fr); }
       .testimonials-grid { grid-template-columns: 1fr; }
       .final-cta__inner { grid-template-columns: 1fr; text-align: center; }
@@ -243,7 +343,7 @@
 
 <!-- Announcement Bar -->
 <div class="announce-bar" role="banner" aria-label="Summer Camp announcement">
-  <span>☀ Summer Camp 2025 enrollment is open! Robotics, Coding, and STEM camps for ages 6–14.</span>
+  <span>☀ Summer Camp 2026 enrollment is open! Robotics, Coding, and STEM camps for ages 6–14.</span>
   <a href="#summer-camp">View Summer Camp →</a>
   <button class="announce-bar__dismiss" aria-label="Dismiss announcement">✕</button>
 </div>
@@ -252,7 +352,7 @@
 <nav class="navbar" role="navigation" aria-label="Main navigation">
   <div class="navbar__inner">
     <a href="index.html" class="navbar__logo">
-      <img src="../ai future logo.png" alt="AI Future Logo" />
+      <img src="ai future logo.png" alt="AI Future Logo" />
       <div>
         <div class="navbar__logo-text">AI FUTURE</div>
         <div class="navbar__logo-sub">Building Future Innovators</div>
@@ -267,7 +367,7 @@
       <li><a href="robotics lab/robotics-lab.html#competitions">Competitions</a></li>
       <li><a href="#contact">About</a></li>
     </ul>
-    <a href="#contact" class="btn btn--primary navbar__cta desktop-only">Book a Free Trial</a>
+    <a href="#summer-inquiry" class="btn btn--primary navbar__cta desktop-only">Book a Free Trial</a>
     <button class="navbar__hamburger" aria-label="Open menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
@@ -285,7 +385,7 @@
   <a href="#summer-camp">Summer Camp ☀</a>
   <a href="robotics lab/robotics-lab.html#competitions">Competitions</a>
   <a href="#contact">About</a>
-  <a href="#contact" class="btn btn--primary" style="margin-top:1rem; text-align:center;">Book a Free Trial</a>
+  <a href="#summer-inquiry" class="btn btn--primary" style="margin-top:1rem; text-align:center;">Book a Free Trial</a>
 </nav>
 
 <!-- Hero -->
@@ -293,15 +393,15 @@
   <div class="hero__inner">
     <div class="hero__content">
       <div class="hero__eyebrow"><i class="fa-solid fa-star"></i> Trusted by 500+ Families</div>
-      <h1 class="hero__title">Building Future<br><span>Innovators</span></h1>
-      <p class="hero__sub">AI Future empowers students with robotics, coding, and STEM education that builds skills, confidence, and a mindset for the future.</p>
+      <h1 class="hero__title">Summer Camp 2026 for<br><span>Future Innovators</span></h1>
+      <p class="hero__sub">Hands-on robotics, coding, and STEM camps for ages 6-14 in Queens. Small groups, expert mentors, and project-based learning kids love.</p>
       <div class="btn-group">
-        <a href="robotics lab/robotics-lab.html" class="btn btn--navy btn--lg"><i class="fa-solid fa-robot"></i> Explore Robotics Lab</a>
-        <a href="code-lab/code-lab.html" class="btn btn--primary btn--lg"><i class="fa-solid fa-code"></i> Explore Code Lab</a>
+        <a href="#summer-inquiry" class="btn btn--primary btn--lg"><i class="fa-solid fa-calendar-check"></i> Enroll for Summer Camp</a>
+        <a href="#summer-camp" class="btn btn--outline btn--lg"><i class="fa-solid fa-list-check"></i> View Camp Options</a>
       </div>
       <div class="btn-group" style="margin-top:0.75rem;">
-        <a href="#summer-camp" class="btn btn--outline btn--sm" style="border-color:var(--af-yellow); color:#8B6800; background:rgba(254,206,0,.1);">☀ View Summer Camp 2025</a>
-        <a href="#contact" class="btn btn--ghost btn--sm"><i class="fa-solid fa-play" style="font-size:.75rem"></i> Watch Our Story</a>
+        <a href="robotics lab/robotics-lab.html" class="btn btn--ghost btn--sm"><i class="fa-solid fa-robot" style="font-size:.75rem"></i> Explore Robotics Lab</a>
+        <a href="code-lab/code-lab.html" class="btn btn--ghost btn--sm"><i class="fa-solid fa-code" style="font-size:.75rem"></i> Explore Code Lab</a>
       </div>
       <div class="hero__trust">
         <div class="hero__trust-item"><i class="fa-solid fa-users"></i> 500+ Students</div>
@@ -313,10 +413,10 @@
     </div>
     <div class="hero__visual">
       <div class="hero__video-wrap">
-        <video autoplay muted loop playsinline poster="../ai future logo.png">
+        <video autoplay muted loop playsinline poster="ai future logo.png">
           <source src="assets/video/grit-animation.mp4" type="video/mp4" />
           <div class="hero__video-fallback">
-            <img src="../ai future logo.png" alt="AI Future" style="max-width:200px; opacity:.8;" />
+            <img src="ai future logo.png" alt="AI Future" style="max-width:200px; opacity:.8;" />
           </div>
         </video>
       </div>
@@ -384,8 +484,8 @@
         <h2 class="section-heading">Summer Camp at AI Future ☀</h2>
         <p class="section-sub">A hands-on summer experience where students build robots, learn coding, create projects, and grow confidence through fun STEM challenges.</p>
         <div class="btn-group" style="margin-bottom:2rem;">
-          <a href="#contact" class="btn btn--primary">Explore All Summer Camps</a>
-          <a href="#contact" class="btn btn--outline">Download Brochure</a>
+          <a href="#summer-inquiry" class="btn btn--primary">Explore All Summer Camps</a>
+          <a href="#summer-inquiry" class="btn btn--outline">Download Brochure</a>
         </div>
         <div class="summer-camps">
           <div class="camp-card reveal">
@@ -415,7 +515,98 @@
         </div>
       </div>
       <div class="summer-image reveal">
-        <img src="../25_summer_pictures/IMG_0521.jpg" alt="Students at summer STEM camp" loading="lazy" />
+        <img src="robotics lab/25_summer_pictures/IMG_0521.jpg" alt="Students at summer STEM camp" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Student Moments -->
+<section class="section" style="background:#fff;">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">Student Life</p>
+      <h2 class="section-heading">Inside AI Future Sessions</h2>
+      <p class="section-sub section-sub--center">Real students learning, collaborating, and building projects every week.</p>
+    </div>
+    <div class="student-gallery-grid">
+      <img src="robotics lab/25_summer_pictures/IMG_0902.jpg" alt="Students collaborating during summer coding activity" loading="lazy" />
+      <img src="robotics lab/FLL Teams/25_26_season_pictures/IMG_3456.jpg" alt="Robotics students testing their robot" loading="lazy" />
+      <img src="robotics lab/25_summer_pictures/Photos (28)/IMG_1327.jpg" alt="Students building projects in camp" loading="lazy" />
+      <img src="robotics lab/25_summer_pictures/Photos (27)/IMG_1354.jpg" alt="Students presenting STEM projects" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<!-- Summer Inquiry -->
+<section class="section inquiry-section" id="summer-inquiry">
+  <div class="container">
+    <div class="inquiry-grid">
+      <div>
+        <p class="section-label">Enrollment</p>
+        <h2 class="section-heading">Reserve Your Child's Spot</h2>
+        <p class="section-sub" style="max-width:620px">Share a few details and we will send matching camp options, schedule availability, and pricing in under 24 hours.</p>
+        <div class="inquiry-meta">
+          <div class="inquiry-pill"><strong>Location</strong>Flushing, Queens, NY</div>
+          <div class="inquiry-pill"><strong>Camp Window</strong>June-August 2026</div>
+          <div class="inquiry-pill"><strong>Pricing</strong>$500/week</div>
+          <div class="inquiry-pill"><strong>Availability</strong>Only 18 seats left</div>
+        </div>
+        <ul class="checklist" style="margin-top:0.75rem;">
+          <li>Small-group instruction with expert mentors</li>
+          <li>Project showcases and parent progress updates</li>
+          <li>Flexible half-day and full-day options</li>
+        </ul>
+      </div>
+      <div class="inquiry-card">
+        <h3 style="font-size:1.15rem; font-weight:800; color:var(--af-deep-navy); margin-bottom:0.35rem">Summer Camp Inquiry Form</h3>
+        <p style="font-size:0.85rem; color:var(--af-muted); margin-bottom:0.95rem">Fast response for families looking to enroll this season.</p>
+        <form id="summer-inquiry-form" class="inquiry-form" novalidate>
+          <label>
+            Parent Full Name
+            <input type="text" name="parentName" required autocomplete="name" />
+          </label>
+          <label>
+            Best Email
+            <input type="email" name="email" required autocomplete="email" />
+          </label>
+          <label>
+            Mobile Number
+            <input type="tel" name="phone" required autocomplete="tel" />
+          </label>
+          <label>
+            Child Age
+            <select name="childAge" required>
+              <option value="">Select age</option>
+              <option>6</option><option>7</option><option>8</option><option>9</option>
+              <option>10</option><option>11</option><option>12</option><option>13</option><option>14</option>
+            </select>
+          </label>
+          <label>
+            Program Interest
+            <select name="programInterest" required>
+              <option value="">Choose a camp</option>
+              <option>Robotics Camp</option>
+              <option>Coding Camp</option>
+              <option>STEM Maker Camp</option>
+              <option>Not sure yet</option>
+            </select>
+          </label>
+          <label>
+            Preferred Week
+            <input type="text" name="preferredWeek" placeholder="e.g., July 8-12" required />
+          </label>
+          <label class="full">
+            Notes (Optional)
+            <textarea name="notes" rows="3" placeholder="Tell us your child's goals or schedule constraints"></textarea>
+          </label>
+          <div class="full" style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; flex-wrap:wrap; margin-top:0.2rem;">
+            <button type="submit" class="btn btn--primary" id="summer-inquiry-submit">Get Camp Options</button>
+            <span style="font-size:0.78rem; color:var(--af-muted)">Or email us: <a href="mailto:info@aifuture.com" style="text-decoration:underline">info@aifuture.com</a></span>
+          </div>
+          <p id="summer-inquiry-status" class="inquiry-status full" role="status" aria-live="polite"></p>
+        </form>
+        <p class="inquiry-note">By submitting, you agree to be contacted by phone or email about camp availability and enrollment.</p>
       </div>
     </div>
   </div>
@@ -547,7 +738,7 @@
       <h2 style="font-size:clamp(1.75rem,3vw,2.5rem); font-weight:800; color:#fff; margin-bottom:.75rem">Summer spots are filling fast!</h2>
       <p style="color:rgba(255,255,255,.7); max-width:540px; margin-bottom:1.5rem">Give your child a summer of robotics, coding, creativity, and confidence. Join hundreds of families who trust AI Future.</p>
       <div class="btn-group">
-        <a href="#contact" class="btn btn--primary btn--lg">Book Summer Camp</a>
+        <a href="#summer-inquiry" class="btn btn--primary btn--lg">Book Summer Camp</a>
         <a href="mailto:info@aifuture.com" class="btn btn--outline-white btn--lg">Contact Us</a>
       </div>
     </div>
@@ -580,7 +771,7 @@
   <div class="container">
     <div class="footer__grid">
       <div class="footer__brand">
-        <img src="../ai future logo.png" alt="AI Future Logo" />
+        <img src="ai future logo.png" alt="AI Future Logo" />
         <div class="footer__brand-name">AI Future</div>
         <div class="footer__tagline">Building Future Innovators</div>
         <div class="footer__social">
@@ -617,12 +808,78 @@
       </div>
     </div>
     <div class="footer__bottom">
-      <span>© 2025 AI Future. All rights reserved.</span>
+      <span>© 2026 AI Future. All rights reserved.</span>
       <span>Flushing, Queens, NY · <a href="mailto:info@aifuture.com" style="color:rgba(255,255,255,.4)">info@aifuture.com</a></span>
     </div>
   </div>
 </footer>
 
 <script src="assets/js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('summer-inquiry-form');
+  const status = document.getElementById('summer-inquiry-status');
+  const submitBtn = document.getElementById('summer-inquiry-submit');
+  if (!form || !status || !submitBtn) return;
+
+  function trackInquiryEvent(eventName, details) {
+    if (Array.isArray(window.dataLayer)) {
+      window.dataLayer.push({ event: eventName, ...details });
+    }
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', eventName, details || {});
+    }
+  }
+
+  form.addEventListener('submit', async function (event) {
+    event.preventDefault();
+    status.textContent = '';
+    status.className = 'inquiry-status full';
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    const formData = new FormData(form);
+    const payload = Object.fromEntries(formData.entries());
+    trackInquiryEvent('summer_inquiry_submit_started', {
+      programInterest: payload.programInterest || 'unknown',
+      childAge: payload.childAge || 'unknown'
+    });
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+
+    try {
+      const response = await fetch('/api/summer-inquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error('Submission failed');
+      }
+
+      status.textContent = 'Thanks! We received your request and will contact you within 24 hours.';
+      status.classList.add('success');
+      trackInquiryEvent('summer_inquiry_submit_success', {
+        programInterest: payload.programInterest || 'unknown',
+        childAge: payload.childAge || 'unknown'
+      });
+      form.reset();
+    } catch (error) {
+      status.textContent = 'We could not submit right now. Please email info@aifuture.com and we will help immediately.';
+      status.classList.add('error');
+      trackInquiryEvent('summer_inquiry_submit_error', {
+        message: error && error.message ? error.message : 'unknown_error'
+      });
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Get Camp Options';
+    }
+  });
+});
+</script>
 </body>
 </html>
