@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs/promises');
 const codeLabApp = require('./code-lab/server');
+const payments = require('./payments');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const sendCodeLabLanding = (res) => res.sendFile(path.join(__dirname, 'code-lab', 'code-lab.html'));
@@ -10,6 +11,10 @@ const summerInquiryFile = path.join(__dirname, 'code-lab', 'data', 'summer-inqui
 const summerInquiryDir = path.dirname(summerInquiryFile);
 const summerAdminUser = process.env.SUMMER_LEADS_ADMIN_USER || 'admin';
 const summerAdminPassword = process.env.SUMMER_LEADS_ADMIN_PASSWORD || 'change-me';
+
+// Payments routes MUST mount before global express.json() — the Stripe webhook
+// endpoint needs the raw request body to verify the signature.
+payments.mount(app, express);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

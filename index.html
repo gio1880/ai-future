@@ -521,6 +521,385 @@
   </div>
 </section>
 
+<!-- Summer Camp Registration & Payment -->
+<section class="section summer-register-section" id="summer-register">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">Register Now</p>
+      <h2 class="section-heading">Summer Camp 2026 — Pick Your Weeks</h2>
+      <p class="section-sub section-sub--center">
+        Nine weeks of hands-on robotics, coding, and STEM building —
+        July 6 through September 5, 2026. Mix and match any weeks that work for your family.
+      </p>
+    </div>
+
+    <div class="price-banner reveal" id="sr-price-banner" aria-live="polite">
+      <div class="price-banner__left">
+        <span class="price-banner__tag" id="sr-price-tag">Early Bird</span>
+        <div>
+          <div class="price-banner__amount">
+            <span id="sr-week-price">$450</span>
+            <span class="price-banner__per">/ week</span>
+          </div>
+          <div class="price-banner__note" id="sr-price-note">
+            Early-bird pricing ends June 15, 2026 — then $500/week.
+          </div>
+        </div>
+      </div>
+      <div class="price-banner__right" id="sr-countdown-wrap">
+        <div class="price-banner__countdown-label">Early-bird ends in</div>
+        <div class="price-banner__countdown" id="sr-countdown" aria-label="Early bird countdown">
+          <span class="cd-cell"><span id="sr-cd-days">--</span><small>days</small></span>
+          <span class="cd-cell"><span id="sr-cd-hours">--</span><small>hrs</small></span>
+          <span class="cd-cell"><span id="sr-cd-mins">--</span><small>min</small></span>
+          <span class="cd-cell"><span id="sr-cd-secs">--</span><small>sec</small></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sr-grid">
+      <div class="sr-cal reveal">
+        <div class="sr-cal__header">
+          <h3>Select your weeks</h3>
+          <button type="button" class="sr-clear" id="sr-clear-btn">Clear selection</button>
+        </div>
+        <div class="sr-weeks" id="sr-weeks" role="group" aria-label="Available camp weeks">
+          <!-- populated by JS from /api/payments/pricing -->
+        </div>
+        <div class="sr-total" id="sr-total">
+          <span class="sr-total__count">0 weeks selected</span>
+          <span class="sr-total__amount">$0</span>
+        </div>
+      </div>
+
+      <form class="sr-form reveal" id="sr-form" novalidate>
+        <h3 class="sr-form__title">Camper information</h3>
+        <label class="sr-field">
+          <span>Parent / guardian name</span>
+          <input type="text" name="parentName" autocomplete="name" required />
+        </label>
+        <label class="sr-field">
+          <span>Child's name</span>
+          <input type="text" name="childName" required />
+        </label>
+        <div class="sr-field-row">
+          <label class="sr-field">
+            <span>Child's age</span>
+            <input type="number" name="childAge" min="5" max="17" required />
+          </label>
+          <label class="sr-field">
+            <span>Grade (Fall '26)</span>
+            <input type="text" name="childGrade" placeholder="e.g. 5th" required />
+          </label>
+        </div>
+        <label class="sr-field">
+          <span>Parent email</span>
+          <input type="email" name="email" autocomplete="email" required />
+        </label>
+        <label class="sr-field">
+          <span>Parent phone</span>
+          <input type="tel" name="phone" autocomplete="tel" required />
+        </label>
+        <button type="submit" class="btn btn--primary btn--lg sr-submit" id="sr-submit">
+          Register &amp; Pay <span id="sr-submit-amount"></span>
+        </button>
+        <p class="sr-legal">
+          Secure checkout powered by Stripe. You'll receive an emailed receipt and
+          confirmation immediately after payment.
+        </p>
+        <p class="sr-error" id="sr-error" role="alert"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Summer Camp Registration — uses existing design tokens */
+  .summer-register-section { background: var(--af-white, #FAFAF6); }
+
+  .price-banner {
+    display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, var(--af-navy) 0%, var(--af-deep-navy) 100%);
+    color: #fff; border-radius: var(--r-xl, 16px); padding: 1.5rem 1.75rem;
+    box-shadow: var(--shadow-lg); margin: 2rem 0 2.5rem;
+  }
+  .price-banner__left { display: flex; align-items: center; gap: 1.1rem; }
+  .price-banner__tag {
+    display: inline-block; background: var(--af-yellow); color: var(--af-deep-navy);
+    font-weight: 800; font-size: .78rem; letter-spacing: .06em; text-transform: uppercase;
+    padding: .35rem .7rem; border-radius: var(--r-full, 999px);
+  }
+  .price-banner__tag.is-regular { background: #fff; color: var(--af-navy); }
+  .price-banner__amount { font-family: 'Cinzel', serif; font-weight: 900; font-size: 2.2rem; line-height: 1; }
+  .price-banner__per { font-family: 'Inter', sans-serif; font-weight: 500; font-size: 1rem; opacity: .85; margin-left: .25rem; }
+  .price-banner__note { font-size: .88rem; opacity: .9; margin-top: .35rem; }
+  .price-banner__right { display: flex; flex-direction: column; align-items: flex-end; gap: .4rem; }
+  .price-banner__countdown-label { font-size: .78rem; letter-spacing: .05em; text-transform: uppercase; opacity: .8; }
+  .price-banner__countdown { display: flex; gap: .5rem; }
+  .cd-cell {
+    display: flex; flex-direction: column; align-items: center; min-width: 52px;
+    background: rgba(255,255,255,.12); border-radius: var(--r-md, 10px); padding: .4rem .55rem;
+    font-family: 'Cinzel', serif; font-weight: 700;
+  }
+  .cd-cell span { font-size: 1.25rem; line-height: 1; }
+  .cd-cell small { font-size: .65rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; opacity: .85; font-family: 'Inter', sans-serif; margin-top: .15rem; }
+
+  .sr-grid {
+    display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 2rem; align-items: start;
+  }
+  @media (max-width: 900px) { .sr-grid { grid-template-columns: 1fr; } }
+
+  .sr-cal, .sr-form {
+    background: #fff; border: 1px solid var(--af-border, #E2E8F0);
+    border-radius: var(--r-xl, 16px); padding: 1.75rem; box-shadow: var(--shadow-md);
+  }
+  .sr-cal__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .sr-cal__header h3 { font-family: 'Cinzel', serif; font-weight: 700; font-size: 1.25rem; color: var(--af-deep-navy); margin: 0; }
+  .sr-clear {
+    background: transparent; border: none; color: var(--af-muted, #64748B);
+    font-size: .85rem; font-weight: 600; cursor: pointer; padding: .25rem .5rem; border-radius: var(--r-sm, 6px);
+  }
+  .sr-clear:hover { color: var(--af-navy); background: var(--af-cream, #F5EDC4); }
+
+  .sr-weeks {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: .75rem;
+  }
+  .sr-week {
+    position: relative; cursor: pointer; user-select: none;
+    background: #fff; border: 2px solid var(--af-border, #E2E8F0);
+    border-radius: var(--r-lg, 12px); padding: .85rem .9rem;
+    transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .sr-week:hover { border-color: var(--af-navy); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+  .sr-week.is-selected {
+    border-color: var(--af-yellow); background: linear-gradient(135deg, #FFF9DC 0%, #FFFFFF 100%);
+    box-shadow: 0 0 0 3px rgba(254, 206, 0, .25);
+  }
+  .sr-week__label { font-family: 'Cinzel', serif; font-weight: 700; color: var(--af-deep-navy); font-size: .95rem; }
+  .sr-week__dates { font-size: .78rem; color: var(--af-muted, #64748B); margin-top: .2rem; }
+  .sr-week__check {
+    position: absolute; top: .55rem; right: .55rem; width: 20px; height: 20px;
+    border-radius: 50%; background: var(--af-yellow); color: var(--af-deep-navy);
+    display: none; align-items: center; justify-content: center; font-size: .7rem; font-weight: 900;
+  }
+  .sr-week.is-selected .sr-week__check { display: flex; }
+  .sr-week input { position: absolute; opacity: 0; pointer-events: none; }
+
+  .sr-total {
+    margin-top: 1.25rem; display: flex; justify-content: space-between; align-items: baseline;
+    padding-top: 1.25rem; border-top: 1px dashed var(--af-border, #E2E8F0);
+  }
+  .sr-total__count { color: var(--af-muted, #64748B); font-size: .95rem; font-weight: 600; }
+  .sr-total__amount { font-family: 'Cinzel', serif; font-weight: 900; font-size: 2rem; color: var(--af-navy); }
+
+  .sr-form__title { font-family: 'Cinzel', serif; font-weight: 700; font-size: 1.25rem; color: var(--af-deep-navy); margin: 0 0 1rem; }
+  .sr-field { display: block; margin-bottom: .85rem; }
+  .sr-field > span { display: block; font-size: .82rem; font-weight: 600; color: var(--af-slate, #2E3440); margin-bottom: .35rem; }
+  .sr-field input {
+    width: 100%; padding: .7rem .85rem; font-size: 1rem; font-family: inherit;
+    border: 1px solid var(--af-border, #E2E8F0); border-radius: var(--r-md, 10px);
+    background: #fff; color: var(--af-slate, #2E3440); transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .sr-field input:focus { outline: none; border-color: var(--af-navy); box-shadow: 0 0 0 3px rgba(7, 62, 119, .15); }
+  .sr-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+
+  .sr-submit { width: 100%; margin-top: .5rem; }
+  .sr-submit[disabled] { opacity: .55; cursor: not-allowed; }
+  #sr-submit-amount { font-weight: 700; margin-left: .25rem; }
+
+  .sr-legal { font-size: .78rem; color: var(--af-muted, #64748B); margin: .85rem 0 0; text-align: center; }
+  .sr-error { color: #B91C1C; font-size: .9rem; font-weight: 600; margin: .75rem 0 0; min-height: 1.2em; }
+</style>
+
+<script>
+(function () {
+  const weeksEl = document.getElementById('sr-weeks');
+  if (!weeksEl) return;
+
+  const state = {
+    weeks: [],           // [{id, label, dates}]
+    selected: new Set(),
+    earlyBird: true,
+    weekPriceCents: 45000,
+    deadlineMs: Date.parse('2026-06-15T23:59:59-04:00'),
+  };
+
+  const fmtUsd = (cents) => '$' + (cents / 100).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+
+  async function loadPricing() {
+    try {
+      const r = await fetch('/api/payments/pricing', { cache: 'no-store' });
+      if (!r.ok) throw new Error('Pricing unavailable');
+      const data = await r.json();
+      const c = data.camp || {};
+      state.weeks = c.weeks || [];
+      state.deadlineMs = Date.parse(c.earlyBirdDeadlineISO || c.earlyBirdDeadline || '2026-06-15T23:59:59-04:00');
+      state.earlyBird = c.pricingTier ? c.pricingTier === 'early-bird' : Date.now() <= state.deadlineMs;
+      state.weekPriceCents = c.currentWeekPrice || c.currentWeekPriceCents || (state.earlyBird ? (c.earlyBird || 45000) : (c.regular || 50000));
+    } catch (e) {
+      // fallback to static config if pricing endpoint is offline
+      state.weeks = [
+        { id: 'w1', label: 'Week 1', dates: 'July 6–11, 2026' },
+        { id: 'w2', label: 'Week 2', dates: 'July 13–18, 2026' },
+        { id: 'w3', label: 'Week 3', dates: 'July 20–25, 2026' },
+        { id: 'w4', label: 'Week 4', dates: 'July 27–Aug 1, 2026' },
+        { id: 'w5', label: 'Week 5', dates: 'Aug 3–8, 2026' },
+        { id: 'w6', label: 'Week 6', dates: 'Aug 10–15, 2026' },
+        { id: 'w7', label: 'Week 7', dates: 'Aug 17–22, 2026' },
+        { id: 'w8', label: 'Week 8', dates: 'Aug 24–29, 2026' },
+        { id: 'w9', label: 'Week 9', dates: 'Aug 31–Sept 5, 2026' },
+      ];
+      state.earlyBird = Date.now() <= state.deadlineMs;
+      state.weekPriceCents = state.earlyBird ? 45000 : 50000;
+    }
+    renderBanner();
+    renderWeeks();
+    renderTotal();
+  }
+
+  function renderBanner() {
+    document.getElementById('sr-week-price').textContent = fmtUsd(state.weekPriceCents);
+    const tag = document.getElementById('sr-price-tag');
+    const note = document.getElementById('sr-price-note');
+    const wrap = document.getElementById('sr-countdown-wrap');
+    if (state.earlyBird) {
+      tag.textContent = 'Early Bird';
+      tag.classList.remove('is-regular');
+      note.textContent = 'Early-bird pricing ends June 15, 2026 — then $500/week.';
+      wrap.style.display = '';
+    } else {
+      tag.textContent = 'Regular';
+      tag.classList.add('is-regular');
+      note.textContent = 'Standard summer pricing — register anytime while weeks remain.';
+      wrap.style.display = 'none';
+    }
+  }
+
+  function renderWeeks() {
+    weeksEl.innerHTML = '';
+    state.weeks.forEach((w) => {
+      const card = document.createElement('label');
+      card.className = 'sr-week';
+      card.dataset.week = w.id;
+      card.innerHTML = `
+        <input type="checkbox" value="${w.id}" />
+        <span class="sr-week__check" aria-hidden="true">&#10003;</span>
+        <div class="sr-week__label">${w.label}</div>
+        <div class="sr-week__dates">${w.dates}</div>
+      `;
+      const cb = card.querySelector('input');
+      card.addEventListener('click', (e) => {
+        if (e.target !== cb) cb.checked = !cb.checked;
+        if (cb.checked) state.selected.add(w.id); else state.selected.delete(w.id);
+        card.classList.toggle('is-selected', cb.checked);
+        renderTotal();
+      });
+      weeksEl.appendChild(card);
+    });
+  }
+
+  function renderTotal() {
+    const n = state.selected.size;
+    const total = n * state.weekPriceCents;
+    document.querySelector('.sr-total__count').textContent =
+      n === 0 ? 'No weeks selected' : `${n} week${n === 1 ? '' : 's'} selected`;
+    document.querySelector('.sr-total__amount').textContent = fmtUsd(total);
+    const submit = document.getElementById('sr-submit');
+    const submitAmount = document.getElementById('sr-submit-amount');
+    submit.disabled = n === 0;
+    submitAmount.textContent = n === 0 ? '' : `— ${fmtUsd(total)}`;
+  }
+
+  function tickCountdown() {
+    if (!state.earlyBird) return;
+    const ms = state.deadlineMs - Date.now();
+    if (ms <= 0) {
+      state.earlyBird = false;
+      state.weekPriceCents = 50000;
+      renderBanner();
+      renderTotal();
+      return;
+    }
+    const days = Math.floor(ms / 86400000);
+    const hours = Math.floor((ms % 86400000) / 3600000);
+    const mins = Math.floor((ms % 3600000) / 60000);
+    const secs = Math.floor((ms % 60000) / 1000);
+    document.getElementById('sr-cd-days').textContent = String(days);
+    document.getElementById('sr-cd-hours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('sr-cd-mins').textContent = String(mins).padStart(2, '0');
+    document.getElementById('sr-cd-secs').textContent = String(secs).padStart(2, '0');
+  }
+
+  document.getElementById('sr-clear-btn').addEventListener('click', () => {
+    state.selected.clear();
+    weeksEl.querySelectorAll('.sr-week').forEach((c) => {
+      c.classList.remove('is-selected');
+      const cb = c.querySelector('input'); if (cb) cb.checked = false;
+    });
+    renderTotal();
+  });
+
+  document.getElementById('sr-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const errorEl = document.getElementById('sr-error');
+    errorEl.textContent = '';
+
+    if (state.selected.size === 0) {
+      errorEl.textContent = 'Please select at least one week.';
+      return;
+    }
+
+    const fd = new FormData(form);
+    const payload = {
+      product: 'camp',
+      weeks: Array.from(state.selected),
+      parentName: (fd.get('parentName') || '').toString().trim(),
+      childName: (fd.get('childName') || '').toString().trim(),
+      childAge: (fd.get('childAge') || '').toString().trim(),
+      childGrade: (fd.get('childGrade') || '').toString().trim(),
+      email: (fd.get('email') || '').toString().trim(),
+      phone: (fd.get('phone') || '').toString().trim(),
+    };
+
+    if (!payload.parentName || !payload.childName || !payload.childAge || !payload.childGrade || !payload.email || !payload.phone) {
+      errorEl.textContent = 'Please fill out every field.';
+      return;
+    }
+
+    const submit = document.getElementById('sr-submit');
+    submit.disabled = true;
+    submit.textContent = 'Redirecting to secure checkout…';
+
+    try {
+      const r = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await r.json();
+      if (!r.ok || !data.url) {
+        throw new Error(data.message || 'Could not start checkout');
+      }
+      window.location.href = data.url;
+    } catch (err) {
+      errorEl.textContent = err.message || 'Checkout unavailable. Please try again.';
+      submit.disabled = false;
+      submit.innerHTML = 'Register &amp; Pay <span id="sr-submit-amount"></span>';
+      renderTotal();
+    }
+  });
+
+  loadPricing().then(() => {
+    tickCountdown();
+    setInterval(tickCountdown, 1000);
+  });
+})();
+</script>
+
 <!-- Student Moments -->
 <section class="section" style="background:#fff;">
   <div class="container">

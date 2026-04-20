@@ -661,6 +661,222 @@
   </div>
 </section>
 
+<!-- Code Lab Membership / Pricing -->
+<section class="section cl-membership-section" id="membership">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">Membership</p>
+      <h2 class="section-heading">Unlock Full Code Lab Access</h2>
+      <p class="section-sub section-sub--center">
+        All 50+ lessons, the AI tutor, projects, certificates, and progress
+        tracking — one simple membership per student.
+      </p>
+    </div>
+
+    <div class="cl-toggle-wrap reveal">
+      <div class="cl-toggle" role="tablist" aria-label="Billing period">
+        <button type="button" class="cl-toggle__btn is-active" data-plan="monthly" role="tab" aria-selected="true">Monthly</button>
+        <button type="button" class="cl-toggle__btn" data-plan="annual" role="tab" aria-selected="false">
+          Annual <span class="cl-save-badge">Save 44%</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="cl-grid">
+      <div class="cl-plan-card reveal">
+        <div class="cl-plan-card__header">
+          <div class="cl-plan-card__name" id="cl-plan-name">Monthly Membership</div>
+          <div class="cl-plan-card__price">
+            <span class="cl-plan-card__amount" id="cl-plan-amount">$14.99</span>
+            <span class="cl-plan-card__period" id="cl-plan-period">/ month</span>
+          </div>
+          <div class="cl-plan-card__note" id="cl-plan-note">Billed monthly. Cancel anytime.</div>
+        </div>
+        <ul class="cl-plan-features">
+          <li><i class="fa-solid fa-check"></i> All 50+ interactive Python lessons</li>
+          <li><i class="fa-solid fa-check"></i> AI tutor — Socratic hints on every lesson</li>
+          <li><i class="fa-solid fa-check"></i> Mini-projects, unit tests &amp; final capstone</li>
+          <li><i class="fa-solid fa-check"></i> Progress tracking &amp; certificates</li>
+          <li><i class="fa-solid fa-check"></i> Auto-saved drafts — never lose your work</li>
+          <li><i class="fa-solid fa-check"></i> Priority-review recommendations</li>
+        </ul>
+      </div>
+
+      <form class="cl-form reveal" id="cl-form" novalidate>
+        <h3 class="cl-form__title">Start your membership</h3>
+        <label class="cl-field">
+          <span>Parent / guardian name</span>
+          <input type="text" name="parentName" autocomplete="name" required />
+        </label>
+        <label class="cl-field">
+          <span>Student's name</span>
+          <input type="text" name="childName" required />
+        </label>
+        <div class="cl-field-row">
+          <label class="cl-field">
+            <span>Student's age</span>
+            <input type="number" name="childAge" min="5" max="17" required />
+          </label>
+          <label class="cl-field">
+            <span>Grade</span>
+            <input type="text" name="childGrade" placeholder="e.g. 6th" required />
+          </label>
+        </div>
+        <label class="cl-field">
+          <span>Parent email</span>
+          <input type="email" name="email" autocomplete="email" required />
+        </label>
+        <button type="submit" class="btn btn--primary btn--lg cl-submit" id="cl-submit">
+          Subscribe <span id="cl-submit-amount">— $14.99/mo</span>
+        </button>
+        <p class="cl-legal">
+          Secure checkout by Stripe. Cancel anytime from the email receipt.
+        </p>
+        <p class="cl-error" id="cl-error" role="alert"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cl-membership-section { background: #FFFFFF; }
+
+  .cl-toggle-wrap { display: flex; justify-content: center; margin: 1.5rem 0 2rem; }
+  .cl-toggle {
+    display: inline-flex; padding: .35rem; background: var(--af-cream, #F5EDC4);
+    border-radius: var(--r-full, 999px); gap: .25rem;
+  }
+  .cl-toggle__btn {
+    border: none; background: transparent; cursor: pointer;
+    font-family: 'Inter', sans-serif; font-weight: 700; font-size: .95rem;
+    color: var(--af-navy); padding: .6rem 1.25rem; border-radius: var(--r-full, 999px);
+    display: inline-flex; align-items: center; gap: .5rem;
+    transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+  }
+  .cl-toggle__btn.is-active {
+    background: var(--af-navy); color: #fff; box-shadow: var(--shadow-sm);
+  }
+  .cl-save-badge {
+    font-size: .7rem; font-weight: 800; letter-spacing: .04em;
+    background: var(--af-yellow); color: var(--af-deep-navy);
+    padding: .15rem .45rem; border-radius: var(--r-full, 999px);
+  }
+  .cl-toggle__btn.is-active .cl-save-badge { background: var(--af-yellow); color: var(--af-deep-navy); }
+
+  .cl-grid {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2rem; align-items: stretch;
+  }
+  @media (max-width: 900px) { .cl-grid { grid-template-columns: 1fr; } }
+
+  .cl-plan-card, .cl-form {
+    background: #fff; border: 1px solid var(--af-border, #E2E8F0);
+    border-radius: var(--r-xl, 16px); padding: 2rem 1.75rem; box-shadow: var(--shadow-md);
+  }
+  .cl-plan-card {
+    background: linear-gradient(160deg, var(--af-navy) 0%, var(--af-deep-navy) 100%);
+    color: #fff; border: none;
+  }
+  .cl-plan-card__header { padding-bottom: 1.25rem; border-bottom: 1px solid rgba(255,255,255,.15); margin-bottom: 1.25rem; }
+  .cl-plan-card__name { font-family: 'Cinzel', serif; font-weight: 700; font-size: 1.05rem; letter-spacing: .04em; text-transform: uppercase; color: var(--af-yellow); margin-bottom: .5rem; }
+  .cl-plan-card__price { display: flex; align-items: baseline; gap: .35rem; }
+  .cl-plan-card__amount { font-family: 'Cinzel', serif; font-weight: 900; font-size: 3rem; line-height: 1; }
+  .cl-plan-card__period { font-size: 1.05rem; opacity: .85; font-weight: 500; }
+  .cl-plan-card__note { font-size: .85rem; opacity: .85; margin-top: .5rem; }
+  .cl-plan-features { list-style: none; padding: 0; margin: 0; }
+  .cl-plan-features li { display: flex; align-items: flex-start; gap: .65rem; padding: .45rem 0; font-size: .95rem; }
+  .cl-plan-features i { color: var(--af-yellow); margin-top: .2rem; font-size: .85rem; }
+
+  .cl-form__title { font-family: 'Cinzel', serif; font-weight: 700; font-size: 1.25rem; color: var(--af-deep-navy); margin: 0 0 1rem; }
+  .cl-field { display: block; margin-bottom: .85rem; }
+  .cl-field > span { display: block; font-size: .82rem; font-weight: 600; color: var(--af-slate, #2E3440); margin-bottom: .35rem; }
+  .cl-field input {
+    width: 100%; padding: .7rem .85rem; font-size: 1rem; font-family: inherit;
+    border: 1px solid var(--af-border, #E2E8F0); border-radius: var(--r-md, 10px);
+    background: #fff; color: var(--af-slate, #2E3440); transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .cl-field input:focus { outline: none; border-color: var(--af-navy); box-shadow: 0 0 0 3px rgba(7, 62, 119, .15); }
+  .cl-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+  .cl-submit { width: 100%; margin-top: .5rem; }
+  .cl-submit[disabled] { opacity: .55; cursor: not-allowed; }
+  .cl-legal { font-size: .78rem; color: var(--af-muted, #64748B); margin: .85rem 0 0; text-align: center; }
+  .cl-error { color: #B91C1C; font-size: .9rem; font-weight: 600; margin: .75rem 0 0; min-height: 1.2em; }
+</style>
+
+<script>
+(function () {
+  const form = document.getElementById('cl-form');
+  if (!form) return;
+
+  const plans = {
+    monthly: { name: 'Monthly Membership', amount: '$14.99', period: '/ month', note: 'Billed monthly. Cancel anytime.', submitLabel: '— $14.99/mo' },
+    annual:  { name: 'Annual Membership',  amount: '$99.99', period: '/ year',  note: 'Billed annually. Saves 44% vs monthly.', submitLabel: '— $99.99/yr' },
+  };
+  let currentPlan = 'monthly';
+
+  function paint() {
+    const p = plans[currentPlan];
+    document.getElementById('cl-plan-name').textContent = p.name;
+    document.getElementById('cl-plan-amount').textContent = p.amount;
+    document.getElementById('cl-plan-period').textContent = p.period;
+    document.getElementById('cl-plan-note').textContent = p.note;
+    document.getElementById('cl-submit-amount').textContent = p.submitLabel;
+  }
+
+  document.querySelectorAll('.cl-toggle__btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      currentPlan = btn.dataset.plan;
+      document.querySelectorAll('.cl-toggle__btn').forEach((b) => {
+        const active = b === btn;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-selected', String(active));
+      });
+      paint();
+    });
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errorEl = document.getElementById('cl-error');
+    errorEl.textContent = '';
+    const fd = new FormData(form);
+    const payload = {
+      product: 'codelab',
+      plan: currentPlan,
+      parentName: (fd.get('parentName') || '').toString().trim(),
+      childName: (fd.get('childName') || '').toString().trim(),
+      childAge: (fd.get('childAge') || '').toString().trim(),
+      childGrade: (fd.get('childGrade') || '').toString().trim(),
+      email: (fd.get('email') || '').toString().trim(),
+    };
+    if (!payload.parentName || !payload.childName || !payload.childAge || !payload.childGrade || !payload.email) {
+      errorEl.textContent = 'Please fill out every field.';
+      return;
+    }
+    const submit = document.getElementById('cl-submit');
+    submit.disabled = true;
+    submit.textContent = 'Redirecting to secure checkout…';
+    try {
+      const r = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await r.json();
+      if (!r.ok || !data.url) throw new Error(data.message || 'Could not start checkout');
+      window.location.href = data.url;
+    } catch (err) {
+      errorEl.textContent = err.message || 'Checkout unavailable. Please try again.';
+      submit.disabled = false;
+      submit.innerHTML = 'Subscribe <span id="cl-submit-amount"></span>';
+      paint();
+    }
+  });
+
+  paint();
+})();
+</script>
+
 <!-- CTA Section -->
 <section class="cta-section" id="contact">
   <div class="container cta-section__inner">

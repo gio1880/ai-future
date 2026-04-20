@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Payment Confirmed — AI Future</title>
+<meta name="robots" content="noindex" />
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<link rel="stylesheet" href="assets/css/design-system.css" />
+
+<style>
+  body {
+    min-height: 100vh; margin: 0; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(160deg, var(--af-navy) 0%, var(--af-deep-navy) 100%);
+    color: var(--af-slate, #2E3440); font-family: 'Inter', sans-serif;
+  }
+  .confirm-card {
+    background: #fff; max-width: 560px; width: calc(100% - 2rem);
+    border-radius: var(--r-xl, 16px); padding: 3rem 2.5rem; text-align: center;
+    box-shadow: 0 30px 80px rgba(0,0,0,.25);
+  }
+  .confirm-check {
+    width: 80px; height: 80px; margin: 0 auto 1.5rem; border-radius: 50%;
+    background: var(--af-yellow); display: flex; align-items: center; justify-content: center;
+    color: var(--af-deep-navy); font-size: 2.4rem;
+    box-shadow: 0 0 0 10px rgba(254, 206, 0, .18);
+  }
+  .confirm-label { color: var(--af-muted, #64748B); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: .8rem; margin-bottom: .75rem; }
+  .confirm-title { font-family: 'Cinzel', serif; font-weight: 900; font-size: 2rem; color: var(--af-deep-navy); margin: 0 0 1rem; }
+  .confirm-body { font-size: 1.05rem; color: var(--af-slate); line-height: 1.55; margin: 0 0 1.5rem; }
+  .confirm-body strong { color: var(--af-navy); }
+  .confirm-summary {
+    background: var(--af-cream, #F5EDC4); border-radius: var(--r-lg, 12px);
+    padding: 1rem 1.25rem; margin-bottom: 1.5rem; text-align: left; font-size: .95rem;
+  }
+  .confirm-summary h3 { margin: 0 0 .5rem; font-family: 'Cinzel', serif; font-size: 1rem; color: var(--af-deep-navy); }
+  .confirm-summary ul { margin: 0; padding-left: 1.25rem; }
+  .confirm-summary li { margin-bottom: .25rem; }
+  .confirm-actions { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; }
+  .confirm-next {
+    margin-top: 1.75rem; font-size: .9rem; color: var(--af-muted, #64748B);
+  }
+  .confirm-next a { color: var(--af-navy); font-weight: 600; text-decoration: none; }
+  .confirm-next a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+  <main class="confirm-card" role="main">
+    <div class="confirm-check" aria-hidden="true"><i class="fa-solid fa-check"></i></div>
+    <div class="confirm-label">Payment Confirmed</div>
+    <h1 class="confirm-title">You're all set!</h1>
+    <p class="confirm-body" id="cf-message">
+      Thanks for registering with AI Future. A confirmation email is on its way
+      with your receipt and next steps.
+    </p>
+
+    <div class="confirm-summary" id="cf-summary" hidden>
+      <h3 id="cf-summary-title">Order summary</h3>
+      <ul id="cf-summary-list"></ul>
+    </div>
+
+    <div class="confirm-actions">
+      <a href="/" class="btn btn--primary">Back to Home</a>
+      <a href="/codelab/app" class="btn btn--outline">Go to Code Lab</a>
+    </div>
+
+    <p class="confirm-next">
+      Questions? Email <a href="mailto:info@aifuture.com">info@aifuture.com</a>.
+    </p>
+  </main>
+
+<script>
+(async function () {
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id');
+  if (!sessionId) return;
+  try {
+    const r = await fetch('/api/payments/session?id=' + encodeURIComponent(sessionId), { cache: 'no-store' });
+    if (!r.ok) return;
+    const data = await r.json();
+    if (!data || !data.record) return;
+    const rec = data.record;
+
+    const title = rec.product === 'camp' ? 'Summer Camp Registration' : 'Code Lab Membership';
+    document.getElementById('cf-summary-title').textContent = title;
+
+    const list = document.getElementById('cf-summary-list');
+    const items = [];
+    items.push(`<strong>Camper / student:</strong> ${escapeHtml(rec.childName || '')}`);
+    if (rec.product === 'camp' && Array.isArray(rec.weeks)) {
+      items.push(`<strong>Weeks:</strong> ${rec.weeks.map(w => escapeHtml(w.label || w.id)).join(', ')}`);
+    }
+    if (rec.product === 'codelab' && rec.plan) {
+      items.push(`<strong>Plan:</strong> ${rec.plan === 'annual' ? 'Annual' : 'Monthly'}`);
+    }
+    if (typeof rec.amountCents === 'number') {
+      items.push(`<strong>Total paid:</strong> $${(rec.amountCents / 100).toFixed(2)}`);
+    }
+    items.push(`<strong>Receipt emailed to:</strong> ${escapeHtml(rec.email || '')}`);
+    list.innerHTML = items.map((i) => `<li>${i}</li>`).join('');
+    document.getElementById('cf-summary').hidden = false;
+  } catch (e) { /* silent */ }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Payments Admin — AI Future</title>
+<meta name="robots" content="noindex" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<link rel="stylesheet" href="assets/css/design-system.css" />
+
+<style>
+  body { background: var(--af-white, #FAFAF6); color: var(--af-slate, #2E3440); font-family: 'Inter', sans-serif; margin: 0; }
+  .admin-header {
+    background: linear-gradient(160deg, var(--af-navy) 0%, var(--af-deep-navy) 100%);
+    color: #fff; padding: 1.5rem 2rem;
+  }
+  .admin-header h1 { font-family: 'Cinzel', serif; font-weight: 900; margin: 0; font-size: 1.65rem; }
+  .admin-header p { margin: .25rem 0 0; opacity: .85; font-size: .95rem; }
+  .admin-container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .stat-card { background: #fff; border: 1px solid var(--af-border, #E2E8F0); border-radius: var(--r-lg, 12px); padding: 1.1rem 1.25rem; }
+  .stat-card__label { color: var(--af-muted, #64748B); font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+  .stat-card__value { font-family: 'Cinzel', serif; font-weight: 900; font-size: 1.85rem; color: var(--af-deep-navy); margin-top: .25rem; }
+
+  .toolbar { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .toolbar__filters { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .filter-btn {
+    background: #fff; border: 1px solid var(--af-border, #E2E8F0);
+    color: var(--af-slate); padding: .5rem .9rem; border-radius: var(--r-full, 999px);
+    font-size: .85rem; font-weight: 600; cursor: pointer;
+  }
+  .filter-btn.is-active { background: var(--af-navy); color: #fff; border-color: var(--af-navy); }
+  .toolbar__actions { display: flex; gap: .5rem; }
+  .toolbar input[type="search"] {
+    padding: .55rem .9rem; border: 1px solid var(--af-border, #E2E8F0);
+    border-radius: var(--r-md, 10px); min-width: 220px; font-size: .9rem;
+  }
+
+  .table-wrap { overflow-x: auto; background: #fff; border: 1px solid var(--af-border, #E2E8F0); border-radius: var(--r-lg, 12px); }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  th, td { padding: .75rem .9rem; text-align: left; border-bottom: 1px solid var(--af-border, #E2E8F0); vertical-align: top; }
+  th { background: var(--af-cream, #F5EDC4); color: var(--af-deep-navy); font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafafa; }
+  .pill { display: inline-block; padding: .2rem .55rem; border-radius: var(--r-full, 999px); font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+  .pill--camp { background: #E0F2FE; color: #0369A1; }
+  .pill--codelab { background: #EDE9FE; color: #6D28D9; }
+  .pill--paid { background: #DCFCE7; color: #15803D; }
+  .pill--pending { background: #FEF3C7; color: #A16207; }
+  .amount { font-family: 'Cinzel', serif; font-weight: 700; color: var(--af-deep-navy); }
+  .muted { color: var(--af-muted, #64748B); font-size: .8rem; }
+  .empty { text-align: center; padding: 3rem 1rem; color: var(--af-muted); }
+</style>
+</head>
+<body>
+  <header class="admin-header">
+    <h1>Payments Dashboard</h1>
+    <p>Summer Camp registrations &amp; Code Lab memberships</p>
+  </header>
+
+  <main class="admin-container">
+    <div class="stat-row" id="stat-row">
+      <div class="stat-card"><div class="stat-card__label">Total orders</div><div class="stat-card__value" id="stat-total">—</div></div>
+      <div class="stat-card"><div class="stat-card__label">Camp registrations</div><div class="stat-card__value" id="stat-camp">—</div></div>
+      <div class="stat-card"><div class="stat-card__label">Code Lab memberships</div><div class="stat-card__value" id="stat-codelab">—</div></div>
+      <div class="stat-card"><div class="stat-card__label">Revenue</div><div class="stat-card__value" id="stat-revenue">—</div></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="toolbar__filters">
+        <button class="filter-btn is-active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="camp">Summer Camp</button>
+        <button class="filter-btn" data-filter="codelab">Code Lab</button>
+      </div>
+      <div class="toolbar__actions">
+        <input type="search" id="search" placeholder="Search name, email…" />
+        <a class="btn btn--outline btn--sm" id="download-csv" href="/api/payments/export?format=csv">Download CSV</a>
+        <a class="btn btn--outline btn--sm" id="download-json" href="/api/payments/export?format=json">Download JSON</a>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Parent</th>
+            <th>Child</th>
+            <th>Grade / Age</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Plan / Weeks</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="empty" id="empty" hidden>No payments yet.</div>
+    </div>
+  </main>
+
+<script>
+(async function () {
+  const rowsEl = document.getElementById('rows');
+  const emptyEl = document.getElementById('empty');
+  let all = [];
+  let filter = 'all';
+  let search = '';
+
+  function esc(s) { return String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
+
+  function formatWeeks(rec) {
+    if (rec.product !== 'camp') return '';
+    if (!Array.isArray(rec.weeks)) return '';
+    return rec.weeks.map(w => w.label || w.id).join(', ');
+  }
+
+  function render() {
+    const q = search.trim().toLowerCase();
+    const list = all.filter((r) => {
+      if (filter !== 'all' && r.product !== filter) return false;
+      if (q) {
+        const hay = `${r.parentName} ${r.childName} ${r.email}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    if (!list.length) {
+      rowsEl.innerHTML = '';
+      emptyEl.hidden = false;
+      return;
+    }
+    emptyEl.hidden = true;
+    rowsEl.innerHTML = list.map((r) => {
+      const when = r.completedAt || r.createdAt;
+      const whenStr = when ? new Date(when).toLocaleString() : '';
+      const planOrWeeks = r.product === 'camp'
+        ? esc(formatWeeks(r))
+        : esc(r.plan === 'annual' ? 'Annual' : 'Monthly');
+      const productPill = r.product === 'camp'
+        ? '<span class="pill pill--camp">Camp</span>'
+        : '<span class="pill pill--codelab">Code Lab</span>';
+      const statusPill = r.status === 'paid'
+        ? '<span class="pill pill--paid">Paid</span>'
+        : '<span class="pill pill--pending">Pending</span>';
+      const amt = typeof r.amountCents === 'number' ? `$${(r.amountCents/100).toFixed(2)}` : '—';
+      return `<tr>
+        <td>${esc(whenStr)}</td>
+        <td>${esc(r.parentName)}</td>
+        <td>${esc(r.childName)}</td>
+        <td>${esc(r.childGrade || '')} ${r.childAge ? `<span class="muted">(age ${esc(r.childAge)})</span>` : ''}</td>
+        <td>${esc(r.email)}</td>
+        <td>${esc(r.phone || '')}</td>
+        <td>${productPill} ${planOrWeeks}</td>
+        <td class="amount">${amt}</td>
+        <td>${statusPill}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function paintStats() {
+    document.getElementById('stat-total').textContent = all.length;
+    document.getElementById('stat-camp').textContent = all.filter(r => r.product === 'camp').length;
+    document.getElementById('stat-codelab').textContent = all.filter(r => r.product === 'codelab').length;
+    const revenue = all.filter(r => r.status === 'paid').reduce((sum, r) => sum + (r.amountCents || 0), 0);
+    document.getElementById('stat-revenue').textContent = '$' + (revenue / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  document.querySelectorAll('.filter-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      filter = btn.dataset.filter;
+      render();
+    });
+  });
+  document.getElementById('search').addEventListener('input', (e) => {
+    search = e.target.value;
+    render();
+  });
+
+  try {
+    const r = await fetch('/api/payments/list', { cache: 'no-store' });
+    if (!r.ok) throw new Error('Failed to load (HTTP ' + r.status + ')');
+    const data = await r.json();
+    all = Array.isArray(data.data) ? data.data : [];
+    // newest first
+    all.sort((a, b) => String(b.completedAt || b.createdAt || '').localeCompare(String(a.completedAt || a.createdAt || '')));
+    paintStats();
+    render();
+  } catch (err) {
+    emptyEl.hidden = false;
+    emptyEl.textContent = 'Error loading payments: ' + err.message;
+  }
+})();
+</script>
+</body>
+</html>
