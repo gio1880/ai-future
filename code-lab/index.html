@@ -7454,6 +7454,7 @@ const PyRunner = {
   pyodide: null,
   loading: false,
   loaded: false,
+  pybricksMockInstalled: false,
 
   async init() {
     if (this.loaded) return;
@@ -7485,6 +7486,7 @@ const PyRunner = {
       this.pyodide = await window.loadPyodide({
         indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/'
       });
+      this.installPybricksMocks();
 
       this.loaded = true;
       this.loading = false;
@@ -7493,6 +7495,94 @@ const PyRunner = {
       this.loading = false;
       throw new Error('Could not load Python engine: ' + e.message);
     }
+  },
+
+  installPybricksMocks() {
+    if (!this.pyodide || this.pybricksMockInstalled) return;
+    this.pyodide.runPython(`
+import sys, types
+
+class _EnumValue:
+    def __init__(self, name): self.name = name
+    def __repr__(self): return self.name
+    def __str__(self): return self.name
+
+class _Port:
+    A = _EnumValue("Port.A")
+    B = _EnumValue("Port.B")
+    C = _EnumValue("Port.C")
+    D = _EnumValue("Port.D")
+    E = _EnumValue("Port.E")
+    F = _EnumValue("Port.F")
+
+class _Direction:
+    CLOCKWISE = _EnumValue("Direction.CLOCKWISE")
+    COUNTERCLOCKWISE = _EnumValue("Direction.COUNTERCLOCKWISE")
+
+class _Stop:
+    COAST = _EnumValue("Stop.COAST")
+    BRAKE = _EnumValue("Stop.BRAKE")
+    HOLD = _EnumValue("Stop.HOLD")
+
+class _Color:
+    RED = _EnumValue("Color.RED")
+    GREEN = _EnumValue("Color.GREEN")
+    BLUE = _EnumValue("Color.BLUE")
+    YELLOW = _EnumValue("Color.YELLOW")
+    BLACK = _EnumValue("Color.BLACK")
+    WHITE = _EnumValue("Color.WHITE")
+
+class PrimeHub:
+    def __init__(self):
+        self.imu = types.SimpleNamespace(ready=lambda: True, reset_heading=lambda angle=0: None)
+        self.light = types.SimpleNamespace(on=lambda *args, **kwargs: None, off=lambda: None)
+        self.speaker = types.SimpleNamespace(beep=lambda *args, **kwargs: None)
+        self.buttons = types.SimpleNamespace(pressed=lambda: [])
+
+class Motor:
+    def __init__(self, port=None, direction=None, *args, **kwargs):
+        self.port = port
+        self.direction = direction
+    def run(self, speed): print(f"Motor running at {speed}")
+    def run_time(self, speed, time, *args, **kwargs): print(f"Motor running at {speed} speed for {time} milliseconds")
+    def run_angle(self, speed, rotation_angle, *args, **kwargs): print(f"Motor running at {speed} for {rotation_angle} degrees")
+    def run_target(self, speed, target_angle, *args, **kwargs): print(f"Motor running to {target_angle} degrees at {speed}")
+    def stop(self): print("Motor stopped")
+    def reset_angle(self, angle=0): None
+    def angle(self): return 0
+
+class DriveBase:
+    def __init__(self, left_motor=None, right_motor=None, wheel_diameter=None, axle_track=None, *args, **kwargs):
+        self.left_motor = left_motor
+        self.right_motor = right_motor
+        self.wheel_diameter = wheel_diameter
+        self.axle_track = axle_track
+    def settings(self, *args, **kwargs): None
+    def straight(self, distance): print(f"Driving straight {distance} mm")
+    def turn(self, angle): print(f"Turning {angle} degrees")
+    def curve(self, radius, angle): print(f"Curving radius {radius} angle {angle}")
+    def use_gyro(self, enabled=True): None
+    def stop(self): print("Robot stopped")
+
+def wait(ms): None
+def multitask(*tasks): return tasks
+def run_task(task): return task
+
+sys.modules["pybricks"] = types.ModuleType("pybricks")
+modules = {
+    "pybricks.hubs": {"PrimeHub": PrimeHub},
+    "pybricks.pupdevices": {"Motor": Motor},
+    "pybricks.robotics": {"DriveBase": DriveBase},
+    "pybricks.parameters": {"Port": _Port, "Direction": _Direction, "Stop": _Stop, "Color": _Color},
+    "pybricks.tools": {"wait": wait, "multitask": multitask, "run_task": run_task},
+}
+for name, attrs in modules.items():
+    module = types.ModuleType(name)
+    for key, value in attrs.items():
+        setattr(module, key, value)
+    sys.modules[name] = module
+`);
+    this.pybricksMockInstalled = true;
   },
 
   async run(code) {
@@ -7570,6 +7660,16 @@ function validateExercise(exercise, userAnswer) {
 // ============================================================================
 // REFERENCE PANEL — Slide-in cheat sheet for Python concepts
 // ============================================================================
+
+function normalizeProgramOutput(value) {
+  return String(value == null ? '' : value)
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
+    .split('\n')
+    .map(line => line.replace(/[ \t]+$/g, ''))
+    .join('\n')
+    .trim();
+}
 
 const RefPanel = {
   isOpen: false,
@@ -8856,6 +8956,12 @@ const LessonViewer = {
 
     if (ch.type === 'code') {
       const starterCode = ch.starterCode || '';
+      if (ch.expectedOutput !== undefined) {
+        html += '<div style="margin:.75rem 0;padding:.65rem .85rem;border:1px solid var(--color-border);border-radius:var(--radius-md);background:rgba(16,185,129,0.08);">';
+        html += '<div style="font-size:.75rem;font-weight:700;letter-spacing:.02em;color:var(--color-success);text-transform:uppercase;margin-bottom:.3rem;">Expected Output</div>';
+        html += '<pre style="margin:0;font-size:.9rem;white-space:pre-wrap;">' + this.escapeHtml(ch.expectedOutput) + '</pre>';
+        html += '</div>';
+      }
       html += '<textarea id="lab-code-input" class="code-input" rows="6" placeholder="Type your code here..." aria-label="Code editor" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" data-gramm="false" inputmode="text" enterkeyhint="enter">' + this.escapeHtml(starterCode) + '</textarea>';
       html += '<div id="lab-run-output" class="run-output hidden"><div class="run-output-header"><span>Output</span><button class="btn-clear-output" onclick="document.getElementById(\'lab-run-output\').classList.add(\'hidden\')">✕</button></div><pre id="lab-run-output-text"></pre></div>';
       html += '<div id="lab-feedback" style="display:none;"></div>';
@@ -8967,9 +9073,16 @@ const LessonViewer = {
         try {
           await PyRunner.init();
           const result = await PyRunner.run(code);
+          const outputDiv = document.getElementById('lab-run-output');
+          const outputPre = document.getElementById('lab-run-output-text');
+          if (outputDiv && outputPre) {
+            outputPre.textContent = result.output || '(no output)';
+            outputPre.style.color = result.error ? 'var(--color-error)' : 'var(--color-text-primary)';
+            outputDiv.classList.remove('hidden');
+          }
           if (!result.error) {
-            const actual = result.output.trim().replace(/\r\n/g, '\n');
-            const expected = ch.expectedOutput.trim();
+            const actual = normalizeProgramOutput(result.output);
+            const expected = normalizeProgramOutput(ch.expectedOutput);
             isCorrect = actual === expected;
           }
         } catch(e) { isCorrect = false; }
@@ -9077,6 +9190,12 @@ const LessonViewer = {
     if (exercise.type === 'code' || exercise.type === 'fill-blank') {
       const starterCode = exercise.starterCode || '';
       html += '<div class="exercise-area">';
+      if (exercise.expectedOutput !== undefined) {
+        html += '<div style="margin:0 0 .75rem;padding:.65rem .85rem;border:1px solid var(--color-border);border-radius:var(--radius-md);background:rgba(16,185,129,0.08);">';
+        html += '<div style="font-size:.75rem;font-weight:700;letter-spacing:.02em;color:var(--color-success);text-transform:uppercase;margin-bottom:.3rem;">Expected Output</div>';
+        html += '<pre style="margin:0;font-size:.9rem;white-space:pre-wrap;">' + this.escapeHtml(exercise.expectedOutput) + '</pre>';
+        html += '</div>';
+      }
       html += '<textarea id="exercise-input" class="code-input" rows="8" placeholder="Type your code here..." aria-label="Code editor" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" data-gramm="false" inputmode="text" enterkeyhint="enter">' + this.escapeHtml(starterCode) + '</textarea>';
       html += '<div id="run-output" class="run-output hidden"><div class="run-output-header"><span>▶ Output</span><button class="btn-clear-output" onclick="document.getElementById(\'run-output\').classList.add(\'hidden\')">✕</button></div><pre id="run-output-text"></pre></div>';
       html += '<div id="exercise-feedback" class="feedback hidden"></div>';
@@ -9188,7 +9307,7 @@ const LessonViewer = {
     return html;
   },
 
-  checkExercise() {
+  async checkExercise() {
     const exercise = this.currentLesson.exercise;
     const feedbackDiv = document.getElementById('exercise-feedback');
     if (!feedbackDiv) return;
@@ -9213,7 +9332,20 @@ const LessonViewer = {
     this.exerciseAttempts++;
     Progress.recordAttempt(this.currentLesson.id);
 
-    const isCorrect = validateExercise(exercise, userAnswer);
+    let isCorrect = false;
+    if ((exercise.type === 'code' || exercise.type === 'fill-blank') && exercise.expectedOutput !== undefined) {
+      try {
+        await PyRunner.init();
+        const result = await PyRunner.run(normalizeQuotes(userAnswer));
+        this._showRunOutput(result.output, result.error);
+        isCorrect = !result.error && normalizeProgramOutput(result.output) === normalizeProgramOutput(exercise.expectedOutput);
+      } catch (e) {
+        this._showRunOutput('Could not run Python: ' + e.message, true);
+        isCorrect = false;
+      }
+    } else {
+      isCorrect = validateExercise(exercise, userAnswer);
+    }
 
     // Safely get success/error messages
     const successMsg = (exercise.validation && exercise.validation.successMessage)
@@ -9818,8 +9950,8 @@ const UnitTestViewer = {
         try {
           const result = await PyRunner.run(code);
           if (!result.error) {
-            const actual = result.output.trim().replace(/\r\n/g, '\n');
-            const expected = q.expectedOutput.trim();
+            const actual = normalizeProgramOutput(result.output);
+            const expected = normalizeProgramOutput(q.expectedOutput);
             isCorrect = actual === expected;
           }
         } catch(e) { isCorrect = false; }
