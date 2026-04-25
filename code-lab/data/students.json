@@ -206,5 +206,13 @@
     "password_hash": "4e5a93748a48967fcd5f301c3974a806:d00f502485c9aad3e5d05ad052c9808c42dc9331965d1a65fc45a73d49022a5654f9d9fe332118edbc21fd5a507279347ab0929b76931d07d6b8150a395702bb",
     "role": "student",
     "created_at": "2026-04-18T18:59:03.125Z"
+  },
+  {
+    "id": "student-1777149889054-snk1h2n",
+    "name": "Kevin Cao",
+    "username": "kcao",
+    "password_hash": "200685b6b451c7bece43d7ce74e74b64:05969d2e6befd0b6a92567d8d6fd1aa24ccdf6f9224fd371668e4feb8b560f7891e69c7d2d6372f7403ea00fc7e109bddf7d4aa116244105ac297b8c6ee871c0",
+    "role": "student",
+    "created_at": "2026-04-25T00:00:00.000Z"
   }
 ]
