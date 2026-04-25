@@ -11006,8 +11006,9 @@ const Presence = {
   },
 
   _currentLessonInfo() {
-    const lesson = (window.LessonViewer && LessonViewer.currentLesson) || null;
-    const step = (window.LessonViewer && LessonViewer.steps && LessonViewer.steps[LessonViewer.currentStep]) || null;
+    const lessonViewer = typeof LessonViewer !== 'undefined' ? LessonViewer : null;
+    const lesson = (lessonViewer && lessonViewer.currentLesson) || null;
+    const step = (lessonViewer && lessonViewer.steps && lessonViewer.steps[lessonViewer.currentStep]) || null;
     return { lessonId: lesson ? lesson.id : null, currentStep: step };
   },
 
@@ -12440,76 +12441,131 @@ const FLLAssessment = (() => {
 ================================================================ -->
 <script>
 /* -- Dashboard rendering ------------------------------------------ */
+function afGetDashboardState() {
+  var allLessons = (typeof LessonRegistry !== 'undefined' && LessonRegistry.all) ? LessonRegistry.all : [];
+  var completedLessons = allLessons.filter(function(lesson) {
+    return Progress.isLessonMastered(lesson.id);
+  });
+  var nextLesson = allLessons.find(function(lesson) {
+    return !Progress.isLessonMastered(lesson.id) && Progress.isUnlocked(lesson.id, allLessons);
+  }) || allLessons[0] || null;
+
+  return {
+    allLessons: allLessons,
+    completedLessons: completedLessons,
+    completedCount: completedLessons.length,
+    totalCount: allLessons.length,
+    overallPercent: Progress.getOverallPercent(),
+    currentLesson: nextLesson,
+    currentLessonId: nextLesson ? nextLesson.id : 'py-01'
+  };
+}
+
+function afLessonStatus(lesson) {
+  if (Progress.isLessonMastered(lesson.id)) return 'done';
+  if (Progress.isUnlocked(lesson.id, LessonRegistry.all)) return 'active';
+  return 'locked';
+}
+
+function afCategoryLabel(category) {
+  var labels = {
+    python: 'Python Foundations',
+    pybricks: 'Pybricks',
+    measurements: 'Measurements',
+    setup: 'Robot Setup',
+    filestructure: 'File Structure'
+  };
+  return labels[category] || category || 'Code Lab';
+}
+
 function renderAFDashboard() {
   var user = Auth.currentUser;
-  var prog = Progress.get();
+  var state = afGetDashboardState();
+  var currentLesson = state.currentLesson;
 
   var nameEl = document.getElementById('af-welcome-name');
-  if (nameEl && user) nameEl.textContent = user.name || user.username || 'Student';
+  if (nameEl && user) nameEl.textContent = 'Welcome back, ' + (user.name || user.username || 'Student') + '!';
 
   var navUser = document.getElementById('nav-username');
   if (navUser && user) navUser.textContent = user.name || user.username || '';
 
+  var greetingEl = document.getElementById('af-greeting');
+  if (greetingEl && user) greetingEl.textContent = 'Hi, ' + (user.name || user.username || 'student') + '!';
+
+  var avatarEl = document.getElementById('af-avatar');
+  if (avatarEl && user) avatarEl.textContent = (user.name || user.username || '?').trim().charAt(0).toUpperCase();
+
   var xpEl = document.getElementById('af-xp-badge');
-  if (xpEl) xpEl.textContent = (prog.xp || 0) + ' XP';
+  if (xpEl) xpEl.innerHTML = '<i class="fa-solid fa-gem"></i> <span id="af-lessons-count">' + state.completedCount + '</span> Lessons';
 
-  var streakEl = document.getElementById('af-streak-badge');
-  if (streakEl) streakEl.textContent = (prog.streak || 0) + ' day streak';
-
-  var pct = prog.overallPercent || 0;
-  var pctEl = document.getElementById('af-progress-pct');
+  var pct = state.overallPercent || 0;
+  var pctEl = document.getElementById('af-progress-pct') || document.getElementById('af-stat-pct');
   if (pctEl) pctEl.textContent = pct + '%';
-  var ring = document.getElementById('af-progress-ring');
+  var progressText = document.getElementById('af-progress-text');
+  if (progressText) progressText.textContent = pct + '%';
+
+  var ring = document.querySelector('.af-progress-ring');
   if (ring) {
-    var circ = 2 * Math.PI * 54;
+    var circ = 2 * Math.PI * 50;
     ring.style.strokeDasharray = circ;
     ring.style.strokeDashoffset = circ * (1 - pct / 100);
   }
 
-  var currentLessonId = prog.currentLesson || 'py-01';
-  var currentLesson = LessonRegistry ? LessonRegistry.getById(currentLessonId) : null;
-  var cardTitle = document.getElementById('af-current-lesson-title');
-  var cardDesc  = document.getElementById('af-current-lesson-desc');
-  var cardPct   = document.getElementById('af-current-lesson-pct');
-  var cardCat   = document.getElementById('af-current-lesson-cat');
+  var statLessons = document.getElementById('af-stat-lessons');
+  if (statLessons) statLessons.textContent = state.completedCount;
+  var statTotal = document.getElementById('af-stat-total');
+  if (statTotal) statTotal.textContent = state.totalCount;
+  var overallPct = document.getElementById('af-overall-pct');
+  if (overallPct) overallPct.textContent = pct + '%';
+  var overallBar = document.getElementById('af-overall-bar');
+  if (overallBar) overallBar.style.width = pct + '%';
+
+  var cardTitle = document.getElementById('af-lesson-title');
+  var cardDesc  = document.getElementById('af-lesson-desc');
+  var cardVis   = document.getElementById('af-lesson-vis-title');
+  var cardCode  = document.getElementById('af-lesson-code-preview');
+  var cardMeta  = document.getElementById('af-lesson-meta');
+  var cardCat   = document.getElementById('af-lesson-unit-label');
   if (currentLesson) {
     if (cardTitle) cardTitle.textContent = currentLesson.title || 'Python Basics';
-    if (cardDesc)  cardDesc.textContent  = currentLesson.subtitle || '';
-    if (cardCat)   cardCat.textContent   = currentLesson.category || 'Python';
-    var lProg = prog.lessons && prog.lessons[currentLessonId];
-    if (cardPct) cardPct.textContent = lProg ? Math.round((lProg.stepsComplete / lProg.totalSteps) * 100) + '%' : '0%';
+    if (cardDesc)  cardDesc.textContent  = currentLesson.description || 'Keep building your coding skills.';
+    if (cardVis)   cardVis.textContent   = currentLesson.title || 'Python';
+    if (cardCode)  cardCode.textContent  = currentLesson.example && currentLesson.example.code ? currentLesson.example.code : 'print("Hello, World!")';
+    if (cardCat)   cardCat.textContent   = 'Unit ' + (currentLesson.order || 1) + ' · ' + afCategoryLabel(currentLesson.category);
+    if (cardMeta)  cardMeta.textContent  = afLessonStatus(currentLesson) === 'done' ? 'Completed' : 'Ready to continue';
   }
 
-  renderLearningPath(prog);
+  renderLearningPath(state);
 }
 
-function renderLearningPath(prog) {
+function renderLearningPath(state) {
   var container = document.getElementById('af-lp-units');
-  if (!container || !LessonRegistry) return;
+  var lessonList = document.getElementById('af-lp-lessons');
+  if ((!container && !lessonList) || !LessonRegistry) return;
   var pythonLessons = typeof LessonRegistry.getByCategory === 'function' ? LessonRegistry.getByCategory('python') : [];
   if (!pythonLessons.length) return;
 
-  container.innerHTML = pythonLessons.slice(0, 8).map(function(lesson, i) {
-    var lp = prog.lessons && prog.lessons[lesson.id];
-    var done = lp && lp.complete;
-    var current = lesson.id === (prog.currentLesson || 'py-01');
-    var state = done ? 'done' : current ? 'active' : 'locked';
-    var stateClass = done ? 'lp-step--done' : current ? 'lp-step--active' : 'lp-step--locked';
-    var icon = done ? '&#10003;' : (i + 1);
-    return '<div class="lp-step ' + stateClass + '" onclick="if(\'' + state + '\'!==\'locked\') afGoToLesson(\'' + lesson.id + '\')">' +
+  var lessonHtml = pythonLessons.slice(0, 8).map(function(lesson, i) {
+    var status = afLessonStatus(lesson);
+    var stateClass = status === 'done' ? 'lp-step--done' : status === 'active' ? 'lp-step--active' : 'lp-step--locked';
+    var icon = status === 'done' ? '&#10003;' : (i + 1);
+    return '<div class="lp-step ' + stateClass + '" onclick="if(\'' + status + '\'!==\'locked\') afGoToLesson(\'' + lesson.id + '\')">' +
       '<div class="lp-dot">' + icon + '</div>' +
       '<div class="lp-info"><div class="lp-title">' + (lesson.title || 'Lesson ' + (i+1)) + '</div>' +
-      '<div class="lp-sub">' + (lesson.subtitle || '') + '</div></div></div>';
+      '<div class="lp-sub">' + (lesson.description || '') + '</div></div></div>';
   }).join('');
+
+  if (container) container.innerHTML = lessonHtml;
+  if (lessonList) lessonList.innerHTML = lessonHtml;
 }
 
 function afGoToLesson(lessonId) {
-  Router.go('#lesson/' + lessonId);
+  Router.navigate('#page-lesson/' + lessonId);
 }
 
 function afContinueLearning() {
-  var prog = Progress.get();
-  Router.go('#lesson/' + (prog.currentLesson || 'py-01'));
+  var state = afGetDashboardState();
+  Router.navigate('#page-lesson/' + state.currentLessonId);
 }
 
 /* -- Lesson sidebar rendering ------------------------------------- */
@@ -12517,11 +12573,9 @@ function renderLessonSidebar(lessonId) {
   var container = document.getElementById('af-lesson-sidebar-content');
   if (!container || !LessonRegistry) return;
   var pythonLessons = typeof LessonRegistry.getByCategory === 'function' ? LessonRegistry.getByCategory('python') : [];
-  var prog = Progress.get();
 
   container.innerHTML = pythonLessons.map(function(lesson, i) {
-    var lp = prog.lessons && prog.lessons[lesson.id];
-    var done = lp && lp.complete;
+    var done = Progress.isLessonMastered(lesson.id);
     var current = lesson.id === lessonId;
     var stateClass = done ? 'af-sidebar-lesson--done' : current ? 'af-sidebar-lesson--active' : '';
     var icon = done ? '&#10003;' : (i + 1);
@@ -12543,7 +12597,7 @@ function afLessonTab(tab) {
 
 /* -- Patch Auth.showApp to wire AI Future UI --------------------- */
 (function patchAuth() {
-  if (!window.Auth) return;
+  if (typeof Auth === 'undefined') return;
   var _origShowApp = Auth.showApp;
   Auth.showApp = function() {
     _origShowApp.call(Auth);
@@ -12553,15 +12607,15 @@ function afLessonTab(tab) {
 
 /* -- Patch Router to update lesson sidebar on route change -------- */
 (function patchRouter() {
-  if (!window.Router) return;
-  var _origGo = Router.go;
-  Router.go = function(hash) {
-    _origGo.call(Router, hash);
-    var lessonMatch = (hash || '').match(/^#lesson\/(.+)$/);
+  if (typeof Router === 'undefined') return;
+  var _origNavigate = Router.navigate;
+  Router.navigate = function(hash) {
+    _origNavigate.call(Router, hash);
+    var lessonMatch = (hash || '').match(/^#page-lesson\/(.+)$/);
     if (lessonMatch) {
       setTimeout(function() { renderLessonSidebar(lessonMatch[1]); }, 50);
     }
-    if (hash === '#home' || hash === '') {
+    if (hash === '#page-home' || hash === '#/home' || hash === '') {
       setTimeout(renderAFDashboard, 50);
     }
   };

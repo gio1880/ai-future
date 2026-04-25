@@ -91,11 +91,9 @@ const ONLINE_WINDOW_MS = 2 * 60 * 1000; // 2 minutes without a heartbeat = offli
 function touchPresence(student, patch) {
   const prev = presence.get(student.id) || {};
   presence.set(student.id, {
-    name: student.name,
-    username: student.username,
-    lastPing: Date.now(),
     ...prev,
     ...patch,
+    lastPing: Date.now(),
     name: student.name,       // ensure latest name wins
     username: student.username
   });
