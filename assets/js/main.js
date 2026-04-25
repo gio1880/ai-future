@@ -81,6 +81,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ── Image Fallbacks ───────────────────────────────────── */
   initImageFallbacks();
+
+  /* ── Footer Newsletter Subscribe ────────────────────────── */
+  // Hook up any <form class="footer__subscribe" data-newsletter>…</form>
+  // Submitting opens the user's email client with a pre-filled note to info@aifuture.com,
+  // so the button has a real, working action even before a newsletter backend exists.
+  document.querySelectorAll('form[data-newsletter]').forEach((form) => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = form.querySelector('input[type="email"]');
+      const email = (input && input.value || '').trim();
+      if (!email) { input && input.focus(); return; }
+      const btn = form.querySelector('button');
+      const originalLabel = btn ? btn.textContent : '';
+      const subject = encodeURIComponent('AI Future newsletter signup');
+      const body = encodeURIComponent(
+        `Please add ${email} to the AI Future newsletter.\n\n— Sent from the AI Future website.`
+      );
+      window.location.href = `mailto:info@aifuture.com?subject=${subject}&body=${body}`;
+      if (btn) {
+        btn.textContent = 'Thanks!';
+        setTimeout(() => { btn.textContent = originalLabel; }, 2500);
+      }
+      if (input) input.value = '';
+    });
+  });
 });
 
 function animateStats(container) {

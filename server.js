@@ -110,15 +110,22 @@ function requireSummerAdmin(req, res, next) {
 app.post('/api/summer-inquiry', async (req, res) => {
 	const {
 		parentName = '',
+		childName = '',
+		childGrade = '',
 		email = '',
 		phone = '',
 		childAge = '',
 		programInterest = '',
 		preferredWeek = '',
+		promoCode = '',
+		freeTrialInterest = '',
 		notes = ''
 	} = req.body || {};
 
-	if (!parentName.trim() || !email.trim() || !phone.trim() || !childAge.trim() || !programInterest.trim() || !preferredWeek.trim()) {
+	const normalizedChildGrade = childGrade.trim() || childAge.trim();
+	const normalizedProgramInterest = programInterest.trim() || preferredWeek.trim();
+
+	if (!parentName.trim() || !email.trim() || !phone.trim() || !normalizedChildGrade || !normalizedProgramInterest || !preferredWeek.trim()) {
 		return res.status(400).json({ success: false, message: 'Missing required fields' });
 	}
 
@@ -126,11 +133,15 @@ app.post('/api/summer-inquiry', async (req, res) => {
 		id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
 		submittedAt: new Date().toISOString(),
 		parentName: parentName.trim(),
+		childName: childName.trim(),
+		childGrade: normalizedChildGrade,
 		email: email.trim(),
 		phone: phone.trim(),
-		childAge: childAge.trim(),
-		programInterest: programInterest.trim(),
+		childAge: normalizedChildGrade,
+		programInterest: normalizedProgramInterest,
 		preferredWeek: preferredWeek.trim(),
+		promoCode: promoCode.trim(),
+		freeTrialInterest: freeTrialInterest.trim(),
 		notes: typeof notes === 'string' ? notes.trim() : ''
 	};
 
@@ -172,7 +183,7 @@ app.get('/api/summer-inquiry/export', requireSummerAdmin, async (req, res) => {
 			return res.status(200).send(JSON.stringify(inquiries, null, 2));
 		}
 
-		const headers = ['id', 'submittedAt', 'parentName', 'email', 'phone', 'childAge', 'programInterest', 'preferredWeek', 'notes'];
+		const headers = ['id', 'submittedAt', 'parentName', 'childName', 'childGrade', 'email', 'phone', 'childAge', 'programInterest', 'preferredWeek', 'promoCode', 'freeTrialInterest', 'notes'];
 		const rows = inquiries.map((record) => headers.map((key) => toCsvValue(record[key] ?? '')).join(','));
 		const csvContent = [headers.join(','), ...rows].join('\n');
 

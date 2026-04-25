@@ -181,7 +181,7 @@
 
     <section class="panel">
       <div class="controls">
-        <input id="search" type="search" placeholder="Search name, email, phone, program, preferred week" />
+        <input id="search" type="search" placeholder="Search name, email, phone, program, week, promo code" />
         <button class="btn btn-primary" id="refresh-btn" type="button">Refresh</button>
         <a class="btn btn-outline" href="/api/summer-inquiry/export" id="export-csv">Export CSV</a>
         <a class="btn btn-outline" href="/api/summer-inquiry/export?format=json" id="export-json">Export JSON</a>
@@ -200,11 +200,14 @@
             <tr>
               <th>Submitted</th>
               <th>Parent</th>
+              <th>Child</th>
               <th>Email</th>
               <th>Phone</th>
-              <th>Age</th>
+              <th>Grade</th>
               <th>Program</th>
               <th>Preferred Week</th>
+              <th>Promo</th>
+              <th>Trial</th>
               <th>Notes</th>
             </tr>
           </thead>
@@ -251,7 +254,7 @@
 
       function renderRows(rows) {
         if (!rows.length) {
-          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#60708e;padding:18px;">No leads found.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:#60708e;padding:18px;">No leads found.</td></tr>';
           return;
         }
 
@@ -259,11 +262,14 @@
           <tr>
             <td>${sanitize(formatDate(lead.submittedAt))}</td>
             <td>${sanitize(lead.parentName)}</td>
+            <td>${sanitize(lead.childName)}</td>
             <td>${sanitize(lead.email)}</td>
             <td>${sanitize(lead.phone)}</td>
-            <td>${sanitize(lead.childAge)}</td>
+            <td>${sanitize(lead.childGrade || lead.childAge)}</td>
             <td>${sanitize(lead.programInterest)}</td>
             <td>${sanitize(lead.preferredWeek)}</td>
+            <td>${sanitize(lead.promoCode)}</td>
+            <td>${sanitize(lead.freeTrialInterest)}</td>
             <td class="notes">${sanitize(lead.notes)}</td>
           </tr>
         `).join('');
@@ -280,11 +286,15 @@
         const filtered = allLeads.filter((lead) => {
           const haystack = [
             lead.parentName,
+            lead.childName,
             lead.email,
             lead.phone,
+            lead.childGrade,
             lead.childAge,
             lead.programInterest,
             lead.preferredWeek,
+            lead.promoCode,
+            lead.freeTrialInterest,
             lead.notes,
             lead.submittedAt
           ].join(' ').toLowerCase();

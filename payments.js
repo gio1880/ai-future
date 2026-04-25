@@ -385,7 +385,7 @@ async function handleCreateCheckout(req, res) {
     }
 
     const b = req.body || {};
-    const productType = sanitizeString(b.productType, 20);
+    const productType = sanitizeString(b.productType || b.product, 20);
     const parentName = sanitizeString(b.parentName, 120);
     const childName = sanitizeString(b.childName, 120);
     const childGrade = sanitizeString(b.childGrade, 40);
@@ -398,7 +398,7 @@ async function handleCreateCheckout(req, res) {
 
     const base = siteBaseUrl(req);
     const successUrl = `${base}/confirmation.html?session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = `${base}/?checkout=cancelled#summer-camp-register`;
+    const cancelUrl = `${base}/?checkout=cancelled#summer-register`;
 
     if (productType === 'camp') {
       if (!phone) return res.status(400).json({ success: false, error: 'Phone number is required for camp.' });

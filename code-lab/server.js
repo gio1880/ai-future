@@ -312,6 +312,12 @@ function getOrCreateProgress(studentId) {
   return progress[studentId];
 }
 
+function countMasteredLessons(lessonProgress = {}) {
+  return Object.values(lessonProgress).filter(item => {
+    return item && item.completed && (item.exercisePassed || item.completed) && (item.labPassed || item.completed) && item.quizPassed;
+  }).length;
+}
+
 // ============================================
 // MIDDLEWARE
 // ============================================
@@ -511,7 +517,7 @@ app.get('/api/admin/classroom', requireAuth, requireTeacher, (req, res) => {
       const p = presence.get(s.id) || {};
       const prog = progress[s.id] || {};
       const lessonProgress = prog.lessonProgress || {};
-      const lessonsCompleted = Object.values(lessonProgress).filter(x => x && x.completed).length;
+      const lessonsCompleted = countMasteredLessons(lessonProgress);
       const online = p.lastPing && (now - p.lastPing) < ONLINE_WINDOW_MS;
       return {
         id: s.id,
@@ -678,7 +684,7 @@ app.get('/api/leaderboard', requireAuth, (req, res) => {
       .filter(s => s.role === 'student')
       .map(s => {
         const studentProgress = progress[s.id] || { lessonProgress: {}, totalTime: 0 };
-        const lessonsCompleted = Object.keys(studentProgress.lessonProgress || {}).length;
+        const lessonsCompleted = countMasteredLessons(studentProgress.lessonProgress || {});
         return {
           name: s.name,
           lessonsCompleted,
@@ -712,7 +718,7 @@ app.get('/api/admin/students', requireAuth, requireTeacher, (req, res) => {
       .filter(s => s.role === 'student')
       .map(s => {
         const studentProgress = progress[s.id] || { lessonProgress: {}, lastLogin: null };
-        const lessonsCompleted = Object.keys(studentProgress.lessonProgress || {}).length;
+        const lessonsCompleted = countMasteredLessons(studentProgress.lessonProgress || {});
         return {
           id: s.id,
           name: s.name,
@@ -943,7 +949,7 @@ app.get('/api/admin/progress', requireAuth, requireTeacher, (req, res) => {
           id: s.id,
           name: s.name,
           username: s.username,
-          lessonsCompleted: Object.keys(studentProgress.lessonProgress || {}).length,
+          lessonsCompleted: countMasteredLessons(studentProgress.lessonProgress || {}),
           lastLogin: studentProgress.lastLogin,
           totalTime: studentProgress.totalTime || 0,
           lessonProgress: studentProgress.lessonProgress,

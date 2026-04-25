@@ -28,8 +28,8 @@
     }
     .rl-hero__inner {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 0.9fr);
+      gap: clamp(2rem, 5vw, 3rem);
       align-items: center;
       max-width: var(--max-w);
       margin-inline: auto;
@@ -89,7 +89,7 @@
     }
     .feature-band__grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
       gap: var(--sp-lg);
       max-width: var(--max-w);
       margin-inline: auto;
@@ -120,8 +120,99 @@
     }
     .programs-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
       gap: var(--sp-lg);
+    }
+    .programs-grid .program-card {
+      color: inherit;
+      text-decoration: none;
+    }
+    .program-detail-grid {
+      display: grid;
+      gap: var(--sp-xl);
+    }
+    .program-detail-card {
+      background: #fff;
+      border: 1px solid var(--af-border);
+      border-radius: var(--r-xl);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+      scroll-margin-top: 92px;
+    }
+    .program-detail-card__media {
+      background: linear-gradient(135deg, var(--af-navy), var(--af-blue));
+      min-height: 100%;
+    }
+    .program-detail-card__media img {
+      width: 100%;
+      height: 100%;
+      min-height: 320px;
+      object-fit: cover;
+    }
+    .program-detail-card__placeholder {
+      min-height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,.55);
+      font-size: 3rem;
+    }
+    .program-detail-card__body {
+      padding: clamp(1.5rem, 4vw, 2.25rem);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .program-detail-card__kicker {
+      color: var(--af-blue);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .program-detail-card__body h3 {
+      color: var(--af-deep-navy);
+      font-size: clamp(1.35rem, 3vw, 1.8rem);
+      line-height: 1.15;
+    }
+    .program-detail-card__body p {
+      color: var(--af-muted);
+      line-height: 1.7;
+    }
+    .program-detail-card__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+    .program-detail-card__meta span {
+      background: #EEF4FF;
+      color: var(--af-navy);
+      border: 1px solid rgba(37,99,255,.14);
+      border-radius: var(--r-full);
+      padding: .3rem .7rem;
+      font-size: .76rem;
+      font-weight: 700;
+    }
+    .program-detail-list {
+      display: grid;
+      gap: .55rem;
+      margin-top: .25rem;
+    }
+    .program-detail-list li {
+      color: var(--af-slate);
+      font-size: .92rem;
+      display: flex;
+      gap: .55rem;
+      align-items: flex-start;
+    }
+    .program-detail-list li::before {
+      content: "\f058";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      color: var(--af-success);
+      margin-top: .05rem;
     }
 
     /* ── Journey ───────────────────────────────────────────── */
@@ -168,8 +259,86 @@
     /* ── Tools ─────────────────────────────────────────────── */
     .tools-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
       gap: var(--sp-md);
+    }
+    .competition-gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+      gap: var(--sp-sm);
+      border-radius: var(--r-xl);
+      overflow: hidden;
+    }
+    .competition-gallery-grid img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--sp-lg);
+    }
+    .showcase-card {
+      background: #fff;
+      border: 1px solid var(--af-border);
+      border-radius: var(--r-xl);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+    .showcase-card--wide { grid-column: 1 / -1; }
+    .fade-gallery {
+      position: relative;
+      overflow: hidden;
+      background: #0b1726;
+      aspect-ratio: 16 / 10;
+    }
+    .showcase-card--wide .fade-gallery { aspect-ratio: 21 / 9; }
+    .fade-gallery img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transform: scale(1.035);
+      transition: opacity 900ms ease, transform 5200ms ease;
+    }
+    .fade-gallery img.is-active {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .showcase-card__body {
+      padding: 1.1rem 1.25rem 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .showcase-card__eyebrow {
+      color: var(--af-blue);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: .3rem;
+    }
+    .showcase-card__title {
+      color: var(--af-deep-navy);
+      font-size: 1.1rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .showcase-card__count {
+      flex: 0 0 auto;
+      border-radius: var(--r-full);
+      background: #EEF4FF;
+      color: var(--af-navy);
+      border: 1px solid rgba(37,99,255,.14);
+      padding: .35rem .7rem;
+      font-size: .78rem;
+      font-weight: 800;
+      white-space: nowrap;
     }
     .tool-chip {
       display: flex; align-items: center; gap: 0.75rem;
@@ -231,22 +400,54 @@
 
     /* Responsive */
     @media (max-width: 1023px) {
+      .rl-hero__inner { grid-template-columns: 1fr; }
       .feature-band__grid { grid-template-columns: repeat(3, 1fr); }
       .programs-grid { grid-template-columns: repeat(3, 1fr); }
       .journey-steps { grid-template-columns: repeat(3, 1fr); }
       .journey-steps::before { display: none; }
       .tools-grid { grid-template-columns: repeat(3, 1fr); }
+      .showcase-grid { grid-template-columns: 1fr; }
+      .showcase-card--wide { grid-column: auto; }
+      .showcase-card--wide .fade-gallery { aspect-ratio: 16 / 10; }
     }
     @media (max-width: 767px) {
-      .rl-hero__inner { grid-template-columns: 1fr; }
+      .rl-hero { padding: 3.25rem 0 2.75rem; }
+      .rl-hero__title { font-size: clamp(2.45rem, 13vw, 3.6rem); }
+      .rl-hero__sub { font-size: 1.08rem; }
+      .rl-hero__desc { max-width: none; }
+      .rl-hero__photo { max-width: none; aspect-ratio: 16/10; border-radius: 18px; }
+      .rl-grit { width: 88px; height: 88px; right: -10px; bottom: -14px; }
       .feature-band__grid { grid-template-columns: repeat(2, 1fr); }
       .feature-band-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,.07); }
       .programs-grid { grid-template-columns: 1fr 1fr; }
+      .program-detail-card { grid-template-columns: 1fr; }
+      .program-detail-card__media img,
+      .program-detail-card__placeholder { min-height: 240px; }
       .journey-steps { grid-template-columns: 1fr; }
       .tools-grid { grid-template-columns: 1fr 1fr; }
       .outcomes-grid { grid-template-columns: 1fr; }
+      .showcase-card__body { align-items: stretch; flex-direction: column; }
+      .showcase-card__count { align-self: flex-start; }
       .rl-cta__inner { grid-template-columns: 1fr; text-align: center; }
       .rl-cta__inner .btn-group { justify-content: center; }
+    }
+    @media (max-width: 430px) {
+      .rl-hero__inner,
+      .feature-band__grid { padding-inline: var(--sp-md); }
+      .rl-hero__title br,
+      .rl-hero__sub br { display: none; }
+      .rl-hero__photo { aspect-ratio: 1 / 1; }
+      .rl-grit { display: none; }
+      .feature-band__grid,
+      .programs-grid,
+      .tools-grid,
+      .competition-gallery-grid { grid-template-columns: 1fr; }
+      .feature-band-item { padding: 1.1rem .75rem; }
+      .program-card__img { aspect-ratio: 5/4; }
+      .program-detail-card__body { padding: 1.2rem; }
+      .program-detail-card__media img,
+      .program-detail-card__placeholder { min-height: 210px; }
+      .competition-gallery-grid img { aspect-ratio: 5/4; }
     }
   </style>
 </head>
@@ -274,12 +475,12 @@
       <li><a href="robotics-lab.html" class="active">Robotics Lab</a></li>
       <li><a href="../code-lab/code-lab.html">Code Lab</a></li>
       <li><a href="#programs">Programs</a></li>
-      <li><a href="#competitions">Competitions</a></li>
-      <li><a href="../index.html#about">About</a></li>
+      <li><a href="#programs">Competitions</a></li>
+      <li><a href="../index.html#contact">About</a></li>
       <li><a href="#gallery">Gallery</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
-    <a href="#contact" class="btn btn--primary navbar__cta desktop-only">Book a Free Trial</a>
+    <a href="../index.html#summer-inquiry" class="btn btn--primary navbar__cta desktop-only">Book a Free Trial</a>
     <button class="navbar__hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -290,8 +491,10 @@
   <a href="robotics-lab.html" class="active">Robotics Lab</a>
   <a href="../code-lab/code-lab.html">Code Lab</a>
   <a href="#programs">Programs</a>
-  <a href="#competitions">Competitions</a>
-  <a href="#contact" class="btn btn--primary" style="margin-top:1rem;text-align:center">Book a Free Trial</a>
+  <a href="#programs">Competitions</a>
+  <a href="#gallery">Gallery</a>
+  <a href="#contact">Contact</a>
+  <a href="../index.html#summer-inquiry" class="btn btn--primary" style="margin-top:1rem;text-align:center">Book a Free Trial</a>
 </nav>
 
 <!-- Hero -->
@@ -309,7 +512,7 @@
     </div>
     <div class="rl-hero__visual reveal">
       <div class="rl-hero__photo">
-        <img src="FLL Teams/25_26_season_pictures/IMG_5092.jpg" alt="Students competing in FLL robotics" loading="lazy" />
+        <img src="FLL Teams/25_26_season_pictures/fll-25-26-004.png" alt="Students competing in FLL robotics" loading="lazy" />
       </div>
       <div class="rl-grit">
         <svg class="grit-mascot grit-float" viewBox="0 0 120 145" width="90" xmlns="http://www.w3.org/2000/svg">
@@ -380,9 +583,9 @@
       <p class="section-sub section-sub--center">From building blocks to competition-level engineering.</p>
     </div>
     <div class="programs-grid">
-      <div class="program-card reveal">
-        <div class="program-card__img">
-          <img src="FLL Teams/25_26_season_pictures/IMG_5080.jpg" alt="LEGO SPIKE Robotics" loading="lazy" />
+      <a class="program-card reveal" href="#lego-spike" aria-label="Learn more about LEGO SPIKE Robotics">
+      <div class="program-card__img">
+          <img src="FLL Teams/25_26_season_pictures/fll-25-26-002.png" alt="LEGO SPIKE Robotics" loading="lazy" />
         </div>
         <div class="program-card__body">
           <div class="program-card__grade">Grades K–5</div>
@@ -390,10 +593,10 @@
           <div class="program-card__desc">Build and code using LEGO SPIKE Essential &amp; Prime.</div>
           <div class="program-card__arrow"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
-      </div>
-      <div class="program-card reveal reveal--delay-1">
-        <div class="program-card__img">
-          <img src="FLL Teams/25_26_season_pictures/IMG_5287.jpg" alt="FIRST LEGO League" loading="lazy" />
+      </a>
+      <a class="program-card reveal reveal--delay-1" href="#first-lego-league" aria-label="Learn more about FIRST LEGO League">
+      <div class="program-card__img">
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-011.png" alt="FIRST LEGO League" loading="lazy" />
         </div>
         <div class="program-card__body">
           <div class="program-card__grade">Grades 4–8</div>
@@ -401,8 +604,8 @@
           <div class="program-card__desc">Design, build, code, and create solutions to real-world problems.</div>
           <div class="program-card__arrow"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
-      </div>
-      <div class="program-card reveal reveal--delay-2">
+      </a>
+      <a class="program-card reveal reveal--delay-2" href="#vex-iq" aria-label="Learn more about VEX IQ">
         <div class="program-card__img" style="display:flex;align-items:center;justify-content:center">
           <i class="fa-solid fa-robot" style="font-size:3rem;color:rgba(255,255,255,.4)"></i>
         </div>
@@ -412,10 +615,10 @@
           <div class="program-card__desc">Build advanced robots and compete in exciting VEX challenges.</div>
           <div class="program-card__arrow"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
-      </div>
-      <div class="program-card reveal reveal--delay-3">
-        <div class="program-card__img">
-          <img src="FTC Pictures/ftc_25_26_pictures/IMG_4478.jpg" alt="FIRST Tech Challenge" loading="lazy" />
+      </a>
+      <a class="program-card reveal reveal--delay-3" href="#first-tech-challenge" aria-label="Learn more about FIRST Tech Challenge">
+      <div class="program-card__img">
+          <img src="FTC Pictures/ftc_25_26_pictures/ftc-25-26-006.png" alt="FIRST Tech Challenge" loading="lazy" />
         </div>
         <div class="program-card__body">
           <div class="program-card__grade">Grades 7–12</div>
@@ -423,8 +626,8 @@
           <div class="program-card__desc">Build, program, and compete at the high school level.</div>
           <div class="program-card__arrow"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
-      </div>
-      <div class="program-card reveal reveal--delay-4">
+      </a>
+      <a class="program-card reveal reveal--delay-4" href="#vex-v5" aria-label="Learn more about VEX V5">
         <div class="program-card__img" style="display:flex;align-items:center;justify-content:center">
           <i class="fa-solid fa-microchip" style="font-size:3rem;color:rgba(255,255,255,.4)"></i>
         </div>
@@ -434,7 +637,119 @@
           <div class="program-card__desc">Design high-performance robots for advanced competition.</div>
           <div class="program-card__arrow"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
-      </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Program Details -->
+<section class="section" style="background:#F8FAFC" id="program-details">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">Learn More</p>
+      <h2 class="section-heading">Find the Right Robotics Path</h2>
+      <p class="section-sub section-sub--center">Each program builds technical skill, confidence, and a clear next step for your child.</p>
+    </div>
+    <div class="program-detail-grid">
+      <article class="program-detail-card" id="lego-spike">
+        <div class="program-detail-card__media">
+          <img src="FLL Teams/25_26_season_pictures/fll-25-26-002.png" alt="Students learning LEGO SPIKE Robotics" loading="lazy" />
+        </div>
+        <div class="program-detail-card__body">
+          <div class="program-detail-card__kicker">Grades K-5</div>
+          <h3>LEGO SPIKE Robotics</h3>
+          <p>A friendly first robotics pathway for younger builders. Students learn how sensors, motors, simple machines, and code work together through hands-on builds.</p>
+          <div class="program-detail-card__meta">
+            <span>Beginner Friendly</span><span>LEGO SPIKE Essential</span><span>LEGO SPIKE Prime</span>
+          </div>
+          <ul class="program-detail-list">
+            <li>Build confidence with guided robot builds and creative challenges.</li>
+            <li>Learn sequencing, loops, sensors, motors, and basic problem solving.</li>
+            <li>Prepare for future FLL-style teamwork, presentations, and project thinking.</li>
+          </ul>
+          <a href="../index.html#summer-inquiry" class="btn btn--navy btn--sm" style="align-self:flex-start">Ask About LEGO SPIKE</a>
+        </div>
+      </article>
+
+      <article class="program-detail-card" id="first-lego-league">
+        <div class="program-detail-card__media">
+          <img src="FLL Teams/hudson valley qualifier championship winners.jpg" alt="AI Future FIRST LEGO League championship team" loading="lazy" />
+        </div>
+        <div class="program-detail-card__body">
+          <div class="program-detail-card__kicker">Grades 4-8</div>
+          <h3>FIRST LEGO League (FLL)</h3>
+          <p>FLL blends robot design, coding, research, teamwork, and live competition. Students learn to solve missions on a field while developing an innovation project around a real-world theme.</p>
+          <div class="program-detail-card__meta">
+            <span>Competition Track</span><span>Robot Design</span><span>Innovation Project</span>
+          </div>
+          <ul class="program-detail-list">
+            <li>Design attachments and strategies for autonomous mission runs.</li>
+            <li>Program reliable robot movement using sensors and iterative testing.</li>
+            <li>Build presentation, judging, teamwork, and engineering notebook habits.</li>
+          </ul>
+          <a href="../index.html#summer-inquiry" class="btn btn--navy btn--sm" style="align-self:flex-start">Ask About FLL</a>
+        </div>
+      </article>
+
+      <article class="program-detail-card" id="vex-iq">
+        <div class="program-detail-card__media">
+          <div class="program-detail-card__placeholder"><i class="fa-solid fa-robot"></i></div>
+        </div>
+        <div class="program-detail-card__body">
+          <div class="program-detail-card__kicker">Grades 4-8</div>
+          <h3>VEX IQ</h3>
+          <p>VEX IQ is a strong next step for students ready for more advanced mechanisms, driver strategy, autonomous programming, and fast-paced competition challenges.</p>
+          <div class="program-detail-card__meta">
+            <span>Intermediate Build</span><span>Driver Skills</span><span>Autonomous Skills</span>
+          </div>
+          <ul class="program-detail-list">
+            <li>Learn drivetrain design, lifts, intakes, gear ratios, and structural strength.</li>
+            <li>Practice team strategy, match play, and competition troubleshooting.</li>
+            <li>Develop stronger coding foundations for autonomous robot behavior.</li>
+          </ul>
+          <a href="../index.html#summer-inquiry" class="btn btn--navy btn--sm" style="align-self:flex-start">Ask About VEX IQ</a>
+        </div>
+      </article>
+
+      <article class="program-detail-card" id="first-tech-challenge">
+        <div class="program-detail-card__media">
+          <img src="FTC Pictures/ftc_25_26_pictures/ftc-25-26-006.png" alt="FIRST Tech Challenge robot and students" loading="lazy" />
+        </div>
+        <div class="program-detail-card__body">
+          <div class="program-detail-card__kicker">Grades 7-12</div>
+          <h3>FIRST Tech Challenge (FTC)</h3>
+          <p>FTC gives older students a real engineering-team experience: metal-frame robots, Java programming, CAD, controls, strategy, outreach, judging, and competition execution.</p>
+          <div class="program-detail-card__meta">
+            <span>Advanced Competition</span><span>Java</span><span>CAD & Engineering</span>
+          </div>
+          <ul class="program-detail-list">
+            <li>Build and iterate competition robots with mechanical and electrical systems.</li>
+            <li>Program autonomous and tele-op robot behavior using Java-based controls.</li>
+            <li>Practice engineering portfolio, outreach, judging, and leadership roles.</li>
+          </ul>
+          <a href="../index.html#summer-inquiry" class="btn btn--navy btn--sm" style="align-self:flex-start">Ask About FTC</a>
+        </div>
+      </article>
+
+      <article class="program-detail-card" id="vex-v5">
+        <div class="program-detail-card__media">
+          <div class="program-detail-card__placeholder"><i class="fa-solid fa-microchip"></i></div>
+        </div>
+        <div class="program-detail-card__body">
+          <div class="program-detail-card__kicker">Grades 9-12</div>
+          <h3>VEX V5</h3>
+          <p>VEX V5 is built for advanced students who want high-performance robot design, rigorous iteration, complex mechanisms, and strategic competition preparation.</p>
+          <div class="program-detail-card__meta">
+            <span>Advanced Engineering</span><span>High School</span><span>Competition Strategy</span>
+          </div>
+          <ul class="program-detail-list">
+            <li>Design robust high-speed mechanisms and competition-ready drivetrains.</li>
+            <li>Strengthen coding, control systems, debugging, and match strategy.</li>
+            <li>Prepare for leadership, build documentation, and high-level robot iteration.</li>
+          </ul>
+          <a href="../index.html#summer-inquiry" class="btn btn--navy btn--sm" style="align-self:flex-start">Ask About VEX V5</a>
+        </div>
+      </article>
     </div>
   </div>
 </section>
@@ -544,15 +859,143 @@
   </div>
 </section>
 
-<!-- Competition Gallery Strip -->
+<!-- Robotics Gallery -->
 <section class="section--sm" style="background:#fff; overflow:hidden" id="gallery">
   <div class="container">
-    <p class="section-label" style="text-align:center; margin-bottom:1.25rem">Competition Gallery</p>
-    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:var(--sp-sm); border-radius:var(--r-xl); overflow:hidden">
-      <img src="FLL Teams/25_26_season_pictures/IMG_5084.jpg" alt="FLL team" style="width:100%;aspect-ratio:1;object-fit:cover" loading="lazy" />
-      <img src="FLL Teams/25_26_season_pictures/IMG_5097.jpg" alt="FLL competition" style="width:100%;aspect-ratio:1;object-fit:cover" loading="lazy" />
-      <img src="FLL Teams/nyc champs 1st place robot design.jpg" alt="1st place robot design" style="width:100%;aspect-ratio:1;object-fit:cover" loading="lazy" />
-      <img src="FLL Teams/25_26_season_pictures/IMG_5280.jpg" alt="FLL students" style="width:100%;aspect-ratio:1;object-fit:cover" loading="lazy" />
+    <div class="section-header">
+      <p class="section-label">Robotics Gallery</p>
+      <h2 class="section-heading">Moments From the Lab</h2>
+      <p class="section-sub section-sub--center">A living look at summer builds, team practice, competition prep, and student wins.</p>
+    </div>
+
+    <div class="showcase-grid">
+      <article class="showcase-card showcase-card--wide reveal">
+        <div class="fade-gallery" aria-label="Summer robotics photo slideshow">
+          <img class="is-active" src="25_summer_pictures/summer-001.jpg" alt="Summer robotics students building together" loading="lazy" />
+          <img src="25_summer_pictures/summer-002.png" alt="Summer robotics hands-on project" loading="lazy" />
+          <img src="25_summer_pictures/summer-003.png" alt="Students testing a robotics build" loading="lazy" />
+          <img src="25_summer_pictures/summer-004.png" alt="Summer camp robotics activity" loading="lazy" />
+          <img src="25_summer_pictures/summer-005.png" alt="Students collaborating in robotics camp" loading="lazy" />
+          <img src="25_summer_pictures/summer-006.png" alt="Robotics lab build session" loading="lazy" />
+          <img src="25_summer_pictures/summer-007.jpg" alt="Summer robotics workshop moment" loading="lazy" />
+          <img src="25_summer_pictures/summer-008.jpg" alt="Student robotics engineering practice" loading="lazy" />
+          <img src="25_summer_pictures/summer-009.jpg" alt="Robotics summer build table" loading="lazy" />
+          <img src="25_summer_pictures/summer-010.jpg" alt="Students working on robot design" loading="lazy" />
+          <img src="25_summer_pictures/summer-011.jpg" alt="Summer robotics class teamwork" loading="lazy" />
+          <img src="25_summer_pictures/summer-012.jpg" alt="Students learning robotics through building" loading="lazy" />
+          <img src="25_summer_pictures/summer-013.jpg" alt="Summer robotics challenge" loading="lazy" />
+          <img src="25_summer_pictures/summer-014.jpg" alt="Robotics camp project showcase" loading="lazy" />
+          <img src="25_summer_pictures/Photos (9)/photo.jpg" alt="Summer robotics live-photo still" loading="lazy" />
+          <img src="25_summer_pictures/Photos (17)/photo.jpg" alt="Summer robotics candid moment" loading="lazy" />
+          <img src="25_summer_pictures/Photos (18)/photo.jpg" alt="Students at robotics camp" loading="lazy" />
+          <img src="25_summer_pictures/Photos (19)/photo.jpg" alt="Robotics camp teamwork" loading="lazy" />
+          <img src="25_summer_pictures/Photos (20)/photo.jpg" alt="Summer robotics project work" loading="lazy" />
+          <img src="25_summer_pictures/Photos (21)/photo.png" alt="Summer camp robotics still" loading="lazy" />
+          <img src="25_summer_pictures/Photos (22)/photo.png" alt="Students building robots in camp" loading="lazy" />
+          <img src="25_summer_pictures/Photos (23)/photo.jpg" alt="Robotics activity closeup" loading="lazy" />
+          <img src="25_summer_pictures/Photos (24)/photo.jpg" alt="Robotics camp group activity" loading="lazy" />
+          <img src="25_summer_pictures/Photos (25)/photo.jpg" alt="Student robotics project moment" loading="lazy" />
+          <img src="25_summer_pictures/Photos (26)/photo.jpg" alt="Summer robotics classroom moment" loading="lazy" />
+          <img src="25_summer_pictures/Photos-3-001 (1)/photo-001.jpg" alt="Robotics summer lab candid" loading="lazy" />
+          <img src="25_summer_pictures/Photos-3-001 (1)/photo-002.jpg" alt="Robotics summer student build" loading="lazy" />
+        </div>
+        <div class="showcase-card__body">
+          <div>
+            <div class="showcase-card__eyebrow">Summer Robotics</div>
+            <div class="showcase-card__title">Hands-on camp energy from build tables to project showcases</div>
+          </div>
+          <div class="showcase-card__count">27 photos</div>
+        </div>
+      </article>
+
+      <article class="showcase-card reveal">
+        <div class="fade-gallery" aria-label="FLL team photo slideshow">
+          <img class="is-active" src="FLL Teams/fll-team-001.png" alt="FLL team photo" loading="lazy" />
+          <img src="FLL Teams/fll-team-002.png" alt="FLL student team moment" loading="lazy" />
+          <img src="FLL Teams/fll-team-003.png" alt="FLL robotics group" loading="lazy" />
+          <img src="FLL Teams/fll-team-004.png" alt="FLL team project moment" loading="lazy" />
+          <img src="FLL Teams/fll-team-005.png" alt="FLL robot design moment" loading="lazy" />
+          <img src="FLL Teams/fll-team-006.png" alt="FLL team award photo" loading="lazy" />
+          <img src="FLL Teams/fll-team-007.png" alt="FLL live-photo still" loading="lazy" />
+        </div>
+        <div class="showcase-card__body">
+          <div>
+            <div class="showcase-card__eyebrow">FLL Teams</div>
+            <div class="showcase-card__title">Teamwork, judging, robot design, and award-day memories</div>
+          </div>
+          <div class="showcase-card__count">7 photos</div>
+        </div>
+      </article>
+
+      <article class="showcase-card reveal reveal--delay-1">
+        <div class="fade-gallery" aria-label="FLL 2024-2025 season slideshow">
+          <img class="is-active" src="FLL Teams/24_25_season_pictures/fll-24-25-001.png" alt="FLL 2024-2025 team photo" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-002.png" alt="FLL 2024-2025 teamwork" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-003.png" alt="FLL 2024-2025 robot performance" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-004.png" alt="FLL 2024-2025 team build" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-005.png" alt="FLL 2024-2025 robotics practice" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-006.png" alt="FLL 2024-2025 competition moment" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-007.png" alt="FLL 2024-2025 robot run" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-008.png" alt="FLL 2024-2025 students competing" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-009.png" alt="FLL 2024-2025 pit area" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-010.png" alt="FLL 2024-2025 team celebration" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-011.png" alt="FLL 2024-2025 student builders" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-012.png" alt="FLL 2024-2025 robot table" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-013.png" alt="FLL 2024-2025 judging moment" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-014.png" alt="FLL 2024-2025 practice moment" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-015.png" alt="FLL 2024-2025 robot testing" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-016.png" alt="FLL 2024-2025 student team" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-017.png" alt="FLL 2024-2025 competition table" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-018.png" alt="FLL 2024-2025 student presentation" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/fll-24-25-019.png" alt="FLL 2024-2025 season highlight" loading="lazy" />
+          <img src="FLL Teams/24_25_season_pictures/Photos/photo.png" alt="FLL 2024-2025 live-photo still" loading="lazy" />
+        </div>
+        <div class="showcase-card__body">
+          <div>
+            <div class="showcase-card__eyebrow">FLL 2024-2025</div>
+            <div class="showcase-card__title">A full season of practice, iteration, competition, and growth</div>
+          </div>
+          <div class="showcase-card__count">20 photos</div>
+        </div>
+      </article>
+
+      <article class="showcase-card reveal reveal--delay-2">
+        <div class="fade-gallery" aria-label="FLL 2025-2026 season slideshow">
+          <img class="is-active" src="FLL Teams/25_26_season_pictures/fll-25-26-001.png" alt="FLL 2025-2026 team build" loading="lazy" />
+          <img src="FLL Teams/25_26_season_pictures/fll-25-26-002.png" alt="FLL 2025-2026 robotics practice" loading="lazy" />
+          <img src="FLL Teams/25_26_season_pictures/fll-25-26-003.png" alt="FLL 2025-2026 student robot work" loading="lazy" />
+          <img src="FLL Teams/25_26_season_pictures/fll-25-26-004.png" alt="FLL 2025-2026 group robotics moment" loading="lazy" />
+          <img src="FLL Teams/25_26_season_pictures/fll-25-26-005.png" alt="FLL 2025-2026 team practice" loading="lazy" />
+        </div>
+        <div class="showcase-card__body">
+          <div>
+            <div class="showcase-card__eyebrow">FLL 2025-2026</div>
+            <div class="showcase-card__title">Fresh team moments from the newest season</div>
+          </div>
+          <div class="showcase-card__count">5 photos</div>
+        </div>
+      </article>
+
+      <article class="showcase-card reveal reveal--delay-3">
+        <div class="fade-gallery" aria-label="FTC team photo slideshow">
+          <img class="is-active" src="FTC Pictures/ftc_25_26_pictures/ftc-25-26-001.png" alt="FTC robot build" loading="lazy" />
+          <img src="FTC Pictures/ftc_25_26_pictures/ftc-25-26-002.png" alt="FTC team working on robot" loading="lazy" />
+          <img src="FTC Pictures/ftc_25_26_pictures/ftc-25-26-003.png" alt="FTC engineering practice" loading="lazy" />
+          <img src="FTC Pictures/ftc_25_26_pictures/ftc-25-26-004.png" alt="FTC robot testing" loading="lazy" />
+          <img src="FTC Pictures/ftc_25_26_pictures/ftc-25-26-005.png" alt="FTC competition preparation" loading="lazy" />
+          <img src="FTC Pictures/ftc_25_26_pictures/ftc-25-26-006.png" alt="FTC students and robot" loading="lazy" />
+          <img src="FTC Pictures/ftc_25_26_pictures/ftc-25-26-007.png" alt="FTC team moment" loading="lazy" />
+          <img src="FTC Pictures/ftc_25_26_pictures/ftc-25-26-008.png" alt="FTC robotics lab moment" loading="lazy" />
+          <img src="FTC Pictures/ftc_25_26_pictures/ftc-25-26-009.png" alt="FTC season highlight" loading="lazy" />
+        </div>
+        <div class="showcase-card__body">
+          <div>
+            <div class="showcase-card__eyebrow">FTC Robotics</div>
+            <div class="showcase-card__title">Advanced robot engineering, testing, and competition prep</div>
+          </div>
+          <div class="showcase-card__count">9 photos</div>
+        </div>
+      </article>
     </div>
   </div>
 </section>
@@ -599,8 +1042,8 @@
       <h2 style="font-size:clamp(1.75rem,3vw,2.5rem); font-weight:800; color:#fff; margin-bottom:.75rem">Join AI Future Robotics Lab</h2>
       <p style="color:rgba(255,255,255,.7); max-width:520px; margin-bottom:1.5rem">Give your child the skills, confidence, and experience to lead tomorrow. Enroll in our hands-on robotics programs today.</p>
       <div class="btn-group">
-        <a href="mailto:info@aifuture.com" class="btn btn--primary btn--lg">Book a Free Trial <i class="fa-solid fa-arrow-right"></i></a>
-        <a href="mailto:info@aifuture.com" class="btn btn--outline-white btn--lg">Contact Us</a>
+        <a href="../index.html#summer-inquiry" class="btn btn--primary btn--lg">Book a Free Trial <i class="fa-solid fa-arrow-right"></i></a>
+        <a href="../index.html#summer-inquiry" class="btn btn--outline-white btn--lg">Contact Us</a>
       </div>
     </div>
   </div>
@@ -615,11 +1058,9 @@
         <div class="footer__brand-name">AI Future</div>
         <div class="footer__tagline">Building Future Innovators</div>
         <div class="footer__social">
-          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
-          <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-          <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="https://www.instagram.com/aifutureny" target="_blank" rel="noopener" aria-label="AI Future on Instagram"><i class="fa-brands fa-instagram"></i><span>@aifutureny</span></a>
+          <a href="https://www.tiktok.com/@aifuturenyc" target="_blank" rel="noopener" aria-label="AI Future on TikTok"><i class="fa-brands fa-tiktok"></i><span>@aifuturenyc</span></a>
+          <a href="https://www.youtube.com/@AIFutureRobotics" target="_blank" rel="noopener" aria-label="AI Future Robotics on YouTube"><i class="fa-brands fa-youtube"></i><span>@AIFutureRobotics</span></a>
         </div>
       </div>
       <div class="footer__col">
@@ -632,17 +1073,17 @@
       </div>
       <div class="footer__col">
         <div class="footer__col-title">About Us</div>
-        <a href="../index.html#about">Our Story</a>
-        <a href="../index.html#team">Our Team</a>
-        <a href="mailto:info@aifuture.com">Contact Us</a>
+        <a href="../index.html#contact">Our Story</a>
+        <a href="../index.html#contact">Our Team</a>
+        <a href="../index.html#summer-inquiry">Contact Us</a>
       </div>
       <div class="footer__col">
         <div class="footer__col-title">Stay Connected</div>
         <p style="font-size:.85rem;color:rgba(255,255,255,.5);margin-bottom:.75rem">Get competition and program updates.</p>
-        <div class="footer__subscribe">
-          <input type="email" placeholder="Your email" />
-          <button>Subscribe</button>
-        </div>
+        <form class="footer__subscribe" data-newsletter>
+          <input type="email" name="email" placeholder="Your email" aria-label="Email address" required />
+          <button type="submit">Subscribe</button>
+        </form>
       </div>
     </div>
     <div class="footer__bottom">
@@ -652,6 +1093,29 @@
   </div>
 </footer>
 
+<script>
+  (() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    document.querySelectorAll('.fade-gallery').forEach((gallery, galleryIndex) => {
+      const slides = Array.from(gallery.querySelectorAll('img'));
+      if (slides.length < 2) return;
+
+      let activeIndex = slides.findIndex((slide) => slide.classList.contains('is-active'));
+      if (activeIndex < 0) {
+        activeIndex = 0;
+        slides[0].classList.add('is-active');
+      }
+
+      const interval = 2600 + (galleryIndex % 3) * 350;
+      window.setInterval(() => {
+        slides[activeIndex].classList.remove('is-active');
+        activeIndex = (activeIndex + 1) % slides.length;
+        slides[activeIndex].classList.add('is-active');
+      }, interval);
+    });
+  })();
+</script>
 <script src="../assets/js/main.js"></script>
 </body>
 </html>

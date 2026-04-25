@@ -466,7 +466,7 @@
     .mnb-item i { font-size: 1.1rem; }
 
     /* ================================================================
-       6. LESSON PAGE — 3-Panel Layout
+       6. LESSON PAGE — Minimal Workspace
     ================================================================ */
     #page-lesson {
       display: none; flex-direction: column; height: 100vh; overflow: hidden;
@@ -475,9 +475,10 @@
 
     /* Lesson topbar */
     .af-lesson-topbar {
-      height: 60px; background: #fff; border-bottom: 1px solid var(--af-border);
+      height: 56px; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--af-border);
       display: flex; align-items: center; gap: .75rem;
       padding-inline: var(--sp-lg); flex-shrink: 0; z-index: 10;
+      backdrop-filter: blur(12px);
     }
     .af-lesson-topbar__back {
       display: flex; align-items: center; gap: .4rem;
@@ -487,10 +488,11 @@
     }
     .af-lesson-topbar__back:hover { background: #F3F4F6; color: var(--af-navy); }
     .af-lesson-topbar__title {
-      font-size: .9rem; font-weight: 700; color: var(--af-deep-navy);
+      font-size: .95rem; font-weight: 700; color: var(--af-deep-navy);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .af-lesson-topbar__progress {
-      flex: 1; max-width: 280px; margin-left: auto; margin-right: var(--sp-md);
+      flex: 1; max-width: 220px; margin-left: auto; margin-right: .75rem;
     }
     .af-lesson-topbar__progress-label {
       font-size: .7rem; color: var(--af-muted); margin-bottom: .25rem;
@@ -502,20 +504,32 @@
     }
 
     .af-lesson-body {
-      display: flex; flex: 1; overflow: hidden;
+      display: grid; grid-template-columns: 220px minmax(0, 1fr) 248px;
+      flex: 1; overflow: hidden; background: #F8FAFC;
     }
 
     /* Course sidebar (left) */
     .af-lesson-sidebar {
-      width: 230px; flex-shrink: 0; background: #F8FAFC;
+      background: #F8FAFC;
       border-right: 1px solid var(--af-border); overflow-y: auto;
-      padding: var(--sp-md) .75rem;
+      padding: 1rem .75rem;
     }
     .af-ls-header {
       font-size: .62rem; font-weight: 700; letter-spacing: .1em;
       text-transform: uppercase; color: var(--af-muted);
-      padding: .5rem .4rem .75rem; border-bottom: 1px solid var(--af-border);
-      margin-bottom: .75rem;
+      padding: .25rem .4rem .75rem; border-bottom: 1px solid var(--af-border);
+      margin-bottom: .65rem;
+    }
+    .af-ls-subhead {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: .5rem; padding: 0 .4rem .75rem;
+      font-size: .72rem; color: var(--af-muted);
+    }
+    .af-ls-count {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 28px; height: 20px; border-radius: 999px;
+      background: rgba(37,99,255,.08); color: var(--af-blue);
+      font-size: .68rem; font-weight: 700; padding: 0 .45rem;
     }
     .af-ls-unit-label {
       font-size: .72rem; font-weight: 700; color: var(--af-navy);
@@ -523,16 +537,19 @@
     }
     .af-ls-lesson {
       display: flex; align-items: center; gap: .6rem;
-      padding: .45rem .4rem; border-radius: var(--r-sm);
+      padding: .55rem .5rem; border-radius: .85rem;
       font-size: .8rem; cursor: pointer;
-      transition: background var(--t-fast); margin-bottom: 1px;
+      transition: all var(--t-fast); margin-bottom: .2rem;
       text-decoration: none; color: var(--af-slate);
     }
-    .af-ls-lesson:hover { background: rgba(37,99,255,.06); }
-    .af-ls-lesson.active { background: rgba(37,99,255,.1); color: var(--af-blue); font-weight: 600; }
+    .af-ls-lesson:hover { background: rgba(255,255,255,.95); box-shadow: var(--shadow-sm); }
+    .af-ls-lesson.active {
+      background: #fff; color: var(--af-blue); font-weight: 600;
+      box-shadow: 0 0 0 1px rgba(37,99,255,.12), var(--shadow-sm);
+    }
     .af-ls-lesson.done { color: var(--af-muted); }
     .af-ls-dot {
-      width: 18px; height: 18px; border-radius: 50%;
+      width: 20px; height: 20px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       font-size: .55rem; flex-shrink: 0;
     }
@@ -546,27 +563,59 @@
       flex: 1; overflow: hidden; display: flex; flex-direction: column;
     }
     #lesson-container {
-      height: 100%; overflow-y: auto; padding: var(--sp-xl);
+      height: 100%; overflow-y: auto; padding: 1.5rem 2rem 2rem;
+      width: 100%; max-width: 960px; margin: 0 auto;
     }
 
     /* Right panel */
     .af-lesson-right {
-      width: 280px; flex-shrink: 0; background: #fff;
+      background: #F8FAFC;
       border-left: 1px solid var(--af-border); overflow-y: auto;
-      padding: var(--sp-lg);
+      padding: 1rem;
     }
-    .af-lr-section { margin-bottom: 1.5rem; }
+    .af-lesson-right-inner {
+      position: sticky; top: 1rem;
+      display: flex; flex-direction: column; gap: .85rem;
+    }
+    .af-lr-card {
+      background: rgba(255,255,255,.9);
+      border: 1px solid rgba(148,163,184,.16);
+      border-radius: 1rem;
+      box-shadow: var(--shadow-sm);
+      padding: .95rem;
+    }
+    .af-lesson-right-inner > .af-lr-section:not(.af-lr-card) { display: none; }
+    .af-lr-section { margin-bottom: 0; }
     .af-lr-section-title {
       font-size: .7rem; font-weight: 700; letter-spacing: .08em;
       text-transform: uppercase; color: var(--af-muted); margin-bottom: .6rem;
     }
+    .af-lr-current-step {
+      font-size: 1rem; font-weight: 700; color: var(--af-deep-navy);
+      margin-bottom: .25rem;
+    }
+    .af-lr-current-meta {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: .75rem; font-size: .78rem; color: var(--af-muted);
+    }
+    .af-lr-progress-track {
+      width: 100%; height: 6px; border-radius: 999px; overflow: hidden;
+      background: #E2E8F0; margin-top: .75rem;
+    }
+    .af-lr-progress-fill {
+      height: 100%; background: linear-gradient(90deg, var(--af-blue), #60A5FA);
+      border-radius: inherit; transition: width .25s ease;
+    }
     .af-lr-step {
       display: flex; align-items: center; gap: .6rem;
-      padding: .4rem .5rem; border-radius: var(--r-sm);
-      font-size: .82rem; color: var(--af-muted); margin-bottom: 2px;
+      padding: .55rem .6rem; border-radius: .85rem;
+      font-size: .82rem; color: var(--af-muted); margin-bottom: .25rem;
+      transition: all var(--t-fast);
     }
     .af-lr-step.done { color: var(--af-success); }
-    .af-lr-step.active { color: var(--af-blue); font-weight: 600; }
+    .af-lr-step.active {
+      color: var(--af-blue); font-weight: 600; background: rgba(37,99,255,.08);
+    }
     .af-lr-step-dot {
       width: 16px; height: 16px; border-radius: 50%;
       border: 2px solid currentColor; flex-shrink: 0;
@@ -574,6 +623,12 @@
     }
     .af-lr-step.done .af-lr-step-dot { background: var(--af-success); border-color: var(--af-success); color: #fff; }
     .af-lr-step.active .af-lr-step-dot { background: var(--af-blue); border-color: var(--af-blue); color: #fff; }
+    .af-lr-step-label {
+      display: flex; flex-direction: column; gap: .1rem;
+    }
+    .af-lr-step-label small {
+      font-size: .72rem; color: var(--af-muted); font-weight: 500;
+    }
 
     .af-lr-hint-btn {
       display: flex; align-items: center; justify-content: space-between;
@@ -661,21 +716,32 @@
     ================================================================ */
     /* LessonViewer header */
     .lesson-header {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      margin-bottom: var(--sp-xl); padding-bottom: var(--sp-lg);
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;
+      margin-bottom: 1.25rem; padding-bottom: 1rem;
       border-bottom: 1px solid var(--af-border);
     }
+    .lesson-header-copy { min-width: 0; }
+    .lesson-kicker {
+      display: inline-flex; align-items: center; gap: .45rem;
+      font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--af-muted); margin-bottom: .45rem;
+    }
     .lesson-header h1 {
-      font-size: 1.35rem; font-weight: 800; color: var(--af-deep-navy);
+      font-size: 1.45rem; font-weight: 800; color: var(--af-deep-navy); line-height: 1.2;
+    }
+    .lesson-header-meta {
+      display: flex; align-items: center; gap: .75rem; flex-wrap: wrap;
+      margin-top: .55rem; font-size: .82rem; color: var(--af-muted);
     }
     .step-indicator { flex-shrink: 0; }
-    .progress-dots { display: flex; gap: .5rem; }
+    .progress-dots { display: flex; gap: .45rem; flex-wrap: wrap; justify-content: flex-end; }
     .progress-dots .dot {
-      width: 34px; height: 34px; border-radius: var(--r-sm);
-      border: 1.5px solid var(--af-border); background: #fff;
-      font-size: .9rem; cursor: pointer;
+      min-width: 36px; height: 34px; border-radius: 999px;
+      border: 1.5px solid var(--af-border); background: rgba(255,255,255,.86);
+      font-size: .82rem; cursor: pointer;
       transition: all var(--t-fast);
       display: flex; align-items: center; justify-content: center;
+      padding: 0 .6rem;
     }
     .progress-dots .dot.active { background: var(--af-blue); border-color: var(--af-blue); color: #fff; }
     .progress-dots .dot.done { background: var(--af-success); border-color: var(--af-success); color: #fff; }
@@ -796,6 +862,70 @@
     .full-code-panel.hidden { display: none; }
     .concept-output { background: #0F172A; color: #E2E8F0; padding: .6rem .75rem; border-radius: var(--r-md); font-family: var(--font-mono); font-size: .82rem; margin-top: .5rem; }
     .concept-output.has-error { color: #FB7185; }
+    .lesson-animation {
+      background: linear-gradient(135deg, #101827 0%, #16213A 100%);
+      border: 1px solid rgba(96,165,250,.22);
+      border-radius: var(--r-xl);
+      overflow: hidden;
+      margin: .9rem 0 1rem;
+      box-shadow: 0 18px 45px rgba(15,23,42,.18);
+    }
+    .lesson-animation__bar {
+      display: flex; align-items: center; justify-content: space-between; gap: .75rem;
+      padding: .65rem .85rem;
+      background: rgba(255,255,255,.045);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .lesson-animation__title {
+      color: #F8FAFC; font-size: .82rem; font-weight: 800;
+      display: flex; align-items: center; gap: .45rem;
+    }
+    .lesson-animation__dots { display: flex; gap: .35rem; }
+    .lesson-animation__dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(148,163,184,.35);
+    }
+    .lesson-animation__dot.active { background: var(--af-yellow); }
+    .lesson-animation__body {
+      display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(180px, .75fr);
+      min-height: 210px;
+    }
+    .lesson-animation__code, .lesson-animation__output { padding: .9rem; }
+    .lesson-animation__code {
+      border-right: 1px solid rgba(255,255,255,.08);
+      background: rgba(15,23,42,.56);
+    }
+    .lesson-animation__label {
+      font-size: .65rem; font-weight: 800; letter-spacing: .08em;
+      text-transform: uppercase; color: rgba(203,213,225,.55); margin-bottom: .45rem;
+    }
+    .lesson-animation__code pre,
+    .lesson-animation__output pre {
+      margin: 0; white-space: pre-wrap; word-break: break-word;
+      font-family: var(--font-mono); font-size: .86rem; line-height: 1.65;
+    }
+    .lesson-animation__code pre { color: #E2E8F0; min-height: 7.5rem; }
+    .lesson-animation__output pre {
+      color: #D9DA26; min-height: 4.5rem;
+      background: rgba(0,0,0,.22); border-radius: var(--r-md); padding: .7rem;
+    }
+    .lesson-animation__cursor {
+      display: inline-block; width: .55ch; color: var(--af-yellow);
+      animation: lessonCursorBlink .85s steps(2, start) infinite;
+    }
+    .lesson-animation__caption {
+      color: #CBD5E1; font-size: .82rem; line-height: 1.55;
+      padding: .7rem .9rem; border-top: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.035);
+    }
+    @keyframes lessonCursorBlink { 50% { opacity: 0; } }
+    @media (max-width: 720px) {
+      .lesson-animation__body { grid-template-columns: 1fr; }
+      .lesson-animation__code { border-right: 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .lesson-animation__cursor { animation: none; }
+    }
     .btn-concept-run {
       background: rgba(37,99,255,.1); color: var(--af-blue);
       border: 1.5px solid rgba(37,99,255,.2); border-radius: var(--r-md);
@@ -1065,7 +1195,9 @@
     @media (max-width: 1023px) {
       .af-app-sidebar { width: 200px; }
       .dash-grid { grid-template-columns: 1fr 260px; }
-      .af-lesson-right { width: 240px; }
+      .af-lesson-body { grid-template-columns: 200px minmax(0, 1fr); }
+      .af-lesson-right { display: none; }
+      #lesson-container { max-width: none; }
     }
     @media (max-width: 767px) {
       .af-app-layout { height: auto; }
@@ -1084,6 +1216,10 @@
       .af-lesson-right { display: none; }
       .af-lesson-mobile-tabs { display: block; }
       #lesson-container { padding: var(--sp-md); padding-bottom: 80px; }
+      .af-lesson-body { grid-template-columns: 1fr; }
+      .af-lesson-topbar__progress { display: none; }
+      .lesson-header { flex-direction: column; }
+      .progress-dots { justify-content: flex-start; }
     }
   </style>
 </head>
@@ -1422,6 +1558,10 @@
       <!-- Left: Course Sidebar -->
       <aside class="af-lesson-sidebar">
         <div class="af-ls-header">Course Lessons</div>
+        <div class="af-ls-subhead">
+          <span id="af-ls-unit-name">Python Foundations</span>
+          <span class="af-ls-count" id="af-ls-count">0/0</span>
+        </div>
         <div id="af-lesson-sidebar-content">
           <!-- populated dynamically by renderLessonSidebar() -->
         </div>
@@ -1442,44 +1582,38 @@
 
       <!-- Right: Info Panel -->
       <aside class="af-lesson-right">
+        <div class="af-lesson-right-inner">
 
-        <div class="af-lr-section">
-          <div class="af-lr-section-title">Lesson Steps</div>
-          <div id="af-lr-steps">
-            <div class="af-lr-step active">
-              <div class="af-lr-step-dot"><i class="fa-solid fa-play" style="font-size:.45rem"></i></div>
-              <span>Learn</span>
-            </div>
-            <div class="af-lr-step">
-              <div class="af-lr-step-dot"></div>
-              <span>See It</span>
-            </div>
-            <div class="af-lr-step">
-              <div class="af-lr-step-dot"></div>
-              <span>Practice</span>
-            </div>
-            <div class="af-lr-step">
-              <div class="af-lr-step-dot"></div>
-              <span>Quiz</span>
-            </div>
+        <div class="af-lr-card">
+          <div class="af-lr-section-title">Current Step</div>
+          <div class="af-lr-current-step" id="af-lr-current-step">Learn</div>
+          <div class="af-lr-current-meta">
+            <span id="af-lr-current-meta">Step 1 of 4</span>
+            <span id="af-lr-current-status">In progress</span>
           </div>
+          <div class="af-lr-progress-track"><div class="af-lr-progress-fill" id="af-lr-progress-fill" style="width:0%"></div></div>
         </div>
 
-        <div class="af-lr-section">
+        <div class="af-lr-card af-lr-section">
+          <div class="af-lr-section-title">Lesson Steps</div>
+          <div id="af-lr-steps"></div>
+        </div>
+
+        <div class="af-lr-card af-lr-section">
           <div class="af-lr-section-title">Instructions</div>
-          <div id="af-lr-instructions" style="font-size:.82rem;color:var(--af-slate);line-height:1.6;background:var(--af-cream);border-radius:var(--r-lg);padding:.85rem">
+          <div id="af-lr-instructions" style="font-size:.82rem;color:var(--af-slate);line-height:1.6;">
             Follow each step, write your code in the editor, and click <strong>Check Answer</strong> when ready.
           </div>
         </div>
 
-        <div class="af-lr-section">
+        <div class="af-lr-card af-lr-section">
           <div class="af-lr-section-title">Hint</div>
           <button class="af-lr-hint-btn" onclick="this.nextElementSibling.classList.toggle('open')">
             <span>💡 Show Hint</span>
             <i class="fa-solid fa-chevron-down" style="font-size:.7rem"></i>
           </button>
           <div class="af-lr-hint-body" id="af-lr-hint-body">
-            Open the lesson and use the <strong>Hint</strong> button inside the exercise to see the hint for each step.
+            Hints unlock inside practice and labs. They start general, then become more specific if a student still needs help.
           </div>
         </div>
 
@@ -1502,7 +1636,7 @@
           </svg>
           <p style="font-size:.72rem;color:var(--af-muted);margin-top:.4rem">Grit is cheering you on!</p>
         </div>
-
+        </div>
       </aside>
     </div><!-- /af-lesson-body -->
 
@@ -6653,6 +6787,26 @@ const Progress = {
   STORAGE_KEY: 'pylearn_progress',
   _syncTimer: null,
 
+  ensureLessonRecord(lessonId) {
+    if (!this.data[lessonId]) {
+      this.data[lessonId] = {
+        completed: false,
+        exercisePassed: false,
+        labPassed: false,
+        quizPassed: false,
+        attempts: 0,
+        hintViews: 0
+      };
+    }
+    const rec = this.data[lessonId];
+    if (rec.completed && rec.exercisePassed === undefined) rec.exercisePassed = true;
+    if (rec.completed && rec.labPassed === undefined) rec.labPassed = true;
+    if (rec.completed && rec.quizPassed === undefined) rec.quizPassed = true;
+    if (rec.attempts === undefined) rec.attempts = 0;
+    if (rec.hintViews === undefined) rec.hintViews = 0;
+    return rec;
+  },
+
   init() {
     try {
       const stored = localStorage.getItem(this.STORAGE_KEY);
@@ -6708,20 +6862,34 @@ const Progress = {
   },
 
   markCompleted(lessonId) {
-    if (!this.data[lessonId]) {
-      this.data[lessonId] = { completed: false, quizPassed: false, attempts: 0 };
-    }
-    this.data[lessonId].completed = true;
+    const rec = this.ensureLessonRecord(lessonId);
+    rec.completed = true;
+    rec.exercisePassed = true;
+    rec.labPassed = true;
+    rec.quizPassed = true;
+    rec.completedAt = new Date().toISOString();
     this.save();
     updateProgressDisplay();
   },
 
+  markExercisePassed(lessonId) {
+    const rec = this.ensureLessonRecord(lessonId);
+    rec.exercisePassed = true;
+    rec.lastPracticePassedAt = new Date().toISOString();
+    this.save();
+  },
+
+  markLabPassed(lessonId) {
+    const rec = this.ensureLessonRecord(lessonId);
+    rec.labPassed = true;
+    rec.lastLabPassedAt = new Date().toISOString();
+    this.save();
+  },
+
   markQuizPassed(lessonId) {
-    if (!this.data[lessonId]) {
-      this.data[lessonId] = { completed: false, quizPassed: false, attempts: 0 };
-    }
-    this.data[lessonId].quizPassed = true;
-    this.data[lessonId].completed = true;
+    const rec = this.ensureLessonRecord(lessonId);
+    rec.quizPassed = true;
+    rec.lastQuizPassedAt = new Date().toISOString();
     // If the student was flagged to review this lesson, passing the quiz clears it.
     if (this.isPriorityReview(lessonId)) {
       this.clearPriorityReview(lessonId);
@@ -6733,20 +6901,52 @@ const Progress = {
     updateProgressDisplay();
   },
 
-  recordAttempt(lessonId) {
-    if (!this.data[lessonId]) {
-      this.data[lessonId] = { completed: false, quizPassed: false, attempts: 0 };
-    }
-    this.data[lessonId].attempts = (this.data[lessonId].attempts || 0) + 1;
+  markLessonMastered(lessonId) {
+    const rec = this.ensureLessonRecord(lessonId);
+    rec.exercisePassed = true;
+    rec.labPassed = true;
+    rec.quizPassed = true;
+    rec.completed = true;
+    rec.masteredAt = new Date().toISOString();
     this.save();
+    updateProgressDisplay();
+  },
+
+  recordAttempt(lessonId) {
+    const rec = this.ensureLessonRecord(lessonId);
+    rec.attempts = (rec.attempts || 0) + 1;
+    this.save();
+  },
+
+  recordHintView(lessonId) {
+    const rec = this.ensureLessonRecord(lessonId);
+    rec.hintViews = (rec.hintViews || 0) + 1;
+    rec.lastHintAt = new Date().toISOString();
+    this.save();
+    return rec.hintViews;
   },
 
   isCompleted(lessonId) {
     return this.data[lessonId]?.completed || false;
   },
 
+  isExercisePassed(lessonId) {
+    const rec = this.data[lessonId];
+    return !!(rec && (rec.exercisePassed || rec.completed));
+  },
+
+  isLabPassed(lessonId) {
+    const rec = this.data[lessonId];
+    return !!(rec && (rec.labPassed || rec.completed));
+  },
+
   isQuizPassed(lessonId) {
     return this.data[lessonId]?.quizPassed || false;
+  },
+
+  isLessonMastered(lessonId) {
+    const rec = this.data[lessonId];
+    return !!(rec && rec.completed && (rec.exercisePassed || rec.completed) && (rec.labPassed || rec.completed) && rec.quizPassed);
   },
 
   isUnlocked(lessonId, allLessons) {
@@ -6758,20 +6958,20 @@ const Progress = {
     if (!lesson || !lesson.prerequisite) {
       return true;
     }
-    return this.isCompleted(lesson.prerequisite);
+    return this.isLessonMastered(lesson.prerequisite);
   },
 
   getOverallPercent() {
     const allLessons = LessonRegistry.all;
     if (allLessons.length === 0) return 0;
-    const completed = allLessons.filter(l => this.isCompleted(l.id)).length;
+    const completed = allLessons.filter(l => this.isLessonMastered(l.id)).length;
     return Math.round((completed / allLessons.length) * 100);
   },
 
   getCategoryPercent(category) {
     const lessons = LessonRegistry.getByCategory(category);
     if (lessons.length === 0) return 0;
-    const completed = lessons.filter(l => this.isCompleted(l.id)).length;
+    const completed = lessons.filter(l => this.isLessonMastered(l.id)).length;
     return Math.round((completed / lessons.length) * 100);
   },
 
@@ -6853,7 +7053,7 @@ const Progress = {
   },
 
   allLessonsCompleted() {
-    return LessonRegistry.all.every(l => this.isCompleted(l.id));
+    return LessonRegistry.all.every(l => this.isLessonMastered(l.id));
   },
 
   // FLL Assessment results
@@ -7612,7 +7812,7 @@ const LessonCards = {
     container.innerHTML = '';
 
     lessons.forEach(lesson => {
-      const isCompleted = Progress.isCompleted(lesson.id);
+      const isCompleted = Progress.isLessonMastered(lesson.id);
       const isUnlocked = Progress.isUnlocked(lesson.id, LessonRegistry.all);
       const number = String(lesson.order).padStart(2, '0');
 
@@ -7684,7 +7884,7 @@ const LessonCards = {
     // Render unit test card for this category
     const unitTest = UNIT_TESTS.find(t => t.category === category);
     if (unitTest) {
-      const allLessonsDone = unitTest.requiredLessons.every(lid => Progress.isCompleted(lid));
+      const allLessonsDone = unitTest.requiredLessons.every(lid => Progress.isLessonMastered(lid));
       const testPassed = Progress.data[unitTest.id]?.passed || false;
       const isDev = Auth.currentUser && Auth.currentUser.role === 'developer';
 
@@ -7699,7 +7899,7 @@ const LessonCards = {
         statusHtml = '<span class="test-status available">📝 Ready</span>';
         buttonHtml = '<button class="btn-start" onclick="Router.navigate(\'#page-unit-test/' + unitTest.id + '\')">Take Unit Test</button>';
       } else {
-        const done = unitTest.requiredLessons.filter(l => Progress.isCompleted(l)).length;
+        const done = unitTest.requiredLessons.filter(l => Progress.isLessonMastered(l)).length;
         statusHtml = '<span class="test-status locked">🔒 ' + done + '/' + unitTest.requiredLessons.length + ' lessons</span>';
         buttonHtml = '<button class="btn-start disabled" disabled>Complete All Lessons First</button>';
       }
@@ -7721,6 +7921,270 @@ const LessonCards = {
 };
 
 // ============================================================================
+// ANIMATED LESSON EXAMPLES - Reusable typed-code demos for Python lessons
+// ============================================================================
+
+const AnimatedExamples = {
+  timers: new Map(),
+  typeDelay: 32,
+  deleteDelay: 14,
+  holdDelay: 1500,
+  outputDelay: 420,
+
+  data: {
+    'py-01': {
+      title: 'Live print() demo',
+      caption: 'Only the text inside the quotes changes. The print command stays the same, and the output follows whatever message is inside.',
+      frames: [
+        { code: 'print("Hello Python!")', output: 'Hello Python!' },
+        { code: 'print("I can change this message.")', output: 'I can change this message.' },
+        { code: 'print("Robots follow exact instructions.")', output: 'Robots follow exact instructions.' }
+      ]
+    },
+    'py-02': {
+      title: 'Variables changing values',
+      caption: 'A variable name can point to one value, then later point to a new value. Printing the variable shows the current value.',
+      frames: [
+        { code: 'robot_name = "Bolt"\nprint(robot_name)', output: 'Bolt' },
+        { code: 'robot_name = "Scout"\nprint(robot_name)', output: 'Scout' },
+        { code: 'score = 10\nprint(score)\nscore = 25\nprint(score)', output: '10\n25' }
+      ]
+    },
+    'py-02b': {
+      title: 'Mad Libs swap-out',
+      caption: 'Change the variables at the top and the whole story changes without rewriting every sentence.',
+      frames: [
+        { code: 'animal = "penguin"\nfood = "pizza"\nprint("The", animal, "carried", food)', output: 'The penguin carried pizza' },
+        { code: 'animal = "robot"\nfood = "waffles"\nprint("The", animal, "carried", food)', output: 'The robot carried waffles' },
+        { code: 'place = "moon base"\nprint("Mission starts at the", place)', output: 'Mission starts at the moon base' }
+      ]
+    },
+    'py-03': {
+      title: 'Numbers vs strings',
+      caption: 'Numbers can do math. Strings are text. If a number is inside quotes, Python treats it like text.',
+      frames: [
+        { code: 'speed = 400\nprint(speed + 50)', output: '450' },
+        { code: 'message = "Drive forward"\nprint(message)', output: 'Drive forward' },
+        { code: 'print("42")\nprint(42)', output: '42\n42' }
+      ]
+    },
+    'py-04': {
+      title: 'Boolean answers',
+      caption: 'Comparisons produce True or False. Those yes/no answers are how programs begin making decisions.',
+      frames: [
+        { code: 'print(400 > 200)', output: 'True' },
+        { code: 'has_obstacle = False\nprint(has_obstacle)', output: 'False' },
+        { code: 'battery = 80\nprint(battery >= 50)', output: 'True' }
+      ]
+    },
+    'py-05': {
+      title: 'Comments are ignored',
+      caption: 'Comments explain the code for humans. Python skips them and runs the real instructions.',
+      frames: [
+        { code: '# Say hello to the driver\nprint("Ready!")', output: 'Ready!' },
+        { code: 'speed = 400  # millimeters per second\nprint(speed)', output: '400' },
+        { code: '# This line is only a note\n# Nothing prints unless we call print()', output: '(no output)' }
+      ]
+    },
+    'py-06': {
+      title: 'Indentation groups code',
+      caption: 'Indented lines belong inside a block. Moving back to the left edge means the block is finished.',
+      frames: [
+        { code: 'if True:\n    print("inside the block")\nprint("outside the block")', output: 'inside the block\noutside the block' },
+        { code: 'if False:\n    print("skipped")\nprint("still runs")', output: 'still runs' },
+        { code: 'for step in range(2):\n    print("repeat")\nprint("done")', output: 'repeat\nrepeat\ndone' }
+      ]
+    },
+    'py-07': {
+      title: 'if / else branches',
+      caption: 'Python checks the condition first. If it is True, the if block runs. If it is False, the else block runs.',
+      frames: [
+        { code: 'distance = 80\nif distance < 100:\n    print("Stop")\nelse:\n    print("Drive")', output: 'Stop' },
+        { code: 'distance = 250\nif distance < 100:\n    print("Stop")\nelse:\n    print("Drive")', output: 'Drive' },
+        { code: 'ready = True\nif ready:\n    print("Start mission")', output: 'Start mission' }
+      ]
+    },
+    'py-08': {
+      title: 'Loops repeat work',
+      caption: 'A loop saves you from writing the same instruction again and again.',
+      frames: [
+        { code: 'for i in range(3):\n    print(i)', output: '0\n1\n2' },
+        { code: 'for count in range(1, 4):\n    print("Lap", count)', output: 'Lap 1\nLap 2\nLap 3' },
+        { code: 'count = 0\nwhile count < 3:\n    print("beep")\n    count = count + 1', output: 'beep\nbeep\nbeep' }
+      ]
+    },
+    'py-09': {
+      title: 'Functions run on call',
+      caption: 'Defining a function stores the recipe. Calling the function actually runs the recipe.',
+      frames: [
+        { code: 'def greet():\n    print("Hello!")\n\ngreet()', output: 'Hello!' },
+        { code: 'def beep():\n    print("beep")\n\nbeep()\nbeep()', output: 'beep\nbeep' },
+        { code: 'def start_robot():\n    print("Motors ready")\n    print("Go!")\n\nstart_robot()', output: 'Motors ready\nGo!' }
+      ]
+    },
+    'py-10': {
+      title: 'Parameters customize functions',
+      caption: 'Parameters are blanks in a function. Each call can fill those blanks with different values.',
+      frames: [
+        { code: 'def drive(distance):\n    print("Drive", distance, "mm")\n\ndrive(500)', output: 'Drive 500 mm' },
+        { code: 'def drive(distance):\n    print("Drive", distance, "mm")\n\ndrive(1200)', output: 'Drive 1200 mm' },
+        { code: 'def move(speed, direction):\n    print(direction, speed)\n\nmove(300, "forward")', output: 'forward 300' }
+      ]
+    },
+    'py-11': {
+      title: 'Return sends a result back',
+      caption: 'print shows a value. return gives a value back so another line can store it or use it.',
+      frames: [
+        { code: 'def add(a, b):\n    return a + b\n\nresult = add(10, 5)\nprint(result)', output: '15' },
+        { code: 'def double(number):\n    return number * 2\n\nprint(double(6))', output: '12' },
+        { code: 'def is_ready(battery):\n    return battery > 50\n\nprint(is_ready(80))', output: 'True' }
+      ]
+    },
+    'py-12': {
+      title: 'Imports unlock tools',
+      caption: 'An import tells Python which outside tool you want to use before you create objects from it.',
+      frames: [
+        { code: 'from pybricks.hubs import PrimeHub\n\nhub = PrimeHub()', output: 'PrimeHub is ready to use' },
+        { code: 'from pybricks.pupdevices import Motor\nfrom pybricks.parameters import Port\n\nleft_motor = Motor(Port.A)', output: 'Motor object created on Port A' },
+        { code: 'from math import sqrt\n\nprint(sqrt(25))', output: '5.0' }
+      ]
+    },
+    'py-13': {
+      title: 'Objects do actions with methods',
+      caption: 'The pattern object.method() means asking a specific object to do one of its actions.',
+      frames: [
+        { code: 'robot.straight(500)', output: 'Robot drives straight 500 mm' },
+        { code: 'robot.turn(90)', output: 'Robot turns 90 degrees' },
+        { code: 'hub.imu.reset_heading(0)', output: 'Hub heading reset to 0' }
+      ]
+    },
+    'py-14': {
+      title: 'Trace line by line',
+      caption: 'Tracing means keeping track of values as each line runs. The output is the result of that timeline.',
+      frames: [
+        { code: 'speed = 400\nspeed = speed + 100\nprint(speed)', output: '500' },
+        { code: 'score = 2\nfor i in range(3):\n    score = score + 1\nprint(score)', output: '5' },
+        { code: 'def add_bonus(points):\n    return points + 10\n\nprint(add_bonus(5))', output: '15' }
+      ]
+    }
+  },
+
+  render(lessonId, escapeHtml) {
+    const demo = this.data[lessonId];
+    if (!demo || !demo.frames || demo.frames.length === 0) return '';
+    const first = demo.frames[0];
+    const dots = demo.frames.map((_, i) =>
+      '<span class="lesson-animation__dot' + (i === 0 ? ' active' : '') + '"></span>'
+    ).join('');
+
+    return [
+      '<div class="lesson-animation" data-lesson-animation="' + escapeHtml(lessonId) + '">',
+        '<div class="lesson-animation__bar">',
+          '<div class="lesson-animation__title">Live concept demo</div>',
+          '<div class="lesson-animation__dots" aria-hidden="true">' + dots + '</div>',
+        '</div>',
+        '<div class="lesson-animation__body">',
+          '<div class="lesson-animation__code">',
+            '<div class="lesson-animation__label">Python</div>',
+            '<pre><code data-animation-code>' + escapeHtml(first.code) + '</code><span class="lesson-animation__cursor">|</span></pre>',
+          '</div>',
+          '<div class="lesson-animation__output">',
+            '<div class="lesson-animation__label">Output</div>',
+            '<pre data-animation-output>' + escapeHtml(first.output || '(no output)') + '</pre>',
+          '</div>',
+        '</div>',
+        '<div class="lesson-animation__caption"><strong>' + escapeHtml(demo.title) + ':</strong> ' + escapeHtml(demo.caption || '') + '</div>',
+      '</div>'
+    ].join('');
+  },
+
+  mount(lessonId) {
+    this.stopAll();
+    const root = document.querySelector('[data-lesson-animation="' + lessonId + '"]');
+    const demo = this.data[lessonId];
+    if (!root || !demo || !demo.frames.length) return;
+
+    const codeEl = root.querySelector('[data-animation-code]');
+    const outputEl = root.querySelector('[data-animation-output]');
+    const dots = Array.from(root.querySelectorAll('.lesson-animation__dot'));
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!codeEl || !outputEl) return;
+
+    if (reduceMotion) {
+      const frame = demo.frames[0];
+      codeEl.textContent = frame.code;
+      outputEl.textContent = frame.output || '(no output)';
+      return;
+    }
+
+    let frameIndex = 0;
+    let phase = 'typing';
+    let charIndex = 0;
+
+    const paintDots = () => {
+      dots.forEach((dot, i) => dot.classList.toggle('active', i === frameIndex));
+    };
+
+    const schedule = (fn, delay) => {
+      const id = window.setTimeout(fn, delay);
+      this.timers.set(root, id);
+    };
+
+    const tick = () => {
+      const frame = demo.frames[frameIndex];
+      paintDots();
+
+      if (phase === 'typing') {
+        outputEl.textContent = '';
+        codeEl.textContent = frame.code.slice(0, charIndex);
+        charIndex += 1;
+        if (charIndex <= frame.code.length) {
+          schedule(tick, this.typeDelay);
+          return;
+        }
+        phase = 'output';
+        schedule(tick, this.outputDelay);
+        return;
+      }
+
+      if (phase === 'output') {
+        outputEl.textContent = frame.output || '(no output)';
+        phase = 'hold';
+        schedule(tick, this.holdDelay);
+        return;
+      }
+
+      if (phase === 'hold') {
+        phase = 'deleting';
+        charIndex = frame.code.length;
+        schedule(tick, this.deleteDelay);
+        return;
+      }
+
+      codeEl.textContent = frame.code.slice(0, charIndex);
+      charIndex -= 1;
+      if (charIndex >= 0) {
+        schedule(tick, this.deleteDelay);
+        return;
+      }
+
+      frameIndex = (frameIndex + 1) % demo.frames.length;
+      charIndex = 0;
+      phase = 'typing';
+      outputEl.textContent = '';
+      schedule(tick, 280);
+    };
+
+    tick();
+  },
+
+  stopAll() {
+    this.timers.forEach((timerId) => window.clearTimeout(timerId));
+    this.timers.clear();
+  }
+};
+
+// ============================================================================
 // LESSON VIEWER - Main lesson rendering and navigation
 // ============================================================================
 
@@ -7734,6 +8198,107 @@ const LessonViewer = {
   quizAnswers: {},
   labIndex: 0,        // current challenge in Practice Lab
   labCompleted: [],    // which challenges have been passed
+
+  getCategoryLabel(category) {
+    const labels = {
+      python: 'Python Foundations',
+      pybricks: 'Pybricks',
+      measurements: 'Measurements',
+      setup: 'Robot Setup',
+      filestructure: 'File Structure'
+    };
+    return labels[category] || 'Course';
+  },
+
+  getStepTitle(step) {
+    const titles = { explain: 'Learn', example: 'See It', exercise: 'Practice', lab: 'Lab', quiz: 'Quiz' };
+    return titles[step] || 'Lesson';
+  },
+
+  getStepInstruction(step) {
+    const instructions = {
+      explain: 'Read the concept first and focus on the key rule this lesson is teaching.',
+      example: 'Watch the example change, then notice what stays the same and what changes.',
+      exercise: 'Try the practice yourself. Run your code, make one fix at a time, then check your answer.',
+      lab: 'Complete each challenge in order. Every challenge needs to be passed before moving on.',
+      quiz: 'Answer every question carefully. A passed quiz shows this lesson is really understood.'
+    };
+    return instructions[step] || 'Work through the current step before moving on.';
+  },
+
+  renderLessonSidebar() {
+    const container = document.getElementById('af-lesson-sidebar-content');
+    const unitLabel = document.getElementById('af-ls-unit-name');
+    const countBadge = document.getElementById('af-ls-count');
+    if (!container || !this.currentLesson) return;
+
+    const lessons = LessonRegistry.getByCategory(this.currentLesson.category);
+    const masteredCount = lessons.filter(lesson => Progress.isLessonMastered(lesson.id)).length;
+
+    if (unitLabel) unitLabel.textContent = this.getCategoryLabel(this.currentLesson.category);
+    if (countBadge) countBadge.textContent = masteredCount + '/' + lessons.length;
+
+    container.innerHTML = lessons.map((lesson, index) => {
+      const mastered = Progress.isLessonMastered(lesson.id);
+      const unlocked = Progress.isUnlocked(lesson.id, LessonRegistry.all);
+      const active = lesson.id === this.currentLesson.id;
+      const stateClass = active ? ' active' : mastered ? ' done' : '';
+      const dotClass = active ? 'active' : mastered ? 'done' : unlocked ? 'todo' : 'locked';
+      const dotIcon = mastered ? '<i class="fa-solid fa-check"></i>' : String(index + 1).padStart(2, '0');
+      const lockAttr = unlocked ? 'onclick="Router.navigate(\'#page-lesson/' + lesson.id + '\')"' : '';
+      return '<div class="af-ls-lesson' + stateClass + '"' + lockAttr + '>' +
+        '<div class="af-ls-dot ' + dotClass + '">' + dotIcon + '</div>' +
+        '<div style="min-width:0;">' +
+          '<div style="font-weight:' + (active ? '700' : '600') + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + this.escapeHtml(lesson.title) + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  },
+
+  updateLessonChrome() {
+    if (!this.currentLesson) return;
+
+    const step = this.steps[this.currentStep];
+    const stepTitle = this.getStepTitle(step);
+    const stepPercent = Math.round(((this.currentStep + 1) / this.steps.length) * 100);
+
+    const topTitle = document.getElementById('af-lt-title');
+    const topPct = document.getElementById('af-lt-pct');
+    const topBar = document.getElementById('af-lt-bar');
+    const railCurrent = document.getElementById('af-lr-current-step');
+    const railMeta = document.getElementById('af-lr-current-meta');
+    const railStatus = document.getElementById('af-lr-current-status');
+    const railFill = document.getElementById('af-lr-progress-fill');
+    const railSteps = document.getElementById('af-lr-steps');
+    const railInstructions = document.getElementById('af-lr-instructions');
+    const headerStepMeta = document.getElementById('lesson-header-step-meta');
+
+    if (topTitle) topTitle.textContent = this.currentLesson.title;
+    if (topPct) topPct.textContent = stepPercent + '%';
+    if (topBar) topBar.style.width = stepPercent + '%';
+    if (headerStepMeta) headerStepMeta.textContent = 'Step ' + (this.currentStep + 1) + ' of ' + this.steps.length;
+    if (railCurrent) railCurrent.textContent = stepTitle;
+    if (railMeta) railMeta.textContent = 'Step ' + (this.currentStep + 1) + ' of ' + this.steps.length;
+    if (railStatus) railStatus.textContent = this.currentStep === this.steps.length - 1 && this.quizPassed ? 'Ready to finish' : 'In progress';
+    if (railFill) railFill.style.width = stepPercent + '%';
+    if (railInstructions) railInstructions.textContent = this.getStepInstruction(step);
+
+    if (railSteps) {
+      railSteps.innerHTML = this.steps.map((stepName, index) => {
+        const stateClass = index < this.currentStep ? ' done' : index === this.currentStep ? ' active' : '';
+        const icon = index < this.currentStep ? '<i class="fa-solid fa-check"></i>' : index === this.currentStep ? '<i class="fa-solid fa-play" style="font-size:.42rem"></i>' : '';
+        return '<div class="af-lr-step' + stateClass + '">' +
+          '<div class="af-lr-step-dot">' + icon + '</div>' +
+          '<div class="af-lr-step-label">' +
+            '<span>' + this.getStepTitle(stepName) + '</span>' +
+            '<small>Step ' + (index + 1) + '</small>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    this.renderLessonSidebar();
+  },
 
   load(lessonId) {
     const lesson = LessonRegistry.getById(lessonId);
@@ -7752,11 +8317,13 @@ const LessonViewer = {
     this.currentLesson = lesson;
     this.currentStep = 0;
     this.exerciseAttempts = 0;
-    this.exerciseCompleted = Progress.isCompleted(lessonId);
+    this.exerciseCompleted = Progress.isExercisePassed(lessonId);
     this.quizPassed = Progress.isQuizPassed(lessonId);
     this.quizAnswers = {};
     this.labIndex = 0;
-    this.labCompleted = [];
+    this.labCompleted = Progress.isLabPassed(lessonId) && lesson.lab && lesson.lab.challenges
+      ? lesson.lab.challenges.map((_, idx) => idx)
+      : [];
 
     // Build steps dynamically — include 'lab' only if lesson has lab challenges
     this.steps = ['explain', 'example', 'exercise'];
@@ -7778,7 +8345,14 @@ const LessonViewer = {
 
     container.innerHTML = `
       <div class="lesson-header">
-        <h1>${this.escapeHtml(lesson.title)}</h1>
+        <div class="lesson-header-copy">
+          <div class="lesson-kicker">${this.escapeHtml(this.getCategoryLabel(lesson.category))}</div>
+          <h1>${this.escapeHtml(lesson.title)}</h1>
+          <div class="lesson-header-meta">
+            <span>Lesson ${lesson.order}</span>
+            <span id="lesson-header-step-meta">Step ${this.currentStep + 1} of ${this.steps.length}</span>
+          </div>
+        </div>
         <div class="step-indicator">
           <div class="progress-dots">
             ${dotsHtml}
@@ -7792,6 +8366,7 @@ const LessonViewer = {
       </div>
     `;
 
+    this.updateLessonChrome();
     this.renderStep(0);
 
     // Show reference panel for this lesson
@@ -7818,6 +8393,9 @@ const LessonViewer = {
   renderStep(stepIndex) {
     const contentDiv = document.getElementById('lesson-content');
     if (!contentDiv) return;
+    if (typeof AnimatedExamples !== 'undefined') {
+      AnimatedExamples.stopAll();
+    }
 
     this.currentStep = stepIndex;
     const step = this.steps[stepIndex];
@@ -7836,10 +8414,14 @@ const LessonViewer = {
     }
 
     contentDiv.innerHTML = html;
+    if (step === 'example' && typeof AnimatedExamples !== 'undefined') {
+      AnimatedExamples.mount(this.currentLesson.id);
+    }
 
     // Attach click handlers to MC option labels so clicking them selects and highlights
     this.initOptionClicks();
     this.updateProgressDots();
+    this.updateLessonChrome();
     this.updateNavButtons();
 
     // Live smart-quote normalization for code textarea (critical for iPad)
@@ -7939,6 +8521,7 @@ const LessonViewer = {
     let html = '<div class="step-example">';
     html += '<div class="step-badge">👀 See It In Action</div>';
     html += '<h2>' + this.escapeHtml(example.title) + '</h2>';
+    html += AnimatedExamples.render(this.currentLesson.id, this.escapeHtml.bind(this));
 
     if (annotations.length > 0) {
       // Progress bar + counter (hidden when single concept)
@@ -8243,7 +8826,7 @@ const LessonViewer = {
       }
       html += '</div>';
       if (ch.hint) {
-        html += '<div id="lab-hint-box" class="hint-box hidden">💡 ' + this.escapeHtml(ch.hint) + '</div>';
+        html += '<div id="lab-hint-box" class="hint-box hidden"></div>';
       }
     } else if (ch.type === 'multiple-choice') {
       const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
@@ -8264,7 +8847,7 @@ const LessonViewer = {
       }
       html += '</div>';
       if (ch.hint) {
-        html += '<div id="lab-hint-box" class="hint-box hidden">💡 ' + this.escapeHtml(ch.hint) + '</div>';
+        html += '<div id="lab-hint-box" class="hint-box hidden"></div>';
       }
     }
 
@@ -8403,13 +8986,14 @@ const LessonViewer = {
           this.goToLabChallenge(this.labIndex + 1);
         }, 1200);
       } else {
+        Progress.markLabPassed(this.currentLesson.id);
         // All done — re-render to show completion banner
         setTimeout(() => {
           this.goToLabChallenge(this.labIndex);
         }, 800);
       }
     } else {
-      const errorMsg = (ch.validation && ch.validation.errorMessage) || 'Not quite. Try again!';
+      const errorMsg = 'Not quite yet. Compare your answer to the challenge goal, then try one small fix.';
       feedbackDiv.className = 'lab-feedback incorrect';
       feedbackDiv.textContent = '✗ ' + errorMsg;
     }
@@ -8417,7 +9001,33 @@ const LessonViewer = {
 
   showLabHint() {
     const hintBox = document.getElementById('lab-hint-box');
-    if (hintBox) hintBox.classList.toggle('hidden');
+    if (!hintBox) return;
+    const lab = this.currentLesson && this.currentLesson.lab;
+    const ch = lab && lab.challenges && lab.challenges[this.labIndex];
+    const hintText = this.buildProgressiveHint(ch, this.labIndex + 1, 'lab');
+    hintBox.innerHTML = 'Hint ' + hintText.level + ': ' + this.escapeHtml(hintText.text);
+    hintBox.classList.remove('hidden');
+  },
+
+  isLabComplete() {
+    const lab = this.currentLesson && this.currentLesson.lab;
+    if (!lab || !lab.challenges || lab.challenges.length === 0) return true;
+    return this.labCompleted.length >= lab.challenges.length;
+  },
+
+  buildProgressiveHint(item, attemptCount, context) {
+    const baseHint = (item && item.hint) || 'Read the prompt again and compare each part of your answer to what the program needs to do.';
+    const safeType = item && item.type;
+    const first = context === 'lab'
+      ? 'Start by naming the exact goal for this challenge, then check one line or option at a time.'
+      : 'Start by rereading the instructions and identifying the one Python idea this practice is checking.';
+    const second = safeType === 'multiple-choice' || safeType === 'trace'
+      ? 'Eliminate choices that break the rule from the lesson. Then choose the option that matches what Python would actually do.'
+      : 'Run your code, compare the output to the goal, and fix the first place where your code and the goal differ.';
+
+    if (attemptCount <= 1) return { level: 1, text: first };
+    if (attemptCount === 2) return { level: 2, text: second };
+    return { level: 3, text: baseHint };
   },
 
   // ===================== END PRACTICE LAB =====================
@@ -8440,7 +9050,7 @@ const LessonViewer = {
       html += '<button onclick="LessonViewer.checkExercise()" class="btn-check">✓ Check Answer</button>';
       html += '<button onclick="LessonViewer.showHint()" class="btn-hint">💡 Hint</button>';
       html += '</div>';
-      html += '<div id="hint-box" class="hint-box hidden">💡 ' + this.escapeHtml(exercise.hint || '') + '</div>';
+      html += '<div id="hint-box" class="hint-box hidden"></div>';
       html += '</div>';
 
     } else if (exercise.type === 'multiple-choice' || exercise.type === 'trace') {
@@ -8470,7 +9080,7 @@ const LessonViewer = {
       }
       html += '</div>';
       if (exercise.hint) {
-        html += '<div id="hint-box" class="hint-box hidden">💡 ' + this.escapeHtml(exercise.hint) + '</div>';
+        html += '<div id="hint-box" class="hint-box hidden"></div>';
       }
     }
 
@@ -8580,6 +9190,7 @@ const LessonViewer = {
 
     if (isCorrect) {
       this.exerciseCompleted = true;
+      Progress.markExercisePassed(this.currentLesson.id);
       feedbackDiv.innerHTML = '<strong>' + this.escapeHtml(successMsg) + '</strong>';
       feedbackDiv.className = 'feedback success';
       feedbackDiv.classList.remove('hidden');
@@ -8593,13 +9204,16 @@ const LessonViewer = {
         });
       }
 
-      Toast.show('Exercise completed! Moving to quiz...', 'success');
+      Toast.show('Practice passed! Moving forward...', 'success');
       setTimeout(() => {
         this.nextStep();
       }, 1500);
     } else {
       this.exerciseCompleted = false;
-      feedbackDiv.innerHTML = this.escapeHtml(errorMsg);
+      const guidedError = this.exerciseAttempts >= 3
+        ? errorMsg
+        : 'Not quite yet. Check the lesson rule, run your code if there is code, and try one small fix.';
+      feedbackDiv.innerHTML = this.escapeHtml(guidedError);
       feedbackDiv.className = 'feedback error';
       feedbackDiv.classList.remove('hidden');
 
@@ -8615,16 +9229,23 @@ const LessonViewer = {
 
       if (this.exerciseAttempts >= 2 && exercise.hint) {
         const hintBox = document.getElementById('hint-box');
-        if (hintBox) hintBox.classList.remove('hidden');
+        if (hintBox) {
+          const hintText = this.buildProgressiveHint(exercise, this.exerciseAttempts, 'exercise');
+          hintBox.innerHTML = 'Hint ' + hintText.level + ': ' + this.escapeHtml(hintText.text);
+          hintBox.classList.remove('hidden');
+        }
       }
     }
   },
 
   showHint() {
     const hintBox = document.getElementById('hint-box');
-    if (hintBox) {
-      hintBox.classList.toggle('hidden');
-    }
+    if (!hintBox) return;
+    const views = Progress.recordHintView(this.currentLesson.id);
+    const attemptCount = Math.max(views, this.exerciseAttempts + 1);
+    const hintText = this.buildProgressiveHint(this.currentLesson.exercise, attemptCount, 'exercise');
+    hintBox.innerHTML = 'Hint ' + hintText.level + ': ' + this.escapeHtml(hintText.text);
+    hintBox.classList.remove('hidden');
   },
 
   // ─── Pyodide Python Runner ───────────────────────────────────────────────
@@ -8664,7 +9285,7 @@ const LessonViewer = {
   retryQuiz() {
     // Re-render the quiz step to reset all answers
     this.quizAnswers = {};
-    this.renderStep(3); // quiz is step index 3
+    this.renderStep(this.steps.indexOf('quiz'));
   },
 
   submitQuiz() {
@@ -8695,7 +9316,6 @@ const LessonViewer = {
         el.style.pointerEvents = 'none';
         if (idx === userAnswer && isCorrect) el.classList.add('correct');
         else if (idx === userAnswer && !isCorrect) el.classList.add('incorrect');
-        else if (idx === question.correct && !isCorrect) el.classList.add('correct');
       });
 
       const feedbackDiv = document.querySelector(`[data-qid="${question.id}"] .question-feedback`);
@@ -8704,7 +9324,7 @@ const LessonViewer = {
           feedbackDiv.textContent = `✓ Correct! ${question.explanation}`;
           feedbackDiv.className = 'question-feedback correct';
         } else {
-          feedbackDiv.textContent = `✗ The correct answer was: "${question.options[question.correct]}". ${question.explanation}`;
+          feedbackDiv.textContent = 'Not yet. Review the lesson idea for this question, then try again.';
           feedbackDiv.className = 'question-feedback incorrect';
         }
         feedbackDiv.classList.remove('hidden');
@@ -8723,7 +9343,7 @@ const LessonViewer = {
         resultDiv.className = 'quiz-result pass';
         Progress.markQuizPassed(this.currentLesson.id);
         updateProgressDisplay();
-        Toast.show('Quiz passed! 🎉 Lesson complete!', 'success');
+        Toast.show('Quiz passed! Finish the lesson to save mastery.', 'success');
         // Disable the submit button
         document.querySelectorAll('.btn-submit').forEach(b => {
           if (b.textContent.includes('Submit')) b.style.display = 'none';
@@ -8747,7 +9367,11 @@ const LessonViewer = {
   },
 
   nextLesson() {
-    Progress.markCompleted(this.currentLesson.id);
+    if (!this.canBypassLessonLocks() && (!this.exerciseCompleted || !this.isLabComplete() || !this.quizPassed)) {
+      Toast.show('Finish the practice, lab, and quiz before completing this lesson.', 'warning');
+      return;
+    }
+    Progress.markLessonMastered(this.currentLesson.id);
     updateProgressDisplay();
     const nextLesson = LessonRegistry.getNext(this.currentLesson.id);
 
@@ -8811,10 +9435,11 @@ const LessonViewer = {
   updateProgressDots() {
     const dots = document.querySelectorAll('.progress-dots .dot');
     dots.forEach((dot, idx) => {
+      dot.classList.remove('active', 'done');
       if (idx === this.currentStep) {
         dot.classList.add('active');
-      } else {
-        dot.classList.remove('active');
+      } else if (idx < this.currentStep) {
+        dot.classList.add('done');
       }
     });
   },
@@ -8833,12 +9458,15 @@ const LessonViewer = {
       btnNext.textContent = isLastStep ? 'Finish' : 'Next →';
 
       const mustSolveExercise = currentStepType === 'exercise' && !this.exerciseCompleted;
+      const mustFinishLab = currentStepType === 'lab' && !this.isLabComplete();
       const mustPassQuiz = currentStepType === 'quiz' && !this.quizPassed;
-      const blocked = !this.canBypassLessonLocks() && (mustSolveExercise || mustPassQuiz);
+      const blocked = !this.canBypassLessonLocks() && (mustSolveExercise || mustFinishLab || mustPassQuiz);
 
       btnNext.disabled = blocked;
       if (mustSolveExercise) {
         btnNext.title = 'Check your exercise answer to continue.';
+      } else if (mustFinishLab) {
+        btnNext.title = 'Complete every lab challenge to continue.';
       } else if (mustPassQuiz) {
         btnNext.title = 'Pass the quiz to complete this lesson.';
       } else {
@@ -8857,6 +9485,10 @@ const LessonViewer = {
     const step = this.steps[this.currentStep];
     if (step === 'exercise' && !this.exerciseCompleted) {
       Toast.show('Complete the exercise first before moving on.', 'warning');
+      return false;
+    }
+    if (step === 'lab' && !this.isLabComplete()) {
+      Toast.show('Complete every lab challenge before moving on.', 'warning');
       return false;
     }
     if (step === 'quiz' && !this.quizPassed) {
@@ -8920,7 +9552,7 @@ const UnitTestViewer = {
     const test = this.getTestById(testId);
     if (!test) return false;
     // All required lessons must be completed
-    return test.requiredLessons.every(lid => Progress.isCompleted(lid));
+    return test.requiredLessons.every(lid => Progress.isLessonMastered(lid));
   },
 
   isPassed(testId) {
@@ -8958,7 +9590,7 @@ const UnitTestViewer = {
     html += '</div>';
 
     // Progress bar
-    const completedLessons = test.requiredLessons.filter(l => Progress.isCompleted(l)).length;
+    const completedLessons = test.requiredLessons.filter(l => Progress.isLessonMastered(l)).length;
     html += '<div style="margin-bottom:2rem;">';
     html += '<div style="display:flex;justify-content:space-between;font-size:0.85rem;color:var(--color-text-muted);margin-bottom:0.5rem;">';
     html += '<span>Lessons completed: ' + completedLessons + '/' + test.requiredLessons.length + '</span>';
@@ -9177,7 +9809,7 @@ const UnitTestViewer = {
         if (feedbackDiv) {
           feedbackDiv.textContent = isCorrect
             ? '✓ Correct! ' + q.explanation
-            : '✗ Incorrect. Expected output: "' + q.expectedOutput + '". ' + q.explanation;
+            : 'Not yet. Run your code and compare your output to the expected output shown above.';
           feedbackDiv.className = 'question-feedback ' + (isCorrect ? 'correct' : 'incorrect');
           feedbackDiv.classList.remove('hidden');
         }
@@ -9195,13 +9827,12 @@ const UnitTestViewer = {
           el.style.pointerEvents = 'none';
           if (idx === userAnswer && isCorrect) el.classList.add('correct');
           else if (idx === userAnswer && !isCorrect) el.classList.add('incorrect');
-          else if (idx === q.correct && !isCorrect) el.classList.add('correct');
         });
 
         if (feedbackDiv) {
           feedbackDiv.textContent = isCorrect
             ? '✓ Correct! ' + q.explanation
-            : '✗ Incorrect. ' + q.explanation;
+            : 'Not yet. Review the related lesson, then try this question again.';
           feedbackDiv.className = 'question-feedback ' + (isCorrect ? 'correct' : 'incorrect');
           feedbackDiv.classList.remove('hidden');
         }
@@ -9232,7 +9863,8 @@ const UnitTestViewer = {
       if (passed) {
         resultDiv.innerHTML = '<div class="ut-result pass">' +
           '<h3 style="color:var(--color-success);font-size:1.5rem;">🎉 Passed! ' + score + '%</h3>' +
-          '<p style="color:var(--color-text-muted);margin:0.5rem 0 1rem;">' + correctCount + '/' + test.questions.length + ' correct. Great work!</p>' +
+          '<p style="color:var(--color-text-muted);margin:0.5rem 0 1rem;">' + correctCount + '/' + test.questions.length + ' correct. Great work! You are ready to use Python in a real mini project.</p>' +
+          '<button class="btn-submit" style="margin-right:0.75rem;" onclick="Router.navigate(\'#/final-project\')">Start Applied Python Project</button>' +
           '<button class="btn-submit" onclick="Router.navigate(\'#/certificates\')">View Certificates →</button>' +
           '</div>';
         Toast.show('Unit test passed! 🎉', 'success');
@@ -9270,7 +9902,7 @@ const UnitTestViewer = {
           reviewHtml += '<p style="font-weight:600;color:var(--color-text-primary);margin-bottom:0.6rem;">📚 Review these lessons before trying again:</p>';
           reviewHtml += '<div style="display:flex;flex-direction:column;gap:0.4rem;">';
           recommended.forEach((title, lid) => {
-            reviewHtml += '<button onclick="Router.navigate(\'#lesson/' + lid + '\')" style="text-align:left;background:rgba(255,255,255,0.05);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:0.6rem 0.9rem;cursor:pointer;color:var(--color-text-primary);font-size:0.9rem;transition:background 0.2s;" onmouseover="this.style.background=\'rgba(79,70,229,0.15)\'" onmouseout="this.style.background=\'rgba(255,255,255,0.05)\'">';
+            reviewHtml += '<button onclick="Router.navigate(\'#page-lesson/' + lid + '\')" style="text-align:left;background:rgba(255,255,255,0.05);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:0.6rem 0.9rem;cursor:pointer;color:var(--color-text-primary);font-size:0.9rem;transition:background 0.2s;" onmouseover="this.style.background=\'rgba(79,70,229,0.15)\'" onmouseout="this.style.background=\'rgba(255,255,255,0.05)\'">';
             reviewHtml += '→ ' + title;
             reviewHtml += '</button>';
           });
@@ -9849,7 +10481,7 @@ function updateHomePage() {
     // Find the next incomplete lesson
     let nextLesson = null;
     for (let i = 0; i < allLessons.length; i++) {
-      if (!Progress.isCompleted(allLessons[i].id)) {
+      if (!Progress.isLessonMastered(allLessons[i].id)) {
         if (Progress.isUnlocked(allLessons[i].id, allLessons)) {
           nextLesson = allLessons[i];
           break;
@@ -9858,7 +10490,7 @@ function updateHomePage() {
     }
 
     // Count completed
-    const completedCount = allLessons.filter(l => Progress.isCompleted(l.id)).length;
+    const completedCount = allLessons.filter(l => Progress.isLessonMastered(l.id)).length;
     const hasProgress = completedCount > 0;
 
     if (hasProgress && nextLesson && continueSection && continueCard) {
@@ -9926,7 +10558,7 @@ function updateHomePage() {
       const container = document.getElementById(info.el);
       if (!container) return;
       const pathLessons = allLessons.filter(l => info.cats.includes(l.category));
-      const done = pathLessons.filter(l => Progress.isCompleted(l.id)).length;
+      const done = pathLessons.filter(l => Progress.isLessonMastered(l.id)).length;
       const total = pathLessons.length;
       const pct = total > 0 ? Math.round((done / total) * 100) : 0;
       const fill = container.querySelector('.path-progress-fill');
@@ -10135,7 +10767,7 @@ function renderCertificatesPage() {
   ];
   categories.forEach(c => {
     const catLessons = LessonRegistry.getByCategory(c.cat);
-    const done = catLessons.filter(l => Progress.isCompleted(l.id)).length;
+    const done = catLessons.filter(l => Progress.isLessonMastered(l.id)).length;
     const complete = done === catLessons.length;
     html += '<li class="' + (complete ? '' : 'incomplete') + '">' + c.label + ': ' + done + '/' + catLessons.length + '</li>';
   });
