@@ -439,6 +439,7 @@
     .ach-title { font-size: .82rem; font-weight: 600; color: var(--af-deep-navy); }
     .ach-sub { font-size: .72rem; color: var(--af-muted); }
     .ach-xp { font-size: .72rem; font-weight: 700; color: var(--af-purple); margin-left: auto; flex-shrink: 0; }
+    .ach-xp.is-complete { color: var(--af-success); }
     .projects-card {
       background: var(--af-deep-navy); border-radius: var(--r-xl);
       padding: 1.25rem; position: relative; overflow: hidden;
@@ -6887,6 +6888,7 @@ const Progress = {
     const rec = this.ensureLessonRecord(lessonId);
     rec.exercisePassed = true;
     rec.lastPracticePassedAt = new Date().toISOString();
+    this._maybeAutoComplete(lessonId);
     this.save();
   },
 
@@ -6894,6 +6896,7 @@ const Progress = {
     const rec = this.ensureLessonRecord(lessonId);
     rec.labPassed = true;
     rec.lastLabPassedAt = new Date().toISOString();
+    this._maybeAutoComplete(lessonId);
     this.save();
   },
 
@@ -6908,8 +6911,43 @@ const Progress = {
         Toast.show('✓ Priority review cleared for this lesson!', 'success');
       }
     }
+    this._maybeAutoComplete(lessonId);
     this.save();
     updateProgressDisplay();
+  },
+
+  // Auto-mark a lesson as fully mastered the moment every required section
+  // (exercise, lab if present, quiz if present) has been passed. Without this,
+  // students who pass all steps but navigate away before clicking the manual
+  // "Complete Lesson ✓" button would never see the lesson turn green on the
+  // course page — `isLessonMastered` requires `completed === true`, which was
+  // previously only set by `markLessonMastered`. This makes completion a
+  // side-effect of finishing the work, which is what students expect.
+  _maybeAutoComplete(lessonId) {
+    const rec = this.data[lessonId];
+    if (!rec || rec.completed) return;
+    const lesson = (typeof LessonRegistry !== 'undefined' && LessonRegistry.getById)
+      ? LessonRegistry.getById(lessonId)
+      : null;
+    const hasExercise = !!(lesson && lesson.exercise);
+    const hasLab = !!(lesson && lesson.lab && lesson.lab.challenges && lesson.lab.challenges.length > 0);
+    const hasQuiz = !!(lesson && lesson.quiz);
+    const exerciseOk = !hasExercise || rec.exercisePassed === true;
+    const labOk = !hasLab || rec.labPassed === true;
+    const quizOk = !hasQuiz || rec.quizPassed === true;
+    if (exerciseOk && labOk && quizOk) {
+      rec.completed = true;
+      rec.completedAt = rec.completedAt || new Date().toISOString();
+      rec.masteredAt = rec.masteredAt || new Date().toISOString();
+      rec.exercisePassed = true;
+      rec.labPassed = true;
+      rec.quizPassed = true;
+      // Re-render lesson cards anywhere they're visible, so the change shows
+      // immediately if the student is on the course page in another tab.
+      if (typeof updateProgressDisplay === 'function') {
+        try { updateProgressDisplay(); } catch (_) { /* ignore */ }
+      }
+    }
   },
 
   markLessonMastered(lessonId) {
@@ -7595,8 +7633,19 @@ for name, attrs in modules.items():
     this.pyodide.setStdout({ batched: (text) => { output += text + '\n'; } });
     this.pyodide.setStderr({ batched: (text) => { errorText += text + '\n'; } });
 
+    // CRITICAL: run user code in a FRESH Python globals namespace so variables,
+    // functions, classes, or imports from a previous run can never bleed into
+    // the next check. Without this, a lesson with multiple examples/challenges
+    // would have State Challenge 1's `name = "Alex"` still defined when
+    // Challenge 2's check runs — causing checks to pass (or fail) for the
+    // wrong reason.
+    //
+    // pybricks mocks live in sys.modules (installed once at init), so user
+    // code can still `from pybricks.hubs import PrimeHub` from any namespace.
+    let freshGlobals = null;
     try {
-      await this.pyodide.runPythonAsync(code);
+      freshGlobals = this.pyodide.toPy({ __name__: '__main__', __doc__: null });
+      await this.pyodide.runPythonAsync(code, { globals: freshGlobals });
     } catch (e) {
       // Python runtime error — extract just the useful part
       const msg = e.message || String(e);
@@ -7609,6 +7658,11 @@ for name, attrs in modules.items():
         l.trim() !== ''
       );
       errorText = userLines.join('\n') || msg;
+    } finally {
+      // Free the proxy so we don't leak a Python dict on every run.
+      if (freshGlobals && typeof freshGlobals.destroy === 'function') {
+        try { freshGlobals.destroy(); } catch (_) { /* ignore */ }
+      }
     }
 
     const finalOutput = (output + errorText).trim();
@@ -8098,10 +8152,10 @@ const LessonCards = {
 
 const AnimatedExamples = {
   timers: new Map(),
-  typeDelay: 32,
-  deleteDelay: 14,
-  holdDelay: 1500,
-  outputDelay: 420,
+  typeDelay: 58,
+  deleteDelay: 28,
+  holdDelay: 2600,
+  outputDelay: 900,
 
   data: {
     'py-01': {
@@ -8398,6 +8452,10 @@ const LessonViewer = {
     return instructions[step] || 'Work through the current step before moving on.';
   },
 
+  getLabDraftSlot(index = this.labIndex) {
+    return 'lab-' + index;
+  },
+
   renderLessonSidebar() {
     const container = document.getElementById('af-lesson-sidebar-content');
     const unitLabel = document.getElementById('af-ls-unit-name');
@@ -8610,7 +8668,7 @@ const LessonViewer = {
     if (labTextarea) {
       setupCodeTextarea(labTextarea, {
         lessonId: this.currentLesson.id,
-        slot: 'lab'
+        slot: this.getLabDraftSlot()
       });
     }
 
@@ -9018,7 +9076,7 @@ const LessonViewer = {
       if (labTa) {
         setupCodeTextarea(labTa, {
           lessonId: this.currentLesson.id,
-          slot: 'lab',
+          slot: this.getLabDraftSlot(),
           focusOnDesktop: true
         });
       }
@@ -12610,6 +12668,30 @@ function afCategoryLabel(category) {
   return labels[category] || category || 'Code Lab';
 }
 
+function afSetMilestone(id, isComplete, progressText) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = isComplete ? '&#10003; Done' : progressText;
+  el.classList.toggle('is-complete', !!isComplete);
+}
+
+function renderAFMilestones(state) {
+  var completedCount = state.completedCount || 0;
+  var unitPassed = false;
+
+  if (typeof Progress !== 'undefined') {
+    if (typeof Progress.isUnitTestPassed === 'function') {
+      unitPassed = Progress.isUnitTestPassed('unit-test-python');
+    } else {
+      unitPassed = !!(Progress.data && Progress.data['unit-test-python'] && Progress.data['unit-test-python'].passed);
+    }
+  }
+
+  afSetMilestone('ach-first-lesson', completedCount >= 1, Math.min(completedCount, 1) + '/1');
+  afSetMilestone('ach-five-lessons', completedCount >= 5, Math.min(completedCount, 5) + '/5');
+  afSetMilestone('ach-unit-test', unitPassed, unitPassed ? '&#10003; Done' : 'Not yet');
+}
+
 function renderAFDashboard() {
   var user = Auth.currentUser;
   var state = afGetDashboardState();
@@ -12651,6 +12733,8 @@ function renderAFDashboard() {
   if (overallPct) overallPct.textContent = pct + '%';
   var overallBar = document.getElementById('af-overall-bar');
   if (overallBar) overallBar.style.width = pct + '%';
+
+  renderAFMilestones(state);
 
   var cardTitle = document.getElementById('af-lesson-title');
   var cardDesc  = document.getElementById('af-lesson-desc');

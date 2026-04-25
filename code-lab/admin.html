@@ -808,7 +808,8 @@
           if (result.success && result.user.role === 'teacher') {
             currentUser = result.user;
             showAdminPanel();
-            await loadStudents();
+            await refreshDashboardData();
+            startDashboardPolling();
             return;
           }
         }
@@ -843,9 +844,8 @@
           currentUser = result.user;
           document.getElementById('loginSection').classList.add('hidden');
           showAdminPanel();
-          await loadStudents();
-          loadTickets();
-          startActivityPolling();
+          await refreshDashboardData();
+          startDashboardPolling();
         } else {
           showError('loginError', result.error || 'Login failed');
         }
@@ -857,8 +857,7 @@
 
     async function logout() {
       try {
-        stopActivityPolling();
-        stopClassroomPolling();
+        stopDashboardPolling();
         await fetch(`${API_BASE}/logout`, { method: 'POST', credentials: 'same-origin' });
         currentUser = null;
         document.getElementById('adminSection').classList.add('hidden');
@@ -868,6 +867,23 @@
       } catch (err) {
         console.error('Logout error:', err);
       }
+    }
+
+    async function refreshDashboardData() {
+      await loadStudents();
+      loadTickets();
+      loadClassroom();
+      loadActivity();
+    }
+
+    function startDashboardPolling() {
+      startActivityPolling();
+      startClassroomPolling();
+    }
+
+    function stopDashboardPolling() {
+      stopActivityPolling();
+      stopClassroomPolling();
     }
 
     // Download full backup of students, progress, tickets, activity as one JSON file.
@@ -907,6 +923,10 @@
     async function loadStudents() {
       try {
         const response = await fetch(`${API_BASE}/admin/students`, { credentials: 'same-origin' });
+        if (!response.ok) {
+          showMessage('error', `Could not load students (${response.status})`);
+          return;
+        }
         const result = await response.json();
 
         if (result.success) {
@@ -914,8 +934,11 @@
           await loadProgress();
           displayStudents();
           updateStats();
+        } else {
+          showMessage('error', result.error || 'Could not load students');
         }
       } catch (err) {
+        showMessage('error', 'Network error loading students');
         console.error('Load students error:', err);
       }
     }
@@ -925,12 +948,22 @@
     async function loadProgress() {
       try {
         const response = await fetch(`${API_BASE}/admin/progress`, { credentials: 'same-origin' });
+        if (!response.ok) {
+          progressData = [];
+          showMessage('error', `Could not load progress (${response.status})`);
+          return;
+        }
         const result = await response.json();
 
         if (result.success) {
           progressData = result.data;
+        } else {
+          progressData = [];
+          showMessage('error', result.error || 'Could not load progress');
         }
       } catch (err) {
+        progressData = [];
+        showMessage('error', 'Network error loading progress');
         console.error('Load progress error:', err);
       }
     }
@@ -1056,6 +1089,10 @@
 
       const firstName = document.getElementById('newStudentFirstName').value.trim();
       const lastName = document.getElementById('newStudentLastName').value.trim();
+      if (!firstName || !lastName) {
+        showMessage('error', 'First name and last name are required');
+        return;
+      }
 
       try {
         const response = await fetch(`${API_BASE}/admin/students`, {
@@ -1638,9 +1675,8 @@
     // Also load tickets and start activity + classroom feeds when admin dashboard loads
     setTimeout(() => {
       if (currentUser) {
-        loadTickets();
-        startActivityPolling();
-        startClassroomPolling();
+        refreshDashboardData();
+        startDashboardPolling();
       }
     }, 1500);
   </script>
