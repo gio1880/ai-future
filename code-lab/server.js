@@ -990,6 +990,105 @@ app.post('/api/admin/reset-progress/:id', requireAuth, requireTeacher, async (re
   }
 });
 
+/**
+ * POST /api/admin/students/:id/progress
+ * Set or unset specific lesson completions for a student.
+ *
+ * Body: {
+ *   complete?:   ["py-01", "py-02", ...],   // mark these lessons fully complete
+ *   uncomplete?: ["py-04", ...]              // remove these lesson records entirely
+ * }
+ *
+ * For each lessonId in `complete`, the student's record is set to
+ *   { completed: true, quizPassed: true, exercisePassed: true, labPassed: true,
+ *     attempts: <preserved or 1>, completedAt, masteredAt }
+ * which satisfies countMasteredLessons() and the client's isLessonMastered() check.
+ *
+ * For each lessonId in `uncomplete`, the lesson record is removed.
+ * Lessons not mentioned in either array are left untouched, so any
+ * in-progress work is preserved.
+ */
+app.post('/api/admin/students/:id/progress', requireAuth, requireTeacher, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const body = req.body || {};
+    const complete = Array.isArray(body.complete) ? body.complete : [];
+    const uncomplete = Array.isArray(body.uncomplete) ? body.uncomplete : [];
+
+    if (!complete.length && !uncomplete.length) {
+      return res.status(400).json({
+        success: false,
+        error: 'Provide `complete` and/or `uncomplete` as non-empty arrays of lesson IDs'
+      });
+    }
+
+    // Validate the student actually exists in students.json
+    const student = findStudentById(id);
+    if (!student) {
+      return res.status(404).json({ success: false, error: 'Student not found' });
+    }
+
+    const progress = readProgress();
+    if (!progress[id]) {
+      progress[id] = {
+        lessonProgress: {},
+        fllResults: [],
+        lastLogin: null,
+        totalTime: 0
+      };
+    }
+    const record = progress[id];
+    record.lessonProgress = record.lessonProgress || {};
+    const lp = record.lessonProgress;
+
+    const now = new Date().toISOString();
+
+    // Apply completions
+    for (const lessonId of complete) {
+      if (typeof lessonId !== 'string' || !lessonId.trim()) continue;
+      const key = lessonId.trim();
+      const existing = lp[key] || {};
+      lp[key] = {
+        ...existing,
+        completed: true,
+        quizPassed: true,
+        exercisePassed: true,
+        labPassed: true,
+        attempts: existing.attempts || 1,
+        completedAt: existing.completedAt || now,
+        masteredAt: existing.masteredAt || now
+      };
+    }
+
+    // Apply uncompletes (drop the record)
+    for (const lessonId of uncomplete) {
+      if (typeof lessonId !== 'string' || !lessonId.trim()) continue;
+      delete lp[lessonId.trim()];
+    }
+
+    await writeProgress(progress);
+
+    // Best-effort activity log
+    try {
+      await logActivity(
+        'admin_set_progress',
+        student.name,
+        student.username,
+        { complete, uncomplete, by: req.session.user.username }
+      );
+    } catch (_) { /* non-fatal */ }
+
+    res.json({
+      success: true,
+      lessonsCompleted: countMasteredLessons(lp),
+      lessonProgress: lp
+    });
+  } catch (err) {
+    console.error('Set progress error:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
 // ============================================
 // ADMIN PANEL ROUTE
 // ============================================

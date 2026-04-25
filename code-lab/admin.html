@@ -789,6 +789,28 @@
     </div>
   </div>
 
+  <!-- Set Progress Modal -->
+  <div id="setProgressModal" class="modal-overlay hidden">
+    <div class="modal" style="max-width: 600px;">
+      <h2>Set Progress — <span id="setProgressStudentName"></span></h2>
+      <p style="color: var(--color-text-muted); font-size: 0.875rem; margin-bottom: 1rem;">
+        Check the lessons this student has completed. Unchecking a lesson will remove its progress record entirely.
+        In-progress lessons not listed here are left untouched.
+      </p>
+      <div style="margin-bottom: 1rem; display: flex; gap: 0.5rem;">
+        <button class="btn btn-small btn-secondary" type="button" onclick="setProgressSelectThrough('py-04')">Up to Lesson 4</button>
+        <button class="btn btn-small btn-secondary" type="button" onclick="setProgressSelectThrough('py-07')">Up to Lesson 7</button>
+        <button class="btn btn-small btn-secondary" type="button" onclick="setProgressSelectThrough('py-14')">All Python lessons</button>
+        <button class="btn btn-small btn-secondary" type="button" onclick="setProgressSelectAll(false)">Clear all</button>
+      </div>
+      <div id="setProgressLessonList" style="max-height: 50vh; overflow-y: auto; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1rem;"></div>
+      <div class="modal-buttons">
+        <button class="btn" type="button" onclick="saveSetProgress()">Save</button>
+        <button class="btn btn-secondary" type="button" onclick="closeSetProgressModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const API_BASE = '/api';
     let currentUser = null;
@@ -987,6 +1009,7 @@
           <td>${lastLogin}</td>
           <td>
             <div class="action-buttons">
+              <button class="btn btn-small" onclick="showSetProgressModal('${student.id}', '${escapeHtml(student.name)}')">Set Progress</button>
               <button class="btn btn-small" onclick="showResetPasswordModal('${student.id}', '${escapeHtml(student.name)}')">Reset Password</button>
               <button class="btn btn-small btn-danger" onclick="deleteStudent('${student.id}', '${escapeHtml(student.name)}')">Delete</button>
             </div>
@@ -1357,6 +1380,147 @@
       } catch (err) {
         showMessage('error', 'Network error');
         console.error('Reset progress error:', err);
+      }
+    }
+
+    // ============================================
+    // SET PROGRESS MODAL
+    // ============================================
+    // Lesson catalog used by the Set Progress modal. Order matters — the
+    // "Up to Lesson N" shortcuts walk this list from the top until they hit
+    // the target ID. Keep in sync with LessonRegistry in index.html.
+    const SET_PROGRESS_LESSONS = [
+      { id: 'py-01',  title: 'Lesson 1 — Variables & Print' },
+      { id: 'py-02',  title: 'Lesson 2 — Math & Numbers' },
+      { id: 'py-02b', title: 'Mini Project — After Lesson 2' },
+      { id: 'py-03',  title: 'Lesson 3 — Strings' },
+      { id: 'py-04',  title: 'Lesson 4 — Booleans & If Statements' },
+      { id: 'py-05',  title: 'Lesson 5 — Loops' },
+      { id: 'py-06',  title: 'Lesson 6 — Lists' },
+      { id: 'py-07',  title: 'Lesson 7 — Functions' },
+      { id: 'py-08',  title: 'Lesson 8 — Dictionaries' },
+      { id: 'py-09',  title: 'Lesson 9 — Tuples & Sets' },
+      { id: 'py-10',  title: 'Lesson 10 — Error Handling' },
+      { id: 'py-11',  title: 'Lesson 11 — File I/O' },
+      { id: 'py-12',  title: 'Lesson 12 — Classes & Objects' },
+      { id: 'py-13',  title: 'Lesson 13 — Modules & Imports' },
+      { id: 'py-14',  title: 'Lesson 14 — Final Project Prep' },
+      { id: 'unit-test-python', title: 'Unit Test — Python' }
+    ];
+
+    let setProgressTarget = null; // { id, name, originalCompleted: Set<string> }
+
+    function showSetProgressModal(id, name) {
+      // Find this student's current progress so the checkboxes start in the right state
+      const studentProgress = (progressData || []).find(p => p.id === id);
+      const lp = studentProgress ? (studentProgress.lessonProgress || {}) : {};
+      const originalCompleted = new Set(
+        Object.keys(lp).filter(lid => lp[lid] && lp[lid].completed === true)
+      );
+
+      setProgressTarget = { id, name, originalCompleted };
+      document.getElementById('setProgressStudentName').textContent = name;
+
+      // Build the checkbox list. Show every lesson in the catalog plus any
+      // "extra" lesson IDs the student has on record that aren't in the catalog
+      // (e.g. retired lesson IDs) so we don't silently lose them.
+      const catalogIds = new Set(SET_PROGRESS_LESSONS.map(l => l.id));
+      const extras = Object.keys(lp).filter(lid => !catalogIds.has(lid));
+      const fullList = [
+        ...SET_PROGRESS_LESSONS,
+        ...extras.map(lid => ({ id: lid, title: lid + ' (custom)' }))
+      ];
+
+      const container = document.getElementById('setProgressLessonList');
+      container.innerHTML = fullList.map(lesson => {
+        const checked = originalCompleted.has(lesson.id) ? 'checked' : '';
+        const safeId = 'sp-cb-' + lesson.id.replace(/[^a-z0-9-]/gi, '_');
+        return `
+          <label for="${safeId}" style="display:flex; align-items:center; gap:0.6rem; padding:0.4rem 0.5rem; border-radius:4px; cursor:pointer; user-select:none;" onmouseover="this.style.background='var(--color-dark-bg)'" onmouseout="this.style.background='transparent'">
+            <input type="checkbox" id="${safeId}" data-lesson-id="${lesson.id}" ${checked} style="width:18px; height:18px; cursor:pointer;">
+            <span style="color:var(--color-text-primary);">${escapeHtml(lesson.title)}</span>
+            <code class="inline-code" style="margin-left:auto; font-size:0.75rem; color:var(--color-text-muted);">${escapeHtml(lesson.id)}</code>
+          </label>
+        `;
+      }).join('');
+
+      document.getElementById('setProgressModal').classList.remove('hidden');
+    }
+
+    function closeSetProgressModal() {
+      document.getElementById('setProgressModal').classList.add('hidden');
+      setProgressTarget = null;
+    }
+
+    function setProgressSelectAll(value) {
+      const boxes = document.querySelectorAll('#setProgressLessonList input[type="checkbox"]');
+      boxes.forEach(b => { b.checked = !!value; });
+    }
+
+    // Check every catalog lesson up to and including the given lesson ID,
+    // and uncheck everything after it. Custom (non-catalog) lessons are left
+    // alone so we don't blow away unusual records.
+    function setProgressSelectThrough(targetId) {
+      const ids = SET_PROGRESS_LESSONS.map(l => l.id);
+      const idx = ids.indexOf(targetId);
+      if (idx === -1) return;
+      const includeSet = new Set(ids.slice(0, idx + 1));
+      const boxes = document.querySelectorAll('#setProgressLessonList input[type="checkbox"]');
+      boxes.forEach(b => {
+        const lid = b.getAttribute('data-lesson-id');
+        if (ids.includes(lid)) {
+          b.checked = includeSet.has(lid);
+        }
+      });
+    }
+
+    async function saveSetProgress() {
+      if (!setProgressTarget) return;
+      const { id, name, originalCompleted } = setProgressTarget;
+
+      const boxes = document.querySelectorAll('#setProgressLessonList input[type="checkbox"]');
+      const nowCompleted = new Set();
+      boxes.forEach(b => {
+        if (b.checked) nowCompleted.add(b.getAttribute('data-lesson-id'));
+      });
+
+      // Diff against original state
+      const complete = [...nowCompleted].filter(lid => !originalCompleted.has(lid));
+      const uncomplete = [...originalCompleted].filter(lid => !nowCompleted.has(lid));
+
+      if (!complete.length && !uncomplete.length) {
+        showMessage('error', 'No changes to save.');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/admin/students/${id}/progress`, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ complete, uncomplete })
+        });
+
+        if (!response.ok) {
+          const errBody = await response.json().catch(() => ({}));
+          showMessage('error', errBody.error || `Server returned ${response.status}`);
+          return;
+        }
+
+        const result = await response.json();
+        if (result.success) {
+          const parts = [];
+          if (complete.length) parts.push(`marked ${complete.length} complete`);
+          if (uncomplete.length) parts.push(`cleared ${uncomplete.length}`);
+          showMessage('success', `Progress for ${name} updated (${parts.join(', ')}).`);
+          closeSetProgressModal();
+          await loadStudents();
+        } else {
+          showMessage('error', result.error || 'Failed to update progress');
+        }
+      } catch (err) {
+        showMessage('error', 'Network error');
+        console.error('Set progress error:', err);
       }
     }
 
