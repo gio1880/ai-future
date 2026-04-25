@@ -7,6 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const sendCodeLabLanding = (res) => res.sendFile(path.join(__dirname, 'code-lab', 'code-lab.html'));
 const sendCodeLabApp = (res) => res.sendFile(path.join(__dirname, 'code-lab', 'index.html'));
+const sendSummerCampAdsLanding = (res) => res.sendFile(path.join(__dirname, 'summer-camp-ads.html'));
 const summerInquiryFile = path.join(__dirname, 'code-lab', 'data', 'summer-inquiries.json');
 const summerInquiryDir = path.dirname(summerInquiryFile);
 const summerAdminUser = process.env.SUMMER_LEADS_ADMIN_USER || 'admin';
@@ -21,6 +22,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Canonical marketing and main routes
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get(['/summer-camp-ads', '/summer-camp-ads/'], (req, res) => sendSummerCampAdsLanding(res));
+app.get(['/summer-camp', '/summer-camp/'], (req, res) => res.redirect(302, '/#summer-camp'));
 app.get('/robotics-lab', (req, res) => res.sendFile(path.join(__dirname, 'robotics lab', 'robotics-lab.html')));
 app.get(['/codelab', '/codelab/'], (req, res) => sendCodeLabLanding(res));
 app.get('/codelab/app', (req, res) => sendCodeLabApp(res));

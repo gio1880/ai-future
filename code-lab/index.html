@@ -975,6 +975,9 @@
       font-family: var(--font-mono); font-size: .875rem; line-height: 1.6;
       resize: vertical; outline: none; transition: border-color var(--t-fast);
       -webkit-text-fill-color: #E2E8F0; caret-color: #fff;
+      -webkit-user-select: text; user-select: text;
+      -webkit-touch-callout: default; touch-action: manipulation;
+      tab-size: 4;
     }
     .code-input:focus { border-color: var(--af-blue); }
     .run-output { background: #0F172A; border-radius: var(--r-lg); overflow: hidden; margin-top: .5rem; }
@@ -1220,6 +1223,14 @@
       .af-lesson-topbar__progress { display: none; }
       .lesson-header { flex-direction: column; }
       .progress-dots { justify-content: flex-start; }
+      .code-input {
+        font-size: 16px;
+        min-height: 220px;
+        resize: vertical;
+      }
+    }
+    @supports (-webkit-touch-callout: default) {
+      .code-input { font-size: 16px; }
     }
   </style>
 </head>
@@ -7345,6 +7356,12 @@ function normalizeQuotes(str) {
     .replace(/\u2026/g, '...');                                  // ellipsis → three dots
 }
 
+function isTouchInputDevice() {
+  return (window.matchMedia && window.matchMedia('(pointer: coarse)').matches)
+    || 'ontouchstart' in window
+    || navigator.maxTouchPoints > 0;
+}
+
 // Make Tab insert indentation in code textareas instead of moving focus.
 function enableCodeTabIndentation(textarea) {
   if (!textarea || textarea.dataset.tabIndentBound === '1') return;
@@ -7364,6 +7381,7 @@ function enableCodeTabIndentation(textarea) {
       if (start === end && before === '    ') {
         this.value = value.slice(0, start - 4) + value.slice(end);
         try { this.setSelectionRange(start - 4, start - 4); } catch (err) {}
+        this.dispatchEvent(new Event('input', { bubbles: true }));
       }
       return;
     }
@@ -7371,7 +7389,61 @@ function enableCodeTabIndentation(textarea) {
     this.value = value.slice(0, start) + '    ' + value.slice(end);
     const cursor = start + 4;
     try { this.setSelectionRange(cursor, cursor); } catch (err) {}
+    this.dispatchEvent(new Event('input', { bubbles: true }));
   });
+}
+
+function setupCodeTextarea(textarea, options = {}) {
+  if (!textarea) return;
+
+  textarea.setAttribute('autocorrect', 'off');
+  textarea.setAttribute('autocapitalize', 'off');
+  textarea.setAttribute('autocomplete', 'off');
+  textarea.setAttribute('spellcheck', 'false');
+  textarea.setAttribute('data-gramm', 'false');
+  textarea.setAttribute('inputmode', 'text');
+  textarea.setAttribute('enterkeyhint', 'enter');
+  textarea.setAttribute('aria-multiline', 'true');
+
+  enableCodeTabIndentation(textarea);
+
+  if (options.lessonId && options.slot) {
+    const draft = DraftStore.load(options.lessonId, options.slot);
+    if (draft !== null && draft !== textarea.value) {
+      textarea.value = draft;
+      DraftStore.showIndicator(textarea.id, 'restored');
+    }
+    textarea.dataset.lessonId = options.lessonId;
+    textarea.dataset.draftSlot = options.slot;
+  }
+
+  if (textarea.dataset.codeInputBound !== '1') {
+    textarea.dataset.codeInputBound = '1';
+
+    textarea.addEventListener('input', function() {
+      const start = this.selectionStart;
+      const end = this.selectionEnd;
+      const normalized = normalizeQuotes(this.value);
+      if (normalized !== this.value) {
+        this.value = normalized;
+        try { this.setSelectionRange(start, end); } catch(e) {}
+      }
+
+      if (this.dataset.lessonId && this.dataset.draftSlot) {
+        DraftStore.saveDebounced(this.dataset.lessonId, this.dataset.draftSlot, this.value, this.id);
+      }
+    });
+
+    textarea.addEventListener('touchend', function() {
+      if (document.activeElement !== this) {
+        try { this.focus({ preventScroll: true }); } catch(e) { this.focus(); }
+      }
+    }, { passive: true });
+  }
+
+  if (options.focusOnDesktop !== false && !isTouchInputDevice()) {
+    textarea.focus();
+  }
 }
 
 // ============================================================================
@@ -8427,50 +8499,19 @@ const LessonViewer = {
     // Live smart-quote normalization for code textarea (critical for iPad)
     const textarea = document.getElementById('exercise-input');
     if (textarea) {
-      enableCodeTabIndentation(textarea);
-      // Restore auto-saved draft if present (survives browser refresh / accidental close)
-      const exerciseDraft = DraftStore.load(this.currentLesson.id, 'exercise');
-      if (exerciseDraft !== null && exerciseDraft !== textarea.value) {
-        textarea.value = exerciseDraft;
-        DraftStore.showIndicator('exercise-input', 'restored');
-      }
-      textarea.addEventListener('input', function() {
-        const start = this.selectionStart;
-        const end = this.selectionEnd;
-        const normalized = normalizeQuotes(this.value);
-        if (normalized !== this.value) {
-          this.value = normalized;
-          // Restore cursor position
-          try { this.setSelectionRange(start, end); } catch(e) {}
-        }
-        // Debounced auto-save of the in-progress code
-        DraftStore.saveDebounced(LessonViewer.currentLesson.id, 'exercise', this.value, 'exercise-input');
+      setupCodeTextarea(textarea, {
+        lessonId: this.currentLesson.id,
+        slot: 'exercise'
       });
-      // Focus the textarea so students can start typing right away on desktop
-      if (!('ontouchstart' in window)) textarea.focus();
     }
 
     // Lab textarea initialization
     const labTextarea = document.getElementById('lab-code-input');
     if (labTextarea) {
-      enableCodeTabIndentation(labTextarea);
-      // Restore auto-saved lab draft if present
-      const labDraft = DraftStore.load(this.currentLesson.id, 'lab');
-      if (labDraft !== null && labDraft !== labTextarea.value) {
-        labTextarea.value = labDraft;
-        DraftStore.showIndicator('lab-code-input', 'restored');
-      }
-      labTextarea.addEventListener('input', function() {
-        const start = this.selectionStart;
-        const end = this.selectionEnd;
-        const normalized = normalizeQuotes(this.value);
-        if (normalized !== this.value) {
-          this.value = normalized;
-          try { this.setSelectionRange(start, end); } catch(e) {}
-        }
-        DraftStore.saveDebounced(LessonViewer.currentLesson.id, 'lab', this.value, 'lab-code-input');
+      setupCodeTextarea(labTextarea, {
+        lessonId: this.currentLesson.id,
+        slot: 'lab'
       });
-      if (!('ontouchstart' in window)) labTextarea.focus();
     }
 
     // Scroll content into view
@@ -8815,7 +8856,7 @@ const LessonViewer = {
 
     if (ch.type === 'code') {
       const starterCode = ch.starterCode || '';
-      html += '<textarea id="lab-code-input" class="code-input" rows="6" placeholder="Type your code here..." autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" data-gramm="false" inputmode="text">' + this.escapeHtml(starterCode) + '</textarea>';
+      html += '<textarea id="lab-code-input" class="code-input" rows="6" placeholder="Type your code here..." aria-label="Code editor" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" data-gramm="false" inputmode="text" enterkeyhint="enter">' + this.escapeHtml(starterCode) + '</textarea>';
       html += '<div id="lab-run-output" class="run-output hidden"><div class="run-output-header"><span>Output</span><button class="btn-clear-output" onclick="document.getElementById(\'lab-run-output\').classList.add(\'hidden\')">✕</button></div><pre id="lab-run-output-text"></pre></div>';
       html += '<div id="lab-feedback" style="display:none;"></div>';
       html += '<div class="lab-actions">';
@@ -8869,17 +8910,11 @@ const LessonViewer = {
       // Re-init lab textarea
       const labTa = document.getElementById('lab-code-input');
       if (labTa) {
-        enableCodeTabIndentation(labTa);
-        labTa.addEventListener('input', function() {
-          const start = this.selectionStart;
-          const end = this.selectionEnd;
-          const normalized = normalizeQuotes(this.value);
-          if (normalized !== this.value) {
-            this.value = normalized;
-            try { this.setSelectionRange(start, end); } catch(e) {}
-          }
+        setupCodeTextarea(labTa, {
+          lessonId: this.currentLesson.id,
+          slot: 'lab',
+          focusOnDesktop: true
         });
-        if (!('ontouchstart' in window)) labTa.focus();
       }
     }
   },
@@ -9042,7 +9077,7 @@ const LessonViewer = {
     if (exercise.type === 'code' || exercise.type === 'fill-blank') {
       const starterCode = exercise.starterCode || '';
       html += '<div class="exercise-area">';
-      html += '<textarea id="exercise-input" class="code-input" rows="8" placeholder="Type your code here..." autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" data-gramm="false" inputmode="text">' + this.escapeHtml(starterCode) + '</textarea>';
+      html += '<textarea id="exercise-input" class="code-input" rows="8" placeholder="Type your code here..." aria-label="Code editor" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" data-gramm="false" inputmode="text" enterkeyhint="enter">' + this.escapeHtml(starterCode) + '</textarea>';
       html += '<div id="run-output" class="run-output hidden"><div class="run-output-header"><span>▶ Output</span><button class="btn-clear-output" onclick="document.getElementById(\'run-output\').classList.add(\'hidden\')">✕</button></div><pre id="run-output-text"></pre></div>';
       html += '<div id="exercise-feedback" class="feedback hidden"></div>';
       html += '<div class="exercise-actions">';
@@ -9623,7 +9658,7 @@ const UnitTestViewer = {
         }
         html += '<textarea id="ut-code-' + qIdx + '" class="code-input" rows="5"';
         html += ' placeholder="' + this.escapeHtml(q.placeholder || '# Write your code here\n') + '"';
-        html += ' autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" data-gramm="false" inputmode="text">';
+        html += ' aria-label="Code editor for question ' + (qIdx + 1) + '" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" data-gramm="false" inputmode="text" enterkeyhint="enter">';
         html += '</textarea>';
         html += '<button onclick="UnitTestViewer.testCode(' + qIdx + ')" class="btn-run" id="ut-run-btn-' + qIdx + '" style="margin-top:0.5rem;">▶ Test My Code</button>';
         html += '<div id="ut-code-output-' + qIdx + '" class="run-output hidden">';
@@ -9689,16 +9724,7 @@ const UnitTestViewer = {
       if (q.type === 'code') {
         const ta = document.getElementById('ut-code-' + qIdx);
         if (ta) {
-          enableCodeTabIndentation(ta);
-          ta.addEventListener('input', function() {
-            const start = this.selectionStart;
-            const end = this.selectionEnd;
-            const normalized = normalizeQuotes(this.value);
-            if (normalized !== this.value) {
-              this.value = normalized;
-              try { this.setSelectionRange(start, end); } catch(e) {}
-            }
-          });
+          setupCodeTextarea(ta, { focusOnDesktop: false });
         }
       }
     });
@@ -10325,7 +10351,7 @@ const FinalProject = {
 
         '<h2 style="color:#f1f5f9;margin-top:1.75rem;">Your Code</h2>' +
         '<p style="color:#94a3b8;font-size:0.88rem;margin-top:0;">Starter code gets you going. Edit freely. Your work auto-saves as you type.</p>' +
-        '<textarea id="fp-code" spellcheck="false" style="width:100%;min-height:340px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:0.95rem;background:#0f172a;color:#e2e8f0;border:1px solid rgba(148,163,184,0.3);border-radius:12px;padding:1rem;line-height:1.5;resize:vertical;">' + escapeHtmlSafe(initialCode) + '</textarea>' +
+        '<textarea id="fp-code" class="code-input" aria-label="Final project code editor" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" data-gramm="false" inputmode="text" enterkeyhint="enter" style="width:100%;min-height:340px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:16px;background:#0f172a;color:#e2e8f0;border:1px solid rgba(148,163,184,0.3);border-radius:12px;padding:1rem;line-height:1.5;resize:vertical;">' + escapeHtmlSafe(initialCode) + '</textarea>' +
 
         '<div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.85rem;">' +
           '<button class="btn-start" onclick="FinalProject.runCode()">▶ Run in Playground</button>' +
@@ -10353,7 +10379,10 @@ const FinalProject = {
         }, 600);
       };
     })();
-    if (area) area.addEventListener('input', scheduleSave);
+    if (area) {
+      setupCodeTextarea(area, { focusOnDesktop: false });
+      area.addEventListener('input', scheduleSave);
+    }
     rubricInputs.forEach(i => i.addEventListener('change', () => FinalProject.saveDraft(area.value, collectRubric())));
   },
 
