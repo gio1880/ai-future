@@ -12,6 +12,11 @@ const summerInquiryFile = path.join(__dirname, 'code-lab', 'data', 'summer-inqui
 const summerInquiryDir = path.dirname(summerInquiryFile);
 const summerAdminUser = process.env.SUMMER_LEADS_ADMIN_USER || 'admin';
 const summerAdminPassword = process.env.SUMMER_LEADS_ADMIN_PASSWORD || 'change-me';
+const platformDataDir = process.env.DATA_DIR || path.join(__dirname, 'data');
+const parentInquiryFile = path.join(platformDataDir, 'parent-inquiries.json');
+const parentInquiryDir = path.dirname(parentInquiryFile);
+const parentAdminUser = process.env.PARENT_LEADS_ADMIN_USER || 'admin';
+const parentAdminPassword = process.env.PARENT_LEADS_ADMIN_PASSWORD || 'change-me';
 
 // Payments routes MUST mount before global express.json() — the Stripe webhook
 // endpoint needs the raw request body to verify the signature.
@@ -23,7 +28,8 @@ app.use(express.urlencoded({ extended: true }));
 // Canonical marketing and main routes
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get(['/summer-camp-ads', '/summer-camp-ads/'], (req, res) => sendSummerCampAdsLanding(res));
-app.get(['/summer-camp', '/summer-camp/'], (req, res) => res.redirect(302, '/#summer-camp'));
+app.get(['/summer-camp', '/summer-camp/'], (req, res) => res.redirect(302, '/summer-camp-ads'));
+app.get(['/contact', '/contact/'], (req, res) => res.sendFile(path.join(__dirname, 'contact.html')));
 app.get('/robotics-lab', (req, res) => res.sendFile(path.join(__dirname, 'robotics lab', 'robotics-lab.html')));
 app.get(['/codelab', '/codelab/'], (req, res) => sendCodeLabLanding(res));
 app.get('/codelab/app', (req, res) => sendCodeLabApp(res));
@@ -56,6 +62,19 @@ app.get('/codelab/dev/*', (req, res) => res.redirect(302, `/dev/${req.params[0]}
 async function readSummerInquiries() {
 	try {
 		const raw = await fs.readFile(summerInquiryFile, 'utf8');
+		const parsed = JSON.parse(raw);
+		return Array.isArray(parsed) ? parsed : [];
+	} catch (readErr) {
+		if (readErr.code === 'ENOENT') {
+			return [];
+		}
+		throw readErr;
+	}
+}
+
+async function readParentInquiries() {
+	try {
+		const raw = await fs.readFile(parentInquiryFile, 'utf8');
 		const parsed = JSON.parse(raw);
 		return Array.isArray(parsed) ? parsed : [];
 	} catch (readErr) {
@@ -109,6 +128,107 @@ function requireSummerAdmin(req, res, next) {
 	res.set('WWW-Authenticate', 'Basic realm="AI Future Summer Leads"');
 	return res.status(401).send('Authentication required');
 }
+
+function requireParentAdmin(req, res, next) {
+	const headerPassword = typeof req.headers['x-admin-password'] === 'string' ? req.headers['x-admin-password'] : '';
+	if (headerPassword && headerPassword === parentAdminPassword) {
+		return next();
+	}
+
+	const credentials = getBasicAuthCredentials(req);
+	const isAuthorized = credentials && credentials.username === parentAdminUser && credentials.password === parentAdminPassword;
+	if (isAuthorized) {
+		return next();
+	}
+
+	res.set('WWW-Authenticate', 'Basic realm="AI Future Parent Leads"');
+	return res.status(401).send('Authentication required');
+}
+
+app.post('/api/parent-inquiry', async (req, res) => {
+	const {
+		parentName = '',
+		studentName = '',
+		childName = '',
+		childAge = '',
+		email = '',
+		phone = '',
+		programInterest = '',
+		preferredContact = '',
+		message = '',
+		sourcePage = ''
+	} = req.body || {};
+
+	const normalizedStudentName = studentName.trim() || childName.trim();
+
+	if (!parentName.trim() || !email.trim() || !phone.trim() || !programInterest.trim()) {
+		return res.status(400).json({ success: false, message: 'Please complete parent name, email, phone, and program interest.' });
+	}
+
+	const inquiryRecord = {
+		id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+		submittedAt: new Date().toISOString(),
+		parentName: parentName.trim(),
+		studentName: normalizedStudentName,
+		childAge: childAge.trim(),
+		email: email.trim(),
+		phone: phone.trim(),
+		programInterest: programInterest.trim(),
+		preferredContact: preferredContact.trim(),
+		message: typeof message === 'string' ? message.trim() : '',
+		sourcePage: typeof sourcePage === 'string' ? sourcePage.trim() : ''
+	};
+
+	try {
+		await fs.mkdir(parentInquiryDir, { recursive: true });
+		const existing = await readParentInquiries();
+		existing.push(inquiryRecord);
+		await fs.writeFile(parentInquiryFile, JSON.stringify(existing, null, 2));
+		return res.status(201).json({ success: true, message: 'Inquiry received' });
+	} catch (err) {
+		console.error('Parent inquiry save error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving inquiry' });
+	}
+});
+
+app.get('/parent-leads-admin', requireParentAdmin, (req, res) => {
+	res.sendFile(path.join(__dirname, 'parent-leads-admin.html'));
+});
+
+app.get('/api/parent-inquiry/list', requireParentAdmin, async (req, res) => {
+	try {
+		const inquiries = await readParentInquiries();
+		return res.json({ success: true, count: inquiries.length, data: inquiries });
+	} catch (err) {
+		console.error('Parent inquiry list error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading inquiries' });
+	}
+});
+
+app.get('/api/parent-inquiry/export', requireParentAdmin, async (req, res) => {
+	const format = (req.query.format || 'csv').toString().toLowerCase();
+
+	try {
+		const inquiries = await readParentInquiries();
+
+		if (format === 'json') {
+			res.setHeader('Content-Type', 'application/json; charset=utf-8');
+			res.setHeader('Content-Disposition', 'attachment; filename="parent-inquiries.json"');
+			return res.status(200).send(JSON.stringify(inquiries, null, 2));
+		}
+
+		const headers = ['id', 'submittedAt', 'parentName', 'studentName', 'childAge', 'email', 'phone', 'programInterest', 'preferredContact', 'message', 'sourcePage'];
+		const rows = inquiries.map((record) => headers.map((key) => toCsvValue(record[key] ?? '')).join(','));
+		const csvContent = [headers.join(','), ...rows].join('\n');
+
+		res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+		res.setHeader('Content-Disposition', 'attachment; filename="parent-inquiries.csv"');
+		return res.status(200).send(csvContent);
+	} catch (err) {
+		console.error('Parent inquiry export error:', err);
+		return res.status(500).json({ success: false, message: 'Server error exporting inquiries' });
+	}
+});
 
 app.post('/api/summer-inquiry', async (req, res) => {
 	const {

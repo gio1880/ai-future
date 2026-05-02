@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Future Program Pathway Scroll Demo</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="ai future logo.png" type="image/png" />
+  <style>
+    :root {
+      --navy: #073E77;
+      --deep: #071426;
+      --blue: #2563FF;
+      --purple: #6D4AFF;
+      --yellow: #FECE00;
+      --green: #16A34A;
+      --ink: #132238;
+      --muted: #61708A;
+      --line: #D9E4F2;
+      --paper: #FAFAF6;
+      --white: #FFFFFF;
+      --shadow: 0 24px 70px rgba(7, 20, 38, .18);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    video, img { display: block; max-width: 100%; }
+
+    .nav {
+      position: fixed;
+      z-index: 30;
+      inset: 0 0 auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px clamp(20px, 4vw, 56px);
+      background: rgba(250, 250, 246, .9);
+      border-bottom: 1px solid rgba(217, 228, 242, .82);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-weight: 950;
+      color: var(--deep);
+    }
+
+    .brand img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+    }
+
+    .nav-link {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(7, 62, 119, .18);
+      border-radius: 999px;
+      background: var(--white);
+      padding: 0 15px;
+      color: var(--navy);
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .hero {
+      min-height: 76svh;
+      display: grid;
+      place-items: center;
+      padding: 108px clamp(20px, 5vw, 76px) 60px;
+      background:
+        linear-gradient(140deg, rgba(7, 62, 119, .09), rgba(254, 206, 0, .13)),
+        var(--paper);
+      overflow: hidden;
+    }
+
+    .hero-inner {
+      width: min(1160px, 100%);
+      display: grid;
+      grid-template-columns: .95fr 1.05fr;
+      align-items: center;
+      gap: clamp(28px, 5vw, 70px);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      border: 1px solid rgba(7, 62, 119, .16);
+      border-radius: 999px;
+      padding: 8px 13px;
+      background: rgba(255, 255, 255, .82);
+      color: var(--navy);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 18px 0 18px;
+      color: var(--deep);
+      font-size: clamp(42px, 6.2vw, 82px);
+      line-height: .96;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 610px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(18px, 2vw, 21px);
+      line-height: 1.65;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 0 18px;
+      border: 1px solid transparent;
+      font-weight: 900;
+    }
+
+    .btn-primary {
+      background: var(--yellow);
+      color: var(--deep);
+      box-shadow: 0 16px 28px rgba(254, 206, 0, .26);
+    }
+
+    .btn-secondary {
+      background: var(--white);
+      border-color: rgba(7, 62, 119, .18);
+      color: var(--navy);
+    }
+
+    .hero-preview {
+      position: relative;
+      min-height: 420px;
+    }
+
+    .preview-video {
+      position: absolute;
+      inset: 0;
+      border-radius: 28px;
+      overflow: hidden;
+      background: var(--deep);
+      box-shadow: var(--shadow);
+      transform: rotate(1.6deg);
+    }
+
+    .preview-video video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.06) contrast(1.02);
+    }
+
+    .preview-card {
+      position: absolute;
+      left: -18px;
+      bottom: 30px;
+      max-width: 310px;
+      border-radius: 18px;
+      padding: 18px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+      color: var(--deep);
+    }
+
+    .preview-card strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1.05;
+    }
+
+    .preview-card span {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+      font-weight: 650;
+    }
+
+    .pathway {
+      position: relative;
+      min-height: 470vh;
+      background: var(--deep);
+      color: var(--white);
+      overflow: clip;
+    }
+
+    .pathway-sticky {
+      position: sticky;
+      top: 0;
+      min-height: 100svh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 28px;
+      padding: 88px clamp(20px, 5vw, 76px) 44px;
+      overflow: hidden;
+    }
+
+    .motion-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .motion-video {
+      position: absolute;
+      right: clamp(20px, 6vw, 96px);
+      top: 18%;
+      width: min(580px, 48vw);
+      aspect-ratio: 4 / 3;
+      border-radius: 34px;
+      overflow: hidden;
+      box-shadow: 0 36px 100px rgba(0, 0, 0, .34);
+      background: #020B16;
+    }
+
+    .motion-video video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.05) contrast(1.04);
+    }
+
+    .motion-video::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(7, 20, 38, .08), rgba(7, 20, 38, .46));
+    }
+
+    .pathway::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 16% 28%, rgba(37, 99, 255, .26), transparent 25%),
+        radial-gradient(circle at 84% 72%, rgba(254, 206, 0, .18), transparent 27%),
+        linear-gradient(180deg, #071426, #0A182B);
+    }
+
+    .pathway-head,
+    .pathway-track-wrap,
+    .pathway-bottom {
+      position: relative;
+      z-index: 2;
+    }
+
+    .pathway-head {
+      max-width: 760px;
+    }
+
+    .section-label {
+      color: var(--yellow);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .pathway-head h2 {
+      margin: 12px 0 12px;
+      font-size: clamp(36px, 5vw, 72px);
+      line-height: .98;
+      letter-spacing: 0;
+    }
+
+    .pathway-head p {
+      max-width: 620px;
+      margin: 0;
+      color: rgba(255, 255, 255, .72);
+      font-size: 18px;
+      line-height: 1.65;
+    }
+
+    .pathway-track-wrap {
+      display: flex;
+      align-items: center;
+      min-height: 500px;
+      margin-inline: calc(clamp(20px, 5vw, 76px) * -1);
+      overflow: visible;
+    }
+
+    .pathway-line {
+      position: absolute;
+      left: clamp(20px, 5vw, 76px);
+      right: clamp(20px, 5vw, 76px);
+      top: 50%;
+      height: 2px;
+      background: rgba(255, 255, 255, .16);
+      transform: translateY(-50%);
+    }
+
+    .pathway-line-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--yellow), #FFFFFF);
+      box-shadow: 0 0 28px rgba(254, 206, 0, .38);
+    }
+
+    .card-track {
+      display: flex;
+      gap: clamp(18px, 3vw, 34px);
+      padding-inline: calc(50vw - min(420px, 80vw) / 2);
+      will-change: transform;
+      transition: transform .16s linear;
+    }
+
+    .program-card {
+      --accent: var(--blue);
+      position: relative;
+      flex: 0 0 min(420px, 80vw);
+      min-height: 370px;
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 24px;
+      padding: 28px;
+      background: rgba(255, 255, 255, .08);
+      box-shadow: 0 24px 72px rgba(0, 0, 0, .24);
+      backdrop-filter: blur(18px);
+      overflow: hidden;
+      transform: scale(.9);
+      opacity: .46;
+      transition: transform .24s ease, opacity .24s ease, background .24s ease, border-color .24s ease;
+    }
+
+    .program-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--accent-soft), transparent 62%);
+      opacity: .9;
+    }
+
+    .program-card::after {
+      content: attr(data-step);
+      position: absolute;
+      right: -10px;
+      bottom: -24px;
+      font-size: 130px;
+      line-height: .8;
+      font-weight: 950;
+      color: rgba(255, 255, 255, .06);
+    }
+
+    .program-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .program-card[data-kind="robotics"] { --accent: #2F8CFF; --accent-soft: rgba(47, 140, 255, .38); }
+    .program-card[data-kind="code"] { --accent: #8B5CF6; --accent-soft: rgba(139, 92, 246, .38); }
+    .program-card[data-kind="camp"] { --accent: #FECE00; --accent-soft: rgba(254, 206, 0, .3); }
+    .program-card[data-kind="team"] { --accent: #22C55E; --accent-soft: rgba(34, 197, 94, .32); }
+
+    .program-card.is-active {
+      transform: scale(1);
+      opacity: 1;
+      background: rgba(255, 255, 255, .13);
+      border-color: rgba(254, 206, 0, .55);
+    }
+
+    .card-dot {
+      width: 16px;
+      height: 16px;
+      border: 3px solid var(--deep);
+      border-radius: 999px;
+      background: var(--yellow);
+      box-shadow: 0 0 0 7px rgba(254, 206, 0, .2);
+      margin-bottom: 26px;
+    }
+
+    .program-tag {
+      display: inline-flex;
+      width: fit-content;
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: rgba(255, 255, 255, .14);
+      color: rgba(255, 255, 255, .74);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .program-card h3 {
+      margin: 22px 0 13px;
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .program-card p {
+      margin: 0;
+      color: rgba(255, 255, 255, .74);
+      font-size: 16px;
+      line-height: 1.58;
+    }
+
+    .program-card ul {
+      display: grid;
+      gap: 9px;
+      padding: 0;
+      margin: 24px 0 0;
+      list-style: none;
+    }
+
+    .program-card li {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: rgba(255, 255, 255, .88);
+      font-size: 14px;
+      font-weight: 760;
+    }
+
+    .program-card li::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--yellow);
+      flex: 0 0 auto;
+    }
+
+    .pathway-bottom {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .active-copy {
+      min-height: 44px;
+      color: rgba(255, 255, 255, .74);
+      font-size: 16px;
+      line-height: 1.55;
+      max-width: 620px;
+    }
+
+    .step-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .step-pill {
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .08);
+      color: rgba(255, 255, 255, .74);
+      padding: 8px 11px;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: background .2s ease, color .2s ease, border-color .2s ease;
+    }
+
+    .step-pill.is-active {
+      background: var(--yellow);
+      color: var(--deep);
+      border-color: var(--yellow);
+    }
+
+    .after {
+      min-height: 72svh;
+      display: grid;
+      place-items: center;
+      padding: 84px clamp(20px, 5vw, 76px);
+      background: var(--white);
+      text-align: center;
+    }
+
+    .after h2 {
+      max-width: 800px;
+      margin: 0;
+      color: var(--deep);
+      font-size: clamp(34px, 5vw, 66px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .after p {
+      max-width: 650px;
+      margin: 18px auto 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 980px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-preview {
+        min-height: 340px;
+      }
+
+      .motion-video {
+        width: min(680px, 86vw);
+        right: -12vw;
+        top: 18%;
+        opacity: .72;
+      }
+
+      .pathway-track-wrap {
+        min-height: 460px;
+      }
+
+      .pathway-bottom {
+        grid-template-columns: 1fr;
+      }
+
+      .step-pills {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav-link { display: none; }
+      .hero { min-height: 88svh; }
+      .preview-card {
+        left: 14px;
+        right: 14px;
+        bottom: 14px;
+        max-width: none;
+      }
+
+      .pathway {
+        min-height: 430vh;
+      }
+
+      .pathway-sticky {
+        padding-top: 82px;
+        gap: 18px;
+      }
+
+      .pathway-head h2 {
+        font-size: clamp(34px, 12vw, 52px);
+      }
+
+      .pathway-head p,
+      .active-copy {
+        font-size: 15px;
+      }
+
+      .pathway-track-wrap {
+        min-height: 430px;
+      }
+
+      .program-card {
+        min-height: 348px;
+        padding: 22px;
+      }
+
+      .motion-video {
+        top: 34%;
+        right: -38vw;
+        width: 128vw;
+        opacity: .4;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .pathway { min-height: auto; }
+      .pathway-sticky { position: relative; }
+      .pathway-track-wrap { margin-inline: 0; overflow: visible; }
+      .card-track {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding-inline: 0;
+        transform: none !important;
+      }
+      .program-card {
+        transform: none;
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="index.html">
+      <img src="ai future logo.png" alt="AI Future logo" />
+      <span>AI Future</span>
+    </a>
+    <a class="nav-link" href="#program-pathway">Program pathway</a>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-inner">
+        <div>
+          <div class="eyebrow">Third structure</div>
+          <h1 id="hero-title">A scrollable pathway through AI Future.</h1>
+          <p>This keeps the cinematic motion from the first version, but gives the section a clearer path: each program card moves into the center as parents scroll.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="#program-pathway">Try the pathway</a>
+            <a class="btn btn-secondary" href="program-scroll-frame-scrub-demo.html">Frame version</a>
+          </div>
+        </div>
+        <div class="hero-preview" aria-hidden="true">
+          <div class="preview-video">
+            <video src="assets/video/program-motion-subtle.mp4" autoplay muted loop playsinline></video>
+          </div>
+          <div class="preview-card">
+            <strong>One scroll. Four clear choices.</strong>
+            <span>Robotics, coding, camp, and competition sit in one parent-friendly sequence.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pathway" id="program-pathway" aria-labelledby="pathway-title">
+      <div class="pathway-sticky">
+        <div class="motion-layer" aria-hidden="true">
+          <div class="motion-video">
+            <video id="ambient-video" src="assets/video/program-motion-robotics.mp4" autoplay muted loop playsinline></video>
+          </div>
+        </div>
+
+        <div class="pathway-head">
+          <div class="section-label">Our programs</div>
+          <h2 id="pathway-title">Choose the right next step.</h2>
+          <p>Instead of showing every program all at once, the scroll creates a guided path from discovery to deeper commitment.</p>
+        </div>
+
+        <div class="pathway-track-wrap">
+          <div class="pathway-line" aria-hidden="true">
+            <div class="pathway-line-fill" id="pathway-fill"></div>
+          </div>
+
+          <div class="card-track" id="card-track">
+            <article class="program-card is-active" data-kind="robotics" data-step="01">
+              <div class="card-dot"></div>
+              <div class="program-tag">Start with building</div>
+              <h3>Robotics Lab</h3>
+              <p>Hands-on classes where students build, code, test, and improve real robots.</p>
+              <ul>
+                <li>Mechanical design habits</li>
+                <li>Sensor and motor coding</li>
+                <li>Collaborative challenges</li>
+              </ul>
+            </article>
+
+            <article class="program-card" data-kind="code" data-step="02">
+              <div class="card-dot"></div>
+              <div class="program-tag">Build digital confidence</div>
+              <h3>Code Lab</h3>
+              <p>Interactive Python lessons with run-and-check practice, progress tracking, and projects.</p>
+              <ul>
+                <li>Python foundations</li>
+                <li>Instant output checks</li>
+                <li>Student dashboards</li>
+              </ul>
+            </article>
+
+            <article class="program-card" data-kind="camp" data-step="03">
+              <div class="card-dot"></div>
+              <div class="program-tag">Seasonal immersion</div>
+              <h3>Summer Camp</h3>
+              <p>Robotics, coding, and STEM maker weeks designed for visible summer growth.</p>
+              <ul>
+                <li>Weekly enrollment</li>
+                <li>Small-group projects</li>
+                <li>Hands-on STEM themes</li>
+              </ul>
+            </article>
+
+            <article class="program-card" data-kind="team" data-step="04">
+              <div class="card-dot"></div>
+              <div class="program-tag">Go further</div>
+              <h3>Competition Team</h3>
+              <p>FLL preparation for students ready for missions, presentations, and team strategy.</p>
+              <ul>
+                <li>Robot game strategy</li>
+                <li>Presentation coaching</li>
+                <li>Leadership roles</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="pathway-bottom">
+          <div class="active-copy" id="active-copy">Robotics is the easiest first story for parents to understand because they can picture the student building something real.</div>
+          <div class="step-pills" aria-label="Jump to program">
+            <button class="step-pill is-active" type="button" data-jump="0">Robotics</button>
+            <button class="step-pill" type="button" data-jump="1">Code Lab</button>
+            <button class="step-pill" type="button" data-jump="2">Camp</button>
+            <button class="step-pill" type="button" data-jump="3">Team</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="after">
+      <div>
+        <h2>This version has the first version’s movement, but a clearer backbone.</h2>
+        <p>The pathway can sit after the homepage hero and replace the existing two big cards, then flow into the summer camp and inquiry sections.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function() {
+      const section = document.querySelector('.pathway');
+      const track = document.getElementById('card-track');
+      const fill = document.getElementById('pathway-fill');
+      const cards = Array.from(document.querySelectorAll('.program-card'));
+      const pills = Array.from(document.querySelectorAll('.step-pill'));
+      const activeCopy = document.getElementById('active-copy');
+      const ambientVideo = document.getElementById('ambient-video');
+      const copy = [
+        'Robotics is the easiest first story for parents to understand because they can picture the student building something real.',
+        'Code Lab becomes the second step: the same confidence, now expressed through Python, output, and projects.',
+        'Summer Camp works as the seasonal offer once parents understand the learning pathways.',
+        'Competition Team gives ambitious students a next level without overwhelming new families.'
+      ];
+      const videos = [
+        'assets/video/program-motion-robotics.mp4',
+        'assets/video/program-motion-subtle.mp4',
+        'assets/video/program-motion-subtle.mp4',
+        'assets/video/program-motion-robotics.mp4'
+      ];
+      let active = 0;
+      let ticking = false;
+
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+      }
+
+      function setActive(index) {
+        if (index === active) return;
+        active = index;
+        cards.forEach((card, i) => card.classList.toggle('is-active', i === index));
+        pills.forEach((pill, i) => pill.classList.toggle('is-active', i === index));
+        activeCopy.textContent = copy[index];
+        if (ambientVideo && ambientVideo.getAttribute('src') !== videos[index]) {
+          ambientVideo.setAttribute('src', videos[index]);
+          ambientVideo.play().catch(() => {});
+        }
+      }
+
+      function update() {
+        ticking = false;
+        if (!section || !track) return;
+
+        const rect = section.getBoundingClientRect();
+        const scrollable = Math.max(section.offsetHeight - window.innerHeight, 1);
+        const progress = clamp(-rect.top / scrollable, 0, 1);
+        const steps = cards.length - 1;
+        const scaled = progress * steps;
+        const index = clamp(Math.round(scaled), 0, steps);
+        const card = cards[0];
+        const cardWidth = card ? card.getBoundingClientRect().width : 420;
+        const gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap || 28);
+        const travel = scaled * (cardWidth + gap);
+
+        track.style.transform = `translate3d(${-travel}px, 0, 0)`;
+        fill.style.width = (progress * 100).toFixed(2) + '%';
+        setActive(index);
+
+        cards.forEach((item, i) => {
+          const distance = Math.abs(i - scaled);
+          const lift = clamp(1 - distance, 0, 1);
+          item.style.transform = `translateY(${-lift * 18}px) scale(${.9 + lift * .1})`;
+          item.style.opacity = (.46 + lift * .54).toFixed(3);
+        });
+      }
+
+      function requestUpdate() {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      }
+
+      pills.forEach((pill) => {
+        pill.addEventListener('click', () => {
+          const index = Number(pill.dataset.jump || 0);
+          const scrollable = Math.max(section.offsetHeight - window.innerHeight, 1);
+          const target = section.offsetTop + scrollable * (index / Math.max(cards.length - 1, 1));
+          window.scrollTo({ top: target, behavior: 'smooth' });
+        });
+      });
+
+      window.addEventListener('scroll', requestUpdate, { passive: true });
+      window.addEventListener('resize', requestUpdate);
+      update();
+    })();
+  </script>
+</body>
+</html>

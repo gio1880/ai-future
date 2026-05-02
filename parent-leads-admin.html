@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>AI Future Program Inquiries</title>
+  <link rel="icon" href="ai future logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #073e77;
+      --blue: #2563ff;
+      --yellow: #fece00;
+      --ink: #10233f;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --soft: #f8fafc;
+      --success: #047857;
+      --warning: #b45309;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--soft);
+    }
+    header {
+      padding: 28px clamp(18px, 4vw, 48px);
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    h1 {
+      margin: 0;
+      color: var(--navy);
+      font-size: clamp(28px, 4vw, 42px);
+      letter-spacing: 0;
+    }
+    h2, h3, p { margin-top: 0; }
+    .actions, .view-tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .header-copy {
+      display: grid;
+      gap: 10px;
+    }
+    .live-indicator {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 11px;
+      border: 1px solid rgba(4,120,87,.18);
+      border-radius: 999px;
+      background: rgba(4,120,87,.08);
+      color: var(--success);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .live-dot {
+      position: relative;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0 0 rgba(4,120,87,.45);
+      animation: livePulse 1.6s ease-out infinite;
+      flex: 0 0 auto;
+    }
+    .live-indicator.is-loading {
+      border-color: rgba(180,83,9,.22);
+      background: rgba(180,83,9,.1);
+      color: var(--warning);
+    }
+    .live-indicator.is-loading .live-dot {
+      background: var(--warning);
+      box-shadow: 0 0 0 0 rgba(180,83,9,.45);
+      animation-duration: .8s;
+    }
+    .live-indicator.is-error {
+      border-color: rgba(185,28,28,.2);
+      background: rgba(185,28,28,.08);
+      color: #b91c1c;
+    }
+    .live-indicator.is-error .live-dot {
+      background: #b91c1c;
+      animation: none;
+    }
+    @keyframes livePulse {
+      0% { box-shadow: 0 0 0 0 currentColor; }
+      70% { box-shadow: 0 0 0 8px rgba(4,120,87,0); }
+      100% { box-shadow: 0 0 0 0 rgba(4,120,87,0); }
+    }
+    a, button {
+      border: 0;
+      border-radius: 8px;
+      background: var(--navy);
+      color: #fff;
+      padding: 11px 14px;
+      text-decoration: none;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    button.secondary, a.secondary {
+      background: #fff;
+      color: var(--navy);
+      border: 1px solid var(--line);
+    }
+    button.is-active {
+      background: var(--yellow);
+      color: var(--navy);
+    }
+    main {
+      padding: 26px clamp(14px, 4vw, 48px) 48px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .stat, .panel, .program-section {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 14px 42px rgba(15,23,42,.06);
+    }
+    .stat { padding: 18px; }
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .stat strong {
+      display: block;
+      margin-top: 6px;
+      color: var(--navy);
+      font-size: 28px;
+      word-break: break-word;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) minmax(220px, 320px) auto;
+      gap: 12px;
+      align-items: end;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+    label {
+      display: grid;
+      gap: 7px;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    input, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 11px 12px;
+      font: inherit;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+    }
+    input:focus, select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(37,99,255,.12);
+    }
+    .view-tabs {
+      margin-bottom: 18px;
+    }
+    .program-list {
+      display: grid;
+      gap: 18px;
+    }
+    .program-section {
+      overflow: hidden;
+    }
+    .program-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px;
+      background: linear-gradient(135deg, #ffffff, #f8fbff);
+      border-bottom: 1px solid var(--line);
+      flex-wrap: wrap;
+    }
+    .program-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .program-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: rgba(37,99,255,.1);
+      color: var(--blue);
+      font-weight: 900;
+    }
+    .program-title h2 {
+      margin: 0;
+      color: var(--navy);
+      font-size: 22px;
+    }
+    .program-title p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .section-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .pill, .source-pill, .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .pill {
+      background: rgba(7,62,119,.08);
+      color: var(--navy);
+    }
+    .source-pill {
+      background: rgba(254,206,0,.18);
+      color: #704b00;
+    }
+    .badge {
+      background: rgba(37,99,255,.1);
+      color: var(--blue);
+    }
+    .lead-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+      padding: 18px;
+    }
+    .lead-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fff;
+    }
+    .lead-card__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .lead-name {
+      color: var(--navy);
+      font-size: 17px;
+      font-weight: 900;
+    }
+    .lead-date {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-align: right;
+      white-space: nowrap;
+    }
+    .lead-detail {
+      display: grid;
+      grid-template-columns: 78px 1fr;
+      gap: 8px;
+      margin: 8px 0;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .lead-detail span:first-child {
+      color: var(--muted);
+      font-weight: 900;
+    }
+    .lead-detail a {
+      all: unset;
+      color: var(--blue);
+      cursor: pointer;
+      font-weight: 800;
+      word-break: break-word;
+    }
+    .message {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #f8fafc;
+      color: #334155;
+      font-size: 13px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+    .empty, .status {
+      padding: 24px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .table-wrap {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: auto;
+      box-shadow: 0 14px 42px rgba(15,23,42,.06);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1120px;
+    }
+    th, td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      background: #f1f5f9;
+      color: #334155;
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      z-index: 1;
+    }
+    td.message-cell {
+      max-width: 340px;
+      white-space: pre-wrap;
+    }
+    .hidden { display: none !important; }
+    @media (max-width: 900px) {
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .controls { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 620px) {
+      .stats { grid-template-columns: 1fr; }
+      header { align-items: flex-start; }
+      .lead-card__top { display: grid; }
+      .lead-date { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-copy">
+      <h1>AI Future Program Inquiries</h1>
+      <div class="live-indicator is-loading" id="live-indicator" aria-live="polite">
+        <span class="live-dot" aria-hidden="true"></span>
+        <span id="live-indicator-text">Syncing live data</span>
+      </div>
+      <p id="last-updated" style="margin:8px 0 0;color:var(--muted);font-weight:700">Loading AI Future program inquiries...</p>
+    </div>
+    <div class="actions">
+      <button class="secondary" id="refresh-btn" type="button">Refresh</button>
+      <a href="/api/parent-inquiry/export?format=csv">Export CSV</a>
+      <a class="secondary" href="/api/parent-inquiry/export?format=json">Export JSON</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="stats" aria-label="Program inquiry summary">
+      <div class="stat"><span>Total inquiries</span><strong id="total-count">0</strong></div>
+      <div class="stat"><span>Showing</span><strong id="showing-count">0</strong></div>
+      <div class="stat"><span>Top program</span><strong id="top-program">-</strong></div>
+      <div class="stat"><span>Newest inquiry</span><strong id="newest-lead">-</strong></div>
+    </section>
+
+    <section class="panel controls" aria-label="Dashboard controls">
+      <label>
+        Search
+        <input id="search-input" type="search" placeholder="Search parent, student, email, phone, or message" />
+      </label>
+      <label>
+        Source page
+        <select id="source-filter">
+          <option value="">All sources</option>
+        </select>
+      </label>
+      <button class="secondary" id="clear-filters" type="button">Clear filters</button>
+    </section>
+
+    <div class="view-tabs" aria-label="Dashboard view">
+      <button class="is-active" id="grouped-view-btn" type="button">Grouped by program</button>
+      <button class="secondary" id="all-view-btn" type="button">Show all chronological</button>
+    </div>
+
+    <section id="grouped-view" class="program-list" aria-label="Inquiries grouped by program">
+      <div class="status">Loading inquiries...</div>
+    </section>
+
+    <section id="all-view" class="hidden" aria-label="All inquiries">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Submitted</th>
+              <th>Parent</th>
+              <th>Student</th>
+              <th>Age</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Program</th>
+              <th>Contact</th>
+              <th>Message</th>
+              <th>Source</th>
+            </tr>
+          </thead>
+          <tbody id="lead-rows">
+            <tr><td class="status" colspan="10">Loading inquiries...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function() {
+      const programSections = document.getElementById('grouped-view');
+      const rows = document.getElementById('lead-rows');
+      const total = document.getElementById('total-count');
+      const showing = document.getElementById('showing-count');
+      const topProgram = document.getElementById('top-program');
+      const newestLead = document.getElementById('newest-lead');
+      const lastUpdated = document.getElementById('last-updated');
+      const liveIndicator = document.getElementById('live-indicator');
+      const liveIndicatorText = document.getElementById('live-indicator-text');
+      const refresh = document.getElementById('refresh-btn');
+      const searchInput = document.getElementById('search-input');
+      const sourceFilter = document.getElementById('source-filter');
+      const clearFilters = document.getElementById('clear-filters');
+      const groupedView = document.getElementById('grouped-view');
+      const allView = document.getElementById('all-view');
+      const groupedViewBtn = document.getElementById('grouped-view-btn');
+      const allViewBtn = document.getElementById('all-view-btn');
+      let allLeads = [];
+
+      const categories = [
+        { key: 'summer', label: 'Summer Camp', icon: 'SC', description: 'Camp, STEM weeks, and summer program requests.' },
+        { key: 'robotics', label: 'Robotics Lab', icon: 'RL', description: 'Robotics classes, trials, VEX, LEGO SPIKE, and engineering interest.' },
+        { key: 'codelab', label: 'Code Lab Inquiry', icon: 'CL', description: 'Code Lab marketing, teacher access, and coding program questions.' },
+        { key: 'fll', label: 'FLL Team', icon: 'FL', description: 'FIRST LEGO League, competition team, and team placement requests.' },
+        { key: 'consultation', label: 'Free Consultation', icon: 'FC', description: 'Families asking for help choosing the right next step.' },
+        { key: 'waitlist', label: 'Join Waitlist', icon: 'JW', description: 'General cohort, availability, or future enrollment interest.' },
+        { key: 'other', label: 'Other / Not Sure', icon: 'OT', description: 'Unclear, undecided, or uncategorized inquiries.' }
+      ];
+
+      function escapeHtml(value) {
+        return String(value || '').replace(/[&<>"']/g, (char) => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        }[char]));
+      }
+
+      function formatDate(value) {
+        if (!value) return '-';
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return value;
+        return date.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+      }
+
+      function normalizeText(value) {
+        return String(value || '').toLowerCase();
+      }
+
+      function normalizeProgram(lead) {
+        const text = `${lead.programInterest || ''} ${lead.sourcePage || ''} ${lead.message || ''}`.toLowerCase();
+        if (text.includes('summer') || text.includes('camp') || text.includes('stem camp')) return 'summer';
+        if (text.includes('fll') || text.includes('first lego') || text.includes('competition team')) return 'fll';
+        if (text.includes('code lab') || text.includes('codelab') || text.includes('coding') || text.includes('teacher access')) return 'codelab';
+        if (text.includes('robotics') || text.includes('robotics & engineering') || text.includes('lego spike') || text.includes('vex') || text.includes('ftc')) return 'robotics';
+        if (text.includes('consultation') || text.includes('consult')) return 'consultation';
+        if (text.includes('waitlist') || text.includes('cohort')) return 'waitlist';
+        return 'other';
+      }
+
+      function sourceLabel(sourcePage) {
+        const source = String(sourcePage || '').toLowerCase();
+        if (!source) return 'Unknown source';
+        if (source.includes('waitlist')) return 'Homepage cinematic waitlist';
+        if (source.includes('summer-camp')) return 'Summer Camp landing page';
+        if (source.includes('robotics')) return 'Robotics Lab landing page';
+        if (source.includes('code-lab') || source.includes('codelab')) return 'Code Lab landing page';
+        if (source.includes('contact')) return 'Contact page';
+        if (source.includes('index')) return 'Homepage';
+        return sourcePage;
+      }
+
+      function matchesFilters(lead) {
+        const query = normalizeText(searchInput.value);
+        const selectedSource = sourceFilter.value;
+        const haystack = [
+          lead.parentName,
+          lead.studentName,
+          lead.childName,
+          lead.childAge,
+          lead.email,
+          lead.phone,
+          lead.programInterest,
+          lead.preferredContact,
+          lead.message,
+          lead.sourcePage,
+          sourceLabel(lead.sourcePage)
+        ].map(normalizeText).join(' ');
+
+        if (query && !haystack.includes(query)) return false;
+        if (selectedSource && sourceLabel(lead.sourcePage) !== selectedSource) return false;
+        return true;
+      }
+
+      function updateSourceOptions(leads) {
+        const current = sourceFilter.value;
+        const sources = Array.from(new Set(leads.map((lead) => sourceLabel(lead.sourcePage)))).sort();
+        sourceFilter.innerHTML = '<option value="">All sources</option>' + sources.map((source) => `<option value="${escapeHtml(source)}">${escapeHtml(source)}</option>`).join('');
+        if (sources.includes(current)) sourceFilter.value = current;
+      }
+
+      function leadCard(lead) {
+        const studentName = lead.studentName || lead.childName || '-';
+        const source = sourceLabel(lead.sourcePage);
+        return `
+          <article class="lead-card">
+            <div class="lead-card__top">
+              <div>
+                <div class="lead-name">${escapeHtml(lead.parentName || 'Unknown parent')}</div>
+                <span class="source-pill">${escapeHtml(source)}</span>
+              </div>
+              <div class="lead-date">${escapeHtml(formatDate(lead.submittedAt))}</div>
+            </div>
+            <div class="lead-detail"><span>Student</span><strong>${escapeHtml(studentName)}</strong></div>
+            <div class="lead-detail"><span>Age</span><span>${escapeHtml(lead.childAge || '-')}</span></div>
+            <div class="lead-detail"><span>Email</span><a href="mailto:${escapeHtml(lead.email)}">${escapeHtml(lead.email || '-')}</a></div>
+            <div class="lead-detail"><span>Phone</span><span>${escapeHtml(lead.phone || '-')}</span></div>
+            <div class="lead-detail"><span>Contact</span><span>${escapeHtml(lead.preferredContact || '-')}</span></div>
+            <div class="lead-detail"><span>Program</span><span class="badge">${escapeHtml(lead.programInterest || 'Other / Not Sure')}</span></div>
+            ${lead.message ? `<div class="message">${escapeHtml(lead.message)}</div>` : ''}
+          </article>
+        `;
+      }
+
+      function renderGrouped(leads) {
+        if (!leads.length) {
+          programSections.innerHTML = '<div class="program-section"><div class="empty">No inquiries match the current filters.</div></div>';
+          return;
+        }
+
+        const grouped = categories.reduce((acc, category) => {
+          acc[category.key] = [];
+          return acc;
+        }, {});
+
+        leads.forEach((lead) => {
+          const key = normalizeProgram(lead);
+          grouped[key].push(lead);
+        });
+
+        programSections.innerHTML = categories.map((category) => {
+          const sectionLeads = grouped[category.key];
+          const newest = sectionLeads[0] ? formatDate(sectionLeads[0].submittedAt) : 'No inquiries yet';
+          return `
+            <section class="program-section">
+              <div class="program-header">
+                <div class="program-title">
+                  <div class="program-icon">${category.icon}</div>
+                  <div>
+                    <h2>${category.label}</h2>
+                    <p>${category.description}</p>
+                  </div>
+                </div>
+                <div class="section-meta">
+                  <span class="pill">${sectionLeads.length} ${sectionLeads.length === 1 ? 'lead' : 'leads'}</span>
+                  <span class="pill">Newest: ${escapeHtml(newest)}</span>
+                </div>
+              </div>
+              ${sectionLeads.length ? `<div class="lead-grid">${sectionLeads.map(leadCard).join('')}</div>` : '<div class="empty">No inquiries in this program yet.</div>'}
+            </section>
+          `;
+        }).join('');
+      }
+
+      function renderTable(leads) {
+        if (!leads.length) {
+          rows.innerHTML = '<tr><td class="empty" colspan="10">No inquiries match the current filters.</td></tr>';
+          return;
+        }
+
+        rows.innerHTML = leads.map((lead) => `
+          <tr>
+            <td>${escapeHtml(formatDate(lead.submittedAt))}</td>
+            <td><strong>${escapeHtml(lead.parentName || 'Unknown parent')}</strong></td>
+            <td>${escapeHtml(lead.studentName || lead.childName || '')}</td>
+            <td>${escapeHtml(lead.childAge || '')}</td>
+            <td><a class="secondary" href="mailto:${escapeHtml(lead.email)}">${escapeHtml(lead.email || '')}</a></td>
+            <td>${escapeHtml(lead.phone || '')}</td>
+            <td><span class="badge">${escapeHtml(lead.programInterest || 'Other / Not Sure')}</span></td>
+            <td>${escapeHtml(lead.preferredContact || '')}</td>
+            <td class="message-cell">${escapeHtml(lead.message || '')}</td>
+            <td>${escapeHtml(sourceLabel(lead.sourcePage))}</td>
+          </tr>
+        `).join('');
+      }
+
+      function render() {
+        const leads = allLeads.filter(matchesFilters);
+        const counts = categories.map((category) => ({
+          label: category.label,
+          count: leads.filter((lead) => normalizeProgram(lead) === category.key).length
+        })).sort((a, b) => b.count - a.count);
+
+        total.textContent = allLeads.length;
+        showing.textContent = leads.length;
+        topProgram.textContent = counts.find((item) => item.count > 0)?.label || '-';
+        newestLead.textContent = leads[0] ? formatDate(leads[0].submittedAt) : '-';
+        renderGrouped(leads);
+        renderTable(leads);
+      }
+
+      function setLiveState(state, text) {
+        liveIndicator.classList.toggle('is-loading', state === 'loading');
+        liveIndicator.classList.toggle('is-error', state === 'error');
+        liveIndicatorText.textContent = text;
+      }
+
+      async function loadLeads() {
+        programSections.innerHTML = '<div class="status">Loading inquiries...</div>';
+        rows.innerHTML = '<tr><td class="status" colspan="10">Loading inquiries...</td></tr>';
+        refresh.disabled = true;
+        setLiveState('loading', 'Syncing live data');
+
+        try {
+          const response = await fetch('/api/parent-inquiry/list', { cache: 'no-store' });
+          const result = await response.json();
+          if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Unable to load inquiries.');
+          }
+
+          allLeads = [...result.data].sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+          updateSourceOptions(allLeads);
+          lastUpdated.textContent = `Last updated ${new Date().toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}`;
+          setLiveState('live', `Live data loaded (${allLeads.length})`);
+          render();
+        } catch (err) {
+          const message = escapeHtml(err.message || 'Unable to load inquiries.');
+          setLiveState('error', 'Live data unavailable');
+          programSections.innerHTML = `<div class="program-section"><div class="status">${message}</div></div>`;
+          rows.innerHTML = `<tr><td class="status" colspan="10">${message}</td></tr>`;
+        } finally {
+          refresh.disabled = false;
+        }
+      }
+
+      refresh.addEventListener('click', loadLeads);
+      searchInput.addEventListener('input', render);
+      sourceFilter.addEventListener('change', render);
+      clearFilters.addEventListener('click', () => {
+        searchInput.value = '';
+        sourceFilter.value = '';
+        render();
+      });
+      groupedViewBtn.addEventListener('click', () => {
+        groupedView.classList.remove('hidden');
+        allView.classList.add('hidden');
+        groupedViewBtn.classList.add('is-active');
+        groupedViewBtn.classList.remove('secondary');
+        allViewBtn.classList.remove('is-active');
+        allViewBtn.classList.add('secondary');
+      });
+      allViewBtn.addEventListener('click', () => {
+        allView.classList.remove('hidden');
+        groupedView.classList.add('hidden');
+        allViewBtn.classList.add('is-active');
+        allViewBtn.classList.remove('secondary');
+        groupedViewBtn.classList.remove('is-active');
+        groupedViewBtn.classList.add('secondary');
+      });
+
+      loadLeads();
+    })();
+  </script>
+</body>
+</html>

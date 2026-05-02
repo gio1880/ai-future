@@ -7,12 +7,12 @@
   <meta name="description" content="AI Future offers in-person robotics classes, online Code Lab, and STEM summer camp for kids in Queens, Brooklyn, Hartsdale, and Manhattan." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0B2A4A" />
-  <link rel="icon" href="ai future logo.png" type="image/png" />
+  <link rel="icon" href="../ai future logo.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
   <style>
-    /* -- Tokens ------------------------------------------------ */
+    /* ── Tokens ──────────────────────────────────────────────── */
     :root {
       --navy:   #071426;
       --brand:  #0b2a4a;
@@ -40,14 +40,14 @@
     ::-webkit-scrollbar-track { background: var(--navy); }
     ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 99px; }
 
-    /* -- Global progress --------------------------------------- */
+    /* ── Global progress ─────────────────────────────────────── */
     #gp {
       position: fixed; top: 0; left: 0; height: 2px; width: 0%;
       background: linear-gradient(90deg, var(--gold), var(--sky));
       z-index: 200; transition: width .08s linear; will-change: width;
     }
 
-    /* -- Nav --------------------------------------------------- */
+    /* ── Nav ─────────────────────────────────────────────────── */
     .nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       height: 64px; padding: 0 clamp(16px,4vw,56px);
@@ -80,7 +80,7 @@
     .btn-ghost:hover { background: rgba(255,255,255,.13); }
     @media (max-width: 700px) { .nav-locs { display: none; } }
 
-    /* -- Summer Banner ----------------------------------------- */
+    /* ── Summer Banner ───────────────────────────────────────── */
     .summer-banner {
       background: linear-gradient(90deg, #7c2d12 0%, #c2410c 40%, #ea580c 70%, #c2410c 100%);
       padding: 12px clamp(16px,4vw,56px);
@@ -106,7 +106,7 @@
     }
     .sb-cta:hover { background: rgba(255,255,255,.28); transform: translateY(-1px); }
 
-    /* -- Hero -------------------------------------------------- */
+    /* ── Hero ────────────────────────────────────────────────── */
     .hero {
       min-height: 100svh; position: relative; overflow: hidden;
       display: grid; grid-template-columns: 1fr 1fr; align-items: center;
@@ -215,7 +215,7 @@
     .pb-summer  { background: var(--orange); color: #fff; }
     .pillar-badge span { display: block; font-size: .62rem; font-weight: 600; opacity: .8; margin-top: 1px; }
 
-    /* -- Stage Grit mascot (slide guide) ----------------------- */
+    /* ── Stage Grit mascot (slide guide) ─────────────────────── */
     .stage-mascot {
       position: absolute; z-index: 20;
       bottom: clamp(14px,2.5vh,28px); right: clamp(14px,2vw,26px);
@@ -273,7 +273,7 @@
       .hero-visual { display: none; }
     }
 
-    /* -- Programs sticky section ------------------------------- */
+    /* ── Programs sticky section ─────────────────────────────── */
     .scroll-track {
       height: 600vh; position: relative;
       background: linear-gradient(180deg, #071426 0%, #0b2a4a 50%, #071426 100%);
@@ -331,7 +331,7 @@
       transition: background .7s var(--ease);
     }
 
-    /* -- Shared slide layout ----------------------------------- */
+    /* ── Shared slide layout ─────────────────────────────────── */
     .slide {
       position: absolute; inset: 0;
       display: grid; grid-template-columns: 1.05fr .95fr; align-items: center;
@@ -343,7 +343,7 @@
     }
     .slide.is-active { opacity: 1; pointer-events: auto; z-index: 2; }
 
-    /* -- Photo side -------------------------------------------- */
+    /* ── Photo side ──────────────────────────────────────────── */
     .slide-photos { position: relative; display: flex; flex-direction: column; gap: 7px; height: min(80svh, 640px); }
     .photo-main {
       position: relative; flex: 1; border-radius: 18px; overflow: hidden;
@@ -389,7 +389,7 @@
     }
     .slide.is-active .slide-num-wm { transform: translateY(-50%) scale(1); opacity: 1; }
 
-    /* -- Content side ------------------------------------------ */
+    /* ── Content side ────────────────────────────────────────── */
     .slide-content { position: relative; z-index: 2; }
     .slide-content > * {
       opacity: 0; transform: translateX(22px);
@@ -459,7 +459,7 @@
     }
     .btn-outline:hover { border-color: rgba(255,255,255,.5); background: rgba(255,255,255,.07); transform: translateY(-2px); }
 
-    /* -- Waitlist slide ---------------------------------------- */
+    /* ── Waitlist slide ──────────────────────────────────────── */
     .slide-waitlist {
       position: absolute; inset: 0;
       display: grid; grid-template-columns: 1fr 1fr; align-items: stretch;
@@ -512,7 +512,7 @@
       .slide-num-wm { display: none; }
     }
 
-    /* -- Stats ------------------------------------------------- */
+    /* ── Stats ───────────────────────────────────────────────── */
     .stats {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
       border-top: 1px solid var(--wline); border-bottom: 1px solid var(--wline);
@@ -527,7 +527,7 @@
     .stat-num { font-family: var(--serif); font-size: clamp(40px,5vw,64px); line-height: 1; color: #fff; }
     .stat-label { font-size: .78rem; font-weight: 700; color: rgba(255,255,255,.44); letter-spacing: .04em; }
 
-    /* -- Locations --------------------------------------------- */
+    /* ── Locations ───────────────────────────────────────────── */
     .locations {
       background: var(--paper);
       padding: clamp(72px,10vw,112px) clamp(22px,5vw,76px);
@@ -585,7 +585,7 @@
     }
     .loc-cta:hover { gap: 9px; color: var(--brand); }
 
-    /* -- Final CTA --------------------------------------------- */
+    /* ── Final CTA ───────────────────────────────────────────── */
     .finale {
       background: var(--navy); color: #fff;
       padding: clamp(80px,11vw,128px) clamp(22px,5.5vw,76px);
@@ -612,7 +612,7 @@
     .fin-r:nth-child(3).in { transition-delay:.22s; }
     .fin-r:nth-child(4).in { transition-delay:.34s; }
 
-    /* -- Footer ------------------------------------------------ */
+    /* ── Footer ──────────────────────────────────────────────── */
     footer {
       background: #04101e;
       padding: 36px clamp(22px,5vw,76px);
@@ -636,17 +636,17 @@
 <body>
   <div id="gp" role="progressbar" aria-label="Page scroll progress"></div>
 
-  <!-- -- Summer Banner --------------------------------------- -->
+  <!-- ── Summer Banner ─────────────────────────────────────── -->
   <div class="summer-banner" role="banner" aria-label="Summer Camp enrollment">
     <span class="sb-pulse" aria-hidden="true"></span>
     <p class="sb-text"><strong>Summer 2025 Enrollment Is Open</strong> — Spots are filling fast. Full-day STEM camp in Queens, Brooklyn &amp; Hartsdale.</p>
-    <a class="sb-cta" href="contact.html?program=Summer%20Camp">Reserve a Spot →</a>
+    <a class="sb-cta" href="../contact.html?program=Summer%20Camp">Reserve a Spot →</a>
   </div>
 
-  <!-- -- Nav ------------------------------------------------ -->
+  <!-- ── Nav ──────────────────────────────────────────────── -->
   <nav class="nav">
-    <a class="nav-brand" href="index.html">
-      <img src="ai future logo.png" alt="AI Future logo" />
+    <a class="nav-brand" href="../index.html">
+      <img src="../ai future logo.png" alt="AI Future logo" />
       <span>AI Future</span>
     </a>
     <div class="nav-right">
@@ -656,11 +656,11 @@
         <span class="nav-loc">Hartsdale</span>
         <span class="nav-loc wl">Manhattan ✦ Waitlist</span>
       </div>
-      <a class="btn btn-gold" href="contact.html">Enroll Now →</a>
+      <a class="btn btn-gold" href="../contact.html">Enroll Now →</a>
     </div>
   </nav>
 
-  <!-- -- Hero ----------------------------------------------- -->
+  <!-- ── Hero ─────────────────────────────────────────────── -->
   <section class="hero">
     <div class="hero-bg" aria-hidden="true"></div>
     <div class="orb orb1" aria-hidden="true"></div>
@@ -674,7 +674,7 @@
       <h1>Where kids build<br><em>the future</em></h1>
       <p class="hero-sub">In-person robotics &amp; coding at our labs, online learning through Code Lab, and an unforgettable summer camp — three ways to give your child a real head start in technology.</p>
       <div class="hero-actions">
-        <a class="btn btn-gold btn-lg" href="contact.html">Enroll Your Child →</a>
+        <a class="btn btn-gold btn-lg" href="../contact.html">Enroll Your Child →</a>
         <a class="btn btn-ghost btn-lg" href="#programs">Explore Programs</a>
       </div>
       <div class="hero-locs" aria-label="Locations">
@@ -687,19 +687,19 @@
 
     <div class="hero-visual" aria-hidden="true">
       <div class="hstack">
-        <img class="hps1" src="robotics lab/25_summer_pictures/IMG_0902.jpg" alt="" />
-        <img class="hps3" src="robotics lab/FLL Teams/hudson valley qualifier championship winners.jpg" alt="" />
-        <img class="hps2" src="robotics lab/25_summer_pictures/summer-010.jpg" alt="" />
+        <img class="hps1" src="../robotics lab/25_summer_pictures/IMG_0902.jpg" alt="" />
+        <img class="hps3" src="../robotics lab/FLL Teams/hudson valley qualifier championship winners.jpg" alt="" />
+        <img class="hps2" src="../robotics lab/25_summer_pictures/summer-010.jpg" alt="" />
       </div>
       <!-- Grit mascot floating in hero -->
       <div class="hero-grit" style="animation: gritIn .6s .9s ease forwards, fC 5s ease-in-out infinite">
         <video autoplay muted playsinline loop preload="metadata" id="heroGritVid">
-          <source src="assets/video/grit-animation.mp4" type="video/mp4" />
+          <source src="../assets/video/grit-animation.mp4" type="video/mp4" />
         </video>
       </div>
       <div class="hero-pillars">
         <div class="pillar-badge pb-robotics">Robotics Lab<span>In-person · 5 programs</span></div>
-        <div class="pillar-badge pb-code">Code Lab<span>Coming soon · join waitlist</span></div>
+        <div class="pillar-badge pb-code">Code Lab<span>Online · subscribe anytime</span></div>
         <div class="pillar-badge pb-summer">Summer Camp<span>Enrolling now · 2025</span></div>
       </div>
     </div>
@@ -710,7 +710,7 @@
     </div>
   </section>
 
-  <!-- -- Programs — sticky scroll story --------------------- -->
+  <!-- ── Programs — sticky scroll story ───────────────────── -->
   <div class="scroll-track" id="programs">
     <div class="story-sticky">
 
@@ -727,32 +727,32 @@
       <!-- Stage -->
       <div class="stage" id="stage">
 
-        <!-- -- Grit guide mascot — swaps per slide ---------- -->
+        <!-- ── Grit guide mascot — swaps per slide ────────── -->
         <div class="stage-mascot" id="stageMascot">
           <div class="stage-mascot-bubble" id="mascotBubble">Let's build something!</div>
           <div class="stage-mascot-vid" id="mascotVidWrap">
             <video id="mascotVid" muted playsinline loop preload="metadata" aria-hidden="true">
-              <source id="mascotSrc" src="assets/video/mascot-wrench-robotics.mp4" type="video/mp4" />
+              <source id="mascotSrc" src="../assets/video/mascot-wrench-robotics.mp4" type="video/mp4" />
             </video>
           </div>
         </div>
 
-        <!-- -- Slide 01: Robotics Lab (in-person hub) ------- -->
+        <!-- ── Slide 01: Robotics Lab (in-person hub) ─────── -->
         <article class="slide is-active" data-index="0"
                  data-glow="radial-gradient(ellipse 70% 55% at 72% 50%, rgba(23,103,180,.14), transparent)"
                  style="--acc:#1767b4; --acc-rgb:23,103,180">
           <div class="slide-photos">
             <div class="photo-main">
-              <img class="pimg is-active" src="robotics lab/FLL Teams/25_26_season_pictures/IMG_5080.jpg"     alt="Students building robots in Robotics Lab" loading="eager" />
-              <img class="pimg"           src="robotics lab/FLL Teams/25_26_season_pictures/IMG_5287.jpg"     alt="Robot programming session" loading="lazy" />
-              <img class="pimg"           src="robotics lab/25_summer_pictures/IMG_0902.jpg"                  alt="AI Future robotics class" loading="lazy" />
+              <img class="pimg is-active" src="../robotics lab/FLL Teams/25_26_season_pictures/IMG_5080.jpg"     alt="Students building robots in Robotics Lab" loading="eager" />
+              <img class="pimg"           src="../robotics lab/FLL Teams/25_26_season_pictures/IMG_5287.jpg"     alt="Robot programming session" loading="lazy" />
+              <img class="pimg"           src="../robotics lab/25_summer_pictures/IMG_0902.jpg"                  alt="AI Future robotics class" loading="lazy" />
               <span class="photo-count">1 / 3</span>
               <p class="photo-caption">Design, build, code, and test — all in one class.</p>
             </div>
             <div class="photo-subs">
-              <div class="photo-sub is-active" data-img="0"><img src="robotics lab/FLL Teams/25_26_season_pictures/IMG_5080.jpg"    alt="" loading="lazy" /></div>
-              <div class="photo-sub"           data-img="1"><img src="robotics lab/FLL Teams/25_26_season_pictures/IMG_5287.jpg"    alt="" loading="lazy" /></div>
-              <div class="photo-sub"           data-img="2"><img src="robotics lab/25_summer_pictures/IMG_0902.jpg"                 alt="" loading="lazy" /></div>
+              <div class="photo-sub is-active" data-img="0"><img src="../robotics lab/FLL Teams/25_26_season_pictures/IMG_5080.jpg"    alt="" loading="lazy" /></div>
+              <div class="photo-sub"           data-img="1"><img src="../robotics lab/FLL Teams/25_26_season_pictures/IMG_5287.jpg"    alt="" loading="lazy" /></div>
+              <div class="photo-sub"           data-img="2"><img src="../robotics lab/25_summer_pictures/IMG_0902.jpg"                 alt="" loading="lazy" /></div>
             </div>
             <span class="slide-num-wm" aria-hidden="true">01</span>
           </div>
@@ -768,66 +768,66 @@
               <div class="s-prog-item"><span class="s-prog-dot"></span>3D Printing &amp; Design<span class="s-prog-type">CAD &amp; prototyping · Ages 10+</span></div>
             </div>
             <div class="s-cta">
-              <a class="btn-acc" href="contact.html?program=Robotics%20Lab" style="--acc:#1767b4;--acc-rgb:23,103,180">Book a Trial Class →</a>
-              <a class="btn-outline" href="robotics lab/robotics-lab.html">Learn More</a>
+              <a class="btn-acc" href="../contact.html?program=Robotics%20Lab" style="--acc:#1767b4;--acc-rgb:23,103,180">Book a Trial Class →</a>
+              <a class="btn-outline" href="../robotics lab/robotics-lab.html">Learn More</a>
             </div>
           </div>
         </article>
 
-        <!-- -- Slide 02: Code Lab (online platform) --------- -->
+        <!-- ── Slide 02: Code Lab (online platform) ───────── -->
         <article class="slide" data-index="1"
                  data-glow="radial-gradient(ellipse 70% 55% at 72% 50%, rgba(18,185,129,.09), transparent)"
                  style="--acc:#12b981; --acc-rgb:18,185,129">
           <div class="slide-photos">
             <div class="photo-main">
-              <img class="pimg is-active" src="robotics lab/25_summer_pictures/Photos (28)/IMG_1327.jpg" alt="Student coding on laptop in Code Lab" loading="lazy" />
-              <img class="pimg"           src="robotics lab/25_summer_pictures/Photos (24)/photo.jpg"    alt="Writing Python code" loading="lazy" />
-              <img class="pimg"           src="robotics lab/25_summer_pictures/Photos (25)/photo.jpg"    alt="Student learning to code online" loading="lazy" />
+              <img class="pimg is-active" src="../robotics lab/25_summer_pictures/Photos (28)/IMG_1327.jpg" alt="Student coding on laptop in Code Lab" loading="lazy" />
+              <img class="pimg"           src="../robotics lab/25_summer_pictures/Photos (24)/photo.jpg"    alt="Writing Python code" loading="lazy" />
+              <img class="pimg"           src="../robotics lab/25_summer_pictures/Photos (25)/photo.jpg"    alt="Student learning to code online" loading="lazy" />
               <span class="photo-count">1 / 3</span>
               <p class="photo-caption">Write real Python. See it run. Build real projects.</p>
             </div>
             <div class="photo-subs">
-              <div class="photo-sub is-active" data-img="0"><img src="robotics lab/25_summer_pictures/Photos (28)/IMG_1327.jpg" alt="" loading="lazy" /></div>
-              <div class="photo-sub"           data-img="1"><img src="robotics lab/25_summer_pictures/Photos (24)/photo.jpg"    alt="" loading="lazy" /></div>
-              <div class="photo-sub"           data-img="2"><img src="robotics lab/25_summer_pictures/Photos (25)/photo.jpg"    alt="" loading="lazy" /></div>
+              <div class="photo-sub is-active" data-img="0"><img src="../robotics lab/25_summer_pictures/Photos (28)/IMG_1327.jpg" alt="" loading="lazy" /></div>
+              <div class="photo-sub"           data-img="1"><img src="../robotics lab/25_summer_pictures/Photos (24)/photo.jpg"    alt="" loading="lazy" /></div>
+              <div class="photo-sub"           data-img="2"><img src="../robotics lab/25_summer_pictures/Photos (25)/photo.jpg"    alt="" loading="lazy" /></div>
             </div>
             <span class="slide-num-wm" aria-hidden="true">02</span>
           </div>
           <div class="slide-content">
-            <p class="s-kicker">Online · Anywhere · Coming soon</p>
+            <p class="s-kicker">Online · Anywhere · Subscribe anytime</p>
             <h2 class="s-title">Code Lab</h2>
-            <p class="s-desc">Our online learning platform is being prepared for students. Families can join the Code Lab waitlist now and we will follow up when the next student-ready release is available.</p>
+            <p class="s-desc">Our online learning platform for kids who want to code from home. Learn Python with interactive lessons, run real code in the browser, track progress, and earn achievements — on any schedule.</p>
             <ul class="s-tags">
               <li>Python programming</li>
               <li>Interactive lessons</li>
-              <li>Python foundations</li>
-              <li>Guided practice</li>
-              <li>Student progress tools</li>
-              <li>Family waitlist</li>
+              <li>Live code execution</li>
+              <li>Student dashboard</li>
+              <li>Any schedule</li>
+              <li>Monthly subscription</li>
             </ul>
             <div class="s-cta">
-              <a class="btn-acc" href="contact.html?program=Code%20Lab&status=coming-soon" style="--acc:#12b981;--acc-rgb:18,185,129">Join Code Lab Waitlist →</a>
-              <a class="btn-outline" href="contact.html?program=Code%20Lab&status=coming-soon">Learn What’s Coming</a>
+              <a class="btn-acc" href="../contact.html?program=Code%20Lab" style="--acc:#12b981;--acc-rgb:18,185,129">Start Code Lab →</a>
+              <a class="btn-outline" href="../code-lab/code-lab.html">See the Platform</a>
             </div>
           </div>
         </article>
 
-        <!-- -- Slide 03: Summer Camp 2025 ------------------- -->
+        <!-- ── Slide 03: Summer Camp 2025 ─────────────────── -->
         <article class="slide" data-index="2"
                  data-glow="radial-gradient(ellipse 70% 55% at 72% 50%, rgba(249,115,22,.12), transparent)"
                  style="--acc:#f97316; --acc-rgb:249,115,22">
           <div class="slide-photos">
             <div class="photo-main">
-              <img class="pimg is-active" src="robotics lab/25_summer_pictures/summer-007.jpg"  alt="Kids at AI Future summer camp" loading="lazy" />
-              <img class="pimg"           src="robotics lab/25_summer_pictures/summer-009.jpg"  alt="Summer camp team challenge" loading="lazy" />
-              <img class="pimg"           src="robotics lab/25_summer_pictures/summer-011.jpg"  alt="Summer camp robotics and coding" loading="lazy" />
+              <img class="pimg is-active" src="../robotics lab/25_summer_pictures/summer-007.jpg"  alt="Kids at AI Future summer camp" loading="lazy" />
+              <img class="pimg"           src="../robotics lab/25_summer_pictures/summer-009.jpg"  alt="Summer camp team challenge" loading="lazy" />
+              <img class="pimg"           src="../robotics lab/25_summer_pictures/summer-011.jpg"  alt="Summer camp robotics and coding" loading="lazy" />
               <span class="photo-count">1 / 3</span>
               <p class="photo-caption">Full days of building, coding, and making — all summer.</p>
             </div>
             <div class="photo-subs">
-              <div class="photo-sub is-active" data-img="0"><img src="robotics lab/25_summer_pictures/summer-007.jpg" alt="" loading="lazy" /></div>
-              <div class="photo-sub"           data-img="1"><img src="robotics lab/25_summer_pictures/summer-009.jpg" alt="" loading="lazy" /></div>
-              <div class="photo-sub"           data-img="2"><img src="robotics lab/25_summer_pictures/summer-011.jpg" alt="" loading="lazy" /></div>
+              <div class="photo-sub is-active" data-img="0"><img src="../robotics lab/25_summer_pictures/summer-007.jpg" alt="" loading="lazy" /></div>
+              <div class="photo-sub"           data-img="1"><img src="../robotics lab/25_summer_pictures/summer-009.jpg" alt="" loading="lazy" /></div>
+              <div class="photo-sub"           data-img="2"><img src="../robotics lab/25_summer_pictures/summer-011.jpg" alt="" loading="lazy" /></div>
             </div>
             <span class="slide-num-wm" aria-hidden="true">03</span>
           </div>
@@ -848,28 +848,28 @@
               <li>Ages 8–14</li>
             </ul>
             <div class="s-cta">
-              <a class="btn-acc" href="contact.html?program=Summer%20Camp" style="--acc:#f97316;--acc-rgb:249,115,22">Reserve a Spot →</a>
-              <a class="btn-outline" href="summer-camp-ads.html">Camp Details</a>
+              <a class="btn-acc" href="../contact.html?program=Summer%20Camp" style="--acc:#f97316;--acc-rgb:249,115,22">Reserve a Spot →</a>
+              <a class="btn-outline" href="../summer-camp-ads.html">Camp Details</a>
             </div>
           </div>
         </article>
 
-        <!-- -- Slide 04: Competition Teams (social proof) --- -->
+        <!-- ── Slide 04: Competition Teams (social proof) ─── -->
         <article class="slide" data-index="3"
                  data-glow="radial-gradient(ellipse 70% 55% at 72% 50%, rgba(254,206,0,.08), transparent)"
                  style="--acc:#fece00; --acc-rgb:254,206,0">
           <div class="slide-photos">
             <div class="photo-main">
-              <img class="pimg is-active" src="robotics lab/FLL Teams/hudson valley qualifier championship winners.jpg" alt="FLL championship team with trophy" loading="lazy" />
-              <img class="pimg"           src="robotics lab/FLL Teams/nyc champs 1st place robot design.jpg"           alt="NYC 1st place robot design award" loading="lazy" />
-              <img class="pimg"           src="robotics lab/FLL Teams/fll-team-002.png"                                alt="AI Future FLL team competing" loading="lazy" />
+              <img class="pimg is-active" src="../robotics lab/FLL Teams/hudson valley qualifier championship winners.jpg" alt="FLL championship team with trophy" loading="lazy" />
+              <img class="pimg"           src="../robotics lab/FLL Teams/nyc champs 1st place robot design.jpg"           alt="NYC 1st place robot design award" loading="lazy" />
+              <img class="pimg"           src="../robotics lab/FLL Teams/fll-team-002.png"                                alt="AI Future FLL team competing" loading="lazy" />
               <span class="photo-count">1 / 3</span>
               <p class="photo-caption">Regional champions. Real trophies. Real skills.</p>
             </div>
             <div class="photo-subs">
-              <div class="photo-sub is-active" data-img="0"><img src="robotics lab/FLL Teams/hudson valley qualifier championship winners.jpg" alt="" loading="lazy" /></div>
-              <div class="photo-sub"           data-img="1"><img src="robotics lab/FLL Teams/nyc champs 1st place robot design.jpg"           alt="" loading="lazy" /></div>
-              <div class="photo-sub"           data-img="2"><img src="robotics lab/FLL Teams/fll-team-002.png"                                 alt="" loading="lazy" /></div>
+              <div class="photo-sub is-active" data-img="0"><img src="../robotics lab/FLL Teams/hudson valley qualifier championship winners.jpg" alt="" loading="lazy" /></div>
+              <div class="photo-sub"           data-img="1"><img src="../robotics lab/FLL Teams/nyc champs 1st place robot design.jpg"           alt="" loading="lazy" /></div>
+              <div class="photo-sub"           data-img="2"><img src="../robotics lab/FLL Teams/fll-team-002.png"                                 alt="" loading="lazy" /></div>
             </div>
             <span class="slide-num-wm" aria-hidden="true">04</span>
           </div>
@@ -885,16 +885,16 @@
             </div>
             <p class="s-desc" style="margin-top:4px">Students on our teams develop leadership, engineering habits, and the resilience to compete — and win — at regional and state level.</p>
             <div class="s-cta">
-              <a class="btn-acc" href="contact.html?program=FLL%20Team" style="--acc:#d4a800;--acc-rgb:212,168,0;color:#fff">Ask About Teams →</a>
-              <a class="btn-outline" href="robotics lab/robotics-lab.html#competitions">See Results</a>
+              <a class="btn-acc" href="../contact.html?program=FLL%20Team" style="--acc:#d4a800;--acc-rgb:212,168,0;color:#fff">Ask About Teams →</a>
+              <a class="btn-outline" href="../robotics lab/robotics-lab.html#competitions">See Results</a>
             </div>
           </div>
         </article>
 
-        <!-- -- Slide 05: Get Started (form) ----------------- -->
+        <!-- ── Slide 05: Get Started (form) ───────────────── -->
         <article class="slide-waitlist" data-index="4">
           <div class="wl-photo">
-            <img src="robotics lab/25_summer_pictures/IMG_0521.jpg" alt="" loading="lazy" />
+            <img src="../robotics lab/25_summer_pictures/IMG_0521.jpg" alt="" loading="lazy" />
           </div>
           <div class="wl-form-wrap">
             <p class="wl-kicker">Ready to get started?</p>
@@ -933,7 +933,7 @@
     </div><!-- /story-sticky -->
   </div><!-- /scroll-track -->
 
-  <!-- -- Stats ----------------------------------------------- -->
+  <!-- ── Stats ─────────────────────────────────────────────── -->
   <div class="stats" aria-label="AI Future by the numbers">
     <div class="stat">
       <div class="stat-num" data-count="300">0</div>
@@ -959,14 +959,14 @@
     </div>
   </div>
 
-  <!-- -- Locations ------------------------------------------- -->
+  <!-- ── Locations ─────────────────────────────────────────── -->
   <section class="locations" id="locations">
     <div class="sec-label">
       <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5"/><circle cx="7" cy="7" r="2.5" fill="currentColor"/></svg>
       Where to find us
     </div>
     <h2>Four locations.<br>One community.</h2>
-    <p class="loc-sub">All three open locations offer Robotics Lab access. Code Lab is currently coming soon, and Summer Camp runs at Queens, Brooklyn, and Hartsdale.</p>
+    <p class="loc-sub">All three open locations offer Robotics Lab and Code Lab access. Summer Camp runs at Queens, Brooklyn, and Hartsdale.</p>
 
     <div class="loc-grid">
       <div class="loc-card">
@@ -983,7 +983,7 @@
           <span class="loc-prog">FLL Team</span>
           <span class="loc-prog">FTC Team</span>
         </div>
-        <a class="loc-cta" href="contact.html?location=Queens">Enroll in Queens <span>→</span></a>
+        <a class="loc-cta" href="../contact.html?location=Queens">Enroll in Queens <span>→</span></a>
       </div>
       <div class="loc-card">
         <div class="loc-top">
@@ -998,7 +998,7 @@
           <span class="loc-prog">Summer Camp</span>
           <span class="loc-prog">FLL Team</span>
         </div>
-        <a class="loc-cta" href="contact.html?location=Brooklyn">Enroll in Brooklyn <span>→</span></a>
+        <a class="loc-cta" href="../contact.html?location=Brooklyn">Enroll in Brooklyn <span>→</span></a>
       </div>
       <div class="loc-card">
         <div class="loc-top">
@@ -1013,7 +1013,7 @@
           <span class="loc-prog">Summer Camp</span>
           <span class="loc-prog">FLL Team</span>
         </div>
-        <a class="loc-cta" href="contact.html?location=Hartsdale">Enroll in Hartsdale <span>→</span></a>
+        <a class="loc-cta" href="../contact.html?location=Hartsdale">Enroll in Hartsdale <span>→</span></a>
       </div>
       <div class="loc-card wl-card">
         <div class="loc-top">
@@ -1024,35 +1024,35 @@
         <div class="loc-borough">New York, NY — Coming Soon</div>
         <p class="loc-wl-note">Our Manhattan campus is on the way. Join the waitlist now to secure your child's spot and get priority access when we open.</p>
         <div class="loc-progs"><span class="loc-prog">Robotics Lab</span><span class="loc-prog">Code Lab</span><span class="loc-prog">Summer Camp</span></div>
-        <a class="loc-cta" style="color:#92610a" href="contact.html?location=Manhattan&waitlist=true">Join Manhattan Waitlist <span>→</span></a>
+        <a class="loc-cta" style="color:#92610a" href="../contact.html?location=Manhattan&waitlist=true">Join Manhattan Waitlist <span>→</span></a>
       </div>
     </div>
   </section>
 
-  <!-- -- Final CTA ------------------------------------------- -->
+  <!-- ── Final CTA ─────────────────────────────────────────── -->
   <section class="finale">
     <p   class="fin-eyebrow fin-r">Summer 2025 — Enrollment open now</p>
     <h2  class="fin-h2      fin-r">Give your child a<br><em>real head start</em></h2>
-    <p   class="fin-sub     fin-r">Book a free trial robotics class, reserve a summer camp spot, or join the Code Lab waitlist — we'll help you find the right fit for your child.</p>
+    <p   class="fin-sub     fin-r">Book a free trial robotics class, reserve a summer camp spot, or subscribe to Code Lab online — we'll help you find the right fit for your child.</p>
     <div class="fin-actions  fin-r">
-      <a class="btn-orange" href="contact.html?program=Summer%20Camp">Reserve Summer Spot →</a>
-      <a class="btn-dark"   href="contact.html?program=Free%20Trial">Book a Free Trial</a>
-      <a class="btn-outlined-dark" href="contact.html?location=Manhattan&waitlist=true">Manhattan Waitlist</a>
+      <a class="btn-orange" href="../contact.html?program=Summer%20Camp">Reserve Summer Spot →</a>
+      <a class="btn-dark"   href="../contact.html?program=Free%20Trial">Book a Free Trial</a>
+      <a class="btn-outlined-dark" href="../contact.html?location=Manhattan&waitlist=true">Manhattan Waitlist</a>
     </div>
   </section>
 
-  <!-- -- Footer ---------------------------------------------- -->
+  <!-- ── Footer ────────────────────────────────────────────── -->
   <footer>
     <div class="footer-brand">
-      <img src="ai future logo.png" alt="AI Future" />
+      <img src="../ai future logo.png" alt="AI Future" />
       <span>AI Future</span>
     </div>
     <div class="footer-links">
-      <a href="contact.html">Contact</a>
-      <a href="robotics lab/robotics-lab.html">Robotics Lab</a>
-      <a href="contact.html?program=Code%20Lab&status=coming-soon">Code Lab Waitlist</a>
-      <a href="summer-camp-ads.html">Summer Camp</a>
-      <a href="contact.html?location=Manhattan&waitlist=true">Manhattan Waitlist</a>
+      <a href="../contact.html">Contact</a>
+      <a href="../robotics lab/robotics-lab.html">Robotics Lab</a>
+      <a href="../code-lab/code-lab.html">Code Lab</a>
+      <a href="../summer-camp-ads.html">Summer Camp</a>
+      <a href="../contact.html?location=Manhattan&waitlist=true">Manhattan Waitlist</a>
     </div>
     <small>© 2026 AI Future. Queens · Brooklyn · Hartsdale · Manhattan (coming soon)</small>
   </footer>
@@ -1083,11 +1083,11 @@
 
     // Per-slide mascot config: [videoSrc, bubbleText]
     const MASCOT_MAP = [
-      ['assets/video/mascot-wrench-robotics.mp4', 'Time to build! 🔧'],
-      ['assets/video/mascot-typing-laptop.mp4',   'Let\'s write some code!'],
-      ['assets/video/mascot-putting-on-jersey.mp4','Summer is almost here!'],
-      ['assets/video/grit-animation.mp4',          'Champions in the making!'],
-      ['assets/video/mascot-regular-cap.mp4',      'Let\'s get you started!'],
+      ['../assets/video/mascot-wrench-robotics.mp4', 'Time to build! 🔧'],
+      ['../assets/video/mascot-typing-laptop.mp4',   'Let\'s write some code!'],
+      ['../assets/video/mascot-putting-on-jersey.mp4','Summer is almost here!'],
+      ['../assets/video/grit-animation.mp4',          'Champions in the making!'],
+      ['../assets/video/mascot-regular-cap.mp4',      'Let\'s get you started!'],
     ];
 
     // All "activatable" units in order (4 slides + 1 waitlist)
@@ -1099,7 +1099,7 @@
     let mascotSwapTimer= null;
     let mascotVisible  = false;
 
-    /* -- Mascot: swap video smoothly ------------------- */
+    /* ── Mascot: swap video smoothly ─────────────────── */
     function swapMascot(idx) {
       if (reducedMotion) return;
       const [src, bubble] = MASCOT_MAP[idx] || MASCOT_MAP[0];
@@ -1117,7 +1117,7 @@
       }, 280);
     }
 
-    /* -- Mascot: show when entering programs zone ------- */
+    /* ── Mascot: show when entering programs zone ─────── */
     function setMascotVisible(show) {
       if (show === mascotVisible) return;
       mascotVisible = show;
@@ -1131,7 +1131,7 @@
       }
     }
 
-    /* -- Activate a unit -------------------------------- */
+    /* ── Activate a unit ──────────────────────────────── */
     function activate(idx) {
       if (idx === active && allUnits[idx].classList.contains('is-active')) return;
       clearTimeout(cycleTimers[active]);
@@ -1157,7 +1157,7 @@
       if (idx < slides.length) startCycle(idx);
     }
 
-    /* -- Auto-cycle photos ------------------------------ */
+    /* ── Auto-cycle photos ────────────────────────────── */
     function startCycle(si) {
       const slide = slides[si];
       if (!slide) return;
@@ -1180,7 +1180,7 @@
       cycleTimers[si] = setTimeout(next, CYCLE_MS);
     }
 
-    /* -- Sub-photo click -------------------------------- */
+    /* ── Sub-photo click ──────────────────────────────── */
     slides.forEach((slide, si) => {
       const imgs  = Array.from(slide.querySelectorAll('.photo-main .pimg'));
       const subs  = Array.from(slide.querySelectorAll('.photo-sub'));
@@ -1199,7 +1199,7 @@
       });
     });
 
-    /* -- Rail dot click --------------------------------- */
+    /* ── Rail dot click ───────────────────────────────── */
     railDots.forEach((dot, i) => {
       dot.addEventListener('click', () => {
         const rect       = track.getBoundingClientRect();
@@ -1209,7 +1209,7 @@
       });
     });
 
-    /* -- Scroll → unit mapping -------------------------- */
+    /* ── Scroll → unit mapping ────────────────────────── */
     function update() {
       ticking = false;
       const rect       = track.getBoundingClientRect();
@@ -1244,7 +1244,7 @@
       if (!ticking) { requestAnimationFrame(update); ticking = true; }
     }, { passive: true });
 
-    /* -- Stat count-up ---------------------------------- */
+    /* ── Stat count-up ────────────────────────────────── */
     const statEls = Array.from(document.querySelectorAll('.stat-num[data-count]'));
     const io = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -1264,7 +1264,7 @@
     }, { threshold: .5 });
     statEls.forEach(el => io.observe(el));
 
-    /* -- Location card stagger -------------------------- */
+    /* ── Location card stagger ────────────────────────── */
     const cards = Array.from(document.querySelectorAll('.loc-card'));
     const cardIO = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -1276,7 +1276,7 @@
     }, { threshold: .12 });
     cards.forEach(c => cardIO.observe(c));
 
-    /* -- Finale fade-up --------------------------------- */
+    /* ── Finale fade-up ───────────────────────────────── */
     const finEls = Array.from(document.querySelectorAll('.fin-r'));
     const finIO  = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -1288,7 +1288,7 @@
     }, { threshold: .15 });
     finEls.forEach(el => finIO.observe(el));
 
-    /* -- Waitlist form submit --------------------------- */
+    /* ── Waitlist form submit ─────────────────────────── */
     const wlForm   = document.getElementById('wlForm');
     const wlBtn    = document.getElementById('wlBtn');
     const wlStatus = document.getElementById('wlStatus');
@@ -1298,11 +1298,6 @@
         wlBtn.disabled = true;
         wlBtn.textContent = 'Sending…';
         const data = Object.fromEntries(new FormData(wlForm));
-        const programNote = data.programInterest ? `Program interest: ${data.programInterest}.` : '';
-        const locationNote = data.locationInterest ? `Preferred location: ${data.locationInterest}.` : '';
-        data.preferredContact = 'Email or text is fine';
-        data.sourcePage = `${window.location.pathname}${window.location.search || ''} landing page programs scroll`;
-        data.message = [programNote, locationNote, 'Homepage Get Matched form submission.'].filter(Boolean).join(' ');
         try {
           const res = await fetch('/api/parent-inquiry', {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -1342,4 +1337,3 @@
   </script>
 </body>
 </html>
-

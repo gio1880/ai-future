@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /codelab/app
+Disallow: /codelab/admin
+Disallow: /codelab/dev
+Disallow: /code-lab/admin.html
+Disallow: /code-lab/index.html
+Disallow: /code-lab/progressive%20fll%20test/
+Disallow: /code-lab/progressive fll test/
+Disallow: /payments-admin.html
+Disallow: /summer-leads-admin.html
+Disallow: /program-scroll-
+Disallow: /design-demos/
+
+Sitemap: https://ai-future-hq27.onrender.com/sitemap.xml

@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "id": "1777520175077-ir3s7x",
+    "type": "quiz_passed",
+    "studentName": "Codex GameTest",
+    "studentUsername": "cgametest",
+    "details": "Passed quiz for py-01",
+    "timestamp": "2026-04-30T03:36:15.077Z"
+  },
+  {
+    "id": "1777520174994-cqruf2",
+    "type": "login",
+    "studentName": "Codex GameTest",
+    "studentUsername": "cgametest",
+    "details": "Logged in",
+    "timestamp": "2026-04-30T03:36:14.994Z"
+  }
+]

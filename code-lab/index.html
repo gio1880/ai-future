@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Future Code Lab</title>
+  <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -1339,7 +1340,20 @@
           <a class="af-sidebar-item" onclick="Router.navigate('#/practice')" href="#/practice">
             <span class="si-icon"><i class="fa-solid fa-terminal"></i></span> Practice
           </a>
+          <div class="af-sidebar-section">Play</div>
+          <a class="af-sidebar-item" onclick="Router.navigate('#/arcade')" href="#/arcade">
+            <span class="si-icon"><i class="fa-solid fa-bolt"></i></span> Code Arcade <small style="margin-left:auto;color:#facc15">Soon</small>
+          </a>
+          <a class="af-sidebar-item" onclick="Router.navigate('#/simulator')" href="#/simulator">
+            <span class="si-icon"><i class="fa-solid fa-robot"></i></span> GritBot Simulator <small style="margin-left:auto;color:#facc15">Soon</small>
+          </a>
+          <a class="af-sidebar-item" onclick="Router.navigate('#/avatar-shop')" href="#/avatar-shop">
+            <span class="si-icon"><i class="fa-solid fa-shirt"></i></span> Avatar Shop <small style="margin-left:auto;color:#facc15">Soon</small>
+          </a>
           <div class="af-sidebar-section">Track</div>
+          <a class="af-sidebar-item" onclick="Router.navigate('#/leaderboard')" href="#/leaderboard">
+            <span class="si-icon"><i class="fa-solid fa-ranking-star"></i></span> Leaderboard <small style="margin-left:auto;color:#facc15">Soon</small>
+          </a>
           <a class="af-sidebar-item" onclick="Router.navigate('#/certificates')" href="#/certificates">
             <span class="si-icon"><i class="fa-solid fa-certificate"></i></span> Certificates
           </a>
@@ -1416,6 +1430,62 @@
                   </div>
                 </div>
               </div>
+            </div>
+
+            <!-- Game Progress -->
+            <div class="game-dashboard-card">
+              <div class="game-dashboard-top">
+                <div>
+                  <p class="game-eyebrow">Student Progress</p>
+                  <h3>Level <span id="game-level">1</span> <span id="game-tier">Starter Bot</span></h3>
+                </div>
+                <div class="game-avatar" id="game-avatar-card">AI</div>
+              </div>
+              <div class="game-xp-row">
+                <span><strong id="game-xp">0</strong>/<span id="game-xp-needed">100</span> XP</span>
+                <span><i class="fa-solid fa-coins"></i> <strong id="game-coins">0</strong> coins</span>
+                <span><i class="fa-solid fa-fire"></i> <strong id="game-streak">0</strong> day streak</span>
+              </div>
+              <div class="game-xp-track"><div id="game-xp-fill" class="game-xp-fill"></div></div>
+              <div class="game-daily">
+                <div class="game-daily-title">Today's Goals</div>
+                <div id="game-daily-goals" class="game-goals"></div>
+              </div>
+              <button class="btn--navy btn--sm" onclick="Router.navigate('#/avatar-shop')" style="align-self:flex-start">Customize GritBot Soon</button>
+            </div>
+
+            <!-- Game Modes -->
+            <div class="mode-grid">
+              <button class="mode-card" onclick="Router.navigate('#/python')">
+                <i class="fa-solid fa-book-open"></i>
+                <span>Learn Mode</span>
+                <small>Lessons, checks, quizzes</small>
+              </button>
+              <button class="mode-card" onclick="Router.navigate('#/arcade')">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Code Arcade</span>
+                <small>Coming soon</small>
+              </button>
+              <button class="mode-card" onclick="Router.navigate('#/simulator')">
+                <i class="fa-solid fa-robot"></i>
+                <span>GritBot Simulator</span>
+                <small>Coming soon</small>
+              </button>
+              <button class="mode-card" onclick="Router.navigate('#/avatar-shop')">
+                <i class="fa-solid fa-shirt"></i>
+                <span>Avatar Shop</span>
+                <small>Coming soon</small>
+              </button>
+              <button class="mode-card" onclick="Router.navigate('#/final-project')">
+                <i class="fa-solid fa-rocket"></i>
+                <span>Final Project</span>
+                <small>Coming soon</small>
+              </button>
+              <button class="mode-card" onclick="Router.navigate('#/leaderboard')">
+                <i class="fa-solid fa-ranking-star"></i>
+                <span>Leaderboard</span>
+                <small>Coming soon</small>
+              </button>
             </div>
 
             <!-- Learning Path (dynamic) -->
@@ -1514,6 +1584,11 @@
               <button onclick="Router.navigate('#/pybricks')" class="btn--primary btn--sm" style="width:100%;justify-content:center;border-radius:var(--r-md)">Explore Pybricks →</button>
             </div>
 
+            <div class="dash-card">
+              <div class="dash-card__title">Recent Rewards</div>
+              <div id="game-activity-log" class="game-activity-log"></div>
+            </div>
+
           </div><!-- /dash-right -->
         </div><!-- /dash-grid -->
 
@@ -1532,9 +1607,9 @@
     <div class="inner">
       <a class="mnb-item active" onclick="Router.navigate('#page-home')"><i class="fa-solid fa-gauge"></i>Dashboard</a>
       <a class="mnb-item" onclick="Router.navigate('#/python')"><i class="fa-brands fa-python"></i>Python</a>
-      <a class="mnb-item" onclick="afContinueLearning()"><i class="fa-solid fa-code"></i>Code</a>
+      <a class="mnb-item" onclick="Router.navigate('#/arcade')"><i class="fa-solid fa-bolt"></i>Soon</a>
+      <a class="mnb-item" onclick="Router.navigate('#/simulator')"><i class="fa-solid fa-robot"></i>Soon</a>
       <a class="mnb-item" onclick="Router.navigate('#/certificates')"><i class="fa-solid fa-certificate"></i>Certs</a>
-      <a class="mnb-item" onclick="Auth.logout()"><i class="fa-solid fa-right-from-bracket"></i>Logout</a>
     </div>
   </nav>
 </section>
@@ -1777,6 +1852,194 @@
       <div class="af-std-topbar__title">🏅 Final Project</div>
     </div>
     <div class="af-std-main"><div id="final-project-container" class="page-content"></div></div>
+  </div>
+</section>
+
+<section id="page-arcade" class="page">
+  <div class="af-standard-page">
+    <div class="af-std-topbar">
+      <a onclick="Router.navigate('#page-home')" href="#page-home"><i class="fa-solid fa-chevron-left"></i> Dashboard</a>
+      <div class="af-std-topbar__title">Code Arcade</div>
+    </div>
+    <div class="af-std-main game-page-shell">
+      <div class="game-page-hero">
+        <div>
+          <p class="game-eyebrow">Code Arcade</p>
+          <h1>Typed Python Arcade</h1>
+          <p>Warm up with Reaction Timer, then type Python to solve fast mini-games that match the lessons.</p>
+        </div>
+        <div class="game-stat-pills">
+          <span id="arcade-best">Best: --</span>
+          <span id="arcade-today-xp">Reaction: 0/100 XP</span>
+          <span id="typed-arcade-today-xp">Typed: 0/150 XP</span>
+        </div>
+      </div>
+      <div class="arcade-layout">
+        <div class="arcade-panel">
+          <div class="game-panel-heading">
+            <span>Warm-up</span>
+            <strong>Reaction Timer</strong>
+          </div>
+          <button id="arcade-pad" class="arcade-pad" onclick="CodeArcade.handlePadClick()">
+            <span id="arcade-status">Press Start</span>
+          </button>
+          <div class="arcade-actions">
+            <button class="btn--primary btn--sm" id="arcade-start" onclick="CodeArcade.start()">Start</button>
+            <button class="btn--navy btn--sm" onclick="CodeArcade.resetRound()">Reset Round</button>
+          </div>
+          <div id="arcade-result" class="game-result">Valid plays earn XP. Early clicks are false starts.</div>
+        </div>
+        <aside class="game-concept-panel">
+          <h3>What this teaches</h3>
+          <ul>
+            <li>Variables store the start time and best score.</li>
+            <li>Timers wait before changing the game state.</li>
+            <li>Events run code when a click happens.</li>
+            <li>Conditionals decide if the click was early or valid.</li>
+          </ul>
+          <pre><code>if state == "click":
+    reaction = now - start_time
+    if reaction &lt; best:
+        best = reaction
+else:
+    false_start = True</code></pre>
+        </aside>
+      </div>
+      <div class="typed-arcade-shell">
+        <div class="typed-arcade-list" id="typed-arcade-list"></div>
+        <div class="typed-arcade-card">
+          <div class="game-panel-heading">
+            <span id="typed-arcade-skill">Python</span>
+            <strong id="typed-arcade-title">Code Sprint</strong>
+          </div>
+          <p id="typed-arcade-prompt" class="typed-arcade-prompt"></p>
+          <div class="typed-target">
+            <span>Target Output</span>
+            <pre id="typed-arcade-target"></pre>
+          </div>
+          <textarea id="typed-arcade-code" class="typed-arcade-code" spellcheck="false"></textarea>
+          <div class="arcade-actions">
+            <button class="btn--primary btn--sm" onclick="TypedArcade.runCode()">Run Code</button>
+            <button class="btn--navy btn--sm" onclick="TypedArcade.submit()">Submit</button>
+            <button class="btn--sm" onclick="TypedArcade.showHint()">Hint</button>
+            <button class="btn--sm" onclick="TypedArcade.resetChallenge()">Reset</button>
+          </div>
+          <div class="typed-output-grid">
+            <div>
+              <span>Output</span>
+              <pre id="typed-arcade-output">(run your code)</pre>
+            </div>
+            <div>
+              <span>Feedback</span>
+              <pre id="typed-arcade-feedback">Type Python, run it, then submit when it matches the target.</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="page-simulator" class="page">
+  <div class="af-standard-page">
+    <div class="af-std-topbar">
+      <a onclick="Router.navigate('#page-home')" href="#page-home"><i class="fa-solid fa-chevron-left"></i> Dashboard</a>
+      <div class="af-std-topbar__title">GritBot Simulator</div>
+    </div>
+    <div class="af-std-main game-page-shell">
+      <div class="game-page-hero">
+        <div>
+          <p class="game-eyebrow" id="sim-mission-eyebrow">Mission 1</p>
+          <h1 id="sim-mission-title">Get the Battery</h1>
+          <p id="sim-mission-goal">Move GritBot from base to the battery, pick it up, return to base, and drop it.</p>
+        </div>
+        <div class="game-stat-pills">
+          <span id="sim-target">Target: 12 commands</span>
+          <span id="sim-best">Best: --</span>
+        </div>
+      </div>
+      <div class="sim-mission-strip" id="sim-mission-strip"></div>
+      <div class="sim-layout">
+        <div class="sim-board-card">
+          <div id="sim-grid" class="sim-grid" aria-label="GritBot mission grid"></div>
+          <div id="sim-result" class="game-result">Write commands, then run or step through the mission.</div>
+        </div>
+        <div class="sim-code-card">
+          <label for="sim-code">Robot Code</label>
+          <textarea id="sim-code" spellcheck="false"></textarea>
+          <div class="sim-actions">
+            <button class="btn--primary btn--sm" onclick="GritBotSimulator.run()">Run</button>
+            <button class="btn--navy btn--sm" onclick="GritBotSimulator.step()">Step</button>
+            <button class="btn--sm" onclick="GritBotSimulator.reset()">Reset</button>
+          </div>
+          <div id="sim-status" class="sim-status"></div>
+        </div>
+        <aside class="game-concept-panel">
+          <h3>Robot code concepts</h3>
+          <ul>
+            <li><code>forward()</code> teaches sequencing.</li>
+            <li>Turns change direction and robot state.</li>
+            <li><code>pickUp()</code> and <code>drop()</code> use condition checks.</li>
+            <li>Mission success requires algorithmic planning.</li>
+          </ul>
+          <pre><code>robot.forward()
+robot.turnRight()
+robot.pickUp()
+robot.drop()</code></pre>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="page-avatar-shop" class="page">
+  <div class="af-standard-page">
+    <div class="af-std-topbar"><a onclick="Router.navigate('#page-home')" href="#page-home"><i class="fa-solid fa-chevron-left"></i> Dashboard</a><div class="af-std-topbar__title">Avatar Shop</div></div>
+    <div class="af-std-main game-page-shell">
+      <div class="game-page-hero"><div><p class="game-eyebrow">Avatar Shop</p><h1>Customize your Code Lab avatar</h1><p>Spend earned coins later on colors, badges, and visual upgrades. This MVP lets students preview and equip starter colors.</p></div></div>
+      <div id="avatar-shop-container" class="avatar-shop-grid"></div>
+    </div>
+  </div>
+</section>
+
+<section id="page-leaderboard" class="page">
+  <div class="af-standard-page">
+    <div class="af-std-topbar"><a onclick="Router.navigate('#page-home')" href="#page-home"><i class="fa-solid fa-chevron-left"></i> Dashboard</a><div class="af-std-topbar__title">Leaderboard</div></div>
+    <div class="af-std-main game-page-shell">
+      <div class="game-page-hero"><div><p class="game-eyebrow">Momentum Board</p><h1>Track your learning streak</h1><p>The public class leaderboard stays private for now; this view shows the student's XP, level, daily goals, and recent activity.</p></div></div>
+      <div id="game-leaderboard-container" class="leaderboard-panel"></div>
+    </div>
+  </div>
+</section>
+
+<section id="page-coming-soon" class="page">
+  <div class="af-standard-page">
+    <div class="af-std-topbar">
+      <a onclick="Router.navigate('#page-home')" href="#page-home"><i class="fa-solid fa-chevron-left"></i> Dashboard</a>
+      <div class="af-std-topbar__title">Coming Soon</div>
+    </div>
+    <div class="af-std-main game-page-shell">
+      <div class="game-page-hero">
+        <div>
+          <p class="game-eyebrow">Code Lab Preview</p>
+          <h1 id="coming-soon-title">This feature is coming soon</h1>
+          <p id="coming-soon-copy">We are polishing this student experience before opening it. For now, keep using lessons, quizzes, practice, certificates, and reference tools.</p>
+        </div>
+      </div>
+      <div class="leaderboard-card">
+        <h2 id="coming-soon-feature">Feature in progress</h2>
+        <p id="coming-soon-detail">Your progress is safe. This area will not award XP, coins, or change your account until it is ready.</p>
+        <div class="leaderboard-stats">
+          <span>Lessons stay open</span>
+          <span>Practice stays open</span>
+          <span>No game progress changes</span>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+          <button class="btn--primary btn--sm" onclick="Router.navigate('#page-home')">Back to Dashboard</button>
+          <button class="btn--navy btn--sm" onclick="Router.navigate('#/python')">Continue Lessons</button>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -6797,6 +7060,7 @@ const DraftStore = {
 const Progress = {
   data: {},
   STORAGE_KEY: 'pylearn_progress',
+  gameProgress: null,
   _syncTimer: null,
 
   ensureLessonRecord(lessonId) {
@@ -6827,6 +7091,9 @@ const Progress = {
       console.error('Failed to load progress from localStorage:', e);
       this.data = {};
     }
+    if (typeof GameProgress !== 'undefined') {
+      GameProgress.init(this.gameProgress);
+    }
   },
 
   save() {
@@ -6849,7 +7116,10 @@ const Progress = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'same-origin',
-        body: JSON.stringify({ lessonProgress: this.data })
+        body: JSON.stringify({
+          lessonProgress: this.data,
+          gameProgress: (typeof GameProgress !== 'undefined') ? GameProgress.toJSON() : this.gameProgress
+        })
       });
     } catch (e) {
       console.error('Failed to sync progress to server:', e);
@@ -6862,6 +7132,10 @@ const Progress = {
       if (resp.ok) {
         const result = await resp.json();
         this.data = (result.data && result.data.lessonProgress) || {};
+        this.gameProgress = (result.data && result.data.gameProgress) || null;
+        if (typeof GameProgress !== 'undefined') {
+          GameProgress.init(this.gameProgress);
+        }
         // Also cache in localStorage
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.data));
         return;
@@ -6880,6 +7154,9 @@ const Progress = {
     rec.labPassed = true;
     rec.quizPassed = true;
     rec.completedAt = new Date().toISOString();
+    if (typeof GameProgress !== 'undefined') {
+      GameProgress.awardLesson(lessonId);
+    }
     this.save();
     updateProgressDisplay();
   },
@@ -6942,6 +7219,9 @@ const Progress = {
       rec.exercisePassed = true;
       rec.labPassed = true;
       rec.quizPassed = true;
+      if (typeof GameProgress !== 'undefined') {
+        GameProgress.awardLesson(lessonId);
+      }
       // Re-render lesson cards anywhere they're visible, so the change shows
       // immediately if the student is on the course page in another tab.
       if (typeof updateProgressDisplay === 'function') {
@@ -6957,6 +7237,9 @@ const Progress = {
     rec.quizPassed = true;
     rec.completed = true;
     rec.masteredAt = new Date().toISOString();
+    if (typeof GameProgress !== 'undefined') {
+      GameProgress.awardLesson(lessonId);
+    }
     this.save();
     updateProgressDisplay();
   },
@@ -7152,6 +7435,349 @@ const Progress = {
   reset() {
     this.data = {};
     this.save();
+  }
+};
+
+// ============================================================================
+// GAME PROGRESS - XP, level, coins, daily goals, and reward history
+// ============================================================================
+
+const GameProgress = {
+  STORAGE_KEY: 'ai_future_codelab_game_progress',
+  state: null,
+
+  defaults() {
+    return {
+      xp: 0,
+      lifetimeXP: 0,
+      level: 1,
+      tier: 'Starter Bot',
+      coins: 0,
+      dailyXP: {},
+      dailyGoals: {},
+      lessonRewards: {},
+      quizAttempts: {},
+      miniGameXPByDate: {},
+      simulatorMissionHistory: {},
+      inventory: {
+        colors: ['default'],
+        eyes: ['classic-eye'],
+        hats: [],
+        backpacks: [],
+        badges: [],
+        effects: [],
+        backgrounds: ['code-lab-desk']
+      },
+      equippedAvatar: {
+        color: 'default',
+        eyes: 'classic-eye',
+        hat: null,
+        backpack: null,
+        badge: null,
+        effect: null,
+        background: 'code-lab-desk'
+      },
+      streak: { current: 0, lastActiveDate: null },
+      rewardHistory: [],
+      activityLog: []
+    };
+  },
+
+  init(serverState) {
+    let localState = null;
+    try {
+      const stored = localStorage.getItem(this.STORAGE_KEY);
+      localState = stored ? JSON.parse(stored) : null;
+    } catch (e) {
+      localState = null;
+    }
+    this.state = this.merge(this.defaults(), serverState || localState || {});
+    this.recalculateLevel();
+    Progress.gameProgress = this.toJSON();
+    this.persistLocal();
+  },
+
+  merge(base, incoming) {
+    const merged = { ...base, ...(incoming || {}) };
+    merged.dailyXP = { ...base.dailyXP, ...(incoming && incoming.dailyXP || {}) };
+    merged.dailyGoals = { ...base.dailyGoals, ...(incoming && incoming.dailyGoals || {}) };
+    merged.lessonRewards = { ...base.lessonRewards, ...(incoming && incoming.lessonRewards || {}) };
+    merged.quizAttempts = { ...base.quizAttempts, ...(incoming && incoming.quizAttempts || {}) };
+    merged.miniGameXPByDate = { ...base.miniGameXPByDate, ...(incoming && incoming.miniGameXPByDate || {}) };
+    merged.simulatorMissionHistory = { ...base.simulatorMissionHistory, ...(incoming && incoming.simulatorMissionHistory || {}) };
+    merged.inventory = { ...base.inventory, ...(incoming && incoming.inventory || {}) };
+    merged.equippedAvatar = { ...base.equippedAvatar, ...(incoming && incoming.equippedAvatar || {}) };
+    Object.keys(base.inventory).forEach(category => {
+      if (!Array.isArray(merged.inventory[category])) merged.inventory[category] = [...base.inventory[category]];
+    });
+    if (!merged.inventory.colors.includes('default')) merged.inventory.colors.unshift('default');
+    if (!merged.inventory.eyes.includes('classic-eye')) merged.inventory.eyes.unshift('classic-eye');
+    if (!merged.inventory.backgrounds.includes('code-lab-desk')) merged.inventory.backgrounds.unshift('code-lab-desk');
+    merged.equippedAvatar.color = merged.equippedAvatar.color || 'default';
+    merged.equippedAvatar.eyes = merged.equippedAvatar.eyes || 'classic-eye';
+    merged.equippedAvatar.background = merged.equippedAvatar.background || 'code-lab-desk';
+    merged.streak = { ...base.streak, ...(incoming && incoming.streak || {}) };
+    merged.activityLog = Array.isArray(merged.activityLog) ? merged.activityLog.slice(0, 20) : [];
+    merged.rewardHistory = Array.isArray(merged.rewardHistory) ? merged.rewardHistory.slice(0, 50) : [];
+    return merged;
+  },
+
+  ensure() {
+    if (!this.state) this.init(null);
+    return this.state;
+  },
+
+  toJSON() {
+    return JSON.parse(JSON.stringify(this.ensure()));
+  },
+
+  todayKey() {
+    return new Date().toISOString().slice(0, 10);
+  },
+
+  levelRequirement(level) {
+    return 100 + Math.max(0, level - 1) * 35;
+  },
+
+  tierForLevel(level) {
+    if (level >= 20) return 'Innovation Captain';
+    if (level >= 15) return 'Robot Strategist';
+    if (level >= 10) return 'Code Builder';
+    if (level >= 5) return 'Debug Explorer';
+    return 'Starter Bot';
+  },
+
+  recalculateLevel() {
+    const s = this.ensure();
+    let level = 1;
+    let remaining = Number(s.lifetimeXP || 0);
+    while (remaining >= this.levelRequirement(level)) {
+      remaining -= this.levelRequirement(level);
+      level += 1;
+    }
+    s.level = level;
+    s.xp = remaining;
+    s.tier = this.tierForLevel(level);
+  },
+
+  levelProgress() {
+    const s = this.ensure();
+    const required = this.levelRequirement(s.level);
+    return {
+      current: Math.min(s.xp || 0, required),
+      required,
+      percent: Math.min(100, Math.round(((s.xp || 0) / required) * 100))
+    };
+  },
+
+  persistLocal() {
+    try {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.state));
+    } catch (e) {}
+  },
+
+  save() {
+    this.recalculateLevel();
+    Progress.gameProgress = this.toJSON();
+    this.persistLocal();
+    if (typeof renderGameDashboard === 'function') renderGameDashboard();
+    if (typeof Progress !== 'undefined' && Progress.save) Progress.save();
+  },
+
+  setDailyGoal(key) {
+    const s = this.ensure();
+    const today = this.todayKey();
+    if (!s.dailyGoals[today]) s.dailyGoals[today] = {};
+    s.dailyGoals[today][key] = true;
+  },
+
+  addActivity(label, xp, type) {
+    const s = this.ensure();
+    s.activityLog.unshift({
+      label,
+      xp: xp || 0,
+      type: type || 'reward',
+      at: new Date().toISOString()
+    });
+    s.activityLog = s.activityLog.slice(0, 20);
+  },
+
+  addXP(amount, label, type) {
+    const s = this.ensure();
+    const xp = Math.max(0, Math.round(amount || 0));
+    if (!xp) {
+      this.addActivity(label || 'Practice recorded', 0, type || 'review');
+      this.save();
+      return { xp: 0, leveledUp: false };
+    }
+    const beforeLevel = s.level || 1;
+    const today = this.todayKey();
+    s.dailyXP[today] = (s.dailyXP[today] || 0) + xp;
+    s.lifetimeXP = (s.lifetimeXP || 0) + xp;
+    s.coins = (s.coins || 0) + Math.max(1, Math.floor(xp / 10));
+    this.addActivity(label || 'XP earned', xp, type || 'reward');
+    this.updateStreak();
+    this.recalculateLevel();
+    const leveledUp = s.level > beforeLevel;
+    if (leveledUp) {
+      const bonus = (s.level - beforeLevel) * 25;
+      s.coins += bonus;
+      this.addActivity('Level up to Level ' + s.level + ' bonus', bonus, 'level');
+      if (typeof Toast !== 'undefined' && Toast.show) Toast.show('Level up! You reached Level ' + s.level + '.', 'success');
+    } else if (typeof Toast !== 'undefined' && Toast.show) {
+      Toast.show('+' + xp + ' XP - ' + (label || 'Progress saved'), 'success');
+    }
+    this.save();
+    return { xp, leveledUp };
+  },
+
+  updateStreak() {
+    const s = this.ensure();
+    const today = this.todayKey();
+    const last = s.streak.lastActiveDate;
+    if (last === today) return;
+    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    s.streak.current = last === yesterday ? (s.streak.current || 0) + 1 : 1;
+    s.streak.lastActiveDate = today;
+  },
+
+  lessonXP(lesson) {
+    if (!lesson) return 50;
+    if (lesson.category === 'pybricks' || lesson.category === 'fll') return 75;
+    if ((lesson.order || 0) >= 8) return 65;
+    return 50;
+  },
+
+  awardLesson(lessonId) {
+    const s = this.ensure();
+    const rec = s.lessonRewards[lessonId] || { count: 0, xp: 0 };
+    if (rec.count >= 2) {
+      rec.count += 1;
+      s.lessonRewards[lessonId] = rec;
+      this.addActivity('Reviewed lesson ' + lessonId, 0, 'lesson');
+      this.save();
+      return { xp: 0 };
+    }
+    const lesson = (typeof LessonRegistry !== 'undefined' && LessonRegistry.getById) ? LessonRegistry.getById(lessonId) : null;
+    const base = this.lessonXP(lesson);
+    const xp = rec.count === 0 ? base : Math.round(base * 0.2);
+    rec.count += 1;
+    rec.xp = (rec.xp || 0) + xp;
+    rec.lastAwardedAt = new Date().toISOString();
+    s.lessonRewards[lessonId] = rec;
+    this.setDailyGoal('lesson');
+    return this.addXP(xp, (rec.count === 1 ? 'Completed ' : 'Reviewed ') + ((lesson && lesson.title) || lessonId), 'lesson');
+  },
+
+  awardQuiz(quizId, score, passed, options) {
+    const s = this.ensure();
+    const rec = s.quizAttempts[quizId] || { attempts: 0, bestScore: 0, xp: 0 };
+    rec.attempts += 1;
+    rec.bestScore = Math.max(rec.bestScore || 0, score || 0);
+    s.quizAttempts[quizId] = rec;
+    if (!passed) {
+      this.addActivity('Quiz attempt recorded: ' + (options && options.label || quizId), 0, 'quiz');
+      this.save();
+      return { xp: 0 };
+    }
+    if ((rec.passedCount || 0) >= 3) {
+      rec.passedCount += 1;
+      rec.lastPassedAt = new Date().toISOString();
+      this.addActivity('Quiz review recorded: ' + (options && options.label || quizId), 0, 'quiz');
+      this.save();
+      return { xp: 0 };
+    }
+    let base = score >= 100 ? 120 : score >= 90 ? 100 : score >= 80 ? 80 : 60;
+    const multiplier = rec.attempts === 1 ? 1 : rec.attempts === 2 ? 0.75 : rec.attempts === 3 ? 0.5 : 0.25;
+    const xp = Math.max(10, Math.round(base * multiplier));
+    rec.xp += xp;
+    rec.passedCount = (rec.passedCount || 0) + 1;
+    rec.lastPassedAt = new Date().toISOString();
+    this.setDailyGoal('quiz');
+    return this.addXP(xp, 'Passed quiz: ' + (options && options.label || quizId), 'quiz');
+  },
+
+  awardArcade(reactionMs, falseStart) {
+    const s = this.ensure();
+    const today = this.todayKey();
+    const arcade = s.miniGameXPByDate[today] || {};
+    const rec = arcade.reactionTimer || { xp: 0, plays: 0, bestMs: null };
+    rec.plays += 1;
+    if (falseStart) {
+      arcade.reactionTimer = rec;
+      s.miniGameXPByDate[today] = arcade;
+      this.addActivity('Reaction Timer false start', 0, 'arcade');
+      this.save();
+      return { xp: 0, message: 'False start. Wait for CLICK!' };
+    }
+    let xp = 5;
+    if (reactionMs < 450) xp += 10;
+    if (reactionMs < 300) xp += 20;
+    const bestBefore = rec.bestMs;
+    if (!bestBefore || reactionMs < bestBefore) {
+      xp += 25;
+      rec.bestMs = reactionMs;
+    }
+    const remaining = Math.max(0, 100 - (rec.xp || 0));
+    xp = Math.min(xp, remaining);
+    rec.xp = (rec.xp || 0) + xp;
+    arcade.reactionTimer = rec;
+    s.miniGameXPByDate[today] = arcade;
+    this.setDailyGoal('arcade');
+    const result = this.addXP(xp, 'Reaction Timer: ' + reactionMs + 'ms', 'arcade');
+    return { xp: result.xp, message: xp ? '+' + xp + ' XP earned' : 'Daily arcade XP cap reached', bestMs: rec.bestMs };
+  },
+
+  awardTypedArcade(challenge) {
+    const s = this.ensure();
+    const today = this.todayKey();
+    const arcade = s.miniGameXPByDate[today] || {};
+    const typed = arcade.typedPython || { xp: 0, completed: {} };
+    if (!typed.completed) typed.completed = {};
+    const rec = typed.completed[challenge.id] || { passes: 0, xp: 0 };
+    let xp = rec.passes === 0 ? (challenge.xpReward || 30) : rec.passes === 1 ? 10 : 0;
+    const remaining = Math.max(0, 150 - (typed.xp || 0));
+    xp = Math.min(xp, remaining);
+    rec.passes += 1;
+    rec.xp += xp;
+    rec.lastPassedAt = new Date().toISOString();
+    typed.completed[challenge.id] = rec;
+    typed.xp = (typed.xp || 0) + xp;
+    arcade.typedPython = typed;
+    s.miniGameXPByDate[today] = arcade;
+    this.setDailyGoal('typedArcade');
+    const result = this.addXP(xp, 'Code Arcade: ' + challenge.title, 'arcade');
+    return { xp: result.xp, message: xp ? '+' + xp + ' XP earned' : 'Typed arcade XP cap reached' };
+  },
+
+  awardSimulator(missionId, commandCount, noError, mission) {
+    const s = this.ensure();
+    const history = s.simulatorMissionHistory[missionId] || { completions: 0, bestCommandCount: null, reviewAwarded: false };
+    let xp = 0;
+    const target = mission && mission.targetCommandCount ? mission.targetCommandCount : 12;
+    if (!history.completions) {
+      xp += (mission && mission.xpReward) || 50;
+      if (commandCount <= target) xp += 25;
+      if (noError) xp += 10;
+    } else {
+      if (!history.reviewAwarded) {
+        xp += 10;
+        history.reviewAwarded = true;
+      }
+      if (!history.bestCommandCount || commandCount < history.bestCommandCount) xp += 25;
+    }
+    history.completions += 1;
+    history.bestCommandCount = history.bestCommandCount ? Math.min(history.bestCommandCount, commandCount) : commandCount;
+    history.lastCompletedAt = new Date().toISOString();
+    s.simulatorMissionHistory[missionId] = history;
+    this.setDailyGoal('simulator');
+    return this.addXP(xp, 'GritBot mission complete: ' + ((mission && mission.name) || missionId), 'simulator');
+  },
+
+  resetDemoProgress() {
+    this.state = this.defaults();
+    this.save();
+    if (typeof Toast !== 'undefined' && Toast.show) Toast.show('Demo XP progress reset.', 'success');
   }
 };
 
@@ -9567,6 +10193,11 @@ const LessonViewer = {
         `;
         resultDiv.className = 'quiz-result pass';
         Progress.markQuizPassed(this.currentLesson.id);
+        if (typeof GameProgress !== 'undefined') {
+          GameProgress.awardQuiz('lesson-quiz-' + this.currentLesson.id, 100, true, {
+            label: this.currentLesson.title || this.currentLesson.id
+          });
+        }
         updateProgressDisplay();
         Toast.show('Quiz passed! Finish the lesson to save mastery.', 'success');
         // Disable the submit button
@@ -10062,6 +10693,9 @@ const UnitTestViewer = {
 
     // Record attempt
     Progress.recordUnitTestAttempt(test.id, score, passed);
+    if (typeof GameProgress !== 'undefined') {
+      GameProgress.awardQuiz(test.id, score, passed, { label: test.title || test.id });
+    }
 
     // Build the priority-review map from the questions they got wrong, so the
     // student dashboard can highlight which lessons to re-study and gate the
@@ -10153,10 +10787,1196 @@ const UnitTestViewer = {
 };
 
 // ============================================================================
+// CODE ARCADE - Reaction Timer MVP
+// ============================================================================
+
+const CodeArcade = {
+  state: 'idle',
+  timer: null,
+  readyAt: 0,
+
+  render() {
+    this.resetRound(false);
+    this.updateStats();
+    if (typeof TypedArcade !== 'undefined') TypedArcade.render();
+  },
+
+  start() {
+    this.resetRound(false);
+    const pad = document.getElementById('arcade-pad');
+    const status = document.getElementById('arcade-status');
+    const result = document.getElementById('arcade-result');
+    const start = document.getElementById('arcade-start');
+    this.state = 'waiting';
+    if (pad) pad.className = 'arcade-pad arcade-wait';
+    if (status) status.textContent = 'Wait...';
+    if (result) result.textContent = 'Do not click yet. The button will change to CLICK!';
+    if (start) start.disabled = true;
+    const delay = 1200 + Math.floor(Math.random() * 2400);
+    this.timer = setTimeout(() => {
+      this.state = 'ready';
+      this.readyAt = performance.now();
+      if (pad) pad.className = 'arcade-pad arcade-ready';
+      if (status) status.textContent = 'CLICK!';
+      if (result) result.textContent = 'Click now.';
+    }, delay);
+  },
+
+  handlePadClick() {
+    const result = document.getElementById('arcade-result');
+    if (this.state === 'idle') {
+      if (result) result.textContent = 'Press Start first.';
+      return;
+    }
+    if (this.state === 'waiting') {
+      clearTimeout(this.timer);
+      const award = GameProgress.awardArcade(0, true);
+      this.state = 'idle';
+      if (result) result.textContent = award.message;
+      this.updatePad('False Start', 'arcade-false');
+      this.updateStats();
+      this.enableStart();
+      return;
+    }
+    if (this.state === 'ready') {
+      const reaction = Math.round(performance.now() - this.readyAt);
+      const award = GameProgress.awardArcade(reaction, false);
+      this.state = 'idle';
+      if (result) result.textContent = reaction + 'ms reaction. ' + award.message + '.';
+      this.updatePad(reaction + 'ms', 'arcade-done');
+      this.updateStats();
+      this.enableStart();
+    }
+  },
+
+  updatePad(text, className) {
+    const pad = document.getElementById('arcade-pad');
+    const status = document.getElementById('arcade-status');
+    if (pad) pad.className = 'arcade-pad ' + className;
+    if (status) status.textContent = text;
+  },
+
+  enableStart() {
+    const start = document.getElementById('arcade-start');
+    if (start) start.disabled = false;
+  },
+
+  resetRound(clearMessage = true) {
+    clearTimeout(this.timer);
+    this.state = 'idle';
+    this.readyAt = 0;
+    this.updatePad('Press Start', '');
+    if (clearMessage) {
+      const result = document.getElementById('arcade-result');
+      if (result) result.textContent = 'Valid plays earn XP. Early clicks are false starts.';
+    }
+    this.enableStart();
+  },
+
+  updateStats() {
+    const s = GameProgress.ensure();
+    const today = GameProgress.todayKey();
+    const rec = ((s.miniGameXPByDate[today] || {}).reactionTimer) || { xp: 0, bestMs: null };
+    const best = document.getElementById('arcade-best');
+    const todayXP = document.getElementById('arcade-today-xp');
+    if (best) best.textContent = 'Best: ' + (rec.bestMs ? rec.bestMs + 'ms' : '--');
+    if (todayXP) todayXP.textContent = 'Reaction: ' + (rec.xp || 0) + '/100 XP';
+    const typedXP = document.getElementById('typed-arcade-today-xp');
+    const typed = ((s.miniGameXPByDate[today] || {}).typedPython) || { xp: 0 };
+    if (typedXP) typedXP.textContent = 'Typed: ' + (typed.xp || 0) + '/150 XP';
+  }
+};
+
+const TypedArcade = {
+  currentId: 'code-sprint-output-builder',
+  lastOutput: '',
+  lastError: '',
+  challenges: [
+    {
+      id: 'code-sprint-output-builder',
+      title: 'Code Sprint: Output Builder',
+      skill: 'print()',
+      difficulty: 'Starter',
+      prompt: 'Type one line of Python that prints the exact target message.',
+      starterCode: '# Print the target message\n',
+      expectedOutput: 'Robot ready',
+      hint: 'Use print("Robot ready").',
+      xpReward: 25
+    },
+    {
+      id: 'variable-dash-speed',
+      title: 'Variable Dash',
+      skill: 'Variables',
+      difficulty: 'Starter',
+      prompt: 'Fill in the starting speed so the final printed value is 15.',
+      starterCode: 'speed = \nspeed = speed + 5\nprint(speed)\n',
+      expectedOutput: '15',
+      hint: 'If speed + 5 equals 15, speed should start at 10.',
+      xpReward: 30
+    },
+    {
+      id: 'bug-fix-rush-indent',
+      title: 'Bug Fix Rush',
+      skill: 'Indentation',
+      difficulty: 'Level 2',
+      prompt: 'Fix the broken if statement so Python can run it.',
+      starterCode: 'battery = 30\nif battery > 20:\nprint("Go")\n',
+      expectedOutput: 'Go',
+      hint: 'The print line belongs inside the if block, so it needs four spaces.',
+      xpReward: 35
+    },
+    {
+      id: 'loop-launch-countdown',
+      title: 'Loop Launch',
+      skill: 'Loops',
+      difficulty: 'Level 3',
+      prompt: 'Write a loop that prints the countdown, then prints Liftoff!',
+      starterCode: 'for number in range(3, 0, -1):\n    \nprint("Liftoff!")\n',
+      expectedOutput: '3\n2\n1\nLiftoff!',
+      hint: 'Inside the loop, print(number). The final print stays outside the loop.',
+      xpReward: 45
+    },
+    {
+      id: 'gate-code-battery',
+      title: 'Gate Code: If/Else',
+      skill: 'Conditionals',
+      difficulty: 'Level 3',
+      prompt: 'Write the condition that sends a low battery robot to charge.',
+      starterCode: 'battery = 15\n\nif battery < 20:\n    print("Charge needed")\nelse:\n    print("Ready")\n',
+      expectedOutput: 'Charge needed',
+      hint: 'A low battery is less than 20, so use battery < 20.',
+      xpReward: 40
+    },
+    {
+      id: 'function-forge-double',
+      title: 'Function Forge',
+      skill: 'Functions',
+      difficulty: 'Level 4',
+      prompt: 'Complete the function so it returns double the number.',
+      starterCode: 'def double(number):\n    return \n\nprint(double(6))\n',
+      expectedOutput: '12',
+      hint: 'Return number * 2 from inside the function.',
+      xpReward: 50
+    },
+    {
+      id: 'robot-command-coder',
+      title: 'Robot Command Coder',
+      skill: 'Sequencing',
+      difficulty: 'Level 2',
+      prompt: 'Type the three robot commands shown in the target path.',
+      starterCode: '# Write the command path\n',
+      expectedOutput: 'forward\nright\nforward',
+      hint: 'For this arcade round, use print() to show each command: forward, right, forward.',
+      xpReward: 35
+    }
+  ],
+
+  render() {
+    this.renderList();
+    this.load(this.currentId);
+  },
+
+  renderList() {
+    const list = document.getElementById('typed-arcade-list');
+    if (!list) return;
+    const today = GameProgress.todayKey();
+    const completed = (((GameProgress.ensure().miniGameXPByDate[today] || {}).typedPython || {}).completed) || {};
+    list.innerHTML = this.challenges.map(challenge => {
+      const done = completed[challenge.id] && completed[challenge.id].passes > 0;
+      return '<button class="typed-arcade-tab ' + (challenge.id === this.currentId ? 'active' : '') + (done ? ' is-done' : '') + '" onclick="TypedArcade.load(\'' + challenge.id + '\')">' +
+        '<span>' + this.escape(challenge.difficulty) + '</span>' +
+        '<strong>' + this.escape(challenge.title) + '</strong>' +
+        '<small>' + this.escape(challenge.skill) + (done ? ' · done' : '') + '</small>' +
+        '</button>';
+    }).join('');
+  },
+
+  load(id) {
+    const challenge = this.get(id) || this.challenges[0];
+    this.currentId = challenge.id;
+    const title = document.getElementById('typed-arcade-title');
+    const skill = document.getElementById('typed-arcade-skill');
+    const prompt = document.getElementById('typed-arcade-prompt');
+    const target = document.getElementById('typed-arcade-target');
+    const code = document.getElementById('typed-arcade-code');
+    const output = document.getElementById('typed-arcade-output');
+    const feedback = document.getElementById('typed-arcade-feedback');
+    if (title) title.textContent = challenge.title;
+    if (skill) skill.textContent = challenge.skill + ' · ' + challenge.difficulty;
+    if (prompt) prompt.textContent = challenge.prompt;
+    if (target) target.textContent = challenge.expectedOutput;
+    if (code) code.value = challenge.starterCode;
+    if (output) output.textContent = '(run your code)';
+    if (feedback) feedback.textContent = 'Type Python, run it, then submit when it matches the target.';
+    this.lastOutput = '';
+    this.lastError = '';
+    this.renderList();
+  },
+
+  get(id) {
+    return this.challenges.find(challenge => challenge.id === id);
+  },
+
+  async runCode() {
+    const challenge = this.get(this.currentId);
+    const codeEl = document.getElementById('typed-arcade-code');
+    const output = document.getElementById('typed-arcade-output');
+    const feedback = document.getElementById('typed-arcade-feedback');
+    if (!challenge || !codeEl) return;
+    const code = normalizeQuotes(codeEl.value.trim());
+    if (!code) {
+      if (feedback) feedback.textContent = 'Type some Python first.';
+      return;
+    }
+    try {
+      await PyRunner.init();
+      const result = await PyRunner.run(code);
+      this.lastOutput = result.output || '';
+      this.lastError = result.error || '';
+      if (output) output.textContent = result.error ? result.error : (result.output || '(no output)');
+      if (feedback) feedback.textContent = result.error ? 'Fix the Python error, then run again.' : 'Code ran. Submit when the output matches the target.';
+    } catch (e) {
+      this.lastOutput = '';
+      this.lastError = e.message;
+      if (output) output.textContent = e.message;
+      if (feedback) feedback.textContent = 'The Python runner could not run this code yet.';
+    }
+  },
+
+  async submit() {
+    const challenge = this.get(this.currentId);
+    const feedback = document.getElementById('typed-arcade-feedback');
+    if (!challenge) return;
+    await this.runCode();
+    if (this.lastError) {
+      if (feedback) feedback.textContent = 'Not yet. Fix the error, then try again.';
+      return;
+    }
+    const actual = normalizeProgramOutput(this.lastOutput);
+    const expected = normalizeProgramOutput(challenge.expectedOutput);
+    if (actual !== expected) {
+      if (feedback) feedback.textContent = 'Not quite. Your output must match the target exactly.';
+      return;
+    }
+    const award = GameProgress.awardTypedArcade(challenge);
+    if (feedback) feedback.textContent = 'Correct! ' + award.message + '.';
+    this.renderList();
+    CodeArcade.updateStats();
+  },
+
+  showHint() {
+    const challenge = this.get(this.currentId);
+    const feedback = document.getElementById('typed-arcade-feedback');
+    if (challenge && feedback) feedback.textContent = challenge.hint;
+  },
+
+  resetChallenge() {
+    this.load(this.currentId);
+  },
+
+  escape(text) {
+    const div = document.createElement('div');
+    div.textContent = text == null ? '' : String(text);
+    return div.innerHTML;
+  }
+};
+
+// ============================================================================
+// GRITBOT SIMULATOR - 2D grid mission MVP
+// ============================================================================
+
+const GritBotSimulator = {
+  directions: ['E', 'S', 'W', 'N'],
+  currentMissionId: 'get-the-battery',
+  commands: [],
+  pointer: 0,
+  animating: false,
+  hadError: false,
+  missionAwardedThisRun: false,
+  state: null,
+  missions: [
+    {
+      id: 'get-the-battery',
+      name: 'Get the Battery',
+      goal: 'Move to the battery, pick it up, return to base, and drop it.',
+      gridSize: { width: 5, height: 5 },
+      start: { x: 0, y: 0 },
+      direction: 'E',
+      base: { x: 0, y: 0 },
+      items: [{ id: 'battery', type: 'battery', x: 2, y: 1, target: { x: 0, y: 0 } }],
+      obstacles: [],
+      colorTiles: [],
+      targetCommandCount: 12,
+      xpReward: 50,
+      starterCode: ['# Get the battery, then return to base','robot.forward()','robot.forward()','robot.turnRight()','robot.forward()','robot.pickUp()','robot.turnRight()','robot.forward()','robot.turnRight()','robot.forward()','robot.turnLeft()','robot.forward()','robot.drop()'].join('\n')
+    },
+    {
+      id: 'deliver-the-gear',
+      name: 'Deliver the Gear',
+      goal: 'Carry the gear around the blocked tile and deliver it to the repair station.',
+      gridSize: { width: 5, height: 5 },
+      start: { x: 0, y: 2 },
+      direction: 'E',
+      base: { x: 0, y: 2 },
+      items: [{ id: 'gear', type: 'gear', x: 1, y: 2, target: { x: 4, y: 2 } }],
+      obstacles: [{ x: 2, y: 2 }],
+      colorTiles: [],
+      targetCommandCount: 13,
+      xpReward: 60,
+      starterCode: ['# Pick up the gear and route around the wall','robot.forward()','robot.pickUp()','robot.turnLeft()','robot.forward()','robot.turnRight()','robot.forward()','robot.forward()','robot.turnRight()','robot.forward()','robot.turnLeft()','robot.forward()','robot.drop()'].join('\n')
+    },
+    {
+      id: 'avoid-the-wall',
+      name: 'Avoid the Wall',
+      goal: 'Reach the finish tile without moving into any blocked squares.',
+      gridSize: { width: 5, height: 5 },
+      start: { x: 0, y: 4 },
+      direction: 'E',
+      base: { x: 0, y: 4 },
+      finish: { x: 4, y: 0 },
+      items: [],
+      obstacles: [{ x: 1, y: 4 }, { x: 1, y: 3 }, { x: 3, y: 1 }],
+      colorTiles: [],
+      targetCommandCount: 10,
+      xpReward: 55,
+      starterCode: ['# Get to the finish without hitting walls','robot.turnLeft()','robot.forward()','robot.forward()','robot.forward()','robot.forward()','robot.turnRight()','robot.forward()','robot.forward()','robot.forward()','robot.forward()'].join('\n')
+    },
+    {
+      id: 'loop-lane',
+      name: 'Loop Lane',
+      goal: 'Use repeat blocks to move GritBot efficiently to the finish.',
+      gridSize: { width: 5, height: 3 },
+      start: { x: 0, y: 1 },
+      direction: 'E',
+      base: { x: 0, y: 1 },
+      finish: { x: 4, y: 1 },
+      items: [],
+      obstacles: [],
+      colorTiles: [],
+      targetCommandCount: 4,
+      xpReward: 65,
+      starterCode: ['# repeat lets one command run many times','repeat(4):','    robot.forward()'].join('\n')
+    },
+    {
+      id: 'sensor-stop',
+      name: 'Sensor Stop',
+      goal: 'Move until GritBot reaches the blue sensor tile.',
+      gridSize: { width: 5, height: 3 },
+      start: { x: 0, y: 1 },
+      direction: 'E',
+      base: { x: 0, y: 1 },
+      finish: { x: 3, y: 1 },
+      items: [],
+      obstacles: [],
+      colorTiles: [{ x: 3, y: 1, color: 'blue' }],
+      targetCommandCount: 3,
+      xpReward: 65,
+      starterCode: ['# Stop when the robot reaches blue','while robot.onColor("blue") == False:','    robot.forward()'].join('\n')
+    },
+    {
+      id: 'warehouse-sort',
+      name: 'Warehouse Sort',
+      goal: 'Deliver both objects to their matching drop zones.',
+      gridSize: { width: 5, height: 5 },
+      start: { x: 0, y: 0 },
+      direction: 'E',
+      base: { x: 0, y: 0 },
+      items: [{ id: 'cube', type: 'cube', x: 1, y: 0, target: { x: 4, y: 0 } }, { id: 'ball', type: 'ball', x: 0, y: 1, target: { x: 4, y: 1 } }],
+      obstacles: [{ x: 2, y: 2 }],
+      colorTiles: [],
+      targetCommandCount: 22,
+      xpReward: 75,
+      starterCode: ['# Deliver the cube, then return for the ball','robot.forward()','robot.pickUp()','robot.forward()','robot.forward()','robot.forward()','robot.drop()','# Now plan the second delivery'].join('\n')
+    },
+    {
+      id: 'fll-table-practice',
+      name: 'FLL Table Practice',
+      goal: 'Run a longer route: collect the model and park at the finish tile.',
+      gridSize: { width: 6, height: 5 },
+      start: { x: 0, y: 4 },
+      direction: 'E',
+      base: { x: 0, y: 4 },
+      finish: { x: 5, y: 0 },
+      items: [{ id: 'model', type: 'model', x: 2, y: 4, target: { x: 5, y: 0 } }],
+      obstacles: [{ x: 3, y: 3 }, { x: 4, y: 3 }],
+      colorTiles: [],
+      targetCommandCount: 18,
+      xpReward: 90,
+      starterCode: ['# FLL-style route planning','robot.forward()','robot.forward()','robot.pickUp()','# Finish the route and park at the top-right tile'].join('\n')
+    }
+  ],
+
+  mission() {
+    return this.missions.find(m => m.id === this.currentMissionId) || this.missions[0];
+  },
+
+  render() {
+    this.renderMissionStrip();
+    this.loadMission(this.currentMissionId, false);
+  },
+
+  loadMission(id, resetCode = true) {
+    this.currentMissionId = id;
+    const mission = this.mission();
+    const eyebrow = document.getElementById('sim-mission-eyebrow');
+    const title = document.getElementById('sim-mission-title');
+    const goal = document.getElementById('sim-mission-goal');
+    const target = document.getElementById('sim-target');
+    if (eyebrow) eyebrow.textContent = 'Mission ' + (this.missions.findIndex(m => m.id === mission.id) + 1);
+    if (title) title.textContent = mission.name;
+    if (goal) goal.textContent = mission.goal;
+    if (target) target.textContent = 'Target: ' + mission.targetCommandCount + ' commands';
+    this.renderMissionStrip();
+    this.reset(resetCode);
+    this.updateBest();
+  },
+
+  renderMissionStrip() {
+    const strip = document.getElementById('sim-mission-strip');
+    if (!strip) return;
+    const history = GameProgress.ensure().simulatorMissionHistory || {};
+    strip.innerHTML = this.missions.map((mission, index) => {
+      const done = history[mission.id] && history[mission.id].completions > 0;
+      return '<button class="sim-mission-tab ' + (mission.id === this.currentMissionId ? 'active' : '') + (done ? ' is-done' : '') + '" onclick="GritBotSimulator.loadMission(\'' + mission.id + '\')">' +
+        '<span>Mission ' + (index + 1) + '</span><strong>' + this.escape(mission.name) + '</strong>' +
+        '</button>';
+    }).join('');
+  },
+
+  reset(resetCode = true) {
+    const mission = this.mission();
+    this.state = {
+      x: mission.start.x,
+      y: mission.start.y,
+      dir: mission.direction,
+      carrying: null,
+      delivered: {},
+      items: mission.items.map(item => ({ ...item, carried: false, delivered: false }))
+    };
+    this.commands = [];
+    this.pointer = 0;
+    this.hadError = false;
+    this.missionAwardedThisRun = false;
+    this.animating = false;
+    const code = document.getElementById('sim-code');
+    if (code && resetCode) code.value = mission.starterCode;
+    if (code && !code.value.trim()) code.value = mission.starterCode;
+    this.setStatus('Ready. Run the starter code or edit one command at a time.');
+    this.draw();
+  },
+
+  parse() {
+    const code = document.getElementById('sim-code');
+    const raw = code ? code.value.split('\n') : [];
+    const commands = [];
+    for (let i = 0; i < raw.length; i++) {
+      const line = raw[i].trim();
+      if (!line || line.startsWith('#')) continue;
+      const repeatMatch = line.match(/^repeat\((\d+)\):$/);
+      if (repeatMatch) {
+        const next = raw[i + 1] ? raw[i + 1].trim() : '';
+        if (!this.isBasicCommand(next)) throw new Error('Line ' + (i + 2) + ': repeat needs one robot command indented below it.');
+        const times = Math.min(8, parseInt(repeatMatch[1], 10));
+        for (let r = 0; r < times; r++) commands.push({ cmd: next, line: i + 2 });
+        i += 1;
+        continue;
+      }
+      const whileMatch = line.match(/^while robot\.onColor\("([^"]+)"\) == False:$/);
+      if (whileMatch) {
+        const next = raw[i + 1] ? raw[i + 1].trim() : '';
+        if (next !== 'robot.forward()') throw new Error('Line ' + (i + 2) + ': sensor loop only supports robot.forward() for now.');
+        commands.push({ cmd: 'robot.forwardUntilColor:' + whileMatch[1], line: i + 1 });
+        i += 1;
+        continue;
+      }
+      if (!this.isBasicCommand(line)) throw new Error('Line ' + (i + 1) + ': unknown command "' + line + '".');
+      commands.push({ cmd: line, line: i + 1 });
+    }
+    if (commands.length > 40) throw new Error('Too many commands. Keep the mission under 40 commands.');
+    return commands;
+  },
+
+  isBasicCommand(line) {
+    return ['robot.forward()', 'robot.turnLeft()', 'robot.turnRight()', 'robot.pickUp()', 'robot.drop()'].includes(line);
+  },
+
+  async run() {
+    if (this.animating) return;
+    try {
+      this.reset(false);
+      this.commands = this.parse();
+      this.animating = true;
+      while (this.pointer < this.commands.length && this.animating) {
+        this.execute(this.commands[this.pointer]);
+        this.pointer += 1;
+        this.draw();
+        await this.delay(420);
+        if (this.checkSuccess()) break;
+      }
+      this.animating = false;
+      this.finishIfDone();
+    } catch (e) {
+      this.animating = false;
+      this.hadError = true;
+      this.setStatus(e.message, true);
+    }
+  },
+
+  step() {
+    if (this.animating) return;
+    try {
+      if (!this.commands.length || this.pointer >= this.commands.length) {
+        this.reset(false);
+        this.commands = this.parse();
+      }
+      const item = this.commands[this.pointer];
+      if (!item) {
+        this.finishIfDone();
+        return;
+      }
+      this.execute(item);
+      this.pointer += 1;
+      this.draw();
+      this.finishIfDone();
+    } catch (e) {
+      this.hadError = true;
+      this.setStatus(e.message, true);
+    }
+  },
+
+  execute(item) {
+    const cmd = item.cmd;
+    if (cmd.startsWith('robot.forwardUntilColor:')) {
+      const color = cmd.split(':')[1];
+      if (this.onColor(color)) {
+        this.setStatus('Line ' + item.line + ': already on ' + color + '.');
+        return;
+      }
+      let guard = 0;
+      while (!this.onColor(color) && guard < 10) {
+        this.moveForward(item.line);
+        guard += 1;
+      }
+      if (!this.onColor(color)) throw new Error('Line ' + item.line + ': sensor loop never reached ' + color + '.');
+      return;
+    }
+    if (cmd === 'robot.turnLeft()') {
+      const idx = this.directions.indexOf(this.state.dir);
+      this.state.dir = this.directions[(idx + 3) % 4];
+      this.setStatus('Line ' + item.line + ': turned left.');
+      return;
+    }
+    if (cmd === 'robot.turnRight()') {
+      const idx = this.directions.indexOf(this.state.dir);
+      this.state.dir = this.directions[(idx + 1) % 4];
+      this.setStatus('Line ' + item.line + ': turned right.');
+      return;
+    }
+    if (cmd === 'robot.forward()') {
+      this.moveForward(item.line);
+      return;
+    }
+    if (cmd === 'robot.pickUp()') {
+      if (this.state.carrying) throw new Error('Line ' + item.line + ': GritBot is already carrying something.');
+      const itemHere = this.state.items.find(obj => !obj.delivered && !obj.carried && obj.x === this.state.x && obj.y === this.state.y);
+      if (!itemHere) throw new Error('Line ' + item.line + ': there is nothing here to pick up.');
+      itemHere.carried = true;
+      this.state.carrying = itemHere.id;
+      this.setStatus('Line ' + item.line + ': picked up ' + itemHere.type + '.');
+      return;
+    }
+    if (cmd === 'robot.drop()') {
+      if (!this.state.carrying) throw new Error('Line ' + item.line + ': GritBot is not carrying anything.');
+      const itemObj = this.state.items.find(obj => obj.id === this.state.carrying);
+      if (!itemObj || itemObj.target.x !== this.state.x || itemObj.target.y !== this.state.y) {
+        throw new Error('Line ' + item.line + ': drop this object on its target tile.');
+      }
+      itemObj.carried = false;
+      itemObj.delivered = true;
+      itemObj.x = this.state.x;
+      itemObj.y = this.state.y;
+      this.state.delivered[itemObj.id] = true;
+      this.state.carrying = null;
+      this.setStatus('Line ' + item.line + ': delivered ' + itemObj.type + '.');
+    }
+  },
+
+  moveForward(line) {
+    const mission = this.mission();
+    const delta = { E: [1, 0], S: [0, 1], W: [-1, 0], N: [0, -1] }[this.state.dir];
+    const nx = this.state.x + delta[0];
+    const ny = this.state.y + delta[1];
+    if (nx < 0 || ny < 0 || nx >= mission.gridSize.width || ny >= mission.gridSize.height) {
+      throw new Error('Line ' + line + ': GritBot hit a wall.');
+    }
+    if (this.isObstacle(nx, ny)) throw new Error('Line ' + line + ': GritBot hit an obstacle.');
+    this.state.x = nx;
+    this.state.y = ny;
+    const carried = this.state.items.find(obj => obj.id === this.state.carrying);
+    if (carried) {
+      carried.x = nx;
+      carried.y = ny;
+    }
+    this.setStatus('Line ' + line + ': moved forward.');
+  },
+
+  isObstacle(x, y) {
+    return this.mission().obstacles.some(obs => obs.x === x && obs.y === y);
+  },
+
+  onColor(color) {
+    return this.mission().colorTiles.some(tile => tile.color === color && tile.x === this.state.x && tile.y === this.state.y);
+  },
+
+  checkSuccess() {
+    const mission = this.mission();
+    const itemsDone = this.state.items.every(item => item.delivered || !item.target);
+    const finishDone = !mission.finish || (this.state.x === mission.finish.x && this.state.y === mission.finish.y);
+    return itemsDone && finishDone;
+  },
+
+  finishIfDone() {
+    if (this.checkSuccess()) {
+      if (this.missionAwardedThisRun) return;
+      this.missionAwardedThisRun = true;
+      const mission = this.mission();
+      const award = GameProgress.awardSimulator(mission.id, this.pointer, !this.hadError, mission);
+      this.setStatus('Mission complete in ' + this.pointer + ' commands. +' + award.xp + ' XP.');
+      this.renderMissionStrip();
+      this.updateBest();
+    } else if (this.pointer >= this.commands.length && this.commands.length) {
+      this.setStatus('Code finished, but the mission is not complete yet.', true);
+    }
+  },
+
+  draw() {
+    const grid = document.getElementById('sim-grid');
+    if (!grid || !this.state) return;
+    const mission = this.mission();
+    grid.style.gridTemplateColumns = 'repeat(' + mission.gridSize.width + ',1fr)';
+    let html = '';
+    for (let y = 0; y < mission.gridSize.height; y++) {
+      for (let x = 0; x < mission.gridSize.width; x++) {
+        const isBase = mission.base && x === mission.base.x && y === mission.base.y;
+        const isFinish = mission.finish && x === mission.finish.x && y === mission.finish.y;
+        const obstacle = this.isObstacle(x, y);
+        const colorTile = mission.colorTiles.find(tile => tile.x === x && tile.y === y);
+        const item = this.state.items.find(obj => !obj.carried && !obj.delivered && obj.x === x && obj.y === y);
+        const target = this.state.items.find(obj => obj.target && obj.target.x === x && obj.target.y === y);
+        const isRobot = this.state.x === x && this.state.y === y;
+        html += '<div class="sim-cell' + (isBase ? ' sim-base' : '') + (isFinish ? ' sim-finish' : '') + (obstacle ? ' sim-obstacle' : '') + (colorTile ? ' sim-color-' + colorTile.color : '') + '">';
+        if (isBase) html += '<span class="sim-label">Base</span>';
+        if (isFinish) html += '<span class="sim-label">Finish</span>';
+        if (target && !target.delivered) html += '<span class="sim-target-dot">' + this.escape(target.type) + '</span>';
+        if (obstacle) html += '<span class="sim-obstacle-icon"><i class="fa-solid fa-ban"></i></span>';
+        if (item) html += '<span class="sim-battery-icon"><i class="' + this.itemIcon(item.type) + '"></i></span>';
+        if (isRobot) html += '<span class="sim-robot sim-dir-' + this.state.dir + '">' + (this.state.carrying ? '<i class="fa-solid fa-robot"></i><b></b>' : '<i class="fa-solid fa-robot"></i>') + '</span>';
+        html += '</div>';
+      }
+    }
+    grid.innerHTML = html;
+  },
+
+  itemIcon(type) {
+    const icons = { battery: 'fa-solid fa-battery-full', gear: 'fa-solid fa-gear', cube: 'fa-solid fa-cube', ball: 'fa-solid fa-circle', model: 'fa-solid fa-cubes' };
+    return icons[type] || 'fa-solid fa-cube';
+  },
+
+  setStatus(message, isError) {
+    const status = document.getElementById('sim-status');
+    const result = document.getElementById('sim-result');
+    if (status) {
+      status.textContent = message;
+      status.className = 'sim-status' + (isError ? ' sim-error' : '');
+    }
+    if (result) result.textContent = message;
+  },
+
+  updateBest() {
+    const best = document.getElementById('sim-best');
+    const history = GameProgress.ensure().simulatorMissionHistory[this.mission().id];
+    if (best) best.textContent = 'Best: ' + (history && history.bestCommandCount ? history.bestCommandCount + ' commands' : '--');
+  },
+
+  delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  },
+
+  escape(text) {
+    const div = document.createElement('div');
+    div.textContent = text == null ? '' : String(text);
+    return div.innerHTML;
+  }
+};
+
+const AvatarRenderer = {
+  colorMap: {
+    'default': '#FECE00',
+    'code-blue': '#2563FF',
+    'debug-green': '#10B981',
+    'arcade-purple': '#8B5CF6',
+    'ruby-red': '#EF4444',
+    'neon-cyan': '#06B6D4',
+    'solar-orange': '#F97316',
+    'midnight-navy': '#0F1E45',
+    'chrome-silver': '#CBD5E1',
+    'gold-bot': '#FACC15'
+  },
+
+  render(equipped, sizeClass = '') {
+    const avatar = { color: 'default', eyes: 'classic-eye', background: 'code-lab-desk', ...equipped };
+    const shell = this.colorMap[avatar.color] || this.colorMap.default;
+    return '<div class="gritbot-avatar ' + sizeClass + ' bg-' + this.escape(avatar.background || 'code-lab-desk') + ' effect-' + this.escape(avatar.effect || 'none') + '" style="--bot-shell:' + shell + '">' +
+      '<div class="avatar-effect-layer"></div>' +
+      this.backgroundBadge(avatar.background) +
+      this.backpack(avatar.backpack) +
+      '<div class="gritbot-body"><div class="gritbot-cap"></div><div class="gritbot-face">' + this.eyes(avatar.eyes) + '</div><div class="gritbot-smile"></div>' + this.badge(avatar.badge) + '</div>' +
+      this.hat(avatar.hat) +
+      '<div class="gritbot-shine"></div>' +
+      '</div>';
+  },
+
+  eyes(id) {
+    const eyes = {
+      'sleepy-eye': '<span class="eye sleepy"></span>',
+      'focus-visor': '<span class="visor focus"></span>',
+      'pixel-glasses': '<span class="glasses pixel"></span>',
+      'debug-goggles': '<span class="glasses goggles"></span>',
+      'star-visor': '<span class="visor star">★</span>',
+      'hacker-monocle': '<span class="monocle"></span>'
+    };
+    return eyes[id] || '<span class="eye classic"></span>';
+  },
+
+  hat(id) {
+    const hats = {
+      'graduation-cap': '<div class="avatar-hat grad"><span></span></div>',
+      'builder-helmet': '<div class="avatar-hat helmet"></div>',
+      'headphones': '<div class="avatar-hat headphones"><span></span><b></b></div>',
+      'space-helmet': '<div class="avatar-hat space"></div>',
+      'wizard-hat': '<div class="avatar-hat wizard"></div>',
+      'fll-trophy-crown': '<div class="avatar-hat crown">▲▲▲</div>',
+      'summer-camp-cap': '<div class="avatar-hat camp"></div>'
+    };
+    return hats[id] || '';
+  },
+
+  backpack(id) {
+    const packs = {
+      'battery-pack': '<div class="avatar-pack battery"><i class="fa-solid fa-battery-full"></i></div>',
+      'toolbox': '<div class="avatar-pack toolbox"><i class="fa-solid fa-toolbox"></i></div>',
+      'laptop-bag': '<div class="avatar-pack laptop"><i class="fa-solid fa-laptop-code"></i></div>',
+      'jetpack': '<div class="avatar-pack jetpack"></div>',
+      'rocket-booster': '<div class="avatar-pack rocket"><i class="fa-solid fa-rocket"></i></div>',
+      'competition-toolkit': '<div class="avatar-pack toolkit"><i class="fa-solid fa-screwdriver-wrench"></i></div>'
+    };
+    return packs[id] || '';
+  },
+
+  badge(id) {
+    if (!id) return '';
+    const icon = {
+      'first-lesson-badge': '1',
+      'quiz-master-badge': 'Q',
+      'bug-fixer-badge': '<i class="fa-solid fa-bug-slash"></i>',
+      'loop-launcher-badge': '<i class="fa-solid fa-repeat"></i>',
+      'function-builder-badge': 'ƒ',
+      'battery-retriever-badge': '<i class="fa-solid fa-battery-full"></i>',
+      'gear-delivery-badge': '<i class="fa-solid fa-gear"></i>',
+      'fll-strategist-badge': '<i class="fa-solid fa-trophy"></i>',
+      'streak-3-badge': '3',
+      'streak-7-badge': '7'
+    }[id] || '★';
+    return '<div class="avatar-badge">' + icon + '</div>';
+  },
+
+  backgroundBadge(id) {
+    const label = {
+      'robotics-table': 'BOT',
+      'arcade-grid': 'XP',
+      'space-mission': 'ORB',
+      'python-terminal': 'PY',
+      'fll-arena': 'FLL',
+      'summer-camp-studio': 'CAMP'
+    }[id];
+    return label ? '<div class="avatar-bg-label">' + label + '</div>' : '';
+  },
+
+  escape(text) {
+    const div = document.createElement('div');
+    div.textContent = text == null ? '' : String(text);
+    return div.innerHTML;
+  }
+};
+
+const AvatarShop = {
+  activeTab: 'featured',
+  categories: [
+    ['featured', 'Featured'],
+    ['all', 'All'],
+    ['colors', 'Colors'],
+    ['eyes', 'Eyes'],
+    ['hats', 'Hats'],
+    ['backpacks', 'Backpacks'],
+    ['badges', 'Badges'],
+    ['effects', 'Effects'],
+    ['backgrounds', 'Backgrounds']
+  ],
+  items: [
+    { id: 'default', name: 'Grit Yellow', category: 'colors', cost: 0, rarity: 'starter', preview: { type: 'color', value: '#FECE00' }, description: 'The classic AI Future shell.' },
+    { id: 'code-blue', name: 'Code Blue', category: 'colors', cost: 25, rarity: 'common', preview: { type: 'color', value: '#2563FF' }, description: 'A crisp blue for focused coders.' },
+    { id: 'debug-green', name: 'Debug Green', category: 'colors', cost: 40, rarity: 'common', preview: { type: 'color', value: '#10B981' }, description: 'A clean green shell for students who squash bugs.' },
+    { id: 'arcade-purple', name: 'Arcade Purple', category: 'colors', cost: 60, rarity: 'common', preview: { type: 'color', value: '#8B5CF6' }, description: 'A bright arcade-ready look.' },
+    { id: 'ruby-red', name: 'Ruby Red', category: 'colors', cost: 60, rarity: 'common', preview: { type: 'color', value: '#EF4444' }, description: 'Bold, fast, and hard to miss.' },
+    { id: 'neon-cyan', name: 'Neon Cyan', category: 'colors', cost: 75, rarity: 'common', preview: { type: 'color', value: '#06B6D4' }, description: 'Glows like a terminal cursor.' },
+    { id: 'solar-orange', name: 'Solar Orange', category: 'colors', cost: 75, rarity: 'common', preview: { type: 'color', value: '#F97316' }, description: 'Made for mission energy.' },
+    { id: 'midnight-navy', name: 'Midnight Navy', category: 'colors', cost: 90, rarity: 'rare', preview: { type: 'color', value: '#0F1E45' }, description: 'A deep navy shell for serious builders.' },
+    { id: 'chrome-silver', name: 'Chrome Silver', category: 'colors', cost: 120, rarity: 'rare', preview: { type: 'color', value: '#CBD5E1' }, description: 'A polished robotics-lab finish.' },
+    { id: 'gold-bot', name: 'Gold Bot', category: 'colors', cost: 250, rarity: 'epic', preview: { type: 'color', value: '#FACC15' }, description: 'A premium shell for top earners.' },
+    { id: 'classic-eye', name: 'Classic Eye', category: 'eyes', cost: 0, rarity: 'starter', description: 'GritBot’s original curious eye.' },
+    { id: 'sleepy-eye', name: 'Sleepy Eye', category: 'eyes', cost: 30, rarity: 'common', description: 'For late-night debugging energy.' },
+    { id: 'focus-visor', name: 'Focus Visor', category: 'eyes', cost: 50, rarity: 'common', description: 'A clean visor for concentration mode.' },
+    { id: 'pixel-glasses', name: 'Pixel Glasses', category: 'eyes', cost: 75, rarity: 'common', description: 'Retro arcade glasses.' },
+    { id: 'debug-goggles', name: 'Debug Goggles', category: 'eyes', cost: 100, rarity: 'rare', description: 'Great for hunting tiny errors.' },
+    { id: 'star-visor', name: 'Star Visor', category: 'eyes', cost: 125, rarity: 'rare', description: 'For students on a streak.' },
+    { id: 'hacker-monocle', name: 'Hacker Monocle', category: 'eyes', cost: 150, rarity: 'epic', description: 'Fancy logic inspector included.' },
+    { id: 'graduation-cap', name: 'Graduation Cap', category: 'hats', cost: 75, rarity: 'common', description: 'Ready for certificate day.' },
+    { id: 'builder-helmet', name: 'Builder Helmet', category: 'hats', cost: 90, rarity: 'common', description: 'For robotics builders.' },
+    { id: 'headphones', name: 'Headphones', category: 'hats', cost: 100, rarity: 'rare', description: 'Code with quiet focus.' },
+    { id: 'space-helmet', name: 'Space Helmet', category: 'hats', cost: 150, rarity: 'rare', description: 'For space mission mode.' },
+    { id: 'wizard-hat', name: 'Wizard Hat', category: 'hats', cost: 175, rarity: 'epic', description: 'Turns functions into magic.' },
+    { id: 'fll-trophy-crown', name: 'FLL Trophy Crown', category: 'hats', cost: 0, rarity: 'achievement', unlockType: 'achievement', unlockRequirement: { type: 'simulatorMission', id: 'fll-table-practice' }, description: 'Unlocked by completing FLL Table Practice.' },
+    { id: 'summer-camp-cap', name: 'Summer Camp Cap', category: 'hats', cost: 80, rarity: 'seasonal', description: 'A sunny cap for future camp events.' },
+    { id: 'battery-pack', name: 'Battery Pack', category: 'backpacks', cost: 80, rarity: 'common', description: 'Stay charged for long missions.' },
+    { id: 'toolbox', name: 'Toolbox', category: 'backpacks', cost: 100, rarity: 'rare', description: 'Everything a builder needs.' },
+    { id: 'laptop-bag', name: 'Laptop Bag', category: 'backpacks', cost: 120, rarity: 'rare', description: 'Portable Code Lab energy.' },
+    { id: 'jetpack', name: 'Jetpack', category: 'backpacks', cost: 180, rarity: 'epic', description: 'Lift off after tough challenges.' },
+    { id: 'rocket-booster', name: 'Rocket Booster', category: 'backpacks', cost: 250, rarity: 'epic', description: 'Maximum simulator speed vibes.' },
+    { id: 'competition-toolkit', name: 'Competition Toolkit', category: 'backpacks', cost: 0, rarity: 'achievement', unlockType: 'achievement', unlockRequirement: { type: 'simulatorMission', id: 'fll-table-practice' }, description: 'Unlocked by FLL strategy work.' },
+    { id: 'first-lesson-badge', name: 'First Lesson', category: 'badges', cost: 0, rarity: 'achievement', unlockType: 'achievement', unlockRequirement: { type: 'lessonsCompleted', count: 1 }, description: 'Unlocked after the first mastered lesson.' },
+    { id: 'quiz-master-badge', name: 'Quiz Master', category: 'badges', cost: 0, rarity: 'achievement', unlockType: 'achievement', unlockRequirement: { type: 'quizMaster' }, description: 'Unlocked by passing quizzes.' },
+    { id: 'bug-fixer-badge', name: 'Bug Fixer', category: 'badges', cost: 0, rarity: 'achievement', unlockType: 'achievement', unlockRequirement: { type: 'typedArcade', id: 'bug-fix-rush-indent' }, description: 'Unlocked by completing Bug Fix Rush.' },
+    { id: 'loop-launcher-badge', name: 'Loop Launcher', category: 'badges', cost: 0, rarity: 'achievement', unlockType: 'achievement', unlockRequirement: { type: 'typedArcade', id: 'loop-launch-countdown' }, description: 'Unlocked by completing Loop Launch.' },
+    { id: 'function-builder-badge', name: 'Function Builder', category: 'badges', cost: 0, rarity: 'achievement', unlockType: 'achievement', unlockRequirement: { type: 'typedArcade', id: 'function-forge-double' }, description: 'Unlocked by completing Function Forge.' },
+    { id: 'battery-retriever-badge', name: 'Battery Retriever', category: 'badges', cost: 0, rarity: 'achievement', unlockType: 'achievement', unlockRequirement: { type: 'simulatorMission', id: 'get-the-battery' }, description: 'Unlocked by completing Get the Battery.' },
+    { id: 'gear-delivery-badge', name: 'Gear Delivery', category: 'badges', cost: 0, rarity: 'achievement', unlockType: 'achievement', unlockRequirement: { type: 'simulatorMission', id: 'deliver-the-gear' }, description: 'Unlocked by completing Deliver the Gear.' },
+    { id: 'fll-strategist-badge', name: 'FLL Strategist', category: 'badges', cost: 0, rarity: 'achievement', unlockType: 'achievement', unlockRequirement: { type: 'simulatorMission', id: 'fll-table-practice' }, description: 'Unlocked by FLL Table Practice.' },
+    { id: 'streak-3-badge', name: '3-Day Streak', category: 'badges', cost: 0, rarity: 'achievement', unlockType: 'achievement', unlockRequirement: { type: 'streak', days: 3 }, description: 'Unlocked with a 3-day learning streak.' },
+    { id: 'streak-7-badge', name: '7-Day Streak', category: 'badges', cost: 0, rarity: 'achievement', unlockType: 'achievement', unlockRequirement: { type: 'streak', days: 7 }, description: 'Unlocked with a 7-day learning streak.' },
+    { id: 'pixel-glow', name: 'Pixel Glow', category: 'effects', cost: 100, rarity: 'rare', description: 'A subtle coding glow.' },
+    { id: 'spark-trail', name: 'Spark Trail', category: 'effects', cost: 125, rarity: 'rare', description: 'Tiny sparks for big ideas.' },
+    { id: 'code-rain', name: 'Code Rain', category: 'effects', cost: 150, rarity: 'rare', description: 'Terminal-style code energy.' },
+    { id: 'electric-zap', name: 'Electric Zap', category: 'effects', cost: 175, rarity: 'epic', description: 'A charged-up robotics effect.' },
+    { id: 'confetti-burst', name: 'Confetti Burst', category: 'effects', cost: 200, rarity: 'epic', description: 'Celebrate every win.' },
+    { id: 'level-up-aura', name: 'Level-Up Aura', category: 'effects', cost: 0, rarity: 'achievement', unlockType: 'achievement', unlockRequirement: { type: 'level', level: 5 }, description: 'Unlocked at Level 5.' },
+    { id: 'arcade-champion-glow', name: 'Arcade Champion Glow', category: 'effects', cost: 0, rarity: 'achievement', unlockType: 'achievement', unlockRequirement: { type: 'typedArcadeCount', count: 5 }, description: 'Unlocked by completing 5 typed arcade games.' },
+    { id: 'code-lab-desk', name: 'Code Lab Desk', category: 'backgrounds', cost: 0, rarity: 'starter', description: 'Your default coding space.' },
+    { id: 'robotics-table', name: 'Robotics Table', category: 'backgrounds', cost: 100, rarity: 'rare', description: 'A workbench for robot builders.' },
+    { id: 'arcade-grid', name: 'Arcade Grid', category: 'backgrounds', cost: 125, rarity: 'rare', description: 'A bright arcade backdrop.' },
+    { id: 'space-mission', name: 'Space Mission', category: 'backgrounds', cost: 150, rarity: 'rare', description: 'Mission control in orbit.' },
+    { id: 'python-terminal', name: 'Python Terminal', category: 'backgrounds', cost: 175, rarity: 'epic', description: 'A terminal-inspired coding background.' },
+    { id: 'fll-arena', name: 'FLL Arena', category: 'backgrounds', cost: 0, rarity: 'achievement', unlockType: 'achievement', unlockRequirement: { type: 'simulatorMission', id: 'fll-table-practice' }, description: 'Unlocked by completing FLL Table Practice.' },
+    { id: 'summer-camp-studio', name: 'Summer Camp Studio', category: 'backgrounds', cost: 120, rarity: 'seasonal', description: 'A bright studio for camp projects.' }
+  ],
+
+  render() {
+    const container = document.getElementById('avatar-shop-container');
+    if (!container) return;
+    this.normalizeAvatarState();
+    const s = GameProgress.ensure();
+    container.className = 'avatar-shop-full';
+    container.innerHTML = this.renderHero(s) + this.renderTabs() + this.renderFeatured() + this.renderGrid() + this.devTools();
+  },
+
+  renderHero(s) {
+    return '<div class="avatar-shop-hero">' +
+      '<div class="avatar-preview-panel">' + AvatarRenderer.render(s.equippedAvatar, 'avatar-large') + '</div>' +
+      '<div class="avatar-shop-summary">' +
+        '<p class="game-eyebrow">GritBot Customizer</p>' +
+        '<h2>Build your learning robot</h2>' +
+        '<p>Spend coins earned from lessons, arcade games, quizzes, and simulator missions. Owned items stay in your inventory.</p>' +
+        '<div class="avatar-shop-stats"><span><i class="fa-solid fa-coins"></i> ' + (s.coins || 0) + ' coins</span><span>Level ' + (s.level || 1) + '</span><span>' + this.escape(s.tier || 'Starter Bot') + '</span></div>' +
+        '<div class="avatar-equipped-list">' + this.equippedSummary(s) + '</div>' +
+      '</div>' +
+      '</div>';
+  },
+
+  renderTabs() {
+    return '<div class="avatar-shop-tabs">' + this.categories.map(([id, label]) =>
+      '<button class="' + (this.activeTab === id ? 'active' : '') + '" onclick="AvatarShop.setTab(\'' + id + '\')">' + label + '</button>'
+    ).join('') + '</div>';
+  },
+
+  renderFeatured() {
+    const featured = ['code-blue', 'debug-green', 'pixel-glasses', 'battery-pack', 'battery-retriever-badge', 'rocket-booster'];
+    return '<div class="avatar-featured"><div class="game-panel-heading"><span>Featured</span><strong>Popular upgrades</strong></div><div class="avatar-featured-row">' +
+      featured.map(id => this.itemCard(this.items.find(item => item.id === id), true)).join('') +
+      '</div></div>';
+  },
+
+  renderGrid() {
+    const items = this.visibleItems();
+    return '<div class="avatar-shop-grid">' + items.map(item => this.itemCard(item, false)).join('') + '</div>';
+  },
+
+  visibleItems() {
+    if (this.activeTab === 'featured') {
+      return this.items.filter(item => ['code-blue', 'debug-green', 'pixel-glasses', 'battery-pack', 'battery-retriever-badge', 'rocket-booster', 'arcade-grid', 'level-up-aura'].includes(item.id));
+    }
+    if (this.activeTab === 'all') return this.items;
+    return this.items.filter(item => item.category === this.activeTab);
+  },
+
+  itemCard(item, compact) {
+    if (!item) return '';
+    const s = GameProgress.ensure();
+    const owned = this.isOwned(item);
+    const equipped = this.isEquipped(item);
+    const unlocked = this.isUnlocked(item);
+    const shortage = Math.max(0, (item.cost || 0) - (s.coins || 0));
+    const stateClass = equipped ? 'equipped' : owned ? 'owned' : !unlocked ? 'locked' : shortage ? 'short' : 'available';
+    return '<div class="avatar-shop-card avatar-rarity-' + item.rarity + ' ' + stateClass + (compact ? ' compact' : '') + '">' +
+      '<div class="avatar-item-preview">' + this.preview(item) + '</div>' +
+      '<div class="avatar-card-meta"><span>' + this.escape(item.rarity || 'common') + '</span><strong>' + this.escape(item.name) + '</strong><p>' + this.escape(item.description || '') + '</p></div>' +
+      '<div class="avatar-card-footer"><span>' + this.priceLabel(item, owned, unlocked, shortage) + '</span>' + this.actionButton(item, owned, equipped, unlocked, shortage) + '</div>' +
+      '</div>';
+  },
+
+  preview(item) {
+    if (item.category === 'colors') return '<div class="avatar-swatch" style="background:' + (item.preview && item.preview.value || '#FECE00') + '"></div>';
+    const sample = { color: 'default', eyes: 'classic-eye', background: 'code-lab-desk' };
+    sample[item.category === 'colors' ? 'color' : item.category.slice(0, -1)] = item.id;
+    if (item.category === 'eyes') sample.eyes = item.id;
+    if (item.category === 'backgrounds') sample.background = item.id;
+    return AvatarRenderer.render(sample, 'avatar-mini');
+  },
+
+  priceLabel(item, owned, unlocked, shortage) {
+    if (!unlocked) return '<i class="fa-solid fa-lock"></i> ' + this.unlockText(item);
+    if (owned) return 'Owned';
+    if (item.cost === 0) return 'Free';
+    if (shortage) return 'Need ' + shortage + ' more';
+    return item.cost + ' coins';
+  },
+
+  actionButton(item, owned, equipped, unlocked, shortage) {
+    if (!unlocked) return '<button class="btn--sm" disabled>Locked</button>';
+    if (equipped) return '<button class="btn--primary btn--sm" disabled>Equipped</button>';
+    if (owned) return '<button class="btn--primary btn--sm" onclick="AvatarShop.equip(\'' + item.id + '\')">Equip</button>';
+    if (shortage) return '<button class="btn--sm" onclick="AvatarShop.notEnough(' + shortage + ')">Need coins</button>';
+    return '<button class="btn--navy btn--sm" onclick="AvatarShop.buy(\'' + item.id + '\')">Buy</button>';
+  },
+
+  buy(itemId) {
+    const item = this.getItem(itemId);
+    const s = GameProgress.ensure();
+    if (!item || !this.isUnlocked(item)) return;
+    if ((s.coins || 0) < (item.cost || 0)) return this.notEnough((item.cost || 0) - (s.coins || 0));
+    this.ensureInventoryCategory(item.category);
+    if (!this.isOwned(item)) {
+      s.coins -= item.cost || 0;
+      s.inventory[item.category].push(item.id);
+      GameProgress.addActivity('Bought avatar item: ' + item.name, 0, 'shop');
+    }
+    this.equip(item.id);
+    if (typeof Toast !== 'undefined' && Toast.show) Toast.show('Bought ' + item.name + '! Equipped on GritBot.', 'success');
+  },
+
+  equip(itemId) {
+    const item = this.getItem(itemId);
+    if (!item || !this.isOwned(item)) return;
+    const slot = this.slotFor(item.category);
+    GameProgress.ensure().equippedAvatar[slot] = item.id;
+    GameProgress.save();
+    this.render();
+    if (typeof renderGameDashboard === 'function') renderGameDashboard();
+  },
+
+  setTab(tab) {
+    this.activeTab = tab;
+    this.render();
+  },
+
+  notEnough(amount) {
+    if (typeof Toast !== 'undefined' && Toast.show) Toast.show('Need ' + amount + ' more coins for that item.', 'warning');
+  },
+
+  isOwned(item) {
+    this.ensureInventoryCategory(item.category);
+    return GameProgress.ensure().inventory[item.category].includes(item.id) || (item.cost === 0 && this.isUnlocked(item) && item.rarity === 'starter');
+  },
+
+  isEquipped(item) {
+    return GameProgress.ensure().equippedAvatar[this.slotFor(item.category)] === item.id;
+  },
+
+  isUnlocked(item) {
+    if (!item.unlockType || item.unlockType === 'coins') return true;
+    const req = item.unlockRequirement || {};
+    const s = GameProgress.ensure();
+    if (req.type === 'lessonsCompleted') return LessonRegistry.all.filter(l => Progress.isLessonMastered(l.id)).length >= req.count;
+    if (req.type === 'quizMaster') {
+      const passedQuizzes = Object.values(s.quizAttempts || {}).filter(q => (q.passedCount || 0) > 0).length;
+      return passedQuizzes >= 3 || (Progress.data && Progress.data['unit-test-python'] && Progress.data['unit-test-python'].passed);
+    }
+    if (req.type === 'typedArcade') return this.typedArcadeCompleted(req.id);
+    if (req.type === 'typedArcadeCount') return this.typedArcadeCount() >= req.count;
+    if (req.type === 'simulatorMission') return !!((s.simulatorMissionHistory || {})[req.id] && s.simulatorMissionHistory[req.id].completions > 0);
+    if (req.type === 'streak') return ((s.streak && s.streak.current) || 0) >= req.days;
+    if (req.type === 'level') return (s.level || 1) >= req.level;
+    return false;
+  },
+
+  unlockText(item) {
+    const req = item.unlockRequirement || {};
+    if (req.type === 'lessonsCompleted') return 'Complete ' + req.count + ' lesson';
+    if (req.type === 'quizMaster') return 'Pass 3 quizzes';
+    if (req.type === 'typedArcade') return 'Beat arcade challenge';
+    if (req.type === 'typedArcadeCount') return 'Beat ' + req.count + ' arcade games';
+    if (req.type === 'simulatorMission') return 'Finish simulator mission';
+    if (req.type === 'streak') return req.days + '-day streak';
+    if (req.type === 'level') return 'Reach Level ' + req.level;
+    return 'Locked';
+  },
+
+  typedArcadeCompleted(id) {
+    const allDays = GameProgress.ensure().miniGameXPByDate || {};
+    return Object.values(allDays).some(day => day.typedPython && day.typedPython.completed && day.typedPython.completed[id] && day.typedPython.completed[id].passes > 0);
+  },
+
+  typedArcadeCount() {
+    const ids = new Set();
+    Object.values(GameProgress.ensure().miniGameXPByDate || {}).forEach(day => {
+      const completed = day.typedPython && day.typedPython.completed;
+      if (completed) Object.keys(completed).forEach(id => { if (completed[id].passes > 0) ids.add(id); });
+    });
+    return ids.size;
+  },
+
+  slotFor(category) {
+    return { colors: 'color', eyes: 'eyes', hats: 'hat', backpacks: 'backpack', badges: 'badge', effects: 'effect', backgrounds: 'background' }[category] || category;
+  },
+
+  getItem(id) {
+    return this.items.find(item => item.id === id);
+  },
+
+  ensureInventoryCategory(category) {
+    const s = GameProgress.ensure();
+    if (!Array.isArray(s.inventory[category])) s.inventory[category] = [];
+  },
+
+  normalizeAvatarState() {
+    const s = GameProgress.ensure();
+    ['colors', 'eyes', 'hats', 'backpacks', 'badges', 'effects', 'backgrounds'].forEach(category => this.ensureInventoryCategory(category));
+    if (!s.inventory.colors.includes('default')) s.inventory.colors.unshift('default');
+    if (!s.inventory.eyes.includes('classic-eye')) s.inventory.eyes.unshift('classic-eye');
+    if (!s.inventory.backgrounds.includes('code-lab-desk')) s.inventory.backgrounds.unshift('code-lab-desk');
+    s.equippedAvatar.color = s.equippedAvatar.color || 'default';
+    s.equippedAvatar.eyes = s.equippedAvatar.eyes || 'classic-eye';
+    s.equippedAvatar.background = s.equippedAvatar.background || 'code-lab-desk';
+  },
+
+  equippedSummary(s) {
+    const slots = ['color', 'eyes', 'hat', 'backpack', 'badge', 'effect', 'background'];
+    return slots.map(slot => {
+      const id = s.equippedAvatar[slot];
+      const item = id && this.getItem(id);
+      return '<span>' + slot + ': <strong>' + this.escape(item ? item.name : 'None') + '</strong></span>';
+    }).join('');
+  },
+
+  devTools() {
+    if (!Auth.currentUser || Auth.currentUser.role !== 'developer') return '';
+    return '<div class="avatar-dev-panel"><h3>Developer Tools</h3>' +
+      '<button class="btn--primary btn--sm" onclick="AvatarShop.addCoins(100)">Add 100 coins</button>' +
+      '<button class="btn--navy btn--sm" onclick="AvatarShop.unlockAll()">Unlock all avatar items</button>' +
+      '<button class="btn--sm" onclick="AvatarShop.resetAvatar()">Reset avatar only</button>' +
+      '<button class="btn--sm" onclick="GameProgress.resetDemoProgress();AvatarShop.render();">Reset full demo progress</button>' +
+      '<pre>' + this.escape(JSON.stringify(GameProgress.ensure().equippedAvatar, null, 2)) + '</pre></div>';
+  },
+
+  addCoins(amount) {
+    GameProgress.ensure().coins = (GameProgress.ensure().coins || 0) + amount;
+    GameProgress.save();
+    this.render();
+  },
+
+  unlockAll() {
+    const s = GameProgress.ensure();
+    this.items.forEach(item => {
+      this.ensureInventoryCategory(item.category);
+      if (!s.inventory[item.category].includes(item.id)) s.inventory[item.category].push(item.id);
+    });
+    GameProgress.save();
+    this.render();
+  },
+
+  resetAvatar() {
+    const s = GameProgress.ensure();
+    s.inventory = JSON.parse(JSON.stringify(GameProgress.defaults().inventory));
+    s.equippedAvatar = JSON.parse(JSON.stringify(GameProgress.defaults().equippedAvatar));
+    GameProgress.save();
+    this.render();
+  },
+
+  escape(text) {
+    const div = document.createElement('div');
+    div.textContent = text == null ? '' : String(text);
+    return div.innerHTML;
+  }
+};
+
+const GameLeaderboard = {
+  render() {
+    const container = document.getElementById('game-leaderboard-container');
+    if (!container) return;
+    const s = GameProgress.ensure();
+    const progress = GameProgress.levelProgress();
+    const activities = (s.activityLog || []).slice(0, 8).map(item =>
+      '<li><span>' + escapeHtml(item.label || 'Activity') + '</span><strong>' + (item.xp ? '+' + item.xp + ' XP' : 'Recorded') + '</strong></li>'
+    ).join('');
+    container.innerHTML = '<div class="leaderboard-card"><h2>Level ' + s.level + ' - ' + s.tier + '</h2>' +
+      '<p>' + progress.current + '/' + progress.required + ' XP toward next level</p>' +
+      '<div class="game-xp-track"><div class="game-xp-fill" style="width:' + progress.percent + '%"></div></div>' +
+      '<div class="leaderboard-stats"><span>' + (s.lifetimeXP || 0) + ' lifetime XP</span><span>' + (s.coins || 0) + ' coins</span><span>' + ((s.streak && s.streak.current) || 0) + ' day streak</span></div>' +
+      '<h3>Recent Activity</h3><ul class="leaderboard-list">' + (activities || '<li><span>No activity yet</span><strong>Start learning</strong></li>') + '</ul></div>';
+  }
+};
+
+// ============================================================================
 // ROUTER - Hash-based routing
 // ============================================================================
 
 const Router = {
+  blockedStudentFeatures: {
+    'page-arcade': {
+      title: 'Code Arcade is coming soon',
+      feature: 'Code Arcade',
+      detail: 'We are still polishing the typed Python games and rewards, so students cannot play Arcade yet.'
+    },
+    'page-simulator': {
+      title: 'GritBot Simulator is coming soon',
+      feature: 'GritBot Simulator',
+      detail: 'Simulator missions are still being tested. This keeps student progress clean until the missions are ready.'
+    },
+    'page-avatar-shop': {
+      title: 'Avatar customization is coming soon',
+      feature: 'Avatar Shop',
+      detail: 'GritBot avatar items, coins, and shop rewards are still being prepared and are blocked for students for now.'
+    },
+    'page-final-project': {
+      title: 'Final Project is coming soon',
+      feature: 'Final Project',
+      detail: 'Final project submissions are not open yet. Students can continue lessons and practice while this is prepared.'
+    },
+    'page-leaderboard': {
+      title: 'Leaderboard is coming soon',
+      feature: 'Leaderboard',
+      detail: 'Leaderboard and game-progress views are private while the XP system is being finalized.'
+    }
+  },
+
   init() {
     window.addEventListener('hashchange', () => this.handleRoute(window.location.hash));
     this.handleRoute(window.location.hash || '#page-home');
@@ -10201,8 +12021,18 @@ const Router = {
         'fll': 'page-fll',
         'certificates': 'page-certificates',
         'final-project': 'page-final-project',
+        'arcade': 'page-arcade',
+        'simulator': 'page-simulator',
+        'avatar-shop': 'page-avatar-shop',
+        'leaderboard': 'page-leaderboard',
       };
       pageId = pageMap[slug] || 'page-home';
+    }
+
+    const blockedFeature = this.blockedStudentFeatures[pageId];
+    if (blockedFeature) {
+      pageId = 'page-coming-soon';
+      param = blockedFeature;
     }
 
     // Hide all pages
@@ -10262,6 +12092,10 @@ const Router = {
       }
     }
 
+    if (pageId === 'page-coming-soon') {
+      renderComingSoonPage(param);
+    }
+
     // Render the Final Project page
     if (pageId === 'page-final-project') {
       if (typeof FinalProject !== 'undefined') {
@@ -10269,9 +12103,25 @@ const Router = {
       }
     }
 
+    if (pageId === 'page-arcade' && typeof CodeArcade !== 'undefined') {
+      CodeArcade.render();
+    }
+
+    if (pageId === 'page-simulator' && typeof GritBotSimulator !== 'undefined') {
+      GritBotSimulator.render();
+    }
+
+    if (pageId === 'page-avatar-shop' && typeof AvatarShop !== 'undefined') {
+      AvatarShop.render();
+    }
+
+    if (pageId === 'page-leaderboard' && typeof GameLeaderboard !== 'undefined') {
+      GameLeaderboard.render();
+    }
+
     // Show AI tutor FAB only on pages where it's useful (lesson + final project)
     if (typeof Tutor !== 'undefined') {
-      const tutorPages = new Set(['page-lesson', 'page-final-project']);
+      const tutorPages = new Set(['page-lesson']);
       Tutor.showFab(tutorPages.has(pageId));
       // Close the tutor panel when leaving a relevant page
       if (!tutorPages.has(pageId) && Tutor.open) Tutor.toggle();
@@ -10292,6 +12142,19 @@ const Router = {
     if (navLinks) navLinks.classList.remove('open');
   }
 };
+
+function renderComingSoonPage(feature) {
+  const data = feature || {};
+  const title = document.getElementById('coming-soon-title');
+  const featureEl = document.getElementById('coming-soon-feature');
+  const detail = document.getElementById('coming-soon-detail');
+  const copy = document.getElementById('coming-soon-copy');
+
+  if (title) title.textContent = data.title || 'This Code Lab feature is coming soon';
+  if (featureEl) featureEl.textContent = data.feature || 'Feature in progress';
+  if (detail) detail.textContent = data.detail || 'This area is being prepared and will not change XP, coins, or progress until it is ready.';
+  if (copy) copy.textContent = 'We are polishing this student experience before opening it. For now, keep using lessons, quizzes, practice, certificates, and reference tools.';
+}
 
 // ============================================================================
 // PAGE INITIALIZERS - Render dynamic content for category pages
@@ -12692,6 +14555,61 @@ function renderAFMilestones(state) {
   afSetMilestone('ach-unit-test', unitPassed, unitPassed ? '&#10003; Done' : 'Not yet');
 }
 
+function renderGameDashboard() {
+  if (typeof GameProgress === 'undefined') return;
+  const s = GameProgress.ensure();
+  const progress = GameProgress.levelProgress();
+  const today = GameProgress.todayKey();
+  const goals = s.dailyGoals[today] || {};
+
+  const levelEl = document.getElementById('game-level');
+  const tierEl = document.getElementById('game-tier');
+  const xpEl = document.getElementById('game-xp');
+  const needEl = document.getElementById('game-xp-needed');
+  const fillEl = document.getElementById('game-xp-fill');
+  const coinsEl = document.getElementById('game-coins');
+  const streakEl = document.getElementById('game-streak');
+  const avatarEl = document.getElementById('game-avatar-card');
+  const topBadge = document.getElementById('af-xp-badge');
+  const streakBadge = document.querySelector('.streak-badge');
+
+  if (levelEl) levelEl.textContent = s.level || 1;
+  if (tierEl) tierEl.textContent = s.tier || 'Starter Bot';
+  if (xpEl) xpEl.textContent = progress.current;
+  if (needEl) needEl.textContent = progress.required;
+  if (fillEl) fillEl.style.width = progress.percent + '%';
+  if (coinsEl) coinsEl.textContent = s.coins || 0;
+  if (streakEl) streakEl.textContent = (s.streak && s.streak.current) || 0;
+  if (avatarEl) {
+    avatarEl.innerHTML = (typeof AvatarRenderer !== 'undefined') ? AvatarRenderer.render(s.equippedAvatar, 'avatar-dashboard') : 'AI';
+    avatarEl.setAttribute('data-color', (s.equippedAvatar && s.equippedAvatar.color) || 'default');
+  }
+  if (topBadge) topBadge.innerHTML = '<i class="fa-solid fa-gem"></i> Level ' + (s.level || 1) + ' · ' + (s.lifetimeXP || 0) + ' XP';
+  if (streakBadge) streakBadge.innerHTML = '<i class="fa-solid fa-fire"></i> ' + (((s.streak && s.streak.current) || 0) || 'Start') + ' day streak';
+
+  const goalList = [
+    ['lesson', 'Complete a lesson'],
+    ['quiz', 'Pass a quiz or unit test'],
+    ['typedArcade', 'Complete a typed arcade challenge'],
+    ['simulator', 'Finish a simulator mission']
+  ];
+  const goalsEl = document.getElementById('game-daily-goals');
+  if (goalsEl) {
+    goalsEl.innerHTML = goalList.map(([key, label]) => {
+      const done = !!goals[key];
+      return '<div class="game-goal ' + (done ? 'is-done' : '') + '"><span>' + (done ? '&#10003;' : '') + '</span>' + label + '</div>';
+    }).join('');
+  }
+
+  const logEl = document.getElementById('game-activity-log');
+  if (logEl) {
+    const items = (s.activityLog || []).slice(0, 6);
+    logEl.innerHTML = items.length ? items.map(item =>
+      '<div class="game-activity"><span>' + escapeHtml(item.label || 'Activity') + '</span><strong>' + (item.xp ? '+' + item.xp + ' XP' : 'Done') + '</strong></div>'
+    ).join('') : '<div class="game-empty">Rewards will appear here as students learn, play, and complete missions.</div>';
+  }
+}
+
 function renderAFDashboard() {
   var user = Auth.currentUser;
   var state = afGetDashboardState();
@@ -12735,6 +14653,7 @@ function renderAFDashboard() {
   if (overallBar) overallBar.style.width = pct + '%';
 
   renderAFMilestones(state);
+  renderGameDashboard();
 
   var cardTitle = document.getElementById('af-lesson-title');
   var cardDesc  = document.getElementById('af-lesson-desc');
@@ -12855,7 +14774,31 @@ function afLessonTab(tab) {
     '.af-sidebar-lesson--active{background:rgba(255,255,255,.15)}',
     '.af-sidebar-lesson--active .af-sidebar-title{color:#fff;font-weight:600}',
     '.af-sidebar-num{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#94a3b8;flex-shrink:0}',
-    '.af-sidebar-title{font-size:.82rem;color:rgba(255,255,255,.8)}'
+    '.af-sidebar-title{font-size:.82rem;color:rgba(255,255,255,.8)}',
+    '.game-dashboard-card,.mode-card,.game-page-hero,.arcade-panel,.sim-board-card,.sim-code-card,.game-concept-panel,.avatar-shop-card,.leaderboard-card{border:1px solid #e5e7eb;background:#fff;border-radius:8px;box-shadow:0 8px 24px rgba(15,30,69,.06)}',
+    '.game-dashboard-card{padding:18px;margin:18px 0;display:flex;flex-direction:column;gap:14px}',
+    '.game-dashboard-top{display:flex;align-items:center;justify-content:space-between;gap:16px}',
+    '.game-dashboard-top h3{margin:0;color:#0f1e45;font-size:1.15rem}.game-dashboard-top h3 span:last-child{font-size:.82rem;color:#2563ff;margin-left:6px}',
+    '.game-eyebrow{margin:0 0 4px;color:#2563ff;text-transform:uppercase;letter-spacing:.08em;font-size:.72rem;font-weight:800}',
+    '.game-avatar{width:56px;height:56px;border-radius:14px;background:#fece00;color:#073e77;display:flex;align-items:center;justify-content:center;font-weight:900;box-shadow:inset 0 -7px 0 rgba(0,0,0,.08)}',
+    '.game-avatar[data-color="blue"]{background:#2563ff;color:#fff}.game-avatar[data-color="green"]{background:#10b981;color:#fff}.game-avatar[data-color="purple"]{background:#8b5cf6;color:#fff}',
+    '.game-xp-row{display:flex;flex-wrap:wrap;gap:12px;color:#475569;font-size:.84rem}.game-xp-track{height:10px;border-radius:999px;background:#e5e7eb;overflow:hidden}.game-xp-fill{height:100%;width:0;background:linear-gradient(90deg,#2563ff,#10b981);border-radius:999px;transition:width .5s ease}',
+    '.game-daily-title{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#64748b;margin-bottom:8px}.game-goals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.game-goal{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:#f8fafc;color:#475569;font-size:.82rem}.game-goal span{width:18px;height:18px;border-radius:50%;border:1px solid #cbd5e1;display:flex;align-items:center;justify-content:center;font-size:.7rem}.game-goal.is-done{background:#ecfdf5;color:#047857}.game-goal.is-done span{background:#10b981;color:#fff;border-color:#10b981}',
+    '.mode-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}.mode-card{text-align:left;padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:6px;color:#0f1e45;transition:transform .15s ease,box-shadow .15s ease}.mode-card:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(15,30,69,.1)}.mode-card i{color:#2563ff;font-size:1.15rem}.mode-card span{font-weight:800}.mode-card small{color:#64748b;line-height:1.35}',
+    '.game-activity-log{display:flex;flex-direction:column;gap:8px}.game-activity{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #eef2f7;font-size:.82rem;color:#475569}.game-activity strong{color:#10b981;white-space:nowrap}.game-empty{color:#64748b;font-size:.82rem;line-height:1.5}',
+    '.game-page-shell{display:flex;flex-direction:column;gap:18px}.game-page-hero{padding:22px;display:flex;align-items:flex-start;justify-content:space-between;gap:18px}.game-page-hero h1{margin:0 0 8px;color:#0f1e45;font-size:clamp(1.8rem,4vw,3rem);line-height:1}.game-page-hero p{margin:0;color:#475569;max-width:720px;line-height:1.55}.game-stat-pills{display:flex;flex-wrap:wrap;gap:8px}.game-stat-pills span{padding:8px 10px;border-radius:999px;background:#f1f5f9;color:#0f1e45;font-weight:700;font-size:.82rem;white-space:nowrap}',
+    '.arcade-layout,.sim-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:18px}.sim-layout{grid-template-columns:minmax(320px,.95fr) minmax(320px,1fr) minmax(260px,.75fr)}',
+    '.arcade-panel,.sim-board-card,.sim-code-card,.game-concept-panel{padding:18px}.arcade-pad{width:100%;min-height:320px;border:0;border-radius:8px;background:#0f1e45;color:#fff;font-size:clamp(2rem,7vw,5rem);font-weight:900;cursor:pointer;transition:background .18s ease,transform .18s ease}.arcade-pad:hover{transform:scale(.995)}.arcade-wait{background:#1e293b}.arcade-ready{background:#10b981}.arcade-false{background:#ef4444}.arcade-done{background:#2563ff}.arcade-actions,.sim-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.game-result{margin-top:12px;color:#475569;line-height:1.5;font-size:.92rem}',
+    '.game-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.game-panel-heading span{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:#64748b;font-weight:800}.game-panel-heading strong{color:#0f1e45}',
+    '.typed-arcade-shell{display:grid;grid-template-columns:260px minmax(0,1fr);gap:18px}.typed-arcade-list{display:flex;flex-direction:column;gap:8px}.typed-arcade-tab,.sim-mission-tab{border:1px solid #e5e7eb;background:#fff;border-radius:8px;padding:12px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:4px;color:#0f1e45;box-shadow:0 4px 14px rgba(15,30,69,.04)}.typed-arcade-tab.active,.sim-mission-tab.active{border-color:#2563ff;box-shadow:0 0 0 3px rgba(37,99,255,.12)}.typed-arcade-tab.is-done,.sim-mission-tab.is-done{background:#ecfdf5;border-color:#a7f3d0}.typed-arcade-tab span,.sim-mission-tab span{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:#64748b;font-weight:800}.typed-arcade-tab small{color:#64748b}.typed-arcade-card{border:1px solid #e5e7eb;background:#fff;border-radius:8px;padding:18px;box-shadow:0 8px 24px rgba(15,30,69,.06)}.typed-arcade-prompt{color:#475569;margin:0 0 12px;line-height:1.5}.typed-target{background:#f8fafc;border:1px solid #e5e7eb;border-radius:8px;padding:10px;margin-bottom:12px}.typed-target span,.typed-output-grid span{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:#64748b;font-weight:800;margin-bottom:6px}.typed-target pre,.typed-output-grid pre{margin:0;white-space:pre-wrap;font-family:Consolas,monospace;color:#0f172a}.typed-arcade-code{width:100%;min-height:190px;border:1px solid #cbd5e1;border-radius:8px;padding:12px;font-family:Consolas,monospace;font-size:.92rem;line-height:1.5;color:#0f172a;background:#f8fafc}.typed-output-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.typed-output-grid>div{background:#f8fafc;border:1px solid #e5e7eb;border-radius:8px;padding:10px;min-height:95px}',
+    '.game-concept-panel h3{margin:0 0 10px;color:#0f1e45}.game-concept-panel ul{margin:0 0 14px;padding-left:20px;color:#475569;line-height:1.55}.game-concept-panel pre{margin:0;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:14px;overflow:auto;font-size:.86rem}',
+    '.sim-mission-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.sim-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;aspect-ratio:1/1}.sim-cell{position:relative;border:1px solid #dbe3ee;background:#f8fafc;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden}.sim-base{background:#eef6ff;border-color:#93c5fd}.sim-finish{background:#ecfdf5;border-color:#86efac}.sim-obstacle{background:#fee2e2;border-color:#fca5a5}.sim-color-blue{background:#dbeafe;border-color:#60a5fa}.sim-label{position:absolute;left:6px;top:5px;font-size:.62rem;font-weight:800;color:#2563ff;text-transform:uppercase}.sim-battery-icon{color:#f59e0b;font-size:1.2rem}.sim-obstacle-icon{color:#dc2626}.sim-target-dot{position:absolute;right:5px;bottom:5px;font-size:.58rem;text-transform:uppercase;color:#64748b;font-weight:800}.sim-robot{width:42px;height:42px;border-radius:12px;background:#fece00;color:#073e77;display:flex;align-items:center;justify-content:center;font-size:1.15rem;box-shadow:0 8px 18px rgba(15,30,69,.16);position:relative}.sim-robot:after{content:"";position:absolute;width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:9px solid #073e77;right:-6px}.sim-dir-S:after{transform:rotate(90deg);right:auto;bottom:-7px}.sim-dir-W:after{transform:rotate(180deg);right:auto;left:-6px}.sim-dir-N:after{transform:rotate(270deg);right:auto;top:-7px}.sim-robot b{position:absolute;right:-5px;top:-5px;width:12px;height:12px;border-radius:3px;background:#f59e0b}',
+    '.sim-code-card label{display:block;font-weight:800;color:#0f1e45;margin-bottom:8px}.sim-code-card textarea{width:100%;min-height:320px;border:1px solid #cbd5e1;border-radius:8px;padding:12px;font-family:Consolas,monospace;font-size:.92rem;line-height:1.5;color:#0f172a;background:#f8fafc}.sim-status{margin-top:12px;color:#475569;font-size:.88rem}.sim-error{color:#dc2626;font-weight:700}',
+    '.avatar-shop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}.avatar-shop-card{padding:18px}.avatar-swatch{width:64px;height:64px;border-radius:16px;margin-bottom:12px}.avatar-shop-card h3{margin:0 0 6px;color:#0f1e45}.avatar-shop-card p{margin:0 0 12px;color:#64748b}.leaderboard-panel{max-width:760px}.leaderboard-card{padding:22px}.leaderboard-card h2,.leaderboard-card h3{color:#0f1e45}.leaderboard-stats{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}.leaderboard-stats span{background:#f1f5f9;border-radius:999px;padding:8px 10px;font-weight:700;color:#0f1e45}.leaderboard-list{list-style:none;margin:0;padding:0}.leaderboard-list li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #eef2f7;color:#475569}.leaderboard-list strong{color:#10b981}',
+    '.avatar-shop-full{display:flex;flex-direction:column;gap:18px}.avatar-shop-hero{display:grid;grid-template-columns:280px minmax(0,1fr);gap:18px;align-items:stretch}.avatar-preview-panel,.avatar-shop-summary,.avatar-featured,.avatar-dev-panel{border:1px solid #e5e7eb;background:#fff;border-radius:8px;box-shadow:0 8px 24px rgba(15,30,69,.06);padding:18px}.avatar-preview-panel{display:flex;align-items:center;justify-content:center;min-height:280px}.avatar-shop-summary h2{margin:0 0 8px;color:#0f1e45;font-size:1.8rem}.avatar-shop-summary p{color:#475569;line-height:1.55;margin:0 0 14px}.avatar-shop-stats,.avatar-equipped-list{display:flex;gap:8px;flex-wrap:wrap}.avatar-shop-stats span,.avatar-equipped-list span{background:#f1f5f9;border-radius:999px;padding:8px 10px;color:#0f1e45;font-weight:700;font-size:.84rem}.avatar-equipped-list span{font-weight:500;color:#64748b}.avatar-shop-tabs{display:flex;gap:8px;flex-wrap:wrap}.avatar-shop-tabs button{border:1px solid #dbe3ee;background:#fff;border-radius:999px;padding:8px 12px;font-weight:800;color:#475569;cursor:pointer}.avatar-shop-tabs button.active{background:#0f1e45;color:#fff;border-color:#0f1e45}.avatar-featured-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}.avatar-shop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}.avatar-shop-card{border:1px solid #e5e7eb;background:#fff;border-radius:8px;padding:14px;box-shadow:0 8px 24px rgba(15,30,69,.05);display:flex;flex-direction:column;gap:12px}.avatar-shop-card.compact{min-height:210px}.avatar-shop-card.equipped{border-color:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.14)}.avatar-shop-card.locked{opacity:.75}.avatar-rarity-rare{border-color:#bfdbfe}.avatar-rarity-epic{border-color:#ddd6fe}.avatar-rarity-achievement{border-color:#fde68a}.avatar-rarity-seasonal{border-color:#fed7aa}.avatar-item-preview{height:112px;display:flex;align-items:center;justify-content:center;background:#f8fafc;border-radius:8px;overflow:hidden}.avatar-card-meta span{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#2563ff}.avatar-card-meta strong{display:block;color:#0f1e45;margin:.25rem 0}.avatar-card-meta p{font-size:.82rem;line-height:1.45;color:#64748b;margin:0}.avatar-card-footer{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px;color:#475569;font-size:.82rem;font-weight:800}.avatar-dev-panel{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start}.avatar-dev-panel h3{width:100%;margin:0;color:#0f1e45}.avatar-dev-panel pre{width:100%;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:12px;overflow:auto}',
+    '.gritbot-avatar{--bot-shell:#FECE00;position:relative;width:150px;height:150px;border-radius:24px;display:flex;align-items:center;justify-content:center;isolation:isolate;overflow:hidden;background:linear-gradient(145deg,#eff6ff,#fff)}.avatar-large{width:240px;height:240px}.avatar-dashboard{width:86px;height:86px}.avatar-mini{width:96px;height:96px}.bg-arcade-grid{background-image:linear-gradient(rgba(37,99,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,255,.12) 1px,transparent 1px);background-size:18px 18px}.bg-robotics-table{background:linear-gradient(145deg,#e0f2fe,#f8fafc)}.bg-space-mission{background:radial-gradient(circle at 30% 20%,#fff 0 2px,transparent 3px),linear-gradient(145deg,#111827,#1e3a8a)}.bg-python-terminal{background:#0f172a}.bg-fll-arena{background:linear-gradient(135deg,#fff7ed,#dbeafe)}.bg-summer-camp-studio{background:linear-gradient(135deg,#fef3c7,#cffafe)}.avatar-effect-layer{position:absolute;inset:0;z-index:0}.effect-pixel-glow .avatar-effect-layer{box-shadow:inset 0 0 45px rgba(37,99,255,.35)}.effect-spark-trail .avatar-effect-layer:before{content:"✦ ✧ ✦";position:absolute;left:14px;top:18px;color:#f59e0b}.effect-code-rain .avatar-effect-layer:before{content:"01\\A10\\Apy";white-space:pre;position:absolute;right:16px;top:14px;color:#10b981;font-family:Consolas,monospace;font-size:.8rem}.effect-electric-zap .avatar-effect-layer:before{content:"⚡";position:absolute;right:22px;top:18px;color:#fde047;font-size:1.6rem}.effect-confetti-burst .avatar-effect-layer:before{content:"● ▲ ■ ●";position:absolute;top:16px;color:#ef4444}.effect-level-up-aura .avatar-effect-layer{background:radial-gradient(circle,rgba(250,204,21,.25),transparent 62%)}.effect-arcade-champion-glow .avatar-effect-layer{background:radial-gradient(circle,rgba(139,92,246,.3),transparent 62%)}.avatar-bg-label{position:absolute;left:10px;top:10px;font-size:.62rem;font-weight:900;color:#64748b;z-index:1}.gritbot-body{position:relative;z-index:3;width:58%;height:54%;border-radius:24% 24% 20% 20%;background:var(--bot-shell);box-shadow:inset 0 -10px 0 rgba(0,0,0,.1),0 12px 24px rgba(15,30,69,.16);display:flex;align-items:center;justify-content:center}.gritbot-cap{position:absolute;top:-18%;width:58%;height:18%;border-radius:6px;background:var(--bot-shell);box-shadow:inset 0 -4px 0 rgba(0,0,0,.08)}.gritbot-cap:before{content:"";position:absolute;left:50%;top:-90%;transform:translateX(-50%);border-left:28px solid transparent;border-right:28px solid transparent;border-bottom:18px solid var(--bot-shell)}.gritbot-face{width:38%;aspect-ratio:1;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;position:relative}.eye.classic{width:52%;height:52%;border-radius:50%;background:#073e77;box-shadow:5px -5px 0 -2px #fff}.eye.sleepy{width:58%;height:18%;border-radius:999px;background:#073e77}.visor{width:78%;height:34%;border-radius:999px;background:#073e77;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem}.visor.focus{background:#2563ff}.visor.star{background:#8b5cf6}.glasses{width:82%;height:40%;border:3px solid #073e77;border-radius:8px;position:relative}.glasses:after{content:"";position:absolute;left:50%;top:35%;width:12px;height:3px;background:#073e77;transform:translateX(-50%)}.glasses.goggles{border-radius:999px;border-color:#10b981}.monocle{width:52%;height:52%;border:4px solid #073e77;border-radius:50%;box-shadow:12px 12px 0 -9px #073e77}.gritbot-smile{position:absolute;bottom:18%;width:28%;height:12%;border-bottom:3px solid #073e77;border-radius:50%}.gritbot-shine{position:absolute;z-index:4;width:22%;height:7%;border-radius:999px;background:rgba(255,255,255,.45);top:32%;left:34%;transform:rotate(-18deg)}.avatar-badge{position:absolute;right:15%;bottom:14%;width:22px;height:22px;border-radius:50%;background:#0f1e45;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900}.avatar-hat{position:absolute;z-index:5;top:18%;left:50%;transform:translateX(-50%)}.avatar-hat.grad{width:70px;height:12px;background:#0f172a}.avatar-hat.grad span{position:absolute;left:22px;top:10px;width:26px;height:18px;background:#0f172a}.avatar-hat.helmet{width:72px;height:28px;border-radius:40px 40px 8px 8px;background:#f59e0b}.avatar-hat.headphones{width:86px;height:48px;border:6px solid #0f172a;border-bottom:0;border-radius:50px 50px 0 0}.avatar-hat.headphones span,.avatar-hat.headphones b{position:absolute;bottom:-14px;width:18px;height:26px;border-radius:8px;background:#0f172a}.avatar-hat.headphones span{left:-8px}.avatar-hat.headphones b{right:-8px}.avatar-hat.space{width:86px;height:62px;border:5px solid rgba(203,213,225,.9);border-radius:50%;background:rgba(255,255,255,.25)}.avatar-hat.wizard{width:0;height:0;border-left:26px solid transparent;border-right:26px solid transparent;border-bottom:76px solid #7c3aed;top:4%}.avatar-hat.crown{color:#facc15;font-size:1.1rem;font-weight:900;letter-spacing:-2px}.avatar-hat.camp{width:72px;height:24px;border-radius:40px 40px 10px 10px;background:#06b6d4}.avatar-hat.camp:after{content:"";position:absolute;right:-18px;bottom:0;width:26px;height:8px;background:#06b6d4;border-radius:999px}.avatar-pack{position:absolute;z-index:2;right:18%;bottom:27%;width:42px;height:54px;border-radius:10px;background:#334155;color:#fff;display:flex;align-items:center;justify-content:center}.avatar-pack.jetpack:before,.avatar-pack.jetpack:after{content:"";position:absolute;bottom:-18px;width:10px;height:22px;background:#f97316;border-radius:999px}.avatar-pack.jetpack:before{left:6px}.avatar-pack.jetpack:after{right:6px}.avatar-pack.rocket{background:#dc2626}.avatar-pack.battery{background:#10b981}.avatar-pack.toolbox{background:#f59e0b}.avatar-pack.laptop{background:#2563ff}.avatar-pack.toolkit{background:#8b5cf6}',
+    '.game-avatar{width:96px;height:96px;background:transparent;box-shadow:none;border-radius:0;overflow:visible}.game-avatar .gritbot-avatar{transform:scale(.8)}',
+    '@media(max-width:960px){.mode-grid,.arcade-layout,.sim-layout,.typed-arcade-shell,.typed-output-grid,.avatar-shop-hero{grid-template-columns:1fr}.game-page-hero{flex-direction:column}.game-goals{grid-template-columns:1fr}.arcade-pad{min-height:240px}.avatar-preview-panel{min-height:220px}.avatar-large{width:200px;height:200px}}'
   ].join('');
   document.head.appendChild(style);
 })();

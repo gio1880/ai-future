@@ -5,14 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Future Code Lab — Learn. Code. Build. Succeed.</title>
   <meta name="description" content="AI Future Code Lab — interactive coding platform for students. Lessons, projects, quizzes, and certificates. Formerly PyLearn." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://ai-future-hq27.onrender.com/codelab" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="AI Future Code Lab | Coding Classes for Kids" />
+  <meta property="og:description" content="Interactive coding classes where students learn Python, run code, build projects, track progress, and earn certificates." />
+  <meta property="og:image" content="https://ai-future-hq27.onrender.com/ai%20future%20logo.png" />
+  <meta property="og:url" content="https://ai-future-hq27.onrender.com/codelab" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AI Future Code Lab | Coding Classes for Kids" />
+  <meta name="twitter:description" content="Python lessons, coding projects, built-in practice, progress tracking, and certificates for students." />
+  <meta name="twitter:image" content="https://ai-future-hq27.onrender.com/ai%20future%20logo.png" />
   <link rel="icon" href="../ai future logo.png" type="image/png" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": "AI Future Code Lab",
+    "description": "Interactive coding classes where students learn Python, run code, build projects, track progress, and earn certificates.",
+    "provider": {
+      "@type": "EducationalOrganization",
+      "name": "AI Future",
+      "url": "https://ai-future-hq27.onrender.com/"
+    },
+    "areaServed": "Queens, New York",
+    "audience": {
+      "@type": "EducationalAudience",
+      "educationalRole": "student"
+    },
+    "url": "https://ai-future-hq27.onrender.com/codelab"
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="/code-lab/assets/css/design-system.css" />
+  <link rel="stylesheet" href="assets/css/design-system.css" />
   <style>
-    /* ── Hero ──────────────────────────────────────────────── */
+    /* -- Hero ------------------------------------------------ */
     .cl-hero {
       background: linear-gradient(135deg, #0D0A2E 0%, #1A0F4E 50%, #0A1A3E 100%);
       padding: 5rem 0 4rem;
@@ -121,7 +151,7 @@
       border: none;
     }
 
-    /* ── Why Cards ─────────────────────────────────────────── */
+    /* -- Why Cards ------------------------------------------- */
     .why-lab-section { background: var(--af-deep-navy); }
     .why-lab-grid {
       display: grid;
@@ -144,7 +174,7 @@
     .why-lab-card__title { font-size: .95rem; font-weight: 700; color: #fff; margin-bottom: .4rem; }
     .why-lab-card__desc { font-size: .875rem; color: rgba(255,255,255,.55); line-height: 1.6; }
 
-    /* ── Pathways ──────────────────────────────────────────── */
+    /* -- Pathways -------------------------------------------- */
     .pathways-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -173,7 +203,7 @@
     }
     .pathway-lab-card__desc { font-size: .85rem; color: var(--af-muted); line-height: 1.5; }
 
-    /* ── Feature Grid (Powerful Learning Experience) ────────── */
+    /* -- Feature Grid (Powerful Learning Experience) ---------- */
     .power-grid {
       display: grid;
       grid-template-columns: 1fr 1.8fr 1fr;
@@ -207,7 +237,7 @@
     .quiz-option.correct { background: rgba(34,197,94,.1); border-color: var(--af-success); color: #15803d; }
     .quiz-option:not(.correct):hover { background: rgba(37,99,255,.05); border-color: var(--af-blue); }
 
-    /* ── Audience Cards ────────────────────────────────────── */
+    /* -- Audience Cards -------------------------------------- */
     .audience-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -233,7 +263,7 @@
     .cert-preview__name { font-size: 1rem; font-weight: 800; color: #fff; }
     .cert-preview__course { font-size: .75rem; color: rgba(255,255,255,.5); }
 
-    /* ── Trust Bar ─────────────────────────────────────────── */
+    /* -- Trust Bar ------------------------------------------- */
     .trust-bar { background: #F1F5F9; border-top: 1px solid var(--af-border); padding: 2rem 0; }
     .trust-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--sp-lg); text-align: center; }
     .trust-stat__num { font-size: 1.5rem; font-weight: 800; color: var(--af-purple); }
@@ -265,6 +295,7 @@
     /* Responsive */
     @media (max-width: 1023px) {
       .cl-hero__inner { grid-template-columns: 1fr; }
+      .navbar .desktop-only { display: none !important; }
       .power-grid { grid-template-columns: 1fr 1fr; }
       .power-grid > .power-side:last-child { grid-column: span 2; flex-direction: row; }
       .why-lab-grid { grid-template-columns: repeat(2, 1fr); }
@@ -310,14 +341,14 @@
 <!-- Announcement Bar -->
 <div class="announce-bar">
   <span>☀ Summer Camp 2025 — Coding Camp for ages 8–14 now open!</span>
-  <a href="/#summer-camp">View Summer Camp →</a>
+  <a href="../index.html">View AI Future Programs →</a>
   <button class="announce-bar__dismiss" aria-label="Dismiss">✕</button>
 </div>
 
 <!-- Navigation -->
 <nav class="navbar">
   <div class="navbar__inner">
-    <a href="/" class="navbar__logo">
+    <a href="../index.html" class="navbar__logo">
       <img src="../ai future logo.png" alt="AI Future Logo" />
       <div>
         <div class="navbar__logo-text">AI FUTURE</div>
@@ -325,16 +356,16 @@
       </div>
     </a>
     <ul class="navbar__links">
-      <li><a href="/">Home</a></li>
-      <li><a href="/robotics-lab">Robotics Lab</a></li>
-      <li><a href="/codelab" class="active active--blue">Code Lab</a></li>
-      <li><a href="/robotics-lab#programs">Programs</a></li>
-      <li><a href="/#summer-camp">Summer Camp</a></li>
-      <li><a href="/#contact">About</a></li>
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../robotics lab/robotics-lab.html">Robotics Lab</a></li>
+      <li><a href="code-lab.html" class="active active--blue">Code Lab</a></li>
+      <li><a href="../robotics lab/robotics-lab.html#programs">Programs</a></li>
+      <li><a href="../index.html">Summer Camp</a></li>
+      <li><a href="../contact.html?program=Code%20Lab">About</a></li>
     </ul>
     <div style="display:flex; gap:.5rem; flex-shrink:0;" class="desktop-only">
-      <a href="/codelab/app" class="btn btn--outline btn--sm">Login</a>
-      <a href="/codelab/app" class="btn btn--primary btn--sm">Sign Up Free</a>
+      <a href="index.html" class="btn btn--outline btn--sm">Login</a>
+      <a href="../contact.html?program=Code%20Lab&status=coming-soon" class="btn btn--primary btn--sm">Join Waitlist</a>
     </div>
     <button class="navbar__hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
   </div>
@@ -342,11 +373,11 @@
 <div class="nav-overlay"></div>
 <nav class="nav-mobile">
   <button class="nav-mobile__close">✕</button>
-  <a href="/">Home</a>
-  <a href="/robotics-lab">Robotics Lab</a>
-  <a href="/codelab" class="active">Code Lab</a>
-  <a href="/codelab/app" class="btn btn--outline" style="margin-top:1rem;text-align:center">Login</a>
-  <a href="/codelab/app" class="btn btn--primary" style="text-align:center">Sign Up Free</a>
+  <a href="../index.html">Home</a>
+  <a href="../robotics lab/robotics-lab.html">Robotics Lab</a>
+  <a href="code-lab.html" class="active">Code Lab</a>
+  <a href="index.html" class="btn btn--outline" style="margin-top:1rem;text-align:center">Login</a>
+  <a href="../contact.html?program=Code%20Lab&status=coming-soon" class="btn btn--primary" style="text-align:center">Join Waitlist</a>
 </nav>
 
 <!-- Hero -->
@@ -358,7 +389,7 @@
       <div class="cl-hero__sub">Learn. Code. Build. Succeed.</div>
       <p class="cl-hero__desc">An interactive online coding platform where students learn by doing. Master real coding skills through hands-on lessons, quizzes, and fun projects.</p>
       <div class="btn-group">
-        <a href="/codelab/app" class="btn btn--primary btn--lg"><i class="fa-solid fa-play"></i> Start Learning Now</a>
+        <a href="../contact.html?program=Code%20Lab&status=coming-soon" class="btn btn--primary btn--lg"><i class="fa-solid fa-clock"></i> Join Code Lab Waitlist</a>
         <a href="#pathways" class="btn btn--outline-white btn--lg">Explore Courses</a>
       </div>
       <div class="cl-hero__minifeat">
@@ -501,42 +532,42 @@
         <div class="pathway-lab-card__title">Scratch</div>
         <span class="pathway-lab-card__grade">Grades 3–6</span>
         <div class="pathway-lab-card__desc">Create stories, games, and animations with visual block coding.</div>
-        <a href="/codelab/app" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Start Learning</a>
+        <a href="../contact.html?program=Code%20Lab&status=coming-soon" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Join Waitlist</a>
       </div>
       <div class="pathway-lab-card reveal reveal--delay-1">
         <div class="pathway-lab-card__num">Pathway 2</div>
         <div class="pathway-lab-card__title">Python Foundations</div>
         <span class="pathway-lab-card__grade">Grades 5–10</span>
         <div class="pathway-lab-card__desc">Learn Python from the basics to build strong programming skills.</div>
-        <a href="/codelab/app" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Start Learning</a>
+        <a href="../contact.html?program=Code%20Lab&status=coming-soon" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Join Waitlist</a>
       </div>
       <div class="pathway-lab-card reveal reveal--delay-2">
         <div class="pathway-lab-card__num">Pathway 3</div>
         <div class="pathway-lab-card__title">Pybricks Robotics</div>
         <span class="pathway-lab-card__grade">Grades 6–12</span>
         <div class="pathway-lab-card__desc">Code LEGO robots using Python with Pybricks MicroPython.</div>
-        <a href="/codelab/app" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Start Learning</a>
+        <a href="../contact.html?program=Code%20Lab&status=coming-soon" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Join Waitlist</a>
       </div>
       <div class="pathway-lab-card reveal">
         <div class="pathway-lab-card__num">Pathway 4</div>
         <div class="pathway-lab-card__title">Robotics Challenges</div>
         <span class="pathway-lab-card__grade">Grades 6–12</span>
         <div class="pathway-lab-card__desc">Solve real robotics missions and engineering coding challenges.</div>
-        <a href="/codelab/app" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Start Learning</a>
+        <a href="../contact.html?program=Code%20Lab&status=coming-soon" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Join Waitlist</a>
       </div>
       <div class="pathway-lab-card reveal reveal--delay-1">
         <div class="pathway-lab-card__num">Pathway 5</div>
         <div class="pathway-lab-card__title">Advanced Projects</div>
         <span class="pathway-lab-card__grade">Grades 8–12</span>
         <div class="pathway-lab-card__desc">Build advanced projects and expand your coding portfolio.</div>
-        <a href="/codelab/app" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Start Learning</a>
+        <a href="../contact.html?program=Code%20Lab&status=coming-soon" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Join Waitlist</a>
       </div>
       <div class="pathway-lab-card reveal reveal--delay-2">
         <div class="pathway-lab-card__num">Pathway 6</div>
         <div class="pathway-lab-card__title">Future Tech</div>
         <span class="pathway-lab-card__grade">Grades 8–12</span>
         <div class="pathway-lab-card__desc">Explore AI, data, and emerging technologies through code.</div>
-        <a href="/codelab/app" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Start Learning</a>
+        <a href="../contact.html?program=Code%20Lab&status=coming-soon" class="btn btn--outline btn--sm" style="align-self:flex-start;margin-top:.25rem">Join Waitlist</a>
       </div>
     </div>
   </div>
@@ -624,7 +655,7 @@
           <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--af-yellow);margin-bottom:.6rem">Keep Going!</div>
           <div style="font-size:.9rem;font-weight:700;color:#fff;margin-bottom:.4rem">Great Job! Well Done.</div>
           <div style="font-size:.8rem;color:rgba(255,255,255,.55);margin-bottom:1rem">You've earned the Loop Master badge. Keep going to unlock more!</div>
-          <a href="/codelab/app" class="btn btn--primary btn--sm" style="width:100%;justify-content:center">Continue Lesson →</a>
+          <a href="index.html" class="btn btn--primary btn--sm" style="width:100%;justify-content:center">Continue Lesson →</a>
         </div>
       </div>
     </div>
@@ -645,7 +676,7 @@
           <li>Build confidence</li>
           <li>Certificates of completion</li>
         </ul>
-        <a href="/codelab/app" class="btn btn--primary btn--sm" style="margin-top:auto;align-self:flex-start">Start Learning</a>
+        <a href="../contact.html?program=Code%20Lab&status=coming-soon" class="btn btn--primary btn--sm" style="margin-top:auto;align-self:flex-start">Join Waitlist</a>
       </div>
       <div class="audience-card audience-card--teacher reveal reveal--delay-1">
         <div class="audience-card__icon">👩‍🏫</div>
@@ -657,7 +688,7 @@
           <li>Identify learning gaps</li>
           <li>Manage classrooms easily</li>
         </ul>
-        <a href="#contact" class="btn btn--outline btn--sm" style="margin-top:auto;align-self:flex-start">Request Access</a>
+        <a href="../contact.html?program=Code%20Lab" class="btn btn--outline btn--sm" style="margin-top:auto;align-self:flex-start">Request Access</a>
       </div>
       <div class="audience-card audience-card--cert reveal reveal--delay-2">
         <div class="audience-card__icon" style="color:var(--af-yellow)">🏅</div>
@@ -727,7 +758,7 @@
       </div>
 
       <form class="cl-form reveal" id="cl-form" novalidate>
-        <h3 class="cl-form__title">Start your membership</h3>
+        <h3 class="cl-form__title">Join the Code Lab waitlist</h3>
         <label class="cl-field">
           <span>Parent / guardian name</span>
           <input type="text" name="parentName" autocomplete="name" required />
@@ -751,10 +782,10 @@
           <input type="email" name="email" autocomplete="email" required />
         </label>
         <button type="submit" class="btn btn--primary btn--lg cl-submit" id="cl-submit">
-          Subscribe <span id="cl-submit-amount">— $14.99/mo</span>
+          Join Waitlist <span id="cl-submit-amount">— monthly interest</span>
         </button>
         <p class="cl-legal">
-          Secure checkout by Stripe. Cancel anytime from the email receipt.
+          Code Lab is being prepared now. We will contact families before enrollment opens.
         </p>
         <p class="cl-error" id="cl-error" role="alert"></p>
       </form>
@@ -833,8 +864,8 @@
   if (!form) return;
 
   const plans = {
-    monthly: { name: 'Monthly Membership', amount: '$14.99', period: '/ month', note: 'Billed monthly. Cancel anytime.', submitLabel: '— $14.99/mo' },
-    annual:  { name: 'Annual Membership',  amount: '$99.99', period: '/ year',  note: 'Billed annually. Saves 44% vs monthly.', submitLabel: '— $99.99/yr' },
+    monthly: { name: 'Monthly Membership', amount: '$14.99', period: '/ month', note: 'Coming soon. Join the waitlist for monthly access updates.', submitLabel: '— monthly interest' },
+    annual:  { name: 'Annual Membership',  amount: '$99.99', period: '/ year',  note: 'Coming soon. Join the waitlist for annual access updates.', submitLabel: '— annual interest' },
   };
   let currentPlan = 'monthly';
 
@@ -864,14 +895,21 @@
     const errorEl = document.getElementById('cl-error');
     errorEl.textContent = '';
     const fd = new FormData(form);
+    const childName = (fd.get('childName') || '').toString().trim();
+    const childAge = (fd.get('childAge') || '').toString().trim();
+    const childGrade = (fd.get('childGrade') || '').toString().trim();
     const payload = {
-      productType: 'codelab',
-      plan: currentPlan,
       parentName: (fd.get('parentName') || '').toString().trim(),
-      childName: (fd.get('childName') || '').toString().trim(),
-      childAge: (fd.get('childAge') || '').toString().trim(),
-      childGrade: (fd.get('childGrade') || '').toString().trim(),
+      studentName: childName,
+      childName,
+      childAge,
+      childGrade,
       email: (fd.get('email') || '').toString().trim(),
+      phone: 'Not provided - Code Lab waitlist',
+      programInterest: 'Code Lab Inquiry',
+      preferredContact: 'Email',
+      sourcePage: `${window.location.pathname}${window.location.search || ''} Code Lab coming-soon offer form`,
+      message: `Code Lab coming-soon waitlist. Plan interest: ${currentPlan}. Student: ${childName}, age ${childAge}, grade ${childGrade}.`
     };
     if (!payload.parentName || !payload.childName || !payload.childAge || !payload.childGrade || !payload.email) {
       errorEl.textContent = 'Please fill out every field.';
@@ -879,20 +917,26 @@
     }
     const submit = document.getElementById('cl-submit');
     submit.disabled = true;
-    submit.textContent = 'Redirecting to secure checkout…';
+    submit.textContent = 'Sending waitlist request…';
     try {
-      const r = await fetch('/api/create-checkout', {
+      const r = await fetch('/api/parent-inquiry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
       const data = await r.json();
-      if (!r.ok || !data.url) throw new Error(data.message || 'Could not start checkout');
-      window.location.href = data.url;
+      if (!r.ok || !data.success) throw new Error(data.message || 'Could not save waitlist request');
+      form.reset();
+      submit.textContent = 'Saved! We will reach out soon.';
+      setTimeout(() => {
+        submit.disabled = false;
+        submit.innerHTML = 'Join Waitlist <span id="cl-submit-amount"></span>';
+        paint();
+      }, 2600);
     } catch (err) {
-      errorEl.textContent = err.message || 'Checkout unavailable. Please try again.';
+      errorEl.textContent = err.message || 'Waitlist unavailable. Please try again.';
       submit.disabled = false;
-      submit.innerHTML = 'Subscribe <span id="cl-submit-amount"></span>';
+      submit.innerHTML = 'Join Waitlist <span id="cl-submit-amount"></span>';
       paint();
     }
   });
@@ -908,7 +952,7 @@
     <h2 class="section-heading section-heading--white" style="margin-bottom:.75rem">Ready to start your coding journey?</h2>
     <p class="section-sub section-sub--white section-sub--center">Join students learning to code on AI Future Code Lab — interactive, fun, and built for the future.</p>
     <div class="btn-group" style="justify-content:center">
-      <a href="/codelab/app" class="btn btn--primary btn--lg"><i class="fa-solid fa-play"></i> Start Learning Now</a>
+      <a href="../contact.html?program=Code%20Lab&status=coming-soon" class="btn btn--primary btn--lg"><i class="fa-solid fa-clock"></i> Join Code Lab Waitlist</a>
       <a href="#pathways" class="btn btn--outline-white btn--lg">View Courses</a>
     </div>
   </div>
@@ -943,17 +987,17 @@
       </div>
       <div class="footer__col">
         <div class="footer__col-title">Code Lab</div>
-        <a href="/codelab/app#page-home">Dashboard</a>
+        <a href="index.html#page-home">Dashboard</a>
         <a href="#pathways">Courses</a>
-        <a href="/codelab/app">Sample Lesson</a>
-        <a href="/codelab/app#/certificates">Certificates</a>
+        <a href="../contact.html?program=Code%20Lab&status=coming-soon">Sample Lesson Soon</a>
+        <a href="index.html#/certificates">Certificates</a>
       </div>
       <div class="footer__col">
         <div class="footer__col-title">AI Future</div>
-        <a href="/">Home</a>
-        <a href="/robotics-lab">Robotics Lab</a>
-        <a href="/#summer-camp">Summer Camp</a>
-        <a href="/#contact">About</a>
+        <a href="../index.html">Home</a>
+        <a href="../robotics lab/robotics-lab.html">Robotics Lab</a>
+        <a href="../index.html">Summer Camp</a>
+        <a href="../contact.html?program=Code%20Lab">About</a>
       </div>
       <div class="footer__col">
         <div class="footer__col-title">Stay Connected</div>
@@ -972,5 +1016,65 @@
 </footer>
 
 <script src="../assets/js/main.js"></script>
+<script>
+  (() => {
+    document.querySelectorAll('form[data-newsletter]').forEach((form) => {
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const input = form.querySelector('input[type="email"]');
+        const button = form.querySelector('button[type="submit"]');
+        const email = (input?.value || '').trim();
+        const originalLabel = button?.textContent || 'Subscribe';
+
+        if (!email) {
+          input?.focus();
+          return;
+        }
+
+        if (button) {
+          button.disabled = true;
+          button.textContent = 'Sending...';
+        }
+
+        try {
+          const response = await fetch('/api/parent-inquiry', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              parentName: 'Newsletter Subscriber',
+              email,
+              phone: 'Not provided - newsletter signup',
+              programInterest: 'Code Lab Inquiry',
+              preferredContact: 'Email',
+              message: 'Code Lab footer newsletter signup.',
+              sourcePage: `${window.location.pathname}${window.location.search || ''}`
+            })
+          });
+          const result = await response.json().catch(() => ({}));
+
+          if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Signup failed');
+          }
+
+          input.value = '';
+          if (button) {
+            button.textContent = 'Saved!';
+            setTimeout(() => { button.textContent = originalLabel; }, 2400);
+          }
+        } catch (err) {
+          if (button) {
+            button.textContent = 'Try again';
+            setTimeout(() => { button.textContent = originalLabel; }, 2400);
+          }
+        } finally {
+          if (button) button.disabled = false;
+        }
+      }, true);
+    });
+  })();
+</script>
 </body>
 </html>
+

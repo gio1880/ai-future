@@ -303,9 +303,13 @@ function getOrCreateProgress(studentId) {
   if (!progress[studentId]) {
     progress[studentId] = {
       lessonProgress: {},
+      gameProgress: {},
       lastLogin: new Date().toISOString(),
       totalTime: 0
     };
+  }
+  if (!progress[studentId].gameProgress) {
+    progress[studentId].gameProgress = {};
   }
   return progress[studentId];
 }
@@ -599,7 +603,7 @@ app.post('/api/progress', requireAuth, async (req, res) => {
       return res.status(403).json({ success: false, error: 'Student access required' });
     }
 
-    const { lessonProgress, totalTime, fllResults } = req.body;
+    const { lessonProgress, totalTime, fllResults, gameProgress } = req.body;
     const progress = readProgress();
     const studentProgress = getOrCreateProgress(req.session.user.id);
 
@@ -627,6 +631,15 @@ app.post('/api/progress', requireAuth, async (req, res) => {
       studentProgress.lessonProgress = {
         ...studentProgress.lessonProgress,
         ...lessonProgress
+      };
+    }
+
+    // Store gamified student progress next to lesson progress. The browser owns
+    // reward calculations; the server only persists the student-specific state.
+    if (gameProgress && typeof gameProgress === 'object' && !Array.isArray(gameProgress)) {
+      studentProgress.gameProgress = {
+        ...(studentProgress.gameProgress || {}),
+        ...gameProgress
       };
     }
 

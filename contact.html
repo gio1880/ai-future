@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact AI Future | Robotics, Coding, and STEM Programs in Queens</title>
+  <meta name="description" content="Contact AI Future to ask about robotics classes, Code Lab, STEM summer camp, FLL teams, trial classes, and program recommendations for your child." />
+  <link rel="canonical" href="https://ai-future-hq27.onrender.com/contact" />
+  <meta property="og:title" content="Contact AI Future" />
+  <meta property="og:description" content="Ask about AI Future robotics, coding, STEM camp, and competition programs for kids." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ai-future-hq27.onrender.com/contact" />
+  <meta property="og:image" content="https://ai-future-hq27.onrender.com/ai%20future%20logo.png" />
+  <link rel="icon" href="ai future logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #073e77;
+      --blue: #2563ff;
+      --yellow: #fece00;
+      --ink: #10233f;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --soft: #f8fafc;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: linear-gradient(135deg, #f8fbff 0%, #ffffff 46%, #fff8da 100%);
+      min-height: 100vh;
+    }
+    a { color: inherit; }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 18px clamp(18px, 5vw, 64px);
+      background: rgba(255,255,255,.86);
+      border-bottom: 1px solid rgba(226,232,240,.9);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(14px);
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      font-weight: 900;
+      color: var(--navy);
+    }
+    .brand img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: #334155;
+    }
+    .wrap {
+      width: min(1120px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: clamp(42px, 7vw, 82px) 0;
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(360px, 1fr);
+      gap: clamp(28px, 5vw, 68px);
+      align-items: center;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(37,99,255,.1);
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 22px 0 18px;
+      font-size: clamp(38px, 6vw, 72px);
+      line-height: .96;
+      letter-spacing: 0;
+      color: var(--navy);
+    }
+    .lead {
+      margin: 0;
+      color: #475569;
+      font-size: clamp(17px, 2vw, 20px);
+      line-height: 1.7;
+      max-width: 620px;
+    }
+    .quick-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 28px;
+      padding: 0;
+      list-style: none;
+      color: #334155;
+      font-weight: 700;
+    }
+    .quick-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .check {
+      display: inline-grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--yellow);
+      color: var(--navy);
+      font-size: 14px;
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+    .form-card {
+      background: rgba(255,255,255,.94);
+      border: 1px solid rgba(226,232,240,.95);
+      border-radius: 8px;
+      box-shadow: 0 24px 80px rgba(7,62,119,.15);
+      padding: clamp(22px, 4vw, 34px);
+    }
+    .form-card h2 {
+      margin: 0 0 8px;
+      color: var(--navy);
+      font-size: 26px;
+    }
+    .form-card p {
+      margin: 0 0 22px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    label {
+      display: grid;
+      gap: 7px;
+      font-size: 12px;
+      font-weight: 900;
+      color: #334155;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+    }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 13px 14px;
+      font: inherit;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(37,99,255,.12);
+    }
+    textarea {
+      min-height: 112px;
+      resize: vertical;
+    }
+    .full { grid-column: 1 / -1; }
+    .submit-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+    button {
+      border: 0;
+      border-radius: 8px;
+      background: var(--navy);
+      color: #fff;
+      padding: 14px 20px;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 12px 26px rgba(7,62,119,.22);
+    }
+    button:disabled {
+      opacity: .65;
+      cursor: wait;
+    }
+    .status {
+      min-height: 22px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .status.ok { color: #047857; }
+    .status.error { color: #b91c1c; }
+    .note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    @media (max-width: 880px) {
+      .wrap { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 620px) {
+      .grid { grid-template-columns: 1fr; }
+      .wrap { width: min(100% - 28px, 1120px); }
+      h1 { font-size: 40px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="index.html">
+      <img src="ai future logo.png" alt="AI Future logo" />
+      <span>AI Future</span>
+    </a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="robotics lab/robotics-lab.html">Robotics Lab</a>
+      <a href="code-lab/code-lab.html">Code Lab</a>
+      <a href="summer-camp-ads.html">Summer Camp</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section>
+      <div class="eyebrow">AI Future parent inquiry</div>
+      <h1>Find the right STEM program for your child.</h1>
+      <p class="lead">Tell us what your family is looking for and our team will follow up about robotics classes, Code Lab, STEM summer camp, FLL teams, trial classes, or the best next step.</p>
+      <ul class="quick-list">
+        <li><span class="check">✓</span> Robotics, coding, summer camp, and competition pathways</li>
+        <li><span class="check">✓</span> Program guidance for students ages 8-14</li>
+        <li><span class="check">✓</span> Submissions go directly to the parent leads dashboard</li>
+      </ul>
+    </section>
+
+    <section class="form-card" aria-labelledby="contact-title">
+      <h2 id="contact-title">Contact AI Future</h2>
+      <p>We usually respond with program recommendations, next available options, and trial class details.</p>
+      <form id="parent-inquiry-form">
+        <div class="grid">
+          <label>
+            Parent name *
+            <input name="parentName" autocomplete="name" required />
+          </label>
+          <label>
+            Student name
+            <input name="studentName" autocomplete="off" />
+          </label>
+          <label>
+            Email *
+            <input name="email" type="email" autocomplete="email" required />
+          </label>
+          <label>
+            Phone *
+            <input name="phone" type="tel" autocomplete="tel" required />
+          </label>
+          <label>
+            Child age
+            <input name="childAge" inputmode="numeric" autocomplete="off" />
+          </label>
+          <label>
+            Program interest *
+            <select name="programInterest" required>
+              <option value="">Choose a program</option>
+              <option>AI Future Programs</option>
+              <option>Robotics Lab</option>
+              <option>Code Lab</option>
+              <option>Summer Camp</option>
+              <option>FLL Team</option>
+              <option>Free Consultation</option>
+              <option>Join Waitlist</option>
+            </select>
+          </label>
+          <label class="full">
+            Best way to contact you
+            <select name="preferredContact">
+              <option>Email or text is fine</option>
+              <option>Email</option>
+              <option>Text message</option>
+              <option>Phone call</option>
+            </select>
+          </label>
+          <label class="full">
+            What should we know?
+            <textarea name="message" placeholder="Tell us about your child's interests, schedule, or questions."></textarea>
+          </label>
+        </div>
+        <input type="hidden" name="sourcePage" value="contact.html" />
+        <div class="submit-row">
+          <button id="parent-inquiry-submit" type="submit">Send inquiry</button>
+          <div class="status" id="parent-inquiry-status" role="status" aria-live="polite"></div>
+        </div>
+        <div class="note">For urgent questions, email info@aifuture.com. This form is for parent program inquiries and stores submissions in the AI Future parent leads dashboard.</div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    (function() {
+      const form = document.getElementById('parent-inquiry-form');
+      const status = document.getElementById('parent-inquiry-status');
+      const submit = document.getElementById('parent-inquiry-submit');
+      const params = new URLSearchParams(window.location.search);
+      const program = params.get('program');
+      const location = params.get('location');
+      const isWaitlist = params.get('waitlist') === 'true';
+      const statusParam = params.get('status');
+
+      function setProgram(value) {
+        if (!value) return;
+        const select = form.elements.programInterest;
+        const match = Array.from(select.options).find((option) => option.value.toLowerCase() === value.toLowerCase());
+        if (match) {
+          select.value = match.value;
+        } else {
+          const option = document.createElement('option');
+          option.value = value;
+          option.textContent = value;
+          select.appendChild(option);
+          select.value = value;
+        }
+      }
+
+      function applyQueryContext() {
+        const fallbackProgram = isWaitlist ? 'Join Waitlist' : '';
+        setProgram(program || fallbackProgram);
+        form.elements.sourcePage.value = `${window.location.pathname}${window.location.search}`;
+
+        if (location || isWaitlist || statusParam) {
+          const context = [
+            location ? `Preferred location: ${location}.` : '',
+            isWaitlist ? 'Family is interested in the waitlist.' : '',
+            statusParam === 'coming-soon' ? 'Family clicked a coming-soon program CTA.' : ''
+          ].filter(Boolean).join(' ');
+          form.elements.message.value = context;
+        }
+      }
+
+      applyQueryContext();
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        status.className = 'status';
+        status.textContent = 'Sending...';
+        submit.disabled = true;
+
+        const payload = Object.fromEntries(new FormData(form).entries());
+        if (location || isWaitlist || statusParam) {
+          const context = [
+            location ? `Preferred location: ${location}.` : '',
+            isWaitlist ? 'Waitlist requested.' : '',
+            statusParam === 'coming-soon' ? 'Coming-soon program interest.' : ''
+          ].filter(Boolean).join(' ');
+          payload.message = [context, payload.message].filter(Boolean).join(' ');
+        }
+
+        try {
+          const response = await fetch('/api/parent-inquiry', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const result = await response.json().catch(() => ({}));
+
+          if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Something went wrong. Please try again.');
+          }
+
+          form.reset();
+          applyQueryContext();
+          status.className = 'status ok';
+          status.textContent = 'Thank you. Your inquiry was sent to the AI Future team.';
+        } catch (err) {
+          status.className = 'status error';
+          status.textContent = err.message || 'Unable to send right now. Please email info@aifuture.com.';
+        } finally {
+          submit.disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

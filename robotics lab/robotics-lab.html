@@ -3,9 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Future Robotics Lab — Build Like an Engineer. Compete Like a Champion.</title>
+  <title>AI Future Robotics Lab | Robotics Classes for Kids</title>
   <meta name="description" content="Hands-on robotics programs for students. FLL, FTC, VEX IQ, VEX V5 and more. Design, build, code, and compete." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://ai-future-hq27.onrender.com/robotics-lab" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="AI Future Robotics Lab | Robotics Classes for Kids in Queens" />
+  <meta property="og:description" content="Hands-on robotics programs where students design, build, code, and compete with LEGO SPIKE, VEX, FLL, FTC, and more." />
+  <meta property="og:image" content="https://ai-future-hq27.onrender.com/robotics%20lab/FLL%20Teams/fll-team-002.png" />
+  <meta property="og:url" content="https://ai-future-hq27.onrender.com/robotics-lab" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AI Future Robotics Lab | Robotics Classes for Kids" />
+  <meta name="twitter:description" content="Robotics classes, competition teams, and engineering pathways for students in Queens." />
+  <meta name="twitter:image" content="https://ai-future-hq27.onrender.com/robotics%20lab/FLL%20Teams/fll-team-002.png" />
   <link rel="icon" href="../ai future logo.png" type="image/png" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": "AI Future Robotics Lab",
+    "description": "Hands-on robotics classes where students design, build, code, and compete with robots.",
+    "provider": {
+      "@type": "EducationalOrganization",
+      "name": "AI Future",
+      "url": "https://ai-future-hq27.onrender.com/"
+    },
+    "areaServed": "Queens, New York",
+    "audience": {
+      "@type": "EducationalAudience",
+      "educationalRole": "student"
+    },
+    "url": "https://ai-future-hq27.onrender.com/robotics-lab"
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -434,7 +464,7 @@
     @media (max-width: 430px) {
       .rl-hero__inner,
       .feature-band__grid { padding-inline: var(--sp-md); }
-      .rl-hero__title br,
+      .rl-hero__title br { display: block; }
       .rl-hero__sub br { display: none; }
       .rl-hero__photo { aspect-ratio: 1 / 1; }
       .rl-grit { display: none; }
@@ -456,7 +486,7 @@
 <!-- Announcement Bar -->
 <div class="announce-bar">
   <span>☀ Summer Camp 2025 enrollment is open! Robotics, Coding, and STEM camps for ages 6–14.</span>
-  <a href="#contact">View Summer Camp →</a>
+  <a href="../summer-camp-ads.html">View Summer Camp →</a>
   <button class="announce-bar__dismiss" aria-label="Dismiss">✕</button>
 </div>
 
@@ -476,11 +506,11 @@
       <li><a href="../code-lab/code-lab.html">Code Lab</a></li>
       <li><a href="#programs">Programs</a></li>
       <li><a href="#programs">Competitions</a></li>
-      <li><a href="../index.html#contact">About</a></li>
+      <li><a href="../contact.html">About</a></li>
       <li><a href="#gallery">Gallery</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="../contact.html?program=Robotics%20Lab">Contact</a></li>
     </ul>
-    <a href="../index.html#summer-inquiry" class="btn btn--primary navbar__cta desktop-only">Book a Free Trial</a>
+    <a href="../contact.html?program=Robotics%20Lab" class="btn btn--primary navbar__cta desktop-only">Book a Free Trial</a>
     <button class="navbar__hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -493,8 +523,8 @@
   <a href="#programs">Programs</a>
   <a href="#programs">Competitions</a>
   <a href="#gallery">Gallery</a>
-  <a href="#contact">Contact</a>
-  <a href="../index.html#summer-inquiry" class="btn btn--primary" style="margin-top:1rem;text-align:center">Book a Free Trial</a>
+  <a href="../contact.html?program=Robotics%20Lab">Contact</a>
+  <a href="../contact.html?program=Robotics%20Lab" class="btn btn--primary" style="margin-top:1rem;text-align:center">Book a Free Trial</a>
 </nav>
 
 <!-- Hero -->
@@ -503,11 +533,11 @@
     <div>
       <div class="rl-hero__label">AI Future</div>
       <h1 class="rl-hero__title">Robotics<br>Lab</h1>
-      <div class="rl-hero__sub">Build Like an Engineer.<br>Compete Like a Champion.</div>
+      <div class="rl-hero__sub">Build Like an Engineer. <br>Compete Like a Champion.</div>
       <p class="rl-hero__desc">Our Robotics Lab gives students the tools, training, and hands-on experience to design, build, code, and compete with robots in real-world challenges.</p>
       <div class="btn-group">
         <a href="#programs" class="btn btn--navy btn--lg"><i class="fa-solid fa-robot"></i> View Robotics Programs</a>
-        <a href="#contact" class="btn btn--outline btn--lg">Join a Competition Team</a>
+        <a href="../contact.html?program=FLL%20Team" class="btn btn--outline btn--lg">Join a Competition Team</a>
       </div>
     </div>
     <div class="rl-hero__visual reveal">
@@ -667,7 +697,7 @@
             <li>Learn sequencing, loops, sensors, motors, and basic problem solving.</li>
             <li>Prepare for future FLL-style teamwork, presentations, and project thinking.</li>
           </ul>
-          <a href="../index.html#summer-inquiry" class="btn btn--navy btn--sm" style="align-self:flex-start">Ask About LEGO SPIKE</a>
+          <a href="../contact.html?program=Robotics%20Lab" class="btn btn--navy btn--sm" style="align-self:flex-start">Ask About LEGO SPIKE</a>
         </div>
       </article>
 
@@ -687,7 +717,7 @@
             <li>Program reliable robot movement using sensors and iterative testing.</li>
             <li>Build presentation, judging, teamwork, and engineering notebook habits.</li>
           </ul>
-          <a href="../index.html#summer-inquiry" class="btn btn--navy btn--sm" style="align-self:flex-start">Ask About FLL</a>
+          <a href="../contact.html?program=FLL%20Team" class="btn btn--navy btn--sm" style="align-self:flex-start">Ask About FLL</a>
         </div>
       </article>
 
@@ -707,7 +737,7 @@
             <li>Practice team strategy, match play, and competition troubleshooting.</li>
             <li>Develop stronger coding foundations for autonomous robot behavior.</li>
           </ul>
-          <a href="../index.html#summer-inquiry" class="btn btn--navy btn--sm" style="align-self:flex-start">Ask About VEX IQ</a>
+          <a href="../contact.html?program=Robotics%20Lab" class="btn btn--navy btn--sm" style="align-self:flex-start">Ask About VEX IQ</a>
         </div>
       </article>
 
@@ -727,7 +757,7 @@
             <li>Program autonomous and tele-op robot behavior using Java-based controls.</li>
             <li>Practice engineering portfolio, outreach, judging, and leadership roles.</li>
           </ul>
-          <a href="../index.html#summer-inquiry" class="btn btn--navy btn--sm" style="align-self:flex-start">Ask About FTC</a>
+          <a href="../contact.html?program=Robotics%20Lab" class="btn btn--navy btn--sm" style="align-self:flex-start">Ask About FTC</a>
         </div>
       </article>
 
@@ -747,7 +777,7 @@
             <li>Strengthen coding, control systems, debugging, and match strategy.</li>
             <li>Prepare for leadership, build documentation, and high-level robot iteration.</li>
           </ul>
-          <a href="../index.html#summer-inquiry" class="btn btn--navy btn--sm" style="align-self:flex-start">Ask About VEX V5</a>
+          <a href="../contact.html?program=Robotics%20Lab" class="btn btn--navy btn--sm" style="align-self:flex-start">Ask About VEX V5</a>
         </div>
       </article>
     </div>
@@ -1042,8 +1072,8 @@
       <h2 style="font-size:clamp(1.75rem,3vw,2.5rem); font-weight:800; color:#fff; margin-bottom:.75rem">Join AI Future Robotics Lab</h2>
       <p style="color:rgba(255,255,255,.7); max-width:520px; margin-bottom:1.5rem">Give your child the skills, confidence, and experience to lead tomorrow. Enroll in our hands-on robotics programs today.</p>
       <div class="btn-group">
-        <a href="../index.html#summer-inquiry" class="btn btn--primary btn--lg">Book a Free Trial <i class="fa-solid fa-arrow-right"></i></a>
-        <a href="../index.html#summer-inquiry" class="btn btn--outline-white btn--lg">Contact Us</a>
+        <a href="../contact.html?program=Robotics%20Lab" class="btn btn--primary btn--lg">Book a Free Trial <i class="fa-solid fa-arrow-right"></i></a>
+        <a href="../contact.html?program=Robotics%20Lab" class="btn btn--outline-white btn--lg">Contact Us</a>
       </div>
     </div>
   </div>
@@ -1068,14 +1098,14 @@
         <a href="../index.html">Home</a>
         <a href="robotics-lab.html">Robotics Lab</a>
         <a href="../code-lab/code-lab.html">Code Lab</a>
-        <a href="../index.html#summer-camp">Summer Camp</a>
+        <a href="../summer-camp-ads.html">Summer Camp</a>
         <a href="#programs">Programs</a>
       </div>
       <div class="footer__col">
         <div class="footer__col-title">About Us</div>
-        <a href="../index.html#contact">Our Story</a>
-        <a href="../index.html#contact">Our Team</a>
-        <a href="../index.html#summer-inquiry">Contact Us</a>
+        <a href="../contact.html">Our Story</a>
+        <a href="../contact.html">Our Team</a>
+        <a href="../contact.html?program=Robotics%20Lab">Contact Us</a>
       </div>
       <div class="footer__col">
         <div class="footer__col-title">Stay Connected</div>
@@ -1113,6 +1143,65 @@
         activeIndex = (activeIndex + 1) % slides.length;
         slides[activeIndex].classList.add('is-active');
       }, interval);
+    });
+  })();
+</script>
+<script>
+  (() => {
+    document.querySelectorAll('form[data-newsletter]').forEach((form) => {
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const input = form.querySelector('input[type="email"]');
+        const button = form.querySelector('button[type="submit"]');
+        const email = (input?.value || '').trim();
+        const originalLabel = button?.textContent || 'Subscribe';
+
+        if (!email) {
+          input?.focus();
+          return;
+        }
+
+        if (button) {
+          button.disabled = true;
+          button.textContent = 'Sending...';
+        }
+
+        try {
+          const response = await fetch('/api/parent-inquiry', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              parentName: 'Newsletter Subscriber',
+              email,
+              phone: 'Not provided - newsletter signup',
+              programInterest: 'Robotics Lab',
+              preferredContact: 'Email',
+              message: 'Robotics Lab footer newsletter signup.',
+              sourcePage: `${window.location.pathname}${window.location.search || ''}`
+            })
+          });
+          const result = await response.json().catch(() => ({}));
+
+          if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Signup failed');
+          }
+
+          input.value = '';
+          if (button) {
+            button.textContent = 'Saved!';
+            setTimeout(() => { button.textContent = originalLabel; }, 2400);
+          }
+        } catch (err) {
+          if (button) {
+            button.textContent = 'Try again';
+            setTimeout(() => { button.textContent = originalLabel; }, 2400);
+          }
+        } finally {
+          if (button) button.disabled = false;
+        }
+      }, true);
     });
   })();
 </script>

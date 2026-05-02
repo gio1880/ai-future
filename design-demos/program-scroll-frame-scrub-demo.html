@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Future Program Frame Scroll Demo</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="ai future logo.png" type="image/png" />
+  <style>
+    :root {
+      --navy: #073E77;
+      --deep: #071426;
+      --blue: #2563FF;
+      --purple: #6D4AFF;
+      --yellow: #FECE00;
+      --green: #16A34A;
+      --ink: #122033;
+      --muted: #637188;
+      --line: #DCE6F2;
+      --paper: #FAFAF6;
+      --white: #FFFFFF;
+      --shadow: 0 24px 68px rgba(18, 32, 51, .16);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    video, img { display: block; max-width: 100%; }
+
+    .topbar {
+      position: fixed;
+      z-index: 20;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px clamp(20px, 4vw, 56px);
+      background: rgba(250, 250, 246, .94);
+      border-bottom: 1px solid rgba(220, 230, 242, .9);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: var(--deep);
+      font-weight: 900;
+    }
+
+    .brand img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+    }
+
+    .topbar a:last-child {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      border-radius: 999px;
+      padding: 0 15px;
+      border: 1px solid rgba(7, 62, 119, .18);
+      background: var(--white);
+      color: var(--navy);
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .intro {
+      min-height: 78svh;
+      display: grid;
+      place-items: center;
+      padding: 108px clamp(20px, 5vw, 76px) 64px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.76), rgba(250,250,246,1)),
+        var(--paper);
+    }
+
+    .intro-inner {
+      width: min(1120px, 100%);
+      display: grid;
+      grid-template-columns: 1.02fr .98fr;
+      gap: clamp(30px, 5vw, 68px);
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      border-radius: 999px;
+      padding: 8px 13px;
+      border: 1px solid rgba(7, 62, 119, .16);
+      background: var(--white);
+      color: var(--navy);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 18px 0 18px;
+      color: var(--deep);
+      font-size: clamp(42px, 6vw, 78px);
+      line-height: .98;
+      letter-spacing: 0;
+    }
+
+    .intro p {
+      max-width: 610px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(18px, 2vw, 21px);
+      line-height: 1.65;
+    }
+
+    .intro-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      border-radius: 999px;
+      padding: 0 18px;
+      border: 1px solid transparent;
+      font-weight: 900;
+    }
+
+    .btn-primary {
+      background: var(--yellow);
+      color: var(--deep);
+      box-shadow: 0 16px 28px rgba(254, 206, 0, .26);
+    }
+
+    .btn-secondary {
+      background: var(--white);
+      border-color: rgba(7, 62, 119, .18);
+      color: var(--navy);
+    }
+
+    .intro-preview {
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: var(--white);
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .intro-preview video {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border-radius: 18px;
+      background: var(--deep);
+    }
+
+    .scrub-section {
+      position: relative;
+      min-height: 520vh;
+      background: #F4F7FB;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .scrub-sticky {
+      position: sticky;
+      top: 0;
+      min-height: 100svh;
+      display: grid;
+      grid-template-columns: minmax(280px, .86fr) minmax(320px, 1.14fr);
+      gap: clamp(24px, 5vw, 64px);
+      align-items: center;
+      padding: 94px clamp(20px, 5vw, 76px) 58px;
+      overflow: hidden;
+    }
+
+    .copy-panel {
+      position: relative;
+      z-index: 2;
+      max-width: 510px;
+    }
+
+    .section-kicker {
+      color: var(--navy);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .copy-panel h2 {
+      margin: 14px 0 16px;
+      color: var(--deep);
+      font-size: clamp(36px, 4.6vw, 66px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .copy-panel > p {
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.68;
+    }
+
+    .program-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .program-step {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 13px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255, 255, 255, .68);
+      text-align: left;
+      color: var(--ink);
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(18, 32, 51, 0);
+      transition: background .22s ease, border-color .22s ease, box-shadow .22s ease, transform .22s ease;
+    }
+
+    .program-step:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(18, 32, 51, .08);
+    }
+
+    .program-step.is-active {
+      background: var(--white);
+      border-color: rgba(37, 99, 255, .36);
+      box-shadow: 0 18px 36px rgba(18, 32, 51, .11);
+    }
+
+    .step-number {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      background: #EEF4FF;
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 950;
+      transition: background .22s ease, color .22s ease;
+    }
+
+    .program-step.is-active .step-number {
+      background: var(--yellow);
+      color: var(--deep);
+    }
+
+    .step-title {
+      display: block;
+      color: var(--deep);
+      font-size: 16px;
+      font-weight: 950;
+      line-height: 1.2;
+    }
+
+    .step-text {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .frame-panel {
+      position: relative;
+      z-index: 1;
+    }
+
+    .device-frame {
+      position: relative;
+      border: 1px solid rgba(7, 62, 119, .15);
+      border-radius: 30px;
+      padding: clamp(12px, 1.6vw, 18px);
+      background: var(--white);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .device-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 4px 4px 14px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #D7E2F0;
+    }
+
+    .dots span:first-child { background: #FF6B6B; }
+    .dots span:nth-child(2) { background: #F6C945; }
+    .dots span:nth-child(3) { background: #43D17A; }
+
+    .video-window {
+      position: relative;
+      border-radius: 22px;
+      overflow: hidden;
+      background: var(--deep);
+      aspect-ratio: 16 / 11;
+    }
+
+    .video-window video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .frame-overlay {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 14px;
+      pointer-events: none;
+    }
+
+    .frame-caption {
+      max-width: 390px;
+      border-radius: 16px;
+      padding: 14px 15px;
+      background: rgba(255, 255, 255, .94);
+      color: var(--deep);
+      box-shadow: 0 16px 34px rgba(0, 0, 0, .16);
+    }
+
+    .frame-caption strong {
+      display: block;
+      font-size: clamp(20px, 2.6vw, 32px);
+      line-height: 1.05;
+    }
+
+    .frame-caption span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 760;
+      line-height: 1.45;
+    }
+
+    .frame-count {
+      min-width: 92px;
+      border-radius: 999px;
+      padding: 10px 13px;
+      background: var(--yellow);
+      color: var(--deep);
+      text-align: center;
+      font-size: 13px;
+      font-weight: 950;
+      box-shadow: 0 12px 26px rgba(0, 0, 0, .14);
+    }
+
+    .progress-track {
+      position: relative;
+      height: 8px;
+      margin-top: 18px;
+      border-radius: 999px;
+      background: #E4ECF6;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--navy), var(--purple), var(--yellow));
+    }
+
+    .frame-notes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .note {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      background: var(--white);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 760;
+      line-height: 1.35;
+    }
+
+    .note strong {
+      display: block;
+      color: var(--deep);
+      font-size: 18px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .closing {
+      min-height: 74svh;
+      display: grid;
+      place-items: center;
+      padding: 86px clamp(20px, 5vw, 76px);
+      background: var(--white);
+      text-align: center;
+    }
+
+    .closing h2 {
+      max-width: 760px;
+      margin: 0;
+      color: var(--deep);
+      font-size: clamp(34px, 5vw, 66px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .closing p {
+      max-width: 620px;
+      margin: 18px auto 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 980px) {
+      .intro-inner,
+      .scrub-sticky {
+        grid-template-columns: 1fr;
+      }
+
+      .scrub-sticky {
+        align-content: start;
+        gap: 26px;
+      }
+
+      .copy-panel {
+        max-width: 780px;
+      }
+
+      .program-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 680px) {
+      .topbar a:last-child { display: none; }
+      .intro { min-height: 86svh; }
+      .scrub-section { min-height: 470vh; }
+      .scrub-sticky { padding-top: 84px; }
+      .program-list,
+      .frame-notes {
+        grid-template-columns: 1fr;
+      }
+      .program-step {
+        grid-template-columns: 38px 1fr;
+        padding: 12px;
+      }
+      .step-number {
+        width: 34px;
+        height: 34px;
+      }
+      .device-frame {
+        border-radius: 22px;
+      }
+      .video-window {
+        aspect-ratio: 4 / 5;
+      }
+      .frame-overlay {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        align-items: start;
+        flex-direction: column;
+      }
+      .frame-count {
+        min-width: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .scrub-section { min-height: auto; }
+      .scrub-sticky { position: relative; }
+      .program-step,
+      .program-step:hover {
+        transition: none;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <img src="ai future logo.png" alt="AI Future logo" />
+      <span>AI Future</span>
+    </a>
+    <a href="#scroll-frames">Frame scroll demo</a>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="intro-title">
+      <div class="intro-inner">
+        <div>
+          <div class="eyebrow">Alternative structure</div>
+          <h1 id="intro-title">Scroll through the video like frames.</h1>
+          <p>This version keeps the page cleaner: one solid video frame, one program panel, and scroll controls the video timing instead of layering transparent motion across the background.</p>
+          <div class="intro-actions">
+            <a class="btn btn-primary" href="#scroll-frames">Try the frame scroll</a>
+            <a class="btn btn-secondary" href="program-scroll-animation-demo.html">See first version</a>
+          </div>
+        </div>
+        <div class="intro-preview">
+          <video src="assets/video/program-motion-robotics.mp4" autoplay muted loop playsinline></video>
+        </div>
+      </div>
+    </section>
+
+    <section class="scrub-section" id="scroll-frames" aria-labelledby="scroll-title">
+      <div class="scrub-sticky">
+        <aside class="copy-panel">
+          <div class="section-kicker">Our programs</div>
+          <h2 id="scroll-title">A guided parent scroll.</h2>
+          <p id="program-summary">The video advances as the parent scrolls, while the active program card changes in clear steps.</p>
+
+          <div class="program-list" aria-label="Program steps">
+            <button class="program-step is-active" type="button" data-step="0">
+              <span class="step-number">01</span>
+              <span>
+                <span class="step-title">Robotics Lab</span>
+                <span class="step-text">Hands-on building, testing, and robot coding for curious students.</span>
+              </span>
+            </button>
+            <button class="program-step" type="button" data-step="1">
+              <span class="step-number">02</span>
+              <span>
+                <span class="step-title">Code Lab</span>
+                <span class="step-text">Python and project practice with instant run-and-check feedback.</span>
+              </span>
+            </button>
+            <button class="program-step" type="button" data-step="2">
+              <span class="step-number">03</span>
+              <span>
+                <span class="step-title">Summer Camp</span>
+                <span class="step-text">Focused robotics, coding, and STEM maker weeks for summer growth.</span>
+              </span>
+            </button>
+            <button class="program-step" type="button" data-step="3">
+              <span class="step-number">04</span>
+              <span>
+                <span class="step-title">Competition Team</span>
+                <span class="step-text">FLL strategy, robot iteration, presentations, and team leadership.</span>
+              </span>
+            </button>
+          </div>
+        </aside>
+
+        <div class="frame-panel">
+          <div class="device-frame">
+            <div class="device-toolbar">
+              <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+              <span id="toolbar-label">Robotics Lab</span>
+            </div>
+
+            <div class="video-window">
+              <video id="scrub-video" src="assets/video/program-motion-robotics.mp4" muted playsinline preload="auto"></video>
+              <div class="frame-overlay">
+                <div class="frame-caption">
+                  <strong id="caption-title">Robotics Lab</strong>
+                  <span id="caption-text">Students learn by building real mechanisms, testing ideas, and improving designs.</span>
+                </div>
+                <div class="frame-count" id="frame-count">Frame 001</div>
+              </div>
+            </div>
+
+            <div class="progress-track" aria-hidden="true">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+
+            <div class="frame-notes">
+              <div class="note"><strong>Solid</strong>No transparent video stack.</div>
+              <div class="note"><strong>Scrubbed</strong>Scroll controls the video time.</div>
+              <div class="note"><strong>Clear</strong>One program focus per step.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing">
+      <div>
+        <h2>This could replace the current two-card program block.</h2>
+        <p>The current homepage can keep its hero, then use this as the next section before summer camp details and the inquiry form.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function() {
+      const section = document.querySelector('.scrub-section');
+      const video = document.getElementById('scrub-video');
+      const steps = Array.from(document.querySelectorAll('.program-step'));
+      const summary = document.getElementById('program-summary');
+      const captionTitle = document.getElementById('caption-title');
+      const captionText = document.getElementById('caption-text');
+      const toolbarLabel = document.getElementById('toolbar-label');
+      const frameCount = document.getElementById('frame-count');
+      const progressFill = document.getElementById('progress-fill');
+      const programs = [
+        {
+          title: 'Robotics Lab',
+          summary: 'The video advances as the parent scrolls, while the active program card changes in clear steps.',
+          caption: 'Students learn by building real mechanisms, testing ideas, and improving designs.'
+        },
+        {
+          title: 'Code Lab',
+          summary: 'Code Lab can sit in the same story without needing a separate busy visual treatment.',
+          caption: 'Students practice Python, run their work, check output, and see progress build lesson by lesson.'
+        },
+        {
+          title: 'Summer Camp',
+          summary: 'The seasonal offer gets its own moment before families reach the registration form.',
+          caption: 'Families see robotics, coding, and STEM maker weeks as one connected summer experience.'
+        },
+        {
+          title: 'Competition Team',
+          summary: 'The final step shows a next-level pathway for students ready to compete.',
+          caption: 'Advanced students prepare for missions, presentations, teamwork, and real competition day.'
+        }
+      ];
+      let active = 0;
+      let duration = 4;
+      let ticking = false;
+
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+      }
+
+      function setActive(index) {
+        if (index === active) return;
+        active = index;
+        steps.forEach((step, i) => step.classList.toggle('is-active', i === index));
+        const data = programs[index];
+        summary.textContent = data.summary;
+        captionTitle.textContent = data.title;
+        captionText.textContent = data.caption;
+        toolbarLabel.textContent = data.title;
+      }
+
+      function update() {
+        ticking = false;
+        if (!section) return;
+
+        const rect = section.getBoundingClientRect();
+        const scrollable = Math.max(section.offsetHeight - window.innerHeight, 1);
+        const progress = clamp(-rect.top / scrollable, 0, 1);
+        const index = clamp(Math.floor(progress * programs.length), 0, programs.length - 1);
+        const targetTime = progress * Math.max(duration - .08, .1);
+
+        setActive(index);
+
+        if (video && Number.isFinite(targetTime)) {
+          try {
+            if (Math.abs(video.currentTime - targetTime) > .035) {
+              video.currentTime = targetTime;
+            }
+          } catch (err) {}
+        }
+
+        const frame = Math.max(1, Math.round(progress * 140));
+        frameCount.textContent = 'Frame ' + String(frame).padStart(3, '0');
+        progressFill.style.width = (progress * 100).toFixed(2) + '%';
+      }
+
+      function requestUpdate() {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      }
+
+      if (video) {
+        video.addEventListener('loadedmetadata', () => {
+          duration = video.duration || duration;
+          video.pause();
+          update();
+        });
+        video.addEventListener('canplay', () => {
+          video.pause();
+          update();
+        }, { once: true });
+      }
+
+      steps.forEach((step) => {
+        step.addEventListener('click', () => {
+          const index = Number(step.dataset.step || 0);
+          const scrollable = Math.max(section.offsetHeight - window.innerHeight, 1);
+          const target = section.offsetTop + scrollable * (index / programs.length + .02);
+          window.scrollTo({ top: target, behavior: 'smooth' });
+        });
+      });
+
+      window.addEventListener('scroll', requestUpdate, { passive: true });
+      window.addEventListener('resize', requestUpdate);
+      update();
+    })();
+  </script>
+</body>
+</html>
