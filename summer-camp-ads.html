@@ -7,16 +7,16 @@
   <meta name="description" content="Join AI Future's summer STEM camp in Queens for robotics, coding, 3D printing, Tinkercad, engineering design, and hands-on problem solving." />
   <meta name="keywords" content="Summer STEM camp Queens, Robotics summer camp Queens, Coding camp for kids Queens, 3D printing camp for kids, STEM camp Flushing NY, Summer camp for elementary and middle school students" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://ai-future-hq27.onrender.com/summer-camp-ads" />
+  <link rel="canonical" href="https://aifuture.nyc/summer-camp-ads" />
   <meta property="og:title" content="AI Future Summer STEM Camp in Queens" />
   <meta property="og:description" content="Hands-on robotics, coding, 3D printing, Tinkercad, engineering design, and real-world problem solving for K-8 students." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://ai-future-hq27.onrender.com/summer-camp-ads" />
-  <meta property="og:image" content="https://ai-future-hq27.onrender.com/ai%20future%20logo.png" />
+  <meta property="og:url" content="https://aifuture.nyc/summer-camp-ads" />
+  <meta property="og:image" content="https://aifuture.nyc/ai%20future%20logo.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="AI Future Summer STEM Camp in Queens" />
   <meta name="twitter:description" content="Robotics, coding, 3D printing, Tinkercad, and engineering design camp for K-8 students in Queens." />
-  <meta name="twitter:image" content="https://ai-future-hq27.onrender.com/ai%20future%20logo.png" />
+  <meta name="twitter:image" content="https://aifuture.nyc/ai%20future%20logo.png" />
   <link rel="icon" href="ai%20future%20logo.png" type="image/png" />
   <script type="application/ld+json">
   {
@@ -27,14 +27,14 @@
     "provider": {
       "@type": "EducationalOrganization",
       "name": "AI Future",
-      "url": "https://ai-future-hq27.onrender.com/"
+      "url": "https://aifuture.nyc/"
     },
     "areaServed": "Queens, New York",
     "audience": {
       "@type": "EducationalAudience",
       "educationalRole": "student"
     },
-    "url": "https://ai-future-hq27.onrender.com/summer-camp-ads"
+    "url": "https://aifuture.nyc/summer-camp-ads"
   }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -559,6 +559,72 @@
     }
     .detail-row span { color: var(--muted); }
     .detail-row strong { text-align: right; color: var(--deep); }
+    .details-note {
+      padding: 16px;
+      border-radius: var(--radius);
+      background: #f7fbff;
+      border: 1px solid rgba(7, 62, 119, 0.12);
+      color: #45546b;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin: 0 0 22px;
+    }
+    .details-note i { color: var(--navy); margin-right: 8px; }
+    .details-mini-gallery {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .details-mini-gallery img {
+      width: 100%;
+      aspect-ratio: 1 / 0.86;
+      object-fit: cover;
+      border-radius: var(--radius);
+      border: 4px solid #fff;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .camp-gallery {
+      background: #f7fbff;
+      overflow: hidden;
+    }
+    .camp-gallery-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr 0.85fr;
+      grid-auto-rows: minmax(190px, 1fr);
+      gap: 14px;
+      margin-top: 30px;
+    }
+    .camp-shot {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: #e8eef7;
+      box-shadow: var(--shadow-soft);
+      min-height: 220px;
+    }
+    .camp-shot.large { grid-row: span 2; min-height: 454px; }
+    .camp-shot.wide { grid-column: span 2; }
+    .camp-shot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 220ms ease;
+    }
+    .camp-shot:hover img { transform: scale(1.035); }
+    .camp-shot span {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      background: rgba(6, 43, 82, 0.86);
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
 
     .form-section {
       background: var(--navy);
@@ -637,6 +703,19 @@
     .stars { color: #d99800; letter-spacing: 1px; margin-bottom: 14px; }
     .testimonial p { color: #3b4658; }
     .testimonial strong { color: var(--deep); }
+    .proof-photo {
+      overflow: hidden;
+      padding: 0;
+    }
+    .proof-photo img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+    .proof-photo div {
+      padding: 18px;
+    }
+    .proof-photo p { margin-bottom: 8px; }
 
     .faq {
       background: #f7fbff;
@@ -743,6 +822,9 @@
       .benefits, .learn-grid, .proof-grid { grid-template-columns: repeat(2, 1fr); }
       .offer-grid { grid-template-columns: 1fr; }
       .age-grid, .tool-strip { grid-template-columns: repeat(2, 1fr); }
+      .camp-gallery-grid { grid-template-columns: 1fr 1fr; }
+      .camp-shot.large { grid-row: span 1; min-height: 240px; }
+      .camp-shot.wide { grid-column: span 1; }
       .final-box { grid-template-columns: 1fr; }
     }
 
@@ -772,6 +854,10 @@
       .benefits, .learn-grid, .age-grid, .tool-strip, .check-grid, .proof-grid, .field-grid {
         grid-template-columns: 1fr;
       }
+      .camp-gallery-grid { grid-template-columns: 1fr; }
+      .camp-shot,
+      .camp-shot.large { min-height: 230px; }
+      .details-mini-gallery { grid-template-columns: 1fr; }
       .project-item { grid-template-columns: 36px 1fr; padding: 15px; }
       .project-item i { width: 36px; height: 36px; }
       .detail-row { display: grid; gap: 3px; }
@@ -1008,20 +1094,57 @@
       </div>
     </section>
 
+    <section class="section camp-gallery" aria-labelledby="camp-gallery-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <p class="eyebrow">Camp in Action</p>
+            <h2 id="camp-gallery-title">More Photos From AI Future Summer Camp</h2>
+          </div>
+          <p class="lead">Parents should be able to see the energy of the program: students building, testing, coding, collaborating, and proudly showing what they made.</p>
+        </div>
+        <div class="camp-gallery-grid">
+          <figure class="camp-shot large reveal">
+            <img src="robotics%20lab/25_summer_pictures/summer-007.jpg" alt="AI Future summer campers working together on a STEM activity" loading="lazy" />
+            <span>Hands-on STEM teamwork</span>
+          </figure>
+          <figure class="camp-shot reveal">
+            <img src="robotics%20lab/25_summer_pictures/summer-009.jpg" alt="Students testing a summer camp build at AI Future" loading="lazy" />
+            <span>Build, test, improve</span>
+          </figure>
+          <figure class="camp-shot reveal">
+            <img src="robotics%20lab/25_summer_pictures/summer-010.jpg" alt="Student project work during AI Future summer camp" loading="lazy" />
+            <span>Creative project time</span>
+          </figure>
+          <figure class="camp-shot reveal">
+            <img src="robotics%20lab/25_summer_pictures/Photos%20(27)/IMG_1354.jpg" alt="AI Future student coding and building during summer camp" loading="lazy" />
+            <span>Coding and robotics practice</span>
+          </figure>
+          <figure class="camp-shot wide reveal">
+            <img src="robotics%20lab/25_summer_pictures/summer-011.jpg" alt="AI Future summer camp students collaborating on robotics and engineering challenges" loading="lazy" />
+            <span>Small group support from idea to prototype</span>
+          </figure>
+        </div>
+      </div>
+    </section>
+
     <section class="section" id="details">
       <div class="container details-grid">
         <div class="reveal">
           <p class="eyebrow">Camp Details</p>
           <h2>Summer Camp Details</h2>
           <p class="lead">A clear, parent-friendly program for students who want to build, code, design, and create during the summer.</p>
+          <p class="details-note"><i class="fa-solid fa-circle-info"></i>Families can request a preferred week in the form. Our team will confirm availability, exact schedule, and the best group for your child's age and experience.</p>
           <div class="detail-list">
             <div class="detail-row"><span>Location</span><strong>AI Future, Queens / Flushing, NY</strong></div>
-            <div class="detail-row"><span>Dates</span><strong>[Insert Camp Dates]</strong></div>
-            <div class="detail-row"><span>Times</span><strong>[Insert Camp Times]</strong></div>
+            <div class="detail-row"><span>Dates</span><strong>Weekly Summer 2026 sessions</strong></div>
+            <div class="detail-row"><span>Times</span><strong>Full-day camp schedule</strong></div>
             <div class="detail-row"><span>Ages / Grades</span><strong>Kindergarten through 8th Grade</strong></div>
             <div class="detail-row"><span>Class Size</span><strong>Small group learning</strong></div>
-            <div class="detail-row"><span>Price</span><strong>[Insert Price]</strong></div>
-            <div class="detail-row"><span>Registration</span><strong>Limited seats available</strong></div>
+            <div class="detail-row"><span>Price</span><strong>$500/week early bird until June 15, 2026; $550/week after</strong></div>
+            <div class="detail-row"><span>Promo</span><strong>Use code COACH for an extra $50 off</strong></div>
+            <div class="detail-row"><span>Activities</span><strong>Robotics, coding, 3D printing, Tinkercad, engineering design</strong></div>
+            <div class="detail-row"><span>Registration</span><strong>Limited seats available by week and grade group</strong></div>
           </div>
           <a class="btn btn-primary" href="#reserve">Reserve Your Child's Spot</a>
         </div>
@@ -1032,6 +1155,12 @@
             <div class="check"><i class="fa-solid fa-check"></i>Robotics summer camp in Flushing</div>
             <div class="check"><i class="fa-solid fa-check"></i>Coding camp for kids in NYC</div>
             <div class="check"><i class="fa-solid fa-check"></i>3D printing camp for kids</div>
+          </div>
+          <div class="details-mini-gallery" aria-label="More AI Future camp photos">
+            <img src="robotics%20lab/25_summer_pictures/summer-012.jpg" alt="AI Future camper working on a hands-on STEM project" loading="lazy" />
+            <img src="robotics%20lab/25_summer_pictures/summer-013.jpg" alt="AI Future summer camp project and building activity" loading="lazy" />
+            <img src="robotics%20lab/25_summer_pictures/summer-014.jpg" alt="Students learning robotics and engineering at AI Future summer camp" loading="lazy" />
+            <img src="robotics%20lab/25_summer_pictures/Photos-3-001%20(1)/photo-001.jpg" alt="AI Future student presenting or testing a STEM project" loading="lazy" />
           </div>
         </aside>
       </div>
@@ -1076,15 +1205,24 @@
       <div class="container">
         <div class="section-head reveal">
           <div>
-            <p class="eyebrow">Social Proof</p>
-            <h2>Trusted by Families Who Want Serious STEM Learning</h2>
+            <p class="eyebrow">Student Experience</p>
+            <h2>What Camp Looks Like Day to Day</h2>
           </div>
-          <p class="lead">Use this section for parent testimonials, student project photos, competition experience, and photos of students building, coding, or designing.</p>
+          <p class="lead">Camp is active, structured, and hands-on. Students spend the day learning by making, then explaining what they built and how they improved it.</p>
         </div>
         <div class="proof-grid">
-          <article class="testimonial reveal"><div class="stars">5/5 stars</div><p>"AI Future gave my child a place to be challenged and excited. They came home explaining their project with so much confidence."</p><strong>Parent testimonial placeholder</strong></article>
-          <article class="testimonial reveal"><div class="stars">5/5 stars</div><p>"The camp felt educational, organized, and hands-on. It was exactly the kind of productive summer program we wanted."</p><strong>Parent testimonial placeholder</strong></article>
-          <article class="testimonial reveal"><div class="stars">5/5 stars</div><p>"My child loved building and testing ideas. I appreciated that the activities were creative but still focused on real skills."</p><strong>Parent testimonial placeholder</strong></article>
+          <article class="testimonial proof-photo reveal">
+            <img src="robotics%20lab/25_summer_pictures/Photos%20(23)/photo.jpg" alt="AI Future camper focused on a coding or robotics activity" loading="lazy" />
+            <div><p>Students rotate through guided builds, coding practice, and design challenges.</p><strong>Hands-on learning blocks</strong></div>
+          </article>
+          <article class="testimonial proof-photo reveal">
+            <img src="robotics%20lab/25_summer_pictures/Photos%20(24)/photo.jpg" alt="AI Future students working together during summer STEM camp" loading="lazy" />
+            <div><p>Small groups make it easier for campers to ask questions, debug, and try again.</p><strong>Collaboration and support</strong></div>
+          </article>
+          <article class="testimonial proof-photo reveal">
+            <img src="robotics%20lab/25_summer_pictures/Photos-3-001%20(1)/photo-002.jpg" alt="AI Future summer camp student testing a hands-on STEM project" loading="lazy" />
+            <div><p>Campers finish with projects they can talk about, improve, and share with family.</p><strong>Projects with a purpose</strong></div>
+          </article>
         </div>
       </div>
     </section>

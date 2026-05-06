@@ -104,7 +104,7 @@ Phase 1 — Steal-with-pride (this week):
 Phase 2 — Production (next 2 weeks):
 1. Film 5 vertical 15-sec hooks at the West Chester campus: kid building a robot, robot doing something cool, kid reacting, parent dropping off, group cheer.
 2. Cut into 3–5 ad variants using each Meta Ad Library template you swiped.
-3. Always end with the exact CTA "Reserve Week ___ — early bird $450 until June 15."
+3. Always end with the exact CTA "Reserve Week ___ — early bird $500 until June 15."
 
 Phase 3 — Launch (week of May 4):
 1. Start with $20/day per ad set, 3 ad sets, 3 creatives each = $180/day.

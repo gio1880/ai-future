@@ -47,8 +47,8 @@ const ADMIN_PASSWORD = process.env.PAYMENTS_ADMIN_PASSWORD || 'change-me';
 // ─── Pricing config (kept server-side so clients can't tamper) ───────────────
 const PRICING = {
   camp: {
-    earlyBird: 450_00,          // cents — valid until EARLY_BIRD_DEADLINE
-    regular: 500_00,
+    earlyBird: 500_00,          // cents — valid until EARLY_BIRD_DEADLINE
+    regular: 550_00,
     earlyBirdDeadlineISO: '2026-06-15T23:59:59-04:00',  // America/New_York
     currency: 'usd',
     weeks: [

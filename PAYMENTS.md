@@ -2,7 +2,7 @@
 
 The AI Future site now supports two paid products:
 
-- **Summer Camp 2026** — multi-select weekly registration, $450/week early-bird (until **June 15, 2026**), $500/week thereafter.
+- **Summer Camp 2026** — multi-select weekly registration, $500/week early-bird (until **June 15, 2026**), $550/week thereafter.
 - **Code Lab Membership** — $14.99/month or $99.99/year (44% annual savings).
 
 Both run through **Stripe Checkout**. On successful payment, a Stripe webhook fires and the server:
