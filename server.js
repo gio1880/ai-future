@@ -340,7 +340,17 @@ app.use('/fll-assets', (req, res, next) => {
 	codeLabApp(req, res, next);
 });
 
-// Static files for existing pages and assets
-app.use(express.static(path.join(__dirname), { index: false }));
+// Static files for existing pages and assets. Media gets a longer browser cache
+// because the landing pages reuse the same photo/video assets across sessions.
+app.use(express.static(path.join(__dirname), {
+	index: false,
+	etag: true,
+	lastModified: true,
+	setHeaders(res, filePath) {
+		if (/\.(?:avif|webp|png|jpe?g|gif|svg|mp4|webm|woff2?)$/i.test(filePath)) {
+			res.setHeader('Cache-Control', 'public, max-age=604800, stale-while-revalidate=86400');
+		}
+	}
+}));
 
 app.listen(PORT, () => console.log(`AI Future Platform running at http://localhost:${PORT}`));

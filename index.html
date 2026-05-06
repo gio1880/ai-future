@@ -356,6 +356,7 @@
       position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
       opacity: 0; transition: opacity .7s var(--ease); will-change: opacity;
     }
+    .pimg:not([src]), .photo-sub img:not([src]), .hstack img:not([src]) { visibility: hidden; }
     .pimg.is-active { opacity: 1; }
     .photo-count {
       position: absolute; bottom: 10px; right: 12px; z-index: 3;
@@ -626,6 +627,281 @@
     .footer-links a:hover { color: #fff; }
     footer small { color: rgba(255,255,255,.24); font-size: .72rem; width: 100%; text-align: center; }
 
+    @media (max-width: 760px) {
+      body { -webkit-text-size-adjust: 100%; }
+      .summer-banner {
+        justify-content: flex-start;
+        gap: 9px;
+        padding: 10px 16px;
+      }
+      .sb-text { flex: 1 1 220px; font-size: .72rem; }
+      .sb-cta { width: 100%; justify-content: center; min-height: 36px; }
+
+      .nav {
+        height: 58px;
+        padding: 0 14px;
+      }
+      .nav-brand { font-size: .86rem; }
+      .nav-brand img { width: 30px; height: 30px; }
+      .nav-right .btn {
+        height: 38px;
+        padding: 0 13px;
+        font-size: .76rem;
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 104px 18px 52px;
+        align-items: start;
+      }
+      .hero-copy { max-width: none; }
+      .hero-eyebrow {
+        max-width: 100%;
+        white-space: normal;
+        line-height: 1.35;
+        letter-spacing: .08em;
+        font-size: .62rem;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: clamp(43px, 14vw, 58px);
+        line-height: .94;
+        margin-bottom: 16px;
+      }
+      .hero-sub {
+        font-size: .96rem;
+        line-height: 1.62;
+        margin-bottom: 22px;
+      }
+      .hero-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .hero-actions .btn,
+      .fin-actions a,
+      .s-cta a {
+        width: 100%;
+        min-height: 48px;
+        justify-content: center;
+      }
+      .hero-locs { gap: 6px; }
+      .loc-chip { font-size: .68rem; padding: 6px 10px; }
+      .scroll-hint { display: none; }
+
+      .scroll-track { height: 520vh; }
+      .story-sticky {
+        display: block;
+        height: 100svh;
+        min-height: 640px;
+      }
+      .rail {
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: calc(10px + env(safe-area-inset-bottom));
+        z-index: 30;
+        height: 48px;
+        flex-direction: row;
+        justify-content: center;
+        gap: 8px;
+        padding: 6px 8px;
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 999px;
+        background: rgba(4,16,30,.82);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+      .rail-prog { display: none; }
+      .rail-dot {
+        width: 34px;
+        height: 34px;
+        font-size: .62rem;
+      }
+      .rail-dot::after { display: none; }
+      .rail-dot.is-active { transform: scale(1.08); }
+
+      .stage { height: 100%; }
+      .slide {
+        grid-template-columns: 1fr;
+        align-content: start;
+        gap: 14px;
+        padding: 16px 16px calc(74px + env(safe-area-inset-bottom));
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .slide-photos {
+        height: clamp(210px, 34svh, 300px);
+        min-height: 0;
+      }
+      .photo-main { border-radius: 14px; }
+      .photo-subs,
+      .photo-caption,
+      .slide-num-wm { display: none; }
+      .photo-count {
+        bottom: 8px;
+        right: 8px;
+        font-size: .62rem;
+      }
+      .slide-content { padding-bottom: 4px; }
+      .slide-content > *,
+      .wl-form-wrap > * {
+        transform: translateY(14px);
+      }
+      .s-kicker {
+        font-size: .62rem;
+        line-height: 1.35;
+        letter-spacing: .12em;
+        margin-bottom: 7px;
+      }
+      .s-title {
+        font-size: clamp(38px, 12vw, 54px);
+        line-height: .94;
+        margin-bottom: 10px;
+      }
+      .s-desc {
+        max-width: none;
+        font-size: .9rem;
+        line-height: 1.58;
+        margin-bottom: 14px;
+      }
+      .s-programs {
+        gap: 7px;
+        margin-bottom: 16px;
+      }
+      .s-prog-item {
+        align-items: flex-start;
+        gap: 8px;
+        padding: 9px 10px;
+        font-size: .76rem;
+        line-height: 1.25;
+      }
+      .s-prog-type {
+        display: block;
+        margin-left: 0;
+        padding-left: 0;
+        font-size: .64rem;
+        line-height: 1.25;
+      }
+      .s-tags { gap: 7px; margin-bottom: 16px; }
+      .s-tags li { font-size: .68rem; padding: 6px 10px; }
+      .s-achievements { gap: 7px; margin-bottom: 14px; }
+      .s-ach { width: 100%; align-items: flex-start; font-size: .7rem; line-height: 1.35; }
+      .s-cta { display: grid; grid-template-columns: 1fr; gap: 9px; }
+      .btn-acc,
+      .btn-outline { height: 48px; }
+
+      .slide-waitlist {
+        display: block;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: calc(72px + env(safe-area-inset-bottom));
+      }
+      .wl-photo { display: none; }
+      .wl-form-wrap {
+        min-height: 100%;
+        justify-content: flex-start;
+        padding: 24px 18px;
+      }
+      .wl-title {
+        font-size: clamp(38px, 12vw, 54px);
+        line-height: .94;
+      }
+      .wl-sub {
+        font-size: .9rem;
+        line-height: 1.58;
+        margin-bottom: 18px;
+      }
+      .wf { gap: 10px; }
+      .wf input,
+      .wf select {
+        height: 48px;
+        font-size: 16px;
+        border-radius: 12px;
+      }
+      .wf-btn { height: 50px; }
+
+      .stats {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+      .stat {
+        padding: 24px 14px;
+        border-right: 1px solid var(--wline);
+        border-bottom: 1px solid var(--wline);
+      }
+      .stat:nth-child(2n) { border-right: none; }
+      .stat-num { font-size: clamp(34px, 12vw, 48px); }
+      .stat-label { font-size: .7rem; line-height: 1.35; }
+
+      .locations { padding: 56px 18px; }
+      .locations h2 {
+        font-size: clamp(34px, 11vw, 48px);
+        line-height: .98;
+      }
+      .loc-sub {
+        margin-bottom: 28px;
+        font-size: .94rem;
+      }
+      .loc-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      .loc-card {
+        padding: 20px;
+        border-radius: 16px;
+      }
+      .loc-card:hover { transform: none; }
+      .loc-cta {
+        display: flex;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 14px;
+        border: 1px solid rgba(23,103,180,.18);
+        border-radius: 999px;
+        background: rgba(23,103,180,.06);
+      }
+
+      .finale {
+        padding: 64px 18px;
+      }
+      .fin-h2 {
+        font-size: clamp(38px, 12vw, 58px);
+        line-height: .95;
+      }
+      .fin-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      footer {
+        padding: 30px 18px;
+        justify-content: center;
+        text-align: center;
+      }
+      .footer-links {
+        justify-content: center;
+        gap: 10px 16px;
+      }
+      footer small { line-height: 1.55; }
+    }
+
+    @media (max-width: 420px) {
+      .nav-brand span { max-width: 92px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .nav-right .btn { padding: 0 11px; }
+      .hero { padding-inline: 16px; }
+      .hero h1 { font-size: clamp(40px, 13vw, 50px); }
+      .hero-sub { font-size: .9rem; }
+      .story-sticky { min-height: 620px; }
+      .slide { padding-inline: 14px; }
+      .slide-photos { height: clamp(190px, 31svh, 250px); }
+      .s-title,
+      .wl-title { font-size: clamp(34px, 11vw, 46px); }
+      .s-prog-item { flex-wrap: wrap; }
+      .stats { grid-template-columns: 1fr; }
+      .stat { border-right: none; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration:.001ms !important; transition-duration:.001ms !important; }
       .slide-content > *, .wl-form-wrap > * { opacity:1 !important; transform:none !important; }
@@ -646,7 +922,7 @@
   <!-- -- Nav ------------------------------------------------ -->
   <nav class="nav">
     <a class="nav-brand" href="index.html">
-      <img src="ai future logo.png" alt="AI Future logo" />
+      <img decoding="async" src="ai future logo.png" alt="AI Future logo" fetchpriority="high" />
       <span>AI Future</span>
     </a>
     <div class="nav-right">
@@ -687,9 +963,9 @@
 
     <div class="hero-visual" aria-hidden="true">
       <div class="hstack">
-        <img class="hps1" src="robotics lab/25_summer_pictures/IMG_0902.jpg" alt="" />
-        <img class="hps3" src="robotics lab/FLL Teams/hudson valley qualifier championship winners.jpg" alt="" />
-        <img class="hps2" src="robotics lab/25_summer_pictures/summer-010.jpg" alt="" />
+        <img decoding="async" class="hps1" data-src="robotics lab/25_summer_pictures/IMG_0902.jpg" loading="lazy" alt="" />
+        <img decoding="async" class="hps3" data-src="robotics lab/FLL Teams/hudson valley qualifier championship winners.jpg" loading="lazy" alt="" />
+        <img decoding="async" class="hps2" data-src="robotics lab/25_summer_pictures/summer-010.jpg" loading="lazy" alt="" />
       </div>
       <!-- Grit mascot floating in hero -->
       <div class="hero-grit" style="animation: gritIn .6s .9s ease forwards, fC 5s ease-in-out infinite">
@@ -743,16 +1019,16 @@
                  style="--acc:#1767b4; --acc-rgb:23,103,180">
           <div class="slide-photos">
             <div class="photo-main">
-              <img class="pimg is-active" src="robotics lab/FLL Teams/25_26_season_pictures/IMG_5080.jpg"     alt="Students building robots in Robotics Lab" loading="eager" />
-              <img class="pimg"           src="robotics lab/FLL Teams/25_26_season_pictures/IMG_5287.jpg"     alt="Robot programming session" loading="lazy" />
-              <img class="pimg"           src="robotics lab/25_summer_pictures/IMG_0902.jpg"                  alt="AI Future robotics class" loading="lazy" />
+              <img decoding="async" class="pimg is-active" src="robotics lab/FLL Teams/25_26_season_pictures/IMG_5080.jpg"     alt="Students building robots in Robotics Lab" loading="eager" fetchpriority="high" />
+              <img decoding="async" class="pimg"           data-src="robotics lab/FLL Teams/25_26_season_pictures/IMG_5287.jpg"     alt="Robot programming session" loading="lazy" />
+              <img decoding="async" class="pimg"           data-src="robotics lab/25_summer_pictures/IMG_0902.jpg"                  alt="AI Future robotics class" loading="lazy" />
               <span class="photo-count">1 / 3</span>
               <p class="photo-caption">Design, build, code, and test — all in one class.</p>
             </div>
             <div class="photo-subs">
-              <div class="photo-sub is-active" data-img="0"><img src="robotics lab/FLL Teams/25_26_season_pictures/IMG_5080.jpg"    alt="" loading="lazy" /></div>
-              <div class="photo-sub"           data-img="1"><img src="robotics lab/FLL Teams/25_26_season_pictures/IMG_5287.jpg"    alt="" loading="lazy" /></div>
-              <div class="photo-sub"           data-img="2"><img src="robotics lab/25_summer_pictures/IMG_0902.jpg"                 alt="" loading="lazy" /></div>
+              <div class="photo-sub is-active" data-img="0"><img decoding="async" data-src="robotics lab/FLL Teams/25_26_season_pictures/IMG_5080.jpg"    alt="" loading="lazy" /></div>
+              <div class="photo-sub"           data-img="1"><img decoding="async" data-src="robotics lab/FLL Teams/25_26_season_pictures/IMG_5287.jpg"    alt="" loading="lazy" /></div>
+              <div class="photo-sub"           data-img="2"><img decoding="async" data-src="robotics lab/25_summer_pictures/IMG_0902.jpg"                 alt="" loading="lazy" /></div>
             </div>
             <span class="slide-num-wm" aria-hidden="true">01</span>
           </div>
@@ -780,16 +1056,16 @@
                  style="--acc:#12b981; --acc-rgb:18,185,129">
           <div class="slide-photos">
             <div class="photo-main">
-              <img class="pimg is-active" src="robotics lab/25_summer_pictures/Photos (28)/IMG_1327.jpg" alt="Student coding on laptop in Code Lab" loading="lazy" />
-              <img class="pimg"           src="robotics lab/25_summer_pictures/Photos (24)/photo.jpg"    alt="Writing Python code" loading="lazy" />
-              <img class="pimg"           src="robotics lab/25_summer_pictures/Photos (25)/photo.jpg"    alt="Student learning to code online" loading="lazy" />
+              <img decoding="async" class="pimg is-active" data-src="robotics lab/25_summer_pictures/Photos (28)/IMG_1327.jpg" alt="Student coding on laptop in Code Lab" loading="lazy" />
+              <img decoding="async" class="pimg"           data-src="robotics lab/25_summer_pictures/Photos (24)/photo.jpg"    alt="Writing Python code" loading="lazy" />
+              <img decoding="async" class="pimg"           data-src="robotics lab/25_summer_pictures/Photos (25)/photo.jpg"    alt="Student learning to code online" loading="lazy" />
               <span class="photo-count">1 / 3</span>
               <p class="photo-caption">Write real Python. See it run. Build real projects.</p>
             </div>
             <div class="photo-subs">
-              <div class="photo-sub is-active" data-img="0"><img src="robotics lab/25_summer_pictures/Photos (28)/IMG_1327.jpg" alt="" loading="lazy" /></div>
-              <div class="photo-sub"           data-img="1"><img src="robotics lab/25_summer_pictures/Photos (24)/photo.jpg"    alt="" loading="lazy" /></div>
-              <div class="photo-sub"           data-img="2"><img src="robotics lab/25_summer_pictures/Photos (25)/photo.jpg"    alt="" loading="lazy" /></div>
+              <div class="photo-sub is-active" data-img="0"><img decoding="async" data-src="robotics lab/25_summer_pictures/Photos (28)/IMG_1327.jpg" alt="" loading="lazy" /></div>
+              <div class="photo-sub"           data-img="1"><img decoding="async" data-src="robotics lab/25_summer_pictures/Photos (24)/photo.jpg"    alt="" loading="lazy" /></div>
+              <div class="photo-sub"           data-img="2"><img decoding="async" data-src="robotics lab/25_summer_pictures/Photos (25)/photo.jpg"    alt="" loading="lazy" /></div>
             </div>
             <span class="slide-num-wm" aria-hidden="true">02</span>
           </div>
@@ -818,16 +1094,16 @@
                  style="--acc:#f97316; --acc-rgb:249,115,22">
           <div class="slide-photos">
             <div class="photo-main">
-              <img class="pimg is-active" src="robotics lab/25_summer_pictures/summer-007.jpg"  alt="Kids at AI Future summer camp" loading="lazy" />
-              <img class="pimg"           src="robotics lab/25_summer_pictures/summer-009.jpg"  alt="Summer camp team challenge" loading="lazy" />
-              <img class="pimg"           src="robotics lab/25_summer_pictures/summer-011.jpg"  alt="Summer camp robotics and coding" loading="lazy" />
+              <img decoding="async" class="pimg is-active" data-src="robotics lab/25_summer_pictures/summer-007.jpg"  alt="Kids at AI Future summer camp" loading="lazy" />
+              <img decoding="async" class="pimg"           data-src="robotics lab/25_summer_pictures/summer-009.jpg"  alt="Summer camp team challenge" loading="lazy" />
+              <img decoding="async" class="pimg"           data-src="robotics lab/25_summer_pictures/summer-011.jpg"  alt="Summer camp robotics and coding" loading="lazy" />
               <span class="photo-count">1 / 3</span>
               <p class="photo-caption">Full days of building, coding, and making — all summer.</p>
             </div>
             <div class="photo-subs">
-              <div class="photo-sub is-active" data-img="0"><img src="robotics lab/25_summer_pictures/summer-007.jpg" alt="" loading="lazy" /></div>
-              <div class="photo-sub"           data-img="1"><img src="robotics lab/25_summer_pictures/summer-009.jpg" alt="" loading="lazy" /></div>
-              <div class="photo-sub"           data-img="2"><img src="robotics lab/25_summer_pictures/summer-011.jpg" alt="" loading="lazy" /></div>
+              <div class="photo-sub is-active" data-img="0"><img decoding="async" data-src="robotics lab/25_summer_pictures/summer-007.jpg" alt="" loading="lazy" /></div>
+              <div class="photo-sub"           data-img="1"><img decoding="async" data-src="robotics lab/25_summer_pictures/summer-009.jpg" alt="" loading="lazy" /></div>
+              <div class="photo-sub"           data-img="2"><img decoding="async" data-src="robotics lab/25_summer_pictures/summer-011.jpg" alt="" loading="lazy" /></div>
             </div>
             <span class="slide-num-wm" aria-hidden="true">03</span>
           </div>
@@ -860,16 +1136,16 @@
                  style="--acc:#fece00; --acc-rgb:254,206,0">
           <div class="slide-photos">
             <div class="photo-main">
-              <img class="pimg is-active" src="robotics lab/FLL Teams/hudson valley qualifier championship winners.jpg" alt="FLL championship team with trophy" loading="lazy" />
-              <img class="pimg"           src="robotics lab/FLL Teams/nyc champs 1st place robot design.jpg"           alt="NYC 1st place robot design award" loading="lazy" />
-              <img class="pimg"           src="robotics lab/FLL Teams/fll-team-002.png"                                alt="AI Future FLL team competing" loading="lazy" />
+              <img decoding="async" class="pimg is-active" data-src="robotics lab/FLL Teams/hudson valley qualifier championship winners.jpg" alt="FLL championship team with trophy" loading="lazy" />
+              <img decoding="async" class="pimg"           data-src="robotics lab/FLL Teams/nyc champs 1st place robot design.jpg"           alt="NYC 1st place robot design award" loading="lazy" />
+              <img decoding="async" class="pimg"           data-src="robotics lab/FLL Teams/fll-team-002.png"                                alt="AI Future FLL team competing" loading="lazy" />
               <span class="photo-count">1 / 3</span>
               <p class="photo-caption">Regional champions. Real trophies. Real skills.</p>
             </div>
             <div class="photo-subs">
-              <div class="photo-sub is-active" data-img="0"><img src="robotics lab/FLL Teams/hudson valley qualifier championship winners.jpg" alt="" loading="lazy" /></div>
-              <div class="photo-sub"           data-img="1"><img src="robotics lab/FLL Teams/nyc champs 1st place robot design.jpg"           alt="" loading="lazy" /></div>
-              <div class="photo-sub"           data-img="2"><img src="robotics lab/FLL Teams/fll-team-002.png"                                 alt="" loading="lazy" /></div>
+              <div class="photo-sub is-active" data-img="0"><img decoding="async" data-src="robotics lab/FLL Teams/hudson valley qualifier championship winners.jpg" alt="" loading="lazy" /></div>
+              <div class="photo-sub"           data-img="1"><img decoding="async" data-src="robotics lab/FLL Teams/nyc champs 1st place robot design.jpg"           alt="" loading="lazy" /></div>
+              <div class="photo-sub"           data-img="2"><img decoding="async" data-src="robotics lab/FLL Teams/fll-team-002.png"                                 alt="" loading="lazy" /></div>
             </div>
             <span class="slide-num-wm" aria-hidden="true">04</span>
           </div>
@@ -894,7 +1170,7 @@
         <!-- -- Slide 05: Get Started (form) ----------------- -->
         <article class="slide-waitlist" data-index="4">
           <div class="wl-photo">
-            <img src="robotics lab/25_summer_pictures/IMG_0521.jpg" alt="" loading="lazy" />
+            <img decoding="async" data-src="robotics lab/25_summer_pictures/IMG_0521.jpg" alt="" loading="lazy" />
           </div>
           <div class="wl-form-wrap">
             <p class="wl-kicker">Ready to get started?</p>
@@ -1044,7 +1320,7 @@
   <!-- -- Footer ---------------------------------------------- -->
   <footer>
     <div class="footer-brand">
-      <img src="ai future logo.png" alt="AI Future" />
+      <img decoding="async" src="ai future logo.png" alt="AI Future" />
       <span>AI Future</span>
     </div>
     <div class="footer-links">
@@ -1092,12 +1368,39 @@
 
     // All "activatable" units in order (4 slides + 1 waitlist)
     const allUnits = [...slides, wlSlide];
+    const heroVisual = document.querySelector('.hero-visual');
 
     let active         = -1;
     let ticking        = false;
     let cycleTimers    = [];
     let mascotSwapTimer= null;
     let mascotVisible  = false;
+
+    function hydrateLazyImages(root) {
+      if (!root) return;
+      const images = [];
+      if (root.matches?.('img[data-src]')) images.push(root);
+      root.querySelectorAll?.('img[data-src].is-active, .photo-sub.is-active img[data-src]').forEach(img => images.push(img));
+      images.forEach(img => {
+        img.src = img.dataset.src;
+        img.removeAttribute('data-src');
+      });
+    }
+
+    function hydrateAllImages(root) {
+      if (!root) return;
+      root.querySelectorAll('img[data-src]').forEach(img => {
+        img.src = img.dataset.src;
+        img.removeAttribute('data-src');
+      });
+    }
+
+    function hydrateDesktopHero() {
+      if (window.matchMedia('(min-width: 901px)').matches) hydrateAllImages(heroVisual);
+    }
+
+    hydrateDesktopHero();
+    window.addEventListener('resize', hydrateDesktopHero, { passive: true });
 
     /* -- Mascot: swap video smoothly ------------------- */
     function swapMascot(idx) {
@@ -1137,6 +1440,8 @@
       clearTimeout(cycleTimers[active]);
       active = idx;
 
+      hydrateLazyImages(allUnits[idx]);
+
       allUnits.forEach((u, i) => u.classList.toggle('is-active', i === idx));
       railDots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
 
@@ -1169,6 +1474,8 @@
       function next() {
         if (si !== active) return;
         const nxt = (cur + 1) % imgs.length;
+        hydrateLazyImages(imgs[nxt]);
+        hydrateLazyImages(subs[nxt]);
         imgs[cur].classList.remove('is-active');
         subs[cur]?.classList.remove('is-active');
         imgs[nxt].classList.add('is-active');
@@ -1189,6 +1496,8 @@
         sub.addEventListener('click', () => {
           clearTimeout(cycleTimers[si]);
           const cur = subs.findIndex(s => s.classList.contains('is-active'));
+          hydrateLazyImages(imgs[ni]);
+          hydrateLazyImages(sub);
           imgs[cur]?.classList.remove('is-active');
           subs[cur]?.classList.remove('is-active');
           imgs[ni].classList.add('is-active');
