@@ -247,8 +247,11 @@ app.post('/api/summer-inquiry', async (req, res) => {
 
 	const normalizedChildGrade = childGrade.trim() || childAge.trim();
 	const normalizedProgramInterest = programInterest.trim() || preferredWeek.trim();
+	const normalizedEmail = email.trim();
+	const normalizedPhone = phone.trim();
+	const hasContactMethod = Boolean(normalizedEmail || normalizedPhone);
 
-	if (!parentName.trim() || !email.trim() || !phone.trim() || !normalizedChildGrade || !normalizedProgramInterest || !preferredWeek.trim()) {
+	if (!parentName.trim() || !hasContactMethod) {
 		return res.status(400).json({ success: false, message: 'Missing required fields' });
 	}
 
@@ -258,8 +261,8 @@ app.post('/api/summer-inquiry', async (req, res) => {
 		parentName: parentName.trim(),
 		childName: childName.trim(),
 		childGrade: normalizedChildGrade,
-		email: email.trim(),
-		phone: phone.trim(),
+		email: normalizedEmail,
+		phone: normalizedPhone,
 		childAge: normalizedChildGrade,
 		programInterest: normalizedProgramInterest,
 		preferredWeek: preferredWeek.trim(),

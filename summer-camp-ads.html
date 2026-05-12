@@ -1120,7 +1120,7 @@
             <img src="robotics%20lab/25_summer_pictures/Photos%20(27)/IMG_1354.jpg" alt="AI Future student coding and building during summer camp" loading="lazy" />
             <span>Coding and robotics practice</span>
           </figure>
-          <figure class="camp-shot wide reveal">
+          <figure class="camp-shot reveal">
             <img src="robotics%20lab/25_summer_pictures/summer-011.jpg" alt="AI Future summer camp students collaborating on robotics and engineering challenges" loading="lazy" />
             <span>Small group support from idea to prototype</span>
           </figure>
@@ -1171,7 +1171,7 @@
         <div class="reveal">
           <p class="eyebrow" style="color:var(--yellow)">Reserve a Spot</p>
           <h2>Request Summer Camp Info or Start Registration</h2>
-          <p class="lead" style="color:rgba(255,255,255,0.78)">Tell us about your child and the program you are interested in. AI Future will follow up with camp options, availability, and next steps.</p>
+          <p class="lead" style="color:rgba(255,255,255,0.78)">Leave your name and the best way to reach you. AI Future will follow up with camp availability, savings, and next steps.</p>
           <div class="form-points">
             <div class="form-point"><i class="fa-solid fa-phone"></i><div><strong>Fast follow-up</strong><br />We will contact you with schedule and registration details.</div></div>
             <div class="form-point"><i class="fa-solid fa-users"></i><div><strong>Small groups</strong><br />Limited seats help students receive support and feedback.</div></div>
@@ -1181,19 +1181,14 @@
         <form class="form-card reveal" id="summer-inquiry-form">
           <div class="form-promo">
             <strong>Extra $50 off with code COACH</strong>
-            <span>Enter the promo code below when requesting your summer camp spot. Popular weeks may fill quickly.</span>
+            <span>Share one way to reach you, choose your promo code, and let us know whether you want a free trial class.</span>
           </div>
           <div class="field-grid">
             <div class="field"><label for="parentName">Parent Name</label><input id="parentName" name="parentName" autocomplete="name" required /></div>
-            <div class="field"><label for="childName">Child Name</label><input id="childName" name="childName" autocomplete="off" required /></div>
-            <div class="field"><label for="childGrade">Child Grade</label><select id="childGrade" name="childGrade" required><option value="">Select grade</option><option>Kindergarten</option><option>1st Grade</option><option>2nd Grade</option><option>3rd Grade</option><option>4th Grade</option><option>5th Grade</option><option>6th Grade</option><option>7th Grade</option><option>8th Grade</option></select></div>
-            <div class="field"><label for="phone">Phone Number</label><input id="phone" name="phone" type="tel" autocomplete="tel" required /></div>
-            <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
-            <div class="field"><label for="preferredWeek">Interested Camp Week</label><input id="preferredWeek" name="preferredWeek" placeholder="Example: Week 1, July, or not sure" required /></div>
-            <div class="field"><label for="programInterest">Interested Program</label><select id="programInterest" name="programInterest" required><option value="">Select program</option><option>Robotics &amp; Engineering</option><option>Coding &amp; Web Development</option><option>3D Printing &amp; Tinkercad</option><option>Full STEM Camp</option><option>Not sure yet</option></select></div>
+            <div class="field"><label for="contactMethod">Preferred Contact</label><select id="contactMethod" name="contactMethod" required><option value="phone">Phone Number</option><option value="email">Email</option></select></div>
+            <div class="field full"><label for="contactValue" id="contactValueLabel">Phone Number</label><input id="contactValue" name="contactValue" type="tel" autocomplete="tel" required /></div>
             <div class="field"><label for="promoCode">Promo Code</label><input id="promoCode" name="promoCode" value="COACH" autocomplete="off" /></div>
             <div class="field"><label for="freeTrialInterest">Would you like to book a free trial class?</label><select id="freeTrialInterest" name="freeTrialInterest" required><option>Yes</option><option>No</option><option>I have questions first</option></select></div>
-            <div class="field full"><label for="notes">Message / Questions</label><textarea id="notes" name="notes" placeholder="Tell us your child's interests, preferred weeks, or questions."></textarea></div>
           </div>
           <button class="btn btn-dark" id="summer-inquiry-submit" type="submit">Reserve Your Child's Spot</button>
           <div class="form-status" id="summer-inquiry-status" role="status" aria-live="polite"></div>
@@ -1298,6 +1293,20 @@
       const form = document.getElementById('summer-inquiry-form');
       const status = document.getElementById('summer-inquiry-status');
       const submit = document.getElementById('summer-inquiry-submit');
+      const contactMethod = document.getElementById('contactMethod');
+      const contactValue = document.getElementById('contactValue');
+      const contactValueLabel = document.getElementById('contactValueLabel');
+
+      const syncContactField = () => {
+        const wantsEmail = contactMethod.value === 'email';
+        contactValueLabel.textContent = wantsEmail ? 'Email' : 'Phone Number';
+        contactValue.type = wantsEmail ? 'email' : 'tel';
+        contactValue.autocomplete = wantsEmail ? 'email' : 'tel';
+        contactValue.placeholder = wantsEmail ? 'parent@example.com' : '(555) 555-5555';
+      };
+
+      contactMethod.addEventListener('change', syncContactField);
+      syncContactField();
 
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -1310,25 +1319,21 @@
         }
 
         const data = Object.fromEntries(new FormData(form).entries());
+        const contact = (data.contactValue || '').trim();
+        const usesEmail = data.contactMethod === 'email';
         const payload = {
           parentName: data.parentName,
-          childName: data.childName,
-          childGrade: data.childGrade,
-          childAge: data.childGrade,
-          phone: data.phone,
-          email: data.email,
-          preferredWeek: data.preferredWeek,
-          programInterest: data.programInterest,
+          phone: usesEmail ? '' : contact,
+          email: usesEmail ? contact : '',
           promoCode: data.promoCode,
-          freeTrialInterest: data.freeTrialInterest,
-          notes: data.notes
+          freeTrialInterest: data.freeTrialInterest
         };
 
         if (Array.isArray(window.dataLayer)) {
-          window.dataLayer.push({ event: 'summer_camp_lead_submit', programInterest: payload.programInterest, childGrade: payload.childGrade });
+          window.dataLayer.push({ event: 'summer_camp_lead_submit', contactMethod: data.contactMethod, freeTrialInterest: payload.freeTrialInterest });
         }
         if (typeof window.gtag === 'function') {
-          window.gtag('event', 'summer_camp_lead_submit', { program_interest: payload.programInterest, child_grade: payload.childGrade });
+          window.gtag('event', 'summer_camp_lead_submit', { contact_method: data.contactMethod, free_trial_interest: payload.freeTrialInterest });
         }
 
         submit.disabled = true;
@@ -1344,6 +1349,7 @@
           status.textContent = 'Thanks. We received your request and will contact you with camp details soon.';
           status.classList.add('success');
           form.reset();
+          syncContactField();
         } catch (error) {
           status.textContent = 'We could not submit right now. Please call or email AI Future and we will help.';
           status.classList.add('error');
