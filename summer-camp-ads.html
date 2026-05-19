@@ -372,6 +372,152 @@
     }
     .mobile-promo-copy { display: none; }
 
+    .simple-header {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      background: rgba(255, 253, 247, 0.96);
+      border-bottom: 1px solid rgba(220, 229, 239, 0.9);
+      backdrop-filter: blur(18px);
+    }
+    .simple-header-inner {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .simple-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--navy);
+      font-weight: 900;
+      line-height: 1;
+    }
+    .simple-brand img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+    }
+    .header-phone {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--deep);
+      font-weight: 900;
+      font-size: 0.92rem;
+      white-space: nowrap;
+      transition: color 180ms ease;
+    }
+    .header-phone:hover { color: var(--navy); }
+    .header-phone i { color: var(--navy); }
+    .conversion-hero {
+      min-height: calc(100svh - 58px);
+      display: flex;
+      align-items: center;
+      padding: clamp(18px, 4vw, 42px) 0;
+      background:
+        linear-gradient(135deg, rgba(254,206,0,0.2), transparent 38%),
+        linear-gradient(180deg, var(--paper), #f6fbff 76%, var(--white));
+    }
+    .conversion-hero-inner {
+      width: min(720px, 100%);
+    }
+    .hero-offer {
+      display: inline-flex;
+      margin-bottom: 12px;
+      padding: 8px 11px;
+      border-radius: var(--radius);
+      background: var(--yellow);
+      color: var(--deep);
+      font-size: 0.84rem;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+    .conversion-hero h1 {
+      max-width: 680px;
+      margin-bottom: 12px;
+      font-size: clamp(2.6rem, 8vw, 5.2rem);
+      line-height: 0.98;
+    }
+    .conversion-hero .lead {
+      max-width: 620px;
+      margin-bottom: 18px;
+    }
+    .quick-lead-form {
+      max-width: 620px;
+      padding: 16px;
+      border: 1px solid rgba(7, 62, 119, 0.12);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: var(--shadow-soft);
+    }
+    .quick-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .quick-lead-form .btn {
+      width: 100%;
+      margin-top: 10px;
+    }
+    .urgency-line {
+      margin: 9px 0 0;
+      color: var(--deep);
+      font-size: 0.9rem;
+      font-weight: 900;
+    }
+    .offer-banner-section {
+      padding: 22px 0;
+      background: var(--white);
+    }
+    .single-offer-banner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 18px;
+      border-radius: var(--radius);
+      background: var(--yellow);
+      color: var(--deep);
+      box-shadow: var(--shadow-soft);
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-weight: 900;
+      text-align: center;
+    }
+    .trust-photos {
+      background: #f7fbff;
+    }
+    .learn-support {
+      margin-top: 26px;
+    }
+    .learn-projects {
+      margin-top: 32px;
+      color: var(--white);
+      background: var(--deep);
+    }
+    .learn-projects h2,
+    .learn-projects h3 { color: var(--white); }
+    .learn-projects .eyebrow { color: var(--yellow); }
+    .learn-projects-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 26px;
+      align-items: center;
+      padding: clamp(24px, 4vw, 38px);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.04);
+    }
+    .learn-tools {
+      margin-top: 28px;
+      padding: 24px;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, #ffffff, var(--cream));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-soft);
+    }
+
     .problem {
       background: var(--white);
     }
@@ -774,7 +920,7 @@
     .footer {
       background: #071a31;
       color: rgba(255,255,255,0.72);
-      padding: 32px 0 92px;
+      padding: 32px 0;
     }
     .footer-inner {
       display: flex;
@@ -818,6 +964,7 @@
       .hero-grid, .problem-panel, .project-grid, .why-grid, .details-grid, .form-wrap, .faq-grid {
         grid-template-columns: 1fr;
       }
+      .learn-projects-inner { grid-template-columns: 1fr; }
       .hero-media { min-height: 440px; }
       .benefits, .learn-grid, .proof-grid { grid-template-columns: repeat(2, 1fr); }
       .offer-grid { grid-template-columns: 1fr; }
@@ -834,7 +981,52 @@
       .nav-inner { height: 64px; }
       .brand img { width: 40px; height: 40px; }
       .brand small { display: none; }
+      .simple-header-inner { min-height: 50px; }
+      .simple-brand img { width: 32px; height: 32px; }
+      .simple-brand span { font-size: 0.9rem; }
+      .header-phone { font-size: 0.78rem; }
       h1 { font-size: clamp(2.5rem, 16vw, 4rem); }
+      .conversion-hero {
+        min-height: calc(100svh - 50px);
+        padding: 10px 0 12px;
+      }
+      .hero-offer {
+        margin-bottom: 8px;
+        padding: 7px 9px;
+        font-size: 0.77rem;
+      }
+      .conversion-hero h1 {
+        margin-bottom: 8px;
+        font-size: clamp(2.05rem, 10vw, 2.62rem);
+      }
+      .conversion-hero .lead {
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+        line-height: 1.42;
+      }
+      .quick-lead-form { padding: 11px; }
+      .quick-form-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .quick-lead-form label { font-size: 0.78rem; }
+      .quick-lead-form input {
+        min-height: 42px;
+        padding: 9px 10px;
+      }
+      .quick-lead-form .btn {
+        min-height: 44px;
+        margin-top: 8px;
+      }
+      .urgency-line {
+        margin-top: 7px;
+        font-size: 0.76rem;
+      }
+      .offer-banner-section { padding: 14px 0; }
+      .single-offer-banner {
+        padding: 14px;
+        font-size: 0.94rem;
+      }
       .btn-row { flex-direction: column; align-items: stretch; }
       .hero { padding-top: 38px; }
       .sticky-promo { top: 64px; }
@@ -854,6 +1046,8 @@
       .benefits, .learn-grid, .age-grid, .tool-strip, .check-grid, .proof-grid, .field-grid {
         grid-template-columns: 1fr;
       }
+      .learn-projects-inner,
+      .learn-tools { padding: 18px; }
       .camp-gallery-grid { grid-template-columns: 1fr; }
       .camp-shot,
       .camp-shot.large { min-height: 230px; }
@@ -863,243 +1057,65 @@
       .detail-row { display: grid; gap: 3px; }
       .detail-row strong { text-align: left; }
       .footer-inner { display: grid; gap: 10px; }
-      .mobile-sticky { display: block; }
     }
   </style>
 </head>
 <body>
-  <div class="topline">Limited summer camp seats available for Queens and Flushing families.</div>
-
-  <nav class="nav" aria-label="Primary navigation">
-    <div class="container nav-inner">
-      <a class="brand" href="#top" aria-label="AI Future Summer STEM Camp">
+  <header class="simple-header" aria-label="Summer camp contact header">
+    <div class="container simple-header-inner">
+      <a class="simple-brand" href="#top" aria-label="AI Future Summer STEM Camp">
         <img src="ai%20future%20logo.png" alt="AI Future logo" />
-        <span>AI Future <small>Summer STEM Camp</small></span>
+        <span>AI Future</span>
       </a>
-      <div class="nav-links">
-        <a href="#learn">What They Learn</a>
-        <a href="#projects">Projects</a>
-        <a href="#details">Details</a>
-        <a href="#faq">FAQ</a>
-      </div>
-      <a class="btn btn-primary" href="#reserve">Reserve Your Child's Spot</a>
+      <a class="header-phone" href="tel:+16463451727" aria-label="Call or text AI Future at 646 345 1727">
+        <i class="fa-solid fa-phone"></i>
+        <span>Call/Text (646) 345-1727</span>
+      </a>
     </div>
-  </nav>
-
-  <div class="sticky-promo" aria-label="Summer camp promotion">
-    <div class="container sticky-promo-inner">
-      <span class="desktop-promo-copy">Summer Camp Offer: Early Bird Deal + Extra $50 Off with Code COACH</span>
-      <span class="mobile-promo-copy">Use Code COACH for $50 Off</span>
-      <a class="btn" href="#reserve">Claim Offer</a>
-    </div>
-  </div>
+  </header>
 
   <main id="top">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="container hero-grid">
-        <div class="hero-copy reveal">
-          <p class="eyebrow">Summer STEM Camp in Queens</p>
-          <h1 id="hero-title">Build. Code. Design. Create This Summer.</h1>
-          <p class="lead">AI Future's Summer STEM Camp gives students hands-on experience with robotics, coding, 3D printing, Tinkercad, engineering design, and real-world problem solving.</p>
-          <div class="offer-line"><i class="fa-solid fa-tag"></i> Early Bird Deal Available | Free Trial Class Offered | Use Code COACH for $50 Off</div>
-          <div class="btn-row">
-            <a class="btn btn-primary" href="#reserve">Reserve Your Child's Spot</a>
-            <a class="btn btn-secondary" href="#free-trial">Book a Free Trial Class</a>
-          </div>
-          <div class="trust-row" aria-label="Camp highlights">
-            <span class="badge offer-badge"><i class="fa-solid fa-bolt"></i> Early Bird Deal</span>
-            <span class="badge offer-badge"><i class="fa-solid fa-calendar-check"></i> Free Trial Available</span>
-            <span class="badge offer-badge"><i class="fa-solid fa-ticket"></i> Use Code COACH for $50 Off</span>
-            <span class="badge"><i class="fa-solid fa-robot"></i> Robotics</span>
-            <span class="badge"><i class="fa-solid fa-code"></i> Coding</span>
-            <span class="badge"><i class="fa-solid fa-cube"></i> 3D Printing</span>
-            <span class="badge"><i class="fa-solid fa-gears"></i> Engineering Design</span>
-            <span class="badge"><i class="fa-solid fa-people-group"></i> Small Group Learning</span>
-          </div>
-        </div>
-        <div class="hero-media reveal" aria-label="AI Future students building STEM projects">
-          <div class="photo-stack">
-            <div class="photo-card big"><img src="robotics%20lab/25_summer_pictures/IMG_0521.jpg" alt="Students building robotics projects at AI Future" /></div>
-            <div class="photo-card"><img src="robotics%20lab/FLL%20Teams/25_26_season_pictures/IMG_5084.jpg" alt="AI Future students collaborating on a robot" /></div>
-            <div class="photo-card"><img src="robotics%20lab/IMG_5877.jpg" alt="Robotics and engineering tools at AI Future" /></div>
-          </div>
-          <div class="floating-chip"><i class="fa-solid fa-location-dot"></i> Queens / Flushing, NY</div>
-          <div class="hero-note"><strong>K-8</strong><span>Age-appropriate STEM projects for elementary and middle school students.</span></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="offers" id="offers" aria-labelledby="offers-title">
+    <section class="conversion-hero" id="reserve" aria-labelledby="hero-title">
       <div class="container">
-        <div class="section-head reveal">
-          <div>
-            <p class="eyebrow">Summer Camp Offers</p>
-            <h2 id="offers-title">Three Smart Ways to Get Started</h2>
-          </div>
-          <p class="lead">Choose the next step that fits your family: reserve now, claim savings, or visit AI Future first with a free trial class.</p>
-        </div>
-        <div class="offer-grid">
-          <article class="offer-card featured reveal">
-            <span class="offer-tag"><i class="fa-solid fa-bolt"></i> Early Bird Offer</span>
-            <h3>Early Bird Summer Camp Deal</h3>
-            <p>Register early and save on your child's summer STEM camp experience. Limited early bird spots are available.</p>
-            <p class="offer-note">Early bird pricing is available for a limited time. Seats are limited and early registration is recommended.</p>
-            <a class="btn btn-primary" href="#reserve">Claim Early Bird Offer</a>
-          </article>
-          <article class="offer-card reveal" id="free-trial">
-            <span class="offer-tag"><i class="fa-solid fa-hand-pointer"></i> Free Trial</span>
-            <h3>Not Ready to Register Yet? Try a Free Trial Class.</h3>
-            <p>Visit AI Future for a free trial class and let your child experience our hands-on STEM learning before committing to summer camp.</p>
-            <p class="offer-note">Students can explore robotics, coding, engineering, or 3D design in a real class environment.</p>
-            <a class="btn btn-secondary" href="#reserve">Book a Free Trial Class</a>
-          </article>
-          <article class="offer-card reveal">
-            <span class="offer-tag"><i class="fa-solid fa-ticket"></i> Promo Code</span>
-            <h3>Get an Extra $50 Off</h3>
-            <p>Use code COACH at registration to receive an additional $50 off summer camp.</p>
-            <div class="promo-code">CODE: COACH</div>
-            <p class="offer-note">Cannot be combined with some offers. Limited-time promotion. Terms may apply.</p>
-            <a class="btn btn-dark" href="#reserve">Claim Offer</a>
-          </article>
+        <div class="conversion-hero-inner">
+          <div class="hero-offer">Free Trial Class + $50 Off Summer Camp</div>
+          <h1 id="hero-title">Reserve a STEM Camp Spot and Ask About a Free Trial</h1>
+          <p class="lead">Hands-on robotics, coding, 3D printing, Tinkercad, and engineering design for K-8 students in Queens / Flushing.</p>
+          <form class="quick-lead-form" id="summer-inquiry-form">
+            <div class="quick-form-grid">
+              <div class="field">
+                <label for="parentName">Parent Name</label>
+                <input id="parentName" name="parentName" autocomplete="name" required />
+              </div>
+              <div class="field">
+                <label for="contact">Phone or Email</label>
+                <input id="contact" name="contact" inputmode="email" required />
+              </div>
+            </div>
+            <input type="hidden" name="promoCode" value="COACH" />
+            <input type="hidden" name="freeTrialInterest" value="Ask during follow-up" />
+            <button class="btn btn-primary" id="summer-inquiry-submit" type="submit">Reserve My Spot</button>
+            <p class="urgency-line">Limited seats remaining. Early bird pricing ends June 15.</p>
+            <div class="form-status" id="summer-inquiry-status" role="status" aria-live="polite"></div>
+          </form>
         </div>
       </div>
     </section>
 
-    <section class="section problem">
-      <div class="container problem-panel reveal">
-        <div>
-          <p class="eyebrow">A Better Summer</p>
-          <h2>More than keeping kids busy.</h2>
-          <p class="lead">This summer, give your child more than screen time. Give them a place to build, code, design, test, improve, and create real projects.</p>
-        </div>
-        <div class="benefits">
-          <article class="benefit">
-            <i class="fa-solid fa-calendar-check"></i>
-            <h3>Productive Summer Learning</h3>
-            <p>Students keep growing while school is out with structured, meaningful STEM challenges.</p>
-          </article>
-          <article class="benefit">
-            <i class="fa-solid fa-lightbulb"></i>
-            <h3>Hands-On Creativity</h3>
-            <p>Campers design, build, troubleshoot, and improve instead of only watching lessons.</p>
-          </article>
-          <article class="benefit">
-            <i class="fa-solid fa-arrow-trend-up"></i>
-            <h3>Confidence Through Projects</h3>
-            <p>Every project gives students something real to explain, present, and feel proud of.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="learn">
+    <section class="offer-banner-section" aria-label="Summer camp offer">
       <div class="container">
-        <div class="section-head reveal">
-          <div>
-            <p class="eyebrow">Skill Building</p>
-            <h2>What Your Child Will Learn</h2>
-          </div>
-          <p class="lead">Each topic is taught through guided projects, so students can connect big ideas to things they actually make.</p>
-        </div>
-        <div class="learn-grid">
-          <article class="card learn-card reveal"><div class="card-icon"><i class="fa-solid fa-robot"></i></div><h3>Robotics &amp; Engineering</h3><p>Students learn how mechanisms, sensors, motors, and iteration come together to solve a challenge.</p></article>
-          <article class="card learn-card reveal"><div class="card-icon"><i class="fa-solid fa-laptop-code"></i></div><h3>Coding &amp; Web Development</h3><p>Campers practice logic, sequencing, and creative coding, then apply it to websites and interactive projects.</p></article>
-          <article class="card learn-card reveal"><div class="card-icon"><i class="fa-solid fa-shapes"></i></div><h3>3D Modeling with Tinkercad</h3><p>Students turn ideas into digital models using beginner-friendly design tools and spatial thinking.</p></article>
-          <article class="card learn-card reveal"><div class="card-icon"><i class="fa-solid fa-print"></i></div><h3>3D Printing</h3><p>They learn how designs become physical prototypes and why testing matters before printing.</p></article>
-          <article class="card learn-card reveal"><div class="card-icon"><i class="fa-solid fa-puzzle-piece"></i></div><h3>Problem Solving</h3><p>Students break big challenges into smaller steps, test solutions, and learn from what does not work yet.</p></article>
-          <article class="card learn-card reveal"><div class="card-icon"><i class="fa-solid fa-person-chalkboard"></i></div><h3>Presentation &amp; Creativity</h3><p>Campers practice explaining their ideas, sharing decisions, and communicating like young inventors.</p></article>
+        <div class="single-offer-banner">
+          Early Bird $500/week · Use code COACH for an extra $50 off · Free trial class available before committing
         </div>
       </div>
     </section>
 
-    <section class="section projects" id="projects">
-      <div class="container project-grid">
-        <div class="project-image reveal">
-          <img src="robotics%20lab/FLL%20Teams/25_26_season_pictures/IMG_5092.jpg" alt="AI Future students presenting and improving robotics projects" />
-        </div>
-        <div class="reveal">
-          <p class="eyebrow">Project-Based Camp</p>
-          <h2>Real Projects Students Can Build</h2>
-          <p class="lead" style="color:rgba(255,255,255,0.78)">Students are most motivated when their work has a purpose. Camp projects help them move from idea to prototype to presentation.</p>
-          <div class="project-list">
-            <article class="project-item"><i class="fa-solid fa-cube"></i><div><h3>Design a 3D printed solution</h3><p>Students identify a real-world problem and create a printable prototype that responds to it.</p></div></article>
-            <article class="project-item"><i class="fa-solid fa-robot"></i><div><h3>Build and improve a robot</h3><p>Campers test, adjust, and refine their robot through hands-on engineering challenges.</p></div></article>
-            <article class="project-item"><i class="fa-solid fa-window-restore"></i><div><h3>Create a website for an invention</h3><p>Older students learn how to present their product, idea, or prototype through a simple web page.</p></div></article>
-            <article class="project-item"><i class="fa-solid fa-flask"></i><div><h3>Prototype, test, and present</h3><p>Students practice the engineering design process from brainstorming to final explanation.</p></div></article>
-            <article class="project-item"><i class="fa-solid fa-pen-ruler"></i><div><h3>Use Tinkercad to model ideas</h3><p>Campers learn to turn sketches and concepts into printable 3D models.</p></div></article>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section age-band">
-      <div class="container">
-        <div class="section-head reveal">
-          <div>
-            <p class="eyebrow">Age Appropriate</p>
-            <h2>Programs Designed for Different Age Groups</h2>
-          </div>
-          <p class="lead">Students join activities matched to their grade level, confidence, and readiness for more advanced tools.</p>
-        </div>
-        <div class="age-grid">
-          <article class="age-card reveal"><strong>Kindergarten - 1st Grade</strong><h3>Early Builders</h3><p>Early engineering, creativity, building challenges, and simple robotics concepts.</p></article>
-          <article class="age-card reveal"><strong>2nd Grade</strong><h3>STEM Explorers</h3><p>Hands-on STEM challenges, building, problem solving, and beginner coding.</p></article>
-          <article class="age-card reveal"><strong>3rd - 4th Grade</strong><h3>Creative Technologists</h3><p>Robotics, coding basics, design thinking, and creative technology projects.</p></article>
-          <article class="age-card reveal"><strong>5th - 8th Grade</strong><h3>Future Inventors</h3><p>3D printing, Tinkercad, web development, engineering design, and real-world invention projects.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container why-grid">
-        <div class="why-photo reveal">
-          <img src="robotics%20lab/FLL%20Teams/2nd%20place%20robot%20performance.jpg" alt="AI Future robotics team achievement and project experience" />
-        </div>
-        <div class="reveal">
-          <p class="eyebrow">Trusted STEM Learning</p>
-          <h2>Why Parents Choose AI Future</h2>
-          <p class="lead">AI Future is built for families who want a serious STEM environment that still feels exciting, supportive, and approachable for kids.</p>
-          <div class="check-grid">
-            <div class="check"><i class="fa-solid fa-check"></i>Hands-on learning, not just worksheets</div>
-            <div class="check"><i class="fa-solid fa-check"></i>Real robotics and technology tools</div>
-            <div class="check"><i class="fa-solid fa-check"></i>Small group support</div>
-            <div class="check"><i class="fa-solid fa-check"></i>Projects students can show at home</div>
-            <div class="check"><i class="fa-solid fa-check"></i>STEM skills that build confidence</div>
-            <div class="check"><i class="fa-solid fa-check"></i>Designed for elementary and middle school students</div>
-            <div class="check"><i class="fa-solid fa-check"></i>Creativity, engineering, and problem-solving</div>
-            <div class="check"><i class="fa-solid fa-check"></i>Competition and team experience</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section tools">
-      <div class="container">
-        <div class="section-head reveal">
-          <div>
-            <p class="eyebrow">Real Tools</p>
-            <h2>Students Learn With Real STEM Tools</h2>
-          </div>
-          <p class="lead">We keep the technology parent-friendly and student-ready: enough depth to build real skills, enough guidance to make beginners feel capable.</p>
-        </div>
-        <div class="tool-strip">
-          <div class="tool reveal"><i class="fa-solid fa-shapes"></i>Tinkercad</div>
-          <div class="tool reveal"><i class="fa-solid fa-print"></i>3D Printers</div>
-          <div class="tool reveal"><i class="fa-solid fa-robot"></i>Robotics Kits</div>
-          <div class="tool reveal"><i class="fa-solid fa-code"></i>Coding Platforms</div>
-          <div class="tool reveal"><i class="fa-solid fa-gears"></i>Engineering Design</div>
-          <div class="tool reveal"><i class="fa-solid fa-globe"></i>Web Tools</div>
-        </div>
-        <p class="lead reveal" style="margin-top:24px">When available, students may work with 3D printers such as Bambu Lab A1 or Bambu Lab P1S, along with robotics kits and guided design tools.</p>
-      </div>
-    </section>
-
-    <section class="section camp-gallery" aria-labelledby="camp-gallery-title">
+    <section class="section trust-photos camp-gallery" aria-labelledby="camp-gallery-title">
       <div class="container">
         <div class="section-head reveal">
           <div>
             <p class="eyebrow">Camp in Action</p>
-            <h2 id="camp-gallery-title">More Photos From AI Future Summer Camp</h2>
+            <h2 id="camp-gallery-title">Photos of Real AI Future Students</h2>
           </div>
           <p class="lead">Parents should be able to see the energy of the program: students building, testing, coding, collaborating, and proudly showing what they made.</p>
         </div>
@@ -1125,6 +1141,133 @@
             <span>Small group support from idea to prototype</span>
           </figure>
         </div>
+        <div class="proof-grid" style="margin-top:18px">
+          <article class="testimonial proof-photo reveal">
+            <img src="robotics%20lab/25_summer_pictures/Photos%20(23)/photo.jpg" alt="AI Future camper focused on a coding or robotics activity" loading="lazy" />
+            <div><p>Students rotate through guided builds, coding practice, and design challenges.</p><strong>Hands-on learning blocks</strong></div>
+          </article>
+          <article class="testimonial proof-photo reveal">
+            <img src="robotics%20lab/25_summer_pictures/Photos%20(24)/photo.jpg" alt="AI Future students working together during summer STEM camp" loading="lazy" />
+            <div><p>Small groups make it easier for campers to ask questions, debug, and try again.</p><strong>Collaboration and support</strong></div>
+          </article>
+          <article class="testimonial proof-photo reveal">
+            <img src="robotics%20lab/25_summer_pictures/Photos-3-001%20(1)/photo-002.jpg" alt="AI Future summer camp student testing a hands-on STEM project" loading="lazy" />
+            <div><p>Campers finish with projects they can talk about, improve, and share with family.</p><strong>Projects with a purpose</strong></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="learn">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <p class="eyebrow">Skill Building</p>
+            <h2>What Your Child Will Learn</h2>
+          </div>
+          <p class="lead">Each topic is taught through guided projects, so students can connect big ideas to things they actually make.</p>
+        </div>
+        <div class="learn-grid">
+          <article class="card learn-card reveal"><div class="card-icon"><i class="fa-solid fa-robot"></i></div><h3>Robotics &amp; Engineering</h3><p>Students learn how mechanisms, sensors, motors, and iteration come together to solve a challenge.</p></article>
+          <article class="card learn-card reveal"><div class="card-icon"><i class="fa-solid fa-laptop-code"></i></div><h3>Coding &amp; Web Development</h3><p>Campers practice logic, sequencing, and creative coding, then apply it to websites and interactive projects.</p></article>
+          <article class="card learn-card reveal"><div class="card-icon"><i class="fa-solid fa-shapes"></i></div><h3>3D Modeling with Tinkercad</h3><p>Students turn ideas into digital models using beginner-friendly design tools and spatial thinking.</p></article>
+          <article class="card learn-card reveal"><div class="card-icon"><i class="fa-solid fa-print"></i></div><h3>3D Printing</h3><p>They learn how designs become physical prototypes and why testing matters before printing.</p></article>
+          <article class="card learn-card reveal"><div class="card-icon"><i class="fa-solid fa-puzzle-piece"></i></div><h3>Problem Solving</h3><p>Students break big challenges into smaller steps, test solutions, and learn from what does not work yet.</p></article>
+          <article class="card learn-card reveal"><div class="card-icon"><i class="fa-solid fa-person-chalkboard"></i></div><h3>Presentation &amp; Creativity</h3><p>Campers practice explaining their ideas, sharing decisions, and communicating like young inventors.</p></article>
+        </div>
+
+        <div class="problem-panel learn-support reveal">
+          <div>
+            <p class="eyebrow">A Better Summer</p>
+            <h2>More than keeping kids busy.</h2>
+            <p class="lead">This summer, give your child more than screen time. Give them a place to build, code, design, test, improve, and create real projects.</p>
+          </div>
+          <div class="benefits">
+            <article class="benefit"><i class="fa-solid fa-calendar-check"></i><h3>Productive Summer Learning</h3><p>Students keep growing while school is out with structured, meaningful STEM challenges.</p></article>
+            <article class="benefit"><i class="fa-solid fa-lightbulb"></i><h3>Hands-On Creativity</h3><p>Campers design, build, troubleshoot, and improve instead of only watching lessons.</p></article>
+            <article class="benefit"><i class="fa-solid fa-arrow-trend-up"></i><h3>Confidence Through Projects</h3><p>Every project gives students something real to explain, present, and feel proud of.</p></article>
+          </div>
+        </div>
+
+        <div class="learn-projects reveal">
+          <div class="learn-projects-inner">
+            <div class="project-image">
+              <img src="robotics%20lab/FLL%20Teams/25_26_season_pictures/IMG_5092.jpg" alt="AI Future students presenting and improving robotics projects" />
+            </div>
+            <div>
+              <p class="eyebrow">Project-Based Camp</p>
+              <h2>Real Projects Students Can Build</h2>
+              <p class="lead" style="color:rgba(255,255,255,0.78)">Students are most motivated when their work has a purpose. Camp projects help them move from idea to prototype to presentation.</p>
+              <div class="project-list">
+                <article class="project-item"><i class="fa-solid fa-cube"></i><div><h3>Design a 3D printed solution</h3><p>Students identify a real-world problem and create a printable prototype that responds to it.</p></div></article>
+                <article class="project-item"><i class="fa-solid fa-robot"></i><div><h3>Build and improve a robot</h3><p>Campers test, adjust, and refine their robot through hands-on engineering challenges.</p></div></article>
+                <article class="project-item"><i class="fa-solid fa-window-restore"></i><div><h3>Create a website for an invention</h3><p>Older students learn how to present their product, idea, or prototype through a simple web page.</p></div></article>
+                <article class="project-item"><i class="fa-solid fa-flask"></i><div><h3>Prototype, test, and present</h3><p>Students practice the engineering design process from brainstorming to final explanation.</p></div></article>
+                <article class="project-item"><i class="fa-solid fa-pen-ruler"></i><div><h3>Use Tinkercad to model ideas</h3><p>Campers learn to turn sketches and concepts into printable 3D models.</p></div></article>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="learn-tools reveal">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Real Tools</p>
+              <h2>Students Learn With Real STEM Tools</h2>
+            </div>
+            <p class="lead">We keep the technology parent-friendly and student-ready: enough depth to build real skills, enough guidance to make beginners feel capable.</p>
+          </div>
+          <div class="tool-strip">
+            <div class="tool"><i class="fa-solid fa-shapes"></i>Tinkercad</div>
+            <div class="tool"><i class="fa-solid fa-print"></i>3D Printers</div>
+            <div class="tool"><i class="fa-solid fa-robot"></i>Robotics Kits</div>
+            <div class="tool"><i class="fa-solid fa-code"></i>Coding Platforms</div>
+            <div class="tool"><i class="fa-solid fa-gears"></i>Engineering Design</div>
+            <div class="tool"><i class="fa-solid fa-globe"></i>Web Tools</div>
+          </div>
+          <p class="lead" style="margin-top:24px">When available, students may work with 3D printers such as Bambu Lab A1 or Bambu Lab P1S, along with robotics kits and guided design tools.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section age-band">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <p class="eyebrow">Age Appropriate</p>
+            <h2>Programs Designed for Different Age Groups</h2>
+          </div>
+          <p class="lead">Students join activities matched to their grade level, confidence, and readiness for more advanced tools.</p>
+        </div>
+        <div class="age-grid">
+          <article class="age-card reveal"><strong>Kindergarten - 1st Grade</strong><h3>Early Builders</h3><p>Early engineering, creativity, building challenges, and simple robotics concepts.</p></article>
+          <article class="age-card reveal"><strong>2nd Grade</strong><h3>STEM Explorers</h3><p>Hands-on STEM challenges, building, problem solving, and beginner coding.</p></article>
+          <article class="age-card reveal"><strong>3rd - 4th Grade</strong><h3>Creative Technologists</h3><p>Robotics, coding basics, design thinking, and creative technology projects.</p></article>
+          <article class="age-card reveal"><strong>5th - 8th Grade</strong><h3>Future Inventors</h3><p>3D printing, Tinkercad, web development, engineering design, and real-world invention projects.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="why">
+      <div class="container why-grid">
+        <div class="why-photo reveal">
+          <img src="robotics%20lab/FLL%20Teams/2nd%20place%20robot%20performance.jpg" alt="AI Future robotics team achievement and project experience" />
+        </div>
+        <div class="reveal">
+          <p class="eyebrow">Trusted STEM Learning</p>
+          <h2>Why Parents Choose AI Future</h2>
+          <p class="lead">AI Future is built for families who want a serious STEM environment that still feels exciting, supportive, and approachable for kids.</p>
+          <div class="check-grid">
+            <div class="check"><i class="fa-solid fa-check"></i>Hands-on learning, not just worksheets</div>
+            <div class="check"><i class="fa-solid fa-check"></i>Real robotics and technology tools</div>
+            <div class="check"><i class="fa-solid fa-check"></i>Small group support</div>
+            <div class="check"><i class="fa-solid fa-check"></i>Projects students can show at home</div>
+            <div class="check"><i class="fa-solid fa-check"></i>STEM skills that build confidence</div>
+            <div class="check"><i class="fa-solid fa-check"></i>Designed for elementary and middle school students</div>
+            <div class="check"><i class="fa-solid fa-check"></i>Creativity, engineering, and problem-solving</div>
+            <div class="check"><i class="fa-solid fa-check"></i>Competition and team experience</div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1146,7 +1289,7 @@
             <div class="detail-row"><span>Activities</span><strong>Robotics, coding, 3D printing, Tinkercad, engineering design</strong></div>
             <div class="detail-row"><span>Registration</span><strong>Limited seats available by week and grade group</strong></div>
           </div>
-          <a class="btn btn-primary" href="#reserve">Reserve Your Child's Spot</a>
+          <a class="btn btn-primary" href="#reserve">Reserve My Spot</a>
         </div>
         <aside class="details-card reveal">
           <h3>Best for families looking for:</h3>
@@ -1166,82 +1309,20 @@
       </div>
     </section>
 
-    <section class="section form-section" id="reserve">
-      <div class="container form-wrap">
-        <div class="reveal">
-          <p class="eyebrow" style="color:var(--yellow)">Reserve a Spot</p>
-          <h2>Request Summer Camp Info or Start Registration</h2>
-          <p class="lead" style="color:rgba(255,255,255,0.78)">Leave your name and the best way to reach you. AI Future will follow up with camp availability, savings, and next steps.</p>
-          <div class="form-points">
-            <div class="form-point"><i class="fa-solid fa-phone"></i><div><strong>Fast follow-up</strong><br />We will contact you with schedule and registration details.</div></div>
-            <div class="form-point"><i class="fa-solid fa-users"></i><div><strong>Small groups</strong><br />Limited seats help students receive support and feedback.</div></div>
-            <div class="form-point"><i class="fa-solid fa-shield-heart"></i><div><strong>Parent-friendly process</strong><br />Ask questions before choosing the best week or program.</div></div>
-          </div>
-        </div>
-        <form class="form-card reveal" id="summer-inquiry-form">
-          <div class="form-promo">
-            <strong>Extra $50 off with code COACH</strong>
-            <span>Share one way to reach you, choose your promo code, and let us know whether you want a free trial class.</span>
-          </div>
-          <div class="field-grid">
-            <div class="field"><label for="parentName">Parent Name</label><input id="parentName" name="parentName" autocomplete="name" required /></div>
-            <div class="field"><label for="contactMethod">Preferred Contact</label><select id="contactMethod" name="contactMethod" required><option value="phone">Phone Number</option><option value="email">Email</option></select></div>
-            <div class="field full"><label for="contactValue" id="contactValueLabel">Phone Number</label><input id="contactValue" name="contactValue" type="tel" autocomplete="tel" required /></div>
-            <div class="field"><label for="promoCode">Promo Code</label><input id="promoCode" name="promoCode" value="COACH" autocomplete="off" /></div>
-            <div class="field"><label for="freeTrialInterest">Would you like to book a free trial class?</label><select id="freeTrialInterest" name="freeTrialInterest" required><option>Yes</option><option>No</option><option>I have questions first</option></select></div>
-          </div>
-          <button class="btn btn-dark" id="summer-inquiry-submit" type="submit">Reserve Your Child's Spot</button>
-          <div class="form-status" id="summer-inquiry-status" role="status" aria-live="polite"></div>
-        </form>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="section-head reveal">
-          <div>
-            <p class="eyebrow">Student Experience</p>
-            <h2>What Camp Looks Like Day to Day</h2>
-          </div>
-          <p class="lead">Camp is active, structured, and hands-on. Students spend the day learning by making, then explaining what they built and how they improved it.</p>
-        </div>
-        <div class="proof-grid">
-          <article class="testimonial proof-photo reveal">
-            <img src="robotics%20lab/25_summer_pictures/Photos%20(23)/photo.jpg" alt="AI Future camper focused on a coding or robotics activity" loading="lazy" />
-            <div><p>Students rotate through guided builds, coding practice, and design challenges.</p><strong>Hands-on learning blocks</strong></div>
-          </article>
-          <article class="testimonial proof-photo reveal">
-            <img src="robotics%20lab/25_summer_pictures/Photos%20(24)/photo.jpg" alt="AI Future students working together during summer STEM camp" loading="lazy" />
-            <div><p>Small groups make it easier for campers to ask questions, debug, and try again.</p><strong>Collaboration and support</strong></div>
-          </article>
-          <article class="testimonial proof-photo reveal">
-            <img src="robotics%20lab/25_summer_pictures/Photos-3-001%20(1)/photo-002.jpg" alt="AI Future summer camp student testing a hands-on STEM project" loading="lazy" />
-            <div><p>Campers finish with projects they can talk about, improve, and share with family.</p><strong>Projects with a purpose</strong></div>
-          </article>
-        </div>
-      </div>
-    </section>
-
     <section class="section faq" id="faq">
       <div class="container faq-grid">
         <div class="reveal">
           <p class="eyebrow">Questions Parents Ask</p>
           <h2>Summer Camp FAQ</h2>
-          <p class="lead">Here are the details most parents want before choosing a STEM summer camp.</p>
-          <a class="btn btn-primary" href="#reserve">Request Camp Info</a>
+          <p class="lead">The essentials parents ask before reserving a STEM summer camp spot.</p>
         </div>
         <div class="faq-list reveal">
           <article class="faq-item open"><button class="faq-question" type="button">What age groups can join? <i class="fa-solid fa-plus"></i></button><div class="faq-answer">AI Future summer camp is designed for students from Kindergarten through 8th Grade, with activities adjusted by grade level.</div></article>
-          <article class="faq-item"><button class="faq-question" type="button">Does my child need experience? <i class="fa-solid fa-plus"></i></button><div class="faq-answer">No. Beginners are welcome. Students receive guidance based on their current comfort level and interests.</div></article>
+          <article class="faq-item"><button class="faq-question" type="button">Is this good for beginners? <i class="fa-solid fa-plus"></i></button><div class="faq-answer">Yes. Beginners are welcome, and students receive guidance based on their current comfort level while more advanced students get room to grow.</div></article>
           <article class="faq-item"><button class="faq-question" type="button">What will students make? <i class="fa-solid fa-plus"></i></button><div class="faq-answer">Projects may include robots, engineering builds, Tinkercad models, 3D printed prototypes, websites, and invention presentations.</div></article>
-          <article class="faq-item"><button class="faq-question" type="button">Will students use 3D printers? <i class="fa-solid fa-plus"></i></button><div class="faq-answer">Students learn how 3D printing works and may use available printers for age-appropriate projects and prototypes.</div></article>
-          <article class="faq-item"><button class="faq-question" type="button">Is this good for beginners? <i class="fa-solid fa-plus"></i></button><div class="faq-answer">Yes. The camp is designed to help beginners build confidence while giving more advanced students room to grow.</div></article>
           <article class="faq-item"><button class="faq-question" type="button">How do I register? <i class="fa-solid fa-plus"></i></button><div class="faq-answer">Complete the form on this page. AI Future will follow up with available weeks, pricing, and registration next steps.</div></article>
           <article class="faq-item"><button class="faq-question" type="button">Are spots limited? <i class="fa-solid fa-plus"></i></button><div class="faq-answer">Yes. Small group learning means seats are limited, especially for popular weeks and grade groups.</div></article>
-          <article class="faq-item"><button class="faq-question" type="button">What should students bring? <i class="fa-solid fa-plus"></i></button><div class="faq-answer">AI Future will share a simple packing list after registration. Students should bring curiosity, focus, and readiness to build.</div></article>
-          <article class="faq-item"><button class="faq-question" type="button">Do you offer a free trial class? <i class="fa-solid fa-plus"></i></button><div class="faq-answer">Yes. Families can book a free trial class before registering so students can experience AI Future's hands-on STEM learning environment.</div></article>
-          <article class="faq-item"><button class="faq-question" type="button">How do I use the $50 off code? <i class="fa-solid fa-plus"></i></button><div class="faq-answer">Use promo code COACH when registering for summer camp to receive an additional $50 off.</div></article>
-          <article class="faq-item"><button class="faq-question" type="button">What is the Early Bird Deal? <i class="fa-solid fa-plus"></i></button><div class="faq-answer">The Early Bird Deal is a limited-time summer camp discount for families who register early. Early registration is recommended because camp seats are limited.</div></article>
+          <article class="faq-item"><button class="faq-question" type="button">Can we try a class before committing? <i class="fa-solid fa-plus"></i></button><div class="faq-answer">Yes. Ask about a free trial class when you submit the form. Families can also use promo code COACH for an additional $50 off summer camp.</div></article>
         </div>
       </div>
     </section>
@@ -1254,8 +1335,7 @@
           <p class="lead">Seats are limited. Reserve your spot now and use code COACH for $50 off while this limited-time promotion is available.</p>
         </div>
         <div class="btn-row">
-          <a class="btn btn-primary" href="#reserve">Reserve Your Child's Spot</a>
-          <a class="btn btn-secondary" href="#reserve">Request Camp Info</a>
+          <a class="btn btn-primary" href="#reserve">Reserve My Spot</a>
         </div>
       </div>
     </section>
@@ -1267,10 +1347,6 @@
       <div>Robotics | Coding | 3D Printing | Engineering Design</div>
     </div>
   </footer>
-
-  <div class="mobile-sticky">
-    <a class="btn btn-primary" href="#reserve">Reserve Spot</a>
-  </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -1293,20 +1369,6 @@
       const form = document.getElementById('summer-inquiry-form');
       const status = document.getElementById('summer-inquiry-status');
       const submit = document.getElementById('summer-inquiry-submit');
-      const contactMethod = document.getElementById('contactMethod');
-      const contactValue = document.getElementById('contactValue');
-      const contactValueLabel = document.getElementById('contactValueLabel');
-
-      const syncContactField = () => {
-        const wantsEmail = contactMethod.value === 'email';
-        contactValueLabel.textContent = wantsEmail ? 'Email' : 'Phone Number';
-        contactValue.type = wantsEmail ? 'email' : 'tel';
-        contactValue.autocomplete = wantsEmail ? 'email' : 'tel';
-        contactValue.placeholder = wantsEmail ? 'parent@example.com' : '(555) 555-5555';
-      };
-
-      contactMethod.addEventListener('change', syncContactField);
-      syncContactField();
 
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -1319,21 +1381,22 @@
         }
 
         const data = Object.fromEntries(new FormData(form).entries());
-        const contact = (data.contactValue || '').trim();
-        const usesEmail = data.contactMethod === 'email';
+        const contact = (data.contact || '').trim();
+        const usesEmail = contact.includes('@');
+        const contactMethod = usesEmail ? 'email' : 'phone';
         const payload = {
           parentName: data.parentName,
           phone: usesEmail ? '' : contact,
           email: usesEmail ? contact : '',
-          promoCode: data.promoCode,
-          freeTrialInterest: data.freeTrialInterest
+          promoCode: data.promoCode || 'COACH',
+          freeTrialInterest: data.freeTrialInterest || 'Ask during follow-up'
         };
 
         if (Array.isArray(window.dataLayer)) {
-          window.dataLayer.push({ event: 'summer_camp_lead_submit', contactMethod: data.contactMethod, freeTrialInterest: payload.freeTrialInterest });
+          window.dataLayer.push({ event: 'summer_camp_lead_submit', contactMethod, freeTrialInterest: payload.freeTrialInterest });
         }
         if (typeof window.gtag === 'function') {
-          window.gtag('event', 'summer_camp_lead_submit', { contact_method: data.contactMethod, free_trial_interest: payload.freeTrialInterest });
+          window.gtag('event', 'summer_camp_lead_submit', { contact_method: contactMethod, free_trial_interest: payload.freeTrialInterest });
         }
 
         submit.disabled = true;
@@ -1349,13 +1412,12 @@
           status.textContent = 'Thanks. We received your request and will contact you with camp details soon.';
           status.classList.add('success');
           form.reset();
-          syncContactField();
         } catch (error) {
           status.textContent = 'We could not submit right now. Please call or email AI Future and we will help.';
           status.classList.add('error');
         } finally {
           submit.disabled = false;
-          submit.textContent = "Reserve Your Child's Spot";
+          submit.textContent = 'Reserve My Spot';
         }
       });
     });

@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 // Canonical marketing and main routes
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get(['/summer-camp-ads', '/summer-camp-ads/'], (req, res) => sendSummerCampAdsLanding(res));
-app.get(['/summer-camp', '/summer-camp/'], (req, res) => res.redirect(302, '/summer-camp-ads'));
+app.get(['/summer-camp', '/summer-camp/'], (req, res) => res.redirect(302, '/contact?program=Summer%20Camp'));
 app.get(['/contact', '/contact/'], (req, res) => res.sendFile(path.join(__dirname, 'contact.html')));
 app.get('/robotics-lab', (req, res) => res.sendFile(path.join(__dirname, 'robotics lab', 'robotics-lab.html')));
 app.get(['/codelab', '/codelab/'], (req, res) => sendCodeLabLanding(res));
