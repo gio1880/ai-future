@@ -421,8 +421,58 @@
         linear-gradient(135deg, rgba(254,206,0,0.2), transparent 38%),
         linear-gradient(180deg, var(--paper), #f6fbff 76%, var(--white));
     }
+    .conversion-hero .container {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(360px, 0.85fr);
+      align-items: center;
+      gap: clamp(28px, 5vw, 72px);
+    }
     .conversion-hero-inner {
       width: min(720px, 100%);
+    }
+    .conversion-hero-visual {
+      position: relative;
+      min-height: clamp(420px, 58vh, 650px);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      background: var(--white);
+    }
+    .conversion-hero-visual img {
+      width: 100%;
+      height: 100%;
+      min-height: inherit;
+      object-fit: cover;
+      object-position: center;
+    }
+    .conversion-hero-visual::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 58%, rgba(6,43,82,0.52));
+      pointer-events: none;
+    }
+    .hero-photo-note {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.94);
+      color: var(--deep);
+      box-shadow: var(--shadow-soft);
+      font-weight: 900;
+    }
+    .hero-photo-note span {
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 800;
     }
     .hero-offer {
       display: inline-flex;
@@ -960,6 +1010,12 @@
     }
 
     @media (max-width: 1020px) {
+      .conversion-hero .container {
+        grid-template-columns: 1fr;
+      }
+      .conversion-hero-visual {
+        min-height: 360px;
+      }
       .nav-links { display: none; }
       .hero-grid, .problem-panel, .project-grid, .why-grid, .details-grid, .form-wrap, .faq-grid {
         grid-template-columns: 1fr;
@@ -990,6 +1046,20 @@
         min-height: calc(100svh - 50px);
         padding: 10px 0 12px;
       }
+      .conversion-hero .container {
+        gap: 16px;
+      }
+      .conversion-hero-visual {
+        display: none;
+      }
+      .hero-photo-note {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        padding: 10px 12px;
+        font-size: 0.82rem;
+      }
+      .hero-photo-note span { display: none; }
       .hero-offer {
         margin-bottom: 8px;
         padding: 7px 9px;
@@ -1099,6 +1169,13 @@
             <div class="form-status" id="summer-inquiry-status" role="status" aria-live="polite"></div>
           </form>
         </div>
+        <figure class="conversion-hero-visual" aria-label="AI Future instructor teaching a small group of STEM students">
+          <img src="assets/summer-camp-ads/group-instruction-1600.webp" alt="AI Future instructor teaching a small group of students during a hands-on STEM class" />
+          <figcaption class="hero-photo-note">
+            Real AI Future class
+            <span>Robotics, coding, and guided project work</span>
+          </figcaption>
+        </figure>
       </div>
     </section>
 
