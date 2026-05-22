@@ -18,6 +18,20 @@
   <meta name="twitter:description" content="Robotics, coding, 3D printing, Tinkercad, and engineering design camp for K-8 students in Queens." />
   <meta name="twitter:image" content="https://aifuture.nyc/ai%20future%20logo.png" />
   <link rel="icon" href="ai%20future%20logo.png" type="image/png" />
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '4538248653113103');
+  fbq('track', 'PageView');
+  </script>
+  <!-- End Meta Pixel Code -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -1131,6 +1145,9 @@
   </style>
 </head>
 <body>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=4538248653113103&ev=PageView&noscript=1"
+  /></noscript>
   <header class="simple-header" aria-label="Summer camp contact header">
     <div class="container simple-header-inner">
       <a class="simple-brand" href="#top" aria-label="AI Future Summer STEM Camp">
@@ -1447,6 +1464,38 @@
       const status = document.getElementById('summer-inquiry-status');
       const submit = document.getElementById('summer-inquiry-submit');
 
+      const getCookie = (name) => {
+        return document.cookie
+          .split('; ')
+          .find((row) => row.startsWith(`${name}=`))
+          ?.split('=')
+          .slice(1)
+          .join('=') || '';
+      };
+
+      const decodeCookieValue = (value) => {
+        try {
+          return decodeURIComponent(value);
+        } catch (error) {
+          return value;
+        }
+      };
+
+      const getMetaFbc = () => {
+        const cookieValue = getCookie('_fbc');
+        if (cookieValue) return decodeCookieValue(cookieValue);
+
+        const fbclid = new URLSearchParams(window.location.search).get('fbclid');
+        return fbclid ? `fb.1.${Date.now()}.${fbclid}` : '';
+      };
+
+      const createMetaEventId = () => {
+        if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+          return window.crypto.randomUUID();
+        }
+        return `summer-lead-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
+      };
+
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
         status.textContent = '';
@@ -1461,16 +1510,21 @@
         const contact = (data.contact || '').trim();
         const usesEmail = contact.includes('@');
         const contactMethod = usesEmail ? 'email' : 'phone';
+        const metaEventId = createMetaEventId();
         const payload = {
           parentName: data.parentName,
           phone: usesEmail ? '' : contact,
           email: usesEmail ? contact : '',
           promoCode: data.promoCode || 'COACH',
-          freeTrialInterest: data.freeTrialInterest || 'Ask during follow-up'
+          freeTrialInterest: data.freeTrialInterest || 'Ask during follow-up',
+          metaEventId,
+          metaFbp: decodeCookieValue(getCookie('_fbp')),
+          metaFbc: getMetaFbc(),
+          metaEventSourceUrl: window.location.href
         };
 
         if (Array.isArray(window.dataLayer)) {
-          window.dataLayer.push({ event: 'summer_camp_lead_submit', contactMethod, freeTrialInterest: payload.freeTrialInterest });
+          window.dataLayer.push({ event: 'summer_camp_lead_submit', contactMethod, freeTrialInterest: payload.freeTrialInterest, metaEventId });
         }
         if (typeof window.gtag === 'function') {
           window.gtag('event', 'summer_camp_lead_submit', { contact_method: contactMethod, free_trial_interest: payload.freeTrialInterest });
@@ -1486,6 +1540,12 @@
             body: JSON.stringify(payload)
           });
           if (!response.ok) throw new Error('Submission failed');
+          if (typeof window.fbq === 'function') {
+            window.fbq('track', 'Lead', {
+              content_name: 'AI Future Summer Camp',
+              content_category: 'summer_camp'
+            }, { eventID: metaEventId });
+          }
           status.textContent = 'Thanks. We received your request and will contact you with camp details soon.';
           status.classList.add('success');
           form.reset();

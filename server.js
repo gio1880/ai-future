@@ -1,10 +1,13 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs/promises');
+const crypto = require('crypto');
 const codeLabApp = require('./code-lab/server');
 const payments = require('./payments');
 const app = express();
 const PORT = process.env.PORT || 3000;
+const metaPixelId = process.env.META_PIXEL_ID || '4538248653113103';
+const metaGraphApiVersion = process.env.META_GRAPH_API_VERSION || 'v25.0';
 const sendCodeLabLanding = (res) => res.sendFile(path.join(__dirname, 'code-lab', 'code-lab.html'));
 const sendCodeLabApp = (res) => res.sendFile(path.join(__dirname, 'code-lab', 'index.html'));
 const sendSummerCampAdsLanding = (res) => res.sendFile(path.join(__dirname, 'summer-camp-ads.html'));
@@ -88,6 +91,88 @@ async function readParentInquiries() {
 function toCsvValue(value) {
 	const normalized = value == null ? '' : String(value);
 	return `"${normalized.replace(/"/g, '""')}"`;
+}
+
+function sha256(value) {
+	return crypto.createHash('sha256').update(value).digest('hex');
+}
+
+function normalizeEmailForMeta(email) {
+	return email.trim().toLowerCase();
+}
+
+function normalizePhoneForMeta(phone) {
+	return phone.replace(/[^\d]/g, '');
+}
+
+function getClientIp(req) {
+	const forwardedFor = req.headers['x-forwarded-for'];
+	if (typeof forwardedFor === 'string' && forwardedFor.trim()) {
+		return forwardedFor.split(',')[0].trim();
+	}
+	return req.socket?.remoteAddress || '';
+}
+
+function cleanMetaString(value, maxLength = 500) {
+	if (typeof value !== 'string') return '';
+	return value.trim().slice(0, maxLength);
+}
+
+async function sendMetaLeadEvent(req, inquiryRecord, meta = {}) {
+	const accessToken = process.env.META_CONVERSIONS_API_ACCESS_TOKEN;
+	if (!accessToken || accessToken === 'replace_with_meta_token') return;
+
+	const userData = {};
+	const emailForHash = normalizeEmailForMeta(inquiryRecord.email || '');
+	const phoneForHash = normalizePhoneForMeta(inquiryRecord.phone || '');
+	const fbp = cleanMetaString(meta.fbp, 200);
+	const fbc = cleanMetaString(meta.fbc, 200);
+	const clientIp = getClientIp(req);
+	const userAgent = cleanMetaString(req.get('user-agent') || '', 500);
+
+	if (emailForHash) userData.em = [sha256(emailForHash)];
+	if (phoneForHash) userData.ph = [sha256(phoneForHash)];
+	if (fbp) userData.fbp = fbp;
+	if (fbc) userData.fbc = fbc;
+	if (clientIp) userData.client_ip_address = clientIp;
+	if (userAgent) userData.client_user_agent = userAgent;
+
+	const eventSourceUrl = cleanMetaString(meta.eventSourceUrl, 1000) || `${req.protocol}://${req.get('host')}/summer-camp-ads`;
+	const payload = {
+		data: [{
+			event_name: 'Lead',
+			event_time: Math.floor(Date.now() / 1000),
+			event_id: cleanMetaString(meta.eventId, 200) || inquiryRecord.id,
+			action_source: 'website',
+			event_source_url: eventSourceUrl,
+			user_data: userData,
+			custom_data: {
+				content_name: 'AI Future Summer Camp',
+				content_category: 'summer_camp',
+				status: 'lead'
+			}
+		}]
+	};
+
+	const testEventCode = cleanMetaString(process.env.META_TEST_EVENT_CODE, 200);
+	if (testEventCode && testEventCode !== 'replace_only_during_meta_testing') {
+		payload.test_event_code = testEventCode;
+	}
+
+	try {
+		const url = `https://graph.facebook.com/${metaGraphApiVersion}/${encodeURIComponent(metaPixelId)}/events?access_token=${encodeURIComponent(accessToken)}`;
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(payload)
+		});
+
+		if (!response.ok) {
+			console.warn('[meta-capi] Lead event rejected', response.status);
+		}
+	} catch (err) {
+		console.warn('[meta-capi] Lead event failed', err.message);
+	}
 }
 
 function getBasicAuthCredentials(req) {
@@ -242,7 +327,11 @@ app.post('/api/summer-inquiry', async (req, res) => {
 		preferredWeek = '',
 		promoCode = '',
 		freeTrialInterest = '',
-		notes = ''
+		notes = '',
+		metaEventId = '',
+		metaFbp = '',
+		metaFbc = '',
+		metaEventSourceUrl = ''
 	} = req.body || {};
 
 	const normalizedChildGrade = childGrade.trim() || childAge.trim();
@@ -276,6 +365,12 @@ app.post('/api/summer-inquiry', async (req, res) => {
 		const existing = await readSummerInquiries();
 		existing.push(inquiryRecord);
 		await fs.writeFile(summerInquiryFile, JSON.stringify(existing, null, 2));
+		void sendMetaLeadEvent(req, inquiryRecord, {
+			eventId: metaEventId,
+			fbp: metaFbp,
+			fbc: metaFbc,
+			eventSourceUrl: metaEventSourceUrl
+		});
 		return res.status(201).json({ success: true, message: 'Inquiry received' });
 	} catch (err) {
 		console.error('Summer inquiry save error:', err);
