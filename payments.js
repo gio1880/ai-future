@@ -15,7 +15,7 @@
  *   GET  /api/payments/export   — CSV export of registrations
  *
  * On checkout.session.completed:
- *   - Appends the record to code-lab/data/payments.json
+ *   - Appends the record to DATA_DIR/payments.json when DATA_DIR is set
  *   - Emails the parent via Resend (if RESEND_API_KEY set)
  *   - Appends a row to Google Sheets (if GOOGLE_SHEETS_ID + service account set)
  *
@@ -43,7 +43,8 @@ const fs = require('fs/promises');
 const fssync = require('fs');
 const crypto = require('crypto');
 
-const PAYMENTS_FILE = path.join(__dirname, 'code-lab', 'data', 'payments.json');
+const PAYMENTS_DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'code-lab', 'data');
+const PAYMENTS_FILE = path.join(PAYMENTS_DATA_DIR, 'payments.json');
 const PAYMENTS_DIR = path.dirname(PAYMENTS_FILE);
 
 const ADMIN_USER = process.env.PAYMENTS_ADMIN_USER || 'admin';
