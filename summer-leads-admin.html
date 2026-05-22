@@ -123,6 +123,56 @@
     .status.good { color: var(--good); }
     .status.bad { color: var(--bad); }
 
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .stat-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .stat-card strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--brand-2);
+      font-size: clamp(1.55rem, 3vw, 2.2rem);
+      line-height: 1;
+    }
+
+    .stat-card small {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .live-dot {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      margin-right: 7px;
+      border-radius: 999px;
+      background: var(--good);
+      box-shadow: 0 0 0 4px rgba(15, 138, 67, 0.12);
+      vertical-align: middle;
+    }
+
     .table-wrap {
       overflow: auto;
       border: 1px solid var(--line);
@@ -180,6 +230,39 @@
       <p>Protected view for camp inquiry follow-up and export.</p>
     </section>
 
+    <section class="stats-grid" aria-label="Summer landing page traffic">
+      <article class="stat-card">
+        <span><i class="live-dot"></i>Live now</span>
+        <strong id="active-visitors">0</strong>
+        <small>Active in the last 2 minutes</small>
+      </article>
+      <article class="stat-card">
+        <span>Total visitors</span>
+        <strong id="total-visitors">0</strong>
+        <small>Unique browser sessions tracked</small>
+      </article>
+      <article class="stat-card">
+        <span>Page views</span>
+        <strong id="total-pageviews">0</strong>
+        <small>Total summer landing page loads</small>
+      </article>
+      <article class="stat-card">
+        <span>Leads</span>
+        <strong id="lead-total">0</strong>
+        <small>Submitted summer camp forms</small>
+      </article>
+      <article class="stat-card">
+        <span>Registrations</span>
+        <strong id="registration-total">0</strong>
+        <small>Paid summer camp checkouts</small>
+      </article>
+      <article class="stat-card">
+        <span>Lead to registration</span>
+        <strong id="conversion-rate">0%</strong>
+        <small>Leads matched by email or phone</small>
+      </article>
+    </section>
+
     <section class="panel">
       <div class="controls">
         <input id="search" type="search" placeholder="Search name, email, phone, program, week, promo code" />
@@ -209,6 +292,7 @@
               <th>Preferred Week</th>
               <th>Promo</th>
               <th>Trial</th>
+              <th>Registration</th>
               <th>Notes</th>
             </tr>
           </thead>
@@ -226,8 +310,15 @@
       const updatedLabel = document.getElementById('updated-label');
       const status = document.getElementById('status');
       const tbody = document.getElementById('leads-body');
+      const activeVisitors = document.getElementById('active-visitors');
+      const totalVisitors = document.getElementById('total-visitors');
+      const totalPageViews = document.getElementById('total-pageviews');
+      const leadTotal = document.getElementById('lead-total');
+      const registrationTotal = document.getElementById('registration-total');
+      const conversionRate = document.getElementById('conversion-rate');
 
       let allLeads = [];
+      let conversionStats = {};
 
       function setStatus(message, kind) {
         status.textContent = message || '';
@@ -255,7 +346,7 @@
 
       function renderRows(rows) {
         if (!rows.length) {
-          tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:#60708e;padding:18px;">No leads found.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;color:#60708e;padding:18px;">No leads found.</td></tr>';
           return;
         }
 
@@ -271,9 +362,22 @@
             <td>${sanitize(lead.preferredWeek)}</td>
             <td>${sanitize(lead.promoCode)}</td>
             <td>${sanitize(lead.freeTrialInterest)}</td>
+            <td>${formatRegistration(lead)}</td>
             <td class="notes">${sanitize(lead.notes)}</td>
           </tr>
         `).join('');
+      }
+
+      function formatRegistration(lead) {
+        if (lead.registrationStatus !== 'Registered') {
+          return '<span style="color:#60708e;font-weight:700;">Lead only</span>';
+        }
+
+        const paid = typeof lead.registrationAmountPaid === 'number'
+          ? `$${(lead.registrationAmountPaid / 100).toFixed(2)}`
+          : '';
+        const registeredAt = lead.registeredAt ? `<br><small>${sanitize(formatDate(lead.registeredAt))}</small>` : '';
+        return `<strong style="color:#0f8a43;">Registered</strong>${paid ? `<br>${sanitize(paid)}` : ''}${registeredAt}`;
       }
 
       function applyFilter() {
@@ -281,6 +385,9 @@
         if (!term) {
           renderRows(allLeads);
           countLabel.textContent = `Leads: ${allLeads.length}`;
+          leadTotal.textContent = allLeads.length;
+          registrationTotal.textContent = Number(conversionStats.totalRegistrations || 0).toLocaleString();
+          conversionRate.textContent = `${Number(conversionStats.leadConversionRate || 0).toLocaleString()}%`;
           return;
         }
 
@@ -304,19 +411,39 @@
 
         renderRows(filtered);
         countLabel.textContent = `Leads: ${filtered.length} of ${allLeads.length}`;
+        leadTotal.textContent = allLeads.length;
+        registrationTotal.textContent = Number(conversionStats.totalRegistrations || 0).toLocaleString();
+        conversionRate.textContent = `${Number(conversionStats.leadConversionRate || 0).toLocaleString()}%`;
+      }
+
+      async function loadTrafficStats() {
+        const response = await fetch('/api/summer-traffic/stats', { method: 'GET' });
+        if (!response.ok) {
+          throw new Error(`Traffic stats failed with status ${response.status}`);
+        }
+
+        const payload = await response.json();
+        const stats = payload.stats || {};
+        activeVisitors.textContent = Number(stats.activeVisitors || 0).toLocaleString();
+        totalVisitors.textContent = Number(stats.totalVisitors || 0).toLocaleString();
+        totalPageViews.textContent = Number(stats.totalPageViews || 0).toLocaleString();
       }
 
       async function loadLeads() {
         setStatus('Loading leads...', '');
 
         try {
-          const response = await fetch('/api/summer-inquiry/list', { method: 'GET' });
+          const [response] = await Promise.all([
+            fetch('/api/summer-inquiry/list', { method: 'GET' }),
+            loadTrafficStats()
+          ]);
           if (!response.ok) {
             throw new Error(`Failed with status ${response.status}`);
           }
 
           const payload = await response.json();
           const leads = Array.isArray(payload.data) ? payload.data : [];
+          conversionStats = payload.conversionStats || {};
           allLeads = leads.sort((a, b) => {
             const da = new Date(a.submittedAt).getTime() || 0;
             const db = new Date(b.submittedAt).getTime() || 0;
@@ -337,6 +464,7 @@
       searchInput.addEventListener('input', applyFilter);
 
       loadLeads();
+      setInterval(loadTrafficStats, 30000);
     })();
   </script>
 </body>

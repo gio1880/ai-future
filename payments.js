@@ -31,18 +31,25 @@
  *   PAYMENTS_ADMIN_USER         (default: "admin")
  *   PAYMENTS_ADMIN_PASSWORD     (default: "change-me")
  *   SITE_BASE_URL               (default: request host; used for success/cancel URLs)
+ *   META_PIXEL_ID
+ *   META_CONVERSIONS_API_ACCESS_TOKEN
+ *   META_GRAPH_API_VERSION
+ *   META_TEST_EVENT_CODE        (optional; remove after Meta test-events checks)
  * -----------------------------------------------------------------------------
  */
 
 const path = require('path');
 const fs = require('fs/promises');
 const fssync = require('fs');
+const crypto = require('crypto');
 
 const PAYMENTS_FILE = path.join(__dirname, 'code-lab', 'data', 'payments.json');
 const PAYMENTS_DIR = path.dirname(PAYMENTS_FILE);
 
 const ADMIN_USER = process.env.PAYMENTS_ADMIN_USER || 'admin';
 const ADMIN_PASSWORD = process.env.PAYMENTS_ADMIN_PASSWORD || 'change-me';
+const META_PIXEL_ID = process.env.META_PIXEL_ID || '4538248653113103';
+const META_GRAPH_API_VERSION = process.env.META_GRAPH_API_VERSION || 'v25.0';
 
 // ─── Pricing config (kept server-side so clients can't tamper) ───────────────
 const PRICING = {
@@ -163,6 +170,71 @@ async function appendPayment(record) {
 function toCsvValue(v) {
   const s = v == null ? '' : String(v);
   return `"${s.replace(/"/g, '""')}"`;
+}
+
+function sha256(value) {
+  return crypto.createHash('sha256').update(value).digest('hex');
+}
+
+function normalizePhoneForMeta(phone) {
+  return sanitizeString(phone, 60).replace(/[^\d]/g, '');
+}
+
+function cleanMetaString(value, maxLength = 500) {
+  if (typeof value !== 'string') return '';
+  return value.trim().slice(0, maxLength);
+}
+
+async function sendMetaCampRegistrationEvent(record) {
+  const accessToken = process.env.META_CONVERSIONS_API_ACCESS_TOKEN;
+  if (!accessToken || accessToken === 'replace_with_meta_token') return;
+  if (!record || record.productType !== 'camp') return;
+
+  const userData = {};
+  const emailForHash = sanitizeEmail(record.email || '');
+  const phoneForHash = normalizePhoneForMeta(record.phone || '');
+
+  if (emailForHash) userData.em = [sha256(emailForHash)];
+  if (phoneForHash) userData.ph = [sha256(phoneForHash)];
+
+  const payload = {
+    data: [{
+      event_name: 'CompleteRegistration',
+      event_time: Math.floor(Date.now() / 1000),
+      event_id: `camp-registration-${record.stripeSessionId || record.id}`,
+      action_source: 'website',
+      event_source_url: `${(process.env.SITE_BASE_URL || 'https://aifuture.nyc').replace(/\/+$/, '')}/confirmation.html`,
+      user_data: userData,
+      custom_data: {
+        content_name: 'AI Future Summer Camp Registration',
+        content_category: 'summer_camp',
+        currency: (record.currency || 'usd').toUpperCase(),
+        value: Number(((record.amountPaid || 0) / 100).toFixed(2)),
+        num_items: Array.isArray(record.weeks) ? record.weeks.length : 1,
+        status: 'registered'
+      }
+    }]
+  };
+
+  const testEventCode = cleanMetaString(process.env.META_TEST_EVENT_CODE, 200);
+  if (testEventCode && testEventCode !== 'replace_only_during_meta_testing') {
+    payload.test_event_code = testEventCode;
+  }
+
+  try {
+    const url = `https://graph.facebook.com/${META_GRAPH_API_VERSION}/${encodeURIComponent(META_PIXEL_ID)}/events?access_token=${encodeURIComponent(accessToken)}`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      console.warn('[payments][meta-capi] CompleteRegistration rejected', response.status);
+    }
+  } catch (err) {
+    console.warn('[payments][meta-capi] CompleteRegistration failed', err.message);
+  }
 }
 
 // ─── Stripe ──────────────────────────────────────────────────────────────────
@@ -543,6 +615,9 @@ async function handleWebhook(req, res) {
       tasks.push(sendConfirmationEmail({ toEmail: record.email, subject, html }).catch(e => ({ error: e.message })));
     }
     tasks.push(appendToSheet(record).catch(e => ({ error: e.message })));
+    if (record.productType === 'camp') {
+      tasks.push(sendMetaCampRegistrationEvent(record).catch(e => ({ error: e.message })));
+    }
     await Promise.allSettled(tasks);
   }
 

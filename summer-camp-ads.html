@@ -1463,6 +1463,7 @@
       const form = document.getElementById('summer-inquiry-form');
       const status = document.getElementById('summer-inquiry-status');
       const submit = document.getElementById('summer-inquiry-submit');
+      const visitorStorageKey = 'aiFutureSummerVisitorId';
 
       const getCookie = (name) => {
         return document.cookie
@@ -1495,6 +1496,42 @@
         }
         return `summer-lead-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
       };
+
+      const getVisitorId = () => {
+        try {
+          const existing = window.localStorage.getItem(visitorStorageKey);
+          if (existing) return existing;
+          const nextId = window.crypto && typeof window.crypto.randomUUID === 'function'
+            ? window.crypto.randomUUID()
+            : `summer-visitor-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
+          window.localStorage.setItem(visitorStorageKey, nextId);
+          return nextId;
+        } catch (error) {
+          return `summer-visitor-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
+        }
+      };
+
+      const sendSummerTraffic = (eventType) => {
+        fetch('/api/summer-traffic/heartbeat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId: getVisitorId(),
+            eventType,
+            pageUrl: window.location.href,
+            referrer: document.referrer || ''
+          }),
+          keepalive: true
+        }).catch(() => {});
+      };
+
+      sendSummerTraffic('pageview');
+      setInterval(() => sendSummerTraffic('heartbeat'), 30000);
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          sendSummerTraffic('heartbeat');
+        }
+      });
 
       form.addEventListener('submit', async (event) => {
         event.preventDefault();

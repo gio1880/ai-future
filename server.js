@@ -13,9 +13,12 @@ const sendCodeLabApp = (res) => res.sendFile(path.join(__dirname, 'code-lab', 'i
 const sendSummerCampAdsLanding = (res) => res.sendFile(path.join(__dirname, 'summer-camp-ads.html'));
 const summerInquiryFile = path.join(__dirname, 'code-lab', 'data', 'summer-inquiries.json');
 const summerInquiryDir = path.dirname(summerInquiryFile);
+const activeVisitorWindowMs = 2 * 60 * 1000;
 const summerAdminUser = process.env.SUMMER_LEADS_ADMIN_USER || 'admin';
 const summerAdminPassword = process.env.SUMMER_LEADS_ADMIN_PASSWORD || 'change-me';
 const platformDataDir = process.env.DATA_DIR || path.join(__dirname, 'data');
+const summerTrafficFile = path.join(platformDataDir, 'summer-traffic.json');
+const summerTrafficDir = path.dirname(summerTrafficFile);
 const parentInquiryFile = path.join(platformDataDir, 'parent-inquiries.json');
 const parentInquiryDir = path.dirname(parentInquiryFile);
 const parentAdminUser = process.env.PARENT_LEADS_ADMIN_USER || 'admin';
@@ -88,6 +91,28 @@ async function readParentInquiries() {
 	}
 }
 
+async function readSummerTraffic() {
+	try {
+		const raw = await fs.readFile(summerTrafficFile, 'utf8');
+		const parsed = JSON.parse(raw);
+		return {
+			totalVisits: Number.isFinite(parsed.totalVisits) ? parsed.totalVisits : 0,
+			totalPageViews: Number.isFinite(parsed.totalPageViews) ? parsed.totalPageViews : 0,
+			sessions: parsed.sessions && typeof parsed.sessions === 'object' ? parsed.sessions : {}
+		};
+	} catch (readErr) {
+		if (readErr.code === 'ENOENT') {
+			return { totalVisits: 0, totalPageViews: 0, sessions: {} };
+		}
+		throw readErr;
+	}
+}
+
+async function writeSummerTraffic(data) {
+	await fs.mkdir(summerTrafficDir, { recursive: true });
+	await fs.writeFile(summerTrafficFile, JSON.stringify(data, null, 2));
+}
+
 function toCsvValue(value) {
 	const normalized = value == null ? '' : String(value);
 	return `"${normalized.replace(/"/g, '""')}"`;
@@ -105,6 +130,78 @@ function normalizePhoneForMeta(phone) {
 	return phone.replace(/[^\d]/g, '');
 }
 
+function normalizeRegistrationEmail(email) {
+	return cleanMetaString(email, 200).toLowerCase();
+}
+
+function normalizeRegistrationPhone(phone) {
+	return cleanMetaString(phone, 60).replace(/[^\d]/g, '');
+}
+
+function buildSummerRegistrationLookup(paymentRecords) {
+	const lookup = {
+		byEmail: new Map(),
+		byPhone: new Map(),
+		totalRegistrations: 0,
+		totalRevenueCents: 0
+	};
+
+	const summerPayments = Array.isArray(paymentRecords)
+		? paymentRecords.filter((record) => record && record.productType === 'camp')
+		: [];
+
+	for (const record of summerPayments) {
+		lookup.totalRegistrations += 1;
+		lookup.totalRevenueCents += Number.isFinite(record.amountPaid) ? record.amountPaid : 0;
+
+		const emailKey = normalizeRegistrationEmail(record.email || '');
+		const phoneKey = normalizeRegistrationPhone(record.phone || '');
+
+		if (emailKey && !lookup.byEmail.has(emailKey)) {
+			lookup.byEmail.set(emailKey, record);
+		}
+		if (phoneKey && !lookup.byPhone.has(phoneKey)) {
+			lookup.byPhone.set(phoneKey, record);
+		}
+	}
+
+	return lookup;
+}
+
+function enrichSummerInquiriesWithRegistrations(inquiries, paymentRecords) {
+	const lookup = buildSummerRegistrationLookup(paymentRecords);
+	const sourceInquiries = Array.isArray(inquiries) ? inquiries : [];
+	const enriched = sourceInquiries.map((lead) => {
+		const emailKey = normalizeRegistrationEmail(lead.email || '');
+		const phoneKey = normalizeRegistrationPhone(lead.phone || '');
+		const registration = (emailKey && lookup.byEmail.get(emailKey)) || (phoneKey && lookup.byPhone.get(phoneKey)) || null;
+
+		if (!registration) {
+			return { ...lead, registrationStatus: 'Lead only' };
+		}
+
+		return {
+			...lead,
+			registrationStatus: 'Registered',
+			registeredAt: registration.timestamp || '',
+			registrationAmountPaid: registration.amountPaid || 0,
+			registrationWeeks: Array.isArray(registration.weeks) ? registration.weeks : [],
+			stripeSessionId: registration.stripeSessionId || ''
+		};
+	});
+
+	const convertedLeads = enriched.filter((lead) => lead.registrationStatus === 'Registered').length;
+	return {
+		records: enriched,
+		stats: {
+			totalRegistrations: lookup.totalRegistrations,
+			convertedLeads,
+			totalRevenueCents: lookup.totalRevenueCents,
+			leadConversionRate: sourceInquiries.length ? Number(((convertedLeads / sourceInquiries.length) * 100).toFixed(1)) : 0
+		}
+	};
+}
+
 function getClientIp(req) {
 	const forwardedFor = req.headers['x-forwarded-for'];
 	if (typeof forwardedFor === 'string' && forwardedFor.trim()) {
@@ -116,6 +213,42 @@ function getClientIp(req) {
 function cleanMetaString(value, maxLength = 500) {
 	if (typeof value !== 'string') return '';
 	return value.trim().slice(0, maxLength);
+}
+
+function cleanVisitorSessionId(value) {
+	return cleanMetaString(value, 120).replace(/[^a-zA-Z0-9_.:-]/g, '');
+}
+
+function buildSummerTrafficStats(data) {
+	const now = Date.now();
+	const cutoff = now - activeVisitorWindowMs;
+	const sessions = Object.values(data.sessions || {});
+	const activeSessions = sessions.filter((session) => {
+		const lastSeen = new Date(session.lastSeen).getTime();
+		return Number.isFinite(lastSeen) && lastSeen >= cutoff;
+	});
+	const recentVisitors = sessions
+		.slice()
+		.sort((a, b) => (new Date(b.lastSeen).getTime() || 0) - (new Date(a.lastSeen).getTime() || 0))
+		.slice(0, 8)
+		.map((session) => {
+			const lastSeen = new Date(session.lastSeen).getTime();
+			return {
+				firstSeen: session.firstSeen || '',
+				lastSeen: session.lastSeen || '',
+				pageViews: Number.isFinite(session.pageViews) ? session.pageViews : 0,
+				referrer: session.referrer || '',
+				isActive: Number.isFinite(lastSeen) && lastSeen >= cutoff
+			};
+		});
+
+	return {
+		activeVisitors: activeSessions.length,
+		totalVisitors: Number.isFinite(data.totalVisits) ? data.totalVisits : sessions.length,
+		totalPageViews: Number.isFinite(data.totalPageViews) ? data.totalPageViews : 0,
+		activeWindowSeconds: Math.round(activeVisitorWindowMs / 1000),
+		recentVisitors
+	};
 }
 
 async function sendMetaLeadEvent(req, inquiryRecord, meta = {}) {
@@ -382,10 +515,78 @@ app.get('/summer-leads-admin', requireSummerAdmin, (req, res) => {
 	res.sendFile(path.join(__dirname, 'summer-leads-admin.html'));
 });
 
+app.post('/api/summer-traffic/heartbeat', async (req, res) => {
+	const {
+		sessionId = '',
+		eventType = 'heartbeat',
+		pageUrl = '',
+		referrer = ''
+	} = req.body || {};
+
+	const normalizedSessionId = cleanVisitorSessionId(sessionId);
+	if (!normalizedSessionId) {
+		return res.status(400).json({ success: false, message: 'Missing visitor session' });
+	}
+
+	const nowIso = new Date().toISOString();
+	const isPageView = eventType === 'pageview';
+
+	try {
+		const data = await readSummerTraffic();
+		const existingSession = data.sessions[normalizedSessionId];
+		const session = existingSession || {
+			id: normalizedSessionId,
+			firstSeen: nowIso,
+			lastSeen: nowIso,
+			pageViews: 0,
+			referrer: cleanMetaString(referrer, 500),
+			firstUrl: cleanMetaString(pageUrl, 1000)
+		};
+
+		if (!existingSession) {
+			data.totalVisits += 1;
+		}
+
+		session.lastSeen = nowIso;
+		session.lastUrl = cleanMetaString(pageUrl, 1000);
+		if (isPageView) {
+			session.pageViews = (Number.isFinite(session.pageViews) ? session.pageViews : 0) + 1;
+			data.totalPageViews += 1;
+		}
+		data.sessions[normalizedSessionId] = session;
+
+		await writeSummerTraffic(data);
+		return res.status(200).json({ success: true, stats: buildSummerTrafficStats(data) });
+	} catch (err) {
+		console.error('Summer traffic heartbeat error:', err);
+		return res.status(500).json({ success: false, message: 'Server error tracking visit' });
+	}
+});
+
+app.get('/api/summer-traffic/stats', requireSummerAdmin, async (req, res) => {
+	try {
+		const data = await readSummerTraffic();
+		return res.json({ success: true, stats: buildSummerTrafficStats(data) });
+	} catch (err) {
+		console.error('Summer traffic stats error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading traffic stats' });
+	}
+});
+
 app.get('/api/summer-inquiry/list', requireSummerAdmin, async (req, res) => {
 	try {
 		const inquiries = await readSummerInquiries();
-		return res.json({ success: true, count: inquiries.length, data: inquiries });
+		const paymentRecords = await payments.readPayments().catch((err) => {
+			console.warn('Summer registration lookup unavailable:', err.message);
+			return [];
+		});
+		const conversion = enrichSummerInquiriesWithRegistrations(inquiries, paymentRecords);
+		return res.json({
+			success: true,
+			count: conversion.records.length,
+			data: conversion.records,
+			conversionStats: conversion.stats
+		});
 	} catch (err) {
 		console.error('Summer inquiry list error:', err);
 		return res.status(500).json({ success: false, message: 'Server error loading inquiries' });
@@ -397,15 +598,33 @@ app.get('/api/summer-inquiry/export', requireSummerAdmin, async (req, res) => {
 
 	try {
 		const inquiries = await readSummerInquiries();
+		const paymentRecords = await payments.readPayments().catch((err) => {
+			console.warn('Summer registration export lookup unavailable:', err.message);
+			return [];
+		});
+		const conversion = enrichSummerInquiriesWithRegistrations(inquiries, paymentRecords);
+		const exportRecords = conversion.records;
 
 		if (format === 'json') {
 			res.setHeader('Content-Type', 'application/json; charset=utf-8');
 			res.setHeader('Content-Disposition', 'attachment; filename="summer-inquiries.json"');
-			return res.status(200).send(JSON.stringify(inquiries, null, 2));
+			return res.status(200).send(JSON.stringify(exportRecords, null, 2));
 		}
 
-		const headers = ['id', 'submittedAt', 'parentName', 'childName', 'childGrade', 'email', 'phone', 'childAge', 'programInterest', 'preferredWeek', 'promoCode', 'freeTrialInterest', 'notes'];
-		const rows = inquiries.map((record) => headers.map((key) => toCsvValue(record[key] ?? '')).join(','));
+		const headers = [
+			'id', 'submittedAt', 'parentName', 'childName', 'childGrade', 'email', 'phone', 'childAge',
+			'programInterest', 'preferredWeek', 'promoCode', 'freeTrialInterest', 'registrationStatus',
+			'registeredAt', 'registrationAmountPaid_usd', 'registrationWeeks', 'stripeSessionId', 'notes'
+		];
+		const rows = exportRecords.map((record) => headers.map((key) => {
+			if (key === 'registrationAmountPaid_usd') {
+				return toCsvValue(((record.registrationAmountPaid || 0) / 100).toFixed(2));
+			}
+			if (key === 'registrationWeeks') {
+				return toCsvValue((record.registrationWeeks || []).map((week) => week.label || week.id || '').join(' | '));
+			}
+			return toCsvValue(record[key] ?? '');
+		}).join(','));
 		const csvContent = [headers.join(','), ...rows].join('\n');
 
 		res.setHeader('Content-Type', 'text/csv; charset=utf-8');
