@@ -1165,9 +1165,9 @@
     <section class="conversion-hero" id="reserve" aria-labelledby="hero-title">
       <div class="container">
         <div class="conversion-hero-inner">
-          <div class="hero-offer">Free Trial Class + $50 Off Summer Camp</div>
-          <h1 id="hero-title">Reserve a STEM Camp Spot and Ask About a Free Trial</h1>
-          <p class="lead">Hands-on robotics, coding, 3D printing, Tinkercad, and engineering design for K-8 students in Queens / Flushing.</p>
+          <div class="hero-offer">Free Trial STEM Class + $50 Off Summer Camp</div>
+          <h1 id="hero-title">Claim Your Child's Free Trial STEM Class</h1>
+          <p class="lead">Hands-on robotics, coding, 3D printing, and engineering design for K-8 students in Flushing, Queens. Try a class for free — no commitment required.</p>
           <form class="quick-lead-form" id="summer-inquiry-form">
             <div class="quick-form-grid">
               <div class="field">
@@ -1180,9 +1180,10 @@
               </div>
             </div>
             <input type="hidden" name="promoCode" value="COACH" />
-            <input type="hidden" name="freeTrialInterest" value="Ask during follow-up" />
-            <button class="btn btn-primary" id="summer-inquiry-submit" type="submit">Reserve My Spot</button>
-            <p class="urgency-line">Limited seats remaining. Early bird pricing ends June 15.</p>
+            <input type="hidden" name="freeTrialInterest" value="Free trial requested from summer landing page" />
+            <button class="btn btn-primary" id="summer-inquiry-submit" type="submit">Claim Free Trial Class</button>
+            <p class="urgency-line">Free trial classes are available for new families.</p>
+            <p class="urgency-line">We'll text or email available trial times. No payment required.</p>
             <div class="form-status" id="summer-inquiry-status" role="status" aria-live="polite"></div>
           </form>
         </div>
@@ -1199,7 +1200,7 @@
     <section class="offer-banner-section" aria-label="Summer camp offer">
       <div class="container">
         <div class="single-offer-banner">
-          Early Bird $500/week · Use code COACH for an extra $50 off · Free trial class available before committing
+          Early bird pricing ends June 15 · $500/week · Use code COACH for an extra $50 off
         </div>
       </div>
     </section>
@@ -1211,7 +1212,7 @@
             <p class="eyebrow">Camp in Action</p>
             <h2 id="camp-gallery-title">Photos of Real AI Future Students</h2>
           </div>
-          <p class="lead">Parents should be able to see the energy of the program: students building, testing, coding, collaborating, and proudly showing what they made.</p>
+          <p class="lead">Every photo is from a real AI Future class. See the builds, the focus, and the energy firsthand.</p>
         </div>
         <div class="camp-gallery-grid">
           <figure class="camp-shot large reveal">
@@ -1373,7 +1374,7 @@
           <p class="lead">A clear, parent-friendly program for students who want to build, code, design, and create during the summer.</p>
           <p class="details-note"><i class="fa-solid fa-circle-info"></i>Families can request a preferred week in the form. Our team will confirm availability, exact schedule, and the best group for your child's age and experience.</p>
           <div class="detail-list">
-            <div class="detail-row"><span>Location</span><strong>AI Future, Queens / Flushing, NY</strong></div>
+            <div class="detail-row"><span>Location</span><strong>AI Future, 132-36 Avery Ave, Flushing, NY</strong></div>
             <div class="detail-row"><span>Dates</span><strong>Weekly Summer 2026 sessions</strong></div>
             <div class="detail-row"><span>Times</span><strong>Full-day camp schedule</strong></div>
             <div class="detail-row"><span>Ages / Grades</span><strong>Kindergarten through 8th Grade</strong></div>
@@ -1383,7 +1384,7 @@
             <div class="detail-row"><span>Activities</span><strong>Robotics, coding, 3D printing, Tinkercad, engineering design</strong></div>
             <div class="detail-row"><span>Registration</span><strong>Limited seats available by week and grade group</strong></div>
           </div>
-          <a class="btn btn-primary" href="#reserve">Reserve My Spot</a>
+          <a class="btn btn-primary" href="#reserve">Claim Free Trial Class</a>
         </div>
         <aside class="details-card reveal">
           <h3>Best for families looking for:</h3>
@@ -1426,10 +1427,10 @@
         <div>
           <p class="eyebrow" style="color:var(--yellow)">Limited Seats</p>
           <h2>Give Your Child a Summer Full of Building, Coding &amp; Creativity</h2>
-          <p class="lead">Seats are limited. Reserve your spot now and use code COACH for $50 off while this limited-time promotion is available.</p>
+          <p class="lead">Seats are limited. Claim a free trial class and use code COACH for $50 off while this limited-time summer camp promotion is available.</p>
         </div>
         <div class="btn-row">
-          <a class="btn btn-primary" href="#reserve">Reserve My Spot</a>
+          <a class="btn btn-primary" href="#reserve">Claim Free Trial Class</a>
         </div>
       </div>
     </section>
@@ -1553,7 +1554,7 @@
           phone: usesEmail ? '' : contact,
           email: usesEmail ? contact : '',
           promoCode: data.promoCode || 'COACH',
-          freeTrialInterest: data.freeTrialInterest || 'Ask during follow-up',
+          freeTrialInterest: data.freeTrialInterest || 'Free trial requested from summer landing page',
           metaEventId,
           metaFbp: decodeCookieValue(getCookie('_fbp')),
           metaFbc: getMetaFbc(),
@@ -1583,7 +1584,7 @@
               content_category: 'summer_camp'
             }, { eventID: metaEventId });
           }
-          status.textContent = 'Thanks. We received your request and will contact you with camp details soon.';
+          status.textContent = 'Thanks. We received your free trial request and will contact you with available times and camp details soon.';
           status.classList.add('success');
           form.reset();
         } catch (error) {
@@ -1591,7 +1592,7 @@
           status.classList.add('error');
         } finally {
           submit.disabled = false;
-          submit.textContent = 'Reserve My Spot';
+          submit.textContent = 'Claim Free Trial Class';
         }
       });
     });
