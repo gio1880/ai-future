@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Summer Camp Hub | AI Future</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#0b2a4a" />
+  <link rel="icon" href="/ai%20future%20logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="image" href="/robotics%20lab/Summer%20Camp/2026-summer-camp/assets/hero.jpg" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* AI Future brand palette (see index.html) */
+      --sun: #f97316;
+      --sun-deep: #0b2a4a;
+      --sun-light: #fff4e8;
+      --sun-mid: #fdd9b5;
+      --gold: #fece00;
+      --sky: #1767b4;
+      --sky-light: #e3effd;
+      --grass: #16a34a;
+      --grass-light: #e7f7ec;
+      --purple: #7c51d4;
+      --purple-light: #f0ebfd;
+      --ink: #10233f;
+      --muted: #5f6c80;
+      --line: #dce5ef;
+      --bg: #f7f8fa;
+      --white: #ffffff;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 20px rgba(11, 42, 74, 0.08);
+      --shadow-hover: 0 8px 32px rgba(11, 42, 74, 0.16);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255,255,255,0.94);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 11px; }
+
+    .brand img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      padding: 4px;
+      background: white;
+    }
+
+    .brand-text strong { display: block; font-size: 15px; font-weight: 800; }
+    .brand-text span { display: block; font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+
+    .chip {
+      padding: 6px 12px;
+      border-radius: 50px;
+      border: 1.5px solid var(--line);
+      font-size: 13px;
+      font-weight: 700;
+      background: white;
+      color: var(--muted);
+    }
+
+    .chip.sun { background: var(--sun-light); border-color: var(--sun-mid); color: var(--sun-deep); }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      border: 0;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      background: var(--ink);
+      color: white;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.82; }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    .hero-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      background:
+        linear-gradient(140deg, rgba(7, 20, 38, 0.92) 0%, rgba(23, 103, 180, 0.72) 100%),
+        url("/robotics%20lab/Summer%20Camp/2026-summer-camp/assets/hero.jpg") center / cover;
+      color: white;
+      padding: clamp(28px, 5vw, 52px);
+      margin-bottom: 28px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.72);
+      margin-bottom: 10px;
+    }
+
+    .hero-title {
+      font-size: clamp(36px, 7.5vw, 64px);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title em { font-style: normal; color: var(--gold); }
+
+    .hero-sub {
+      font-size: 16px;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.88);
+      margin-top: 14px;
+      max-width: 540px;
+    }
+
+    .hero-date-badge {
+      background: rgba(255,255,255,0.18);
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-radius: var(--radius-sm);
+      padding: 18px 22px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .hero-date-badge .date-label {
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 6px;
+    }
+
+    .hero-date-badge .date-val { font-size: 18px; font-weight: 900; }
+
+    .focus-banner {
+      background: #fff7d6;
+      border: 2px solid #f5d96e;
+      border-radius: var(--radius);
+      padding: 22px 26px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .focus-icon { font-size: 36px; line-height: 1; flex-shrink: 0; margin-top: 2px; }
+
+    .focus-body strong {
+      display: block;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #8a6a00;
+      margin-bottom: 4px;
+    }
+
+    .focus-body h2 { font-size: 20px; font-weight: 900; color: #5a4400; margin-bottom: 6px; }
+    .focus-body p { font-size: 15px; color: #6b5200; line-height: 1.6; }
+
+    .focus-build-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: white;
+      border: 1.5px solid #f0dc8e;
+      border-radius: 50px;
+      padding: 5px 13px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #8a6a00;
+      margin-top: 10px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 900;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-sub { font-size: 14px; color: var(--muted); margin-bottom: 18px; }
+
+    .progress-card {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+
+    .progress-card .big-num {
+      font-size: 38px;
+      font-weight: 900;
+      color: var(--sun-deep);
+      line-height: 1;
+    }
+
+    .progress-card .label { font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+
+    .progress-track {
+      flex: 1;
+      min-width: 200px;
+      height: 12px;
+      background: var(--sun-light);
+      border-radius: 50px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 50px;
+      background: linear-gradient(90deg, var(--gold), var(--sun));
+      transition: width 0.5s ease;
+    }
+
+    .week-card {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .week-card.is-current { border-color: var(--sun); box-shadow: var(--shadow-hover); }
+
+    .week-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px 22px;
+      cursor: pointer;
+      user-select: none;
+      flex-wrap: wrap;
+    }
+
+    .week-card.is-current .week-head {
+      background: linear-gradient(135deg, var(--sun-light), white);
+    }
+
+    .week-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .week-num {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--sun-light);
+      color: var(--sun-deep);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .week-card.is-current .week-num { background: var(--sun); color: white; }
+    .week-card.is-past .week-num { background: var(--grass-light); color: var(--grass); }
+
+    .week-title { font-size: 17px; font-weight: 900; }
+    .week-dates { font-size: 12.5px; color: var(--muted); font-weight: 700; margin-top: 2px; }
+
+    .week-badge {
+      padding: 5px 12px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .week-badge.now { background: var(--sun); color: white; }
+    .week-badge.done { background: var(--grass-light); color: var(--grass); }
+    .week-badge.soon { background: var(--sky-light); color: var(--sky); }
+
+    .week-toggle {
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--sun-deep);
+      margin-left: auto;
+    }
+
+    .week-body { display: none; border-top: 1px solid var(--line); }
+    .week-card.open .week-body { display: block; }
+
+    .week-goal {
+      padding: 12px 22px;
+      background: var(--bg);
+      font-size: 13.5px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .day-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .day-row:last-child { border-bottom: 0; }
+    .day-row.is-today { background: var(--sun-light); }
+    .day-row.is-past { opacity: 0.6; }
+
+    .day-date {
+      flex-shrink: 0;
+      width: 76px;
+      text-align: center;
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 8px 6px;
+    }
+
+    .day-row.is-today .day-date { border-color: var(--sun); }
+
+    .day-date .dow {
+      font-size: 10.5px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    .day-date .dom { font-size: 19px; font-weight: 900; margin-top: 1px; }
+
+    .day-info { flex: 1; min-width: 0; }
+
+    .day-activity { font-size: 14px; line-height: 1.55; }
+    .day-activity.empty { color: var(--muted); font-style: italic; }
+
+    .day-build {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      background: var(--sky-light);
+      color: var(--sky);
+      border-radius: 50px;
+      padding: 4px 11px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .today-tag {
+      display: inline-block;
+      background: var(--sun);
+      color: white;
+      border-radius: 50px;
+      padding: 2px 9px;
+      font-size: 10.5px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    .resource-category { margin-bottom: 26px; }
+
+    .cat-label {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1.5px solid var(--line);
+    }
+
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .resource-card {
+      background: white;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--line);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.18s, transform 0.18s;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .resource-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+
+    .resource-name { font-size: 15px; font-weight: 800; line-height: 1.35; }
+
+    .resource-type-badge {
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 9px;
+      border-radius: 50px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .type-Website { background: var(--sky-light); color: var(--sky); }
+    .type-Video   { background: #fdeee9; color: #e8583a; }
+    .type-Reading { background: var(--grass-light); color: var(--grass); }
+    .type-Folder  { background: var(--purple-light); color: var(--purple); }
+
+    .resource-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .resource-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+    .resource-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--sun-deep);
+      margin-top: auto;
+    }
+
+    .announce-list { display: grid; gap: 14px; }
+
+    .announce-card {
+      background: white;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--line);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .announce-card.coach-only { border-left: 4px solid var(--sun); }
+
+    .announce-date {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 5px;
+    }
+
+    .announce-title { font-size: 16px; font-weight: 900; margin-bottom: 6px; }
+    .announce-body { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    .main-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) 330px;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .loading-state {
+      min-height: 60vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .loading-spinner {
+      font-size: 48px;
+      animation: spin 1.5s linear infinite;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text { font-size: 16px; font-weight: 700; color: var(--muted); }
+
+    @media (max-width: 900px) {
+      .main-layout { grid-template-columns: 1fr; }
+      .hero-card { grid-template-columns: 1fr; }
+      .hero-date-badge { align-self: flex-start; }
+    }
+
+    @media (max-width: 580px) {
+      .page { padding-inline: 14px; }
+      .hero-card { padding: 24px 20px; }
+      .day-row { flex-direction: column; gap: 10px; }
+      .day-date { width: 100%; display: flex; gap: 10px; align-items: baseline; justify-content: center; }
+    }
+
+    /* Touch devices (iPad/phone): comfortable tap targets, no tap flash or hover-only effects */
+    @media (pointer: coarse) {
+      body { -webkit-tap-highlight-color: transparent; }
+      .btn, .chip { min-height: 44px; display: inline-flex; align-items: center; }
+      .week-head { padding: 20px 22px; }
+      .resource-link { padding: 8px 0; }
+      .resource-card:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <img src="/ai%20future%20logo.png" alt="AI Future" />
+        <div class="brand-text">
+          <strong>Summer Camp Hub</strong>
+          <span id="userLine">Loading…</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="chip sun" id="rolePill">Camper</span>
+        <button class="btn" id="logoutButton">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page" id="app">
+    <div class="loading-state">
+      <span class="loading-spinner">☀️</span>
+      <p class="loading-text">Loading your camp hub…</p>
+    </div>
+  </main>
+
+  <script>
+    const app = document.getElementById('app');
+    const userLine = document.getElementById('userLine');
+    const rolePill = document.getElementById('rolePill');
+    const logoutButton = document.getElementById('logoutButton');
+
+    function esc(v) {
+      return String(v == null ? '' : v)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function parseDate(value) {
+      if (!value) return null;
+      const date = new Date(`${value}T12:00:00`);
+      return Number.isNaN(date.getTime()) ? null : date;
+    }
+
+    function todayKey() {
+      const now = new Date();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      return `${now.getFullYear()}-${m}-${d}`;
+    }
+
+    function fmt(value, opts) {
+      const date = parseDate(value);
+      return date ? date.toLocaleDateString(undefined, opts) : '';
+    }
+
+    function allDays(curriculum) {
+      return curriculum.flatMap(week => Array.isArray(week.days) ? week.days : []);
+    }
+
+    function findFocusDay(curriculum) {
+      const days = allDays(curriculum).filter(d => d.date).sort((a, b) => a.date.localeCompare(b.date));
+      const today = todayKey();
+      const exact = days.find(d => d.date === today);
+      if (exact) return { day: exact, isToday: true };
+      const next = days.find(d => d.date > today);
+      if (next) return { day: next, isToday: false };
+      return null;
+    }
+
+    function renderHero(camp) {
+      const start = fmt(camp.startDate, { month: 'short', day: 'numeric' });
+      const end = fmt(camp.endDate, { month: 'short', day: 'numeric' });
+      return `
+        <div class="hero-card">
+          <div>
+            <div class="hero-eyebrow">${esc(camp.year)} · ${esc(camp.scheduleNote || '')}</div>
+            <div class="hero-title">Summer <em>Camp</em></div>
+            <p class="hero-sub">${esc(camp.themeSummary || '')}</p>
+          </div>
+          <div class="hero-date-badge">
+            <div class="date-label">Camp runs</div>
+            <div class="date-val">${esc(start)} – ${esc(end)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFocus(curriculum) {
+      const focus = findFocusDay(curriculum);
+      if (!focus) {
+        return `
+          <div class="focus-banner">
+            <div class="focus-icon">🎉</div>
+            <div class="focus-body">
+              <strong>That's a wrap</strong>
+              <h2>Camp is complete — amazing work this summer!</h2>
+              <p>Check announcements for next steps and fall program info.</p>
+            </div>
+          </div>
+        `;
+      }
+      const { day, isToday } = focus;
+      const dateLabel = fmt(day.date, { weekday: 'long', month: 'long', day: 'numeric' });
+      const activity = day.activity || 'Your coach will post today’s plan soon — check back!';
+      return `
+        <div class="focus-banner">
+          <div class="focus-icon">${isToday ? '🎯' : '⏭️'}</div>
+          <div class="focus-body">
+            <strong>${isToday ? 'Today at camp' : 'Next camp day'} · ${esc(dateLabel)}</strong>
+            <h2>${isToday ? 'Here’s the plan for today' : 'Get ready for what’s next'}</h2>
+            <p>${esc(activity)}</p>
+            ${day.build ? `<span class="focus-build-tag">🔧 Build: ${esc(day.build)}</span>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderProgress(curriculum) {
+      const days = allDays(curriculum).filter(d => d.date);
+      const today = todayKey();
+      const done = days.filter(d => d.date < today).length;
+      const total = days.length;
+      const pct = total ? Math.round((done / total) * 100) : 0;
+      return `
+        <div class="progress-card">
+          <div>
+            <div class="big-num">${done}<span style="font-size:20px;color:var(--muted)"> / ${total}</span></div>
+            <div class="label">Camp days completed</div>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <div style="font-weight:900;font-size:16px;color:var(--sun-deep)">${pct}%</div>
+        </div>
+      `;
+    }
+
+    function weekStatus(week) {
+      const dates = (week.days || []).map(d => d.date).filter(Boolean).sort();
+      if (!dates.length) return 'soon';
+      const today = todayKey();
+      if (today > dates[dates.length - 1]) return 'done';
+      if (today >= dates[0]) return 'now';
+      return 'soon';
+    }
+
+    function renderWeek(week, index) {
+      const status = weekStatus(week);
+      const today = todayKey();
+      const dates = (week.days || []).map(d => d.date).filter(Boolean).sort();
+      const range = dates.length
+        ? `${fmt(dates[0], { month: 'short', day: 'numeric' })} – ${fmt(dates[dates.length - 1], { month: 'short', day: 'numeric' })}`
+        : 'Dates TBD';
+      const badge = status === 'now'
+        ? '<span class="week-badge now">This week</span>'
+        : status === 'done'
+          ? '<span class="week-badge done">Done ✓</span>'
+          : '<span class="week-badge soon">Coming up</span>';
+
+      const dayRows = (week.days || []).map(day => {
+        const isToday = day.date === today;
+        const isPast = day.date < today;
+        return `
+          <div class="day-row ${isToday ? 'is-today' : ''} ${isPast ? 'is-past' : ''}">
+            <div class="day-date">
+              <div class="dow">${esc(fmt(day.date, { weekday: 'short' }))}</div>
+              <div class="dom">${esc(fmt(day.date, { month: 'numeric', day: 'numeric' }))}</div>
+            </div>
+            <div class="day-info">
+              ${isToday ? '<span class="today-tag">Today</span>' : ''}
+              <div class="day-activity ${day.activity ? '' : 'empty'}">${esc(day.activity || 'Plan coming soon — your coach will fill this in.')}</div>
+              ${day.build ? `<span class="day-build">🔧 ${esc(day.build)}</span>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="week-card ${status === 'now' ? 'is-current open' : ''} ${status === 'done' ? 'is-past' : ''}" id="week-${esc(week.id)}">
+          <div class="week-head" onclick="toggleWeek('${esc(week.id)}')">
+            <div class="week-label">
+              <div class="week-num">W${index + 1}</div>
+              <div>
+                <div class="week-title">${esc(week.label)}${week.theme ? ` · ${esc(week.theme)}` : ''}</div>
+                <div class="week-dates">${esc(range)}</div>
+              </div>
+            </div>
+            ${badge}
+            <span class="week-toggle">+</span>
+          </div>
+          <div class="week-body">
+            ${week.goal ? `<div class="week-goal">🥅 ${esc(week.goal)}</div>` : ''}
+            ${dayRows}
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleWeek(weekId) {
+      const card = document.getElementById('week-' + weekId);
+      if (card) card.classList.toggle('open');
+    }
+
+    function renderResources(resources, user) {
+      const visible = resources.filter(r => !Array.isArray(r.roles) || r.roles.includes(user.role));
+      const grouped = {};
+      visible.forEach(r => {
+        const cat = r.category || 'Other';
+        if (!grouped[cat]) grouped[cat] = [];
+        grouped[cat].push(r);
+      });
+      const icons = { Website: '🌐', Video: '▶️', Reading: '📖', Folder: '📁' };
+      return Object.entries(grouped).map(([cat, items]) => `
+        <div class="resource-category">
+          <div class="cat-label">${esc(cat)}</div>
+          <div class="resource-grid">
+            ${items.map(item => `
+              <div class="resource-card">
+                <div class="resource-card-top">
+                  <div class="resource-name">${icons[item.type] || '🔗'} ${esc(item.label)}</div>
+                  <span class="resource-type-badge type-${esc(item.type)}">${esc(item.type)}</span>
+                </div>
+                <p class="resource-desc">${esc(item.description)}</p>
+                <a class="resource-link" href="${esc(item.url)}" target="_blank" rel="noreferrer">Open resource →</a>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderAnnouncements(announcements, user) {
+      const visible = announcements.filter(a => a.audience === 'all' || a.audience === user.role);
+      if (!visible.length) return '<p style="color:var(--muted);font-size:14px">No announcements yet — check back soon!</p>';
+      return visible.map(a => `
+        <div class="announce-card ${a.audience === 'coach' ? 'coach-only' : ''}">
+          ${a.date ? `<div class="announce-date">${esc(a.date)}</div>` : ''}
+          <div class="announce-title">${esc(a.title)}</div>
+          <p class="announce-body">${esc(a.body)}</p>
+        </div>
+      `).join('');
+    }
+
+    function renderDashboard(data) {
+      const { user, camp, curriculum, announcements, resources } = data;
+      const isCoach = user.role === 'coach';
+      userLine.textContent = `${user.name} · ${isCoach ? 'Coach preview' : 'Camper'}`;
+      rolePill.textContent = isCoach ? 'Coach' : 'Camper';
+
+      app.innerHTML = `
+        ${renderHero(camp)}
+        ${renderFocus(curriculum)}
+        ${renderProgress(curriculum)}
+
+        <div class="main-layout">
+          <div>
+            <div class="section-title">🗓️ Weekly Schedule</div>
+            <p class="section-sub">Tap a week to see each day's plan and build. Today is always highlighted.</p>
+            ${curriculum.map((week, i) => renderWeek(week, i)).join('')}
+
+            <div style="margin-top:36px">
+              <div class="section-title">📚 Resources</div>
+              <p class="section-sub">Everything you need for camp — apps, lessons, and project research.</p>
+              ${renderResources(resources, user)}
+            </div>
+          </div>
+
+          <aside>
+            <div class="section-title">📢 Announcements</div>
+            <p class="section-sub">Latest updates from your coaches.</p>
+            <div class="announce-list">
+              ${renderAnnouncements(announcements, user)}
+            </div>
+            ${isCoach ? `
+              <div style="margin-top:24px">
+                <a class="btn" style="display:block;text-align:center;padding:14px" href="/camp-hub/coach">Open Coach Dashboard →</a>
+              </div>
+            ` : ''}
+          </aside>
+        </div>
+      `;
+    }
+
+    async function loadHub() {
+      try {
+        const response = await fetch('/api/camp/hub-data');
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Login required');
+        renderDashboard(result.data);
+      } catch (err) {
+        window.location.href = '/camp-hub/login';
+      }
+    }
+
+    logoutButton.addEventListener('click', async () => {
+      await fetch('/api/camp/logout', { method: 'POST' });
+      window.location.href = '/camp-hub/login';
+    });
+
+    loadHub();
+  </script>
+</body>
+</html>

@@ -723,6 +723,48 @@
       padding-top: 4px;
     }
 
+    .curriculum-more {
+      align-items: center;
+      background: white;
+      border: 1.5px solid var(--line);
+      border-top: 0;
+      border-radius: 0 0 var(--radius) var(--radius);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: space-between;
+      padding: 16px;
+    }
+
+    .curriculum-more p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .curriculum-more-link {
+      background: var(--green);
+      border-radius: var(--radius-sm);
+      color: white;
+      display: inline-flex;
+      font-size: 13px;
+      font-weight: 900;
+      padding: 10px 14px;
+      white-space: nowrap;
+    }
+
+    .curriculum-more-link:hover {
+      background: var(--green-dark);
+    }
+
+    .curriculum-page-top {
+      align-items: center;
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
     .calendar-section {
       margin: 0 0 40px;
     }
@@ -1930,59 +1972,69 @@
       return `${text.slice(0, length - 1).trim()}...`;
     }
 
-    function renderCurriculumOverview(curriculum) {
+    function renderCurriculumOverview(curriculum, options = {}) {
       if (!Array.isArray(curriculum) || !curriculum.length) {
         return '<div class="empty-curriculum">No curriculum assignments have been added yet.</div>';
       }
 
       const areas = curriculum.filter(area => Array.isArray(area.assignments));
       const assignments = getCalendarAssignments(areas);
-      const dates = [...new Set(assignments.map(item => item.dueDate))].sort();
+      const allDates = [...new Set(assignments.map(item => item.dueDate))].sort();
+      const dates = options.untilDate ? allDates.filter(dueDate => dueDate <= options.untilDate) : allDates;
+      const hiddenCount = allDates.length - dates.length;
 
       if (!dates.length) {
         return '<div class="empty-curriculum">No curriculum due dates have been added yet.</div>';
       }
 
       return `
-        <div class="curriculum-table-wrap">
-          <table class="curriculum-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                ${areas.map(area => `<th>${esc(area.label || 'FLL Area')}</th>`).join('')}
-              </tr>
-            </thead>
-            <tbody>
-              ${dates.map(dueDate => `
+        <div>
+          <div class="curriculum-table-wrap">
+            <table class="curriculum-table">
+              <thead>
                 <tr>
-                  <td>
-                    <div class="curriculum-date-cell">
-                      ${esc(formatShortDate(dueDate))}
-                      <span>${esc(new Date(`${dueDate}T12:00:00`).toLocaleDateString(undefined, { weekday: 'long' }))}</span>
-                    </div>
-                  </td>
-                  ${areas.map(area => {
-                    const items = assignments.filter(item => item.dueDate === dueDate && item.areaId === area.id);
-                    return `
-                      <td>
-                        ${items.length ? items.map(item => `
-                          <div class="curriculum-lesson-card">
-                            <div class="curriculum-lesson-title">${esc(item.title)}</div>
-                            ${item.description ? `<div class="curriculum-lesson-desc">${esc(trimText(item.description, 130))}</div>` : ''}
-                            <div class="curriculum-meta">
-                              ${item.workContext ? `<span class="curriculum-chip">${esc(item.workContext)}</span>` : ''}
-                              ${item.type ? `<span class="curriculum-chip">${esc(item.type)}</span>` : ''}
-                              ${item.questionCount ? `<span class="curriculum-chip">${item.questionCount} prompts</span>` : ''}
-                            </div>
-                          </div>
-                        `).join('') : '<div class="curriculum-empty-cell">No lesson</div>'}
-                      </td>
-                    `;
-                  }).join('')}
+                  <th>Date</th>
+                  ${areas.map(area => `<th>${esc(area.label || 'FLL Area')}</th>`).join('')}
                 </tr>
-              `).join('')}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                ${dates.map(dueDate => `
+                  <tr>
+                    <td>
+                      <div class="curriculum-date-cell">
+                        ${esc(formatShortDate(dueDate))}
+                        <span>${esc(new Date(`${dueDate}T12:00:00`).toLocaleDateString(undefined, { weekday: 'long' }))}</span>
+                      </div>
+                    </td>
+                    ${areas.map(area => {
+                      const items = assignments.filter(item => item.dueDate === dueDate && item.areaId === area.id);
+                      return `
+                        <td>
+                          ${items.length ? items.map(item => `
+                            <div class="curriculum-lesson-card">
+                              <div class="curriculum-lesson-title">${esc(item.title)}</div>
+                              ${item.description ? `<div class="curriculum-lesson-desc">${esc(trimText(item.description, 130))}</div>` : ''}
+                              <div class="curriculum-meta">
+                                ${item.workContext ? `<span class="curriculum-chip">${esc(item.workContext)}</span>` : ''}
+                                ${item.type ? `<span class="curriculum-chip">${esc(item.type)}</span>` : ''}
+                                ${item.questionCount ? `<span class="curriculum-chip">${item.questionCount} prompts</span>` : ''}
+                              </div>
+                            </div>
+                          `).join('') : '<div class="curriculum-empty-cell">No lesson</div>'}
+                        </td>
+                      `;
+                    }).join('')}
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+          ${options.showMoreLink && hiddenCount > 0 ? `
+            <div class="curriculum-more">
+              <p>Showing curriculum through September 2026. ${hiddenCount} later date rows continue through March 2027.</p>
+              <a class="curriculum-more-link" href="/fll-hub/curriculum">Show more</a>
+            </div>
+          ` : ''}
         </div>
       `;
     }
@@ -2237,11 +2289,36 @@
       `).join('');
     }
 
+    function renderFullCurriculumPage(data) {
+      const { user, season, timeline, curriculum } = data;
+      const phase = timeline.find(p => p.status === 'current') || timeline[0] || {};
+      userLine.textContent = `${user.name} - Coach curriculum`;
+      rolePill.textContent = 'Coach';
+      app.innerHTML = `
+        <div class="curriculum-page-top">
+          <div>
+            <div class="section-title">Full Curriculum Timeline</div>
+            <p class="section-sub">Complete BIOGLOW plan from pre-season through March 2027.</p>
+          </div>
+          <a class="curriculum-more-link" href="/fll-hub">Back to coach hub</a>
+        </div>
+        ${renderHero(season, phase)}
+        <div class="curriculum-section">
+          ${renderCurriculumOverview(curriculum)}
+        </div>
+      `;
+    }
+
     function renderDashboard(data) {
       const { user, season, teams, timeline, announcements, resources, curriculum } = data;
       const phase = timeline.find(p => p.status === 'current') || timeline[0] || {};
       const isCoach = user.role === 'coach';
       const userId = user.id || user.name;
+
+      if (isCoach && window.location.pathname.replace(/\/$/, '') === '/fll-hub/curriculum') {
+        renderFullCurriculumPage(data);
+        return;
+      }
 
       userLine.textContent = `${user.name} · ${isCoach ? 'Coach view' : 'Student'}`;
       rolePill.textContent = isCoach ? 'Coach' : 'Student';
@@ -2271,8 +2348,8 @@
 
               <div class="curriculum-section">
                 <div class="section-title">Curriculum Timeline Overview</div>
-                <p class="section-sub">Dates run down the left. Each FLL area column shows the lesson or assignment due on that date.</p>
-                ${renderCurriculumOverview(curriculum)}
+                <p class="section-sub">Preview through September. Dates run down the left, and each FLL area column shows the lesson or assignment due on that date.</p>
+                ${renderCurriculumOverview(curriculum, { untilDate: '2026-09-30', showMoreLink: true })}
               </div>
             ` : ''}
 

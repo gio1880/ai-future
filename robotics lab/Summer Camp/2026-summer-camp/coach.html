@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coach Dashboard | Summer Camp Hub</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#0b2a4a" />
+  <link rel="icon" href="/ai%20future%20logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* AI Future brand palette (see index.html) */
+      --sun: #fece00;
+      --sun-deep: #0b2a4a;
+      --sun-light: #fff7d6;
+      --sun-mid: #f5d96e;
+      --sky: #1767b4;
+      --sky-light: #e3effd;
+      --grass: #16a34a;
+      --grass-light: #e7f7ec;
+      --red: #dc2626;
+      --red-light: #fdecec;
+      --ink: #10233f;
+      --muted: #5f6c80;
+      --line: #dce5ef;
+      --bg: #f7f8fa;
+      --white: #ffffff;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 20px rgba(11, 42, 74, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea, select { font: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255,255,255,0.94);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 11px; }
+
+    .brand img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      padding: 4px;
+      background: white;
+    }
+
+    .brand-text strong { display: block; font-size: 15px; font-weight: 800; }
+    .brand-text span { display: block; font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+
+    .chip {
+      padding: 6px 12px;
+      border-radius: 50px;
+      border: 1.5px solid var(--line);
+      font-size: 13px;
+      font-weight: 700;
+      background: white;
+      color: var(--muted);
+    }
+
+    .chip.sun { background: var(--sun-light); border-color: var(--sun-mid); color: var(--sun-deep); }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      border: 0;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      background: var(--ink);
+      color: white;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.82; }
+
+    .btn-primary { background: var(--sun-deep); }
+    .btn-ghost {
+      background: white;
+      color: var(--sun-deep);
+      border: 1.5px solid var(--sun-mid);
+    }
+    .btn-danger { background: var(--red-light); color: var(--red); }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 20px 80px;
+    }
+
+    .page-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .page-title { font-size: 26px; font-weight: 900; }
+    .page-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 26px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 10px 18px;
+      border-radius: 50px;
+      border: 1.5px solid var(--line);
+      background: white;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    .tab-btn.active {
+      background: var(--sun-deep);
+      border-color: var(--sun-deep);
+      color: white;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .section-title { font-size: 19px; font-weight: 900; margin-bottom: 6px; }
+    .section-sub { font-size: 13.5px; color: var(--muted); margin-bottom: 16px; }
+
+    .card {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    /* Schedule editor */
+    .week-block { margin-bottom: 14px; }
+
+    .week-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .week-head:hover { border-color: var(--sun-mid); }
+    .week-head strong { font-size: 15px; }
+    .week-head span { font-size: 12.5px; color: var(--muted); }
+
+    .week-days { display: none; padding-top: 10px; }
+    .week-block.open .week-days { display: grid; gap: 10px; }
+
+    .day-edit {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+    }
+
+    .day-edit.is-today { border-color: var(--sun); background: var(--sun-light); }
+
+    .day-edit-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .day-edit-date { font-weight: 900; font-size: 14px; }
+
+    .day-edit label {
+      display: block;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin: 10px 0 5px;
+    }
+
+    .day-edit textarea, .day-edit input {
+      width: 100%;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-size: 13.5px;
+      background: white;
+      color: var(--ink);
+      outline: none;
+      resize: vertical;
+    }
+
+    .day-edit textarea:focus, .day-edit input:focus { border-color: var(--sun); }
+
+    .day-save-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .save-status {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: var(--grass);
+    }
+
+    /* Announcements */
+    .form-grid { display: grid; gap: 12px; }
+
+    .form-grid label {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-grid input, .form-grid textarea, .form-grid select {
+      width: 100%;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-size: 14px;
+      outline: none;
+      background: white;
+      color: var(--ink);
+    }
+
+    .form-grid input:focus, .form-grid textarea:focus, .form-grid select:focus { border-color: var(--sun); }
+
+    .announce-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin-bottom: 10px;
+    }
+
+    .announce-item.coach-only { border-left: 4px solid var(--sun); }
+
+    .announce-item h4 { font-size: 15px; font-weight: 900; margin-bottom: 4px; }
+    .announce-item p { font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+
+    .announce-meta {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    /* Campers */
+    .table-wrap { overflow-x: auto; }
+
+    table { border-collapse: collapse; width: 100%; min-width: 560px; }
+
+    th, td {
+      text-align: left;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      font-size: 13.5px;
+    }
+
+    th {
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      background: var(--sun-light);
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 50px;
+      font-size: 11.5px;
+      font-weight: 800;
+    }
+    .pill.on { background: var(--grass-light); color: var(--grass); }
+    .pill.off { background: var(--red-light); color: var(--red); }
+
+    .creds-box {
+      background: var(--grass-light);
+      border: 1.5px solid #bce5c8;
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      margin-top: 12px;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .creds-box code {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-weight: 800;
+    }
+
+    .error-box {
+      background: var(--red-light);
+      border: 1.5px solid #f3c4c4;
+      border-radius: var(--radius-sm);
+      color: var(--red);
+      padding: 12px 14px;
+      font-size: 13.5px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .loading-state {
+      min-height: 60vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .loading-spinner {
+      font-size: 48px;
+      animation: spin 1.5s linear infinite;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text { font-size: 16px; font-weight: 700; color: var(--muted); }
+
+    @media (max-width: 580px) {
+      .page { padding-inline: 14px; }
+    }
+
+    /* Touch devices (iPad/phone): 16px inputs stop iOS focus-zoom; bigger tap targets */
+    @media (pointer: coarse) {
+      body { -webkit-tap-highlight-color: transparent; }
+      .day-edit textarea, .day-edit input,
+      .form-grid input, .form-grid textarea, .form-grid select { font-size: 16px; }
+      .btn { min-height: 44px; }
+      .tab-btn { min-height: 46px; }
+      .week-head { padding: 18px; }
+      th, td { padding: 14px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <img src="/ai%20future%20logo.png" alt="AI Future" />
+        <div class="brand-text">
+          <strong>Coach Dashboard</strong>
+          <span id="userLine">Loading…</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <a class="chip" href="/camp-hub">Camper view</a>
+        <span class="chip sun">Coach</span>
+        <button class="btn" id="logoutButton">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page" id="app">
+    <div class="loading-state">
+      <span class="loading-spinner">☀️</span>
+      <p class="loading-text">Loading the coach dashboard…</p>
+    </div>
+  </main>
+
+  <script>
+    const app = document.getElementById('app');
+    const userLine = document.getElementById('userLine');
+    const logoutButton = document.getElementById('logoutButton');
+
+    let hubData = null;
+    let roster = [];
+
+    function esc(v) {
+      return String(v == null ? '' : v)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function todayKey() {
+      const now = new Date();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      return `${now.getFullYear()}-${m}-${d}`;
+    }
+
+    function fmt(value, opts) {
+      if (!value) return '';
+      const date = new Date(`${value}T12:00:00`);
+      return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString(undefined, opts);
+    }
+
+    async function api(url, options = {}) {
+      const response = await fetch(url, {
+        headers: { 'Content-Type': 'application/json' },
+        ...options
+      });
+      const result = await response.json().catch(() => ({}));
+      if (response.status === 401) {
+        window.location.href = '/camp-hub/login';
+        throw new Error('Login required');
+      }
+      if (!response.ok || result.success === false) {
+        throw new Error(result.message || 'Request failed');
+      }
+      return result;
+    }
+
+    /* ── Schedule tab ── */
+    function renderScheduleTab(curriculum) {
+      const today = todayKey();
+      return `
+        <div class="section-title">Schedule Editor</div>
+        <p class="section-sub">Edit any day's activity, build, or private coach notes — campers see activity and build instantly. Weeks 7–8 have open days ready to fill in.</p>
+        ${curriculum.map(week => {
+          const dates = (week.days || []).map(d => d.date).filter(Boolean).sort();
+          const isCurrent = dates.length && today >= dates[0] && today <= dates[dates.length - 1];
+          return `
+            <div class="week-block ${isCurrent ? 'open' : ''}" id="wk-${esc(week.id)}">
+              <div class="week-head" onclick="document.getElementById('wk-${esc(week.id)}').classList.toggle('open')">
+                <div>
+                  <strong>${esc(week.label)}${week.theme ? ` · ${esc(week.theme)}` : ''}</strong><br/>
+                  <span>${esc(fmt(dates[0], { month: 'short', day: 'numeric' }))} – ${esc(fmt(dates[dates.length - 1], { month: 'short', day: 'numeric' }))}${week.goal ? ` · ${esc(week.goal)}` : ''}</span>
+                </div>
+                <span style="font-weight:900;color:var(--sun-deep)">${isCurrent ? 'This week' : 'Edit'} ▾</span>
+              </div>
+              <div class="week-days">
+                ${(week.days || []).map(day => `
+                  <div class="day-edit ${day.date === today ? 'is-today' : ''}" id="day-${esc(day.id)}">
+                    <div class="day-edit-head">
+                      <span class="day-edit-date">${esc(fmt(day.date, { weekday: 'long', month: 'long', day: 'numeric' }))}${day.date === today ? ' · TODAY' : ''}</span>
+                    </div>
+                    <label>Activity (campers see this)</label>
+                    <textarea rows="2" data-field="activity">${esc(day.activity)}</textarea>
+                    <label>Build (campers see this)</label>
+                    <input data-field="build" value="${esc(day.build)}" />
+                    <label>Coach notes (private — coaches only)</label>
+                    <textarea rows="2" data-field="coachNotes">${esc(day.coachNotes)}</textarea>
+                    <div class="day-save-row">
+                      <button class="btn btn-primary" onclick="saveDay('${esc(day.id)}')">Save day</button>
+                      <span class="save-status" id="status-${esc(day.id)}"></span>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }).join('')}
+      `;
+    }
+
+    async function saveDay(dayId) {
+      const box = document.getElementById('day-' + dayId);
+      const status = document.getElementById('status-' + dayId);
+      if (!box) return;
+      const payload = {};
+      box.querySelectorAll('[data-field]').forEach(el => { payload[el.dataset.field] = el.value; });
+      status.textContent = 'Saving…';
+      status.style.color = 'var(--muted)';
+      try {
+        await api(`/api/camp/coach/days/${encodeURIComponent(dayId)}`, {
+          method: 'PATCH',
+          body: JSON.stringify(payload)
+        });
+        status.textContent = 'Saved ✓';
+        status.style.color = 'var(--grass)';
+        setTimeout(() => { status.textContent = ''; }, 2500);
+      } catch (err) {
+        status.textContent = err.message;
+        status.style.color = 'var(--red)';
+      }
+    }
+
+    /* ── Announcements tab ── */
+    function renderAnnouncementsTab(announcements) {
+      return `
+        <div class="section-title">Announcements</div>
+        <p class="section-sub">Post updates for campers, or coach-only notes for the team. Newest first.</p>
+        <div class="card">
+          <div class="form-grid">
+            <div>
+              <label for="annTitle">Title</label>
+              <input id="annTitle" placeholder="e.g. Bring a water bottle tomorrow!" />
+            </div>
+            <div>
+              <label for="annBody">Message</label>
+              <textarea id="annBody" rows="3" placeholder="What do campers (or coaches) need to know?"></textarea>
+            </div>
+            <div>
+              <label for="annAudience">Audience</label>
+              <select id="annAudience">
+                <option value="all">Everyone</option>
+                <option value="coach">Coaches only</option>
+              </select>
+            </div>
+            <div>
+              <button class="btn btn-primary" onclick="postAnnouncement()">Post announcement</button>
+            </div>
+            <div class="error-box" id="annError"></div>
+          </div>
+        </div>
+        <div id="announceList">
+          ${renderAnnounceItems(announcements)}
+        </div>
+      `;
+    }
+
+    function renderAnnounceItems(announcements) {
+      const sorted = [...announcements].sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+      if (!sorted.length) return '<p style="color:var(--muted);font-size:14px">No announcements yet.</p>';
+      return sorted.map(a => `
+        <div class="announce-item ${a.audience === 'coach' ? 'coach-only' : ''}">
+          <div>
+            <div class="announce-meta">${esc(a.date || '')} · ${a.audience === 'coach' ? 'Coaches only' : 'Everyone'}</div>
+            <h4>${esc(a.title)}</h4>
+            <p>${esc(a.body)}</p>
+          </div>
+          <button class="btn btn-danger" onclick="deleteAnnouncement('${esc(a.id)}')">Delete</button>
+        </div>
+      `).join('');
+    }
+
+    async function postAnnouncement() {
+      const title = document.getElementById('annTitle').value.trim();
+      const body = document.getElementById('annBody').value.trim();
+      const audience = document.getElementById('annAudience').value;
+      const errorBox = document.getElementById('annError');
+      errorBox.style.display = 'none';
+      if (!title || !body) {
+        errorBox.textContent = 'Title and message are both required.';
+        errorBox.style.display = 'block';
+        return;
+      }
+      try {
+        const result = await api('/api/camp/coach/announcements', {
+          method: 'POST',
+          body: JSON.stringify({ title, body, audience })
+        });
+        hubData.announcements = result.announcements;
+        document.getElementById('announceList').innerHTML = renderAnnounceItems(hubData.announcements);
+        document.getElementById('annTitle').value = '';
+        document.getElementById('annBody').value = '';
+      } catch (err) {
+        errorBox.textContent = err.message;
+        errorBox.style.display = 'block';
+      }
+    }
+
+    async function deleteAnnouncement(id) {
+      if (!confirm('Delete this announcement?')) return;
+      try {
+        const result = await api(`/api/camp/coach/announcements/${encodeURIComponent(id)}`, { method: 'DELETE' });
+        hubData.announcements = result.announcements;
+        document.getElementById('announceList').innerHTML = renderAnnounceItems(hubData.announcements);
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    /* ── Campers tab ── */
+    function renderCampersTab() {
+      return `
+        <div class="section-title">Campers</div>
+        <p class="section-sub">Add campers to give them hub logins. Usernames and passwords are generated automatically — write them down when shown, they only appear once.</p>
+        <div class="card">
+          <div class="form-grid">
+            <div>
+              <label for="camperName">Camper name</label>
+              <input id="camperName" placeholder="e.g. Maya Chen" />
+            </div>
+            <div>
+              <button class="btn btn-primary" onclick="addCamper()">Add camper</button>
+            </div>
+            <div class="creds-box" id="credsBox" style="display:none"></div>
+            <div class="error-box" id="camperError"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Name</th><th>Username</th><th>Status</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="rosterBody">
+                ${renderRosterRows()}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderRosterRows() {
+      const students = roster.filter(u => u.role === 'student');
+      if (!students.length) return '<tr><td colspan="4" style="color:var(--muted)">No campers yet — add the first one above.</td></tr>';
+      return students.map(s => `
+        <tr>
+          <td style="font-weight:800">${esc(s.name)}</td>
+          <td><code>${esc(s.username)}</code></td>
+          <td><span class="pill ${s.active !== false ? 'on' : 'off'}">${s.active !== false ? 'Active' : 'Disabled'}</span></td>
+          <td style="white-space:nowrap">
+            <button class="btn btn-ghost" onclick="resetPassword('${esc(s.id)}', '${esc(s.name)}')">Reset password</button>
+            <button class="btn ${s.active !== false ? 'btn-danger' : 'btn-primary'}" onclick="toggleActive('${esc(s.id)}', ${s.active !== false})">
+              ${s.active !== false ? 'Disable' : 'Enable'}
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function refreshRoster() {
+      const result = await api('/api/camp/coach/roster');
+      roster = result.users || [];
+      const body = document.getElementById('rosterBody');
+      if (body) body.innerHTML = renderRosterRows();
+    }
+
+    async function addCamper() {
+      const name = document.getElementById('camperName').value.trim();
+      const errorBox = document.getElementById('camperError');
+      const credsBox = document.getElementById('credsBox');
+      errorBox.style.display = 'none';
+      credsBox.style.display = 'none';
+      if (!name) {
+        errorBox.textContent = 'Camper name is required.';
+        errorBox.style.display = 'block';
+        return;
+      }
+      try {
+        const result = await api('/api/camp/coach/students', {
+          method: 'POST',
+          body: JSON.stringify({ name })
+        });
+        const s = result.student;
+        credsBox.innerHTML = `
+          ✅ <strong>${esc(s.name)}</strong> added!<br/>
+          Username: <code>${esc(s.username)}</code><br/>
+          Password: <code>${esc(s.password)}</code><br/>
+          <span style="font-size:12.5px;color:var(--muted)">Save these now — the password is not shown again.</span>
+        `;
+        credsBox.style.display = 'block';
+        document.getElementById('camperName').value = '';
+        await refreshRoster();
+      } catch (err) {
+        errorBox.textContent = err.message;
+        errorBox.style.display = 'block';
+      }
+    }
+
+    async function resetPassword(id, name) {
+      if (!confirm(`Reset the password for ${name}?`)) return;
+      try {
+        const result = await api(`/api/camp/coach/students/${encodeURIComponent(id)}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ resetPassword: true })
+        });
+        alert(`New password for ${name}: ${result.password}\n\nWrite it down — it is not shown again.`);
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    async function toggleActive(id, isActive) {
+      try {
+        await api(`/api/camp/coach/students/${encodeURIComponent(id)}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ active: !isActive })
+        });
+        await refreshRoster();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    /* ── Shell ── */
+    function showTab(name) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + name));
+    }
+
+    function renderShell() {
+      const { user, camp, curriculum, announcements } = hubData;
+      userLine.textContent = `${user.name} · Coach`;
+      app.innerHTML = `
+        <div class="page-head">
+          <div>
+            <div class="page-title">${esc(camp.name)} ${esc(camp.year)}</div>
+            <p class="page-sub">${esc(fmt(camp.startDate, { month: 'long', day: 'numeric' }))} – ${esc(fmt(camp.endDate, { month: 'long', day: 'numeric' }))} · ${esc(camp.scheduleNote || '')}</p>
+          </div>
+          <a class="btn btn-ghost" href="/camp-hub">View hub as campers see it →</a>
+        </div>
+
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="schedule" onclick="showTab('schedule')">🗓️ Schedule</button>
+          <button class="tab-btn" data-tab="announcements" onclick="showTab('announcements')">📢 Announcements</button>
+          <button class="tab-btn" data-tab="campers" onclick="showTab('campers')">👧 Campers</button>
+        </div>
+
+        <div class="tab-panel active" id="panel-schedule">${renderScheduleTab(curriculum)}</div>
+        <div class="tab-panel" id="panel-announcements">${renderAnnouncementsTab(announcements)}</div>
+        <div class="tab-panel" id="panel-campers">${renderCampersTab()}</div>
+      `;
+    }
+
+    async function load() {
+      try {
+        const [hubResult, rosterResult] = await Promise.all([
+          api('/api/camp/hub-data'),
+          api('/api/camp/coach/roster')
+        ]);
+        hubData = hubResult.data;
+        roster = rosterResult.users || [];
+        renderShell();
+      } catch (err) {
+        if (err.message !== 'Login required') {
+          app.innerHTML = `<div class="loading-state"><p class="loading-text">${esc(err.message)}</p></div>`;
+        }
+      }
+    }
+
+    logoutButton.addEventListener('click', async () => {
+      await fetch('/api/camp/logout', { method: 'POST' });
+      window.location.href = '/camp-hub/login';
+    });
+
+    load();
+  </script>
+</body>
+</html>

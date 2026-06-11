@@ -1,0 +1,23 @@
+[
+  {
+    "id": "welcome-2026",
+    "date": "2026-06-11",
+    "audience": "all",
+    "title": "Welcome to Summer Camp 2026!",
+    "body": "This hub is your home base for the whole summer — check it each morning to see what we're building and learning that day."
+  },
+  {
+    "id": "first-day",
+    "date": "2026-06-11",
+    "audience": "all",
+    "title": "First day is Monday, June 29",
+    "body": "Camp runs Monday through Thursday. Bring a water bottle and your curiosity — we start with the SPIKE Prime kit on day one!"
+  },
+  {
+    "id": "coach-prep",
+    "date": "2026-06-11",
+    "audience": "coach",
+    "title": "Coach prep checklist",
+    "body": "Charge all SPIKE Prime hubs, verify the build instruction stations, add camper accounts in the Students tab, and fill in the open days for Weeks 7-8 in the schedule editor."
+  }
+]

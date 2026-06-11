@@ -10,3 +10,6 @@ yarn-error.log*
 .env
 .env.*
 !.env.example
+
+# Private local credential exports
+data/fll-hub/**/private-credentials*.txt

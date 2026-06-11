@@ -1,0 +1,67 @@
+[
+  {
+    "id": "spike-app",
+    "category": "SPIKE Prime",
+    "type": "Website",
+    "label": "SPIKE App Download",
+    "description": "The official LEGO Education SPIKE app — this is where campers write all of their programs.",
+    "url": "https://education.lego.com/en-us/downloads/spike-app/software/"
+  },
+  {
+    "id": "spike-lessons",
+    "category": "SPIKE Prime",
+    "type": "Website",
+    "label": "LEGO Education Lessons",
+    "description": "Official build and code lessons for SPIKE Prime — great for extra practice or fast finishers.",
+    "url": "https://education.lego.com/en-us/lessons/"
+  },
+  {
+    "id": "word-blocks-help",
+    "category": "SPIKE Prime",
+    "type": "Reading",
+    "label": "Word Blocks Help",
+    "description": "Reference for every programming block in the SPIKE app — motors, sensors, events, and more.",
+    "url": "https://spike.legoeducation.com/prime/help/"
+  },
+  {
+    "id": "edp",
+    "category": "Innovation Project",
+    "type": "Reading",
+    "label": "The Engineering Design Process",
+    "description": "Ask, imagine, plan, create, improve — the process campers use to build their prototypes in Weeks 3-5.",
+    "url": "https://www.teachengineering.org/populartopics/designprocess"
+  },
+  {
+    "id": "archaeology-kids",
+    "category": "Innovation Project",
+    "type": "Reading",
+    "label": "Archaeology for Kids",
+    "description": "Kid-friendly introduction to archaeology — how scientists dig up and study the past.",
+    "url": "https://kids.nationalgeographic.com/history/article/archaeology"
+  },
+  {
+    "id": "gears-explained",
+    "category": "Robot Skills",
+    "type": "Video",
+    "label": "How Gears Work",
+    "description": "Gear ratios, torque, and speed explained — pairs with the Week 2 Geared Car build.",
+    "url": "https://www.youtube.com/results?search_query=lego+spike+prime+gear+ratio+explained"
+  },
+  {
+    "id": "pid-intro",
+    "category": "Robot Skills",
+    "type": "Reading",
+    "label": "PID Line Following & Driving Straight",
+    "description": "Beginner-friendly explanation of PID control for FLL-style robots — used in Weeks 2 and 4.",
+    "url": "https://primelessons.org/en/PrimeLessons.html"
+  },
+  {
+    "id": "coach-curriculum-notes",
+    "category": "Coach Materials",
+    "type": "Folder",
+    "label": "Coach Curriculum Notes",
+    "description": "Day-by-day coach notes live in the schedule editor — open any day to add prep notes for the team.",
+    "url": "/camp-hub/coach",
+    "roles": ["coach"]
+  }
+]

@@ -1,0 +1,290 @@
+[
+  {
+    "id": "week-1",
+    "label": "Week 1",
+    "theme": "Meet the SPIKE Prime",
+    "goal": "Get comfortable with the kit, motors, and first programs.",
+    "days": [
+      {
+        "id": "day-2026-06-29",
+        "date": "2026-06-29",
+        "activity": "Introduction to archaeology and project overview. Before students begin their projects, students will learn about the SPIKE Prime kit.",
+        "build": "Hopper",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-06-30",
+        "date": "2026-06-30",
+        "activity": "Students will continue to test how different LEGO parts can influence the way their robots move.",
+        "build": "Bunny",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-07-01",
+        "date": "2026-07-01",
+        "activity": "Students will learn about basic programming concepts.",
+        "build": "Virtual Counter",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-07-02",
+        "date": "2026-07-02",
+        "activity": "Students will continue to learn how to program and will learn how to use a distance sensor.",
+        "build": "Turtle",
+        "coachNotes": ""
+      }
+    ]
+  },
+  {
+    "id": "week-2",
+    "label": "Week 2",
+    "theme": "Driving with Sensors",
+    "goal": "Master gears, gyro, PID, and the color sensor.",
+    "days": [
+      {
+        "id": "day-2026-07-06",
+        "date": "2026-07-06",
+        "activity": "Students will learn about gears, gear ratio, torque, and speed.",
+        "build": "Geared Car",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-07-07",
+        "date": "2026-07-07",
+        "activity": "Students will learn about the gyro sensor and will learn how to make their robots drive more straight.",
+        "build": "Car",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-07-08",
+        "date": "2026-07-08",
+        "activity": "Students will learn about PID and will learn how to improve their drive straight code.",
+        "build": "Car",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-07-09",
+        "date": "2026-07-09",
+        "activity": "Students will learn how to use the color sensor and will solve a maze.",
+        "build": "Car with color sensor",
+        "coachNotes": ""
+      }
+    ]
+  },
+  {
+    "id": "week-3",
+    "label": "Week 3",
+    "theme": "Innovation Project Kickoff",
+    "goal": "Research a real problem and start prototyping with the engineering design process.",
+    "days": [
+      {
+        "id": "day-2026-07-13",
+        "date": "2026-07-13",
+        "activity": "Review final project, learn about archaeology, and research different ideas.",
+        "build": "",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-07-14",
+        "date": "2026-07-14",
+        "activity": "Learn about more archaeological issues and pick a problem to research.",
+        "build": "",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-07-15",
+        "date": "2026-07-15",
+        "activity": "Students will learn about the engineering design process and will begin to build their prototype.",
+        "build": "Prototype v1",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-07-16",
+        "date": "2026-07-16",
+        "activity": "Students will continue to use the engineering design process to improve their design.",
+        "build": "Prototype v1",
+        "coachNotes": ""
+      }
+    ]
+  },
+  {
+    "id": "week-4",
+    "label": "Week 4",
+    "theme": "Advanced Builds",
+    "goal": "Robotic arms, transforming robots, precision turns, and poster design.",
+    "days": [
+      {
+        "id": "day-2026-07-20",
+        "date": "2026-07-20",
+        "activity": "Students will learn how to build a robotic arm.",
+        "build": "Robotic Arm",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-07-21",
+        "date": "2026-07-21",
+        "activity": "Students will learn how to build a transformative robot.",
+        "build": "Transformative Robot",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-07-22",
+        "date": "2026-07-22",
+        "activity": "Students will learn how to make accurate turns using the gyro sensor and PID.",
+        "build": "Car",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-07-23",
+        "date": "2026-07-23",
+        "activity": "Students will begin to design their posters.",
+        "build": "Poster draft",
+        "coachNotes": ""
+      }
+    ]
+  },
+  {
+    "id": "week-5",
+    "label": "Week 5",
+    "theme": "Iterate and Practice",
+    "goal": "Improve prototypes, get feedback, and rehearse presentations.",
+    "days": [
+      {
+        "id": "day-2026-07-27",
+        "date": "2026-07-27",
+        "activity": "Students will continue to improve their prototypes and will continue to work on their prototypes.",
+        "build": "Prototype v2",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-07-28",
+        "date": "2026-07-28",
+        "activity": "Students will practice and show off their current design and receive feedback.",
+        "build": "Prototype v2",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-07-29",
+        "date": "2026-07-29",
+        "activity": "Students will make adjustments based on feedback.",
+        "build": "Prototype v2",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-07-30",
+        "date": "2026-07-30",
+        "activity": "Practice day — rehearse the full presentation with the team.",
+        "build": "",
+        "coachNotes": ""
+      }
+    ]
+  },
+  {
+    "id": "week-6",
+    "label": "Week 6",
+    "theme": "Presentation Week",
+    "goal": "Final practice, presentation day, and the start of the new robot design.",
+    "days": [
+      {
+        "id": "day-2026-08-03",
+        "date": "2026-08-03",
+        "activity": "Final practice day.",
+        "build": "",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-08-04",
+        "date": "2026-08-04",
+        "activity": "Presentation Day / Release Day — show families the prototypes, posters, and robot skills.",
+        "build": "",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-08-05",
+        "date": "2026-08-05",
+        "activity": "Learn about the new robot design — a pin-less design.",
+        "build": "Pin-less Robot",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-08-06",
+        "date": "2026-08-06",
+        "activity": "Continue to work on the robot build and decide on a color scheme.",
+        "build": "Pin-less Robot",
+        "coachNotes": ""
+      }
+    ]
+  },
+  {
+    "id": "week-7",
+    "label": "Week 7",
+    "theme": "Robot Strategy",
+    "goal": "Starter code and competition strategy for the new robot.",
+    "days": [
+      {
+        "id": "day-2026-08-10",
+        "date": "2026-08-10",
+        "activity": "Build starter code file and begin to build strategy.",
+        "build": "Pin-less Robot",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-08-11",
+        "date": "2026-08-11",
+        "activity": "",
+        "build": "",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-08-12",
+        "date": "2026-08-12",
+        "activity": "",
+        "build": "",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-08-13",
+        "date": "2026-08-13",
+        "activity": "",
+        "build": "",
+        "coachNotes": ""
+      }
+    ]
+  },
+  {
+    "id": "week-8",
+    "label": "Week 8",
+    "theme": "Final Week",
+    "goal": "Wrap up the robot, strategy runs, and celebrate the summer.",
+    "days": [
+      {
+        "id": "day-2026-08-17",
+        "date": "2026-08-17",
+        "activity": "",
+        "build": "",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-08-18",
+        "date": "2026-08-18",
+        "activity": "",
+        "build": "",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-08-19",
+        "date": "2026-08-19",
+        "activity": "",
+        "build": "",
+        "coachNotes": ""
+      },
+      {
+        "id": "day-2026-08-20",
+        "date": "2026-08-20",
+        "activity": "",
+        "build": "",
+        "coachNotes": ""
+      }
+    ]
+  }
+]

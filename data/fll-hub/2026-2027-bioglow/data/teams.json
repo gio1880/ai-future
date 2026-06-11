@@ -1,38 +1,13 @@
 [
   {
-    "id": "team-01",
-    "name": "BIOGLOW Team 01",
-    "nickname": "Ecosystem Engineers",
-    "meetingDays": "Tuesdays and Thursdays",
-    "coach": "Coach",
-    "room": "Robotics Lab",
-    "currentFocus": "Pre-season roles, robot inventory, teamwork routines, and ecosystem research warmups.",
-    "nextDeliverable": "Bring a notebook, confirm team roles, and choose three ecosystem questions to investigate.",
-    "status": "Getting ready",
-    "readiness": 18,
-    "studentHighlights": [
-      "Set up robot kits and batteries.",
-      "Practice gracious professionalism during build challenges.",
-      "Start a BIOGLOW idea bank."
-    ],
-    "coachNotes": [
-      "Confirm roster and parent communication.",
-      "Prepare kickoff watch plan for August 4, 2026.",
-      "Keep mission details as placeholders until official challenge release."
-    ],
-    "region": "hudson-valley",
-    "regionName": "Hudson Valley Region",
-    "firstCompetition": "2027-01-09"
-  },
-  {
     "id": "team-history-guardians",
     "name": "History Guardians",
     "nickname": "History Guardians",
     "meetingDays": "To be scheduled",
     "coach": "Coach",
     "room": "Robotics Lab",
-    "currentFocus": "Returning team — reviewing last season rubrics and building on robot design strengths.",
-    "nextDeliverable": "Confirm returning roster and review last season rubrics.",
+    "currentFocus": "Returning team roster setup, BIOGLOW kickoff prep, robot inventory, and documentation routines.",
+    "nextDeliverable": "Confirm returning roster, issue student accounts, and review last season rubrics.",
     "status": "Returning team",
     "readiness": 30,
     "returning": true,
@@ -57,13 +32,13 @@
   },
   {
     "id": "team-firefox",
-    "name": "Firefox",
-    "nickname": "Firefox",
+    "name": "FireFox",
+    "nickname": "FireFox",
     "meetingDays": "To be scheduled",
     "coach": "Coach",
     "room": "Robotics Lab",
-    "currentFocus": "Returning team — strong robot game performance last season, building out attachments earlier this year.",
-    "nextDeliverable": "Confirm returning roster and review last season rubrics.",
+    "currentFocus": "Returning team roster setup, BIOGLOW kickoff prep, robot reliability, and presentation confidence.",
+    "nextDeliverable": "Confirm returning roster, issue student accounts, and review last season rubrics.",
     "status": "Returning team",
     "readiness": 30,
     "returning": true,
@@ -87,14 +62,14 @@
     "firstCompetition": "2027-01-16"
   },
   {
-    "id": "team-title-engineers",
-    "name": "Title Engineers",
-    "nickname": "Title Engineers",
+    "id": "team-tidal-engineers",
+    "name": "TiDAL Engineers",
+    "nickname": "TiDAL Engineers",
     "meetingDays": "To be scheduled",
     "coach": "Coach",
     "room": "Robotics Lab",
-    "currentFocus": "Returning team — excellent engineering notebook habits, aiming for deeper mission strategy this season.",
-    "nextDeliverable": "Confirm returning roster and review last season rubrics.",
+    "currentFocus": "Returning team roster setup, BIOGLOW kickoff prep, engineering documentation, and mission strategy.",
+    "nextDeliverable": "Confirm returning roster, issue student accounts, and review last season rubrics.",
     "status": "Returning team",
     "readiness": 30,
     "returning": true,
@@ -116,5 +91,36 @@
     "region": "nj",
     "regionName": "NJ Region (FIRST Mid-Atlantic North)",
     "firstCompetition": "2026-11-21"
+  },
+  {
+    "id": "team-wcdc-fighters",
+    "name": "WCDC Fighters",
+    "nickname": "WCDC Fighters",
+    "meetingDays": "To be scheduled",
+    "coach": "Coach",
+    "room": "Robotics Lab",
+    "currentFocus": "Returning team roster setup, BIOGLOW kickoff prep, robot fundamentals, and team routines.",
+    "nextDeliverable": "Confirm returning roster, issue student accounts, and review last season rubrics.",
+    "status": "Returning team",
+    "readiness": 30,
+    "returning": true,
+    "pastSeasons": [
+      {
+        "id": "rubric-wf-2025",
+        "season": "2025-2026 SUBMERGED",
+        "label": "Judging Rubric - SUBMERGED Season",
+        "url": "",
+        "notes": "Returning team from the 2025-2026 season. Add official judge feedback when available.",
+        "addedAt": "2026-06-11T12:57:18.249Z"
+      }
+    ],
+    "studentHighlights": [],
+    "coachNotes": [
+      "Confirm enrollment for the 2026-2027 BIOGLOW season."
+    ],
+    "createdAt": "2026-06-11T18:52:09.675Z",
+    "region": "hudson-valley",
+    "regionName": "Hudson Valley Region",
+    "firstCompetition": "2027-01-09"
   }
 ]

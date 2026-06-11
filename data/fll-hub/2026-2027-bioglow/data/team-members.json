@@ -1,16 +1,121 @@
 [
   {
-    "teamId": "team-01",
-    "studentId": "student-team-01-a",
-    "displayName": "Student One",
-    "role": "Research + Robot Prep",
-    "initials": "S1"
+    "teamId": "team-history-guardians",
+    "studentId": "student-claire-zhai-33c762",
+    "displayName": "Claire Zhai",
+    "role": "Team member",
+    "initials": "CZ"
   },
   {
-    "teamId": "team-01",
-    "studentId": "student-team-01-b",
-    "displayName": "Team One",
-    "role": "Presentation + Team Share-out",
-    "initials": "T1"
+    "teamId": "team-history-guardians",
+    "studentId": "student-luke-tisserant-33a686",
+    "displayName": "Luke Tisserant",
+    "role": "Team member",
+    "initials": "LT"
+  },
+  {
+    "teamId": "team-history-guardians",
+    "studentId": "student-mason-yuan-1f9680",
+    "displayName": "Mason Yuan",
+    "role": "Team member",
+    "initials": "MY"
+  },
+  {
+    "teamId": "team-history-guardians",
+    "studentId": "student-isabella-feng-dde604",
+    "displayName": "Isabella Feng",
+    "role": "Team member",
+    "initials": "IF"
+  },
+  {
+    "teamId": "team-tidal-engineers",
+    "studentId": "student-domenico-petrini-6ef9cb",
+    "displayName": "Domenico Petrini",
+    "role": "Team member",
+    "initials": "DP"
+  },
+  {
+    "teamId": "team-tidal-engineers",
+    "studentId": "student-elis-fishman-e7aa78",
+    "displayName": "Elis Fishman",
+    "role": "Team member",
+    "initials": "EF"
+  },
+  {
+    "teamId": "team-tidal-engineers",
+    "studentId": "student-isaiah-irwin-2f1d7b",
+    "displayName": "Isaiah Irwin",
+    "role": "Team member",
+    "initials": "II"
+  },
+  {
+    "teamId": "team-tidal-engineers",
+    "studentId": "student-finn-fitzner-3e1a78",
+    "displayName": "Finn Fitzner",
+    "role": "Team member",
+    "initials": "FF"
+  },
+  {
+    "teamId": "team-firefox",
+    "studentId": "student-lawrence-liu-cb31cb",
+    "displayName": "Lawrence Liu",
+    "role": "Team member",
+    "initials": "LL"
+  },
+  {
+    "teamId": "team-firefox",
+    "studentId": "student-vincent-liu-36515a",
+    "displayName": "Vincent Liu",
+    "role": "Team member",
+    "initials": "VL"
+  },
+  {
+    "teamId": "team-firefox",
+    "studentId": "student-thales-liu-be7a7e",
+    "displayName": "Thales Liu",
+    "role": "Team member",
+    "initials": "TL"
+  },
+  {
+    "teamId": "team-firefox",
+    "studentId": "student-adam-zeng-5bdd20",
+    "displayName": "Adam Zeng",
+    "role": "Team member",
+    "initials": "AZ"
+  },
+  {
+    "teamId": "team-firefox",
+    "studentId": "student-estella-6e878f",
+    "displayName": "Estella",
+    "role": "Team member",
+    "initials": "E"
+  },
+  {
+    "teamId": "team-wcdc-fighters",
+    "studentId": "student-sanjit-harnal-b05b32",
+    "displayName": "Sanjit Harnal",
+    "role": "Team member",
+    "initials": "SH"
+  },
+  {
+    "teamId": "team-wcdc-fighters",
+    "studentId": "student-mason-p-ed2ab1",
+    "displayName": "Mason P.",
+    "role": "Team member",
+    "initials": "MP"
+  },
+  {
+    "teamId": "team-wcdc-fighters",
+    "studentId": "student-winston-lee-96b448",
+    "displayName": "Winston Lee",
+    "role": "Team member",
+    "initials": "WL"
+  },
+  {
+    "teamId": "team-wcdc-fighters",
+    "studentId": "student-ethan-deng-56ffe3",
+    "displayName": "Ethan Deng",
+    "role": "Team member",
+    "initials": "ED"
   }
 ]

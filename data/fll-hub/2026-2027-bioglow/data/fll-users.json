@@ -9,24 +9,6 @@
     "active": true
   },
   {
-    "id": "student-team-01-a",
-    "name": "Student One",
-    "username": "student1",
-    "password_hash": "560b84c785021f3455d36329a3f55ea2:defecd68307bfd8c8fdbf0b61b28b45620ca6ad63cbefb6e4907b68f623ba2126aca3692fecfd8c0fa085daa4197dd703c0b5a001d79d9d4fc06c560641404d0",
-    "role": "student",
-    "teamId": "team-01",
-    "active": true
-  },
-  {
-    "id": "student-team-01-b",
-    "name": "Team One",
-    "username": "team1",
-    "password_hash": "0cdaf31600a5fa3e6d6d8af3eb3d9634:dfac07a9e919febde49f5dc6b491a821f15d767414508661fa0a2343b25cbb79539e8affdf6c6b51f901483c4ec44a2cbe576f272ae4673726af58cbf0e75a51",
-    "role": "student",
-    "teamId": "team-01",
-    "active": true
-  },
-  {
     "id": "coach-giovanny",
     "name": "Giovanny De Los Angeles",
     "username": "giovanny",
@@ -51,6 +33,159 @@
     "password_hash": "dba1ffd08688af7a21bfc51c184a2167:0b13c161895f35cdb5775b8bfe94f7a7a57201d1297e2355b6ab530815fab3e57e059c3165c004dbe23f77a73a87a08b953d277a4ab3199af87f14ca63c34fa8",
     "role": "coach",
     "teamId": null,
+    "active": true
+  },
+  {
+    "id": "student-claire-zhai-33c762",
+    "name": "Claire Zhai",
+    "username": "clairezhai",
+    "password_hash": "2ff9f73dfb0a028240a40103d360511d:ea7f4364c77569e8cb0650194945cad468c97385d138367fef1ed94ba410d0b195aefa7a0f209747d8e9bdd3411425b551930606b3a84d26367942c2842b46ef",
+    "role": "student",
+    "teamId": "team-history-guardians",
+    "active": true
+  },
+  {
+    "id": "student-luke-tisserant-33a686",
+    "name": "Luke Tisserant",
+    "username": "luketisserant",
+    "password_hash": "35bcb7c340c9e28c8ccd3e4694938cc4:d6e79de811f1cdaad52181ea3023443c1ae031f5323fcd65170228a95a713302050fe8fd1159e2124de62df3948d581f1af7859446d4fdb483fe950b06b19b5c",
+    "role": "student",
+    "teamId": "team-history-guardians",
+    "active": true
+  },
+  {
+    "id": "student-mason-yuan-1f9680",
+    "name": "Mason Yuan",
+    "username": "masonyuan",
+    "password_hash": "743773612131df80cca4302fecf9ed9e:ebd587a0c197dc6312b96e101be2aff409dc541d2817c0bdea1a60202b4b1651f5f4a7ba4549854f7a4ef75f9f6b2e1560e2fa965ff06267471ccd639245326b",
+    "role": "student",
+    "teamId": "team-history-guardians",
+    "active": true
+  },
+  {
+    "id": "student-isabella-feng-dde604",
+    "name": "Isabella Feng",
+    "username": "isabellafeng",
+    "password_hash": "02d7cc54dffb3f4c38793f14b32893bf:93c9c131d2c978a061a29568485456101efe02e4921ffa1e4cd993a4085890dad24a209f9217bda6ea35f60bb793e77ad3625d885a27148b8734d63ab7ac3e6c",
+    "role": "student",
+    "teamId": "team-history-guardians",
+    "active": true
+  },
+  {
+    "id": "student-domenico-petrini-6ef9cb",
+    "name": "Domenico Petrini",
+    "username": "domenicopetrini",
+    "password_hash": "92b6fd2eb45e228cb7b89f38bf31e3fb:c2ed174999b80569c4760a32529465a0597f226ec7d73b77dd7024d47f2b92279b6dffc3f7c40504731c71e0ce11c94d4b02e50598d5db564345b1d2ba7601e1",
+    "role": "student",
+    "teamId": "team-tidal-engineers",
+    "active": true
+  },
+  {
+    "id": "student-elis-fishman-e7aa78",
+    "name": "Elis Fishman",
+    "username": "elisfishman",
+    "password_hash": "d380492a15c97adb3c28f6be04802968:364b1d67ac7eaf145dc17e2f75a9cfd6b8f669173c506018d7d8bcee3a66d6b3b5610a48d15a6df901e06d14f516bf85e4c820eb7217201375192efd3796b2ca",
+    "role": "student",
+    "teamId": "team-tidal-engineers",
+    "active": true
+  },
+  {
+    "id": "student-isaiah-irwin-2f1d7b",
+    "name": "Isaiah Irwin",
+    "username": "isaiahirwin",
+    "password_hash": "017a16a2f17555a0d8d4d8965cf26b6d:48d3915c884a2d1d2b108ace56d1f65fe62dc3166122e3030fdb51ac7e03635d70a0133ed98da972ec5689a9b5bda355a81266faab0379f993edd573ec47adf0",
+    "role": "student",
+    "teamId": "team-tidal-engineers",
+    "active": true
+  },
+  {
+    "id": "student-finn-fitzner-3e1a78",
+    "name": "Finn Fitzner",
+    "username": "finnfitzner",
+    "password_hash": "670527dc96c831e1f77ceff9c2337cbe:2c1d5ef4274607c4c6c5117e40ecdf6c28da25868f3f32171123158b4eaddf6a70fec30142b224f3266895b661791b96806de26eec9af076443c07b35b0cb11d",
+    "role": "student",
+    "teamId": "team-tidal-engineers",
+    "active": true
+  },
+  {
+    "id": "student-lawrence-liu-cb31cb",
+    "name": "Lawrence Liu",
+    "username": "lawrenceliu",
+    "password_hash": "46e0f2f009e34bd6fdd560986534906a:db0734781f0b4dccae655672fca5ea53d637fce90126f75e30fd1d017c0599631eebc5c2a3dbf26922804284efe55b1dab6da2925b77144bdf757a54e1d33373",
+    "role": "student",
+    "teamId": "team-firefox",
+    "active": true
+  },
+  {
+    "id": "student-vincent-liu-36515a",
+    "name": "Vincent Liu",
+    "username": "vincentliu",
+    "password_hash": "5fceefe1b4f41b0be5cf865852515b98:dabaa87e37afd5d09d45a35f3fe6a9da2150c47c6f6b3b7f043bab28f7ce310976bcec504f147e9ccfe6da4f32ee00847a2be3d1890820942e9709eb2842ff29",
+    "role": "student",
+    "teamId": "team-firefox",
+    "active": true
+  },
+  {
+    "id": "student-thales-liu-be7a7e",
+    "name": "Thales Liu",
+    "username": "thalesliu",
+    "password_hash": "78ce71c5efcbb889f04c8f3290487376:678f5c0711dd0164ddd0c8cff1fd307dfd6b370fb9a33e14562f89400037b4cdaa2c353b83175450651e31eaac2f7491a7216d2e79291c5a6df2c44859de85a4",
+    "role": "student",
+    "teamId": "team-firefox",
+    "active": true
+  },
+  {
+    "id": "student-adam-zeng-5bdd20",
+    "name": "Adam Zeng",
+    "username": "adamzeng",
+    "password_hash": "43b64a28c91cd7079f139d3ea5cdb2de:81d67b261ee56c14024398bf30330926c11db5bef17af6858f0cc7ab00c3fd565cc6add87714e54ed919af41781aa194013c8cf0539f71ddfa2b034338606e44",
+    "role": "student",
+    "teamId": "team-firefox",
+    "active": true
+  },
+  {
+    "id": "student-estella-6e878f",
+    "name": "Estella",
+    "username": "estella",
+    "password_hash": "06d9ff0548d7bd79659f0124ec1617a1:36e7dba0a323e350bce8a17b274ed8c793da7560f2a0cb1d1f4d207772b191de9273dfc03e8ffdd41f7bdb11364195da6288147935342cf434ec7edf69d330cf",
+    "role": "student",
+    "teamId": "team-firefox",
+    "active": true
+  },
+  {
+    "id": "student-sanjit-harnal-b05b32",
+    "name": "Sanjit Harnal",
+    "username": "sanjitharnal",
+    "password_hash": "c8d582fc19735287659ac5beeffe851e:718f0b82aa0226e53b84de5f54efc2f6a62d39cd7e475aae178637c501ae9e710abc72821197772a639f4280215a846bbd0a02eb9b9bcb2bd106adc56525c6b9",
+    "role": "student",
+    "teamId": "team-wcdc-fighters",
+    "active": true
+  },
+  {
+    "id": "student-mason-p-ed2ab1",
+    "name": "Mason P.",
+    "username": "masonp",
+    "password_hash": "67fe20e741671cc1c0d9bf650c46f132:0775e0512de39d14f801c195af43c19fe5267901abf1e4433af92305dd96edb528f6ea05c92dc74dd3f443d66f5e82fdb3f5225ddc98238cd038b48cba506805",
+    "role": "student",
+    "teamId": "team-wcdc-fighters",
+    "active": true
+  },
+  {
+    "id": "student-winston-lee-96b448",
+    "name": "Winston Lee",
+    "username": "winstonlee",
+    "password_hash": "c2685066a375bdc8a72553b74fae5aa2:73fa390d4ebd867907297c62204739f311de6012167f21701081a3f42904752695ccddb0cf9d49bf939fb7d1cf4d2f5550b6a812fd7709dd0bfe35dce3958418",
+    "role": "student",
+    "teamId": "team-wcdc-fighters",
+    "active": true
+  },
+  {
+    "id": "student-ethan-deng-56ffe3",
+    "name": "Ethan Deng",
+    "username": "ethandeng",
+    "password_hash": "b2cfb266976d9474ec78403461560d2e:45562e111b6a9b8670e8371c6b61b5e89e360824afd01c0e95d66b9c056de0346c5af75bec4ae774231ad5149d15152bad872d9b5c10d517dbeb592b207a5219",
+    "role": "student",
+    "teamId": "team-wcdc-fighters",
     "active": true
   }
 ]

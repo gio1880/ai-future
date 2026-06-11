@@ -53,6 +53,21 @@ const fllDataFileNames = [
 	'resources.json'
 ];
 const fllSessions = new Map();
+const campHubDir = path.join(__dirname, 'robotics lab', 'Summer Camp', '2026-summer-camp');
+const campSeedDataDir = path.join(campHubDir, 'data');
+const campHubDataDir = process.env.CAMP_DATA_DIR || path.join(platformDataDir, 'camp-hub', '2026-summer-camp', 'data');
+const campUsersFile = path.join(campHubDataDir, 'camp-users.json');
+const campCurriculumFile = path.join(campHubDataDir, 'curriculum.json');
+const campAnnouncementsFile = path.join(campHubDataDir, 'announcements.json');
+const campSessionCookie = 'camp_session';
+const campDataFileNames = [
+	'camp-users.json',
+	'camp.json',
+	'curriculum.json',
+	'announcements.json',
+	'resources.json'
+];
+const campSessions = new Map();
 
 // Payments routes MUST mount before global express.json() — the Stripe webhook
 // endpoint needs the raw request body to verify the signature.
@@ -254,6 +269,126 @@ async function readFllUsers() {
 	return Array.isArray(users) ? users : [];
 }
 
+function setCampSessionCookie(res, token) {
+	const maxAge = 7 * 24 * 60 * 60;
+	const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
+	res.setHeader('Set-Cookie', `${campSessionCookie}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${secure}`);
+}
+
+function clearCampSessionCookie(res) {
+	res.setHeader('Set-Cookie', `${campSessionCookie}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`);
+}
+
+function getCampSession(req) {
+	const token = parseCookies(req)[campSessionCookie];
+	if (!token) return null;
+	const session = campSessions.get(token);
+	if (!session) return null;
+	if (Date.now() - session.lastSeen > 7 * 24 * 60 * 60 * 1000) {
+		campSessions.delete(token);
+		return null;
+	}
+	session.lastSeen = Date.now();
+	return { token, ...session };
+}
+
+function publicCampUser(user) {
+	if (!user) return null;
+	return {
+		id: user.id,
+		name: user.name,
+		username: user.username,
+		role: user.role
+	};
+}
+
+async function initializeCampDataDir() {
+	await fs.mkdir(campHubDataDir, { recursive: true });
+	await Promise.all(campDataFileNames.map(async (fileName) => {
+		const targetFile = path.join(campHubDataDir, fileName);
+		try {
+			await fs.access(targetFile);
+		} catch (err) {
+			if (err.code !== 'ENOENT') throw err;
+			const seedFile = path.join(campSeedDataDir, fileName);
+			try {
+				await fs.copyFile(seedFile, targetFile);
+			} catch (copyErr) {
+				if (copyErr.code !== 'ENOENT') throw copyErr;
+				await fs.writeFile(targetFile, '[]');
+			}
+		}
+	}));
+}
+
+async function readCampUsers() {
+	const users = await readJsonFile(campUsersFile, []);
+	return Array.isArray(users) ? users : [];
+}
+
+async function requireCampAuth(req, res, next) {
+	try {
+		const session = getCampSession(req);
+		if (!session) {
+			if (req.path.startsWith('/api/')) {
+				return res.status(401).json({ success: false, message: 'Camp login required' });
+			}
+			return res.redirect(302, '/camp-hub/login');
+		}
+		const users = await readCampUsers();
+		const user = users.find((candidate) => candidate.id === session.userId && candidate.active !== false);
+		if (!user) {
+			campSessions.delete(session.token);
+			clearCampSessionCookie(res);
+			if (req.path.startsWith('/api/')) {
+				return res.status(401).json({ success: false, message: 'Camp login required' });
+			}
+			return res.redirect(302, '/camp-hub/login');
+		}
+		req.campUser = user;
+		return next();
+	} catch (err) {
+		console.error('Camp auth error:', err);
+		return res.status(500).json({ success: false, message: 'Server error checking camp session' });
+	}
+}
+
+function requireCampCoach(req, res, next) {
+	if (!req.campUser || req.campUser.role !== 'coach') {
+		return res.status(403).json({ success: false, message: 'Coach access required' });
+	}
+	return next();
+}
+
+async function getCampHubDataFor(user) {
+	const [camp, curriculum, announcements, resources] = await Promise.all([
+		readJsonFile(path.join(campHubDataDir, 'camp.json'), {}),
+		readJsonFile(campCurriculumFile, []),
+		readJsonFile(campAnnouncementsFile, []),
+		readJsonFile(path.join(campHubDataDir, 'resources.json'), [])
+	]);
+	const isCoach = user.role === 'coach';
+	const visibleAnnouncements = (Array.isArray(announcements) ? announcements : [])
+		.filter((item) => item.audience === 'all' || item.audience === user.role);
+	const visibleResources = (Array.isArray(resources) ? resources : [])
+		.filter((item) => !Array.isArray(item.roles) || item.roles.includes(user.role));
+	const visibleCurriculum = (Array.isArray(curriculum) ? curriculum : []).map((week) => ({
+		...week,
+		days: (Array.isArray(week.days) ? week.days : []).map((day) => {
+			if (isCoach) return day;
+			const { coachNotes, ...studentDay } = day;
+			return studentDay;
+		})
+	}));
+	return {
+		user: publicCampUser(user),
+		camp,
+		curriculum: visibleCurriculum,
+		announcements: visibleAnnouncements,
+		resources: visibleResources
+	};
+}
+
 async function getFllHubDataFor(user) {
 	const [season, teams, timeline, announcements, resources, tasks, assignments, sections] = await Promise.all([
 		readJsonFile(path.join(fllHubDataDir, 'season.json'), {}),
@@ -306,7 +441,9 @@ function buildFllCurriculumOverview(tasks, assignments, sections) {
 		assignments: []
 	}));
 	const byId = new Map(grouped.map((section) => [section.id, section]));
-	for (const task of Array.isArray(tasks) ? tasks : []) {
+	const existingTaskIds = new Set((Array.isArray(tasks) ? tasks : []).map((task) => task.id));
+	const plannedTasks = getPlannedFllCurriculumTasks().filter((task) => !existingTaskIds.has(task.id));
+	for (const task of [...(Array.isArray(tasks) ? tasks : []), ...plannedTasks]) {
 		const sectionId = sectionAliases[task.category] || 'innovation';
 		const section = byId.get(sectionId);
 		if (!section) continue;
@@ -330,6 +467,55 @@ function buildFllCurriculumOverview(tasks, assignments, sections) {
 		section.nextDue = section.assignments.find((assignment) => assignment.status !== 'done') || section.assignments[0] || null;
 	}
 	return grouped;
+}
+
+function getPlannedFllCurriculumTasks() {
+	const rows = [
+		['2026-11-13', 'Rebuild Review and Attachment Audit', 'Late-season mission selection and run order review', 'Solution Impact Check', 'Core Values Evidence Review'],
+		['2026-11-20', 'Reliability Testing Protocol', 'High-value mission consistency trials', 'User Feedback Round 2', 'Team Communication Reset'],
+		['2026-12-04', 'Robot Design Explanation Draft', 'Qualifier-style robot game scrimmage', 'Innovation Pitch Draft', 'Judging Role Assignments'],
+		['2026-12-11', 'Attachment Simplification Sprint', 'Mission recovery and backup routes', 'Prototype Evidence Board', 'Gracious Professionalism Scenarios'],
+		['2026-12-18', 'Engineering Notebook Checkpoint', 'Timed round data review', 'Research Sources Cleanup', 'Winter Break Practice Plan'],
+		['2027-01-08', 'Post-break Robot Inspection', 'Mission run refresh and calibration', 'Innovation Project Storyline', 'Team Goal Reset'],
+		['2027-01-15', 'Robot Design Judging Practice', 'Robot game accuracy week', 'Expert Feedback Follow-up', 'Core Values Reflection'],
+		['2027-01-22', 'Final Attachment Decisions', 'Strategy board update', 'Solution Iteration 3', 'Judging Q&A Practice'],
+		['2027-01-29', 'Robot Design Poster Notes', 'Full table run-throughs', 'Innovation Slides Draft', 'Teamwork Strengths Inventory'],
+		['2027-02-05', 'Design Tradeoff Explanation', 'Pressure-test first 30 seconds', 'Community Impact Plan', 'Presentation Transitions'],
+		['2027-02-12', 'Robot Maintenance Checklist', 'Mission consistency chart review', 'Final Prototype Polish', 'Core Values Examples Bank'],
+		['2027-02-19', 'Technical Interview Practice', 'Tournament-style robot game rounds', 'Innovation Script Polish', 'Mock Judging Round 1'],
+		['2027-02-26', 'Robot Design Final Review', 'Backup plan and reset practice', 'Innovation Display Final Review', 'Mock Judging Round 2'],
+		['2027-03-05', 'Competition Robot Readiness', 'Qualifier readiness scrimmage', 'Project Materials Pack', 'Team Celebration and Roles'],
+		['2027-03-12', 'Post-Qualifier Robot Improvements', 'Mission data after event', 'Feedback-based Innovation Update', 'Reflection and Next Goals'],
+		['2027-03-19', 'Advanced Design Iteration', 'New target score planning', 'Project Sharing Plan', 'Leadership Rotation'],
+		['2027-03-26', 'Season Portfolio Wrap-up', 'Final robot game archive', 'Innovation Project Archive', 'Season Reflection and Showcase']
+	];
+	const areaInfo = [
+		{ category: 'Robot Design', assignmentId: 'assignment-planned-robot-design', context: 'lab' },
+		{ category: 'Robot Game', assignmentId: 'assignment-planned-robot-game', context: 'lab' },
+		{ category: 'Innovation Project', assignmentId: 'assignment-planned-innovation', context: 'class' },
+		{ category: 'Core Values', assignmentId: 'assignment-planned-core-values', context: 'class' }
+	];
+	return rows.flatMap((row) => {
+		const [dueDate, ...titles] = row;
+		return titles.map((title, index) => {
+			const area = areaInfo[index];
+			const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+			return {
+				id: `planned-${dueDate}-${slug}`,
+				assignmentId: area.assignmentId,
+				teamId: 'team-01',
+				assignedTo: 'student-team-01-a',
+				title,
+				description: `Planned curriculum checkpoint for ${area.category}. Coaches can adjust the lesson details as the BIOGLOW season develops.`,
+				category: area.category,
+				type: 'planned lesson',
+				workContext: area.context,
+				status: 'todo',
+				dueDate,
+				questions: []
+			};
+		});
+	});
 }
 
 function requireFllCoach(req, res, next) {
@@ -1120,6 +1306,13 @@ app.get(['/fll-hub', '/fll-hub/'], requireFllAuth, (req, res) => {
 	res.sendFile(path.join(fllHubDir, 'hub.html'));
 });
 
+app.get(['/fll-hub/curriculum', '/fll-hub/curriculum/'], requireFllAuth, (req, res) => {
+	if (req.fllUser.role !== 'coach') {
+		return res.redirect(302, '/fll-hub/student');
+	}
+	res.sendFile(path.join(fllHubDir, 'hub.html'));
+});
+
 app.get(['/fll-hub/student', '/fll-hub/student/'], requireFllAuth, (req, res) => {
 	if (req.fllUser.role !== 'student') {
 		return res.redirect(302, '/fll-hub');
@@ -1630,6 +1823,8 @@ app.use('/codelab/api', (req, res, next) => {
 	codeLabApp(req, res, next);
 });
 app.use('/api', (req, res, next) => {
+	// Camp hub API routes are registered later on this app — skip the codeLab proxy.
+	if (req.path.startsWith('/camp/')) return next();
 	req.url = `/api${req.url}`;
 	codeLabApp(req, res, next);
 });
@@ -1638,9 +1833,254 @@ app.use('/fll-assets', (req, res, next) => {
 	codeLabApp(req, res, next);
 });
 
+// ── Summer Camp Hub ──
+app.get(['/camp-hub/login', '/camp-hub/login/'], (req, res) => {
+	res.sendFile(path.join(campHubDir, 'login.html'));
+});
+
+app.get(['/camp-hub', '/camp-hub/'], requireCampAuth, (req, res) => {
+	res.sendFile(path.join(campHubDir, 'hub.html'));
+});
+
+app.get(['/camp-hub/coach', '/camp-hub/coach/'], requireCampAuth, (req, res) => {
+	if (req.campUser.role !== 'coach') {
+		return res.redirect(302, '/camp-hub');
+	}
+	res.sendFile(path.join(campHubDir, 'coach.html'));
+});
+
+app.post('/api/camp/login', async (req, res) => {
+	try {
+		const username = cleanMetaString(req.body.username || '', 80).toLowerCase();
+		const password = typeof req.body.password === 'string' ? req.body.password : '';
+		const users = await readCampUsers();
+		const user = users.find((candidate) => candidate.username.toLowerCase() === username && candidate.active !== false);
+
+		if (!user || !verifyScryptPassword(password, user.password_hash)) {
+			return res.status(401).json({ success: false, message: 'Invalid camp username or password' });
+		}
+
+		const token = crypto.randomBytes(32).toString('hex');
+		campSessions.set(token, {
+			userId: user.id,
+			createdAt: Date.now(),
+			lastSeen: Date.now()
+		});
+		setCampSessionCookie(res, token);
+		return res.json({
+			success: true,
+			user: publicCampUser(user),
+			redirectTo: user.role === 'coach' ? '/camp-hub/coach' : '/camp-hub'
+		});
+	} catch (err) {
+		console.error('Camp login error:', err);
+		return res.status(500).json({ success: false, message: 'Server error signing in' });
+	}
+});
+
+app.post('/api/camp/logout', (req, res) => {
+	const session = getCampSession(req);
+	if (session) {
+		campSessions.delete(session.token);
+	}
+	clearCampSessionCookie(res);
+	return res.json({ success: true });
+});
+
+app.get('/api/camp/session', async (req, res) => {
+	try {
+		const session = getCampSession(req);
+		if (!session) {
+			return res.status(401).json({ success: false, message: 'Camp login required' });
+		}
+		const users = await readCampUsers();
+		const user = users.find((candidate) => candidate.id === session.userId && candidate.active !== false);
+		if (!user) {
+			campSessions.delete(session.token);
+			clearCampSessionCookie(res);
+			return res.status(401).json({ success: false, message: 'Camp login required' });
+		}
+		return res.json({ success: true, user: publicCampUser(user) });
+	} catch (err) {
+		console.error('Camp session error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading camp session' });
+	}
+});
+
+app.get('/api/camp/hub-data', requireCampAuth, async (req, res) => {
+	try {
+		const data = await getCampHubDataFor(req.campUser);
+		return res.json({ success: true, data });
+	} catch (err) {
+		console.error('Camp hub data error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading camp hub data' });
+	}
+});
+
+app.patch('/api/camp/coach/days/:dayId', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const curriculum = await readJsonFile(campCurriculumFile, []);
+		let updatedDay = null;
+		for (const week of curriculum) {
+			const day = (Array.isArray(week.days) ? week.days : []).find((candidate) => candidate.id === req.params.dayId);
+			if (day) {
+				if (typeof req.body.activity === 'string') day.activity = cleanMetaString(req.body.activity, 600);
+				if (typeof req.body.build === 'string') day.build = cleanMetaString(req.body.build, 120);
+				if (typeof req.body.coachNotes === 'string') day.coachNotes = cleanMetaString(req.body.coachNotes, 600);
+				updatedDay = day;
+				break;
+			}
+		}
+		if (!updatedDay) {
+			return res.status(404).json({ success: false, message: 'Camp day not found' });
+		}
+		await writeJsonFile(campCurriculumFile, curriculum);
+		return res.json({ success: true, day: updatedDay });
+	} catch (err) {
+		console.error('Camp coach day update error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving the day' });
+	}
+});
+
+app.post('/api/camp/coach/announcements', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const title = cleanMetaString(req.body.title || '', 140);
+		const body = cleanMetaString(req.body.body || '', 1000);
+		const audience = req.body.audience === 'coach' ? 'coach' : 'all';
+		if (!title || !body) {
+			return res.status(400).json({ success: false, message: 'Title and message are required' });
+		}
+		const announcements = await readJsonFile(campAnnouncementsFile, []);
+		announcements.push({
+			id: `ann-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
+			date: new Date().toISOString().slice(0, 10),
+			audience,
+			title,
+			body
+		});
+		await writeJsonFile(campAnnouncementsFile, announcements);
+		return res.status(201).json({ success: true, announcements });
+	} catch (err) {
+		console.error('Camp coach announcement error:', err);
+		return res.status(500).json({ success: false, message: 'Server error posting announcement' });
+	}
+});
+
+app.delete('/api/camp/coach/announcements/:id', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const announcements = await readJsonFile(campAnnouncementsFile, []);
+		const remaining = announcements.filter((item) => item.id !== req.params.id);
+		if (remaining.length === announcements.length) {
+			return res.status(404).json({ success: false, message: 'Announcement not found' });
+		}
+		await writeJsonFile(campAnnouncementsFile, remaining);
+		return res.json({ success: true, announcements: remaining });
+	} catch (err) {
+		console.error('Camp coach announcement delete error:', err);
+		return res.status(500).json({ success: false, message: 'Server error deleting announcement' });
+	}
+});
+
+app.get('/api/camp/coach/roster', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const users = await readCampUsers();
+		return res.json({
+			success: true,
+			users: users.map((user) => ({
+				id: user.id,
+				name: user.name,
+				username: user.username,
+				role: user.role,
+				active: user.active !== false
+			}))
+		});
+	} catch (err) {
+		console.error('Camp coach roster error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading roster' });
+	}
+});
+
+app.post('/api/camp/coach/students', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const name = cleanMetaString(req.body.name || '', 80);
+		if (!name) {
+			return res.status(400).json({ success: false, message: 'Camper name is required' });
+		}
+		const username = cleanMetaString(req.body.username || '', 80).toLowerCase() || null;
+		const password = typeof req.body.password === 'string' && req.body.password.length >= 6 ? req.body.password : null;
+		const users = await readCampUsers();
+		const existingUsernames = new Set(users.map((user) => user.username.toLowerCase()));
+		if (username && existingUsernames.has(username)) {
+			return res.status(409).json({ success: false, message: 'That username is already taken' });
+		}
+		const finalUsername = username || uniqueUsername(name, existingUsernames);
+		const finalPassword = password || generateStudentPassword();
+		const id = `camper-${slugify(name)}-${crypto.randomBytes(3).toString('hex')}`;
+		users.push({
+			id,
+			name,
+			username: finalUsername,
+			password_hash: hashScryptPassword(finalPassword),
+			role: 'student',
+			active: true
+		});
+		await writeJsonFile(campUsersFile, users);
+		return res.status(201).json({ success: true, student: { id, name, username: finalUsername, password: finalPassword } });
+	} catch (err) {
+		console.error('Camp coach add camper error:', err);
+		return res.status(500).json({ success: false, message: 'Server error adding camper' });
+	}
+});
+
+app.patch('/api/camp/coach/students/:id', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const users = await readCampUsers();
+		const user = users.find((candidate) => candidate.id === req.params.id && candidate.role === 'student');
+		if (!user) {
+			return res.status(404).json({ success: false, message: 'Camper not found' });
+		}
+		let newPassword = null;
+		if (req.body.resetPassword === true) {
+			newPassword = generateStudentPassword();
+			user.password_hash = hashScryptPassword(newPassword);
+		}
+		if (typeof req.body.active === 'boolean') {
+			user.active = req.body.active;
+		}
+		if (typeof req.body.name === 'string' && cleanMetaString(req.body.name, 80)) {
+			user.name = cleanMetaString(req.body.name, 80);
+		}
+		await writeJsonFile(campUsersFile, users);
+		const response = { success: true, user: { id: user.id, name: user.name, username: user.username, active: user.active !== false } };
+		if (newPassword) response.password = newPassword;
+		return res.json(response);
+	} catch (err) {
+		console.error('Camp coach update camper error:', err);
+		return res.status(500).json({ success: false, message: 'Server error updating camper' });
+	}
+});
+
 app.use((req, res, next) => {
 	const requestPath = decodeURIComponent(req.path || '');
 	const fllStaticRoot = '/robotics lab/FLL Teams/2026-2027-bioglow';
+	const campStaticRoot = '/robotics lab/Summer Camp/2026-summer-camp';
+	if (requestPath.startsWith(`${campStaticRoot}/data/`)) {
+		return res.status(404).send('Not found');
+	}
+	if (requestPath === `${campStaticRoot}/hub.html`) {
+		return requireCampAuth(req, res, () => res.sendFile(path.join(campHubDir, 'hub.html')));
+	}
+	if (requestPath === `${campStaticRoot}/coach.html`) {
+		return requireCampAuth(req, res, () => {
+			if (req.campUser.role !== 'coach') {
+				return res.redirect(302, '/camp-hub');
+			}
+			return res.sendFile(path.join(campHubDir, 'coach.html'));
+		});
+	}
+	if (requestPath === `${campStaticRoot}/login.html`) {
+		return res.redirect(302, '/camp-hub/login');
+	}
 	if (requestPath.startsWith(`${fllStaticRoot}/data/`)) {
 		return res.status(404).send('Not found');
 	}
@@ -1674,11 +2114,11 @@ app.use(express.static(path.join(__dirname), {
 	}
 }));
 
-initializeFllDataDir()
+Promise.all([initializeFllDataDir(), initializeCampDataDir()])
 	.then(() => {
 		app.listen(PORT, () => console.log(`AI Future Platform running at http://localhost:${PORT}`));
 	})
 	.catch((err) => {
-		console.error('Failed to initialize FLL hub data:', err);
+		console.error('Failed to initialize hub data:', err);
 		process.exit(1);
 	});
