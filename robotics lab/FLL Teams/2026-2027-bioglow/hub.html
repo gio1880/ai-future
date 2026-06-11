@@ -765,6 +765,159 @@
       margin-bottom: 24px;
     }
 
+    .curriculum-view-panel {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin: 0 0 22px;
+      padding: 16px;
+    }
+
+    .curriculum-view-controls {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      align-items: end;
+    }
+
+    .curriculum-control-group {
+      display: grid;
+      gap: 8px;
+    }
+
+    .curriculum-control-group label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .curriculum-mode-tabs,
+    .curriculum-date-row,
+    .curriculum-quick-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .curriculum-mode-btn,
+    .curriculum-quick-btn {
+      background: var(--bg);
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      color: var(--ink);
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 900;
+      min-height: 38px;
+      padding: 8px 12px;
+    }
+
+    .curriculum-mode-btn.is-active,
+    .curriculum-quick-btn:hover {
+      background: var(--green);
+      border-color: var(--green);
+      color: white;
+    }
+
+    .curriculum-select,
+    .curriculum-date-input {
+      background: var(--bg);
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      color: var(--ink);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      min-height: 38px;
+      padding: 8px 10px;
+    }
+
+    .curriculum-date-input {
+      min-width: 145px;
+    }
+
+    .curriculum-filter-summary {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      margin-top: 14px;
+    }
+
+    .area-overview-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .area-overview-card {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .area-overview-head {
+      align-items: flex-start;
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .area-overview-title {
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .area-month-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .area-month {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+    }
+
+    .area-month-title {
+      color: var(--green-dark);
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .area-lesson-row {
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: 8px;
+      grid-template-columns: 82px 1fr;
+      padding: 9px 0;
+    }
+
+    .area-lesson-row:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .area-lesson-date {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .area-lesson-title {
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
     .calendar-section {
       margin: 0 0 40px;
     }
@@ -986,6 +1139,15 @@
       margin-bottom: 40px;
     }
 
+    .timeline-scroll {
+      max-height: 470px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding-right: 6px;
+      scrollbar-color: var(--green-mid) transparent;
+      scrollbar-width: thin;
+    }
+
     .timeline-list {
       display: grid;
       gap: 12px;
@@ -999,6 +1161,7 @@
       display: flex;
       align-items: flex-start;
       gap: 18px;
+      min-width: 0;
     }
 
     .timeline-item.is-current {
@@ -1519,6 +1682,9 @@
       .announcements-scroll {
         max-height: 360px;
       }
+      .timeline-scroll {
+        max-height: 380px;
+      }
       .hero-card {
         grid-template-columns: 1fr;
       }
@@ -1561,6 +1727,21 @@
         scroll-snap-type: x mandatory;
       }
       .announcements-scroll .announce-card {
+        flex: 0 0 min(86vw, 340px);
+        scroll-snap-align: start;
+      }
+      .timeline-scroll {
+        max-height: none;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 0 4px 12px 0;
+        scroll-snap-type: x mandatory;
+      }
+      .timeline-scroll .timeline-list {
+        display: flex;
+        gap: 12px;
+      }
+      .timeline-scroll .timeline-item {
         flex: 0 0 min(86vw, 340px);
         scroll-snap-align: start;
       }
@@ -2427,8 +2608,10 @@
             <div class="timeline-section">
               <div class="section-title">🗺️ Season Journey</div>
               <p class="section-sub">Your roadmap from now to competition day.</p>
-              <div class="timeline-list">
-                ${renderTimeline(timeline)}
+              <div class="timeline-scroll">
+                <div class="timeline-list">
+                  ${renderTimeline(timeline)}
+                </div>
               </div>
             </div>
           </aside>
