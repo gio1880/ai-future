@@ -1,0 +1,28 @@
+[
+  {
+    "id": "assignment-kickoff-prep",
+    "teamId": "team-01",
+    "title": "BIOGLOW kickoff prep",
+    "summary": "Get ready for the August 4 challenge release by building team routines and ecosystem curiosity.",
+    "instructions": "Review the current BIOGLOW theme preview, bring three ecosystem questions, and be ready to explain one nature-tech connection.",
+    "priority": "High",
+    "dueDate": "2026-08-03",
+    "status": "Active",
+    "createdBy": "coach-default",
+    "pinned": true,
+    "category": "Season Prep"
+  },
+  {
+    "id": "assignment-kit-inventory",
+    "teamId": "team-01",
+    "title": "Robot kit inventory",
+    "summary": "Make sure the team has the parts, batteries, cables, and labels needed for a smooth season.",
+    "instructions": "Check the SPIKE kits, note missing parts, charge batteries, and organize parts by type.",
+    "priority": "Medium",
+    "dueDate": "2026-07-15",
+    "status": "Active",
+    "createdBy": "coach-default",
+    "pinned": true,
+    "category": "Robot Game"
+  }
+]

@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coach Backend · BIOGLOW 2026-2027</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f6f8f7;
+      color: #202124;
+    }
+
+    .topbar {
+      background: white;
+      border-bottom: 1.5px solid #e8eaed;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .topbar-title { font-size: 17px; font-weight: 900; letter-spacing: -0.01em; }
+    .topbar-title span { color: #1e8e5a; }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .topbar-user { font-size: 13px; color: #5f6368; font-weight: 600; }
+    .btn-logout {
+      background: none; border: 1.5px solid #dadce0; border-radius: 50px;
+      padding: 7px 16px; font-size: 13px; font-weight: 700; color: #5f6368; cursor: pointer;
+    }
+    .btn-logout:hover { border-color: #d93025; color: #d93025; }
+
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 26px 20px 60px; }
+
+    .page-head { margin-bottom: 22px; }
+    .page-title { font-size: 24px; font-weight: 900; letter-spacing: -0.02em; margin: 0 0 6px; }
+    .page-sub { font-size: 14px; color: #5f6368; margin: 0; }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: white;
+      border: 1.5px solid #e0e3e8;
+      border-radius: 50px;
+      padding: 9px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #5f6368;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .tab-btn.active { background: #1e8e5a; border-color: #1e8e5a; color: white; }
+    .tab-btn:not(.active):hover { border-color: #1e8e5a; color: #1e8e5a; }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* teams */
+    .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .team-card {
+      background: white;
+      border: 1.5px solid #e8eaed;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .team-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+    .team-name { font-size: 18px; font-weight: 900; }
+    .team-badge {
+      font-size: 10px; font-weight: 800; border-radius: 50px; padding: 4px 11px;
+      background: #e6f4ea; color: #1e8e5a; white-space: nowrap;
+    }
+    .team-badge.new { background: #e8f1fd; color: #1a73e8; }
+    .team-meta { font-size: 12px; color: #5f6368; margin-bottom: 14px; }
+
+    .team-section-label {
+      font-size: 11px; font-weight: 800; color: #80868b; text-transform: uppercase;
+      letter-spacing: 0.05em; margin: 14px 0 8px;
+    }
+    .member-chiprow { display: flex; flex-wrap: wrap; gap: 6px; }
+    .member-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #f1f3f4; border-radius: 50px; padding: 5px 12px 5px 5px;
+      font-size: 12px; font-weight: 700; color: #3c4043;
+    }
+    .member-avatar {
+      width: 22px; height: 22px; border-radius: 50%; background: #1e8e5a; color: white;
+      font-size: 9px; font-weight: 800; display: flex; align-items: center; justify-content: center;
+    }
+    .member-chip.inactive { opacity: 0.5; }
+    .no-members { font-size: 12px; color: #80868b; font-style: italic; }
+
+    .rubric-item {
+      background: #fef9ec; border: 1px solid #f5e6b8; border-radius: 10px;
+      padding: 10px 12px; margin-bottom: 8px;
+    }
+    .rubric-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .rubric-season { font-size: 11px; font-weight: 800; color: #b07c00; }
+    .rubric-label { font-size: 13px; font-weight: 700; margin: 2px 0; }
+    .rubric-notes { font-size: 12px; color: #5f6368; line-height: 1.5; }
+    .rubric-link { font-size: 12px; font-weight: 700; color: #1a73e8; text-decoration: none; }
+    .rubric-delete { background: none; border: none; color: #bdc1c6; cursor: pointer; font-size: 12px; padding: 2px 6px; border-radius: 6px; }
+    .rubric-delete:hover { color: #d93025; background: #fce8e6; }
+
+    .mini-form { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .mini-form-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .mini-form input, .mini-form textarea {
+      border: 1.5px solid #dadce0; border-radius: 8px; padding: 8px 10px;
+      font-size: 13px; font-family: inherit; flex: 1; min-width: 120px;
+    }
+    .mini-form input:focus, .mini-form textarea:focus { outline: none; border-color: #1e8e5a; }
+    .mini-btn {
+      background: #1e8e5a; color: white; border: none; border-radius: 8px;
+      padding: 8px 16px; font-size: 12px; font-weight: 800; cursor: pointer;
+    }
+    .mini-btn:hover { background: #166c44; }
+    .mini-btn.outline { background: white; color: #1e8e5a; border: 1.5px solid #1e8e5a; }
+    .toggle-form-btn {
+      background: none; border: 1.5px dashed #bdc1c6; border-radius: 8px; width: 100%;
+      padding: 8px; font-size: 12px; font-weight: 700; color: #5f6368; cursor: pointer;
+    }
+    .toggle-form-btn:hover { border-color: #1e8e5a; color: #1e8e5a; }
+    .hidden { display: none !important; }
+
+    /* forms panel */
+    .form-card {
+      background: white; border: 1.5px solid #e8eaed; border-radius: 18px;
+      padding: 26px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); max-width: 620px;
+    }
+    .form-title { font-size: 17px; font-weight: 900; margin: 0 0 4px; }
+    .form-sub { font-size: 13px; color: #5f6368; margin: 0 0 18px; }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+    .field input, .field select, .field textarea {
+      width: 100%; border: 1.5px solid #dadce0; border-radius: 10px; padding: 10px 12px;
+      font-size: 14px; font-family: inherit;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      outline: none; border-color: #1e8e5a; box-shadow: 0 0 0 3px rgba(30,142,90,0.12);
+    }
+    .field-hint { font-size: 12px; color: #80868b; margin-top: 5px; }
+    .submit-btn {
+      background: #1e8e5a; color: white; border: none; border-radius: 50px;
+      padding: 12px 28px; font-size: 14px; font-weight: 800; cursor: pointer;
+    }
+    .submit-btn:hover { background: #166c44; }
+    .submit-btn:disabled { opacity: 0.6; cursor: wait; }
+    .form-msg { margin-top: 12px; font-size: 13px; font-weight: 700; min-height: 20px; }
+    .form-msg.error { color: #d93025; }
+    .form-msg.success { color: #1e8e5a; }
+
+    /* credentials output */
+    .creds-card {
+      margin-top: 18px; background: #e6f4ea; border: 1.5px solid #b7dfca;
+      border-radius: 14px; padding: 18px;
+    }
+    .creds-title { font-size: 14px; font-weight: 900; color: #166c44; margin-bottom: 4px; }
+    .creds-warn { font-size: 12px; color: #3c8c5e; margin-bottom: 12px; }
+    .creds-table { width: 100%; border-collapse: collapse; font-size: 13px; background: white; border-radius: 10px; overflow: hidden; }
+    .creds-table th { background: #f1f3f4; text-align: left; padding: 8px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: #5f6368; }
+    .creds-table td { padding: 8px 12px; border-top: 1px solid #f1f3f4; }
+    .creds-table code { background: #f1f3f4; border-radius: 5px; padding: 2px 7px; font-size: 12px; }
+    .creds-actions { margin-top: 12px; display: flex; gap: 10px; }
+
+    /* students table */
+    .students-table-wrap { background: white; border: 1.5px solid #e8eaed; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .students-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .students-table th { background: #f8f9fa; text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: #5f6368; border-bottom: 1.5px solid #e8eaed; }
+    .students-table td { padding: 11px 16px; border-bottom: 1px solid #f1f3f4; vertical-align: middle; }
+    .students-table tr:last-child td { border-bottom: none; }
+    .students-table select {
+      border: 1.5px solid #dadce0; border-radius: 8px; padding: 6px 8px; font-size: 12px; font-weight: 600;
+    }
+    .st-action-btn {
+      background: white; border: 1.5px solid #dadce0; border-radius: 50px;
+      padding: 5px 12px; font-size: 11px; font-weight: 700; color: #5f6368; cursor: pointer; margin-right: 6px;
+    }
+    .st-action-btn:hover { border-color: #1a73e8; color: #1a73e8; }
+    .st-action-btn.danger:hover { border-color: #d93025; color: #d93025; }
+    .st-inactive { opacity: 0.5; }
+    .st-status-pill { font-size: 10px; font-weight: 800; border-radius: 50px; padding: 3px 9px; }
+    .st-status-pill.on { background: #e6f4ea; color: #1e8e5a; }
+    .st-status-pill.off { background: #fce8e6; color: #d93025; }
+
+    /* ── Calendar ── */
+    .cal-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; flex-wrap: wrap; margin-bottom: 12px;
+    }
+    .cal-toolbar-group { display: flex; gap: 6px; align-items: center; }
+    .cal-view-btn {
+      background: white; border: 1.5px solid #e0e3e8; border-radius: 8px;
+      padding: 7px 14px; font-size: 12px; font-weight: 700; color: #5f6368; cursor: pointer;
+    }
+    .cal-view-btn.active { background: #1e8e5a; border-color: #1e8e5a; color: white; }
+    .cal-view-btn:not(.active):hover { border-color: #1e8e5a; color: #1e8e5a; }
+    .cal-filter {
+      border: 1.5px solid #e0e3e8; border-radius: 8px; padding: 7px 10px;
+      font-size: 12px; font-weight: 600; background: white; cursor: pointer; max-width: 190px;
+    }
+    .cal-nav-btn {
+      background: #f1f3f4; border: none; border-radius: 50%; width: 32px; height: 32px;
+      font-size: 16px; font-weight: 800; color: #5f6368; cursor: pointer;
+    }
+    .cal-nav-btn:hover { background: #e6f4ea; color: #1e8e5a; }
+    .cal-today-btn {
+      background: white; border: 1.5px solid #e0e3e8; border-radius: 50px;
+      padding: 7px 16px; font-size: 12px; font-weight: 700; color: #5f6368; cursor: pointer;
+    }
+    .cal-today-btn:hover { border-color: #1e8e5a; color: #1e8e5a; }
+    .cal-range-label { font-size: 17px; font-weight: 900; margin-bottom: 8px; }
+    .cal-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 14px; }
+    .cal-legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: #5f6368; }
+    .cal-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+    .cal-dot.due { background: #e37400; }
+    .cal-dot.done { background: #34a853; }
+    .cal-dot.competition { background: #d93025; }
+    .cal-dot.season { background: #1a73e8; }
+
+    .cal-card-grid {
+      background: white; border: 1.5px solid #e8eaed; border-radius: 18px;
+      padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .cal-dow-row, .cal-month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+    .cal-dow { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #80868b; text-align: center; padding: 6px 0; }
+    .cal-cell {
+      min-height: 76px; border: 1px solid #f1f3f4; border-radius: 8px;
+      padding: 4px; background: #fafbfc; overflow: hidden;
+    }
+    .cal-cell.empty { border: none; background: transparent; }
+    .cal-cell.today { border: 2px solid #1e8e5a; background: #e6f4ea; }
+    .cal-cell.has-events { background: white; }
+    .cal-daynum { font-size: 11px; font-weight: 700; color: #5f6368; margin-bottom: 3px; }
+    .cal-cell.today .cal-daynum { color: #1e8e5a; }
+    .cal-chip {
+      font-size: 9.5px; font-weight: 700; border-radius: 5px; padding: 2px 5px; margin-bottom: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.4;
+    }
+    .cal-chip.due { background: #fff3e0; color: #e37400; }
+    .cal-chip.done { background: #e6f4ea; color: #1e8e5a; text-decoration: line-through; }
+    .cal-chip.competition { background: #fce8e6; color: #d93025; }
+    .cal-chip.season { background: #e8f1fd; color: #1a73e8; }
+
+    /* week view */
+    .cal-week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .cal-week-col { border: 1px solid #f1f3f4; border-radius: 10px; background: #fafbfc; min-height: 200px; padding: 8px; }
+    .cal-week-col.today { border: 2px solid #1e8e5a; background: #f3fbf6; }
+    .cal-week-head { font-size: 11px; font-weight: 800; color: #5f6368; margin-bottom: 8px; text-align: center; }
+    .cal-week-head .big { display: block; font-size: 18px; font-weight: 900; color: #202124; }
+    .cal-week-col.today .cal-week-head .big { color: #1e8e5a; }
+    .cal-event-block {
+      border-radius: 8px; padding: 6px 8px; margin-bottom: 6px; font-size: 11px; font-weight: 700; line-height: 1.4;
+    }
+    .cal-event-block .ev-team { display: block; font-size: 10px; font-weight: 600; opacity: 0.75; }
+    .cal-event-block.due { background: #fff3e0; color: #b35900; }
+    .cal-event-block.done { background: #e6f4ea; color: #166c44; }
+    .cal-event-block.competition { background: #fce8e6; color: #b3261e; }
+    .cal-event-block.season { background: #e8f1fd; color: #174ea6; }
+
+    /* day view */
+    .cal-day-list { display: flex; flex-direction: column; gap: 10px; }
+    .cal-day-empty { color: #80868b; font-size: 14px; padding: 30px 0; text-align: center; }
+    .cal-day-event { display: flex; gap: 12px; align-items: flex-start; border: 1.5px solid #f1f3f4; border-radius: 12px; padding: 14px; background: #fafbfc; }
+    .cal-day-event .ev-icon { font-size: 22px; }
+    .cal-day-event .ev-title { font-size: 14px; font-weight: 800; }
+    .cal-day-event .ev-sub { font-size: 12px; color: #5f6368; margin-top: 2px; }
+
+    /* year view */
+    .cal-year-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .cal-mini-month { border: 1px solid #f1f3f4; border-radius: 12px; padding: 10px; background: #fafbfc; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; }
+    .cal-mini-month:hover { border-color: #1e8e5a; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .cal-mini-title { font-size: 12px; font-weight: 800; text-align: center; margin-bottom: 6px; }
+    .cal-mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
+    .cal-mini-day { font-size: 8px; text-align: center; padding: 2px 0; color: #80868b; border-radius: 3px; position: relative; }
+    .cal-mini-day.today { background: #1e8e5a; color: white; font-weight: 800; }
+    .cal-mini-day .mini-dots { display: flex; justify-content: center; gap: 1px; height: 4px; }
+    .cal-mini-day .mini-dot { width: 3px; height: 3px; border-radius: 50%; }
+    .mini-dot.due { background: #e37400; }
+    .mini-dot.done { background: #34a853; }
+    .mini-dot.competition { background: #d93025; }
+    .mini-dot.season { background: #1a73e8; }
+
+    @media (max-width: 760px) {
+      .cal-week-grid { grid-template-columns: 1fr; }
+      .cal-year-grid { grid-template-columns: repeat(2, 1fr); }
+      .cal-cell { min-height: 48px; }
+      .cal-chip { font-size: 0; padding: 0; }
+      .cal-chip::before { content: '●'; font-size: 8px; }
+    }
+
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: #202124; color: white; border-radius: 50px; padding: 11px 24px;
+      font-size: 13px; font-weight: 700; opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 100;
+    }
+    .toast.show { opacity: 1; }
+
+    @media (max-width: 760px) {
+      .team-grid { grid-template-columns: 1fr; }
+      .wrap { padding: 18px 12px 50px; }
+      .students-table-wrap { overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-title">🌿 BIOGLOW <span>Coach Backend</span></div>
+    <div class="topbar-right">
+      <span class="topbar-user" id="userLine">Loading…</span>
+      <button class="btn-logout" onclick="logout()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="page-head">
+      <h1 class="page-title">Team &amp; Roster Management</h1>
+      <p class="page-sub">Manage your returning and new teams, import rosters, and generate student logins for the 2026-2027 BIOGLOW season.</p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="teams" onclick="showTab('teams')">🏆 Teams</button>
+      <button class="tab-btn" data-tab="students" onclick="showTab('students')">👥 All Students</button>
+      <button class="tab-btn" data-tab="add" onclick="showTab('add')">➕ Add Student</button>
+      <button class="tab-btn" data-tab="bulk" onclick="showTab('bulk')">📥 Bulk Import</button>
+      <button class="tab-btn" data-tab="newteam" onclick="showTab('newteam')">🆕 Create Team</button>
+      <button class="tab-btn" data-tab="calendar" onclick="showTab('calendar')">📅 Calendar</button>
+      <button class="tab-btn" data-tab="curriculum" onclick="showTab('curriculum')">📚 Curriculum</button>
+    </div>
+
+    <div class="panel active" id="panel-teams"><div id="teamsGrid" class="team-grid">Loading…</div></div>
+    <div class="panel" id="panel-students"><div id="studentsWrap">Loading…</div></div>
+
+    <div class="panel" id="panel-add">
+      <div class="form-card">
+        <h2 class="form-title">Add a student</h2>
+        <p class="form-sub">Creates a login and (optionally) places them on a team. Leave username/password blank to auto-generate.</p>
+        <div class="field">
+          <label for="addName">Student name *</label>
+          <input id="addName" type="text" placeholder="e.g. Maya Rodriguez">
+        </div>
+        <div class="field">
+          <label for="addTeam">Team</label>
+          <select id="addTeam"><option value="">— No team yet —</option></select>
+        </div>
+        <div class="field">
+          <label for="addUsername">Username (optional)</label>
+          <input id="addUsername" type="text" placeholder="Auto-generated from name if blank">
+        </div>
+        <div class="field">
+          <label for="addPassword">Password (optional)</label>
+          <input id="addPassword" type="text" placeholder="Auto-generated if blank (min 6 characters)">
+        </div>
+        <button class="submit-btn" id="addBtn" onclick="addStudent()">Create student login</button>
+        <div class="form-msg" id="addMsg"></div>
+        <div id="addCreds"></div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-bulk">
+      <div class="form-card">
+        <h2 class="form-title">Bulk import roster</h2>
+        <p class="form-sub">Paste one student name per line. Usernames and passwords are auto-generated — you'll get a credential sheet to print or download.</p>
+        <div class="field">
+          <label for="bulkTeam">Assign all to team</label>
+          <select id="bulkTeam"><option value="">— No team yet —</option></select>
+        </div>
+        <div class="field">
+          <label for="bulkNames">Student names (one per line) *</label>
+          <textarea id="bulkNames" rows="8" placeholder="Maya Rodriguez&#10;Jaden Smith&#10;Ava Chen&#10;Liam Johnson"></textarea>
+          <div class="field-hint">Up to 60 students at a time.</div>
+        </div>
+        <button class="submit-btn" id="bulkBtn" onclick="bulkAdd()">Import students</button>
+        <div class="form-msg" id="bulkMsg"></div>
+        <div id="bulkCreds"></div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-newteam">
+      <div class="form-card">
+        <h2 class="form-title">Create a team</h2>
+        <p class="form-sub">New teams start empty — add students from the Add Student or Bulk Import tabs.</p>
+        <div class="field">
+          <label for="teamName">Team name *</label>
+          <input id="teamName" type="text" placeholder="e.g. Glow Getters">
+        </div>
+        <div class="field">
+          <label for="teamDays">Meeting days</label>
+          <input id="teamDays" type="text" placeholder="e.g. Tuesdays and Thursdays">
+        </div>
+        <div class="field">
+          <label for="teamRoom">Room</label>
+          <input id="teamRoom" type="text" placeholder="Robotics Lab">
+        </div>
+        <div class="field">
+          <label><input id="teamReturning" type="checkbox" style="width:auto;margin-right:8px;">Returning team (was enrolled last season)</label>
+        </div>
+        <button class="submit-btn" id="teamBtn" onclick="createTeam()">Create team</button>
+        <div class="form-msg" id="teamMsg"></div>
+      </div>
+    </div>
+    <div class="panel" id="panel-calendar">
+      <div class="cal-toolbar">
+        <div class="cal-toolbar-group">
+          <button class="cal-view-btn" data-view="day" onclick="setCalView('day')">Day</button>
+          <button class="cal-view-btn" data-view="week" onclick="setCalView('week')">Week</button>
+          <button class="cal-view-btn active" data-view="month" onclick="setCalView('month')">Month</button>
+          <button class="cal-view-btn" data-view="year" onclick="setCalView('year')">Year</button>
+        </div>
+        <div class="cal-toolbar-group">
+          <select class="cal-filter" id="calTeamFilter" onchange="renderCoachCalendar()">
+            <option value="all">All teams</option>
+          </select>
+          <select class="cal-filter" id="calRegionFilter" onchange="renderCoachCalendar()">
+            <option value="all">All regions</option>
+          </select>
+        </div>
+        <div class="cal-toolbar-group">
+          <button class="cal-nav-btn" onclick="calNav(-1)">‹</button>
+          <button class="cal-today-btn" onclick="calToday()">Today</button>
+          <button class="cal-nav-btn" onclick="calNav(1)">›</button>
+        </div>
+      </div>
+      <div class="cal-range-label" id="calRangeLabel"></div>
+      <div class="cal-legend">
+        <span class="cal-legend-item"><span class="cal-dot due"></span>Assignment due</span>
+        <span class="cal-legend-item"><span class="cal-dot done"></span>Completed</span>
+        <span class="cal-legend-item"><span class="cal-dot competition"></span>Competition</span>
+        <span class="cal-legend-item"><span class="cal-dot season"></span>Season event</span>
+      </div>
+      <div id="coachCalendar"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    let roster = null;
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    function showTab(id) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+      document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === `panel-${id}`));
+    }
+
+    async function api(url, options = {}) {
+      const response = await fetch(url, {
+        headers: { 'Content-Type': 'application/json' },
+        ...options
+      });
+      const result = await response.json();
+      if (!response.ok || !result.success) throw new Error(result.message || 'Request failed');
+      return result;
+    }
+
+    async function loadRoster() {
+      try {
+        const result = await api('/api/fll/coach/roster');
+        roster = result.data;
+        document.getElementById('userLine').textContent = `${roster.user.name} · Coach`;
+        renderTeams();
+        renderStudents();
+        fillTeamSelects();
+        fillCalendarFilters();
+        renderCoachCalendar();
+      } catch (err) {
+        window.location.href = '/fll-hub/login';
+      }
+    }
+
+    function teamMembers(teamId) {
+      const ids = new Set(roster.students.filter(s => s.teamId === teamId).map(s => s.id));
+      return roster.students.filter(s => s.teamId === teamId);
+    }
+
+    function renderTeams() {
+      const grid = document.getElementById('teamsGrid');
+      grid.innerHTML = roster.teams.map(team => {
+        const members = teamMembers(team.id);
+        const rubrics = Array.isArray(team.pastSeasons) ? team.pastSeasons : [];
+        return `
+          <div class="team-card">
+            <div class="team-card-head">
+              <div class="team-name">${escapeHtml(team.nickname || team.name)}</div>
+              <span class="team-badge ${team.returning ? '' : 'new'}">${team.returning ? '↩ Returning' : '✦ New'}</span>
+            </div>
+            <div class="team-meta">${escapeHtml(team.meetingDays || 'No schedule yet')} · ${escapeHtml(team.room || '')}</div>
+
+            <div class="team-section-label">Members (${members.length})</div>
+            ${members.length ? `
+              <div class="member-chiprow">
+                ${members.map(m => `
+                  <span class="member-chip ${m.active ? '' : 'inactive'}">
+                    <span class="member-avatar">${escapeHtml((m.name || '?').split(/\\s+/).slice(0,2).map(p => p[0]).join('').toUpperCase())}</span>
+                    ${escapeHtml(m.name)}
+                  </span>
+                `).join('')}
+              </div>
+            ` : `<div class="no-members">No members yet — import the roster from the Bulk Import tab.</div>`}
+
+            <div class="team-section-label">Past Season Rubrics (${rubrics.length})</div>
+            ${rubrics.map(r => `
+              <div class="rubric-item">
+                <div class="rubric-head">
+                  <span class="rubric-season">${escapeHtml(r.season)}</span>
+                  <button class="rubric-delete" onclick="deleteRubric('${escapeHtml(team.id)}','${escapeHtml(r.id)}')">✕</button>
+                </div>
+                <div class="rubric-label">${escapeHtml(r.label)}</div>
+                ${r.notes ? `<div class="rubric-notes">${escapeHtml(r.notes)}</div>` : ''}
+                ${r.url ? `<a class="rubric-link" href="${escapeHtml(r.url)}" target="_blank" rel="noreferrer">Open rubric →</a>` : ''}
+              </div>
+            `).join('')}
+            <button class="toggle-form-btn" onclick="document.getElementById('rubric-form-${escapeHtml(team.id)}').classList.toggle('hidden')">＋ Add rubric</button>
+            <div class="mini-form hidden" id="rubric-form-${escapeHtml(team.id)}">
+              <div class="mini-form-row">
+                <input type="text" id="rubric-season-${escapeHtml(team.id)}" placeholder="Season (e.g. 2025-2026 SUBMERGED)">
+                <input type="text" id="rubric-label-${escapeHtml(team.id)}" placeholder="Label (e.g. Judging Rubric)">
+              </div>
+              <input type="text" id="rubric-url-${escapeHtml(team.id)}" placeholder="Link to rubric file (optional)">
+              <textarea id="rubric-notes-${escapeHtml(team.id)}" rows="2" placeholder="Notes / judge feedback summary (optional)"></textarea>
+              <div class="mini-form-row">
+                <button class="mini-btn" onclick="addRubric('${escapeHtml(team.id)}')">Save rubric</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderStudents() {
+      const wrap = document.getElementById('studentsWrap');
+      if (!roster.students.length) {
+        wrap.innerHTML = '<div class="form-card">No students yet — add some from the Add Student or Bulk Import tabs.</div>';
+        return;
+      }
+      const teamOptions = id => `<option value="">— No team —</option>` +
+        roster.teams.map(t => `<option value="${escapeHtml(t.id)}" ${t.id === id ? 'selected' : ''}>${escapeHtml(t.nickname || t.name)}</option>`).join('');
+
+      wrap.innerHTML = `
+        <div class="students-table-wrap">
+          <table class="students-table">
+            <thead><tr><th>Name</th><th>Username</th><th>Team</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              ${roster.students.map(s => `
+                <tr class="${s.active ? '' : 'st-inactive'}">
+                  <td><strong>${escapeHtml(s.name)}</strong></td>
+                  <td><code>${escapeHtml(s.username)}</code></td>
+                  <td>
+                    <select onchange="moveStudent('${escapeHtml(s.id)}', this.value)">${teamOptions(s.teamId)}</select>
+                  </td>
+                  <td><span class="st-status-pill ${s.active ? 'on' : 'off'}">${s.active ? 'Active' : 'Disabled'}</span></td>
+                  <td>
+                    <button class="st-action-btn" onclick="resetPassword('${escapeHtml(s.id)}', '${escapeHtml(s.name)}')">🔑 Reset password</button>
+                    <button class="st-action-btn danger" onclick="toggleActive('${escapeHtml(s.id)}', ${s.active ? 'false' : 'true'})">${s.active ? 'Disable' : 'Enable'}</button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function fillTeamSelects() {
+      ['addTeam', 'bulkTeam'].forEach(id => {
+        const select = document.getElementById(id);
+        const current = select.value;
+        select.innerHTML = '<option value="">— No team yet —</option>' +
+          roster.teams.map(t => `<option value="${escapeHtml(t.id)}">${escapeHtml(t.nickname || t.name)}</option>`).join('');
+        select.value = current;
+      });
+    }
+
+    function credsTable(students) {
+      return `
+        <div class="creds-card">
+          <div class="creds-title">✅ ${students.length} login${students.length > 1 ? 's' : ''} created</div>
+          <div class="creds-warn">⚠️ Save these now — passwords are not shown again (you can reset them later).</div>
+          <table class="creds-table">
+            <thead><tr><th>Name</th><th>Username</th><th>Password</th></tr></thead>
+            <tbody>
+              ${students.map(s => `<tr><td>${escapeHtml(s.name)}</td><td><code>${escapeHtml(s.username)}</code></td><td><code>${escapeHtml(s.password)}</code></td></tr>`).join('')}
+            </tbody>
+          </table>
+          <div class="creds-actions">
+            <button class="mini-btn" onclick='copyCreds(${JSON.stringify(JSON.stringify(students))})'>📋 Copy all</button>
+            <button class="mini-btn outline" onclick='downloadCreds(${JSON.stringify(JSON.stringify(students))})'>⬇ Download CSV</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function copyCreds(json) {
+      const students = JSON.parse(json);
+      const text = students.map(s => `${s.name}\tusername: ${s.username}\tpassword: ${s.password}`).join('\n');
+      navigator.clipboard.writeText(text).then(() => showToast('Credentials copied'));
+    }
+
+    function downloadCreds(json) {
+      const students = JSON.parse(json);
+      const csv = 'Name,Username,Password\n' + students.map(s => `"${s.name.replace(/"/g,'""')}",${s.username},${s.password}`).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'student-logins.csv';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    // ── actions ──
+    async function addStudent() {
+      const msg = document.getElementById('addMsg');
+      const btn = document.getElementById('addBtn');
+      msg.textContent = ''; msg.className = 'form-msg';
+      const name = document.getElementById('addName').value.trim();
+      if (!name) { msg.textContent = 'Enter the student name.'; msg.className = 'form-msg error'; return; }
+      btn.disabled = true;
+      try {
+        const result = await api('/api/fll/coach/students', {
+          method: 'POST',
+          body: JSON.stringify({
+            name,
+            username: document.getElementById('addUsername').value.trim() || undefined,
+            password: document.getElementById('addPassword').value || undefined,
+            teamId: document.getElementById('addTeam').value || undefined
+          })
+        });
+        document.getElementById('addCreds').innerHTML = credsTable([result.student]);
+        document.getElementById('addName').value = '';
+        document.getElementById('addUsername').value = '';
+        document.getElementById('addPassword').value = '';
+        msg.textContent = '';
+        await loadRoster();
+      } catch (err) {
+        msg.textContent = err.message; msg.className = 'form-msg error';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function bulkAdd() {
+      const msg = document.getElementById('bulkMsg');
+      const btn = document.getElementById('bulkBtn');
+      msg.textContent = ''; msg.className = 'form-msg';
+      const names = document.getElementById('bulkNames').value;
+      if (!names.trim()) { msg.textContent = 'Paste at least one student name.'; msg.className = 'form-msg error'; return; }
+      btn.disabled = true;
+      try {
+        const result = await api('/api/fll/coach/students/bulk', {
+          method: 'POST',
+          body: JSON.stringify({
+            names,
+            teamId: document.getElementById('bulkTeam').value || undefined
+          })
+        });
+        document.getElementById('bulkCreds').innerHTML = credsTable(result.students);
+        document.getElementById('bulkNames').value = '';
+        await loadRoster();
+      } catch (err) {
+        msg.textContent = err.message; msg.className = 'form-msg error';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function createTeam() {
+      const msg = document.getElementById('teamMsg');
+      const btn = document.getElementById('teamBtn');
+      msg.textContent = ''; msg.className = 'form-msg';
+      const name = document.getElementById('teamName').value.trim();
+      if (!name) { msg.textContent = 'Enter the team name.'; msg.className = 'form-msg error'; return; }
+      btn.disabled = true;
+      try {
+        await api('/api/fll/coach/teams', {
+          method: 'POST',
+          body: JSON.stringify({
+            name,
+            meetingDays: document.getElementById('teamDays').value.trim() || undefined,
+            room: document.getElementById('teamRoom').value.trim() || undefined,
+            returning: document.getElementById('teamReturning').checked
+          })
+        });
+        msg.textContent = `✓ Team "${name}" created!`; msg.className = 'form-msg success';
+        document.getElementById('teamName').value = '';
+        document.getElementById('teamDays').value = '';
+        document.getElementById('teamRoom').value = '';
+        document.getElementById('teamReturning').checked = false;
+        await loadRoster();
+      } catch (err) {
+        msg.textContent = err.message; msg.className = 'form-msg error';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function addRubric(teamId) {
+      const season = document.getElementById(`rubric-season-${teamId}`).value.trim();
+      const label = document.getElementById(`rubric-label-${teamId}`).value.trim();
+      if (!season || !label) { showToast('Season and label are required'); return; }
+      try {
+        await api(`/api/fll/coach/teams/${encodeURIComponent(teamId)}/rubrics`, {
+          method: 'POST',
+          body: JSON.stringify({
+            season, label,
+            url: document.getElementById(`rubric-url-${teamId}`).value.trim(),
+            notes: document.getElementById(`rubric-notes-${teamId}`).value.trim()
+          })
+        });
+        showToast('Rubric added');
+        await loadRoster();
+      } catch (err) { showToast(err.message); }
+    }
+
+    async function deleteRubric(teamId, rubricId) {
+      if (!confirm('Remove this rubric from the team profile?')) return;
+      try {
+        await api(`/api/fll/coach/teams/${encodeURIComponent(teamId)}/rubrics/${encodeURIComponent(rubricId)}`, { method: 'DELETE' });
+        showToast('Rubric removed');
+        await loadRoster();
+      } catch (err) { showToast(err.message); }
+    }
+
+    async function moveStudent(studentId, teamId) {
+      try {
+        await api(`/api/fll/coach/students/${encodeURIComponent(studentId)}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ teamId })
+        });
+        showToast('Student moved');
+        await loadRoster();
+      } catch (err) { showToast(err.message); }
+    }
+
+    async function resetPassword(studentId, name) {
+      if (!confirm(`Reset password for ${name}? The old password will stop working.`)) return;
+      try {
+        const result = await api(`/api/fll/coach/students/${encodeURIComponent(studentId)}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ resetPassword: true })
+        });
+        prompt(`New password for ${name} — copy it now:`, result.newPassword);
+      } catch (err) { showToast(err.message); }
+    }
+
+    async function toggleActive(studentId, active) {
+      try {
+        await api(`/api/fll/coach/students/${encodeURIComponent(studentId)}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ active: active === 'true' || active === true })
+        });
+        await loadRoster();
+      } catch (err) { showToast(err.message); }
+    }
+
+    // ── Coach calendar ────────────────────────────────────────────────────
+    let calView = 'month';
+    let calDate = new Date(); calDate.setHours(0,0,0,0);
+
+    function setCalView(view) {
+      calView = view;
+      document.querySelectorAll('.cal-view-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+      renderCoachCalendar();
+    }
+
+    function calNav(delta) {
+      const d = new Date(calDate);
+      if (calView === 'day') d.setDate(d.getDate() + delta);
+      else if (calView === 'week') d.setDate(d.getDate() + delta * 7);
+      else if (calView === 'month') d.setMonth(d.getMonth() + delta);
+      else d.setFullYear(d.getFullYear() + delta);
+      calDate = d;
+      renderCoachCalendar();
+    }
+
+    function calToday() {
+      calDate = new Date(); calDate.setHours(0,0,0,0);
+      renderCoachCalendar();
+    }
+
+    function dateKey(d) {
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    }
+
+    function teamLabel(teamId) {
+      const t = roster.teams.find(x => x.id === teamId);
+      return t ? (t.nickname || t.name) : teamId;
+    }
+
+    // build {'YYYY-MM-DD': [{label, type, team, sub}]} honoring filters
+    function coachCalendarEvents() {
+      const teamFilter = document.getElementById('calTeamFilter').value;
+      const regionFilter = document.getElementById('calRegionFilter').value;
+      const events = {};
+      const push = (dateStr, ev) => {
+        if (!dateStr) return;
+        const key = String(dateStr).slice(0, 10);
+        (events[key] = events[key] || []).push(ev);
+      };
+
+      const visibleTeams = roster.teams.filter(t =>
+        (teamFilter === 'all' || t.id === teamFilter) &&
+        (regionFilter === 'all' || t.region === regionFilter)
+      );
+      const visibleTeamIds = new Set(visibleTeams.map(t => t.id));
+
+      // assignment due dates
+      (roster.tasks || []).forEach(task => {
+        if (!task.dueDate || !visibleTeamIds.has(task.teamId)) return;
+        push(task.dueDate, {
+          label: task.title,
+          type: task.status === 'done' ? 'done' : 'due',
+          team: teamLabel(task.teamId)
+        });
+      });
+
+      // region competitions (only regions that have a visible team, or the filtered region)
+      const regions = (roster.season && roster.season.regions) || [];
+      const visibleRegions = new Set(visibleTeams.map(t => t.region));
+      regions.forEach(region => {
+        if (regionFilter !== 'all' && region.id !== regionFilter) return;
+        if (regionFilter === 'all' && teamFilter !== 'all' && !visibleRegions.has(region.id)) return;
+        push(region.predictedQualifier, { label: `🏅 Qualifier (predicted)`, type: 'competition', team: region.name });
+        push(region.predictedChampionship, { label: `🏆 Championship (predicted)`, type: 'competition', team: region.name });
+      });
+
+      // game release
+      if (roster.season && roster.season.releaseDate) {
+        push(roster.season.releaseDate, { label: '🚀 BIOGLOW Game Release', type: 'season', team: 'All teams' });
+      }
+      return events;
+    }
+
+    function renderCoachCalendar() {
+      if (!roster) return;
+      const events = coachCalendarEvents();
+      const container = document.getElementById('coachCalendar');
+      const rangeLabel = document.getElementById('calRangeLabel');
+
+      if (calView === 'month') {
+        rangeLabel.textContent = calDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        container.innerHTML = renderMonthView(events);
+      } else if (calView === 'week') {
+        const start = new Date(calDate); start.setDate(start.getDate() - start.getDay());
+        const end = new Date(start); end.setDate(end.getDate() + 6);
+        rangeLabel.textContent = `${start.toLocaleDateString('en-US',{month:'short',day:'numeric'})} – ${end.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`;
+        container.innerHTML = renderWeekView(events, start);
+      } else if (calView === 'day') {
+        rangeLabel.textContent = calDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+        container.innerHTML = renderDayView(events);
+      } else {
+        rangeLabel.textContent = String(calDate.getFullYear());
+        container.innerHTML = renderYearView(events);
+      }
+    }
+
+    function renderMonthView(events) {
+      const year = calDate.getFullYear(), month = calDate.getMonth();
+      const firstDow = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const todayKey = dateKey(new Date());
+      let cells = '';
+      for (let i = 0; i < firstDow; i++) cells += '<div class="cal-cell empty"></div>';
+      for (let d = 1; d <= daysInMonth; d++) {
+        const key = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const dayEvents = events[key] || [];
+        cells += `
+          <div class="cal-cell ${key === todayKey ? 'today' : ''} ${dayEvents.length ? 'has-events' : ''}">
+            <div class="cal-daynum">${d}</div>
+            ${dayEvents.map(ev => `<div class="cal-chip ${ev.type}" title="${escapeHtml(ev.team)}: ${escapeHtml(ev.label)}">${escapeHtml(ev.label)}</div>`).join('')}
+          </div>`;
+      }
+      return `
+        <div class="cal-card-grid">
+          <div class="cal-dow-row">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => `<div class="cal-dow">${d}</div>`).join('')}</div>
+          <div class="cal-month-grid">${cells}</div>
+        </div>`;
+    }
+
+    function renderWeekView(events, start) {
+      const todayKey = dateKey(new Date());
+      const cols = [];
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(start); d.setDate(d.getDate() + i);
+        const key = dateKey(d);
+        const dayEvents = events[key] || [];
+        cols.push(`
+          <div class="cal-week-col ${key === todayKey ? 'today' : ''}">
+            <div class="cal-week-head">${d.toLocaleDateString('en-US',{weekday:'short'})}<span class="big">${d.getDate()}</span></div>
+            ${dayEvents.map(ev => `
+              <div class="cal-event-block ${ev.type}">
+                ${escapeHtml(ev.label)}
+                <span class="ev-team">${escapeHtml(ev.team)}</span>
+              </div>`).join('')}
+          </div>`);
+      }
+      return `<div class="cal-card-grid"><div class="cal-week-grid">${cols.join('')}</div></div>`;
+    }
+
+    function renderDayView(events) {
+      const dayEvents = events[dateKey(calDate)] || [];
+      const icons = { due: '🟠', done: '✅', competition: '🏅', season: '🚀' };
+      if (!dayEvents.length) {
+        return `<div class="cal-card-grid"><div class="cal-day-empty">No events on this day.</div></div>`;
+      }
+      return `
+        <div class="cal-card-grid"><div class="cal-day-list">
+          ${dayEvents.map(ev => `
+            <div class="cal-day-event">
+              <div class="ev-icon">${icons[ev.type] || '📌'}</div>
+              <div>
+                <div class="ev-title">${escapeHtml(ev.label)}</div>
+                <div class="ev-sub">${escapeHtml(ev.team)} · ${ev.type === 'due' ? 'Assignment due' : ev.type === 'done' ? 'Completed assignment' : ev.type === 'competition' ? 'Competition' : 'Season event'}</div>
+              </div>
+            </div>`).join('')}
+        </div></div>`;
+    }
+
+    function renderYearView(events) {
+      const year = calDate.getFullYear();
+      const todayKey = dateKey(new Date());
+      const months = [];
+      for (let m = 0; m < 12; m++) {
+        const firstDow = new Date(year, m, 1).getDay();
+        const daysInMonth = new Date(year, m + 1, 0).getDate();
+        let mini = '';
+        for (let i = 0; i < firstDow; i++) mini += '<div class="cal-mini-day"></div>';
+        for (let d = 1; d <= daysInMonth; d++) {
+          const key = `${year}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+          const dayEvents = events[key] || [];
+          const dots = [...new Set(dayEvents.map(e => e.type))].slice(0, 3)
+            .map(t => `<span class="mini-dot ${t}"></span>`).join('');
+          mini += `<div class="cal-mini-day ${key === todayKey ? 'today' : ''}">${d}<div class="mini-dots">${dots}</div></div>`;
+        }
+        const monthName = new Date(year, m, 1).toLocaleDateString('en-US', { month: 'long' });
+        months.push(`
+          <div class="cal-mini-month" onclick="calDate = new Date(${year}, ${m}, 1); setCalView('month')">
+            <div class="cal-mini-title">${monthName}</div>
+            <div class="cal-mini-grid">${mini}</div>
+          </div>`);
+      }
+      return `<div class="cal-year-grid">${months.join('')}</div>`;
+    }
+
+    function fillCalendarFilters() {
+      const teamSelect = document.getElementById('calTeamFilter');
+      const regionSelect = document.getElementById('calRegionFilter');
+      const keepTeam = teamSelect.value, keepRegion = regionSelect.value;
+      teamSelect.innerHTML = '<option value="all">All teams</option>' +
+        roster.teams.map(t => `<option value="${escapeHtml(t.id)}">${escapeHtml(t.nickname || t.name)}</option>`).join('');
+      const regions = (roster.season && roster.season.regions) || [];
+      regionSelect.innerHTML = '<option value="all">All regions</option>' +
+        regions.map(r => `<option value="${escapeHtml(r.id)}">${escapeHtml(r.name)}</option>`).join('');
+      teamSelect.value = keepTeam || 'all';
+      regionSelect.value = keepRegion || 'all';
+    }
+
+    async function logout() {
+      await fetch('/api/fll/logout', { method: 'POST' });
+      window.location.href = '/fll-hub/login';
+    }
+
+    loadRoster();
+  </script>
+</body>
+</html>

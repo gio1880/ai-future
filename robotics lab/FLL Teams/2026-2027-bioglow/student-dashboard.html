@@ -1,0 +1,4633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student BIOGLOW Home | AI Future FLL</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/ai%20future%20logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #202124;
+      --muted: #5f6368;
+      --line: #dadce0;
+      --bg: #f8fafd;
+      --card: #ffffff;
+      --green: #1e8e5a;
+      --green-dark: #137333;
+      --blue: #1a73e8;
+      --blue-soft: #e8f0fe;
+      --amber: #f9ab00;
+      --red: #d93025;
+      --purple: #6f42c1;
+      --shadow: 0 1px 2px rgba(60, 64, 67, 0.18), 0 1px 3px rgba(60, 64, 67, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    button {
+      border: 0;
+      background: var(--green);
+      color: #fff;
+      font-weight: 800;
+      padding: 10px 14px;
+      min-height: 40px;
+      cursor: pointer;
+    }
+
+    button:hover { background: var(--green-dark); }
+    button:disabled { opacity: 0.65; cursor: wait; }
+
+    a { color: inherit; }
+
+    .appbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .appbar-inner {
+      height: 64px;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      min-width: 0;
+    }
+
+    .brand img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      border: 1px solid var(--line);
+      padding: 4px;
+      background: #fff;
+    }
+
+    .brand-title strong {
+      display: block;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .brand-title span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 2px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .chip,
+    .link-chip,
+    .filter-chip {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      padding: 8px 11px;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .filter-chip {
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    .filter-chip.active {
+      border-color: #b7dfc8;
+      background: #e6f4ea;
+      color: var(--green-dark);
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 22px 20px 56px;
+    }
+
+    .team-home {
+      color: #fff;
+      min-height: 210px;
+      padding: 28px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 22px;
+      align-items: end;
+      background:
+        linear-gradient(90deg, rgba(19, 115, 51, 0.95), rgba(26, 115, 232, 0.74)),
+        url("/robotics%20lab/FLL%20Teams/25_26_season_pictures/fll-25-26-003.png") center / cover;
+      border: 1px solid rgba(32, 33, 36, 0.08);
+      box-shadow: var(--shadow);
+    }
+
+    .kicker {
+      margin: 0 0 8px;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(36px, 6vw, 64px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .team-home p {
+      max-width: 720px;
+      margin: 12px 0 0;
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1.55;
+      font-size: 16px;
+    }
+
+    .home-stats {
+      display: grid;
+      gap: 10px;
+    }
+
+    .home-stat {
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.14);
+      padding: 13px;
+    }
+
+    .home-stat strong {
+      display: block;
+      margin-bottom: 5px;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin: 16px 0 20px;
+      overflow-x: auto;
+    }
+
+    .tab {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+      padding: 10px 14px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      color: var(--green-dark);
+      border-color: #b7dfc8;
+      background: #e6f4ea;
+    }
+
+    .dashboard-grid {
+      display: block;
+    }
+
+    .panel,
+    .card,
+    .assignment-card,
+    .task-card,
+    .resource-card,
+    .milestone-card,
+    .log-card,
+    .work-form,
+    .vision-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .panel,
+    .card,
+    .assignment-card,
+    .task-card,
+    .resource-card,
+    .milestone-card,
+    .log-card,
+    .vision-card {
+      padding: 16px;
+    }
+
+    .panel,
+    .card {
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 19px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 6px;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+
+    .muted {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .section-block {
+      margin-bottom: 22px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .team-list,
+    .quick-list,
+    .classwork-list,
+    .task-list,
+    .resource-grid,
+    .milestone-list,
+    .log-list,
+    .vision-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .start-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .start-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      min-height: 132px;
+    }
+
+    .start-card strong {
+      display: block;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .start-card span {
+      display: block;
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .start-card p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .teammate-strip {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .mini-person {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 7px 9px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .mini-avatar {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      background: #e6f4ea;
+      color: var(--green-dark);
+      border: 1px solid #b7dfc8;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .next-actions {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .action-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      padding: 15px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .team-member {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      border-top: 1px solid var(--line);
+      padding-top: 11px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      background: #e6f4ea;
+      color: var(--green-dark);
+      border: 1px solid #b7dfc8;
+      font-weight: 900;
+    }
+
+    .team-member strong,
+    .quick-item strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .team-member span,
+    .quick-item span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .quick-list {
+      margin-top: 12px;
+    }
+
+    .quick-item {
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+    }
+
+    .task-groups {
+      display: grid;
+      gap: 14px;
+    }
+
+    .section-overview {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .section-card {
+      border: 1px solid var(--line);
+      background: #fff;
+      box-shadow: var(--shadow);
+      padding: 15px;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .section-card.blue { border-top: 4px solid var(--blue); }
+    .section-card.green { border-top: 4px solid var(--green); }
+    .section-card.purple { border-top: 4px solid var(--purple); }
+    .section-card.amber { border-top: 4px solid var(--amber); }
+
+    .section-card p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .detail-panel {
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+
+    .detail-panel summary {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px;
+      font-weight: 900;
+    }
+
+    .detail-panel-body {
+      border-top: 1px solid var(--line);
+      padding: 16px;
+    }
+
+    .mission-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .mission-card {
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 14px;
+    }
+
+    .mission-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .task-group {
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 14px;
+    }
+
+    .task-group-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .task-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .task-card p,
+    .assignment-card p,
+    .resource-card p,
+    .log-card p,
+    .vision-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .tag {
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: #fff;
+      padding: 6px 8px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .tag.high {
+      background: #fce8e6;
+      border-color: #f4b5ae;
+      color: var(--red);
+    }
+
+    .tag.home { color: #7a4f00; background: #fff7e0; border-color: #fde293; }
+    .tag.lab { color: var(--green-dark); background: #e6f4ea; border-color: #b7dfc8; }
+    .tag.class { color: var(--blue); background: var(--blue-soft); border-color: #c9dafd; }
+
+    select,
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      padding: 10px 11px;
+      outline: none;
+    }
+
+    select:focus,
+    input:focus,
+    textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
+    }
+
+    .task-actions {
+      margin-top: 12px;
+      display: grid;
+      gap: 7px;
+    }
+
+    label {
+      display: block;
+      font-weight: 800;
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 0 0 12px;
+    }
+
+    .resource-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .resource-card.rubric {
+      border-left: 4px solid var(--amber);
+    }
+
+    .resource-card a {
+      display: inline-flex;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .vision-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .vision-card {
+      border-left: 4px solid var(--purple);
+    }
+
+    .progress {
+      height: 8px;
+      background: #edf2ee;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: var(--value, 0%);
+      background: var(--green);
+    }
+
+    .milestone-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .milestone-card li {
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr);
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .check {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--line);
+      display: inline-grid;
+      place-items: center;
+      font-size: 10px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .check.done {
+      border-color: var(--green);
+      background: var(--green);
+    }
+
+    .work-form {
+      padding: 16px;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    textarea {
+      min-height: 88px;
+      resize: vertical;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .checkbox-line {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .checkbox-line input { width: auto; }
+
+    .empty {
+      border: 1px dashed #c5d4cc;
+      background: #fbfdfb;
+      color: var(--muted);
+      padding: 14px;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .toast {
+      display: none;
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 30;
+      max-width: 320px;
+      background: #202124;
+      color: #fff;
+      padding: 13px 15px;
+      box-shadow: var(--shadow);
+      font-weight: 800;
+    }
+
+    /* ── My Team + Countdown row ── */
+    .landing-info-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 18px 0 0;
+    }
+    .landing-info-row.three-col { grid-template-columns: 1fr 1fr 1fr; }
+
+    .landing-info-card {
+      background: white;
+      border: 1.5px solid #e8eaed;
+      border-radius: 18px;
+      padding: 20px 22px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .landing-info-icon {
+      font-size: 32px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .landing-info-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #80868b;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .landing-info-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: #202124;
+      line-height: 1.25;
+    }
+
+    .landing-info-sub {
+      font-size: 12px;
+      color: #5f6368;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .countdown-days {
+      font-size: 26px !important;
+      font-weight: 900 !important;
+    }
+
+    /* ── Pre-Season Assignments ── */
+    /* ── Pre-Season Assignments ── */
+    .preseason-section {
+      background: white;
+      border: 1.5px solid #e8eaed;
+      border-radius: 20px;
+      padding: 22px 24px 18px;
+      margin: 16px 0 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+
+    .preseason-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .preseason-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .preseason-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #202124;
+      letter-spacing: -0.01em;
+    }
+
+    .preseason-count {
+      font-size: 11px;
+      font-weight: 800;
+      background: #fff3e0;
+      color: #e37400;
+      border: 1.5px solid #ffe0b2;
+      border-radius: 50px;
+      padding: 3px 12px;
+      letter-spacing: 0.02em;
+    }
+
+    .preseason-count.done {
+      background: #e6f4ea;
+      color: #1e8e5a;
+      border-color: #b7dfca;
+    }
+
+    .preseason-progress-bar-wrap {
+      height: 5px;
+      border-radius: 50px;
+      background: #f1f3f4;
+      overflow: hidden;
+      width: 80px;
+    }
+
+    .preseason-progress-bar-fill {
+      height: 100%;
+      border-radius: 50px;
+      background: linear-gradient(90deg, #34a853, #1e8e5a);
+      transition: width 0.4s ease;
+    }
+
+    .preseason-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .preseason-task {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      background: #fafbfc;
+      border-radius: 14px;
+      border: 1.5px solid #e8eaed;
+      overflow: hidden;
+      transition: box-shadow 0.18s, border-color 0.18s;
+    }
+
+    .preseason-task:hover {
+      border-color: #c5d8fb;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    .preseason-task-accent {
+      width: 5px;
+      flex-shrink: 0;
+      background: #dadce0;
+      border-radius: 0;
+    }
+
+    .preseason-task[data-status="todo"] .preseason-task-accent  { background: #dadce0; }
+    .preseason-task[data-status="doing"] .preseason-task-accent { background: #1a73e8; }
+    .preseason-task[data-status="blocked"] .preseason-task-accent { background: #d93025; }
+    .preseason-task[data-status="done"] .preseason-task-accent  { background: #34a853; }
+
+    .preseason-task-body {
+      flex: 1;
+      min-width: 0;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .preseason-task-left {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .preseason-task-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #202124;
+      margin-bottom: 7px;
+      line-height: 1.3;
+    }
+
+    .preseason-task[data-status="done"] .preseason-task-title {
+      color: #80868b;
+      text-decoration: line-through;
+    }
+
+    .preseason-task-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      align-items: center;
+    }
+
+    .preseason-tag {
+      font-size: 11px;
+      font-weight: 600;
+      background: #f1f3f4;
+      color: #5f6368;
+      border-radius: 50px;
+      padding: 3px 9px;
+      border: 1px solid #e8eaed;
+    }
+
+    .preseason-tag.due-soon {
+      background: #fff3e0;
+      color: #e37400;
+      border-color: #ffe0b2;
+    }
+
+    .preseason-tag.overdue {
+      background: #fce8e6;
+      color: #d93025;
+      border-color: #f5c6c3;
+    }
+
+    .preseason-task-right {
+      flex-shrink: 0;
+    }
+
+    .preseason-status-select {
+      font-size: 12px;
+      font-weight: 700;
+      border: 1.5px solid #dadce0;
+      border-radius: 50px;
+      padding: 7px 14px;
+      background: white;
+      cursor: pointer;
+      color: #202124;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235f6368'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 28px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .preseason-status-select:focus {
+      outline: none;
+      border-color: #1a73e8;
+      box-shadow: 0 0 0 3px rgba(26,115,232,0.15);
+    }
+
+    .preseason-status-select[data-val="todo"]    { border-color: #dadce0; color: #5f6368; }
+    .preseason-status-select[data-val="doing"]   { border-color: #1a73e8; color: #1a73e8; background-color: #e8f1fd; }
+    .preseason-status-select[data-val="blocked"] { border-color: #d93025; color: #d93025; background-color: #fce8e6; }
+    .preseason-status-select[data-val="done"]    { border-color: #34a853; color: #1e8e5a; background-color: #e6f4ea; }
+
+    .preseason-empty {
+      text-align: center;
+      padding: 24px 0 10px;
+      color: #5f6368;
+      font-size: 14px;
+    }
+
+    .preseason-empty-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    /* ── Preseason task card – clickable row enhancements ── */
+    .preseason-task {
+      cursor: pointer;
+    }
+    .preseason-task-row1 {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 7px;
+    }
+    .preseason-task-row1 .preseason-task-title {
+      margin-bottom: 0;
+      flex: 1;
+      min-width: 0;
+    }
+    .preseason-task-type-badge {
+      font-size: 10px;
+      font-weight: 700;
+      background: #f1f3f4;
+      border: 1px solid #e0e3e8;
+      border-radius: 50px;
+      padding: 3px 9px;
+      white-space: nowrap;
+      color: #5f6368;
+      flex-shrink: 0;
+    }
+    .preseason-task-chevron {
+      font-size: 22px;
+      color: #bdc1c6;
+      margin-left: 4px;
+      flex-shrink: 0;
+      line-height: 1;
+      align-self: center;
+      transition: transform 0.15s, color 0.15s;
+    }
+    .preseason-task:hover .preseason-task-chevron {
+      color: #1a73e8;
+      transform: translateX(3px);
+    }
+
+    /* ── Task detail view ── */
+    .ta-back-row {
+      margin-bottom: 18px;
+    }
+
+    .ta-back-btn {
+      background: none;
+      border: none;
+      color: #1a73e8;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 6px 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 8px;
+      transition: opacity 0.15s;
+    }
+    .ta-back-btn:hover { opacity: 0.7; }
+
+    .ta-detail {
+      background: white;
+      border-radius: 20px;
+      border: 1.5px solid #e8eaed;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      overflow: hidden;
+    }
+
+    .ta-header {
+      padding: 26px 28px 20px;
+      border-bottom: 1.5px solid #f1f3f4;
+    }
+
+    .ta-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .ta-badge {
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 50px;
+      padding: 4px 12px;
+    }
+    .ta-badge-type { background: #e8f1fd; color: #1a73e8; }
+    .ta-badge-ctx  { background: #f1f3f4; color: #5f6368; }
+    .ta-badge-due  { background: #fff3e0; color: #e37400; }
+    .ta-badge-done { background: #e6f4ea; color: #1e8e5a; }
+
+    .ta-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: #202124;
+      line-height: 1.25;
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    /* video */
+    .ta-video-section {
+      padding: 20px 28px;
+      background: #0f0f0f;
+    }
+    .ta-video-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #9aa0a6;
+      margin-bottom: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .ta-video-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .ta-video-wrap iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+
+    /* lesson body */
+    .ta-lesson-body {
+      padding: 24px 28px;
+      border-bottom: 1.5px solid #f1f3f4;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #3c4043;
+    }
+    .ta-lesson-body p { margin: 0 0 14px; }
+    .ta-lesson-body p:last-child { margin-bottom: 0; }
+    .ta-lesson-body strong { color: #202124; font-weight: 800; }
+    .ta-lesson-body ul { margin: 8px 0 14px 20px; padding: 0; }
+    .ta-lesson-body li { margin-bottom: 6px; }
+
+    /* questions */
+    .ta-questions-section {
+      padding: 24px 28px;
+      border-bottom: 1.5px solid #f1f3f4;
+    }
+    .ta-questions-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #202124;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ta-questions-sub {
+      font-size: 12px;
+      font-weight: 600;
+      color: #80868b;
+    }
+    .ta-questions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .ta-question {
+      display: flex;
+      gap: 14px;
+    }
+    .ta-question-num {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #e8f1fd;
+      color: #1a73e8;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .ta-question-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .ta-question-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: #202124;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .ta-answer {
+      width: 100%;
+      border: 1.5px solid #dadce0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #202124;
+      resize: vertical;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      box-sizing: border-box;
+    }
+    .ta-answer:focus {
+      outline: none;
+      border-color: #1a73e8;
+      box-shadow: 0 0 0 3px rgba(26,115,232,0.12);
+    }
+    .ta-answer[readonly] {
+      background: #f8f9fa;
+      color: #5f6368;
+      cursor: default;
+    }
+    .ta-answer-text { resize: none; height: 44px; }
+    .ta-answer-error { border-color: #d93025 !important; box-shadow: 0 0 0 3px rgba(217,48,37,0.12) !important; }
+
+    /* photo */
+    .ta-photo-section {
+      padding: 20px 28px;
+      border-bottom: 1.5px solid #f1f3f4;
+    }
+    .ta-photo-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #202124;
+      margin-bottom: 12px;
+    }
+    .ta-photo-upload-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #f1f3f4;
+      border: 2px dashed #bdc1c6;
+      border-radius: 12px;
+      padding: 14px 22px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #3c4043;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .ta-photo-upload-btn:hover {
+      border-color: #1a73e8;
+      background: #e8f1fd;
+      color: #1a73e8;
+    }
+    .ta-photo-hint {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #80868b;
+    }
+    .ta-photo-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .ta-photo-preview-wrap {
+      position: relative;
+      display: inline-block;
+    }
+    .ta-photo-preview {
+      width: 100%;
+      max-height: 220px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1.5px solid #e8eaed;
+      display: block;
+    }
+    .ta-photo-num {
+      position: absolute;
+      top: 8px; left: 8px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      font-size: 11px;
+      font-weight: 800;
+      border-radius: 50px;
+      padding: 2px 9px;
+    }
+    .ta-photo-remove {
+      position: absolute;
+      top: 8px; right: 8px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* submit row */
+    .ta-submit-row {
+      padding: 22px 28px 6px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .ta-submit-btn {
+      background: #1e8e5a;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 13px 28px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .ta-submit-btn:hover { background: #166c44; transform: translateY(-1px); }
+    .ta-submit-btn:active { transform: translateY(0); }
+    .ta-save-btn {
+      background: white;
+      color: #5f6368;
+      border: 1.5px solid #dadce0;
+      border-radius: 50px;
+      padding: 12px 22px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .ta-save-btn:hover { border-color: #1a73e8; color: #1a73e8; }
+    .ta-submit-hint {
+      padding: 0 28px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      min-height: 22px;
+    }
+    .ta-submit-hint.error { color: #d93025; }
+    .ta-submit-hint.success { color: #1e8e5a; }
+
+    .ta-done-banner {
+      margin: 22px 28px;
+      background: #e6f4ea;
+      border: 1.5px solid #b7dfca;
+      border-radius: 14px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .ta-done-icon { font-size: 28px; }
+    .ta-done-title { font-size: 16px; font-weight: 800; color: #1e8e5a; margin-bottom: 4px; }
+    .ta-done-sub { font-size: 13px; color: #3c8c5e; }
+
+    /* ── Code example block ── */
+    .ta-code-section {
+      margin: 0 28px 4px;
+      padding: 20px 0;
+      border-bottom: 1.5px solid #f1f3f4;
+    }
+    .ta-code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .ta-code-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #202124;
+    }
+    .ta-code-copy {
+      background: #e8f1fd;
+      color: #1a73e8;
+      border: 1.5px solid #c5d8fb;
+      border-radius: 50px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .ta-code-copy:hover { background: #d4e5fb; }
+    .ta-code-block {
+      background: #1e1e2e;
+      color: #cdd6f4;
+      border-radius: 12px;
+      padding: 16px 18px;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-x: auto;
+      margin: 0;
+      font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+    }
+
+    /* ── Table question ── */
+    .ta-table-wrap {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1.5px solid #e8eaed;
+    }
+    .ta-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      min-width: 480px;
+    }
+    .ta-table th {
+      background: #f1f3f4;
+      color: #3c4043;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1.5px solid #e0e3e8;
+    }
+    .ta-table td {
+      padding: 0;
+      border-bottom: 1px solid #f1f3f4;
+      border-right: 1px solid #f1f3f4;
+    }
+    .ta-table td:last-child { border-right: none; }
+    .ta-table tr:last-child td { border-bottom: none; }
+    .ta-table-cell {
+      width: 100%;
+      border: none;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #202124;
+      background: transparent;
+      box-sizing: border-box;
+    }
+    .ta-table-cell:focus {
+      outline: none;
+      background: #e8f1fd;
+    }
+    .ta-table-cell[readonly] { color: #5f6368; }
+    .ta-table-addrow {
+      margin: 10px 12px;
+      background: none;
+      border: 1.5px dashed #bdc1c6;
+      border-radius: 8px;
+      padding: 7px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #5f6368;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .ta-table-addrow:hover { border-color: #1a73e8; color: #1a73e8; }
+
+    /* ── Core Values journal ── */
+    .cv-add-section {
+      padding: 22px 28px;
+      border-bottom: 1.5px solid #f1f3f4;
+      background: #fafbfc;
+    }
+    .cv-add-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #202124;
+      margin-bottom: 12px;
+    }
+    .cv-add-row {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+    }
+    .cv-add-select {
+      border: 1.5px solid #dadce0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      background: white;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .cv-add-input { flex: 1; height: auto !important; }
+    .cv-add-btn {
+      background: #1e8e5a;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 22px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .cv-add-btn:hover { background: #166c44; }
+    .cv-add-hint {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #80868b;
+    }
+
+    .cv-values-grid {
+      padding: 22px 28px 26px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .cv-value-card {
+      border: 1.5px solid #e8eaed;
+      border-top: 4px solid var(--cv-color, #1a73e8);
+      border-radius: 14px;
+      padding: 16px;
+      background: white;
+    }
+    .cv-value-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .cv-value-icon { font-size: 20px; }
+    .cv-value-label {
+      font-size: 15px;
+      font-weight: 800;
+      color: #202124;
+      flex: 1;
+    }
+    .cv-value-count {
+      font-size: 12px;
+      font-weight: 800;
+      background: #f1f3f4;
+      color: #5f6368;
+      border-radius: 50px;
+      padding: 2px 10px;
+    }
+    .cv-value-desc {
+      font-size: 12px;
+      color: #5f6368;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+    .cv-entries {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .cv-entry {
+      background: #f8f9fa;
+      border: 1px solid #e8eaed;
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .cv-entry-text {
+      font-size: 13px;
+      color: #202124;
+      line-height: 1.5;
+      margin-bottom: 6px;
+    }
+    .cv-entry-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cv-entry-time {
+      font-size: 11px;
+      color: #80868b;
+      font-weight: 600;
+    }
+    .cv-entry-delete {
+      background: none;
+      border: none;
+      color: #bdc1c6;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+    .cv-entry-delete:hover { color: #d93025; background: #fce8e6; }
+
+    @media (max-width: 600px) {
+      .cv-values-grid { grid-template-columns: 1fr; padding: 16px 18px 20px; }
+      .cv-add-section { padding: 16px 18px; }
+      .cv-add-row { flex-direction: column; }
+      .ta-code-section { margin: 0 18px; }
+    }
+
+    /* ── Attachment tracker ── */
+    .att-grid {
+      padding: 22px 28px 8px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .att-card {
+      border: 1.5px solid #e8eaed;
+      border-radius: 14px;
+      padding: 16px;
+      background: #fafbfc;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .att-card-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .att-name-input {
+      flex: 1;
+      min-width: 0;
+      border: 1.5px solid transparent;
+      background: transparent;
+      border-radius: 8px;
+      padding: 6px 8px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #202124;
+      font-family: inherit;
+    }
+    .att-name-input:hover { border-color: #e0e3e8; background: white; }
+    .att-name-input:focus { outline: none; border-color: #1a73e8; background: white; }
+    .att-iter-count {
+      font-size: 11px;
+      font-weight: 800;
+      background: #e8f1fd;
+      color: #1a73e8;
+      border-radius: 50px;
+      padding: 3px 10px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .att-delete-btn {
+      background: none;
+      border: none;
+      color: #bdc1c6;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .att-delete-btn:hover { color: #d93025; background: #fce8e6; }
+    .att-purpose-input {
+      border: 1.5px solid #e0e3e8;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #3c4043;
+      background: white;
+    }
+    .att-purpose-input:focus { outline: none; border-color: #1a73e8; }
+    .att-iterations {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .att-iteration {
+      background: white;
+      border: 1px solid #e8eaed;
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .att-iter-imgwrap {
+      position: relative;
+      margin-bottom: 8px;
+    }
+    .att-iter-img {
+      width: 100%;
+      max-height: 220px;
+      object-fit: cover;
+      border-radius: 8px;
+      display: block;
+    }
+    .att-iter-version {
+      position: absolute;
+      top: 8px; left: 8px;
+      background: rgba(0,0,0,0.65);
+      color: white;
+      font-size: 11px;
+      font-weight: 800;
+      border-radius: 50px;
+      padding: 3px 10px;
+    }
+    .att-iter-delete {
+      position: absolute;
+      top: 8px; right: 8px;
+      background: rgba(0,0,0,0.55);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 3px 9px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .att-iter-delete:hover { background: #d93025; }
+    .att-iter-note {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1.5px solid #e8eaed;
+      border-radius: 8px;
+      padding: 7px 9px;
+      font-size: 12px;
+      font-family: inherit;
+      color: #3c4043;
+      margin-bottom: 6px;
+    }
+    .att-iter-note:focus { outline: none; border-color: #1a73e8; }
+    .att-iter-time {
+      font-size: 11px;
+      color: #80868b;
+      font-weight: 600;
+    }
+    .att-no-iterations {
+      font-size: 12px;
+      color: #80868b;
+      text-align: center;
+      padding: 14px 0;
+      border: 1.5px dashed #e0e3e8;
+      border-radius: 10px;
+    }
+    .att-add-photo-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: white;
+      border: 1.5px dashed #bdc1c6;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #5f6368;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+    .att-add-photo-btn:hover { border-color: #1a73e8; color: #1a73e8; background: #e8f1fd; }
+    .att-add-row {
+      padding: 4px 28px 26px;
+    }
+    .att-add-attachment-btn {
+      width: 100%;
+      background: white;
+      border: 2px dashed #bdc1c6;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #5f6368;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+    .att-add-attachment-btn:hover { border-color: #1e8e5a; color: #1e8e5a; background: #e6f4ea; }
+
+    @media (max-width: 600px) {
+      .att-grid { grid-template-columns: 1fr; padding: 16px 18px 6px; }
+      .att-add-row { padding: 4px 18px 20px; }
+    }
+
+    /* ── Season calendar ── */
+    .cal-card {
+      background: white;
+      border: 1.5px solid #e8eaed;
+      border-radius: 20px;
+      padding: 20px 22px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      margin-bottom: 8px;
+    }
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .cal-month-label {
+      font-size: 16px;
+      font-weight: 900;
+      color: #202124;
+    }
+    .cal-nav {
+      background: #f1f3f4;
+      border: none;
+      border-radius: 50%;
+      width: 34px; height: 34px;
+      font-size: 18px;
+      font-weight: 800;
+      color: #5f6368;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .cal-nav:hover { background: #e8f1fd; color: #1a73e8; }
+    .cal-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .cal-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #5f6368;
+    }
+    .cal-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+    .cal-dot.due { background: #e37400; }
+    .cal-dot.done { background: #34a853; }
+    .cal-dot.competition { background: #d93025; }
+    .cal-dot.season { background: #1a73e8; }
+
+    .cal-dow-row, .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .cal-dow {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #80868b;
+      text-align: center;
+      padding: 6px 0;
+    }
+    .cal-cell {
+      min-height: 64px;
+      border: 1px solid #f1f3f4;
+      border-radius: 8px;
+      padding: 4px;
+      background: #fafbfc;
+      overflow: hidden;
+    }
+    .cal-cell.empty { border: none; background: transparent; }
+    .cal-cell.today { border: 2px solid #1a73e8; background: #e8f1fd; }
+    .cal-cell.has-events { background: white; }
+    .cal-daynum {
+      font-size: 11px;
+      font-weight: 700;
+      color: #5f6368;
+      margin-bottom: 3px;
+    }
+    .cal-cell.today .cal-daynum { color: #1a73e8; }
+    .cal-chip {
+      font-size: 9px;
+      font-weight: 700;
+      border-radius: 5px;
+      padding: 2px 5px;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.4;
+    }
+    .cal-chip.due { background: #fff3e0; color: #e37400; cursor: pointer; }
+    .cal-chip.due:hover { background: #ffe0b2; }
+    .cal-chip.done { background: #e6f4ea; color: #1e8e5a; cursor: pointer; text-decoration: line-through; }
+    .cal-chip.competition { background: #fce8e6; color: #d93025; }
+    .cal-chip.season { background: #e8f1fd; color: #1a73e8; }
+
+    @media (max-width: 600px) {
+      .cal-cell { min-height: 44px; }
+      .cal-chip { font-size: 0; padding: 0; }
+      .cal-chip::before { content: '●'; font-size: 8px; }
+      .cal-chip.due::before { color: #e37400; }
+      .cal-chip.done::before { color: #1e8e5a; }
+      .cal-chip.competition::before { color: #d93025; }
+      .cal-chip.season::before { color: #1a73e8; }
+    }
+
+    /* ── Cat grid title ── */
+    .cat-grid-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #202124;
+      margin: 22px 0 12px;
+    }
+
+    /* ── 4 Category cards (landing) ── */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-top: 4px;
+    }
+
+    .cat-card {
+      background: white;
+      border: 2px solid var(--cat-border, #dadce0);
+      border-radius: 20px;
+      padding: 28px 24px 22px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      min-height: 220px;
+    }
+
+    .cat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 32px rgba(0,0,0,0.13);
+      border-color: var(--cat-color, #1a73e8);
+    }
+
+    .cat-card-icon {
+      font-size: 40px;
+      line-height: 1;
+    }
+
+    .cat-card-label {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--cat-color, #202124);
+      line-height: 1.2;
+    }
+
+    .cat-card-desc {
+      font-size: 13px;
+      color: #5f6368;
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    .cat-card-footer {
+      margin-top: auto;
+    }
+
+    .cat-progress-bar {
+      height: 7px;
+      border-radius: 50px;
+      background: #e8eaed;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .cat-progress-fill {
+      height: 100%;
+      border-radius: 50px;
+      background: var(--cat-color, #1a73e8);
+      transition: width 0.4s ease;
+    }
+
+    .cat-progress-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #5f6368;
+      font-weight: 600;
+    }
+
+    .cat-open-badge {
+      background: var(--cat-light, #e8f1fd);
+      color: var(--cat-color, #1a73e8);
+      border: 1px solid var(--cat-border, #c5d8fb);
+      border-radius: 50px;
+      padding: 2px 9px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .cat-open-done {
+      color: #1e8e5a;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 600px) {
+      .cat-grid { grid-template-columns: 1fr; }
+      .landing-info-row, .landing-info-row.three-col { grid-template-columns: 1fr; }
+      .ta-header, .ta-lesson-body, .ta-questions-section, .ta-photo-section, .ta-submit-row, .ta-submit-hint, .ta-done-banner { padding-left: 18px; padding-right: 18px; }
+      .ta-video-section { padding: 14px 18px; }
+      .ta-title { font-size: 18px; }
+      .ta-submit-row { flex-direction: column; align-items: stretch; }
+      .ta-submit-btn, .ta-save-btn { text-align: center; }
+    }
+
+    /* ── Category detail view ── */
+    .detail-header {
+      background: var(--cat-light, #e8f1fd);
+      border: 2px solid var(--cat-border, #c5d8fb);
+      border-radius: 20px;
+      padding: 22px 24px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .back-btn {
+      background: white;
+      color: #202124;
+      border: 1.5px solid #dadce0;
+      border-radius: 10px;
+      padding: 9px 16px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+
+    .back-btn:hover { background: #f1f3f4; }
+
+    .detail-header-icon {
+      font-size: 42px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .detail-header-label {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--cat-color, #202124);
+      margin-bottom: 3px;
+    }
+
+    .detail-header-desc {
+      font-size: 13px;
+      color: #5f6368;
+      line-height: 1.5;
+    }
+
+    .detail-header-counts {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .detail-count-chip {
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .detail-count-chip.open {
+      background: #fce8e6;
+      color: #d93025;
+    }
+
+    .detail-count-chip.done {
+      background: #e6f4ea;
+      color: #137333;
+    }
+
+    .detail-task-list {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .detail-task-card {
+      background: white;
+      border: 1.5px solid #dadce0;
+      border-radius: 16px;
+      padding: 20px 22px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      transition: box-shadow 0.18s;
+    }
+
+    .detail-task-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.11); }
+
+    .detail-task-card.is-done {
+      opacity: 0.6;
+      background: #f8f9fa;
+    }
+
+    .detail-task-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .detail-task-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #202124;
+      margin-bottom: 5px;
+    }
+
+    .detail-task-card.is-done .detail-task-title {
+      text-decoration: line-through;
+      color: #5f6368;
+    }
+
+    .detail-task-desc {
+      font-size: 13px;
+      color: #5f6368;
+      line-height: 1.55;
+      margin-bottom: 10px;
+    }
+
+    .detail-task-meta {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .detail-tag {
+      background: #f1f3f4;
+      border-radius: 50px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #5f6368;
+    }
+
+    .detail-status-wrap { flex-shrink: 0; }
+
+    .detail-status-select {
+      border: 1.5px solid #dadce0;
+      border-radius: 10px;
+      background: white;
+      color: #202124;
+      padding: 8px 11px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .detail-status-select:focus { border-color: #1a73e8; }
+
+    .detail-empty {
+      background: #f8f9fa;
+      border: 1.5px dashed #dadce0;
+      border-radius: 14px;
+      padding: 28px 22px;
+      text-align: center;
+      color: #5f6368;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .detail-resources-title,
+    .detail-log-title {
+      font-size: 16px;
+      font-weight: 900;
+      color: #202124;
+      margin: 0 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .detail-resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .detail-resource-card {
+      background: white;
+      border: 1.5px solid #dadce0;
+      border-radius: 14px;
+      padding: 16px;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+
+    .detail-resource-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+
+    .detail-resource-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: #202124;
+    }
+
+    .detail-resource-desc {
+      font-size: 12px;
+      color: #5f6368;
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .detail-resource-open {
+      font-size: 12px;
+      font-weight: 800;
+      color: #1a73e8;
+      margin-top: 4px;
+    }
+
+    .detail-log-section {
+      margin-top: 8px;
+    }
+
+    /* ── First-login welcome overlay ── */
+    .welcome-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: #0d2017;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 24px 40px;
+      overflow-y: auto;
+      animation: wsIn 0.4s ease;
+    }
+
+    /* push card down to appear centered when content fits, scroll naturally when taller */
+    .ws-card {
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+
+    .welcome-screen.hidden { display: none; }
+
+    @keyframes wsIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .ws-card {
+      background: white;
+      border-radius: 28px;
+      max-width: 520px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 32px 100px rgba(0,0,0,0.5);
+      animation: wsCardIn 0.45s cubic-bezier(0.34, 1.46, 0.64, 1) 0.1s both;
+    }
+
+    @keyframes wsCardIn {
+      from { opacity: 0; transform: translateY(40px) scale(0.95); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .ws-hero {
+      background: linear-gradient(135deg, #0d6640 0%, #1e8e5a 50%, #26c47a 100%);
+      padding: 40px 36px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ws-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .ws-plant {
+      font-size: 64px;
+      line-height: 1;
+      margin-bottom: 18px;
+      display: block;
+      position: relative;
+      animation: wsBounce 2s ease-in-out infinite;
+    }
+
+    @keyframes wsBounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+
+    .ws-season-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.2);
+      border: 1.5px solid rgba(255,255,255,0.35);
+      border-radius: 50px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.9);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .ws-hero h2 {
+      font-size: 32px;
+      font-weight: 900;
+      color: white;
+      margin: 0 0 10px;
+      line-height: 1.15;
+      position: relative;
+    }
+
+    .ws-hero h2 em {
+      font-style: normal;
+      color: #f0d060;
+    }
+
+    .ws-hero p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.6;
+      margin: 0;
+      position: relative;
+    }
+
+    .ws-body {
+      padding: 28px 32px 32px;
+    }
+
+    .ws-steps {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .ws-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: #f4faf6;
+      border-radius: 14px;
+      padding: 14px 16px;
+      border: 1.5px solid #daeadf;
+    }
+
+    .ws-step-icon {
+      font-size: 28px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .ws-step-text strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 800;
+      color: #1a2a22;
+      margin-bottom: 2px;
+    }
+
+    .ws-step-text p {
+      font-size: 13px;
+      color: #5e6e65;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .ws-cta {
+      width: 100%;
+      background: #1e8e5a;
+      color: white;
+      border: 0;
+      border-radius: 14px;
+      padding: 17px;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.12s;
+      letter-spacing: 0.01em;
+    }
+
+    .ws-cta:hover {
+      background: #136d4b;
+      transform: translateY(-2px);
+    }
+
+    .ws-name-line {
+      text-align: center;
+      font-size: 13px;
+      color: #8a9e92;
+      margin-top: 14px;
+    }
+
+    /* ── Welcome banner ── */
+    .welcome-banner {
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .welcome-top {
+      background: linear-gradient(135deg, #136d4b 0%, #1e8e5a 55%, #2db37a 100%);
+      padding: 28px 28px 22px;
+      color: white;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .welcome-greeting {
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.72);
+      margin-bottom: 6px;
+    }
+
+    .welcome-name {
+      font-size: clamp(26px, 5vw, 40px);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .welcome-phase-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.18);
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-radius: 50px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.92);
+    }
+
+    .welcome-meta {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .welcome-meta .date-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 4px;
+    }
+
+    .welcome-meta .date-val {
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    /* ── Next step card ── */
+    .next-step-card {
+      background: #fffbe6;
+      border: 2px solid #f0d060;
+      border-radius: 0 0 20px 20px;
+      padding: 20px 28px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .next-step-icon {
+      font-size: 32px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .next-step-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .next-step-label {
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #8a6a00;
+      margin-bottom: 4px;
+    }
+
+    .next-step-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: #4a3800;
+      margin-bottom: 5px;
+      line-height: 1.3;
+    }
+
+    .next-step-desc {
+      font-size: 14px;
+      color: #7a5c00;
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+
+    .next-step-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #1e8e5a;
+      color: white;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 20px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.12s;
+    }
+
+    .btn-primary:hover { background: #136d4b; transform: translateY(-1px); }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: transparent;
+      color: #5a4200;
+      border: 2px solid #d4b040;
+      border-radius: 10px;
+      padding: 9px 16px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .btn-outline:hover { background: rgba(212,176,64,0.12); }
+
+    /* ── Inline video expand ── */
+    .video-expand-area {
+      margin-top: 14px;
+      display: none;
+    }
+
+    .video-expand-area.open { display: block; }
+
+    .video-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .video-finish-btn {
+      margin-top: 14px;
+      width: 100%;
+      background: #1e8e5a;
+      color: white;
+      border: 0;
+      border-radius: 10px;
+      padding: 14px 20px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .video-finish-btn:hover { background: #136d4b; }
+
+    /* ── Reflection form ── */
+    .reflection-form-area {
+      margin-top: 16px;
+      background: white;
+      border: 2px solid #d4b040;
+      border-radius: 14px;
+      padding: 22px;
+      display: none;
+    }
+
+    .reflection-form-area.open { display: block; }
+
+    .reflection-title {
+      font-size: 16px;
+      font-weight: 900;
+      color: #4a3800;
+      margin-bottom: 4px;
+    }
+
+    .reflection-subtitle {
+      font-size: 13px;
+      color: #8a6a00;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .reflection-field {
+      margin-bottom: 16px;
+    }
+
+    .reflection-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      color: #5a4400;
+      margin-bottom: 6px;
+    }
+
+    .reflection-label span {
+      font-weight: 400;
+      color: #a07820;
+      font-size: 12px;
+    }
+
+    .reflection-textarea {
+      width: 100%;
+      border: 1.5px solid #e0c860;
+      border-radius: 8px;
+      background: #fffdf0;
+      color: #3a2c00;
+      padding: 11px 13px;
+      font: inherit;
+      font-size: 14px;
+      min-height: 76px;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.15s;
+      box-sizing: border-box;
+    }
+
+    .reflection-textarea:focus {
+      border-color: #c09020;
+      background: #fff;
+    }
+
+    .reflection-submit {
+      width: 100%;
+      background: #1e8e5a;
+      color: white;
+      border: 0;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: background 0.15s, transform 0.12s;
+    }
+
+    .reflection-submit:hover { background: #136d4b; transform: translateY(-1px); }
+    .reflection-submit:disabled { opacity: 0.65; cursor: wait; transform: none; }
+
+    /* ── Completed state ── */
+    .video-task-done {
+      background: #e6f7f0;
+      border: 2px solid #8edbb8;
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-top: 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .video-task-done-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .video-task-done strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 900;
+      color: #136d4b;
+      margin-bottom: 3px;
+    }
+
+    .video-task-done p {
+      font-size: 13px;
+      color: #2a7a55;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .video-task-done-answers {
+      margin-top: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .done-answer {
+      background: white;
+      border: 1px solid #b8e8ce;
+      border-radius: 8px;
+      padding: 10px 13px;
+    }
+
+    .done-answer-q {
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #2a7a55;
+      margin-bottom: 4px;
+    }
+
+    .done-answer-a {
+      font-size: 13px;
+      color: #1a2a22;
+      line-height: 1.5;
+    }
+
+    .loading {
+      min-height: 55vh;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    @media (max-width: 1120px) {
+      .dashboard-grid {
+        grid-template-columns: minmax(0, 1fr) 320px;
+      }
+      .left-rail {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+      .team-home {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 840px) {
+      .dashboard-grid,
+      .task-list,
+      .section-overview,
+      .start-grid,
+      .action-card,
+      .mission-grid,
+      .resource-grid,
+      .vision-grid,
+      .left-rail,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .appbar-inner {
+        height: auto;
+        align-items: flex-start;
+        flex-direction: column;
+        padding-block: 14px;
+      }
+      .nav-actions {
+        justify-content: flex-start;
+      }
+      .page { padding-inline: 14px; }
+      .team-home { padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="appbar">
+    <div class="appbar-inner">
+      <div class="brand">
+        <img src="/ai%20future%20logo.png" alt="AI Future" />
+        <div class="brand-title">
+          <strong>BIOGLOW Team Home</strong>
+          <span id="userLine">Loading your team</span>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <a class="link-chip" href="/robotics-lab">Robotics Lab</a>
+        <span class="chip" id="teamPill">FLL Team</span>
+        <button id="logoutButton" type="button">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- First-login welcome screen -->
+  <div class="welcome-screen hidden" id="welcomeScreen">
+    <div class="ws-card">
+      <div class="ws-hero">
+        <span class="ws-plant">🌿</span>
+        <div class="ws-season-tag">✨ 2026–2027 Season</div>
+        <h2>Welcome to <em>BIOGLOW</em>!</h2>
+        <p>You're on the AI Future FLL team. This is your personal home base for everything this season.</p>
+      </div>
+      <div class="ws-body">
+        <div class="ws-steps">
+          <div class="ws-step">
+            <div class="ws-step-icon">🎯</div>
+            <div class="ws-step-text">
+              <strong>Your next step — always at the top</strong>
+              <p>Every time you log in, you'll see exactly what to do next — no guessing.</p>
+            </div>
+          </div>
+          <div class="ws-step">
+            <div class="ws-step-icon">🎬</div>
+            <div class="ws-step-text">
+              <strong>Start with the teaser video</strong>
+              <p>Watch the official BIOGLOW teaser, then answer 3 quick questions to complete your first task.</p>
+            </div>
+          </div>
+          <div class="ws-step">
+            <div class="ws-step-icon">🤖</div>
+            <div class="ws-step-text">
+              <strong>Track your team's progress</strong>
+              <p>See tasks, FLL areas, milestones, and log your work after every session.</p>
+            </div>
+          </div>
+          <div class="ws-step">
+            <div class="ws-step-icon">📚</div>
+            <div class="ws-step-text">
+              <strong>All your resources in one place</strong>
+              <p>Official links, rubrics, research articles, and season materials — right here.</p>
+            </div>
+          </div>
+        </div>
+        <button class="ws-cta" id="wsCtaBtn">Let's go! 🚀</button>
+        <p class="ws-name-line" id="wsNameLine"></p>
+      </div>
+    </div>
+  </div>
+
+  <main class="page" id="app">
+    <div class="loading">Loading your BIOGLOW team home...</div>
+  </main>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    const app = document.getElementById('app');
+    const userLine = document.getElementById('userLine');
+    const teamPill = document.getElementById('teamPill');
+    const logoutButton = document.getElementById('logoutButton');
+    const toast = document.getElementById('toast');
+    let activeResourceCategory = 'All';
+    let latestData = null;
+
+    const statusLabels = {
+      todo: 'To do',
+      doing: 'Doing',
+      blocked: 'Blocked',
+      done: 'Done'
+    };
+
+    const visionPrompts = [
+      { title: 'Biodiversity in Queens', text: 'What local habitats need better observation, care, or protection?' },
+      { title: 'Nature-inspired design', text: 'What can robot attachments, sensors, or systems learn from animals and plants?' },
+      { title: 'Sensors and data', text: 'How could light, temperature, soil, motion, or image data help people understand ecosystems?' },
+      { title: 'Habitat protection', text: 'How can students make parks, gardens, waterways, or school spaces healthier for living things?' }
+    ];
+
+    function escapeHtml(value) {
+      return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.style.display = 'block';
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => {
+        toast.style.display = 'none';
+      }, 2600);
+    }
+
+    function formatDate(value) {
+      if (!value) return 'No due date';
+      const date = new Date(`${value}T00:00:00`);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function formatTimestamp(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '';
+      return date.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    }
+
+    function nextDueTask(tasks) {
+      return tasks
+        .filter((task) => task.status !== 'done')
+        .sort((a, b) => String(a.dueDate || '').localeCompare(String(b.dueDate || '')))[0] || null;
+    }
+
+    function assignmentForTask(task, assignments) {
+      return assignments.find((assignment) => assignment.id === task.assignmentId);
+    }
+
+    function renderTeamMembers(members) {
+      if (!members.length) return '<div class="empty">Your coach has not added teammates yet.</div>';
+      return `<div class="team-list">${members.map((member) => `
+        <div class="team-member">
+          <div class="avatar">${escapeHtml(member.initials || '?')}</div>
+          <div>
+            <strong>${escapeHtml(member.displayName)}</strong>
+            <span>${escapeHtml(member.role || 'Team member')}</span>
+          </div>
+        </div>
+      `).join('')}</div>`;
+    }
+
+    function renderTeammateStrip(members) {
+      if (!members.length) return '<p>No teammates added yet.</p>';
+      return `<div class="teammate-strip">${members.map((member) => `
+        <span class="mini-person"><span class="mini-avatar">${escapeHtml(member.initials || '?')}</span>${escapeHtml(member.displayName)}</span>
+      `).join('')}</div>`;
+    }
+
+    function renderUpcoming(tasks, assignments, nextClass) {
+      const upcoming = [
+        ...assignments.map((item) => ({ type: 'Assignment', title: item.title, date: item.dueDate })),
+        ...tasks.map((item) => ({ type: 'Task', title: item.title, date: item.dueDate }))
+      ].filter((item) => item.date)
+        .sort((a, b) => String(a.date).localeCompare(String(b.date)))
+        .slice(0, 5);
+      return `
+        <div class="quick-list">
+          <div class="quick-item"><strong>${escapeHtml(nextClass.statusText)}</strong><span>${escapeHtml(nextClass.dateLabel || 'Schedule TBD')} ${nextClass.timeLabel ? `at ${escapeHtml(nextClass.timeLabel)}` : ''}</span></div>
+          ${upcoming.map((item) => `<div class="quick-item"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.type)} due ${escapeHtml(formatDate(item.date))}</span></div>`).join('')}
+        </div>
+      `;
+    }
+
+    function renderTaskCard(task, assignments) {
+      const assignment = assignmentForTask(task, assignments);
+      const context = task.workContext || 'any';
+      return `
+        <article class="task-card">
+          <h3>${escapeHtml(task.title)}</h3>
+          <p>${escapeHtml(task.description)}</p>
+          <div class="meta-row">
+            <span class="tag ${escapeHtml(context)}">${escapeHtml(context === 'any' ? 'Before class' : context)}</span>
+            <span class="tag">${escapeHtml(task.category || 'Task')}</span>
+            <span class="tag">Due ${escapeHtml(formatDate(task.dueDate))}</span>
+            ${assignment ? `<span class="tag">${escapeHtml(assignment.title)}</span>` : ''}
+          </div>
+          <div class="task-actions">
+            <label for="status-${escapeHtml(task.id)}">Status</label>
+            <select id="status-${escapeHtml(task.id)}" data-task-status="${escapeHtml(task.id)}">
+              ${Object.entries(statusLabels).map(([value, label]) => `<option value="${value}" ${task.status === value ? 'selected' : ''}>${label}</option>`).join('')}
+            </select>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderTaskGroup(title, helper, tasks, assignments) {
+      return `
+        <section class="task-group">
+          <div class="task-group-title">
+            <div>
+              <h3>${escapeHtml(title)}</h3>
+              <p class="muted">${escapeHtml(helper)}</p>
+            </div>
+            <span class="chip">${tasks.length}</span>
+          </div>
+          <div class="task-list">${tasks.length ? tasks.map((task) => renderTaskCard(task, assignments)).join('') : '<div class="empty">Nothing assigned here yet.</div>'}</div>
+        </section>
+      `;
+    }
+
+    function renderNextActions(tasks, assignments) {
+      const actions = tasks
+        .filter((task) => task.status !== 'done')
+        .sort((a, b) => String(a.dueDate || '').localeCompare(String(b.dueDate || '')))
+        .slice(0, 3);
+      if (!actions.length) return '<div class="empty">No open tasks right now.</div>';
+      return `<div class="next-actions">${actions.map((task) => {
+        const assignment = assignmentForTask(task, assignments);
+        const context = task.workContext || 'any';
+        return `
+          <article class="action-card">
+            <div>
+              <h3>${escapeHtml(task.title)}</h3>
+              <p class="muted">${escapeHtml(task.description)}</p>
+              <div class="meta-row">
+                <span class="tag">Assignment</span>
+                <span class="tag ${escapeHtml(context)}">${escapeHtml(context === 'any' ? 'Before class' : context)}</span>
+                <span class="tag">Due ${escapeHtml(formatDate(task.dueDate))}</span>
+                ${assignment ? `<span class="tag">${escapeHtml(assignment.title)}</span>` : ''}
+              </div>
+            </div>
+            <span class="tag">${escapeHtml(statusLabels[task.status] || task.status)}</span>
+          </article>
+        `;
+      }).join('')}</div>`;
+    }
+
+    function renderTasks(taskGroups, assignments) {
+      return `
+        <div class="task-groups">
+          ${renderTaskGroup('Before next class', 'Assignments to finish before your next team session.', taskGroups.beforeNextClass || [], assignments)}
+          ${renderTaskGroup('At home', 'Season preview, reading, reflection, and research assignments.', taskGroups.home || [], assignments)}
+          ${renderTaskGroup('In the lab', 'Robot game, mission strategy, and hands-on prep assignments.', taskGroups.lab || [], assignments)}
+          ${renderTaskGroup('In class', 'Share-outs, team discussion, and coach-led assignments.', taskGroups.class || [], assignments)}
+        </div>
+      `;
+    }
+
+    function renderSectionOverview(sections, progress) {
+      if (!sections.length) return '<div class="empty">Your coach has not added the four FLL sections yet.</div>';
+      return `
+        <div class="section-overview">
+          ${sections.map((section) => {
+            const item = progress[section.id] || { complete: 0, total: 0, percent: 0 };
+            return `
+              <article class="section-card ${escapeHtml(section.color || '')}">
+                <div>
+                  <h3>${escapeHtml(section.label)}</h3>
+                  <p>${escapeHtml(section.summary)}</p>
+                </div>
+                <div>
+                  <div class="meta-row">
+                    <span class="tag">${escapeHtml(section.focusNow)}</span>
+                  </div>
+                  <div class="progress"><span style="--value:${item.percent}%"></span></div>
+                  <p>${item.complete} of ${item.total} checkpoints</p>
+                </div>
+              </article>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function renderMissionAnalysis(missions, countdown) {
+      if (!missions.length) return '<div class="empty">Mission analysis will appear after your coach adds it.</div>';
+      return `
+        <div class="card">
+          <h3>${escapeHtml(countdown.label)}</h3>
+          <p class="muted">Official BIOGLOW missions release on ${escapeHtml(formatDate(countdown.releaseDate))}. Until then, practice sorting mission types.</p>
+        </div>
+        <div class="mission-grid">
+          ${missions.map((mission) => `
+            <article class="mission-card">
+              <h3>${escapeHtml(mission.title)}</h3>
+              <p>${escapeHtml(mission.description)}</p>
+              <div class="meta-row">
+                <span class="tag">${escapeHtml(mission.actionType)}</span>
+                <span class="tag ${String(mission.difficulty).toLowerCase() === 'hard' ? 'high' : ''}">${escapeHtml(mission.difficulty)}</span>
+                <span class="tag">${escapeHtml(mission.side)}</span>
+                <span class="tag">${escapeHtml(mission.fieldZone)}</span>
+              </div>
+            </article>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderAssignments(assignments) {
+      if (!assignments.length) return '<div class="empty">No pinned coach assignments yet.</div>';
+      return assignments.map((assignment) => `
+        <article class="assignment-card">
+          <h3>${escapeHtml(assignment.title)}</h3>
+          <p>${escapeHtml(assignment.instructions)}</p>
+          <div class="meta-row">
+            <span class="tag ${String(assignment.priority).toLowerCase() === 'high' ? 'high' : ''}">${escapeHtml(assignment.priority || 'Normal')}</span>
+            <span class="tag">${escapeHtml(assignment.category || 'Classwork')}</span>
+            <span class="tag">Due ${escapeHtml(formatDate(assignment.dueDate))}</span>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function resourceCategories(resources) {
+      const categories = ['All', ...new Set(resources.map((resource) => resource.category || 'Other'))];
+      return categories;
+    }
+
+    function renderResourceLibrary(resources) {
+      const categories = resourceCategories(resources);
+      const visible = activeResourceCategory === 'All'
+        ? resources
+        : resources.filter((resource) => resource.category === activeResourceCategory);
+      return `
+        <div class="filters">
+          ${categories.map((category) => `<button class="filter-chip ${category === activeResourceCategory ? 'active' : ''}" type="button" data-resource-filter="${escapeHtml(category)}">${escapeHtml(category)}</button>`).join('')}
+        </div>
+        <div class="resource-grid">
+          ${visible.length ? visible.map((resource) => `
+            <article class="resource-card ${resource.category === 'Rubrics' ? 'rubric' : ''}">
+              <h3>${escapeHtml(resource.label)}</h3>
+              <p>${escapeHtml(resource.description)}</p>
+              <div class="meta-row">
+                <span class="tag">${escapeHtml(resource.category || 'Resource')}</span>
+                <span class="tag">${escapeHtml(resource.type || 'Link')}</span>
+                <span class="tag">${escapeHtml(resource.source || 'AI Future')}</span>
+              </div>
+              <a href="${escapeHtml(resource.url)}" target="_blank" rel="noreferrer">Open resource</a>
+            </article>
+          `).join('') : '<div class="empty">No resources in this category yet.</div>'}
+        </div>
+      `;
+    }
+
+    function renderVisionBoard(resources) {
+      return visionPrompts.map((prompt) => `
+        <article class="vision-card">
+          <h3>${escapeHtml(prompt.title)}</h3>
+          <p>${escapeHtml(prompt.text)}</p>
+        </article>
+      `).join('');
+    }
+
+    function renderMilestones(milestones, summary) {
+      if (!milestones.length) return '<div class="empty">No milestone checklist yet.</div>';
+      return `
+        <div class="panel">
+          <h2>Team progress</h2>
+          <p class="muted">${summary.complete} of ${summary.total} milestones complete.</p>
+          <div class="progress"><span style="--value:${summary.percent}%"></span></div>
+        </div>
+        <div class="milestone-list">
+          ${milestones.map((group) => `
+            <article class="milestone-card">
+              <h3>${escapeHtml(group.category)}</h3>
+              <ul>
+                ${(group.items || []).map((item) => `<li><span class="check ${item.complete ? 'done' : ''}">${item.complete ? 'OK' : ''}</span><span>${escapeHtml(item.label)}</span></li>`).join('')}
+              </ul>
+            </article>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderWorkLogForm(tasks) {
+      const activeTasks = tasks.filter((task) => task.status !== 'done');
+      if (!tasks.length) return '<div class="empty">You do not have assigned tasks yet, so there is nothing to log.</div>';
+      return `
+        <form id="workLogForm" class="work-form">
+          <div class="field">
+            <label for="logTask">Task</label>
+            <select id="logTask" name="taskId" required>
+              ${(activeTasks.length ? activeTasks : tasks).map((task) => `<option value="${escapeHtml(task.id)}">${escapeHtml(task.title)}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="logLocation">Location</label>
+              <select id="logLocation" name="location" required>
+                <option value="class">Class</option>
+                <option value="lab">Lab</option>
+                <option value="home">Home</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="logMinutes">Minutes</label>
+              <input id="logMinutes" name="minutes" type="number" min="0" max="600" step="5" value="30" required />
+            </div>
+          </div>
+          <div class="field">
+            <label for="logNote">Work update</label>
+            <textarea id="logNote" name="note" required placeholder="Tell your coach what changed, what you read, what you tested, or where you got stuck."></textarea>
+          </div>
+          <label class="checkbox-line">
+            <input id="logBlocked" name="blocked" type="checkbox" />
+            I am blocked and need help.
+          </label>
+          <button type="submit">Turn in update</button>
+        </form>
+      `;
+    }
+
+    function renderLogs(logs, tasks) {
+      if (!logs.length) return '<div class="empty">No work updates yet. Add one after your next lab, class, or home session.</div>';
+      const taskById = new Map(tasks.map((task) => [task.id, task]));
+      return logs.slice(0, 6).map((log) => `
+        <article class="log-card">
+          <h3>${escapeHtml(taskById.get(log.taskId)?.title || 'Task update')}</h3>
+          <p>${escapeHtml(log.note)}</p>
+          <div class="meta-row">
+            <span class="tag ${escapeHtml(log.location)}">${escapeHtml(log.location)}</span>
+            <span class="tag">${Number(log.minutes) || 0} min</span>
+            ${log.blocked ? '<span class="tag high">Blocked</span>' : ''}
+            <span class="tag">${escapeHtml(formatTimestamp(log.createdAt))}</span>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function timeGreeting() {
+      const h = new Date().getHours();
+      if (h < 12) return 'Good morning';
+      if (h < 17) return 'Good afternoon';
+      return 'Good evening';
+    }
+
+    function todayLabel() {
+      return new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+    }
+
+    function getNextStep(currentPhase, tasks, bioglowCountdown) {
+      const phaseId = currentPhase ? (currentPhase.id || currentPhase) : '';
+      // Pre-season: push toward BIOGLOW research & videos
+      if (phaseId === 'pre-season') {
+        return {
+          icon: '🎬',
+          label: 'Your next step — Pre-Season',
+          title: 'Watch the BIOGLOW teaser & start researching',
+          desc: 'The challenge hasn\'t dropped yet, but you can get a head start! Watch the official teaser video and start exploring ecosystems, biodiversity, and nature-inspired design.',
+          primaryText: '▶ Watch teaser video',
+          primaryAction: 'video',
+          videoId: '6oPqt5IQbPI',
+          secondaryText: 'Explore BIOGLOW season page',
+          secondaryUrl: 'https://www.first-lego-league.org/en/2026-27-season/bioglow',
+        };
+      }
+      // Open tasks: show the soonest due
+      const open = tasks
+        .filter(t => t.status !== 'done')
+        .sort((a, b) => String(a.dueDate || 'z').localeCompare(String(b.dueDate || 'z')));
+      if (open.length) {
+        const t = open[0];
+        return {
+          icon: '📌',
+          label: 'Your next step',
+          title: t.title,
+          desc: t.description || 'This is your most pressing open task. Get it done before your next session!',
+          primaryText: 'Mark as doing →',
+          primaryAction: 'task',
+          taskId: t.id,
+          secondaryText: null,
+        };
+      }
+      // All done / no tasks
+      return {
+        icon: '🌿',
+        label: 'You\'re all caught up!',
+        title: `Kickoff is ${formatDate(bioglowCountdown.releaseDate)} — stay curious`,
+        desc: 'No open tasks right now. Use this time to explore the BIOGLOW theme and think about your Innovation Project idea.',
+        primaryText: 'Explore BIOGLOW →',
+        primaryAction: 'link',
+        primaryUrl: 'https://www.first-lego-league.org/en/2026-27-season/bioglow',
+        secondaryText: null,
+      };
+    }
+
+    const WELCOME_SEEN_KEY = 'bioglow-student-welcomed-';
+
+    function maybeShowWelcomeScreen(user) {
+      const key = WELCOME_SEEN_KEY + (user.id || user.name);
+      if (localStorage.getItem(key)) return;
+
+      const wsEl = document.getElementById('welcomeScreen');
+      const nameLine = document.getElementById('wsNameLine');
+      const ctaBtn = document.getElementById('wsCtaBtn');
+      if (!wsEl) return;
+
+      if (nameLine) nameLine.textContent = `Signed in as ${user.name}`;
+
+      wsEl.classList.remove('hidden');
+      if (ctaBtn) ctaBtn.focus();
+
+      // use onclick so it replaces itself cleanly on each renderDashboard call
+      ctaBtn.onclick = function() {
+        localStorage.setItem(key, '1');
+        wsEl.style.animation = 'wsOut 0.3s ease forwards';
+        setTimeout(() => wsEl.classList.add('hidden'), 280);
+      };
+    }
+
+    // Add fade-out keyframe via JS since it's a one-time thing
+    (function() {
+      const style = document.createElement('style');
+      style.textContent = '@keyframes wsOut { from { opacity:1; } to { opacity:0; } }';
+      document.head.appendChild(style);
+    })();
+
+    const VIDEO_REFLECTION_KEY_PREFIX = 'bioglow-video-reflection-';
+
+    const REFLECTION_QUESTIONS = [
+      { id: 'q1', label: 'What was the most interesting thing you saw or heard?', placeholder: 'Write at least one sentence…' },
+      { id: 'q2', label: 'What ecosystem problem do you think BIOGLOW wants teams to solve?', placeholder: 'Think about what you noticed in the video…' },
+      { id: 'q3', label: 'What is one question you still have about BIOGLOW?', placeholder: 'Write any question — there are no wrong answers!' },
+    ];
+
+    function getVideoReflection(userId, videoId) {
+      try {
+        return JSON.parse(localStorage.getItem(`${VIDEO_REFLECTION_KEY_PREFIX}${userId}-${videoId}`) || 'null');
+      } catch { return null; }
+    }
+
+    function saveVideoReflection(userId, videoId, answers) {
+      localStorage.setItem(
+        `${VIDEO_REFLECTION_KEY_PREFIX}${userId}-${videoId}`,
+        JSON.stringify({ answers, completedAt: new Date().toISOString() })
+      );
+    }
+
+    function renderWelcomeBanner(user, currentPhase, tasks, bioglowCountdown) {
+      const step = getNextStep(currentPhase, tasks, bioglowCountdown);
+      const phaseLabel = currentPhase ? (currentPhase.phase || currentPhase) : 'Pre-Season';
+      const phaseId = currentPhase ? (currentPhase.id || currentPhase) : '';
+      const firstName = (user.name || '').split(' ')[0] || user.name;
+      const userId = user.id || user.name;
+
+      let primaryBtn = '';
+      let extraContent = '';
+
+      if (step.primaryAction === 'video') {
+        const saved = getVideoReflection(userId, step.videoId);
+
+        if (saved) {
+          // Already completed — show done state inline
+          const answersHtml = REFLECTION_QUESTIONS.map((q, i) => `
+            <div class="done-answer">
+              <div class="done-answer-q">${escapeHtml(q.label)}</div>
+              <div class="done-answer-a">${escapeHtml(saved.answers[q.id] || '—')}</div>
+            </div>
+          `).join('');
+          extraContent = `
+            <div class="video-task-done">
+              <div class="video-task-done-icon">✅</div>
+              <div style="flex:1;min-width:0">
+                <strong>Completed — great work!</strong>
+                <p>You watched the teaser and shared your thoughts. Your reflections are saved below.</p>
+                <div class="video-task-done-answers">${answersHtml}</div>
+              </div>
+            </div>
+          `;
+          primaryBtn = `<button class="btn-outline" onclick="reopenVideo('${escapeHtml(step.videoId)}')">▶ Watch again</button>`;
+        } else {
+          primaryBtn = `<button class="btn-primary" id="watchBtn" onclick="openVideo('${escapeHtml(step.videoId)}')">▶ Watch teaser video</button>`;
+          extraContent = `
+            <div class="video-expand-area" id="welcomeVideoArea">
+              <div class="video-wrap">
+                <iframe id="welcomeIframe" src="" allowfullscreen loading="lazy" title="BIOGLOW Teaser"></iframe>
+              </div>
+              <button class="video-finish-btn" onclick="showReflectionForm()">✏️ I finished watching — write my thoughts</button>
+            </div>
+            <div class="reflection-form-area" id="reflectionArea">
+              <div class="reflection-title">📝 Share your thoughts</div>
+              <div class="reflection-subtitle">Answer these 3 questions to complete the task. There are no right or wrong answers — just be honest!</div>
+              ${REFLECTION_QUESTIONS.map(q => `
+                <div class="reflection-field">
+                  <label class="reflection-label" for="rq-${escapeHtml(q.id)}">${escapeHtml(q.label)}</label>
+                  <textarea class="reflection-textarea" id="rq-${escapeHtml(q.id)}" placeholder="${escapeHtml(q.placeholder)}" rows="3"></textarea>
+                </div>
+              `).join('')}
+              <button class="reflection-submit" id="reflectionSubmitBtn" onclick="submitReflection('${escapeHtml(userId)}', '${escapeHtml(step.videoId)}')">
+                ✅ Mark as complete
+              </button>
+            </div>
+          `;
+        }
+      } else if (step.primaryAction === 'link') {
+        primaryBtn = `<a class="btn-primary" href="${escapeHtml(step.primaryUrl)}" target="_blank" rel="noreferrer">${escapeHtml(step.primaryText)}</a>`;
+      } else if (step.primaryAction === 'task') {
+        primaryBtn = `<button class="btn-primary" onclick="quickMarkDoing('${escapeHtml(step.taskId)}')">${escapeHtml(step.primaryText)}</button>`;
+      }
+
+      const secondaryBtn = step.secondaryUrl
+        ? `<a class="btn-outline" href="${escapeHtml(step.secondaryUrl)}" target="_blank" rel="noreferrer">${escapeHtml(step.secondaryText)}</a>`
+        : '';
+
+      return `
+        <div class="welcome-banner">
+          <div class="welcome-top">
+            <div>
+              <div class="welcome-greeting">${escapeHtml(timeGreeting())}</div>
+              <div class="welcome-name">${escapeHtml(firstName)} 👋</div>
+              <span class="welcome-phase-chip">📍 ${escapeHtml(phaseId === 'pre-season' ? 'Pre-Season · Kickoff Aug 4' : phaseLabel)}</span>
+            </div>
+            <div class="welcome-meta">
+              <div class="date-label">Today</div>
+              <div class="date-val">${escapeHtml(todayLabel())}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function openVideo(videoId) {
+      const area = document.getElementById('welcomeVideoArea');
+      const iframe = document.getElementById('welcomeIframe');
+      const btn = document.getElementById('watchBtn');
+      if (!area || !iframe) return;
+      area.classList.add('open');
+      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+      if (btn) btn.textContent = '✕ Close video';
+      if (btn) btn.onclick = () => closeVideo(videoId);
+      area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function closeVideo(videoId) {
+      const area = document.getElementById('welcomeVideoArea');
+      const iframe = document.getElementById('welcomeIframe');
+      const btn = document.getElementById('watchBtn');
+      if (!area || !iframe) return;
+      area.classList.remove('open');
+      iframe.src = '';
+      if (btn) btn.textContent = '▶ Watch teaser video';
+      if (btn) btn.onclick = () => openVideo(videoId);
+    }
+
+    function reopenVideo(videoId) {
+      // re-render with a temporary open state — simplest approach is just link out
+      window.open(`https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`, '_blank');
+    }
+
+    function showReflectionForm() {
+      const reflectionArea = document.getElementById('reflectionArea');
+      const videoArea = document.getElementById('welcomeVideoArea');
+      if (!reflectionArea) return;
+      reflectionArea.classList.add('open');
+      // stop the video so the student focuses on writing
+      const iframe = document.getElementById('welcomeIframe');
+      if (iframe) iframe.src = '';
+      if (videoArea) videoArea.classList.remove('open');
+      reflectionArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // focus first textarea
+      const first = reflectionArea.querySelector('textarea');
+      if (first) setTimeout(() => first.focus(), 300);
+    }
+
+    function submitReflection(userId, videoId) {
+      const btn = document.getElementById('reflectionSubmitBtn');
+      const answers = {};
+      let allFilled = true;
+
+      REFLECTION_QUESTIONS.forEach(q => {
+        const el = document.getElementById(`rq-${q.id}`);
+        const val = el ? el.value.trim() : '';
+        answers[q.id] = val;
+        if (!val) allFilled = false;
+      });
+
+      if (!allFilled) {
+        showToast('Please answer all 3 questions before completing.');
+        // highlight empty fields
+        REFLECTION_QUESTIONS.forEach(q => {
+          const el = document.getElementById(`rq-${q.id}`);
+          if (el && !el.value.trim()) {
+            el.style.borderColor = '#e05a30';
+            el.addEventListener('input', () => { el.style.borderColor = ''; }, { once: true });
+          }
+        });
+        return;
+      }
+
+      if (btn) btn.disabled = true;
+      saveVideoReflection(userId, videoId, answers);
+      showToast('🎉 Task complete — great reflections!');
+      // Re-render the dashboard to show the done state
+      if (latestData) renderDashboard(latestData);
+    }
+
+    function quickMarkDoing(taskId) {
+      updateTaskStatus(taskId, 'doing');
+    }
+
+    // ── Category definitions ──────────────────────────────────────────────
+    const CATEGORIES = [
+      {
+        id: 'robot-design',
+        label: 'Robot Design',
+        icon: '🤖',
+        color: '#1a73e8',
+        colorLight: '#e8f1fd',
+        colorBorder: '#c5d8fb',
+        desc: 'Build your robot, test your design, and explain your engineering decisions.',
+      },
+      {
+        id: 'innovation',
+        label: 'Innovation Project',
+        icon: '💡',
+        color: '#6f42c1',
+        colorLight: '#f0ebfd',
+        colorBorder: '#d4c5f9',
+        desc: 'Research an ecosystem problem and develop a creative, real-world solution.',
+      },
+      {
+        id: 'core-values',
+        label: 'Core Values',
+        icon: '🤝',
+        color: '#f9ab00',
+        colorLight: '#fff8e1',
+        colorBorder: '#fde293',
+        desc: 'Show teamwork, inclusion, discovery, and fun in everything your team does.',
+      },
+      {
+        id: 'robot-game',
+        label: 'Robot Performance',
+        icon: '🏁',
+        color: '#1e8e5a',
+        colorLight: '#e6f4ea',
+        colorBorder: '#b7dfc8',
+        desc: 'Study the missions, run your robot, and improve your score every session.',
+      },
+    ];
+
+    let activeCategory = null; // null = landing, string id = category detail
+    let activeTask = null;     // null = not in task detail, string id = task detail
+
+    // ── Task answer storage ───────────────────────────────────────────────
+    function taskStorageKey(userId, taskId) {
+      return `bioglow-task-submission-${userId}-${taskId}`;
+    }
+
+    function getTaskSubmission(userId, taskId) {
+      try { return JSON.parse(localStorage.getItem(taskStorageKey(userId, taskId)) || 'null'); }
+      catch { return null; }
+    }
+
+    function saveTaskSubmission(userId, taskId, answers, photos) {
+      const existing = getTaskSubmission(userId, taskId) || {};
+      // migrate legacy single-photo format
+      const existingPhotos = existing.photos || (existing.photoDataUrl ? [existing.photoDataUrl] : []);
+      const payload = {
+        answers: { ...(existing.answers || {}), ...answers },
+        photos: photos !== undefined ? photos : existingPhotos,
+        savedAt: new Date().toISOString(),
+        submittedAt: existing.submittedAt || null
+      };
+      try {
+        localStorage.setItem(taskStorageKey(userId, taskId), JSON.stringify(payload));
+      } catch (e) {
+        alert('Storage is full — try removing an older photo first.');
+      }
+      return payload;
+    }
+
+    function getTaskPhotos(saved) {
+      if (!saved) return [];
+      return saved.photos || (saved.photoDataUrl ? [saved.photoDataUrl] : []);
+    }
+
+    // shared: downscale an image file to max 900px JPEG data URL
+    function compressImageFile(file, callback) {
+      const img = new Image();
+      const reader = new FileReader();
+      reader.onload = e => {
+        img.onload = () => {
+          const maxDim = 900;
+          let { width, height } = img;
+          if (width > maxDim || height > maxDim) {
+            const scale = maxDim / Math.max(width, height);
+            width = Math.round(width * scale);
+            height = Math.round(height * scale);
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width; canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          callback(canvas.toDataURL('image/jpeg', 0.8));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function markTaskSubmitted(userId, taskId) {
+      const existing = getTaskSubmission(userId, taskId) || { answers: {} };
+      existing.submittedAt = new Date().toISOString();
+      localStorage.setItem(taskStorageKey(userId, taskId), JSON.stringify(existing));
+    }
+
+    // ── Open / close task detail ──────────────────────────────────────────
+    let taskReturnCategory = null; // remember where we opened the task from
+
+    function openTask(taskId) {
+      activeTask = taskId;
+      taskReturnCategory = activeCategory;
+      activeCategory = null;
+      app.innerHTML = renderTaskDetail(latestData, taskId);
+      wireListeners();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function closeTask() {
+      activeTask = null;
+      if (taskReturnCategory) {
+        activeCategory = taskReturnCategory;
+        taskReturnCategory = null;
+        app.innerHTML = renderCategoryDetail(latestData, activeCategory);
+      } else {
+        app.innerHTML = renderLanding(latestData);
+      }
+      wireListeners();
+    }
+
+    // ── Task detail renderer ──────────────────────────────────────────────
+    function renderTaskDetail(data, taskId) {
+      const { user, tasks } = data;
+      const task = tasks.find(t => t.id === taskId);
+      if (!task) return renderLanding(data);
+
+      const userId = user.id || user.name;
+      const saved = getTaskSubmission(userId, taskId);
+      const answers = (saved && saved.answers) || {};
+      const taskPhotos = getTaskPhotos(saved);
+      const submitted = !!(saved && saved.submittedAt);
+
+      const typeLabel = { video: '🎬 Video Lesson', lesson: '📖 Lesson', submission: '📤 Submission', journal: '📓 Journal', tracker: '🔧 Tracker' }[task.type] || '📋 Assignment';
+      const ctxIcon = { lab:'🔬 Lab', home:'🏠 Home', class:'📋 Class' }[task.workContext] || '📌 Any';
+
+      // ── journal type renders its own page ──
+      if (task.type === 'journal') {
+        return renderJournalTask(task, userId, typeLabel, ctxIcon);
+      }
+
+      // ── attachment tracker renders its own page ──
+      if (task.type === 'tracker') {
+        return renderAttachmentTracker(task, userId, ctxIcon);
+      }
+
+      // ── video embed ──
+      const videoHtml = (task.type === 'video' && task.videoId) ? `
+        <div class="ta-video-section">
+          <div class="ta-video-label">📺 Watch the video below before answering the questions</div>
+          <div class="ta-video-wrap">
+            <iframe src="https://www.youtube.com/embed/${escapeHtml(task.videoId)}?rel=0&modestbranding=1"
+              allowfullscreen loading="lazy" title="${escapeHtml(task.title)}"></iframe>
+          </div>
+        </div>
+      ` : '';
+
+      // ── lesson body ──
+      const lessonHtml = task.description ? `
+        <div class="ta-lesson-body">
+          ${renderMarkdownish(task.description)}
+        </div>
+      ` : '';
+
+      // ── example code block ──
+      const codeHtml = task.codeExample ? `
+        <div class="ta-code-section">
+          <div class="ta-code-header">
+            <span class="ta-code-label">🐍 Example Pybricks code — copy this into VS Code</span>
+            <button class="ta-code-copy" onclick="copyTaskCode(this)">📋 Copy code</button>
+          </div>
+          <pre class="ta-code-block"><code>${escapeHtml(task.codeExample)}</code></pre>
+        </div>
+      ` : '';
+
+      // ── questions ──
+      const questionsHtml = (task.questions || []).map((q, i) => {
+        let inputEl;
+        if (q.type === 'table') {
+          inputEl = renderTableQuestion(q, answers[q.id], submitted);
+        } else if (q.type === 'textarea') {
+          const val = escapeHtml(answers[q.id] || '');
+          inputEl = `<textarea class="ta-answer" id="ta-q-${escapeHtml(q.id)}" data-qid="${escapeHtml(q.id)}" placeholder="${escapeHtml(q.placeholder || '')}" rows="4" ${submitted ? 'readonly' : ''}>${val}</textarea>`;
+        } else {
+          const val = escapeHtml(answers[q.id] || '');
+          inputEl = `<input class="ta-answer ta-answer-text" type="text" id="ta-q-${escapeHtml(q.id)}" data-qid="${escapeHtml(q.id)}" placeholder="${escapeHtml(q.placeholder || '')}" value="${val}" ${submitted ? 'readonly' : ''}>`;
+        }
+        return `
+          <div class="ta-question">
+            <div class="ta-question-num">Q${i + 1}</div>
+            <div class="ta-question-body">
+              <label class="ta-question-label" for="ta-q-${escapeHtml(q.id)}">${escapeHtml(q.label)}</label>
+              ${inputEl}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // ── photo upload (multiple) ──
+      const photoHtml = task.allowPhoto ? `
+        <div class="ta-photo-section">
+          <div class="ta-photo-label">📸 ${escapeHtml(task.photoPrompt || 'Attach photos of your work (optional)')}</div>
+          ${taskPhotos.length ? `
+            <div class="ta-photo-gallery">
+              ${taskPhotos.map((p, i) => `
+                <div class="ta-photo-preview-wrap">
+                  <img class="ta-photo-preview" src="${p}" alt="Photo ${i + 1}">
+                  <span class="ta-photo-num">${i + 1}</span>
+                  ${!submitted ? `<button class="ta-photo-remove" onclick="removeTaskPhoto('${escapeHtml(userId)}','${escapeHtml(taskId)}',${i})">✕</button>` : ''}
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+          ${!submitted ? `
+            <label class="ta-photo-upload-btn" for="ta-photo-input">
+              📎 ${taskPhotos.length ? 'Add another photo' : 'Choose photo or file'}
+              <input type="file" id="ta-photo-input" accept="image/*" style="display:none" onchange="handleTaskPhoto(this,'${escapeHtml(userId)}','${escapeHtml(taskId)}')">
+            </label>
+            <div class="ta-photo-hint">JPG, PNG, HEIC — add as many photos as you need to show your work</div>
+          ` : ''}
+        </div>
+      ` : '';
+
+      // ── submit / done state ──
+      const submitArea = submitted ? `
+        <div class="ta-done-banner">
+          <div class="ta-done-icon">✅</div>
+          <div>
+            <div class="ta-done-title">Assignment submitted!</div>
+            <div class="ta-done-sub">Submitted ${escapeHtml(formatDate(saved.submittedAt))} · Your coach can see your answers.</div>
+          </div>
+        </div>
+      ` : `
+        <div class="ta-submit-row">
+          <button class="ta-submit-btn" onclick="submitTaskAnswers('${escapeHtml(userId)}','${escapeHtml(taskId)}')">
+            ✅ Submit assignment
+          </button>
+          <button class="ta-save-btn" onclick="saveTaskDraft('${escapeHtml(userId)}','${escapeHtml(taskId)}')">
+            💾 Save draft
+          </button>
+        </div>
+        <div class="ta-submit-hint" id="ta-submit-msg"></div>
+      `;
+
+      return `
+        <div class="ta-back-row">
+          <button class="ta-back-btn" onclick="closeTask()">← Back to Dashboard</button>
+        </div>
+        <div class="ta-detail">
+          <div class="ta-header">
+            <div class="ta-badges">
+              <span class="ta-badge ta-badge-type">${typeLabel}</span>
+              <span class="ta-badge ta-badge-ctx">${ctxIcon}</span>
+              ${task.dueDate ? `<span class="ta-badge ta-badge-due">📅 Due ${escapeHtml(formatDate(task.dueDate))}</span>` : ''}
+              ${submitted ? `<span class="ta-badge ta-badge-done">✅ Submitted</span>` : ''}
+            </div>
+            <h1 class="ta-title">${escapeHtml(task.title)}</h1>
+          </div>
+
+          ${videoHtml}
+          ${lessonHtml}
+          ${codeHtml}
+
+          ${(task.questions || []).length ? `
+            <div class="ta-questions-section">
+              <div class="ta-questions-title">
+                ✏️ ${task.type === 'video' ? 'Reflection Questions' : task.type === 'submission' ? 'Written Response' : 'Comprehension Check'}
+                <span class="ta-questions-sub">Answer all questions to submit</span>
+              </div>
+              <div class="ta-questions-list">
+                ${questionsHtml}
+              </div>
+            </div>
+          ` : ''}
+
+          ${photoHtml}
+          ${submitArea}
+        </div>
+      `;
+    }
+
+    // ── Table question renderer ───────────────────────────────────────────
+    function renderTableQuestion(q, savedVal, submitted) {
+      let rows = [];
+      try { rows = JSON.parse(savedVal || '[]'); } catch { rows = []; }
+      const minRows = q.minRows || 2;
+      const maxRows = q.maxRows || 8;
+      const rowCount = Math.min(maxRows, Math.max(minRows, rows.length || minRows));
+      const cols = q.columns || [];
+
+      const bodyRows = [];
+      for (let r = 0; r < rowCount; r++) {
+        const cells = cols.map((c, cIdx) => {
+          const cellVal = escapeHtml((rows[r] && rows[r][cIdx]) || '');
+          return `<td><input class="ta-table-cell" type="text" data-tq="${escapeHtml(q.id)}" data-trow="${r}" data-tcol="${cIdx}" value="${cellVal}" ${submitted ? 'readonly' : ''}></td>`;
+        }).join('');
+        bodyRows.push(`<tr>${cells}</tr>`);
+      }
+
+      return `
+        <div class="ta-table-wrap" data-table-qid="${escapeHtml(q.id)}" data-maxrows="${maxRows}">
+          <table class="ta-table">
+            <thead><tr>${cols.map(c => `<th>${escapeHtml(c)}</th>`).join('')}</tr></thead>
+            <tbody>${bodyRows.join('')}</tbody>
+          </table>
+          ${!submitted && rowCount < maxRows ? `<button class="ta-table-addrow" onclick="addTableRow('${escapeHtml(q.id)}')">＋ Add row</button>` : ''}
+        </div>
+      `;
+    }
+
+    function addTableRow(qid) {
+      const wrap = document.querySelector(`[data-table-qid="${qid}"]`);
+      if (!wrap) return;
+      const tbody = wrap.querySelector('tbody');
+      const maxRows = Number(wrap.dataset.maxrows) || 8;
+      const current = tbody.querySelectorAll('tr').length;
+      if (current >= maxRows) return;
+      const cols = wrap.querySelectorAll('thead th').length;
+      const tr = document.createElement('tr');
+      for (let c = 0; c < cols; c++) {
+        const td = document.createElement('td');
+        const input = document.createElement('input');
+        input.className = 'ta-table-cell';
+        input.type = 'text';
+        input.dataset.tq = qid;
+        input.dataset.trow = String(current);
+        input.dataset.tcol = String(c);
+        td.appendChild(input);
+        tr.appendChild(td);
+      }
+      tbody.appendChild(tr);
+      if (tbody.querySelectorAll('tr').length >= maxRows) {
+        const btn = wrap.querySelector('.ta-table-addrow');
+        if (btn) btn.remove();
+      }
+    }
+
+    function collectTableAnswer(qid) {
+      const cells = document.querySelectorAll(`[data-tq="${qid}"]`);
+      const rows = [];
+      cells.forEach(cell => {
+        const r = Number(cell.dataset.trow), c = Number(cell.dataset.tcol);
+        if (!rows[r]) rows[r] = [];
+        rows[r][c] = cell.value || '';
+      });
+      // drop fully-empty rows
+      const filled = rows.filter(row => (row || []).some(v => (v || '').trim()));
+      return filled.length ? JSON.stringify(filled) : '';
+    }
+
+    // ── Copy code button ──────────────────────────────────────────────────
+    function copyTaskCode(btn) {
+      const code = btn.closest('.ta-code-section').querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = orig; }, 2000);
+      });
+    }
+
+    // ── Core Values journal ───────────────────────────────────────────────
+    const CORE_VALUES = [
+      { id: 'discovery',  label: 'Discovery',  icon: '🔍', color: '#1a73e8', desc: 'We explore new skills and ideas.' },
+      { id: 'innovation', label: 'Innovation', icon: '💡', color: '#6f42c1', desc: 'We use creativity and persistence to solve problems.' },
+      { id: 'impact',     label: 'Impact',     icon: '🌍', color: '#1e8e5a', desc: 'We apply what we learn to improve our world.' },
+      { id: 'inclusion',  label: 'Inclusion',  icon: '🤗', color: '#e37400', desc: 'We respect each other and embrace our differences.' },
+      { id: 'teamwork',   label: 'Teamwork',   icon: '🤝', color: '#d93025', desc: 'We are stronger when we work together.' },
+      { id: 'fun',        label: 'Fun',        icon: '🎉', color: '#f9ab00', desc: 'We enjoy and celebrate what we do!' },
+    ];
+
+    function journalKey(userId) { return `bioglow-cv-journal-${userId}`; }
+
+    function getJournalEntries(userId) {
+      try { return JSON.parse(localStorage.getItem(journalKey(userId)) || '[]'); }
+      catch { return []; }
+    }
+
+    function addJournalEntry(userId, taskId) {
+      const select = document.getElementById('cv-journal-value');
+      const input = document.getElementById('cv-journal-text');
+      if (!select || !input) return;
+      const text = (input.value || '').trim();
+      if (!text) {
+        input.classList.add('ta-answer-error');
+        input.focus();
+        return;
+      }
+      const entries = getJournalEntries(userId);
+      entries.unshift({
+        id: `cv-${Date.now()}`,
+        value: select.value,
+        text,
+        createdAt: new Date().toISOString()
+      });
+      localStorage.setItem(journalKey(userId), JSON.stringify(entries));
+      app.innerHTML = renderTaskDetail(latestData, taskId);
+      wireListeners();
+    }
+
+    function deleteJournalEntry(userId, taskId, entryId) {
+      const entries = getJournalEntries(userId).filter(e => e.id !== entryId);
+      localStorage.setItem(journalKey(userId), JSON.stringify(entries));
+      app.innerHTML = renderTaskDetail(latestData, taskId);
+      wireListeners();
+    }
+
+    function journalTimestamp(iso) {
+      const d = new Date(iso);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) +
+             ' at ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    }
+
+    function renderJournalTask(task, userId, typeLabel, ctxIcon) {
+      const entries = getJournalEntries(userId);
+
+      const valueCards = CORE_VALUES.map(cv => {
+        const cvEntries = entries.filter(e => e.value === cv.id);
+        return `
+          <div class="cv-value-card" style="--cv-color:${cv.color};">
+            <div class="cv-value-head">
+              <span class="cv-value-icon">${cv.icon}</span>
+              <span class="cv-value-label">${cv.label}</span>
+              <span class="cv-value-count">${cvEntries.length}</span>
+            </div>
+            <div class="cv-value-desc">${escapeHtml(cv.desc)}</div>
+            ${cvEntries.length ? `
+              <div class="cv-entries">
+                ${cvEntries.map(e => `
+                  <div class="cv-entry">
+                    <div class="cv-entry-text">${escapeHtml(e.text)}</div>
+                    <div class="cv-entry-footer">
+                      <span class="cv-entry-time">🕐 ${escapeHtml(journalTimestamp(e.createdAt))}</span>
+                      <button class="cv-entry-delete" onclick="deleteJournalEntry('${escapeHtml(userId)}','${escapeHtml(task.id)}','${escapeHtml(e.id)}')">✕</button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="ta-back-row">
+          <button class="ta-back-btn" onclick="closeTask()">← Back to Dashboard</button>
+        </div>
+        <div class="ta-detail">
+          <div class="ta-header">
+            <div class="ta-badges">
+              <span class="ta-badge ta-badge-type">${typeLabel}</span>
+              <span class="ta-badge ta-badge-ctx">${ctxIcon}</span>
+              <span class="ta-badge ta-badge-done">${entries.length} shout-out${entries.length !== 1 ? 's' : ''} recorded</span>
+            </div>
+            <h1 class="ta-title">${escapeHtml(task.title)}</h1>
+          </div>
+
+          <div class="ta-lesson-body">
+            ${renderMarkdownish(task.description)}
+          </div>
+
+          <div class="cv-add-section">
+            <div class="cv-add-title">➕ Add a shout-out</div>
+            <div class="cv-add-row">
+              <select class="cv-add-select" id="cv-journal-value">
+                ${CORE_VALUES.map(cv => `<option value="${cv.id}">${cv.icon} ${cv.label}</option>`).join('')}
+              </select>
+              <input class="ta-answer ta-answer-text cv-add-input" type="text" id="cv-journal-text"
+                placeholder="e.g. Today I discovered that our gyro sensor has drift — now I know how to test for it!"
+                onkeydown="if(event.key==='Enter'){addJournalEntry('${escapeHtml(userId)}','${escapeHtml(task.id)}')}">
+              <button class="cv-add-btn" onclick="addJournalEntry('${escapeHtml(userId)}','${escapeHtml(task.id)}')">Add</button>
+            </div>
+            <div class="cv-add-hint">Entries are automatically date-and-time stamped. Add as many as you want, all season long!</div>
+          </div>
+
+          <div class="cv-values-grid">
+            ${valueCards}
+          </div>
+        </div>
+      `;
+    }
+
+    // ── Attachment tracker ────────────────────────────────────────────────
+    function trackerKey(userId) { return `bioglow-attachments-${userId}`; }
+
+    function getAttachments(userId) {
+      try {
+        const saved = JSON.parse(localStorage.getItem(trackerKey(userId)) || 'null');
+        if (saved && saved.length) return saved;
+      } catch {}
+      // default: Attachment 1–4
+      return [1,2,3,4].map(n => ({ id: `att-${n}`, name: `Attachment ${n}`, purpose: '', iterations: [] }));
+    }
+
+    function saveAttachments(userId, attachments) {
+      try {
+        localStorage.setItem(trackerKey(userId), JSON.stringify(attachments));
+      } catch (e) {
+        alert('Storage is full — try deleting an older iteration photo first.');
+      }
+    }
+
+    function addAttachment(userId, taskId) {
+      const atts = getAttachments(userId);
+      atts.push({ id: `att-${Date.now()}`, name: `Attachment ${atts.length + 1}`, purpose: '', iterations: [] });
+      saveAttachments(userId, atts);
+      app.innerHTML = renderTaskDetail(latestData, taskId);
+      wireListeners();
+    }
+
+    function removeAttachment(userId, taskId, attId) {
+      const atts = getAttachments(userId);
+      const att = atts.find(a => a.id === attId);
+      if (att && (att.iterations.length || att.purpose) && !confirm(`Delete "${att.name}" and its ${att.iterations.length} iteration photo(s)?`)) return;
+      saveAttachments(userId, atts.filter(a => a.id !== attId));
+      app.innerHTML = renderTaskDetail(latestData, taskId);
+      wireListeners();
+    }
+
+    function updateAttachmentField(userId, attId, field, value) {
+      const atts = getAttachments(userId);
+      const att = atts.find(a => a.id === attId);
+      if (!att) return;
+      att[field] = value;
+      saveAttachments(userId, atts);
+    }
+
+    // downscale photo to max 900px so localStorage doesn't fill up
+    function addIterationPhoto(input, userId, taskId, attId) {
+      const file = input.files[0];
+      if (!file) return;
+      const img = new Image();
+      const reader = new FileReader();
+      reader.onload = e => {
+        img.onload = () => {
+          const maxDim = 900;
+          let { width, height } = img;
+          if (width > maxDim || height > maxDim) {
+            const scale = maxDim / Math.max(width, height);
+            width = Math.round(width * scale);
+            height = Math.round(height * scale);
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width; canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+
+          const atts = getAttachments(userId);
+          const att = atts.find(a => a.id === attId);
+          if (!att) return;
+          att.iterations.push({
+            id: `it-${Date.now()}`,
+            photo: dataUrl,
+            note: '',
+            createdAt: new Date().toISOString()
+          });
+          saveAttachments(userId, atts);
+          app.innerHTML = renderTaskDetail(latestData, taskId);
+          wireListeners();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function updateIterationNote(userId, attId, itId, value) {
+      const atts = getAttachments(userId);
+      const att = atts.find(a => a.id === attId);
+      const it = att && att.iterations.find(i => i.id === itId);
+      if (!it) return;
+      it.note = value;
+      saveAttachments(userId, atts);
+    }
+
+    function removeIteration(userId, taskId, attId, itId) {
+      if (!confirm('Delete this iteration photo?')) return;
+      const atts = getAttachments(userId);
+      const att = atts.find(a => a.id === attId);
+      if (!att) return;
+      att.iterations = att.iterations.filter(i => i.id !== itId);
+      saveAttachments(userId, atts);
+      app.innerHTML = renderTaskDetail(latestData, taskId);
+      wireListeners();
+    }
+
+    function renderAttachmentTracker(task, userId, ctxIcon) {
+      const atts = getAttachments(userId);
+      const totalPhotos = atts.reduce((n, a) => n + a.iterations.length, 0);
+
+      const attCards = atts.map(att => `
+        <div class="att-card">
+          <div class="att-card-head">
+            <input class="att-name-input" type="text" value="${escapeHtml(att.name)}" placeholder="Attachment name"
+              onchange="updateAttachmentField('${escapeHtml(userId)}','${escapeHtml(att.id)}','name',this.value)">
+            <span class="att-iter-count">${att.iterations.length} version${att.iterations.length !== 1 ? 's' : ''}</span>
+            <button class="att-delete-btn" onclick="removeAttachment('${escapeHtml(userId)}','${escapeHtml(task.id)}','${escapeHtml(att.id)}')" title="Delete attachment">✕</button>
+          </div>
+          <input class="att-purpose-input" type="text" value="${escapeHtml(att.purpose)}" placeholder="What is it for? e.g. Lift missions — forklift arm"
+            onchange="updateAttachmentField('${escapeHtml(userId)}','${escapeHtml(att.id)}','purpose',this.value)">
+
+          ${att.iterations.length ? `
+            <div class="att-iterations">
+              ${att.iterations.map((it, idx) => `
+                <div class="att-iteration">
+                  <div class="att-iter-imgwrap">
+                    <img class="att-iter-img" src="${it.photo}" alt="Version ${idx + 1}">
+                    <span class="att-iter-version">v${idx + 1}</span>
+                    <button class="att-iter-delete" onclick="removeIteration('${escapeHtml(userId)}','${escapeHtml(task.id)}','${escapeHtml(att.id)}','${escapeHtml(it.id)}')">✕</button>
+                  </div>
+                  <input class="att-iter-note" type="text" value="${escapeHtml(it.note)}" placeholder="What changed in this version?"
+                    onchange="updateIterationNote('${escapeHtml(userId)}','${escapeHtml(att.id)}','${escapeHtml(it.id)}',this.value)">
+                  <div class="att-iter-time">🕐 ${escapeHtml(journalTimestamp(it.createdAt))}</div>
+                </div>
+              `).join('')}
+            </div>
+          ` : `<div class="att-no-iterations">No photos yet — snap your first version below!</div>`}
+
+          <label class="att-add-photo-btn">
+            📸 Add iteration photo
+            <input type="file" accept="image/*" style="display:none"
+              onchange="addIterationPhoto(this,'${escapeHtml(userId)}','${escapeHtml(task.id)}','${escapeHtml(att.id)}')">
+          </label>
+        </div>
+      `).join('');
+
+      return `
+        <div class="ta-back-row">
+          <button class="ta-back-btn" onclick="closeTask()">← Back</button>
+        </div>
+        <div class="ta-detail">
+          <div class="ta-header">
+            <div class="ta-badges">
+              <span class="ta-badge ta-badge-type">🔧 Attachment Tracker</span>
+              <span class="ta-badge ta-badge-ctx">${ctxIcon}</span>
+              <span class="ta-badge ta-badge-done">${atts.length} attachments · ${totalPhotos} photos</span>
+            </div>
+            <h1 class="ta-title">${escapeHtml(task.title)}</h1>
+          </div>
+
+          <div class="ta-lesson-body">
+            ${renderMarkdownish(task.description)}
+          </div>
+
+          <div class="att-grid">
+            ${attCards}
+          </div>
+
+          <div class="att-add-row">
+            <button class="att-add-attachment-btn" onclick="addAttachment('${escapeHtml(userId)}','${escapeHtml(task.id)}')">＋ Add another attachment</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // ── Simple markdown-ish renderer (bold, newlines, bullets) ───────────
+    function renderMarkdownish(text) {
+      if (!text) return '';
+      const escaped = text
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      return escaped
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n- /g, '\n• ')
+        .split('\n\n')
+        .map(para => para.trim())
+        .filter(Boolean)
+        .map(para => para.startsWith('•') || para.includes('\n•')
+          ? `<ul>${para.split('\n').map(l => l.replace(/^• /,'').trim()).filter(Boolean).map(l => `<li>${l}</li>`).join('')}</ul>`
+          : `<p>${para.replace(/\n/g,'<br>')}</p>`)
+        .join('');
+    }
+
+    // ── Task photo handling (multiple photos, auto-compressed) ──────────
+    function handleTaskPhoto(input, userId, taskId) {
+      const file = input.files[0];
+      if (!file) return;
+      // preserve any typed-but-unsaved answers before re-render
+      const answers = collectAnswers(taskId);
+      compressImageFile(file, dataUrl => {
+        const photos = getTaskPhotos(getTaskSubmission(userId, taskId));
+        photos.push(dataUrl);
+        saveTaskSubmission(userId, taskId, answers, photos);
+        app.innerHTML = renderTaskDetail(latestData, taskId);
+        wireListeners();
+      });
+    }
+
+    function removeTaskPhoto(userId, taskId, index) {
+      const answers = collectAnswers(taskId);
+      const photos = getTaskPhotos(getTaskSubmission(userId, taskId));
+      photos.splice(index, 1);
+      saveTaskSubmission(userId, taskId, answers, photos);
+      app.innerHTML = renderTaskDetail(latestData, taskId);
+      wireListeners();
+    }
+
+    // ── Save draft ────────────────────────────────────────────────────────
+    function saveTaskDraft(userId, taskId) {
+      const answers = collectAnswers(taskId);
+      saveTaskSubmission(userId, taskId, answers, undefined);
+      const msg = document.getElementById('ta-submit-msg');
+      if (msg) { msg.textContent = '✓ Draft saved!'; msg.className = 'ta-submit-hint success'; setTimeout(() => { if (msg) msg.textContent = ''; }, 2500); }
+    }
+
+    // ── Submit assignment ─────────────────────────────────────────────────
+    function submitTaskAnswers(userId, taskId) {
+      const task = latestData.tasks.find(t => t.id === taskId);
+      if (!task) return;
+      const answers = collectAnswers(taskId);
+      const questions = task.questions || [];
+      const missing = questions.filter(q => !(answers[q.id] || '').trim());
+      if (missing.length) {
+        missing.forEach(q => {
+          const el = document.getElementById(`ta-q-${q.id}`);
+          if (el) { el.classList.add('ta-answer-error'); el.focus(); }
+        });
+        const msg = document.getElementById('ta-submit-msg');
+        if (msg) { msg.textContent = `Please answer all ${missing.length} remaining question${missing.length > 1 ? 's' : ''} before submitting.`; msg.className = 'ta-submit-hint error'; }
+        return;
+      }
+      saveTaskSubmission(userId, taskId, answers, undefined);
+      markTaskSubmitted(userId, taskId);
+      updateTaskStatus(taskId, 'done');
+      app.innerHTML = renderTaskDetail(latestData, taskId);
+      wireListeners();
+    }
+
+    function collectAnswers(taskId) {
+      const answers = {};
+      document.querySelectorAll(`[data-qid]`).forEach(el => {
+        el.classList.remove('ta-answer-error');
+        answers[el.dataset.qid] = el.value || el.textContent || '';
+      });
+      // table questions store rows as JSON
+      document.querySelectorAll('[data-table-qid]').forEach(wrap => {
+        const qid = wrap.dataset.tableQid;
+        answers[qid] = collectTableAnswer(qid);
+      });
+      return answers;
+    }
+
+    // ── Landing: team info + countdown + pre-season tasks + 4 cards ──────
+    function renderLanding(data) {
+      const { user, team, teamMembers, currentPhase, tasks, bioglowCountdown, nextClass, sections, sectionProgress } = data;
+
+      // ── My team + countdown row ──
+      const days = Number(bioglowCountdown.daysUntil) || 0;
+      const urgency = days <= 14 ? '#d93025' : days <= 30 ? '#f9ab00' : '#1e8e5a';
+      const memberCount = (teamMembers || []).length;
+
+      // competition countdown (per team region)
+      let compCard = '';
+      if (team && team.firstCompetition) {
+        const compDate = new Date(team.firstCompetition + 'T00:00:00');
+        const nowD = new Date(); nowD.setHours(0,0,0,0);
+        const compDays = Math.max(0, Math.round((compDate - nowD) / 86400000));
+        const compUrgency = compDays <= 30 ? '#d93025' : compDays <= 90 ? '#f9ab00' : '#1e8e5a';
+        compCard = `
+          <div class="landing-info-card">
+            <div class="landing-info-icon">🏅</div>
+            <div>
+              <div class="landing-info-label">First Competition (predicted)</div>
+              <div class="landing-info-value countdown-days" style="color:${compUrgency};">${compDays} days</div>
+              <div class="landing-info-sub">${escapeHtml(team.regionName || '')} · ~${escapeHtml(formatDate(team.firstCompetition))}</div>
+            </div>
+          </div>
+        `;
+      }
+
+      const infoRow = `
+        <div class="landing-info-row ${compCard ? 'three-col' : ''}">
+          <div class="landing-info-card">
+            <div class="landing-info-icon">🏆</div>
+            <div>
+              <div class="landing-info-label">My Team</div>
+              <div class="landing-info-value">${escapeHtml(team ? team.nickname || team.name : 'No team yet')}</div>
+              <div class="landing-info-sub">${memberCount} student${memberCount !== 1 ? 's' : ''} · ${escapeHtml(team ? team.meetingDays || 'TBD' : 'TBD')}${team && team.regionName ? ` · ${escapeHtml(team.regionName.split('(')[0].trim())}` : ''}</div>
+            </div>
+          </div>
+          <div class="landing-info-card countdown-card" style="--urgency:${urgency};">
+            <div class="landing-info-icon">🚀</div>
+            <div>
+              <div class="landing-info-label">Game Release Countdown</div>
+              <div class="landing-info-value countdown-days" style="color:${urgency};">${days} days</div>
+              <div class="landing-info-sub">BIOGLOW drops ${escapeHtml(formatDate(bioglowCountdown.releaseDate))}</div>
+            </div>
+          </div>
+          ${compCard}
+        </div>
+      `;
+
+      // ── Pre-season assignments: learning about the BIOGLOW topic.
+      //    Category-specific work (Robot Design, Innovation, etc.) lives in those category pages. ──
+      const today = new Date(); today.setHours(0,0,0,0);
+      const allTasks = tasks
+        .filter(t => (t.category || '').toLowerCase() === 'pre-season')
+        .sort((a,b) => String(a.dueDate||'').localeCompare(String(b.dueDate||'')));
+      const openTasks = allTasks.filter(t => t.status !== 'done');
+      const doneCount = allTasks.length - openTasks.length;
+      const pct = allTasks.length ? Math.round((doneCount / allTasks.length) * 100) : 0;
+
+      function dueCls(dueDate) {
+        if (!dueDate) return '';
+        const d = new Date(dueDate); d.setHours(0,0,0,0);
+        const diff = Math.round((d - today) / 86400000);
+        if (diff < 0) return 'overdue';
+        if (diff <= 7) return 'due-soon';
+        return '';
+      }
+
+      const ctxIcon = { lab:'🔬', home:'🏠', class:'📋' };
+
+      const preSeasonSection = `
+        <div class="preseason-section">
+          <div class="preseason-header">
+            <div class="preseason-header-left">
+              <div class="preseason-title">📋 Pre-Season Assignments</div>
+              ${openTasks.length > 0
+                ? `<span class="preseason-count">${openTasks.length} remaining</span>`
+                : `<span class="preseason-count done">✓ All done</span>`}
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:11px;font-weight:700;color:#80868b;">${pct}%</span>
+              <div class="preseason-progress-bar-wrap">
+                <div class="preseason-progress-bar-fill" style="width:${pct}%"></div>
+              </div>
+            </div>
+          </div>
+          ${allTasks.length === 0 ? `
+            <div class="preseason-empty">
+              <div class="preseason-empty-icon">🎉</div>
+              No assignments yet — check back soon!
+            </div>
+          ` : `
+          <div class="preseason-list">
+            ${allTasks.map(task => {
+              const dc = dueCls(task.dueDate);
+              const ctx = ctxIcon[task.workContext] || '📌';
+              return `
+              <div class="preseason-task" data-status="${escapeHtml(task.status)}" onclick="openTask('${escapeHtml(task.id)}')">
+                <div class="preseason-task-accent"></div>
+                <div class="preseason-task-body">
+                  <div class="preseason-task-left">
+                    <div class="preseason-task-row1">
+                      <div class="preseason-task-title">${escapeHtml(task.title)}</div>
+                      <span class="preseason-task-type-badge">${{ video:'🎬 Video', lesson:'📖 Lesson', submission:'📤 Submission', journal:'📓 Journal', tracker:'🔧 Tracker' }[task.type] || '📋 Task'}</span>
+                    </div>
+                    <div class="preseason-task-meta">
+                      <span class="preseason-tag">${escapeHtml(task.category || 'General')}</span>
+                      <span class="preseason-tag">${ctx} ${escapeHtml(task.workContext === 'lab' ? 'Lab' : task.workContext === 'home' ? 'Home' : task.workContext === 'class' ? 'Class' : 'Any')}</span>
+                      ${task.dueDate ? `<span class="preseason-tag ${dc}">📅 Due ${escapeHtml(formatDate(task.dueDate))}</span>` : ''}
+                    </div>
+                  </div>
+                  <div class="preseason-task-right" onclick="event.stopPropagation()">
+                    <select class="preseason-status-select" data-val="${escapeHtml(task.status)}" data-task-status="${escapeHtml(task.id)}" onchange="this.dataset.val=this.value">
+                      ${Object.entries(statusLabels).map(([v,l]) => `<option value="${v}" ${task.status===v?'selected':''}>${l}</option>`).join('')}
+                    </select>
+                  </div>
+                  <div class="preseason-task-chevron">›</div>
+                </div>
+              </div>`;
+            }).join('')}
+          </div>
+          `}
+        </div>
+      `;
+
+      // ── 4 category cards ──
+      const cards = CATEGORIES.map(cat => {
+        const progress = sectionProgress ? (sectionProgress[cat.id] || { complete: 0, total: 0, percent: 0 }) : { complete: 0, total: 0, percent: 0 };
+        const openCount = tasks.filter(t => {
+          const c = (t.category || '').toLowerCase();
+          const s = (t.section || '').toLowerCase();
+          return (c === cat.id || c === cat.label.toLowerCase() || c.replace(/\s+/g,'-') === cat.id ||
+                  s === cat.id || s.replace(/\s+/g,'-') === cat.id) && t.status !== 'done';
+        }).length;
+        const section = (sections || []).find(s => s.id === cat.id) || {};
+
+        return `
+          <button class="cat-card" onclick="openCategory('${cat.id}')" style="--cat-color:${cat.color};--cat-light:${cat.colorLight};--cat-border:${cat.colorBorder};">
+            <div class="cat-card-icon">${cat.icon}</div>
+            <div class="cat-card-label">${escapeHtml(cat.label)}</div>
+            <div class="cat-card-desc">${escapeHtml(section.focusNow || cat.desc)}</div>
+            <div class="cat-card-footer">
+              <div class="cat-progress-bar"><div class="cat-progress-fill" style="width:${progress.percent}%"></div></div>
+              <div class="cat-progress-label">
+                <span>${progress.complete} / ${progress.total || '—'} checkpoints</span>
+                ${openCount > 0 ? `<span class="cat-open-badge">${openCount} open</span>` : '<span class="cat-open-done">✓ up to date</span>'}
+              </div>
+            </div>
+          </button>
+        `;
+      }).join('');
+
+      return `
+        ${renderWelcomeBanner(user, currentPhase, tasks, bioglowCountdown)}
+        ${infoRow}
+        ${preSeasonSection}
+        <div class="cat-grid-title">📂 Your FLL Areas</div>
+        <div class="cat-grid">${cards}</div>
+        <div class="cat-grid-title">📅 Season Calendar</div>
+        <div id="seasonCalendar">${renderCalendar(data)}</div>
+      `;
+    }
+
+    // ── Season calendar ───────────────────────────────────────────────────
+    let calMonth = null; // Date anchored to the 1st of the displayed month
+
+    function calendarEvents(data) {
+      const { tasks, team, season, bioglowCountdown } = data;
+      const events = {}; // 'YYYY-MM-DD' -> [{label, type, taskId?}]
+      const push = (dateStr, ev) => {
+        if (!dateStr) return;
+        const key = dateStr.slice(0, 10);
+        (events[key] = events[key] || []).push(ev);
+      };
+      tasks.forEach(t => {
+        if (t.dueDate) push(t.dueDate, { label: t.title, type: t.status === 'done' ? 'done' : 'due', taskId: t.id });
+      });
+      if (bioglowCountdown && bioglowCountdown.releaseDate) {
+        push(bioglowCountdown.releaseDate, { label: '🚀 BIOGLOW Game Release!', type: 'season' });
+      }
+      const region = team && season && Array.isArray(season.regions)
+        ? season.regions.find(r => r.id === team.region) : null;
+      if (region) {
+        push(region.predictedQualifier, { label: `🏅 Qualifier (predicted) — ${region.name}`, type: 'competition' });
+        push(region.predictedChampionship, { label: `🏆 Championship (predicted) — ${region.name}`, type: 'competition' });
+      }
+      return events;
+    }
+
+    function renderCalendar(data) {
+      if (!calMonth) { const n = new Date(); calMonth = new Date(n.getFullYear(), n.getMonth(), 1); }
+      const events = calendarEvents(data);
+      const year = calMonth.getFullYear(), month = calMonth.getMonth();
+      const firstDow = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const todayKey = new Date().toISOString().slice(0, 10);
+      const monthLabel = calMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+      let cells = '';
+      for (let i = 0; i < firstDow; i++) cells += '<div class="cal-cell empty"></div>';
+      for (let d = 1; d <= daysInMonth; d++) {
+        const key = `${year}-${String(month + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const dayEvents = events[key] || [];
+        const chips = dayEvents.map(ev => {
+          const cls = `cal-chip ${ev.type}`;
+          const click = ev.taskId ? `onclick="openTask('${escapeHtml(ev.taskId)}')"` : '';
+          return `<div class="${cls}" ${click} title="${escapeHtml(ev.label)}">${escapeHtml(ev.label)}</div>`;
+        }).join('');
+        cells += `
+          <div class="cal-cell ${key === todayKey ? 'today' : ''} ${dayEvents.length ? 'has-events' : ''}">
+            <div class="cal-daynum">${d}</div>
+            ${chips}
+          </div>
+        `;
+      }
+
+      return `
+        <div class="cal-card">
+          <div class="cal-header">
+            <button class="cal-nav" onclick="changeCalMonth(-1)">‹</button>
+            <div class="cal-month-label">${escapeHtml(monthLabel)}</div>
+            <button class="cal-nav" onclick="changeCalMonth(1)">›</button>
+          </div>
+          <div class="cal-legend">
+            <span class="cal-legend-item"><span class="cal-dot due"></span>Assignment due</span>
+            <span class="cal-legend-item"><span class="cal-dot done"></span>Completed</span>
+            <span class="cal-legend-item"><span class="cal-dot competition"></span>Competition</span>
+            <span class="cal-legend-item"><span class="cal-dot season"></span>Season event</span>
+          </div>
+          <div class="cal-dow-row">
+            ${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => `<div class="cal-dow">${d}</div>`).join('')}
+          </div>
+          <div class="cal-grid">${cells}</div>
+        </div>
+      `;
+    }
+
+    function changeCalMonth(delta) {
+      calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() + delta, 1);
+      const el = document.getElementById('seasonCalendar');
+      if (el && latestData) el.innerHTML = renderCalendar(latestData);
+    }
+
+    // ── Category detail view ──────────────────────────────────────────────
+    function renderCategoryDetail(data, categoryId) {
+      const { tasks, assignments, workLogs, resources } = data;
+      const cat = CATEGORIES.find(c => c.id === categoryId);
+      if (!cat) return renderLanding(data);
+
+      // filter tasks to this category (loose match on category/section fields)
+      const catTasks = tasks.filter(t => {
+        const c = (t.category || '').toLowerCase();
+        const s = (t.section || '').toLowerCase();
+        return c === categoryId || c === cat.label.toLowerCase() ||
+               c.replace(/\s+/g,'-') === categoryId ||
+               s === categoryId || s.replace(/\s+/g,'-') === categoryId;
+      });
+
+      const open = catTasks.filter(t => t.status !== 'done');
+      const done = catTasks.filter(t => t.status === 'done');
+
+      const sortedCatTasks = catTasks.slice().sort((a,b) => String(a.dueDate||'').localeCompare(String(b.dueDate||'')));
+      const ctxIcon = { lab:'🔬', home:'🏠', class:'📋' };
+      const taskCards = sortedCatTasks.length
+        ? `<div class="preseason-list">${sortedCatTasks.map(task => {
+            const ctx = ctxIcon[task.workContext] || '📌';
+            return `
+              <div class="preseason-task" data-status="${escapeHtml(task.status)}" onclick="openTask('${escapeHtml(task.id)}')">
+                <div class="preseason-task-accent"></div>
+                <div class="preseason-task-body">
+                  <div class="preseason-task-left">
+                    <div class="preseason-task-row1">
+                      <div class="preseason-task-title">${escapeHtml(task.title)}</div>
+                      <span class="preseason-task-type-badge">${{ video:'🎬 Video', lesson:'📖 Lesson', submission:'📤 Submission', journal:'📓 Journal', tracker:'🔧 Tracker' }[task.type] || '📋 Task'}</span>
+                    </div>
+                    <div class="preseason-task-meta">
+                      <span class="preseason-tag">${ctx} ${escapeHtml(task.workContext === 'lab' ? 'Lab' : task.workContext === 'home' ? 'Home' : task.workContext === 'class' ? 'Class' : 'Any')}</span>
+                      ${task.dueDate ? `<span class="preseason-tag">📅 Due ${escapeHtml(formatDate(task.dueDate))}</span>` : ''}
+                    </div>
+                  </div>
+                  <div class="preseason-task-right" onclick="event.stopPropagation()">
+                    <select class="preseason-status-select" data-val="${escapeHtml(task.status)}" data-task-status="${escapeHtml(task.id)}" onchange="this.dataset.val=this.value">
+                      ${Object.entries(statusLabels).map(([v,l]) => `<option value="${v}" ${task.status===v?'selected':''}>${l}</option>`).join('')}
+                    </select>
+                  </div>
+                  <div class="preseason-task-chevron">›</div>
+                </div>
+              </div>`;
+          }).join('')}</div>`
+        : `<div class="detail-empty">No assignments in this category yet — check back after your next session.</div>`;
+
+      // category-relevant resources
+      const catResources = resources.filter(r => {
+        const rc = (r.category || '').toLowerCase();
+        return rc.includes('rubric') ||
+               (categoryId === 'robot-design' && (rc.includes('robot') || rc.includes('design'))) ||
+               (categoryId === 'innovation' && (rc.includes('article') || rc.includes('bio') || rc.includes('vision') || rc.includes('innovation'))) ||
+               (categoryId === 'core-values' && rc.includes('core')) ||
+               (categoryId === 'robot-game' && (rc.includes('robot') || rc.includes('mission')));
+      });
+
+      return `
+        <div class="detail-header" style="--cat-color:${cat.color};--cat-light:${cat.colorLight};--cat-border:${cat.colorBorder};">
+          <button class="back-btn" onclick="openCategory(null)">← Back</button>
+          <div class="detail-header-icon">${cat.icon}</div>
+          <div>
+            <div class="detail-header-label">${escapeHtml(cat.label)}</div>
+            <div class="detail-header-desc">${escapeHtml(cat.desc)}</div>
+          </div>
+          <div class="detail-header-counts">
+            <span class="detail-count-chip open">${open.length} open</span>
+            <span class="detail-count-chip done">${done.length} done</span>
+          </div>
+        </div>
+
+        <div class="cat-grid-title">📋 Pre-Season Assignments — ${escapeHtml(cat.label)}</div>
+        <div class="detail-task-list">${taskCards}</div>
+
+        ${catResources.length ? `
+          <div class="detail-resources-title">📚 Related Resources</div>
+          <div class="detail-resources-grid">
+            ${catResources.map(r => `
+              <a class="detail-resource-card" href="${escapeHtml(r.url)}" target="_blank" rel="noreferrer">
+                <div class="detail-resource-name">${escapeHtml(r.label)}</div>
+                <div class="detail-resource-desc">${escapeHtml(r.description)}</div>
+                <div class="detail-resource-open">Open →</div>
+              </a>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        <div class="detail-log-section">
+          <div class="detail-log-title">📝 Log your work</div>
+          ${renderWorkLogForm(catTasks.length ? catTasks : tasks)}
+        </div>
+      `;
+    }
+
+    function openCategory(id) {
+      activeCategory = id;
+      if (latestData) {
+        app.innerHTML = id
+          ? renderCategoryDetail(latestData, id)
+          : renderLanding(latestData);
+        wireListeners();
+        if (!id) window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function wireListeners() {
+      document.querySelectorAll('[data-task-status]').forEach(sel => {
+        sel.addEventListener('change', () => {
+          // update accent color immediately
+          sel.dataset.val = sel.value;
+          const row = sel.closest('.preseason-task');
+          if (row) row.dataset.status = sel.value;
+          updateTaskStatus(sel.dataset.taskStatus, sel.value);
+        });
+      });
+      const form = document.getElementById('workLogForm');
+      if (form) form.addEventListener('submit', submitWorkLog);
+    }
+
+    // ── Main render ───────────────────────────────────────────────────────
+    function renderDashboard(data) {
+      latestData = data;
+      const { user, team } = data;
+      userLine.textContent = `${user.name} – ${team ? team.name : 'No team assigned'}`;
+      teamPill.textContent = team ? team.nickname || team.name : 'Student';
+      maybeShowWelcomeScreen(user);
+
+      app.innerHTML = activeTask
+        ? renderTaskDetail(data, activeTask)
+        : activeCategory
+          ? renderCategoryDetail(data, activeCategory)
+          : renderLanding(data);
+
+      wireListeners();
+    }
+
+    async function loadDashboard() {
+      try {
+        const response = await fetch('/api/fll/student-dashboard');
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Student login required');
+        renderDashboard(result.data);
+      } catch (err) {
+        window.location.href = '/fll-hub/login';
+      }
+    }
+
+    async function updateTaskStatus(taskId, status) {
+      try {
+        const response = await fetch(`/api/fll/tasks/${encodeURIComponent(taskId)}/status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Could not update task.');
+        showToast('Task updated');
+        await loadDashboard();
+      } catch (err) {
+        showToast(err.message);
+        await loadDashboard();
+      }
+    }
+
+    async function submitWorkLog(event) {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const button = form.querySelector('button[type="submit"]');
+      button.disabled = true;
+      const taskId = form.taskId.value;
+      const payload = {
+        location: form.location.value,
+        minutes: Number(form.minutes.value),
+        note: form.note.value.trim(),
+        blocked: form.blocked.checked
+      };
+
+      try {
+        const response = await fetch(`/api/fll/tasks/${encodeURIComponent(taskId)}/work-log`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Could not save work log.');
+        showToast('Update turned in');
+        await loadDashboard();
+      } catch (err) {
+        showToast(err.message);
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    logoutButton.addEventListener('click', async () => {
+      await fetch('/api/fll/logout', { method: 'POST' });
+      window.location.href = '/fll-hub/login';
+    });
+
+    loadDashboard();
+  </script>
+</body>
+</html>

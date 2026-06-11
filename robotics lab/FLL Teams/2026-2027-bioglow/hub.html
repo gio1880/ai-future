@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BIOGLOW Hub | AI Future FLL</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/ai%20future%20logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green: #1d9e6e;
+      --green-dark: #136d4b;
+      --green-light: #e6f7f0;
+      --green-mid: #c2edda;
+      --glow: #f0c130;
+      --glow-light: #fdf6d8;
+      --blue: #2870c9;
+      --blue-light: #e8f1fd;
+      --purple: #7c51d4;
+      --purple-light: #f0ebfd;
+      --coral: #e8583a;
+      --coral-light: #fdeee9;
+      --ink: #1a2a22;
+      --muted: #5e6e65;
+      --line: #daeadf;
+      --bg: #f4faf6;
+      --white: #ffffff;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 20px rgba(29, 158, 110, 0.10);
+      --shadow-hover: 0 8px 32px rgba(29, 158, 110, 0.18);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+
+    /* ── Top bar ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .brand img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      padding: 4px;
+      background: white;
+    }
+
+    .brand-text strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .brand-text span {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chip {
+      padding: 6px 12px;
+      border-radius: 50px;
+      border: 1.5px solid var(--line);
+      font-size: 13px;
+      font-weight: 700;
+      background: white;
+      color: var(--muted);
+    }
+
+    .chip.green {
+      background: var(--green-light);
+      border-color: var(--green-mid);
+      color: var(--green-dark);
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      border: 0;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      background: var(--ink);
+      color: white;
+      transition: opacity 0.15s;
+    }
+
+    .btn:hover { opacity: 0.82; }
+
+    /* ── Page ── */
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    /* ── Hero card ── */
+    .hero-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      background:
+        linear-gradient(140deg, rgba(19, 50, 35, 0.90) 0%, rgba(29, 158, 110, 0.78) 100%),
+        url("/robotics%20lab/FLL%20Teams/25_26_season_pictures/fll-25-26-002.png") center / cover;
+      color: white;
+      padding: clamp(28px, 5vw, 52px);
+      margin-bottom: 28px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 10px;
+    }
+
+    .hero-title {
+      font-size: clamp(40px, 9vw, 80px);
+      font-weight: 900;
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title em {
+      font-style: normal;
+      color: var(--glow);
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.85);
+      margin-top: 14px;
+      max-width: 540px;
+    }
+
+    .hero-date-badge {
+      background: rgba(255,255,255,0.18);
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-radius: var(--radius-sm);
+      padding: 18px 22px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .hero-date-badge .date-label {
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 6px;
+    }
+
+    .hero-date-badge .date-val {
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    /* ── Focus banner ── */
+    .focus-banner {
+      background: var(--glow-light);
+      border: 2px solid #f4d86e;
+      border-radius: var(--radius);
+      padding: 22px 26px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .focus-icon {
+      font-size: 36px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .focus-body strong {
+      display: block;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #8a6a00;
+      margin-bottom: 4px;
+    }
+
+    .focus-body h2 {
+      font-size: 20px;
+      font-weight: 900;
+      color: #5a4400;
+      margin-bottom: 6px;
+    }
+
+    .focus-body p {
+      font-size: 15px;
+      color: #6b5200;
+      line-height: 1.6;
+    }
+
+    /* ── Section titles ── */
+    .section-title {
+      font-size: 22px;
+      font-weight: 900;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-sub {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    /* ── Team cards ── */
+    .team-grid {
+      display: grid;
+      gap: 18px;
+      margin-bottom: 40px;
+    }
+
+    .team-card {
+      background: white;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--line);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.18s, transform 0.18s;
+    }
+
+    .team-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
+
+    .team-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .team-name {
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .team-meta {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 800;
+      background: var(--blue-light);
+      color: var(--blue);
+      white-space: nowrap;
+    }
+
+    .progress-wrap {
+      margin-bottom: 18px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .progress-bar {
+      height: 10px;
+      border-radius: 50px;
+      background: var(--line);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 50px;
+      background: linear-gradient(90deg, var(--green), var(--glow));
+      transition: width 0.5s ease;
+    }
+
+    .info-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .info-box {
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+    }
+
+    .info-box-label {
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--green-dark);
+      margin-bottom: 5px;
+    }
+
+    .info-box p {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--ink);
+    }
+
+    .info-box ul {
+      padding-left: 16px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-top: 4px;
+    }
+
+    /* ── Resources ── */
+    .resources-section {
+      margin-bottom: 40px;
+    }
+
+    .resource-category {
+      margin-bottom: 26px;
+    }
+
+    .cat-label {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1.5px solid var(--line);
+    }
+
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .resource-card {
+      background: white;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--line);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.18s, transform 0.18s;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .resource-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
+
+    .resource-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .resource-type-badge {
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 9px;
+      border-radius: 50px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .type-Website  { background: var(--blue-light); color: var(--blue); }
+    .type-Video    { background: var(--coral-light); color: var(--coral); }
+    .type-Rubric   { background: var(--purple-light); color: var(--purple); }
+    .type-Reading  { background: var(--green-light); color: var(--green-dark); }
+    .type-Biography{ background: var(--glow-light); color: #8a6a00; }
+    .type-Prompt   { background: var(--green-light); color: var(--green-dark); }
+    .type-Folder   { background: #f1f1f1; color: #555; }
+    .type-Template { background: #f1f1f1; color: #555; }
+
+    .resource-name {
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .resource-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .resource-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--green);
+      margin-top: auto;
+    }
+
+    .resource-link:hover { color: var(--green-dark); }
+
+    .curriculum-section {
+      margin: 0 0 40px;
+    }
+
+    .curriculum-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .curriculum-area {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .curriculum-area-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .curriculum-area-title {
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .curriculum-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .curriculum-chip {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 5px 10px;
+      white-space: nowrap;
+    }
+
+    .curriculum-chip.is-count {
+      background: var(--green-light);
+      border-color: #b8e1c2;
+      color: var(--green-dark);
+      flex-shrink: 0;
+    }
+
+    .curriculum-next {
+      background: var(--glow-light);
+      border: 1px solid #ead77b;
+      border-radius: var(--radius-sm);
+      color: #675000;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 14px;
+      padding: 10px 12px;
+    }
+
+    .curriculum-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .curriculum-item {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--green);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .curriculum-item summary {
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      list-style: none;
+      padding: 12px 14px;
+    }
+
+    .curriculum-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .curriculum-item summary::after {
+      color: var(--green-dark);
+      content: "+";
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .curriculum-item[open] summary::after {
+      content: "-";
+    }
+
+    .curriculum-item-title {
+      font-size: 14px;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .curriculum-date {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      margin-left: auto;
+      white-space: nowrap;
+    }
+
+    .curriculum-detail {
+      border-top: 1px solid var(--line);
+      padding: 0 14px 14px;
+    }
+
+    .curriculum-detail p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      padding-top: 12px;
+    }
+
+    .empty-curriculum {
+      background: white;
+      border: 1.5px dashed var(--line);
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+      padding: 20px;
+    }
+
+    /* ── Timeline ── */
+    .timeline-section {
+      margin-bottom: 40px;
+    }
+
+    .timeline-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .timeline-item {
+      background: white;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--line);
+      padding: 18px 22px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .timeline-item.is-current {
+      border-color: var(--green);
+      background: linear-gradient(135deg, var(--green-light), white);
+      box-shadow: var(--shadow);
+    }
+
+    .timeline-item.is-done {
+      opacity: 0.55;
+    }
+
+    .timeline-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2.5px solid var(--line);
+      background: white;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      margin-top: 2px;
+    }
+
+    .timeline-item.is-current .timeline-dot {
+      border-color: var(--green);
+      background: var(--green);
+      color: white;
+    }
+
+    .timeline-item.is-done .timeline-dot {
+      background: #b8d8c4;
+      border-color: #b8d8c4;
+      color: white;
+    }
+
+    .timeline-body h3 {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 3px;
+    }
+
+    .timeline-date {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .timeline-goal {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .timeline-deliverables {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .deliverable-tag {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 50px;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .timeline-item.is-current .deliverable-tag {
+      background: var(--green-light);
+      border-color: var(--green-mid);
+      color: var(--green-dark);
+    }
+
+    /* ── Announcements ── */
+    .announce-list {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+
+    .announce-card {
+      background: white;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--line);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .announce-card.coach-only {
+      border-left: 4px solid var(--glow);
+    }
+
+    .announce-date {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 5px;
+    }
+
+    .announce-title {
+      font-size: 17px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .announce-body {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── Start Here tasks ── */
+    .start-here {
+      margin-bottom: 36px;
+    }
+
+    .start-here-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .start-here-progress {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .start-here-progress-bar {
+      width: 120px;
+      height: 8px;
+      border-radius: 50px;
+      background: var(--line);
+      overflow: hidden;
+    }
+
+    .start-here-progress-fill {
+      height: 100%;
+      border-radius: 50px;
+      background: linear-gradient(90deg, var(--green), var(--glow));
+      transition: width 0.4s ease;
+    }
+
+    .task-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .task-card {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.18s;
+    }
+
+    .task-card.is-done {
+      border-color: var(--green-mid);
+      background: var(--green-light);
+    }
+
+    .task-card:hover { box-shadow: var(--shadow-hover); }
+
+    .task-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .task-check {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2.5px solid var(--line);
+      background: white;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      color: transparent;
+      transition: all 0.18s;
+    }
+
+    .task-card.is-done .task-check {
+      background: var(--green);
+      border-color: var(--green);
+      color: white;
+    }
+
+    .task-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .task-title {
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .task-card.is-done .task-title {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    .task-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-top: 3px;
+    }
+
+    .task-action {
+      flex-shrink: 0;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--green);
+      white-space: nowrap;
+    }
+
+    .task-card.is-done .task-action { color: var(--muted); }
+
+    .task-expand {
+      padding: 0 18px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.2s ease;
+    }
+
+    .task-expand.open {
+      max-height: 520px;
+      padding-bottom: 18px;
+    }
+
+    .video-embed {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: #000;
+    }
+
+    .video-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .task-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green);
+      color: white;
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .task-link-btn:hover { background: var(--green-dark); }
+
+    .task-mark-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 2px solid var(--green);
+      color: var(--green);
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: all 0.15s;
+    }
+
+    .task-mark-btn:hover {
+      background: var(--green);
+      color: white;
+    }
+
+    .task-prompt-box {
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .task-prompt-box strong { color: var(--green-dark); }
+
+    /* ── Welcome modal ── */
+    .welcome-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(20, 40, 28, 0.55);
+      backdrop-filter: blur(6px);
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .welcome-overlay.hidden {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .welcome-modal {
+      background: white;
+      border-radius: 24px;
+      max-width: 540px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.22);
+      animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(28px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .welcome-header {
+      background: linear-gradient(135deg, #136d4b 0%, #1d9e6e 60%, #2fc08a 100%);
+      padding: 36px 32px 28px;
+      text-align: center;
+      color: white;
+    }
+
+    .welcome-wave {
+      font-size: 52px;
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+
+    .welcome-header h2 {
+      font-size: 26px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .welcome-header p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.55;
+    }
+
+    .welcome-body {
+      padding: 28px 32px 32px;
+    }
+
+    .welcome-steps {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 26px;
+    }
+
+    .welcome-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+    }
+
+    .step-icon {
+      font-size: 26px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .step-text strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 2px;
+      color: var(--ink);
+    }
+
+    .step-text p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .welcome-cta {
+      width: 100%;
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      border: 0;
+      background: var(--green);
+      color: white;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.12s;
+    }
+
+    .welcome-cta:hover {
+      background: var(--green-dark);
+      transform: translateY(-1px);
+    }
+
+    .welcome-skip {
+      display: block;
+      text-align: center;
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+      width: 100%;
+    }
+
+    .welcome-skip:hover { color: var(--ink); }
+
+    /* ── Loading ── */
+    .loading-state {
+      min-height: 60vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .loading-spinner {
+      font-size: 48px;
+      animation: spin 1.5s linear infinite;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    /* ── Two-col layout ── */
+    .main-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) 340px;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .sidebar {
+      display: grid;
+      gap: 0;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .main-layout {
+        grid-template-columns: 1fr;
+      }
+      .hero-card {
+        grid-template-columns: 1fr;
+      }
+      .hero-date-badge {
+        align-self: flex-start;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .info-row {
+        grid-template-columns: 1fr;
+      }
+      .page { padding-inline: 14px; }
+      .hero-card { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <img src="/ai%20future%20logo.png" alt="AI Future" />
+        <div class="brand-text">
+          <strong>BIOGLOW Hub</strong>
+          <span id="userLine">Loading…</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <a class="chip" href="/robotics-lab">Robotics Lab</a>
+        <span class="chip green" id="rolePill">FLL</span>
+        <button class="btn" id="logoutButton">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Welcome modal (shown once per student) -->
+  <div class="welcome-overlay hidden" id="welcomeOverlay" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+    <div class="welcome-modal">
+      <div class="welcome-header">
+        <div class="welcome-wave">👋</div>
+        <h2 id="welcomeTitle">Welcome to the BIOGLOW Hub!</h2>
+        <p>This is your home base for the 2026–2027 FLL season. Here's a quick look at what you'll find here.</p>
+      </div>
+      <div class="welcome-body">
+        <div class="welcome-steps">
+          <div class="welcome-step">
+            <div class="step-icon">🎯</div>
+            <div class="step-text">
+              <strong>What to do right now</strong>
+              <p>The yellow "Right Now" banner at the top always shows your current season phase and what your goal is for this stretch.</p>
+            </div>
+          </div>
+          <div class="welcome-step">
+            <div class="step-icon">⭐</div>
+            <div class="step-text">
+              <strong>Start Here checklist</strong>
+              <p>Pre-season tasks — watch the teaser videos, read research articles, and brainstorm ideas. Check each one off as you go!</p>
+            </div>
+          </div>
+          <div class="welcome-step">
+            <div class="step-icon">🏆</div>
+            <div class="step-text">
+              <strong>Your team dashboard</strong>
+              <p>See your team's readiness, current focus, and next deliverable — all in one place so you're never lost.</p>
+            </div>
+          </div>
+          <div class="welcome-step">
+            <div class="step-icon">📚</div>
+            <div class="step-text">
+              <strong>All your resources</strong>
+              <p>Official challenge links, videos, rubrics, and articles are grouped by category — everything you need in one spot.</p>
+            </div>
+          </div>
+          <div class="welcome-step">
+            <div class="step-icon">🗺️</div>
+            <div class="step-text">
+              <strong>Season journey</strong>
+              <p>The timeline on the right shows every phase from pre-season all the way to competition day — so you always know what's coming next.</p>
+            </div>
+          </div>
+          <div class="welcome-step">
+            <div class="step-icon">📢</div>
+            <div class="step-text">
+              <strong>Announcements</strong>
+              <p>Check the announcements before every practice — your coach posts updates, reminders, and week-by-week goals there.</p>
+            </div>
+          </div>
+        </div>
+        <button class="welcome-cta" id="welcomeGo">Let's go! 🚀</button>
+        <button class="welcome-skip" id="welcomeSkip">Skip intro</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="page" id="app">
+    <div class="loading-state">
+      <span class="loading-spinner">🌿</span>
+      <p class="loading-text">Loading your BIOGLOW hub…</p>
+    </div>
+  </main>
+
+  <script>
+    const app = document.getElementById('app');
+    const userLine = document.getElementById('userLine');
+    const rolePill = document.getElementById('rolePill');
+    const logoutButton = document.getElementById('logoutButton');
+    const welcomeOverlay = document.getElementById('welcomeOverlay');
+    const welcomeGo = document.getElementById('welcomeGo');
+    const welcomeSkip = document.getElementById('welcomeSkip');
+
+    function dismissWelcome() {
+      welcomeOverlay.classList.add('hidden');
+    }
+
+    function maybeShowWelcome(user) {
+      if (user.role === 'coach') return;
+      const key = `bioglow-welcomed-${user.id || user.name}`;
+      if (localStorage.getItem(key)) return;
+      welcomeOverlay.classList.remove('hidden');
+      welcomeGo.focus();
+      welcomeGo.addEventListener('click', () => {
+        localStorage.setItem(key, '1');
+        dismissWelcome();
+      });
+      welcomeSkip.addEventListener('click', () => {
+        localStorage.setItem(key, '1');
+        dismissWelcome();
+      });
+      welcomeOverlay.addEventListener('click', (e) => {
+        if (e.target === welcomeOverlay) {
+          localStorage.setItem(key, '1');
+          dismissWelcome();
+        }
+      });
+    }
+
+    function esc(v) {
+      return String(v == null ? '' : v)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    const PRE_SEASON_TASKS = [
+      {
+        id: 'watch-teaser-1',
+        icon: '🎬',
+        title: 'Watch: BIOGLOW First Look Teaser',
+        desc: 'The official season teaser — get your first look at what BIOGLOW is all about.',
+        type: 'video',
+        videoId: '6oPqt5IQbPI',
+        action: 'Watch video',
+      },
+      {
+        id: 'watch-teaser-2',
+        icon: '🎬',
+        title: 'Watch: FIRST LEGO League BIOGLOW Reveal',
+        desc: 'The full season reveal — see the theme, challenge categories, and robot game intro.',
+        type: 'video',
+        videoId: 'P0R7FMBfzaA',
+        action: 'Watch video',
+      },
+      {
+        id: 'visit-official',
+        icon: '🌐',
+        title: 'Explore the Official BIOGLOW Season Page',
+        desc: 'Read the official season overview from FIRST LEGO League — bookmark this page!',
+        type: 'link',
+        url: 'https://www.first-lego-league.org/en/2026-27-season/bioglow',
+        action: 'Open page →',
+      },
+      {
+        id: 'read-biodiversity',
+        icon: '🌿',
+        title: 'Read: What Is Biodiversity?',
+        desc: 'Start here to understand why biodiversity matters and how ecosystems stay balanced.',
+        type: 'link',
+        url: 'https://www.nationalgeographic.org/encyclopedia/biodiversity/',
+        action: 'Read article →',
+      },
+      {
+        id: 'read-biomimicry',
+        icon: '🔬',
+        title: 'Read: Nature-Inspired Design (Biomimicry)',
+        desc: 'Explore how engineers copy nature\'s ideas to design better technology and solutions.',
+        type: 'link',
+        url: 'https://biomimicry.org/what-is-biomimicry/',
+        action: 'Read article →',
+      },
+      {
+        id: 'read-goodall',
+        icon: '🧬',
+        title: 'Learn About Jane Goodall',
+        desc: 'A scientist who changed the world through observation and conservation. Great inspiration for your innovation project.',
+        type: 'link',
+        url: 'https://janegoodall.org/our-story/about-jane/',
+        action: 'Read bio →',
+      },
+      {
+        id: 'brainstorm-problems',
+        icon: '💭',
+        title: 'Brainstorm: 3 Ecosystem Problems Near You',
+        desc: 'Think about your neighborhood — parks, street trees, pollinators, water, waste, or heat. What ecosystem problems do you notice every day?',
+        type: 'prompt',
+        prompt: '<strong>Your challenge:</strong> Write down at least 3 ecosystem problems you\'ve seen in Queens, NYC, or near your home. These could become your Innovation Project idea!',
+        action: 'See prompt',
+      },
+    ];
+
+    function getTaskKey(userId) {
+      return `bioglow-tasks-${userId}`;
+    }
+
+    function loadTaskState(userId) {
+      try {
+        return JSON.parse(localStorage.getItem(getTaskKey(userId)) || '{}');
+      } catch { return {}; }
+    }
+
+    function saveTaskState(userId, state) {
+      localStorage.setItem(getTaskKey(userId), JSON.stringify(state));
+    }
+
+    function renderStartHere(userId, phaseId) {
+      if (phaseId !== 'pre-season') return '';
+      const state = loadTaskState(userId);
+      const done = PRE_SEASON_TASKS.filter(t => state[t.id]).length;
+      const total = PRE_SEASON_TASKS.length;
+      const pct = Math.round((done / total) * 100);
+
+      const taskCards = PRE_SEASON_TASKS.map(task => {
+        const isDone = !!state[task.id];
+        let expandContent = '';
+        if (task.type === 'video') {
+          expandContent = `
+            <div class="video-embed">
+              <iframe src="https://www.youtube.com/embed/${esc(task.videoId)}?rel=0" allowfullscreen loading="lazy" title="${esc(task.title)}"></iframe>
+            </div>
+            ${!isDone ? `<button class="task-mark-btn" onclick="markTaskDone('${esc(userId)}','${esc(task.id)}')">✓ Mark as watched</button>` : ''}
+          `;
+        } else if (task.type === 'link') {
+          expandContent = `
+            <a class="task-link-btn" href="${esc(task.url)}" target="_blank" rel="noreferrer" onclick="markTaskDone('${esc(userId)}','${esc(task.id)}')">
+              ${esc(task.action)}
+            </a>
+            ${!isDone ? `<span style="display:block;font-size:12px;color:var(--muted);margin-top:8px;">Opening the link counts as completing this task ✓</span>` : ''}
+          `;
+        } else if (task.type === 'prompt') {
+          expandContent = `
+            <div class="task-prompt-box">${task.prompt}</div>
+            ${!isDone ? `<button class="task-mark-btn" onclick="markTaskDone('${esc(userId)}','${esc(task.id)}')">✓ I wrote my ideas — mark as done</button>` : ''}
+          `;
+        }
+
+        return `
+          <div class="task-card ${isDone ? 'is-done' : ''}" id="task-${esc(task.id)}">
+            <div class="task-row" onclick="toggleTaskExpand('${esc(task.id)}')">
+              <div class="task-check">✓</div>
+              <div class="task-info">
+                <div class="task-title">${task.icon} ${esc(task.title)}</div>
+                <div class="task-desc">${esc(task.desc)}</div>
+              </div>
+              <div class="task-action">${isDone ? 'Done ✓' : esc(task.action)}</div>
+            </div>
+            <div class="task-expand" id="expand-${esc(task.id)}">
+              ${expandContent}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="start-here">
+          <div class="start-here-header">
+            <div>
+              <div class="section-title">⭐ Start Here — Pre-Season</div>
+              <p class="section-sub">Complete these tasks before kickoff on August 4. Check them off as you go!</p>
+            </div>
+            <div class="start-here-progress">
+              <span>${done} / ${total} done</span>
+              <div class="start-here-progress-bar">
+                <div class="start-here-progress-fill" style="width:${pct}%"></div>
+              </div>
+            </div>
+          </div>
+          <div class="task-list">${taskCards}</div>
+        </div>
+      `;
+    }
+
+    function toggleTaskExpand(taskId) {
+      const expand = document.getElementById('expand-' + taskId);
+      if (!expand) return;
+      expand.classList.toggle('open');
+    }
+
+    function markTaskDone(userId, taskId) {
+      const state = loadTaskState(userId);
+      state[taskId] = true;
+      saveTaskState(userId, state);
+      const card = document.getElementById('task-' + taskId);
+      if (card) {
+        card.classList.add('is-done');
+        const check = card.querySelector('.task-check');
+        if (check) check.textContent = '✓';
+        const action = card.querySelector('.task-action');
+        if (action) action.textContent = 'Done ✓';
+        const markBtn = card.querySelector('.task-mark-btn');
+        if (markBtn) markBtn.remove();
+        const hint = card.querySelector('.task-expand span');
+        if (hint) hint.remove();
+      }
+      // refresh progress bar
+      const done = PRE_SEASON_TASKS.filter(t => loadTaskState(userId)[t.id]).length;
+      const pct = Math.round((done / PRE_SEASON_TASKS.length) * 100);
+      const fill = document.querySelector('.start-here-progress-fill');
+      if (fill) fill.style.width = pct + '%';
+      const label = document.querySelector('.start-here-progress span');
+      if (label) label.textContent = `${done} / ${PRE_SEASON_TASKS.length} done`;
+    }
+
+    function phaseEmoji(index) {
+      const emojis = ['🔧','🚀','🔬','🤖','💡','🎤','🏁','🎉'];
+      return emojis[index] || '⭐';
+    }
+
+    function typeIcon(type) {
+      const map = { Website:'🌐', Video:'▶️', Rubric:'📋', Reading:'📖', Biography:'🧬', Prompt:'💭', Folder:'📁', Template:'📄' };
+      return map[type] || '🔗';
+    }
+
+    function categoryColor(cat) {
+      const map = {
+        Official: 'var(--blue)', 'Teaser Videos': 'var(--coral)',
+        Rubrics: 'var(--purple)', Articles: 'var(--green)',
+        Biographies: '#d4a000', 'Vision Board': 'var(--green)',
+        'Shared Folder': '#777', Team: '#777', Planning: '#777'
+      };
+      return map[cat] || 'var(--green)';
+    }
+
+    function renderHero(season, phase) {
+      const kickoffDate = 'August 4, 2026';
+      return `
+        <div class="hero-card">
+          <div>
+            <div class="hero-eyebrow">${esc(season.year)} · FIRST LEGO League</div>
+            <div class="hero-title">BIO<em>GLOW</em></div>
+            <p class="hero-sub">${esc(season.themeSummary || 'Teams explore ecosystems and the connections between nature, technology, creativity, and innovation.')}</p>
+          </div>
+          <div class="hero-date-badge">
+            <div class="date-label">Season Kickoff</div>
+            <div class="date-val">${esc(kickoffDate)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFocusBanner(phase) {
+      return `
+        <div class="focus-banner">
+          <div class="focus-icon">🎯</div>
+          <div class="focus-body">
+            <strong>Right now · ${esc(phase.dateRange || '')}</strong>
+            <h2>${esc(phase.phase || 'Pre-season Setup')}</h2>
+            <p>${esc(phase.studentGoal || 'Get ready for an amazing season!')}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTeamCard(team, isCoach) {
+      const readiness = Math.max(0, Math.min(100, Number(team.readiness) || 0));
+      const highlightItems = Array.isArray(team.studentHighlights) && team.studentHighlights.length
+        ? `<ul>${team.studentHighlights.map(h => `<li>${esc(h)}</li>`).join('')}</ul>`
+        : '<p>Nothing here yet — check back soon!</p>';
+      const coachItems = Array.isArray(team.coachNotes) && team.coachNotes.length
+        ? `<ul>${team.coachNotes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>`
+        : '<p>No notes yet.</p>';
+
+      return `
+        <div class="team-card">
+          <div class="team-card-top">
+            <div>
+              <div class="team-name">${esc(team.name)}</div>
+              <div class="team-meta">${esc(team.meetingDays || 'Meeting day TBD')} · ${esc(team.room || 'Room TBD')}</div>
+            </div>
+            <span class="status-badge">${esc(team.status || 'Active')}</span>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-label">
+              <span>Season readiness</span>
+              <span>${readiness}%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:${readiness}%"></div>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-box">
+              <div class="info-box-label">🔍 Current focus</div>
+              <p>${esc(team.currentFocus || 'Update this in the team file.')}</p>
+            </div>
+            <div class="info-box">
+              <div class="info-box-label">📌 Next deliverable</div>
+              <p>${esc(team.nextDeliverable || 'Coming soon.')}</p>
+            </div>
+          </div>
+          <div class="info-row" style="margin-top:12px">
+            <div class="info-box">
+              <div class="info-box-label">⭐ Student highlights</div>
+              ${highlightItems}
+            </div>
+            ${isCoach ? `
+              <div class="info-box">
+                <div class="info-box-label">📝 Coach notes</div>
+                ${coachItems}
+              </div>
+            ` : `
+              <div class="info-box">
+                <div class="info-box-label">💬 Tip</div>
+                <p>Check the weekly announcement before each practice session!</p>
+              </div>
+            `}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderResources(resources, user) {
+      const visible = resources.filter(r => !Array.isArray(r.roles) || r.roles.includes(user.role));
+      const grouped = {};
+      visible.forEach(r => {
+        const cat = r.category || 'Other';
+        if (!grouped[cat]) grouped[cat] = [];
+        grouped[cat].push(r);
+      });
+
+      return Object.entries(grouped).map(([cat, items]) => `
+        <div class="resource-category">
+          <div class="cat-label">${esc(cat)}</div>
+          <div class="resource-grid">
+            ${items.map(item => `
+              <div class="resource-card">
+                <div class="resource-card-top">
+                  <div class="resource-name">${typeIcon(item.type)} ${esc(item.label)}</div>
+                  <span class="resource-type-badge type-${esc(item.type)}">${esc(item.type)}</span>
+                </div>
+                <p class="resource-desc">${esc(item.description)}</p>
+                <a class="resource-link" href="${esc(item.url)}" target="_blank" rel="noreferrer">
+                  Open resource →
+                </a>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function formatShortDate(value) {
+      if (!value) return 'No date yet';
+      const date = new Date(`${value}T12:00:00`);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    }
+
+    function trimText(value, length = 210) {
+      const text = String(value || '').trim();
+      if (text.length <= length) return text;
+      return `${text.slice(0, length - 1).trim()}...`;
+    }
+
+    function renderCurriculumOverview(curriculum) {
+      if (!Array.isArray(curriculum) || !curriculum.length) {
+        return '<div class="empty-curriculum">No curriculum assignments have been added yet.</div>';
+      }
+
+      return `
+        <div class="curriculum-grid">
+          ${curriculum.map(area => {
+            const assignments = Array.isArray(area.assignments) ? area.assignments : [];
+            return `
+              <section class="curriculum-area">
+                <div class="curriculum-area-head">
+                  <div>
+                    <div class="curriculum-area-title">${esc(area.label || 'FLL Area')}</div>
+                    <p class="resource-desc">${esc(area.summary || area.focusNow || 'Assignments for this FLL area will appear here as the season plan grows.')}</p>
+                  </div>
+                  <span class="curriculum-chip is-count">${assignments.length} assignments</span>
+                </div>
+
+                ${area.nextDue ? `
+                  <div class="curriculum-next">
+                    <strong>Next up:</strong> ${esc(area.nextDue.title)}${area.nextDue.dueDate ? ` due ${esc(formatShortDate(area.nextDue.dueDate))}` : ''}
+                  </div>
+                ` : ''}
+
+                ${assignments.length ? `
+                  <div class="curriculum-list">
+                    ${assignments.map(item => `
+                      <details class="curriculum-item">
+                        <summary>
+                          <span class="curriculum-item-title">${esc(item.title)}</span>
+                          <span class="curriculum-date">${esc(formatShortDate(item.dueDate))}</span>
+                        </summary>
+                        <div class="curriculum-detail">
+                          ${item.description ? `<p>${esc(trimText(item.description))}</p>` : ''}
+                          <div class="curriculum-meta">
+                            ${item.type ? `<span class="curriculum-chip">${esc(item.type)}</span>` : ''}
+                            ${item.workContext ? `<span class="curriculum-chip">${esc(item.workContext)}</span>` : ''}
+                            ${item.questionCount ? `<span class="curriculum-chip">${item.questionCount} prompts</span>` : ''}
+                            ${item.parentTitle ? `<span class="curriculum-chip">${esc(item.parentTitle)}</span>` : ''}
+                          </div>
+                        </div>
+                      </details>
+                    `).join('')}
+                  </div>
+                ` : '<div class="empty-curriculum">No assignments in this area yet.</div>'}
+              </section>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function renderTimeline(timeline) {
+      return timeline.map((phase, i) => `
+        <div class="timeline-item ${phase.status === 'current' ? 'is-current' : ''} ${phase.status === 'done' ? 'is-done' : ''}">
+          <div class="timeline-dot">${phase.status === 'current' ? '→' : phase.status === 'done' ? '✓' : ''}</div>
+          <div class="timeline-body">
+            <h3>${esc(phase.phase)}</h3>
+            <div class="timeline-date">${esc(phase.dateRange)}</div>
+            <p class="timeline-goal">${esc(phase.studentGoal)}</p>
+            ${Array.isArray(phase.deliverables) && phase.deliverables.length ? `
+              <div class="timeline-deliverables">
+                ${phase.deliverables.map(d => `<span class="deliverable-tag">${esc(d)}</span>`).join('')}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderAnnouncements(announcements, user) {
+      const visible = announcements.filter(a => a.audience === 'all' || a.audience === user.role);
+      if (!visible.length) return '<p style="color:var(--muted);font-size:14px">No announcements yet — check back soon!</p>';
+      return visible.map(a => `
+        <div class="announce-card ${a.audience === 'coach' ? 'coach-only' : ''}">
+          ${a.date ? `<div class="announce-date">${esc(a.date)}</div>` : ''}
+          <div class="announce-title">${esc(a.title)}</div>
+          <p class="announce-body">${esc(a.body)}</p>
+        </div>
+      `).join('');
+    }
+
+    function renderDashboard(data) {
+      const { user, season, teams, timeline, announcements, resources, curriculum } = data;
+      const phase = timeline.find(p => p.status === 'current') || timeline[0] || {};
+      const isCoach = user.role === 'coach';
+      const userId = user.id || user.name;
+
+      userLine.textContent = `${user.name} · ${isCoach ? 'Coach view' : 'Student'}`;
+      rolePill.textContent = isCoach ? 'Coach' : 'Student';
+
+      maybeShowWelcome(user);
+      app.innerHTML = `
+        ${renderHero(season, phase)}
+        ${renderFocusBanner(phase)}
+        ${!isCoach ? renderStartHere(userId, phase.id) : ''}
+
+        <div class="main-layout">
+          <div>
+            <div class="section-title">🏆 ${isCoach ? 'Team Dashboards' : 'Your Team'}</div>
+            <p class="section-sub">Track your team's progress and what's coming up next.</p>
+            <div class="team-grid">
+              ${teams.map(t => renderTeamCard(t, isCoach)).join('')}
+            </div>
+
+            ${isCoach ? `
+              <div class="curriculum-section">
+                <div class="section-title">Curriculum Timeline Overview</div>
+                <p class="section-sub">All student assignments grouped by FLL area and ordered by due date.</p>
+                ${renderCurriculumOverview(curriculum)}
+              </div>
+            ` : ''}
+
+            <div class="resources-section">
+              <div class="section-title">📚 Resources</div>
+              <p class="section-sub">Everything you need for the BIOGLOW season — all in one place.</p>
+              ${renderResources(resources, user)}
+            </div>
+          </div>
+
+          <aside class="sidebar">
+            <div class="announce-list" style="margin-bottom:28px">
+              <div class="section-title">📢 Announcements</div>
+              <p class="section-sub">Latest updates from your coach.</p>
+              ${renderAnnouncements(announcements, user)}
+            </div>
+
+            <div class="timeline-section">
+              <div class="section-title">🗺️ Season Journey</div>
+              <p class="section-sub">Your roadmap from now to competition day.</p>
+              <div class="timeline-list">
+                ${renderTimeline(timeline)}
+              </div>
+            </div>
+          </aside>
+        </div>
+      `;
+    }
+
+    async function loadHub() {
+      try {
+        const response = await fetch('/api/fll/hub-data');
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Login required');
+        renderDashboard(result.data);
+      } catch (err) {
+        window.location.href = '/fll-hub/login';
+      }
+    }
+
+    logoutButton.addEventListener('click', async () => {
+      await fetch('/api/fll/logout', { method: 'POST' });
+      window.location.href = '/fll-hub/login';
+    });
+
+    loadHub();
+  </script>
+</body>
+</html>

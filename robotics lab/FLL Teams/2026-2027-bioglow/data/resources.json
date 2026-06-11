@@ -1,0 +1,245 @@
+[
+  {
+    "id": "official-bioglow",
+    "category": "Official",
+    "label": "BIOGLOW Season Page",
+    "description": "Official public season preview and season timeline.",
+    "type": "Website",
+    "source": "FIRST LEGO League",
+    "url": "https://www.first-lego-league.org/en/2026-27-season/bioglow",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "official-fll-global",
+    "category": "Official",
+    "label": "FIRST LEGO League Global",
+    "description": "Program overview, editions, values, and season links.",
+    "type": "Website",
+    "source": "FIRST",
+    "url": "https://www.firstlegoleague.org/",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "bioglow-teaser-video",
+    "category": "Teaser Videos",
+    "label": "BIOGLOW First Look Teaser",
+    "description": "A first-look season teaser for students to watch before kickoff.",
+    "type": "Video",
+    "source": "FIRST LEGO League",
+    "url": "https://www.youtube.com/watch?v=6oPqt5IQbPI",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "rubric-robot-design-reflection",
+    "category": "Rubrics",
+    "label": "Robot Design Reflection Rubric",
+    "description": "Use last year's judging areas to reflect on robot strategy, testing, and design decisions.",
+    "type": "Rubric",
+    "source": "AI Future",
+    "url": "/robotics%20lab/FLL%20Teams/2026-2027-bioglow/resources/judging/",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "rubric-project-reflection",
+    "category": "Rubrics",
+    "label": "Innovation Project Reflection Rubric",
+    "description": "Reflect on problem research, solution creativity, testing, and presentation clarity.",
+    "type": "Rubric",
+    "source": "AI Future",
+    "url": "/robotics%20lab/FLL%20Teams/2026-2027-bioglow/resources/innovation-project/",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "article-biodiversity-basics",
+    "category": "Articles",
+    "label": "Biodiversity Basics",
+    "description": "Start here to understand why biodiversity matters and how ecosystems stay balanced.",
+    "type": "Reading",
+    "source": "Coach-curated",
+    "url": "https://www.nationalgeographic.org/encyclopedia/biodiversity/",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "article-biomimicry",
+    "category": "Articles",
+    "label": "Nature-Inspired Design",
+    "description": "Explore how engineers learn from living systems to design better solutions.",
+    "type": "Reading",
+    "source": "Coach-curated",
+    "url": "https://biomimicry.org/what-is-biomimicry/",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "bio-jane-goodall",
+    "category": "Biographies",
+    "label": "Jane Goodall",
+    "description": "A scientist students can study for observation, habitat, and conservation thinking.",
+    "type": "Biography",
+    "source": "Coach-curated",
+    "url": "https://janegoodall.org/our-story/about-jane/",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "vision-board-nyc-habitats",
+    "category": "Vision Board",
+    "label": "Local Habitat Ideas",
+    "description": "Brainstorm Queens and NYC ecosystem problems: parks, street trees, pollinators, water, waste, heat, and wildlife.",
+    "type": "Prompt",
+    "source": "AI Future",
+    "url": "#vision-board",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "shared-folder",
+    "category": "Shared Folder",
+    "label": "Student Shared Resource Folder",
+    "description": "The team Google Drive: rubrics from last year, starter bot, starter code, mission model instructions, innovation project resources, and team folders.",
+    "type": "Folder",
+    "source": "Google Drive",
+    "url": "https://drive.google.com/drive/folders/1B6XECwAZmHYZJ98tYbxKaUwV0gmVvS7Z",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "category": "Team",
+    "label": "Team Profile Template",
+    "description": "Copy this when adding a new team.",
+    "type": "Template",
+    "source": "AI Future",
+    "url": "/robotics%20lab/FLL%20Teams/2026-2027-bioglow/teams/_template/team-profile.md",
+    "roles": [
+      "coach"
+    ]
+  },
+  {
+    "category": "Planning",
+    "label": "Weekly Plan Template",
+    "description": "Meeting goals, checkpoints, and reflection prompts.",
+    "type": "Template",
+    "source": "AI Future",
+    "url": "/robotics%20lab/FLL%20Teams/2026-2027-bioglow/teams/_template/weekly-plan.md",
+    "roles": [
+      "coach"
+    ]
+  },
+  {
+    "id": "drive-last-year-rubrics",
+    "category": "Rubrics",
+    "label": "Last Year Rubrics (Drive)",
+    "description": "Real judging rubrics from last season — see exactly what judges score.",
+    "type": "Folder",
+    "source": "Google Drive",
+    "url": "https://drive.google.com/drive/folders/1B6XECwAZmHYZJ98tYbxKaUwV0gmVvS7Z",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "drive-starter-bot",
+    "category": "Robot Design",
+    "label": "Starter Bot Instructions (Drive)",
+    "description": "Base bot build instructions in the shared Drive — start here for your drive base.",
+    "type": "Folder",
+    "source": "Google Drive",
+    "url": "https://drive.google.com/drive/folders/1B6XECwAZmHYZJ98tYbxKaUwV0gmVvS7Z",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "drive-starter-code",
+    "category": "Robot Design",
+    "label": "Starter Code — Blocks & Python (Drive)",
+    "description": "Starter programs in both Blocks and Python (Pybricks) to copy into your projects.",
+    "type": "Folder",
+    "source": "Google Drive",
+    "url": "https://drive.google.com/drive/folders/1B6XECwAZmHYZJ98tYbxKaUwV0gmVvS7Z",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "drive-robot-design-template",
+    "category": "Robot Design",
+    "label": "Robot Design Slides Template (Drive)",
+    "description": "Google Slides template for your Robot Design judging presentation — make a copy and fill it in.",
+    "type": "Template",
+    "source": "Google Drive",
+    "url": "https://drive.google.com/drive/folders/1B6XECwAZmHYZJ98tYbxKaUwV0gmVvS7Z",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "drive-mission-models",
+    "category": "Robot Game Missions",
+    "label": "Mission Model Building Instructions (Drive)",
+    "description": "Build instructions for the mission models — build the field as soon as the season kit arrives.",
+    "type": "Folder",
+    "source": "Google Drive",
+    "url": "https://drive.google.com/drive/folders/1B6XECwAZmHYZJ98tYbxKaUwV0gmVvS7Z",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "drive-innovation-folder",
+    "category": "Innovation Project",
+    "label": "Innovation Project Resources (Drive)",
+    "description": "Innovation project docs including the Museum Trip Guide and cheat sheets.",
+    "type": "Folder",
+    "source": "Google Drive",
+    "url": "https://drive.google.com/drive/folders/1B6XECwAZmHYZJ98tYbxKaUwV0gmVvS7Z",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "drive-coach-contact",
+    "category": "Official",
+    "label": "Coach Gio Contact Info (Drive)",
+    "description": "How to reach Coach Gio — questions, absences, and team communication.",
+    "type": "PDF",
+    "source": "Google Drive",
+    "url": "https://drive.google.com/drive/folders/1B6XECwAZmHYZJ98tYbxKaUwV0gmVvS7Z",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  }
+]

@@ -1,0 +1,49 @@
+[
+  {
+    "teamId": "team-01",
+    "category": "Robot Game",
+    "phaseId": "pre-season",
+    "items": [
+      { "id": "robot-kit-check", "label": "Robot kits checked", "complete": false },
+      { "id": "drive-practice", "label": "Drive-base practice started", "complete": false },
+      { "id": "run-log-routine", "label": "Run log routine introduced", "complete": false }
+    ]
+  },
+  {
+    "teamId": "team-01",
+    "category": "Innovation Project",
+    "phaseId": "pre-season",
+    "items": [
+      { "id": "theme-preview", "label": "BIOGLOW preview discussed", "complete": true },
+      { "id": "question-bank", "label": "Ecosystem question bank started", "complete": false },
+      { "id": "local-problems", "label": "Local ecosystem problems brainstormed", "complete": false }
+    ]
+  },
+  {
+    "teamId": "team-01",
+    "category": "Judging",
+    "phaseId": "pre-season",
+    "items": [
+      { "id": "intro-shareout", "label": "One-minute share-out practiced", "complete": false },
+      { "id": "design-story", "label": "Design story habit introduced", "complete": false }
+    ]
+  },
+  {
+    "teamId": "team-01",
+    "category": "Core Values",
+    "phaseId": "pre-season",
+    "items": [
+      { "id": "team-norms", "label": "Team norms drafted", "complete": false },
+      { "id": "roles", "label": "Student roles drafted", "complete": false }
+    ]
+  },
+  {
+    "teamId": "team-01",
+    "category": "Engineering Notebook",
+    "phaseId": "pre-season",
+    "items": [
+      { "id": "notebook-setup", "label": "Notebook format selected", "complete": false },
+      { "id": "first-reflection", "label": "First team reflection recorded", "complete": false }
+    ]
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "robot-design",
+    "label": "Robot Design",
+    "summary": "Build a reliable robot and explain why your design choices make sense.",
+    "focusNow": "Practice drive base reliability and start an engineering notebook habit.",
+    "color": "blue"
+  },
+  {
+    "id": "robot-game",
+    "label": "Robot Game",
+    "summary": "Study missions, choose strategies, test runs, and improve consistency.",
+    "focusNow": "Count down to mission release and learn mission analysis categories.",
+    "color": "green"
+  },
+  {
+    "id": "innovation",
+    "label": "Innovation",
+    "summary": "Research an ecosystem problem and develop a creative solution.",
+    "focusNow": "Collect BIOGLOW questions and early research ideas.",
+    "color": "purple"
+  },
+  {
+    "id": "core-values",
+    "label": "Core Values",
+    "summary": "Show teamwork, inclusion, discovery, innovation, impact, and fun.",
+    "focusNow": "Practice team roles, respectful feedback, and short share-outs.",
+    "color": "amber"
+  }
+]

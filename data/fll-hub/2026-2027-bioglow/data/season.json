@@ -1,0 +1,49 @@
+{
+  "name": "BIOGLOW",
+  "year": "2026-2027",
+  "releaseDate": "2026-08-04",
+  "program": "FIRST LEGO League",
+  "editionNotes": "BIOGLOW includes Founders Edition and Future Edition context. This hub is prepared for SPIKE-based FLL team planning and can be updated as regional details are confirmed.",
+  "themeSummary": "Teams explore ecosystems and the connections between nature, technology, creativity, and innovation.",
+  "currentPhaseId": "pre-season",
+  "officialLinks": [
+    {
+      "label": "FIRST LEGO League BIOGLOW",
+      "url": "https://www.first-lego-league.org/en/2026-27-season/bioglow"
+    },
+    {
+      "label": "FIRST LEGO League Global",
+      "url": "https://www.firstlegoleague.org/"
+    },
+    {
+      "label": "FIRST Inspires FLL",
+      "url": "https://www.firstinspires.org/programs/fll/"
+    }
+  ],
+  "regions": [
+    {
+      "id": "nj",
+      "name": "NJ Region (FIRST Mid-Atlantic North)",
+      "qualifierWindow": "Late November 2026",
+      "predictedQualifier": "2026-11-21",
+      "predictedChampionship": "2026-12-12",
+      "notes": "Predicted from 2025-26: qualifiers Nov 22-23, championship Dec 13-14. Earliest region — be ready by early November!"
+    },
+    {
+      "id": "hudson-valley",
+      "name": "Hudson Valley Region",
+      "qualifierWindow": "January 2027",
+      "predictedQualifier": "2027-01-09",
+      "predictedChampionship": "2027-02-06",
+      "notes": "Predicted from 2025-26: qualifiers Jan 10-31, championship Feb 7 at RPI."
+    },
+    {
+      "id": "nyc",
+      "name": "NYC Region (NYC FIRST)",
+      "qualifierWindow": "Mid-January to mid-February 2027",
+      "predictedQualifier": "2027-01-16",
+      "predictedChampionship": "2027-03-13",
+      "notes": "Predicted from past seasons: qualifiers mid-Jan to mid-Feb, NYC Championship in March."
+    }
+  ]
+}

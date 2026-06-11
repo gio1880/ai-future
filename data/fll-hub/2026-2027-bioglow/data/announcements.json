@@ -1,0 +1,23 @@
+[
+  {
+    "id": "welcome",
+    "date": "2026-06-08",
+    "audience": "all",
+    "title": "Welcome to the BIOGLOW hub",
+    "body": "This is the team home base for season updates, timeline checkpoints, resources, and coach notes."
+  },
+  {
+    "id": "kickoff-save-date",
+    "date": "2026-06-08",
+    "audience": "all",
+    "title": "Kickoff is August 4, 2026",
+    "body": "Official challenge details release on August 4. Until then, focus on routines, kit readiness, and ecosystem research habits."
+  },
+  {
+    "id": "coach-setup",
+    "date": "2026-06-08",
+    "audience": "coach",
+    "title": "Coach setup checklist",
+    "body": "Confirm rosters, update team placeholders, and prepare the first four meeting plans before kickoff."
+  }
+]

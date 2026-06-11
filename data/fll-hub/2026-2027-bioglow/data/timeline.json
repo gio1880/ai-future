@@ -1,0 +1,114 @@
+[
+  {
+    "id": "pre-season",
+    "phase": "Pre-season Setup",
+    "dateRange": "Now - August 3, 2026",
+    "status": "current",
+    "studentGoal": "Learn team routines, organize kits, and build curiosity around ecosystems.",
+    "coachGoal": "Finalize rosters, meeting cadence, supplies, and communication systems.",
+    "deliverables": [
+      "Team roles drafted",
+      "Robot kits checked",
+      "Notebook habits started",
+      "BIOGLOW research question bank"
+    ]
+  },
+  {
+    "id": "kickoff",
+    "phase": "Kickoff and Challenge Release",
+    "dateRange": "August 4, 2026",
+    "status": "upcoming",
+    "studentGoal": "Watch the release, understand the challenge, and capture first reactions.",
+    "coachGoal": "Download official materials, clarify rules, and reset placeholders with real challenge details.",
+    "deliverables": [
+      "Challenge notes",
+      "Mission inventory",
+      "Project theme notes",
+      "Team questions list"
+    ]
+  },
+  {
+    "id": "discovery",
+    "phase": "Discovery and Research Sprint",
+    "dateRange": "August - September 2026",
+    "status": "upcoming",
+    "studentGoal": "Explore ecosystems, identify problems, and interview people connected to the theme.",
+    "coachGoal": "Guide research habits and help teams narrow project directions.",
+    "deliverables": [
+      "Problem shortlist",
+      "Expert outreach list",
+      "Mission priority draft",
+      "Core values reflection"
+    ]
+  },
+  {
+    "id": "robot-strategy",
+    "phase": "Robot Base and Mission Strategy",
+    "dateRange": "September - October 2026",
+    "status": "upcoming",
+    "studentGoal": "Build a reliable base, choose mission paths, and test consistently.",
+    "coachGoal": "Keep strategy realistic and make testing data visible.",
+    "deliverables": [
+      "Reliable drive base",
+      "First mission route",
+      "Attachment ideas",
+      "Run log"
+    ]
+  },
+  {
+    "id": "innovation-project",
+    "phase": "Innovation Project Development",
+    "dateRange": "October - November 2026",
+    "status": "upcoming",
+    "studentGoal": "Develop, test, and improve a solution connected to BIOGLOW.",
+    "coachGoal": "Support research quality, feedback cycles, and presentation clarity.",
+    "deliverables": [
+      "Chosen problem",
+      "Prototype or model",
+      "Expert feedback",
+      "Presentation outline"
+    ]
+  },
+  {
+    "id": "judging-practice",
+    "phase": "Judging Practice and Core Values",
+    "dateRange": "November - December 2026",
+    "status": "upcoming",
+    "studentGoal": "Practice explaining the robot, project, and teamwork story clearly.",
+    "coachGoal": "Run mock judging and tighten the engineering narrative.",
+    "deliverables": [
+      "Robot design story",
+      "Project script",
+      "Core values examples",
+      "Mock judging notes"
+    ]
+  },
+  {
+    "id": "qualifier-ready",
+    "phase": "Qualifier Readiness",
+    "dateRange": "December 2026 - January 2027",
+    "status": "upcoming",
+    "studentGoal": "Make robot runs repeatable and arrive competition-ready.",
+    "coachGoal": "Prepare logistics, judging materials, and final practice schedule.",
+    "deliverables": [
+      "Packing checklist",
+      "Final robot runs",
+      "Presentation ready",
+      "Competition schedule"
+    ]
+  },
+  {
+    "id": "competition-reflection",
+    "phase": "Competition Week and Reflection",
+    "dateRange": "Event week - Post-event",
+    "status": "upcoming",
+    "studentGoal": "Compete with confidence, learn from other teams, and reflect after the event.",
+    "coachGoal": "Support calm execution and capture lessons for the next cycle.",
+    "deliverables": [
+      "Event notes",
+      "Team reflection",
+      "Photo archive",
+      "Next steps"
+    ]
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "teamId": "team-01",
+    "studentId": "student-team-01-a",
+    "displayName": "Student One",
+    "role": "Research + Robot Prep",
+    "initials": "S1"
+  },
+  {
+    "teamId": "team-01",
+    "studentId": "student-team-01-b",
+    "displayName": "Team One",
+    "role": "Presentation + Team Share-out",
+    "initials": "T1"
+  }
+]

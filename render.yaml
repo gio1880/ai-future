@@ -11,6 +11,10 @@ services:
         generateValue: true          # Render generates a secure random value once
       - key: DATA_DIR
         value: /var/data
+      # Optional. If unset, FLL hub data is stored at
+      # /var/data/fll-hub/2026-2027-bioglow/data and seeded from the repo.
+      - key: FLL_DATA_DIR
+        sync: false
       # AI Tutor (optional). When unset, the tutor panel still works but returns
       # built-in hints instead of LLM-generated ones. Set this in the Render
       # dashboard (sync: false keeps it out of this committed file).

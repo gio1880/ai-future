@@ -1,0 +1,12 @@
+[
+  {
+    "teamId": "team-01",
+    "label": "Saturday FLL Team",
+    "weekday": 6,
+    "weekdayName": "Saturday",
+    "startTime": "10:00 AM",
+    "endTime": "12:00 PM",
+    "room": "Robotics Lab",
+    "timezone": "America/New_York"
+  }
+]

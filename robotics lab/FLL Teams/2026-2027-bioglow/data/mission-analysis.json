@@ -1,0 +1,57 @@
+[
+  {
+    "id": "mission-release-countdown",
+    "teamId": "team-01",
+    "title": "Mission release countdown",
+    "description": "Official missions are not released yet. Use this time to learn how to quickly sort missions once the field is revealed.",
+    "actionType": "Countdown",
+    "difficulty": "Easy",
+    "fieldZone": "Full field",
+    "side": "Both",
+    "status": "Pre-release"
+  },
+  {
+    "id": "mission-push-pull",
+    "teamId": "team-01",
+    "title": "Push / pull missions",
+    "description": "Look for missions where the robot moves an object by pushing, pulling, sliding, or dragging.",
+    "actionType": "Push / Pull",
+    "difficulty": "Easy",
+    "fieldZone": "Near launch area",
+    "side": "Red or blue",
+    "status": "Practice category"
+  },
+  {
+    "id": "mission-drop-off",
+    "teamId": "team-01",
+    "title": "Drop-off missions",
+    "description": "Look for missions where the robot carries an object and leaves it in a target area.",
+    "actionType": "Drop off",
+    "difficulty": "Medium",
+    "fieldZone": "Middle field",
+    "side": "Both",
+    "status": "Practice category"
+  },
+  {
+    "id": "mission-pickup",
+    "teamId": "team-01",
+    "title": "Pickup missions",
+    "description": "Look for missions where the robot needs to grab, trap, or collect an object and bring it back.",
+    "actionType": "Pickup",
+    "difficulty": "Medium",
+    "fieldZone": "Middle or far field",
+    "side": "Red or blue",
+    "status": "Practice category"
+  },
+  {
+    "id": "mission-lift",
+    "teamId": "team-01",
+    "title": "Lift missions",
+    "description": "Look for missions that need an arm, lever, or vertical movement.",
+    "actionType": "Lift",
+    "difficulty": "Hard",
+    "fieldZone": "Far field",
+    "side": "Blue side",
+    "status": "Practice category"
+  }
+]
