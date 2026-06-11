@@ -1673,6 +1673,9 @@
       .main-layout {
         grid-template-columns: 1fr;
       }
+      .curriculum-view-controls {
+        grid-template-columns: 1fr;
+      }
       .calendar-year-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -1694,6 +1697,67 @@
     }
 
     @media (max-width: 580px) {
+      .topbar-inner {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .topbar-right {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+      }
+      .topbar-right .btn {
+        grid-column: 1 / -1;
+        justify-content: center;
+      }
+      .section-title {
+        font-size: 19px;
+      }
+      .section-sub {
+        font-size: 13px;
+      }
+      .hero-title {
+        font-size: clamp(42px, 16vw, 64px);
+      }
+      .hero-sub {
+        font-size: 15px;
+      }
+      .curriculum-page-top {
+        align-items: stretch;
+        flex-direction: column;
+      }
+      .curriculum-page-top .curriculum-more-link {
+        justify-content: center;
+      }
+      .curriculum-view-panel {
+        padding: 14px;
+      }
+      .curriculum-mode-tabs,
+      .curriculum-date-row,
+      .curriculum-quick-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      .curriculum-mode-btn,
+      .curriculum-quick-btn,
+      .curriculum-select,
+      .curriculum-date-input {
+        width: 100%;
+      }
+      .curriculum-table {
+        min-width: 760px;
+      }
+      .curriculum-table th,
+      .curriculum-table td {
+        padding: 10px;
+      }
+      .area-overview-head {
+        display: grid;
+      }
+      .area-lesson-row {
+        grid-template-columns: 1fr;
+      }
       .info-row {
         grid-template-columns: 1fr;
       }
@@ -2208,19 +2272,38 @@
       return `${text.slice(0, length - 1).trim()}...`;
     }
 
+    function filterCurriculumAreas(curriculum, options = {}) {
+      const startDate = options.startDate || '';
+      const endDate = options.endDate || options.untilDate || '';
+      return (Array.isArray(curriculum) ? curriculum : [])
+        .filter(area => Array.isArray(area.assignments))
+        .filter(area => !options.areaId || options.areaId === 'all' || area.id === options.areaId)
+        .map(area => ({
+          ...area,
+          assignments: area.assignments.filter(item => {
+            if (!item.dueDate) return false;
+            if (startDate && item.dueDate < startDate) return false;
+            if (endDate && item.dueDate > endDate) return false;
+            return true;
+          })
+        }))
+        .filter(area => area.assignments.length);
+    }
+
     function renderCurriculumOverview(curriculum, options = {}) {
       if (!Array.isArray(curriculum) || !curriculum.length) {
         return '<div class="empty-curriculum">No curriculum assignments have been added yet.</div>';
       }
 
-      const areas = curriculum.filter(area => Array.isArray(area.assignments));
+      const areas = filterCurriculumAreas(curriculum, options);
       const assignments = getCalendarAssignments(areas);
       const allDates = [...new Set(assignments.map(item => item.dueDate))].sort();
-      const dates = options.untilDate ? allDates.filter(dueDate => dueDate <= options.untilDate) : allDates;
-      const hiddenCount = allDates.length - dates.length;
+      const allCurriculumDates = [...new Set(getCalendarAssignments(curriculum).map(item => item.dueDate))].sort();
+      const hiddenCount = options.untilDate ? allCurriculumDates.filter(dueDate => dueDate > options.untilDate).length : 0;
+      const dates = allDates;
 
       if (!dates.length) {
-        return '<div class="empty-curriculum">No curriculum due dates have been added yet.</div>';
+        return '<div class="empty-curriculum">No curriculum due dates match this view.</div>';
       }
 
       return `
@@ -2275,9 +2358,74 @@
       `;
     }
 
+    function monthKey(value) {
+      const date = parseDueDate(value);
+      if (!date) return 'No date';
+      return date.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+    }
+
+    function renderAreaCurriculumOverview(curriculum, options = {}) {
+      const areas = filterCurriculumAreas(curriculum, options);
+      if (!areas.length) {
+        return '<div class="empty-curriculum">No lessons match this area or date window.</div>';
+      }
+
+      return `
+        <div class="area-overview-grid">
+          ${areas.map(area => {
+            const assignments = [...area.assignments].sort((a, b) => String(a.dueDate || '').localeCompare(String(b.dueDate || '')));
+            const grouped = assignments.reduce((groups, item) => {
+              const key = monthKey(item.dueDate);
+              if (!groups[key]) groups[key] = [];
+              groups[key].push(item);
+              return groups;
+            }, {});
+            return `
+              <section class="area-overview-card">
+                <div class="area-overview-head">
+                  <div>
+                    <div class="area-overview-title">${esc(area.label || 'FLL Area')}</div>
+                    <p class="resource-desc">${esc(area.summary || area.focusNow || 'Season lessons and assignments for this FLL area.')}</p>
+                  </div>
+                  <span class="curriculum-chip is-count">${assignments.length} lessons</span>
+                </div>
+                <div class="area-month-list">
+                  ${Object.entries(grouped).map(([month, items]) => `
+                    <div class="area-month">
+                      <div class="area-month-title">${esc(month)}</div>
+                      ${items.map(item => `
+                        <div class="area-lesson-row">
+                          <div class="area-lesson-date">${esc(formatShortDate(item.dueDate))}</div>
+                          <div>
+                            <div class="area-lesson-title">${esc(item.title)}</div>
+                            ${item.description ? `<p class="curriculum-lesson-desc">${esc(trimText(item.description, 140))}</p>` : ''}
+                            <div class="curriculum-meta">
+                              ${item.workContext ? `<span class="curriculum-chip">${esc(item.workContext)}</span>` : ''}
+                              ${item.type ? `<span class="curriculum-chip">${esc(item.type)}</span>` : ''}
+                            </div>
+                          </div>
+                        </div>
+                      `).join('')}
+                    </div>
+                  `).join('')}
+                </div>
+              </section>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
     const assignmentCalendarState = {
       view: 'month',
       anchorDate: null
+    };
+
+    const fullCurriculumState = {
+      mode: 'table',
+      areaId: 'all',
+      startDate: '2026-06-01',
+      endDate: '2027-03-31'
     };
 
     function parseDueDate(value) {
@@ -2539,10 +2687,133 @@
           <a class="curriculum-more-link" href="/fll-hub">Back to coach hub</a>
         </div>
         ${renderHero(season, phase)}
+        ${renderCurriculumViewControls(curriculum)}
         <div class="curriculum-section">
-          ${renderCurriculumOverview(curriculum)}
+          <div data-full-curriculum-results>
+            ${renderFullCurriculumResults(curriculum)}
+          </div>
         </div>
       `;
+      setupFullCurriculumControls(curriculum);
+    }
+
+    function renderCurriculumViewControls(curriculum) {
+      const areas = (Array.isArray(curriculum) ? curriculum : []).filter(area => Array.isArray(area.assignments));
+      return `
+        <div class="curriculum-view-panel">
+          <div class="curriculum-view-controls">
+            <div class="curriculum-control-group">
+              <label>View style</label>
+              <div class="curriculum-mode-tabs">
+                <button class="curriculum-mode-btn ${fullCurriculumState.mode === 'table' ? 'is-active' : ''}" data-curriculum-mode="table" type="button">Full table</button>
+                <button class="curriculum-mode-btn ${fullCurriculumState.mode === 'area' ? 'is-active' : ''}" data-curriculum-mode="area" type="button">By area</button>
+              </div>
+            </div>
+            <div class="curriculum-control-group">
+              <label>FLL area</label>
+              <select class="curriculum-select" data-curriculum-area>
+                <option value="all">All FLL areas</option>
+                ${areas.map(area => `<option value="${esc(area.id)}" ${fullCurriculumState.areaId === area.id ? 'selected' : ''}>${esc(area.label || area.id)}</option>`).join('')}
+              </select>
+            </div>
+            <div class="curriculum-control-group">
+              <label>Focus window</label>
+              <div class="curriculum-date-row">
+                <input class="curriculum-date-input" data-curriculum-start type="date" value="${esc(fullCurriculumState.startDate)}" />
+                <input class="curriculum-date-input" data-curriculum-end type="date" value="${esc(fullCurriculumState.endDate)}" />
+              </div>
+            </div>
+          </div>
+          <div class="curriculum-quick-row" style="margin-top:14px">
+            <button class="curriculum-quick-btn" data-curriculum-range="all" type="button">Whole season</button>
+            <button class="curriculum-quick-btn" data-curriculum-range="fall" type="button">Fall build</button>
+            <button class="curriculum-quick-btn" data-curriculum-range="winter" type="button">Winter prep</button>
+            <button class="curriculum-quick-btn" data-curriculum-range="march" type="button">March finish</button>
+          </div>
+          <div class="curriculum-filter-summary">${renderCurriculumFilterSummary(curriculum)}</div>
+        </div>
+      `;
+    }
+
+    function getFullCurriculumOptions() {
+      return {
+        areaId: fullCurriculumState.areaId,
+        startDate: fullCurriculumState.startDate,
+        endDate: fullCurriculumState.endDate
+      };
+    }
+
+    function renderFullCurriculumResults(curriculum) {
+      const options = getFullCurriculumOptions();
+      return fullCurriculumState.mode === 'area'
+        ? renderAreaCurriculumOverview(curriculum, options)
+        : renderCurriculumOverview(curriculum, options);
+    }
+
+    function renderCurriculumFilterSummary(curriculum) {
+      const options = getFullCurriculumOptions();
+      const assignments = getCalendarAssignments(filterCurriculumAreas(curriculum, options));
+      const areaLabel = options.areaId === 'all'
+        ? 'all FLL areas'
+        : ((curriculum || []).find(area => area.id === options.areaId)?.label || 'selected area');
+      return `Showing ${assignments.length} lessons for ${areaLabel} from ${formatShortDate(options.startDate)} to ${formatShortDate(options.endDate)}.`;
+    }
+
+    function refreshFullCurriculum(curriculum) {
+      const results = document.querySelector('[data-full-curriculum-results]');
+      if (results) results.innerHTML = renderFullCurriculumResults(curriculum);
+      const panel = document.querySelector('.curriculum-view-panel');
+      if (panel) {
+        panel.outerHTML = renderCurriculumViewControls(curriculum);
+        setupFullCurriculumControls(curriculum);
+      }
+    }
+
+    function setupFullCurriculumControls(curriculum) {
+      document.querySelectorAll('[data-curriculum-mode]').forEach(button => {
+        button.addEventListener('click', () => {
+          fullCurriculumState.mode = button.dataset.curriculumMode;
+          refreshFullCurriculum(curriculum);
+        });
+      });
+
+      const areaSelect = document.querySelector('[data-curriculum-area]');
+      if (areaSelect) {
+        areaSelect.addEventListener('change', () => {
+          fullCurriculumState.areaId = areaSelect.value;
+          refreshFullCurriculum(curriculum);
+        });
+      }
+
+      const startInput = document.querySelector('[data-curriculum-start]');
+      const endInput = document.querySelector('[data-curriculum-end]');
+      if (startInput) {
+        startInput.addEventListener('change', () => {
+          fullCurriculumState.startDate = startInput.value || '2026-06-01';
+          refreshFullCurriculum(curriculum);
+        });
+      }
+      if (endInput) {
+        endInput.addEventListener('change', () => {
+          fullCurriculumState.endDate = endInput.value || '2027-03-31';
+          refreshFullCurriculum(curriculum);
+        });
+      }
+
+      document.querySelectorAll('[data-curriculum-range]').forEach(button => {
+        button.addEventListener('click', () => {
+          const ranges = {
+            all: ['2026-06-01', '2027-03-31'],
+            fall: ['2026-08-01', '2026-11-30'],
+            winter: ['2026-12-01', '2027-02-28'],
+            march: ['2027-03-01', '2027-03-31']
+          };
+          const [start, end] = ranges[button.dataset.curriculumRange] || ranges.all;
+          fullCurriculumState.startDate = start;
+          fullCurriculumState.endDate = end;
+          refreshFullCurriculum(curriculum);
+        });
+      });
     }
 
     function renderDashboard(data) {
