@@ -614,6 +614,308 @@
       padding: 20px;
     }
 
+    .curriculum-table-wrap {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow-x: auto;
+    }
+
+    .curriculum-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 880px;
+      width: 100%;
+    }
+
+    .curriculum-table th,
+    .curriculum-table td {
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      padding: 14px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .curriculum-table th {
+      background: var(--green-light);
+      color: var(--green-dark);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      position: sticky;
+      text-transform: uppercase;
+      top: 0;
+      z-index: 1;
+    }
+
+    .curriculum-table th:first-child,
+    .curriculum-table td:first-child {
+      background: white;
+      left: 0;
+      position: sticky;
+      width: 138px;
+      z-index: 2;
+    }
+
+    .curriculum-table th:first-child {
+      background: var(--green-light);
+      z-index: 3;
+    }
+
+    .curriculum-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .curriculum-table th:last-child,
+    .curriculum-table td:last-child {
+      border-right: 0;
+    }
+
+    .curriculum-date-cell {
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+
+    .curriculum-date-cell span {
+      color: var(--muted);
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      margin-top: 3px;
+    }
+
+    .curriculum-lesson-card {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--green);
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      padding: 10px;
+    }
+
+    .curriculum-lesson-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .curriculum-lesson-title {
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.35;
+      margin-bottom: 5px;
+    }
+
+    .curriculum-lesson-desc {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      margin-bottom: 8px;
+    }
+
+    .curriculum-empty-cell {
+      color: var(--muted);
+      font-size: 12px;
+      font-style: italic;
+      padding-top: 4px;
+    }
+
+    .calendar-section {
+      margin: 0 0 40px;
+    }
+
+    .calendar-shell {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .calendar-toolbar {
+      align-items: center;
+      background: linear-gradient(135deg, var(--green-light), white);
+      border-bottom: 1.5px solid var(--line);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: space-between;
+      padding: 16px;
+    }
+
+    .calendar-title {
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .calendar-count {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 3px;
+    }
+
+    .calendar-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .calendar-button {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      color: var(--ink);
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 900;
+      min-height: 38px;
+      padding: 8px 12px;
+    }
+
+    .calendar-button:hover {
+      border-color: var(--green);
+      color: var(--green-dark);
+    }
+
+    .calendar-button.is-active {
+      background: var(--green);
+      border-color: var(--green);
+      color: white;
+    }
+
+    .calendar-body {
+      padding: 16px;
+    }
+
+    .calendar-weekdays,
+    .calendar-month-grid,
+    .calendar-week-grid,
+    .calendar-year-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .calendar-weekdays,
+    .calendar-month-grid {
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .calendar-weekday {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .calendar-day {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      min-height: 118px;
+      padding: 8px;
+    }
+
+    .calendar-day.is-muted {
+      opacity: 0.45;
+    }
+
+    .calendar-day.is-today {
+      border-color: var(--green);
+      box-shadow: inset 0 0 0 1px var(--green);
+    }
+
+    .calendar-day-number {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .calendar-pill {
+      background: white;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--green);
+      border-radius: 7px;
+      color: var(--ink);
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1.35;
+      margin-top: 5px;
+      padding: 6px 7px;
+    }
+
+    .calendar-pill span {
+      color: var(--muted);
+      display: block;
+      font-size: 10px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .calendar-more {
+      color: var(--green-dark);
+      font-size: 11px;
+      font-weight: 900;
+      margin-top: 6px;
+    }
+
+    .calendar-week-grid {
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .calendar-week-day {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      min-height: 220px;
+      padding: 10px;
+    }
+
+    .calendar-week-day.is-today {
+      border-color: var(--green);
+      box-shadow: inset 0 0 0 1px var(--green);
+    }
+
+    .calendar-week-date {
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .calendar-year-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .calendar-month-card {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      min-height: 170px;
+      padding: 12px;
+    }
+
+    .calendar-month-name {
+      display: flex;
+      font-size: 14px;
+      font-weight: 900;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .calendar-empty {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      padding: 10px 0;
+    }
+
     /* ── Timeline ── */
     .timeline-section {
       margin-bottom: 40px;
@@ -1127,6 +1429,12 @@
       .main-layout {
         grid-template-columns: 1fr;
       }
+      .calendar-year-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .calendar-week-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
       .hero-card {
         grid-template-columns: 1fr;
       }
@@ -1137,6 +1445,26 @@
 
     @media (max-width: 580px) {
       .info-row {
+        grid-template-columns: 1fr;
+      }
+      .calendar-toolbar {
+        align-items: stretch;
+      }
+      .calendar-controls {
+        width: 100%;
+      }
+      .calendar-button {
+        flex: 1 1 70px;
+      }
+      .calendar-body {
+        overflow-x: auto;
+      }
+      .calendar-month-grid,
+      .calendar-weekdays {
+        min-width: 720px;
+      }
+      .calendar-year-grid,
+      .calendar-week-grid {
         grid-template-columns: 1fr;
       }
       .page { padding-inline: 14px; }
@@ -1607,52 +1935,276 @@
         return '<div class="empty-curriculum">No curriculum assignments have been added yet.</div>';
       }
 
+      const areas = curriculum.filter(area => Array.isArray(area.assignments));
+      const assignments = getCalendarAssignments(areas);
+      const dates = [...new Set(assignments.map(item => item.dueDate))].sort();
+
+      if (!dates.length) {
+        return '<div class="empty-curriculum">No curriculum due dates have been added yet.</div>';
+      }
+
       return `
-        <div class="curriculum-grid">
-          ${curriculum.map(area => {
-            const assignments = Array.isArray(area.assignments) ? area.assignments : [];
-            return `
-              <section class="curriculum-area">
-                <div class="curriculum-area-head">
-                  <div>
-                    <div class="curriculum-area-title">${esc(area.label || 'FLL Area')}</div>
-                    <p class="resource-desc">${esc(area.summary || area.focusNow || 'Assignments for this FLL area will appear here as the season plan grows.')}</p>
-                  </div>
-                  <span class="curriculum-chip is-count">${assignments.length} assignments</span>
-                </div>
-
-                ${area.nextDue ? `
-                  <div class="curriculum-next">
-                    <strong>Next up:</strong> ${esc(area.nextDue.title)}${area.nextDue.dueDate ? ` due ${esc(formatShortDate(area.nextDue.dueDate))}` : ''}
-                  </div>
-                ` : ''}
-
-                ${assignments.length ? `
-                  <div class="curriculum-list">
-                    ${assignments.map(item => `
-                      <details class="curriculum-item">
-                        <summary>
-                          <span class="curriculum-item-title">${esc(item.title)}</span>
-                          <span class="curriculum-date">${esc(formatShortDate(item.dueDate))}</span>
-                        </summary>
-                        <div class="curriculum-detail">
-                          ${item.description ? `<p>${esc(trimText(item.description))}</p>` : ''}
-                          <div class="curriculum-meta">
-                            ${item.type ? `<span class="curriculum-chip">${esc(item.type)}</span>` : ''}
-                            ${item.workContext ? `<span class="curriculum-chip">${esc(item.workContext)}</span>` : ''}
-                            ${item.questionCount ? `<span class="curriculum-chip">${item.questionCount} prompts</span>` : ''}
-                            ${item.parentTitle ? `<span class="curriculum-chip">${esc(item.parentTitle)}</span>` : ''}
+        <div class="curriculum-table-wrap">
+          <table class="curriculum-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                ${areas.map(area => `<th>${esc(area.label || 'FLL Area')}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${dates.map(dueDate => `
+                <tr>
+                  <td>
+                    <div class="curriculum-date-cell">
+                      ${esc(formatShortDate(dueDate))}
+                      <span>${esc(new Date(`${dueDate}T12:00:00`).toLocaleDateString(undefined, { weekday: 'long' }))}</span>
+                    </div>
+                  </td>
+                  ${areas.map(area => {
+                    const items = assignments.filter(item => item.dueDate === dueDate && item.areaId === area.id);
+                    return `
+                      <td>
+                        ${items.length ? items.map(item => `
+                          <div class="curriculum-lesson-card">
+                            <div class="curriculum-lesson-title">${esc(item.title)}</div>
+                            ${item.description ? `<div class="curriculum-lesson-desc">${esc(trimText(item.description, 130))}</div>` : ''}
+                            <div class="curriculum-meta">
+                              ${item.workContext ? `<span class="curriculum-chip">${esc(item.workContext)}</span>` : ''}
+                              ${item.type ? `<span class="curriculum-chip">${esc(item.type)}</span>` : ''}
+                              ${item.questionCount ? `<span class="curriculum-chip">${item.questionCount} prompts</span>` : ''}
+                            </div>
                           </div>
-                        </div>
-                      </details>
-                    `).join('')}
-                  </div>
-                ` : '<div class="empty-curriculum">No assignments in this area yet.</div>'}
-              </section>
-            `;
-          }).join('')}
+                        `).join('') : '<div class="curriculum-empty-cell">No lesson</div>'}
+                      </td>
+                    `;
+                  }).join('')}
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
         </div>
       `;
+    }
+
+    const assignmentCalendarState = {
+      view: 'month',
+      anchorDate: null
+    };
+
+    function parseDueDate(value) {
+      if (!value) return null;
+      const date = new Date(`${value}T12:00:00`);
+      return Number.isNaN(date.getTime()) ? null : date;
+    }
+
+    function dateKey(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function sameDay(a, b) {
+      return a && b && dateKey(a) === dateKey(b);
+    }
+
+    function addCalendarDays(date, amount) {
+      const copy = new Date(date);
+      copy.setDate(copy.getDate() + amount);
+      return copy;
+    }
+
+    function startOfCalendarWeek(date) {
+      const copy = new Date(date);
+      copy.setDate(copy.getDate() - copy.getDay());
+      copy.setHours(12, 0, 0, 0);
+      return copy;
+    }
+
+    function getCalendarAssignments(curriculum) {
+      return (Array.isArray(curriculum) ? curriculum : [])
+        .flatMap(area => (Array.isArray(area.assignments) ? area.assignments : []).map(item => ({
+          ...item,
+          areaId: area.id || '',
+          areaLabel: area.label || 'FLL',
+          due: parseDueDate(item.dueDate)
+        })))
+        .filter(item => item.due)
+        .sort((a, b) => a.due - b.due || String(a.title || '').localeCompare(String(b.title || '')));
+    }
+
+    function assignmentsForDate(assignments, date) {
+      const key = dateKey(date);
+      return assignments.filter(item => dateKey(item.due) === key);
+    }
+
+    function renderCalendarPill(item) {
+      return `
+        <div class="calendar-pill" title="${esc(item.title)}">
+          ${esc(trimText(item.title, 58))}
+          <span>${esc(item.areaLabel)}${item.workContext ? ` - ${esc(item.workContext)}` : ''}</span>
+        </div>
+      `;
+    }
+
+    function renderCalendarToolbar(assignments, title) {
+      return `
+        <div class="calendar-toolbar">
+          <div>
+            <div class="calendar-title">${esc(title)}</div>
+            <div class="calendar-count">${assignments.length} scheduled assignments with due dates</div>
+          </div>
+          <div class="calendar-controls" aria-label="Calendar controls">
+            <button class="calendar-button" data-calendar-step="-1" type="button">Prev</button>
+            <button class="calendar-button ${assignmentCalendarState.view === 'year' ? 'is-active' : ''}" data-calendar-view="year" type="button">Year</button>
+            <button class="calendar-button ${assignmentCalendarState.view === 'month' ? 'is-active' : ''}" data-calendar-view="month" type="button">Month</button>
+            <button class="calendar-button ${assignmentCalendarState.view === 'week' ? 'is-active' : ''}" data-calendar-view="week" type="button">Week</button>
+            <button class="calendar-button" data-calendar-step="1" type="button">Next</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderMonthCalendar(assignments, anchor) {
+      const monthStart = new Date(anchor.getFullYear(), anchor.getMonth(), 1, 12);
+      const gridStart = startOfCalendarWeek(monthStart);
+      const title = monthStart.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+      const today = new Date();
+      const days = Array.from({ length: 42 }, (_, index) => addCalendarDays(gridStart, index));
+
+      return `
+        ${renderCalendarToolbar(assignments, title)}
+        <div class="calendar-body">
+          <div class="calendar-weekdays">
+            ${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => `<div class="calendar-weekday">${day}</div>`).join('')}
+          </div>
+          <div class="calendar-month-grid">
+            ${days.map(day => {
+              const dayItems = assignmentsForDate(assignments, day);
+              const visibleItems = dayItems.slice(0, 3);
+              return `
+                <div class="calendar-day ${day.getMonth() !== anchor.getMonth() ? 'is-muted' : ''} ${sameDay(day, today) ? 'is-today' : ''}">
+                  <div class="calendar-day-number">${day.getDate()}</div>
+                  ${visibleItems.map(renderCalendarPill).join('')}
+                  ${dayItems.length > visibleItems.length ? `<div class="calendar-more">+${dayItems.length - visibleItems.length} more</div>` : ''}
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderWeekCalendar(assignments, anchor) {
+      const weekStart = startOfCalendarWeek(anchor);
+      const weekEnd = addCalendarDays(weekStart, 6);
+      const title = `${weekStart.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}`;
+      const today = new Date();
+      const days = Array.from({ length: 7 }, (_, index) => addCalendarDays(weekStart, index));
+
+      return `
+        ${renderCalendarToolbar(assignments, title)}
+        <div class="calendar-body">
+          <div class="calendar-week-grid">
+            ${days.map(day => {
+              const dayItems = assignmentsForDate(assignments, day);
+              return `
+                <div class="calendar-week-day ${sameDay(day, today) ? 'is-today' : ''}">
+                  <div class="calendar-week-date">${day.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</div>
+                  ${dayItems.length ? dayItems.map(renderCalendarPill).join('') : '<div class="calendar-empty">No assignments due.</div>'}
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderYearCalendar(assignments, anchor) {
+      const year = anchor.getFullYear();
+      const title = `${year} Assignment Year`;
+      const months = Array.from({ length: 12 }, (_, index) => new Date(year, index, 1, 12));
+
+      return `
+        ${renderCalendarToolbar(assignments, title)}
+        <div class="calendar-body">
+          <div class="calendar-year-grid">
+            ${months.map(month => {
+              const monthItems = assignments.filter(item => item.due.getFullYear() === year && item.due.getMonth() === month.getMonth());
+              const visibleItems = monthItems.slice(0, 4);
+              return `
+                <div class="calendar-month-card">
+                  <div class="calendar-month-name">
+                    <span>${month.toLocaleDateString(undefined, { month: 'long' })}</span>
+                    <span>${monthItems.length}</span>
+                  </div>
+                  ${visibleItems.length ? visibleItems.map(item => `
+                    <div class="calendar-pill">
+                      ${esc(formatShortDate(item.dueDate))}: ${esc(trimText(item.title, 50))}
+                      <span>${esc(item.areaLabel)}</span>
+                    </div>
+                  `).join('') : '<div class="calendar-empty">No due dates yet.</div>'}
+                  ${monthItems.length > visibleItems.length ? `<div class="calendar-more">+${monthItems.length - visibleItems.length} more</div>` : ''}
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAssignmentCalendar(curriculum) {
+      const assignments = getCalendarAssignments(curriculum);
+      if (!assignments.length) {
+        return '<div class="empty-curriculum">No assignment due dates have been added yet.</div>';
+      }
+
+      if (!assignmentCalendarState.anchorDate) {
+        const today = new Date();
+        assignmentCalendarState.anchorDate = assignments.find(item => item.due >= today)?.due || assignments[0].due;
+      }
+
+      return `
+        <div class="calendar-shell">
+          ${assignmentCalendarState.view === 'year'
+            ? renderYearCalendar(assignments, assignmentCalendarState.anchorDate)
+            : assignmentCalendarState.view === 'week'
+              ? renderWeekCalendar(assignments, assignmentCalendarState.anchorDate)
+              : renderMonthCalendar(assignments, assignmentCalendarState.anchorDate)}
+        </div>
+      `;
+    }
+
+    function setupAssignmentCalendar(curriculum) {
+      const section = document.querySelector('[data-assignment-calendar]');
+      if (!section) return;
+
+      section.querySelectorAll('[data-calendar-view]').forEach(button => {
+        button.addEventListener('click', () => {
+          assignmentCalendarState.view = button.dataset.calendarView;
+          section.innerHTML = renderAssignmentCalendar(curriculum);
+          setupAssignmentCalendar(curriculum);
+        });
+      });
+
+      section.querySelectorAll('[data-calendar-step]').forEach(button => {
+        button.addEventListener('click', () => {
+          const amount = Number(button.dataset.calendarStep) || 0;
+          const current = assignmentCalendarState.anchorDate || new Date();
+          const next = new Date(current);
+          if (assignmentCalendarState.view === 'year') {
+            next.setFullYear(next.getFullYear() + amount);
+          } else if (assignmentCalendarState.view === 'week') {
+            next.setDate(next.getDate() + amount * 7);
+          } else {
+            next.setMonth(next.getMonth() + amount);
+          }
+          assignmentCalendarState.anchorDate = next;
+          section.innerHTML = renderAssignmentCalendar(curriculum);
+          setupAssignmentCalendar(curriculum);
+        });
+      });
     }
 
     function renderTimeline(timeline) {
@@ -1709,9 +2261,17 @@
             </div>
 
             ${isCoach ? `
+              <div class="calendar-section">
+                <div class="section-title">Assignment Calendar</div>
+                <p class="section-sub">Switch between yearly, monthly, and weekly views to see when team assignments are due.</p>
+                <div data-assignment-calendar>
+                  ${renderAssignmentCalendar(curriculum)}
+                </div>
+              </div>
+
               <div class="curriculum-section">
                 <div class="section-title">Curriculum Timeline Overview</div>
-                <p class="section-sub">All student assignments grouped by FLL area and ordered by due date.</p>
+                <p class="section-sub">Dates run down the left. Each FLL area column shows the lesson or assignment due on that date.</p>
                 ${renderCurriculumOverview(curriculum)}
               </div>
             ` : ''}
@@ -1740,6 +2300,7 @@
           </aside>
         </div>
       `;
+      if (isCoach) setupAssignmentCalendar(curriculum);
     }
 
     async function loadHub() {
