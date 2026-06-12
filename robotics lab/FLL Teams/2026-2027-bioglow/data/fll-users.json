@@ -12,7 +12,7 @@
     "id": "student-team-01-a",
     "name": "Student One",
     "username": "student1",
-    "password_hash": "560b84c785021f3455d36329a3f55ea2:defecd68307bfd8c8fdbf0b61b28b45620ca6ad63cbefb6e4907b68f623ba2126aca3692fecfd8c0fa085daa4197dd703c0b5a001d79d9d4fc06c560641404d0",
+    "password_hash": "fa7c41e82bb12459fe95b29cf2a233ea:9394a846e3006d0f17ebfc042f23e67961e03c8a933efcc608f8905c500f7d81a349135afd4ae076e994bec0be39f6e993950220e8ca384bbbcd29fab3ccabb0",
     "role": "student",
     "teamId": "team-01",
     "active": true

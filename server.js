@@ -390,7 +390,7 @@ async function getCampHubDataFor(user) {
 }
 
 async function getFllHubDataFor(user) {
-	const [season, teams, timeline, announcements, resources, tasks, assignments, sections] = await Promise.all([
+	const [season, teams, timeline, announcements, resources, tasks, assignments, sections, members] = await Promise.all([
 		readJsonFile(path.join(fllHubDataDir, 'season.json'), {}),
 		readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
 		readJsonFile(path.join(fllHubDataDir, 'timeline.json'), []),
@@ -398,16 +398,20 @@ async function getFllHubDataFor(user) {
 		readJsonFile(path.join(fllHubDataDir, 'resources.json'), []),
 		readJsonFile(fllTasksFile, []),
 		readJsonFile(fllAssignmentsFile, []),
-		readJsonFile(fllSeasonSectionsFile, [])
+		readJsonFile(fllSeasonSectionsFile, []),
+		readJsonFile(fllTeamMembersFile, [])
 	]);
 
 	const teamList = Array.isArray(teams) ? teams : [];
+	const memberList = Array.isArray(members) ? members : [];
 	const visibleTeams = user.role === 'coach' ? teamList : teamList.filter((team) => team.id === user.teamId);
+	const visibleTeamIds = new Set(visibleTeams.map((team) => team.id));
 	return {
 		user: publicFllUser(user),
 		season,
 		teams: visibleTeams,
 		allTeams: user.role === 'coach' ? teamList : undefined,
+		teamMembers: memberList.filter((member) => visibleTeamIds.has(member.teamId)),
 		timeline: Array.isArray(timeline) ? timeline : [],
 		announcements: Array.isArray(announcements) ? announcements : [],
 		resources: Array.isArray(resources) ? resources : [],

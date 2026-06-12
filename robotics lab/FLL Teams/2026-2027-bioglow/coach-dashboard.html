@@ -6,12 +6,15 @@
   <title>Coach Backend · BIOGLOW 2026-2027</title>
   <style>
     * { box-sizing: border-box; }
+    html, body { overflow-x: hidden; }
     body {
       margin: 0;
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: #f6f8f7;
       color: #202124;
     }
+    img, iframe { max-width: 100%; }
+    input, select, textarea { max-width: 100%; }
 
     .topbar {
       background: white;
@@ -294,6 +297,34 @@
       .cal-cell { min-height: 48px; }
       .cal-chip { font-size: 0; padding: 0; }
       .cal-chip::before { content: '●'; font-size: 8px; }
+      .cal-chip.due::before { color: #e37400; }
+      .cal-chip.done::before { color: #1e8e5a; }
+      .cal-chip.competition::before { color: #d93025; }
+      .cal-chip.season::before { color: #1a73e8; }
+    }
+
+    /* ── Wide, screen-centered calendar on large displays ── */
+    @media (min-width: 1140px) {
+      #panel-calendar.active {
+        width: min(1320px, calc(100vw - 48px));
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      #panel-calendar .cal-cell { min-height: 96px; }
+    }
+
+    /* ── Phone-size fixes ── */
+    @media (max-width: 640px) {
+      .topbar { flex-wrap: wrap; gap: 8px; padding: 12px 16px; }
+      .wrap { padding: 16px 12px 50px; }
+      .team-card { padding: 16px; }
+      .form-card { padding: 18px; }
+      .cal-toolbar { justify-content: flex-start; }
+      .cal-filter { max-width: 100%; flex: 1; }
+      .mini-form-row { flex-direction: column; }
+      .creds-actions { flex-wrap: wrap; }
+      .cal-year-grid { grid-template-columns: 1fr; }
     }
 
     .toast {

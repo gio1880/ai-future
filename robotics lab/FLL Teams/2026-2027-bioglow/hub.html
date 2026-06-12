@@ -36,12 +36,16 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html, body { overflow-x: hidden; }
+
     body {
       font-family: Inter, system-ui, sans-serif;
       color: var(--ink);
       background: var(--bg);
       min-height: 100vh;
     }
+
+    img, iframe { max-width: 100%; }
 
     a { color: inherit; text-decoration: none; }
     button, input { font: inherit; }
@@ -268,8 +272,15 @@
     /* ── Team cards ── */
     .team-grid {
       display: grid;
+      grid-template-columns: minmax(0, 1fr);
       gap: 18px;
       margin-bottom: 40px;
+    }
+
+    .team-grid .team-card {
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
     }
 
     .team-card {
@@ -292,6 +303,56 @@
       justify-content: space-between;
       gap: 14px;
       margin-bottom: 16px;
+    }
+
+    .team-roster-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .team-roster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .roster-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f1f3f4;
+      border: 1px solid var(--line);
+      border-radius: 50px;
+      padding: 4px 12px 4px 4px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .roster-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--green, #1e8e5a);
+      color: white;
+      font-size: 9px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .team-roster-empty {
+      font-size: 12px;
+      color: var(--muted);
+      font-style: italic;
+      margin: 0 0 16px;
     }
 
     .team-name {
@@ -1663,6 +1724,11 @@
       align-items: start;
     }
 
+    /* children may contain wide scrollable tables — never let them stretch the column */
+    .main-layout > div {
+      min-width: 0;
+    }
+
     .sidebar {
       display: grid;
       gap: 0;
@@ -1671,7 +1737,7 @@
     /* ── Responsive ── */
     @media (max-width: 900px) {
       .main-layout {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
       }
       .curriculum-view-controls {
         grid-template-columns: 1fr;
@@ -2171,7 +2237,18 @@
       `;
     }
 
-    function renderTeamCard(team, isCoach) {
+    function renderTeamCard(team, isCoach, members) {
+      const memberList = Array.isArray(members) ? members : [];
+      const rosterHtml = memberList.length
+        ? `<div class="team-roster">
+            ${memberList.map(m => `
+              <span class="roster-chip" title="${esc(m.role || 'Team member')}">
+                <span class="roster-avatar">${esc(m.initials || (m.displayName || '?').split(/\s+/).slice(0,2).map(p => p[0]).join('').toUpperCase())}</span>
+                ${esc(m.displayName)}
+              </span>
+            `).join('')}
+          </div>`
+        : '<p class="team-roster-empty">No students assigned yet.</p>';
       const readiness = Math.max(0, Math.min(100, Number(team.readiness) || 0));
       const highlightItems = Array.isArray(team.studentHighlights) && team.studentHighlights.length
         ? `<ul>${team.studentHighlights.map(h => `<li>${esc(h)}</li>`).join('')}</ul>`
@@ -2189,6 +2266,8 @@
             </div>
             <span class="status-badge">${esc(team.status || 'Active')}</span>
           </div>
+          <div class="team-roster-label">👥 Students (${memberList.length})</div>
+          ${rosterHtml}
           <div class="progress-wrap">
             <div class="progress-label">
               <span>Season readiness</span>
@@ -2817,7 +2896,7 @@
     }
 
     function renderDashboard(data) {
-      const { user, season, teams, timeline, announcements, resources, curriculum } = data;
+      const { user, season, teams, timeline, announcements, resources, curriculum, teamMembers } = data;
       const phase = timeline.find(p => p.status === 'current') || timeline[0] || {};
       const isCoach = user.role === 'coach';
       const userId = user.id || user.name;
@@ -2841,7 +2920,7 @@
             <div class="section-title">🏆 ${isCoach ? 'Team Dashboards' : 'Your Team'}</div>
             <p class="section-sub">Track your team's progress and what's coming up next.</p>
             <div class="team-grid">
-              ${teams.map(t => renderTeamCard(t, isCoach)).join('')}
+              ${teams.map(t => renderTeamCard(t, isCoach, (teamMembers || []).filter(m => m.teamId === t.id))).join('')}
             </div>
 
             ${isCoach ? `
