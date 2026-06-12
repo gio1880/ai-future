@@ -444,7 +444,16 @@
     }
 
     .resource-category {
-      margin-bottom: 26px;
+      min-width: 0;
+    }
+
+    .cat-count {
+      background: var(--green-light);
+      color: var(--green-dark);
+      border-radius: 50px;
+      padding: 1px 9px;
+      font-size: 11px;
+      margin-left: 6px;
     }
 
     .cat-label {
@@ -460,26 +469,31 @@
 
     .resource-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 12px;
     }
 
     .resource-card {
       background: white;
-      border-radius: var(--radius);
+      border-radius: var(--radius-sm);
       border: 1.5px solid var(--line);
-      padding: 18px;
-      box-shadow: var(--shadow);
-      transition: box-shadow 0.18s, transform 0.18s;
+      padding: 13px 15px;
+      transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 5px;
+      min-width: 0;
+      color: inherit;
+      cursor: pointer;
     }
 
     .resource-card:hover {
       box-shadow: var(--shadow-hover);
       transform: translateY(-2px);
+      border-color: var(--green);
     }
+
+    .resource-card:hover .resource-link { color: var(--green-dark); }
 
     .resource-card-top {
       display: flex;
@@ -509,28 +523,39 @@
     .type-Template { background: #f1f1f1; color: #555; }
 
     .resource-name {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
-      line-height: 1.35;
+      line-height: 1.3;
     }
 
     .resource-desc {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--muted);
-      line-height: 1.55;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin: 0;
     }
 
     .resource-link {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800;
       color: var(--green);
       margin-top: auto;
     }
 
-    .resource-link:hover { color: var(--green-dark); }
+    /* categories flow side by side instead of stacking full-width */
+    .resource-categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
+      gap: 22px 28px;
+      align-items: start;
+    }
 
     .curriculum-section {
       margin: 0 0 40px;
@@ -2333,25 +2358,23 @@
         grouped[cat].push(r);
       });
 
-      return Object.entries(grouped).map(([cat, items]) => `
+      return `<div class="resource-categories">${Object.entries(grouped).map(([cat, items]) => `
         <div class="resource-category">
-          <div class="cat-label">${esc(cat)}</div>
+          <div class="cat-label">${esc(cat)} <span class="cat-count">${items.length}</span></div>
           <div class="resource-grid">
             ${items.map(item => `
-              <div class="resource-card">
+              <a class="resource-card" href="${esc(item.url)}" target="_blank" rel="noreferrer">
                 <div class="resource-card-top">
                   <div class="resource-name">${typeIcon(item.type)} ${esc(item.label)}</div>
                   <span class="resource-type-badge type-${esc(item.type)}">${esc(item.type)}</span>
                 </div>
                 <p class="resource-desc">${esc(item.description)}</p>
-                <a class="resource-link" href="${esc(item.url)}" target="_blank" rel="noreferrer">
-                  Open resource →
-                </a>
-              </div>
+                <span class="resource-link">Open resource →</span>
+              </a>
             `).join('')}
           </div>
         </div>
-      `).join('');
+      `).join('')}</div>`;
     }
 
     function formatShortDate(value) {
@@ -2939,11 +2962,6 @@
               ${teams.map(t => renderTeamCard(t, isCoach, (teamMembers || []).filter(m => m.teamId === t.id))).join('')}
             </div>
 
-            <div class="resources-section">
-              <div class="section-title">📚 Resources</div>
-              <p class="section-sub">Everything you need for the BIOGLOW season — all in one place.</p>
-              ${renderResources(resources, user)}
-            </div>
           </div>
 
           <aside class="sidebar">
@@ -2965,6 +2983,12 @@
               </div>
             </div>
           </aside>
+        </div>
+
+        <div class="resources-section wide-breakout">
+          <div class="section-title">📚 Resources</div>
+          <p class="section-sub">Everything you need for the BIOGLOW season — all in one place.</p>
+          ${renderResources(resources, user)}
         </div>
 
         ${isCoach ? `
