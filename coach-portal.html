@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Coach Portal | AI Future</title>
+  <style>
+    :root {
+      --ink: #17202c;
+      --muted: #667085;
+      --line: #d8dee8;
+      --brand: #2563ff;
+      --brand-dark: #1648cc;
+      --green: #0f766e;
+      --surface: #ffffff;
+      --page: #f5f7fb;
+      --soft: #eef4ff;
+      --danger: #b42318;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--page);
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 800;
+      background: linear-gradient(135deg, #2563ff, #14b8a6);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.45rem;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .userline {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .logout {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 13px;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .logout:hover { border-color: var(--brand); color: var(--brand); }
+
+    main {
+      padding: 28px 0 44px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 22px;
+    }
+
+    .tab {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 12px;
+      white-space: nowrap;
+      color: #31415c;
+      background: #fff;
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .tab[aria-selected="true"] {
+      color: #fff;
+      border-color: var(--brand);
+      background: var(--brand);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 18px;
+      min-height: 230px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 12px 28px rgba(21, 31, 48, 0.08);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .category {
+      margin-bottom: 8px;
+      color: var(--green);
+      font-size: 0.78rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .badge {
+      flex: 0 0 auto;
+      border-radius: 8px;
+      padding: 5px 8px;
+      color: #345;
+      background: var(--soft);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .description {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .open {
+      width: 100%;
+      min-height: 44px;
+      border: 0;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--brand);
+      font: inherit;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .open:hover { background: var(--brand-dark); }
+    .open:disabled {
+      opacity: 0.7;
+      cursor: wait;
+    }
+
+    .notice {
+      display: none;
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(180, 35, 24, 0.25);
+      border-radius: 8px;
+      color: var(--danger);
+      background: #fff7f5;
+      font-weight: 750;
+    }
+
+    .empty {
+      padding: 26px;
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      background: #fff;
+    }
+
+    @media (max-width: 640px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 16px 0;
+      }
+
+      .logout { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="shell topbar">
+      <div class="brand">
+        <div class="mark">AI</div>
+        <div>
+          <h1>Coach Portal</h1>
+          <div id="userline" class="userline">Loading...</div>
+        </div>
+      </div>
+      <button id="logoutButton" class="logout" type="button">Sign out</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <div id="notice" class="notice" role="alert"></div>
+    <nav id="tabs" class="tabs" aria-label="Hub categories"></nav>
+    <section id="grid" class="grid" aria-live="polite"></section>
+  </main>
+
+  <script>
+    const userline = document.getElementById('userline');
+    const tabs = document.getElementById('tabs');
+    const grid = document.getElementById('grid');
+    const notice = document.getElementById('notice');
+    const logoutButton = document.getElementById('logoutButton');
+    let hubs = [];
+    let activeCategory = 'All';
+
+    function showNotice(message) {
+      notice.textContent = message || '';
+      notice.style.display = message ? 'block' : 'none';
+    }
+
+    function categoriesFor(items) {
+      return ['All', ...Array.from(new Set(items.map((hub) => hub.category))).sort()];
+    }
+
+    function renderTabs() {
+      tabs.innerHTML = '';
+      for (const category of categoriesFor(hubs)) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'tab';
+        button.textContent = category;
+        button.setAttribute('aria-selected', String(category === activeCategory));
+        button.addEventListener('click', () => {
+          activeCategory = category;
+          renderTabs();
+          renderCards();
+        });
+        tabs.appendChild(button);
+      }
+    }
+
+    function renderCards() {
+      const visible = activeCategory === 'All'
+        ? hubs
+        : hubs.filter((hub) => hub.category === activeCategory);
+      grid.innerHTML = '';
+
+      if (!visible.length) {
+        const empty = document.createElement('div');
+        empty.className = 'empty';
+        empty.textContent = 'No hubs are available in this category.';
+        grid.appendChild(empty);
+        return;
+      }
+
+      for (const hub of visible) {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-top">
+            <div>
+              <div class="category"></div>
+              <h2></h2>
+            </div>
+            <span class="badge"></span>
+          </div>
+          <p class="description"></p>
+          <button class="open" type="button">Open</button>
+        `;
+        card.querySelector('.category').textContent = hub.category;
+        card.querySelector('h2').textContent = hub.title;
+        card.querySelector('.badge').textContent = hub.adminOnly ? 'Owner' : 'Coach';
+        card.querySelector('.description').textContent = hub.description;
+        card.querySelector('.open').addEventListener('click', () => openHub(hub.id, card.querySelector('.open')));
+        grid.appendChild(card);
+      }
+    }
+
+    async function loadSession() {
+      try {
+        const response = await fetch('/api/coach/session', { cache: 'no-store' });
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          window.location.href = '/coach-login';
+          return;
+        }
+        userline.textContent = `${result.user.name} · ${result.user.role === 'owner' ? 'Owner/Admin' : 'Coach'}`;
+        hubs = Array.isArray(result.hubs) ? result.hubs : [];
+        renderTabs();
+        renderCards();
+      } catch (err) {
+        showNotice('Could not load the coach portal.');
+      }
+    }
+
+    async function openHub(hubId, button) {
+      showNotice('');
+      const previousText = button.textContent;
+      button.disabled = true;
+      button.textContent = 'Opening...';
+
+      try {
+        const response = await fetch(`/api/coach/open/${encodeURIComponent(hubId)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success || !result.url) {
+          throw new Error(result.message || 'Could not open this hub');
+        }
+        window.open(result.url, '_blank', 'noopener');
+      } catch (err) {
+        showNotice(err.message || 'Could not open this hub.');
+      } finally {
+        button.disabled = false;
+        button.textContent = previousText;
+      }
+    }
+
+    logoutButton.addEventListener('click', async () => {
+      try {
+        await fetch('/api/coach/logout', { method: 'POST' });
+      } finally {
+        window.location.href = '/coach-login';
+      }
+    });
+
+    loadSession();
+  </script>
+</body>
+</html>

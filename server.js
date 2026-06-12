@@ -68,10 +68,68 @@ const campDataFileNames = [
 	'resources.json'
 ];
 const campSessions = new Map();
+const coachUsersFile = path.join(platformDataDir, 'coach-users.json');
+const coachSessionCookie = 'coach_session';
+const coachSessions = new Map();
+const regularCoachHubs = ['fll-hub', 'camp-hub', 'code-lab-admin'];
+const adminCoachHubs = [...regularCoachHubs, 'payments-admin', 'parent-leads-admin', 'summer-leads-admin'];
+const coachHubDefinitions = {
+	'fll-hub': {
+		id: 'fll-hub',
+		title: 'FLL Hub',
+		category: 'Competition',
+		description: 'Season dashboard, coach tools, curriculum, rosters, assignments, and FLL team resources.',
+		targetUrl: '/fll-hub/coach',
+		grant: 'fll-hub'
+	},
+	'camp-hub': {
+		id: 'camp-hub',
+		title: 'Summer Camp Hub',
+		category: 'Programs',
+		description: 'Camp schedule, announcements, curriculum notes, camper roster, and coach prep tools.',
+		targetUrl: '/camp-hub/coach',
+		grant: 'camp-hub'
+	},
+	'code-lab-admin': {
+		id: 'code-lab-admin',
+		title: 'Code Lab Backend',
+		category: 'Learning Platform',
+		description: 'Student accounts, progress, support tickets, activity, and live classroom monitoring.',
+		targetUrl: '/admin',
+		grant: 'code-lab-admin'
+	},
+	'payments-admin': {
+		id: 'payments-admin',
+		title: 'Payments Admin',
+		category: 'Admin',
+		description: 'Registration and membership payment records for owner/admin review.',
+		targetUrl: '/payments-admin',
+		grant: 'payments-admin',
+		adminOnly: true
+	},
+	'parent-leads-admin': {
+		id: 'parent-leads-admin',
+		title: 'Parent Leads',
+		category: 'Admin',
+		description: 'Parent inquiries from the main website contact and program interest forms.',
+		targetUrl: '/parent-leads-admin',
+		grant: 'parent-leads-admin',
+		adminOnly: true
+	},
+	'summer-leads-admin': {
+		id: 'summer-leads-admin',
+		title: 'Summer Leads',
+		category: 'Admin',
+		description: 'Summer camp ad leads, inquiry exports, and landing page traffic stats.',
+		targetUrl: '/summer-leads-admin',
+		grant: 'summer-leads-admin',
+		adminOnly: true
+	}
+};
 
 // Payments routes MUST mount before global express.json() — the Stripe webhook
 // endpoint needs the raw request body to verify the signature.
-payments.mount(app, express);
+payments.mount(app, express, { isUnifiedCoachAdmin: isCoachAdminRequest });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -109,6 +167,119 @@ app.get('/codelab/lesson/:slug', (req, res) => res.redirect(302, '/codelab/app')
 app.get('/codelab/admin', (req, res) => res.redirect(302, '/admin'));
 app.get('/codelab/dev', (req, res) => res.redirect(302, '/dev'));
 app.get('/codelab/dev/*', (req, res) => res.redirect(302, `/dev/${req.params[0]}`));
+
+app.get(['/coach-login', '/coach-login/'], async (req, res) => {
+	const user = await getCoachUserFromSession(req);
+	if (user) {
+		return res.redirect(302, '/coach-portal');
+	}
+	return res.sendFile(path.join(__dirname, 'coach-login.html'));
+});
+
+app.get(['/coach-portal', '/coach-portal/'], requireCoachPortalAuth, (req, res) => {
+	return res.sendFile(path.join(__dirname, 'coach-portal.html'));
+});
+
+app.post('/api/coach/login', async (req, res) => {
+	try {
+		const username = cleanMetaString(req.body.username || '', 80).toLowerCase();
+		const password = typeof req.body.password === 'string' ? req.body.password : '';
+		const users = await readCoachUsers();
+		const user = users.find((candidate) => String(candidate.username || '').toLowerCase() === username && candidate.active !== false);
+
+		if (!user || !verifyScryptPassword(password, user.password_hash)) {
+			return res.status(401).json({ success: false, message: 'Invalid coach username or password' });
+		}
+
+		const token = crypto.randomBytes(32).toString('hex');
+		coachSessions.set(token, {
+			userId: user.id,
+			hubs: Array.isArray(user.hubs) ? user.hubs : [],
+			createdAt: Date.now(),
+			lastSeen: Date.now()
+		});
+		setCoachSessionCookie(res, token);
+		return res.json({
+			success: true,
+			user: publicCoachUser(user),
+			hubs: coachVisibleHubs(user),
+			redirectTo: '/coach-portal'
+		});
+	} catch (err) {
+		console.error('Coach login error:', err);
+		return res.status(500).json({ success: false, message: 'Server error signing in' });
+	}
+});
+
+app.post('/api/coach/logout', (req, res) => {
+	const session = getCoachSession(req);
+	if (session) {
+		coachSessions.delete(session.token);
+	}
+	clearCoachSessionCookie(res);
+	return res.json({ success: true });
+});
+
+app.get('/api/coach/session', requireCoachPortalAuth, (req, res) => {
+	return res.json({
+		success: true,
+		user: publicCoachUser(req.coachUser),
+		hubs: coachVisibleHubs(req.coachUser)
+	});
+});
+
+app.post('/api/coach/open/:hubId', requireCoachPortalAuth, async (req, res, next) => {
+	try {
+		const hub = coachHubDefinitions[req.params.hubId];
+		if (!hub) {
+			return res.status(404).json({ success: false, message: 'Hub not found' });
+		}
+		if (!coachHasHub(req.coachUser, hub.grant)) {
+			return res.status(403).json({ success: false, message: 'You do not have access to this hub' });
+		}
+
+		if (hub.id === 'fll-hub') {
+			const fllUsers = await readFllUsers();
+			const fllUser = fllUsers.find((candidate) => {
+				if (req.coachUser.fllUserId && candidate.id === req.coachUser.fllUserId) return true;
+				return String(candidate.username || '').toLowerCase() === String(req.coachUser.fllUsername || req.coachUser.username || '').toLowerCase();
+			});
+			if (!fllUser || fllUser.role !== 'coach' || fllUser.active === false) {
+				return res.status(404).json({ success: false, message: 'Matching FLL coach account not found' });
+			}
+			createFllSessionForUser(res, fllUser);
+			return res.json({ success: true, url: hub.targetUrl });
+		}
+
+		if (hub.id === 'camp-hub') {
+			const campUsers = await readCampUsers();
+			const campUser = campUsers.find((candidate) => {
+				if (req.coachUser.campUserId && candidate.id === req.coachUser.campUserId) return true;
+				return String(candidate.username || '').toLowerCase() === String(req.coachUser.campUsername || req.coachUser.username || '').toLowerCase();
+			});
+			if (!campUser || campUser.role !== 'coach' || campUser.active === false) {
+				return res.status(404).json({ success: false, message: 'Matching camp coach account not found' });
+			}
+			createCampSessionForUser(res, campUser);
+			return res.json({ success: true, url: hub.targetUrl });
+		}
+
+		if (hub.id === 'code-lab-admin') {
+			req.url = '/api/internal/coach-login';
+			req.headers['x-coach-bridge-secret'] = codeLabApp.coachBridgeSecret;
+			req.body = {
+				coach: publicCoachUser(req.coachUser),
+				redirectTo: hub.targetUrl
+			};
+			return codeLabApp(req, res, next);
+		}
+
+		return res.json({ success: true, url: hub.targetUrl });
+	} catch (err) {
+		console.error('Coach hub open error:', err);
+		return res.status(500).json({ success: false, message: 'Server error opening hub' });
+	}
+});
 
 async function readSummerInquiries() {
 	try {
@@ -324,6 +495,205 @@ async function initializeCampDataDir() {
 async function readCampUsers() {
 	const users = await readJsonFile(campUsersFile, []);
 	return Array.isArray(users) ? users : [];
+}
+
+async function readCoachUsers() {
+	const users = await readJsonFile(coachUsersFile, []);
+	return Array.isArray(users) ? users : [];
+}
+
+async function initializeCoachDataDir() {
+	await fs.mkdir(path.dirname(coachUsersFile), { recursive: true });
+	try {
+		await fs.access(coachUsersFile);
+		return;
+	} catch (err) {
+		if (err.code !== 'ENOENT') throw err;
+	}
+
+	const [fllUsers, campUsers] = await Promise.all([readFllUsers(), readCampUsers()]);
+	const fllCoachUsers = fllUsers.filter((user) => user.role === 'coach' && user.active !== false);
+	const campCoachUsers = campUsers.filter((user) => user.role === 'coach' && user.active !== false);
+	const campByUsername = new Map(campCoachUsers.map((user) => [String(user.username || '').toLowerCase(), user]));
+	const sharedFllCoachUsers = fllCoachUsers.filter((fllUser) => campByUsername.has(String(fllUser.username || '').toLowerCase()));
+	const sourceFllCoachUsers = sharedFllCoachUsers.length ? sharedFllCoachUsers : fllCoachUsers;
+	const seededUsers = sourceFllCoachUsers.map((fllUser) => {
+		const username = String(fllUser.username || '').toLowerCase();
+		const isOwner = username === 'giovanny';
+		const campUser = campByUsername.get(username) || null;
+		return {
+			id: `coach-${username}`,
+			name: fllUser.name,
+			username,
+			password_hash: fllUser.password_hash,
+			role: isOwner ? 'owner' : 'coach',
+			hubs: isOwner ? adminCoachHubs : regularCoachHubs,
+			fllUserId: fllUser.id,
+			fllUsername: fllUser.username,
+			campUserId: campUser?.id || null,
+			campUsername: campUser?.username || username,
+			active: true
+		};
+	});
+
+	if (!sharedFllCoachUsers.length) {
+		for (const campUser of campCoachUsers) {
+			const username = String(campUser.username || '').toLowerCase();
+			if (seededUsers.some((user) => user.username === username)) continue;
+			seededUsers.push({
+				id: `coach-${username}`,
+				name: campUser.name,
+				username,
+				password_hash: campUser.password_hash,
+				role: 'coach',
+				hubs: ['camp-hub', 'code-lab-admin'],
+				fllUserId: null,
+				fllUsername: username,
+				campUserId: campUser.id,
+				campUsername: campUser.username,
+				active: true
+			});
+		}
+	}
+
+	if (!seededUsers.length) {
+		seededUsers.push({
+			id: 'coach-owner',
+			name: 'Owner Admin',
+			username: 'owner',
+			password_hash: hashScryptPassword(process.env.COACH_OWNER_PASSWORD || 'change-me'),
+			role: 'owner',
+			hubs: adminCoachHubs,
+			fllUserId: null,
+			fllUsername: null,
+			campUserId: null,
+			campUsername: null,
+			active: true
+		});
+	}
+
+	await writeJsonFile(coachUsersFile, seededUsers);
+}
+
+function setCoachSessionCookie(res, token) {
+	const maxAge = 7 * 24 * 60 * 60;
+	const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
+	res.setHeader('Set-Cookie', `${coachSessionCookie}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${secure}`);
+}
+
+function clearCoachSessionCookie(res) {
+	res.setHeader('Set-Cookie', `${coachSessionCookie}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`);
+}
+
+function getCoachSession(req) {
+	const token = parseCookies(req)[coachSessionCookie];
+	if (!token) return null;
+	const session = coachSessions.get(token);
+	if (!session) return null;
+	if (Date.now() - session.lastSeen > 7 * 24 * 60 * 60 * 1000) {
+		coachSessions.delete(token);
+		return null;
+	}
+	session.lastSeen = Date.now();
+	return { token, ...session };
+}
+
+function publicCoachUser(user) {
+	if (!user) return null;
+	return {
+		id: user.id,
+		name: user.name,
+		username: user.username,
+		role: user.role === 'owner' ? 'owner' : 'coach'
+	};
+}
+
+function coachHasHub(user, hubId) {
+	return Boolean(user && Array.isArray(user.hubs) && user.hubs.includes(hubId));
+}
+
+function coachVisibleHubs(user) {
+	return Object.values(coachHubDefinitions)
+		.filter((hub) => coachHasHub(user, hub.grant))
+		.map((hub) => ({
+			id: hub.id,
+			title: hub.title,
+			category: hub.category,
+			description: hub.description,
+			adminOnly: Boolean(hub.adminOnly)
+		}));
+}
+
+async function getCoachUserFromSession(req) {
+	const session = getCoachSession(req);
+	if (!session) return null;
+	const users = await readCoachUsers();
+	const user = users.find((candidate) => candidate.id === session.userId && candidate.active !== false);
+	if (!user) {
+		coachSessions.delete(session.token);
+		return null;
+	}
+	return user;
+}
+
+function isCoachAdminRequest(req) {
+	const session = getCoachSession(req);
+	if (!session) return false;
+	return Array.isArray(session.hubs)
+		&& session.hubs.includes('payments-admin')
+		&& session.hubs.includes('parent-leads-admin')
+		&& session.hubs.includes('summer-leads-admin');
+}
+
+async function requireCoachPortalAuth(req, res, next) {
+	try {
+		const user = await getCoachUserFromSession(req);
+		if (!user) {
+			if (req.path.startsWith('/api/')) {
+				return res.status(401).json({ success: false, message: 'Coach login required' });
+			}
+			return res.redirect(302, '/coach-login');
+		}
+		req.coachUser = user;
+		return next();
+	} catch (err) {
+		console.error('Coach portal auth error:', err);
+		return res.status(500).json({ success: false, message: 'Server error checking coach session' });
+	}
+}
+
+async function requireCoachAdmin(req, res, next) {
+	try {
+		const user = await getCoachUserFromSession(req);
+		if (user && coachHasHub(user, 'parent-leads-admin') && coachHasHub(user, 'summer-leads-admin')) {
+			req.coachUser = user;
+			return next();
+		}
+		return next();
+	} catch (err) {
+		console.error('Coach admin auth error:', err);
+		return next();
+	}
+}
+
+function createFllSessionForUser(res, user) {
+	const token = crypto.randomBytes(32).toString('hex');
+	fllSessions.set(token, {
+		userId: user.id,
+		createdAt: Date.now(),
+		lastSeen: Date.now()
+	});
+	setFllSessionCookie(res, token);
+}
+
+function createCampSessionForUser(res, user) {
+	const token = crypto.randomBytes(32).toString('hex');
+	campSessions.set(token, {
+		userId: user.id,
+		createdAt: Date.now(),
+		lastSeen: Date.now()
+	});
+	setCampSessionCookie(res, token);
 }
 
 async function requireCampAuth(req, res, next) {
@@ -995,6 +1365,10 @@ function getBasicAuthCredentials(req) {
 }
 
 function requireSummerAdmin(req, res, next) {
+	if (isCoachAdminRequest(req)) {
+		return next();
+	}
+
 	const headerPassword = typeof req.headers['x-admin-password'] === 'string' ? req.headers['x-admin-password'] : '';
 	if (headerPassword && headerPassword === summerAdminPassword) {
 		return next();
@@ -1011,6 +1385,10 @@ function requireSummerAdmin(req, res, next) {
 }
 
 function requireParentAdmin(req, res, next) {
+	if (isCoachAdminRequest(req)) {
+		return next();
+	}
+
 	const headerPassword = typeof req.headers['x-admin-password'] === 'string' ? req.headers['x-admin-password'] : '';
 	if (headerPassword && headerPassword === parentAdminPassword) {
 		return next();
@@ -1738,6 +2116,149 @@ app.patch('/api/fll/coach/students/:id', requireFllAuth, requireFllCoach, async 
 	}
 });
 
+// ── Coach: resource management ─────────────────────────────────────────────
+
+app.post('/api/fll/coach/resources', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const label = cleanMetaString(req.body.label || '', 120);
+		const url = cleanMetaString(req.body.url || '', 600);
+		if (!label || !url) {
+			return res.status(400).json({ success: false, message: 'Resource name and link are required' });
+		}
+		const resourcesFile = path.join(fllHubDataDir, 'resources.json');
+		const resources = await readJsonFile(resourcesFile, []);
+		const resource = {
+			id: `resource-${slugify(label)}-${crypto.randomBytes(3).toString('hex')}`,
+			category: cleanMetaString(req.body.category || '', 60) || 'Other',
+			label,
+			description: cleanMetaString(req.body.description || '', 300),
+			type: cleanMetaString(req.body.type || '', 30) || 'Website',
+			source: 'Coach-added',
+			url,
+			roles: req.body.coachOnly ? ['coach'] : ['student', 'coach']
+		};
+		resources.push(resource);
+		await writeJsonFile(resourcesFile, resources);
+		return res.status(201).json({ success: true, resource });
+	} catch (err) {
+		console.error('FLL coach add resource error:', err);
+		return res.status(500).json({ success: false, message: 'Server error adding resource' });
+	}
+});
+
+app.delete('/api/fll/coach/resources/:id', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const resourcesFile = path.join(fllHubDataDir, 'resources.json');
+		const resources = await readJsonFile(resourcesFile, []);
+		const remaining = resources.filter((resource) => resource.id !== req.params.id);
+		if (remaining.length === resources.length) {
+			return res.status(404).json({ success: false, message: 'Resource not found' });
+		}
+		await writeJsonFile(resourcesFile, remaining);
+		return res.json({ success: true });
+	} catch (err) {
+		console.error('FLL coach delete resource error:', err);
+		return res.status(500).json({ success: false, message: 'Server error deleting resource' });
+	}
+});
+
+// ── Coach: assignment management (creates one task per student) ───────────
+
+app.post('/api/fll/coach/assignments', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const title = cleanMetaString(req.body.title || '', 160);
+		const category = cleanMetaString(req.body.category || '', 60);
+		const dueDate = cleanMetaString(req.body.dueDate || '', 10);
+		if (!title || !category || !/^\d{4}-\d{2}-\d{2}$/.test(dueDate)) {
+			return res.status(400).json({ success: false, message: 'Title, FLL area, and a valid due date are required' });
+		}
+		const teamId = cleanMetaString(req.body.teamId || '', 80) || 'all';
+		const [tasks, members] = await Promise.all([
+			readJsonFile(fllTasksFile, []),
+			readJsonFile(fllTeamMembersFile, [])
+		]);
+		const targets = (Array.isArray(members) ? members : [])
+			.filter((member) => teamId === 'all' || member.teamId === teamId);
+		if (!targets.length) {
+			return res.status(400).json({ success: false, message: 'No students found for that team' });
+		}
+		const baseId = `task-${slugify(title)}-${crypto.randomBytes(3).toString('hex')}`;
+		const now = new Date().toISOString();
+		const created = targets.map((member, index) => ({
+			id: `${baseId}-${index}`,
+			assignmentId: 'assignment-coach-created',
+			teamId: member.teamId,
+			assignedTo: member.studentId,
+			title,
+			description: cleanMetaString(req.body.description || '', 4000),
+			category,
+			type: cleanMetaString(req.body.type || '', 30) || 'submission',
+			workContext: cleanMetaString(req.body.workContext || '', 20) || 'class',
+			status: 'todo',
+			dueDate,
+			questions: Array.isArray(req.body.questions) ? req.body.questions : [],
+			createdBy: req.fllUser.id,
+			createdAt: now,
+			updatedAt: now
+		}));
+		tasks.push(...created);
+		await writeJsonFile(fllTasksFile, tasks);
+		return res.status(201).json({ success: true, count: created.length, title });
+	} catch (err) {
+		console.error('FLL coach add assignment error:', err);
+		return res.status(500).json({ success: false, message: 'Server error adding assignment' });
+	}
+});
+
+// update every task that shares a title (assignments are duplicated per student)
+app.patch('/api/fll/coach/assignments', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const matchTitle = cleanMetaString(req.body.matchTitle || '', 160);
+		if (!matchTitle) {
+			return res.status(400).json({ success: false, message: 'matchTitle is required' });
+		}
+		const tasks = await readJsonFile(fllTasksFile, []);
+		const group = tasks.filter((task) => task.title === matchTitle);
+		if (!group.length) {
+			return res.status(404).json({ success: false, message: 'Assignment not found' });
+		}
+		const now = new Date().toISOString();
+		group.forEach((task) => {
+			if (typeof req.body.dueDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(req.body.dueDate)) {
+				task.dueDate = req.body.dueDate;
+			}
+			if (typeof req.body.title === 'string' && req.body.title.trim()) {
+				task.title = cleanMetaString(req.body.title, 160);
+			}
+			task.updatedAt = now;
+		});
+		await writeJsonFile(fllTasksFile, tasks);
+		return res.json({ success: true, count: group.length });
+	} catch (err) {
+		console.error('FLL coach update assignment error:', err);
+		return res.status(500).json({ success: false, message: 'Server error updating assignment' });
+	}
+});
+
+app.delete('/api/fll/coach/assignments', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const matchTitle = cleanMetaString(req.query.title || '', 160);
+		if (!matchTitle) {
+			return res.status(400).json({ success: false, message: 'title query param is required' });
+		}
+		const tasks = await readJsonFile(fllTasksFile, []);
+		const remaining = tasks.filter((task) => task.title !== matchTitle);
+		if (remaining.length === tasks.length) {
+			return res.status(404).json({ success: false, message: 'Assignment not found' });
+		}
+		await writeJsonFile(fllTasksFile, remaining);
+		return res.json({ success: true, removed: tasks.length - remaining.length });
+	} catch (err) {
+		console.error('FLL coach delete assignment error:', err);
+		return res.status(500).json({ success: false, message: 'Server error deleting assignment' });
+	}
+});
+
 app.post('/api/fll/tasks/:id/status', requireFllAuth, requireFllStudent, async (req, res) => {
 	try {
 		const allowedStatuses = new Set(['todo', 'doing', 'blocked', 'done']);
@@ -2118,7 +2639,9 @@ app.use(express.static(path.join(__dirname), {
 	}
 }));
 
-Promise.all([initializeFllDataDir(), initializeCampDataDir()])
+initializeFllDataDir()
+	.then(() => initializeCampDataDir())
+	.then(() => initializeCoachDataDir())
 	.then(() => {
 		app.listen(PORT, () => console.log(`AI Future Platform running at http://localhost:${PORT}`));
 	})

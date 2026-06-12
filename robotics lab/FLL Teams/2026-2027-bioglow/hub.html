@@ -1097,13 +1097,12 @@
     .calendar-day {
       background: var(--bg);
       border: 1px solid var(--line);
-      border-radius: var(--radius-sm);
+      border-radius: 8px;
       display: flex;
       flex-direction: column;
-      height: 132px;
-      min-height: 118px;
+      min-height: 72px;
       overflow: hidden;
-      padding: 8px;
+      padding: 5px 6px;
     }
 
     .calendar-day.is-muted {
@@ -1117,25 +1116,25 @@
 
     .calendar-day-number {
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 900;
-      margin-bottom: 6px;
+      margin-bottom: 3px;
     }
 
     .calendar-pill {
       background: white;
       border: 1px solid var(--line);
-      border-left: 4px solid var(--green);
-      border-radius: 7px;
+      border-left: 3px solid var(--green);
+      border-radius: 6px;
       color: var(--ink);
       display: block;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 800;
-      line-height: 1.35;
-      margin-top: 5px;
+      line-height: 1.3;
+      margin-top: 3px;
       max-width: 100%;
       overflow: hidden;
-      padding: 6px 7px;
+      padding: 3px 5px;
       overflow-wrap: anywhere;
     }
 
@@ -1760,6 +1759,134 @@
       min-width: 0;
     }
 
+    /* section header with actions on the right */
+    .section-head-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+    .section-head-row .section-title { margin-bottom: 4px; }
+    .section-head-row .section-sub { margin-bottom: 0; }
+    .section-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+    .btn-small {
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 9px 18px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.15s;
+    }
+    .btn-small:hover { opacity: 0.85; }
+    .btn-small.outline {
+      background: white;
+      color: var(--green-dark);
+      border: 1.5px solid var(--green);
+    }
+
+    /* inline coach forms */
+    .inline-form {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin: 14px 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+    }
+    .inline-form.hidden { display: none; }
+    .inline-form label {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+    .inline-form input, .inline-form select, .inline-form textarea {
+      width: 100%;
+      border: 1.5px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 10px;
+      font-size: 13px;
+      font-family: inherit;
+      background: white;
+    }
+    .inline-form input:focus, .inline-form select:focus, .inline-form textarea:focus {
+      outline: none;
+      border-color: var(--green);
+    }
+    .inline-form .form-full { grid-column: 1 / -1; }
+    .inline-form-actions { grid-column: 1 / -1; display: flex; gap: 10px; align-items: center; }
+    .inline-form-msg { font-size: 13px; font-weight: 700; }
+    .inline-form-msg.error { color: var(--coral); }
+    .inline-form-msg.success { color: var(--green-dark); }
+
+    /* coach delete button on resource cards */
+    .res-del {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid var(--line);
+      border-radius: 50px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.15s, color 0.15s;
+      z-index: 2;
+    }
+    .resource-card { position: relative; }
+    .resource-card:hover .res-del { opacity: 1; }
+    .res-del:hover { color: var(--coral); border-color: var(--coral); }
+
+    /* curriculum lesson edit tools */
+    .cur-tools {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .cur-tools button {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      cursor: pointer;
+      min-height: 0;
+    }
+    .cur-tools button:hover { border-color: var(--green); color: var(--green-dark); background: var(--green-light); }
+    .cur-tools button.cur-del:hover { border-color: var(--coral); color: var(--coral); background: var(--coral-light); }
+    .cur-tools input[type="date"] {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 5px;
+      color: var(--muted);
+      font-family: inherit;
+      max-width: 118px;
+    }
+
     /* on large screens, expand beyond the 1100px page and center on the viewport */
     @media (min-width: 1240px) {
       .wide-breakout {
@@ -2364,6 +2491,7 @@
           <div class="resource-grid">
             ${items.map(item => `
               <a class="resource-card" href="${esc(item.url)}" target="_blank" rel="noreferrer">
+                ${user.role === 'coach' && item.id ? `<button class="res-del" data-res-del="${esc(item.id)}" title="Remove resource">✕ Remove</button>` : ''}
                 <div class="resource-card-top">
                   <div class="resource-name">${typeIcon(item.type)} ${esc(item.label)}</div>
                   <span class="resource-type-badge type-${esc(item.type)}">${esc(item.type)}</span>
@@ -2456,6 +2584,14 @@
                                 ${item.type ? `<span class="curriculum-chip">${esc(item.type)}</span>` : ''}
                                 ${item.questionCount ? `<span class="curriculum-chip">${item.questionCount} prompts</span>` : ''}
                               </div>
+                              ${options.editable ? `
+                                <div class="cur-tools">
+                                  <button data-cur-action="up" data-title="${esc(item.title)}" data-area="${esc(area.id)}" title="Move earlier (swaps due dates)">↑</button>
+                                  <button data-cur-action="down" data-title="${esc(item.title)}" data-area="${esc(area.id)}" title="Move later (swaps due dates)">↓</button>
+                                  <input type="date" value="${esc(item.dueDate)}" data-cur-action="date" data-title="${esc(item.title)}" title="Change due date">
+                                  <button class="cur-del" data-cur-action="del" data-title="${esc(item.title)}" title="Delete assignment">✕</button>
+                                </div>
+                              ` : ''}
                             </div>
                           `).join('') : '<div class="curriculum-empty-cell">No lesson</div>'}
                         </td>
@@ -2935,7 +3071,8 @@
     }
 
     function renderDashboard(data) {
-      const { user, season, teams, timeline, announcements, resources, curriculum, teamMembers } = data;
+      const { user, season, teams, allTeams, timeline, announcements, resources, curriculum, teamMembers } = data;
+      hubData = data;
       const phase = timeline.find(p => p.status === 'current') || timeline[0] || {};
       const isCoach = user.role === 'coach';
       const userId = user.id || user.name;
@@ -2986,8 +3123,32 @@
         </div>
 
         <div class="resources-section wide-breakout">
-          <div class="section-title">📚 Resources</div>
-          <p class="section-sub">Everything you need for the BIOGLOW season — all in one place.</p>
+          <div class="section-head-row">
+            <div>
+              <div class="section-title">📚 Resources</div>
+              <p class="section-sub">Everything you need for the BIOGLOW season — all in one place.</p>
+            </div>
+            ${isCoach ? `
+              <div class="section-actions">
+                <button class="btn-small" onclick="document.getElementById('resourceForm').classList.toggle('hidden')">＋ Add resource</button>
+              </div>
+            ` : ''}
+          </div>
+          ${isCoach ? `
+            <div class="inline-form hidden" id="resourceForm">
+              <div><label>Name *</label><input id="rfLabel" type="text" placeholder="e.g. SPIKE Prime Guide"></div>
+              <div><label>Link (URL) *</label><input id="rfUrl" type="url" placeholder="https://..."></div>
+              <div><label>Category</label><input id="rfCategory" type="text" list="rfCatList" placeholder="e.g. Robot Design">
+                <datalist id="rfCatList"><option>Official</option><option>Robot Design</option><option>Robot Game Missions</option><option>Innovation Project</option><option>Core Values</option><option>Rubrics</option><option>Articles</option><option>Teaser Videos</option></datalist>
+              </div>
+              <div><label>Type</label><select id="rfType"><option>Website</option><option>Video</option><option>Folder</option><option>Rubric</option><option>Reading</option><option>Template</option><option>PDF</option></select></div>
+              <div class="form-full"><label>Description</label><input id="rfDesc" type="text" placeholder="One sentence about what this is for"></div>
+              <div class="inline-form-actions">
+                <button class="btn-small" onclick="submitResource()">Save resource</button>
+                <span class="inline-form-msg" id="rfMsg"></span>
+              </div>
+            </div>
+          ` : ''}
           ${renderResources(resources, user)}
         </div>
 
@@ -3001,14 +3162,146 @@
           </div>
 
           <div class="curriculum-section wide-breakout">
-            <div class="section-title">Curriculum Timeline Overview</div>
-            <p class="section-sub">Preview through September. Dates run down the left, and each FLL area column shows the lesson or assignment due on that date.</p>
-            ${renderCurriculumOverview(curriculum, { untilDate: '2026-09-30', showMoreLink: true })}
+            <div class="section-head-row">
+              <div>
+                <div class="section-title">Curriculum Timeline Overview</div>
+                <p class="section-sub">Dates run down the left, and each FLL area column shows the lesson or assignment due on that date. Use ↑↓ to reorder, or change a due date directly.</p>
+              </div>
+              <div class="section-actions">
+                <button class="btn-small" onclick="document.getElementById('assignmentForm').classList.toggle('hidden')">＋ Add assignment</button>
+                <a class="btn-small outline" href="/fll-hub/curriculum">View full curriculum →</a>
+              </div>
+            </div>
+            <div class="inline-form hidden" id="assignmentForm">
+              <div class="form-full"><label>Assignment title *</label><input id="afTitle" type="text" placeholder="e.g. Step 14 — Practice Judging Q&A"></div>
+              <div><label>FLL area *</label><select id="afCategory"><option>Innovation Project</option><option>Robot Design</option><option>Robot Game</option><option>Core Values</option><option>Pre-Season</option></select></div>
+              <div><label>Type</label><select id="afType"><option value="submission">Submission</option><option value="lesson">Lesson</option><option value="video">Video</option><option value="journal">Journal</option></select></div>
+              <div><label>Where</label><select id="afContext"><option value="class">Class</option><option value="home">Home</option><option value="lab">Lab</option></select></div>
+              <div><label>Due date *</label><input id="afDue" type="date"></div>
+              <div><label>Assign to</label><select id="afTeam"><option value="all">All teams</option>${(allTeams || teams).map(t => `<option value="${esc(t.id)}">${esc(t.nickname || t.name)}</option>`).join('')}</select></div>
+              <div class="form-full"><label>Description / instructions</label><textarea id="afDesc" rows="3" placeholder="What should students do? Markdown-style **bold** and bullet lists are supported."></textarea></div>
+              <div class="inline-form-actions">
+                <button class="btn-small" onclick="submitAssignment()">Create assignment</button>
+                <span class="inline-form-msg" id="afMsg"></span>
+              </div>
+            </div>
+            ${renderCurriculumOverview(curriculum, { untilDate: '2026-09-30', editable: true })}
           </div>
         ` : ''}
       `;
       if (isCoach) setupAssignmentCalendar(curriculum);
     }
+
+    // ── Coach editing: resources + assignments ──────────────────────────
+    let hubData = null;
+
+    async function coachApi(url, options = {}) {
+      const response = await fetch(url, { headers: { 'Content-Type': 'application/json' }, ...options });
+      const result = await response.json();
+      if (!response.ok || !result.success) throw new Error(result.message || 'Request failed');
+      return result;
+    }
+
+    function setFormMsg(id, text, cls) {
+      const el = document.getElementById(id);
+      if (el) { el.textContent = text; el.className = `inline-form-msg ${cls || ''}`; }
+    }
+
+    async function submitResource() {
+      const label = document.getElementById('rfLabel').value.trim();
+      const url = document.getElementById('rfUrl').value.trim();
+      if (!label || !url) { setFormMsg('rfMsg', 'Name and link are required.', 'error'); return; }
+      try {
+        await coachApi('/api/fll/coach/resources', {
+          method: 'POST',
+          body: JSON.stringify({
+            label, url,
+            category: document.getElementById('rfCategory').value.trim(),
+            type: document.getElementById('rfType').value,
+            description: document.getElementById('rfDesc').value.trim()
+          })
+        });
+        await loadHub();
+      } catch (err) { setFormMsg('rfMsg', err.message, 'error'); }
+    }
+
+    async function submitAssignment() {
+      const title = document.getElementById('afTitle').value.trim();
+      const dueDate = document.getElementById('afDue').value;
+      if (!title || !dueDate) { setFormMsg('afMsg', 'Title and due date are required.', 'error'); return; }
+      try {
+        await coachApi('/api/fll/coach/assignments', {
+          method: 'POST',
+          body: JSON.stringify({
+            title, dueDate,
+            category: document.getElementById('afCategory').value,
+            type: document.getElementById('afType').value,
+            workContext: document.getElementById('afContext').value,
+            teamId: document.getElementById('afTeam').value,
+            description: document.getElementById('afDesc').value.trim()
+          })
+        });
+        await loadHub();
+      } catch (err) { setFormMsg('afMsg', err.message, 'error'); }
+    }
+
+    function areaAssignmentsSorted(areaId) {
+      const area = (hubData && Array.isArray(hubData.curriculum) ? hubData.curriculum : []).find(a => a.id === areaId);
+      if (!area) return [];
+      const seen = new Set();
+      return area.assignments
+        .filter(item => item.dueDate && !seen.has(item.title) && seen.add(item.title))
+        .sort((a, b) => String(a.dueDate).localeCompare(String(b.dueDate)));
+    }
+
+    async function moveAssignment(title, areaId, direction) {
+      const list = areaAssignmentsSorted(areaId);
+      const index = list.findIndex(item => item.title === title);
+      const neighbor = list[index + (direction === 'up' ? -1 : 1)];
+      if (index === -1 || !neighbor) return;
+      const current = list[index];
+      try {
+        await coachApi('/api/fll/coach/assignments', { method: 'PATCH', body: JSON.stringify({ matchTitle: current.title, dueDate: neighbor.dueDate }) });
+        await coachApi('/api/fll/coach/assignments', { method: 'PATCH', body: JSON.stringify({ matchTitle: neighbor.title, dueDate: current.dueDate }) });
+        await loadHub();
+      } catch (err) { alert(err.message); }
+    }
+
+    document.addEventListener('click', async (event) => {
+      const resDel = event.target.closest('[data-res-del]');
+      if (resDel) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!confirm('Remove this resource for everyone?')) return;
+        try {
+          await coachApi(`/api/fll/coach/resources/${encodeURIComponent(resDel.dataset.resDel)}`, { method: 'DELETE' });
+          await loadHub();
+        } catch (err) { alert(err.message); }
+        return;
+      }
+      const curBtn = event.target.closest('button[data-cur-action]');
+      if (curBtn) {
+        const { curAction, title, area } = curBtn.dataset;
+        if (curAction === 'up' || curAction === 'down') {
+          await moveAssignment(title, area, curAction);
+        } else if (curAction === 'del') {
+          if (!confirm(`Delete "${title}" for all assigned students? Their saved answers stay on their devices but the assignment disappears.`)) return;
+          try {
+            await coachApi(`/api/fll/coach/assignments?title=${encodeURIComponent(title)}`, { method: 'DELETE' });
+            await loadHub();
+          } catch (err) { alert(err.message); }
+        }
+      }
+    });
+
+    document.addEventListener('change', async (event) => {
+      const input = event.target.closest('input[data-cur-action="date"]');
+      if (!input || !input.value) return;
+      try {
+        await coachApi('/api/fll/coach/assignments', { method: 'PATCH', body: JSON.stringify({ matchTitle: input.dataset.title, dueDate: input.value }) });
+        await loadHub();
+      } catch (err) { alert(err.message); }
+    });
 
     async function loadHub() {
       try {

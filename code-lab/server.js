@@ -66,6 +66,7 @@ function generatePassword() {
 const app = express();
 const PORT = process.env.PORT || 3000;
 const SESSION_SECRET = process.env.SESSION_SECRET || 'pylearn-dev-secret-key-change-in-prod';
+const COACH_BRIDGE_SECRET = crypto.randomBytes(32).toString('hex');
 
 // Data directory and file paths
 // DATA_DIR env var points to a Render Disk (persistent storage) in production.
@@ -377,6 +378,27 @@ function requireDeveloper(req, res, next) {
   }
   next();
 }
+
+app.post('/api/internal/coach-login', (req, res) => {
+  const bridgeSecret = req.headers['x-coach-bridge-secret'];
+  if (bridgeSecret !== COACH_BRIDGE_SECRET) {
+    return res.status(404).json({ success: false, error: 'Not found' });
+  }
+
+  const coach = req.body && req.body.coach;
+  if (!coach || !coach.id || !coach.name || !coach.username) {
+    return res.status(400).json({ success: false, error: 'Coach user is required' });
+  }
+
+  req.session.user = {
+    id: `coach-${coach.id}`,
+    name: coach.name,
+    username: coach.username,
+    role: 'teacher'
+  };
+
+  return res.json({ success: true, user: req.session.user, url: req.body.redirectTo || '/admin' });
+});
 
 // ============================================
 // AUTH API ENDPOINTS
@@ -1441,5 +1463,7 @@ if (require.main === module) {
     console.log(`  Admin panel: http://localhost:${PORT}/admin\n`);
   });
 }
+
+app.coachBridgeSecret = COACH_BRIDGE_SECRET;
 
 module.exports = app;

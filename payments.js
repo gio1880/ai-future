@@ -124,7 +124,13 @@ function sanitizeEmail(v) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s) ? s : '';
 }
 
+let unifiedCoachAdminCheck = null;
+
 function basicAuth(req, res, next) {
+  if (typeof unifiedCoachAdminCheck === 'function' && unifiedCoachAdminCheck(req)) {
+    return next();
+  }
+
   const header = req.headers.authorization || '';
   if (header.startsWith('Basic ')) {
     try {
@@ -721,7 +727,11 @@ async function handleSessionLookup(req, res) {
  * Attach all payments routes to an existing Express app.
  * Call BEFORE `app.use(express.json())` so the webhook can read the raw body.
  */
-function mount(app, express) {
+function mount(app, express, options = {}) {
+  unifiedCoachAdminCheck = typeof options.isUnifiedCoachAdmin === 'function'
+    ? options.isUnifiedCoachAdmin
+    : null;
+
   // Webhook MUST receive the raw body — mount it before express.json()
   app.post('/api/webhook', express.raw({ type: 'application/json' }), handleWebhook);
 
