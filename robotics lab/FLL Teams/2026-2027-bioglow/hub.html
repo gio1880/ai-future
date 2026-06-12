@@ -1729,6 +1729,22 @@
       min-width: 0;
     }
 
+    /* full-width sections below the two-column layout */
+    .wide-breakout {
+      margin-top: 40px;
+      min-width: 0;
+    }
+
+    /* on large screens, expand beyond the 1100px page and center on the viewport */
+    @media (min-width: 1240px) {
+      .wide-breakout {
+        width: min(1400px, calc(100vw - 64px));
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+
     .sidebar {
       display: grid;
       gap: 0;
@@ -2923,22 +2939,6 @@
               ${teams.map(t => renderTeamCard(t, isCoach, (teamMembers || []).filter(m => m.teamId === t.id))).join('')}
             </div>
 
-            ${isCoach ? `
-              <div class="calendar-section">
-                <div class="section-title">Assignment Calendar</div>
-                <p class="section-sub">Switch between yearly, monthly, and weekly views to see when team assignments are due.</p>
-                <div data-assignment-calendar>
-                  ${renderAssignmentCalendar(curriculum)}
-                </div>
-              </div>
-
-              <div class="curriculum-section">
-                <div class="section-title">Curriculum Timeline Overview</div>
-                <p class="section-sub">Preview through September. Dates run down the left, and each FLL area column shows the lesson or assignment due on that date.</p>
-                ${renderCurriculumOverview(curriculum, { untilDate: '2026-09-30', showMoreLink: true })}
-              </div>
-            ` : ''}
-
             <div class="resources-section">
               <div class="section-title">📚 Resources</div>
               <p class="section-sub">Everything you need for the BIOGLOW season — all in one place.</p>
@@ -2966,6 +2966,22 @@
             </div>
           </aside>
         </div>
+
+        ${isCoach ? `
+          <div class="calendar-section wide-breakout">
+            <div class="section-title">Assignment Calendar</div>
+            <p class="section-sub">Switch between yearly, monthly, and weekly views to see when team assignments are due.</p>
+            <div data-assignment-calendar>
+              ${renderAssignmentCalendar(curriculum)}
+            </div>
+          </div>
+
+          <div class="curriculum-section wide-breakout">
+            <div class="section-title">Curriculum Timeline Overview</div>
+            <p class="section-sub">Preview through September. Dates run down the left, and each FLL area column shows the lesson or assignment due on that date.</p>
+            ${renderCurriculumOverview(curriculum, { untilDate: '2026-09-30', showMoreLink: true })}
+          </div>
+        ` : ''}
       `;
       if (isCoach) setupAssignmentCalendar(curriculum);
     }
