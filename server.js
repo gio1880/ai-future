@@ -59,13 +59,15 @@ const campHubDataDir = process.env.CAMP_DATA_DIR || path.join(platformDataDir, '
 const campUsersFile = path.join(campHubDataDir, 'camp-users.json');
 const campCurriculumFile = path.join(campHubDataDir, 'curriculum.json');
 const campAnnouncementsFile = path.join(campHubDataDir, 'announcements.json');
+const campSubmissionsFile = path.join(campHubDataDir, 'submissions.json');
 const campSessionCookie = 'camp_session';
 const campDataFileNames = [
 	'camp-users.json',
 	'camp.json',
 	'curriculum.json',
 	'announcements.json',
-	'resources.json'
+	'resources.json',
+	'submissions.json'
 ];
 const campSessions = new Map();
 const coachUsersFile = path.join(platformDataDir, 'coach-users.json');
@@ -131,7 +133,7 @@ const coachHubDefinitions = {
 // endpoint needs the raw request body to verify the signature.
 payments.mount(app, express, { isUnifiedCoachAdmin: isCoachAdminRequest });
 
-app.use(express.json());
+app.use(express.json({ limit: '12mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Canonical marketing and main routes
@@ -469,7 +471,8 @@ function publicCampUser(user) {
 		id: user.id,
 		name: user.name,
 		username: user.username,
-		role: user.role
+		role: user.role,
+		className: user.className || 'Unassigned'
 	};
 }
 
@@ -495,6 +498,11 @@ async function initializeCampDataDir() {
 async function readCampUsers() {
 	const users = await readJsonFile(campUsersFile, []);
 	return Array.isArray(users) ? users : [];
+}
+
+async function readCampSubmissions() {
+	const submissions = await readJsonFile(campSubmissionsFile, []);
+	return Array.isArray(submissions) ? submissions : [];
 }
 
 async function readCoachUsers() {
@@ -535,6 +543,24 @@ async function initializeCoachDataDir() {
 			active: true
 		};
 	});
+
+	const defaultFllCoach = fllCoachUsers.find((user) => String(user.username || '').toLowerCase() === 'coach');
+	const defaultCampCoach = campByUsername.get('campcoach');
+	if (defaultFllCoach && defaultCampCoach && !seededUsers.some((user) => user.username === 'coach')) {
+		seededUsers.push({
+			id: 'coach-test',
+			name: 'Test Coach',
+			username: 'coach',
+			password_hash: defaultFllCoach.password_hash,
+			role: 'coach',
+			hubs: regularCoachHubs,
+			fllUserId: defaultFllCoach.id,
+			fllUsername: defaultFllCoach.username,
+			campUserId: defaultCampCoach.id,
+			campUsername: defaultCampCoach.username,
+			active: true
+		});
+	}
 
 	if (!sharedFllCoachUsers.length) {
 		for (const campUser of campCoachUsers) {
@@ -731,11 +757,12 @@ function requireCampCoach(req, res, next) {
 }
 
 async function getCampHubDataFor(user) {
-	const [camp, curriculum, announcements, resources] = await Promise.all([
+	const [camp, curriculum, announcements, resources, submissions] = await Promise.all([
 		readJsonFile(path.join(campHubDataDir, 'camp.json'), {}),
 		readJsonFile(campCurriculumFile, []),
 		readJsonFile(campAnnouncementsFile, []),
-		readJsonFile(path.join(campHubDataDir, 'resources.json'), [])
+		readJsonFile(path.join(campHubDataDir, 'resources.json'), []),
+		readCampSubmissions()
 	]);
 	const isCoach = user.role === 'coach';
 	const visibleAnnouncements = (Array.isArray(announcements) ? announcements : [])
@@ -755,7 +782,10 @@ async function getCampHubDataFor(user) {
 		camp,
 		curriculum: visibleCurriculum,
 		announcements: visibleAnnouncements,
-		resources: visibleResources
+		resources: visibleResources,
+		submissions: isCoach
+			? []
+			: submissions.filter((item) => item.studentId === user.id)
 	};
 }
 
@@ -2442,6 +2472,59 @@ app.get('/api/camp/hub-data', requireCampAuth, async (req, res) => {
 	}
 });
 
+app.post('/api/camp/submissions', requireCampAuth, async (req, res) => {
+	try {
+		if (!req.campUser || req.campUser.role !== 'student') {
+			return res.status(403).json({ success: false, message: 'Camper access required' });
+		}
+		const dayId = cleanMetaString(req.body.dayId || '', 120);
+		const reflection = cleanMetaString(req.body.reflection || '', 1800);
+		const photoDataUrl = typeof req.body.photoDataUrl === 'string' ? req.body.photoDataUrl : '';
+		if (!dayId) {
+			return res.status(400).json({ success: false, message: 'Assignment day is required' });
+		}
+		if (!reflection && !photoDataUrl) {
+			return res.status(400).json({ success: false, message: 'Add a reflection or a photo before submitting' });
+		}
+		if (photoDataUrl && (!photoDataUrl.startsWith('data:image/') || photoDataUrl.length > 8 * 1024 * 1024)) {
+			return res.status(400).json({ success: false, message: 'Photo must be an image under 8 MB after compression' });
+		}
+
+		const curriculum = await readJsonFile(campCurriculumFile, []);
+		const day = (Array.isArray(curriculum) ? curriculum : [])
+			.flatMap((week) => Array.isArray(week.days) ? week.days : [])
+			.find((candidate) => candidate.id === dayId);
+		if (!day) {
+			return res.status(404).json({ success: false, message: 'Assignment not found' });
+		}
+
+		const submissions = await readCampSubmissions();
+		const now = new Date().toISOString();
+		const existing = submissions.find((item) => item.dayId === dayId && item.studentId === req.campUser.id);
+		const payload = {
+			id: existing?.id || `camp-sub-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
+			dayId,
+			studentId: req.campUser.id,
+			studentName: req.campUser.name,
+			className: req.campUser.className || 'Unassigned',
+			reflection,
+			photoDataUrl,
+			updatedAt: now,
+			submittedAt: existing?.submittedAt || now
+		};
+		if (existing) {
+			Object.assign(existing, payload);
+		} else {
+			submissions.push(payload);
+		}
+		await writeJsonFile(campSubmissionsFile, submissions);
+		return res.status(existing ? 200 : 201).json({ success: true, submission: payload });
+	} catch (err) {
+		console.error('Camp submission error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving submission' });
+	}
+});
+
 app.patch('/api/camp/coach/days/:dayId', requireCampAuth, requireCampCoach, async (req, res) => {
 	try {
 		const curriculum = await readJsonFile(campCurriculumFile, []);
@@ -2452,6 +2535,9 @@ app.patch('/api/camp/coach/days/:dayId', requireCampAuth, requireCampCoach, asyn
 				if (typeof req.body.activity === 'string') day.activity = cleanMetaString(req.body.activity, 600);
 				if (typeof req.body.build === 'string') day.build = cleanMetaString(req.body.build, 120);
 				if (typeof req.body.coachNotes === 'string') day.coachNotes = cleanMetaString(req.body.coachNotes, 600);
+				if (typeof req.body.assignment === 'string') day.assignment = cleanMetaString(req.body.assignment, 900);
+				if (typeof req.body.worksheetLabel === 'string') day.worksheetLabel = cleanMetaString(req.body.worksheetLabel, 120);
+				if (typeof req.body.worksheetUrl === 'string') day.worksheetUrl = cleanMetaString(req.body.worksheetUrl, 1000);
 				updatedDay = day;
 				break;
 			}
@@ -2516,12 +2602,49 @@ app.get('/api/camp/coach/roster', requireCampAuth, requireCampCoach, async (req,
 				name: user.name,
 				username: user.username,
 				role: user.role,
-				active: user.active !== false
+				active: user.active !== false,
+				className: user.className || 'Unassigned'
 			}))
 		});
 	} catch (err) {
 		console.error('Camp coach roster error:', err);
 		return res.status(500).json({ success: false, message: 'Server error loading roster' });
+	}
+});
+
+app.get('/api/camp/coach/progress', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const [users, curriculum, submissions] = await Promise.all([
+			readCampUsers(),
+			readJsonFile(campCurriculumFile, []),
+			readCampSubmissions()
+		]);
+		const students = users
+			.filter((user) => user.role === 'student')
+			.map((user) => ({
+				id: user.id,
+				name: user.name,
+				username: user.username,
+				active: user.active !== false,
+				className: user.className || 'Unassigned'
+			}));
+		const days = (Array.isArray(curriculum) ? curriculum : []).flatMap((week) =>
+			(Array.isArray(week.days) ? week.days : []).map((day) => ({
+				id: day.id,
+				date: day.date,
+				week: week.label,
+				theme: week.theme,
+				activity: day.activity,
+				assignment: day.assignment || day.activity || '',
+				build: day.build || '',
+				worksheetLabel: day.worksheetLabel || '',
+				worksheetUrl: day.worksheetUrl || ''
+			}))
+		);
+		return res.json({ success: true, students, days, submissions });
+	} catch (err) {
+		console.error('Camp coach progress error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading progress' });
 	}
 });
 
@@ -2531,6 +2654,7 @@ app.post('/api/camp/coach/students', requireCampAuth, requireCampCoach, async (r
 		if (!name) {
 			return res.status(400).json({ success: false, message: 'Camper name is required' });
 		}
+		const className = cleanMetaString(req.body.className || '', 80) || 'Unassigned';
 		const username = cleanMetaString(req.body.username || '', 80).toLowerCase() || null;
 		const password = typeof req.body.password === 'string' && req.body.password.length >= 6 ? req.body.password : null;
 		const users = await readCampUsers();
@@ -2547,10 +2671,11 @@ app.post('/api/camp/coach/students', requireCampAuth, requireCampCoach, async (r
 			username: finalUsername,
 			password_hash: hashScryptPassword(finalPassword),
 			role: 'student',
+			className,
 			active: true
 		});
 		await writeJsonFile(campUsersFile, users);
-		return res.status(201).json({ success: true, student: { id, name, username: finalUsername, password: finalPassword } });
+		return res.status(201).json({ success: true, student: { id, name, username: finalUsername, password: finalPassword, className } });
 	} catch (err) {
 		console.error('Camp coach add camper error:', err);
 		return res.status(500).json({ success: false, message: 'Server error adding camper' });
@@ -2575,8 +2700,11 @@ app.patch('/api/camp/coach/students/:id', requireCampAuth, requireCampCoach, asy
 		if (typeof req.body.name === 'string' && cleanMetaString(req.body.name, 80)) {
 			user.name = cleanMetaString(req.body.name, 80);
 		}
+		if (typeof req.body.className === 'string') {
+			user.className = cleanMetaString(req.body.className, 80) || 'Unassigned';
+		}
 		await writeJsonFile(campUsersFile, users);
-		const response = { success: true, user: { id: user.id, name: user.name, username: user.username, active: user.active !== false } };
+		const response = { success: true, user: { id: user.id, name: user.name, username: user.username, active: user.active !== false, className: user.className || 'Unassigned' } };
 		if (newPassword) response.password = newPassword;
 		return res.json(response);
 	} catch (err) {

@@ -352,6 +352,57 @@
       font-weight: 800;
     }
 
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .toolbar label {
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .toolbar select {
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 9px 12px;
+      background: white;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .progress-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .submission-card {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .submission-card.missing { opacity: 0.72; background: #fbfcfd; }
+    .submission-card h4 { font-size: 15px; margin-bottom: 6px; }
+    .submission-card p { font-size: 13px; line-height: 1.5; color: var(--muted); margin-top: 8px; }
+    .submission-card img { width: 100%; max-height: 220px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--line); margin-top: 10px; }
+
+    .class-heading {
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--sun-deep);
+      margin: 18px 0 8px;
+    }
+
     .error-box {
       background: var(--red-light);
       border: 1.5px solid #f3c4c4;
@@ -430,6 +481,8 @@
 
     let hubData = null;
     let roster = [];
+    let progressData = { students: [], days: [], submissions: [] };
+    let rosterView = 'class';
 
     function esc(v) {
       return String(v == null ? '' : v)
@@ -451,6 +504,10 @@
       if (!value) return '';
       const date = new Date(`${value}T12:00:00`);
       return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString(undefined, opts);
+    }
+
+    function classList() {
+      return Array.from(new Set(roster.filter(u => u.role === 'student').map(u => u.className || 'Unassigned'))).sort();
     }
 
     async function api(url, options = {}) {
@@ -495,8 +552,14 @@
                     </div>
                     <label>Activity (campers see this)</label>
                     <textarea rows="2" data-field="activity">${esc(day.activity)}</textarea>
+                    <label>Assignment / reflection prompt (campers submit this)</label>
+                    <textarea rows="2" data-field="assignment">${esc(day.assignment || '')}</textarea>
                     <label>Build (campers see this)</label>
                     <input data-field="build" value="${esc(day.build)}" />
+                    <label>Worksheet or PDF label</label>
+                    <input data-field="worksheetLabel" value="${esc(day.worksheetLabel || '')}" placeholder="e.g. Gear Ratio Worksheet" />
+                    <label>Worksheet or PDF URL</label>
+                    <input data-field="worksheetUrl" value="${esc(day.worksheetUrl || '')}" placeholder="https://... or /path/to/file.pdf" />
                     <label>Coach notes (private — coaches only)</label>
                     <textarea rows="2" data-field="coachNotes">${esc(day.coachNotes)}</textarea>
                     <div class="day-save-row">
@@ -621,6 +684,63 @@
     }
 
     /* ── Campers tab ── */
+    function renderProgressTab() {
+      const classes = ['All', ...Array.from(new Set(progressData.students.map(s => s.className || 'Unassigned'))).sort()];
+      const days = progressData.days || [];
+      const defaultDay = days.find(d => d.date >= todayKey()) || days[0] || {};
+      return `
+        <div class="section-title">Student Progress</div>
+        <p class="section-sub">Review every camper submission, including reflections and final-work photos.</p>
+        <div class="toolbar">
+          <label for="progressClass">Class</label>
+          <select id="progressClass" onchange="refreshProgressView()">
+            ${classes.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('')}
+          </select>
+          <label for="progressDay">Assignment</label>
+          <select id="progressDay" onchange="refreshProgressView()">
+            ${days.map(d => `<option value="${esc(d.id)}" ${d.id === defaultDay.id ? 'selected' : ''}>${esc(fmt(d.date, { month: 'short', day: 'numeric' }))} - ${esc((d.assignment || d.activity || 'Assignment').slice(0, 60))}</option>`).join('')}
+          </select>
+        </div>
+        <div id="progressView"></div>
+      `;
+    }
+
+    function refreshProgressView() {
+      const classFilter = document.getElementById('progressClass')?.value || 'All';
+      const dayId = document.getElementById('progressDay')?.value || '';
+      const day = (progressData.days || []).find(d => d.id === dayId) || {};
+      const submissions = progressData.submissions || [];
+      const students = (progressData.students || [])
+        .filter(s => s.active !== false)
+        .filter(s => classFilter === 'All' || (s.className || 'Unassigned') === classFilter)
+        .sort((a, b) => `${a.className || ''}${a.name}`.localeCompare(`${b.className || ''}${b.name}`));
+      const submittedCount = students.filter(s => submissions.some(item => item.studentId === s.id && item.dayId === dayId)).length;
+      const cards = students.map(student => {
+        const sub = submissions.find(item => item.studentId === student.id && item.dayId === dayId);
+        return `
+          <div class="submission-card ${sub ? '' : 'missing'}">
+            <h4>${esc(student.name)}</h4>
+            <span class="pill ${sub ? 'on' : 'off'}">${sub ? 'Submitted' : 'Missing'}</span>
+            <p><strong>Class:</strong> ${esc(student.className || 'Unassigned')}</p>
+            ${sub ? `
+              <p><strong>Reflection:</strong> ${esc(sub.reflection || 'No written reflection')}</p>
+              <p><strong>Submitted:</strong> ${esc(new Date(sub.updatedAt || sub.submittedAt).toLocaleString())}</p>
+              ${sub.photoDataUrl ? `<a class="btn btn-ghost" href="${sub.photoDataUrl}" target="_blank" rel="noreferrer">Open photo</a><img src="${sub.photoDataUrl}" alt="${esc(student.name)} submission photo" />` : '<p>No photo submitted.</p>'}
+            ` : `<p>No submission yet for ${esc(day.assignment || day.activity || 'this assignment')}.</p>`}
+          </div>
+        `;
+      }).join('');
+      const view = document.getElementById('progressView');
+      if (!view) return;
+      view.innerHTML = `
+        <div class="card">
+          <div class="section-title" style="font-size:16px">${esc(day.assignment || day.activity || 'Assignment')}</div>
+          <p class="section-sub">${submittedCount} of ${students.length} submitted</p>
+          <div class="progress-grid">${cards || '<p class="section-sub">No campers match this view.</p>'}</div>
+        </div>
+      `;
+    }
+
     function renderCampersTab() {
       return `
         <div class="section-title">Campers</div>
@@ -632,6 +752,10 @@
               <input id="camperName" placeholder="e.g. Maya Chen" />
             </div>
             <div>
+              <label for="camperClass">Class / group</label>
+              <input id="camperClass" placeholder="e.g. Week 1 AM, Advanced, Blue Class" />
+            </div>
+            <div>
               <button class="btn btn-primary" onclick="addCamper()">Add camper</button>
             </div>
             <div class="creds-box" id="credsBox" style="display:none"></div>
@@ -639,10 +763,18 @@
           </div>
         </div>
         <div class="card">
+          <div class="toolbar">
+            <label for="rosterView">Organize roster by</label>
+            <select id="rosterView" onchange="setRosterView(this.value)">
+              <option value="class" ${rosterView === 'class' ? 'selected' : ''}>Class / group</option>
+              <option value="name" ${rosterView === 'name' ? 'selected' : ''}>Student name</option>
+              <option value="status" ${rosterView === 'status' ? 'selected' : ''}>Status</option>
+            </select>
+          </div>
           <div class="table-wrap">
             <table>
               <thead>
-                <tr><th>Name</th><th>Username</th><th>Status</th><th>Actions</th></tr>
+                <tr><th>Name</th><th>Class</th><th>Username</th><th>Status</th><th>Actions</th></tr>
               </thead>
               <tbody id="rosterBody">
                 ${renderRosterRows()}
@@ -654,11 +786,24 @@
     }
 
     function renderRosterRows() {
-      const students = roster.filter(u => u.role === 'student');
-      if (!students.length) return '<tr><td colspan="4" style="color:var(--muted)">No campers yet — add the first one above.</td></tr>';
-      return students.map(s => `
+      let students = roster.filter(u => u.role === 'student');
+      if (!students.length) return '<tr><td colspan="5" style="color:var(--muted)">No campers yet - add the first one above.</td></tr>';
+      students = [...students].sort((a, b) => {
+        if (rosterView === 'status') return String(b.active !== false).localeCompare(String(a.active !== false)) || a.name.localeCompare(b.name);
+        if (rosterView === 'name') return a.name.localeCompare(b.name);
+        return `${a.className || 'Unassigned'}${a.name}`.localeCompare(`${b.className || 'Unassigned'}${b.name}`);
+      });
+      let currentClass = '';
+      return students.map(s => {
+        const className = s.className || 'Unassigned';
+        const classBreak = rosterView === 'class' && className !== currentClass
+          ? `<tr><td colspan="5" class="class-heading">${esc(className)}</td></tr>`
+          : '';
+        currentClass = className;
+        return `${classBreak}
         <tr>
           <td style="font-weight:800">${esc(s.name)}</td>
+          <td><input value="${esc(className)}" style="min-width:150px" onchange="updateCamperClass('${esc(s.id)}', this.value)" /></td>
           <td><code>${esc(s.username)}</code></td>
           <td><span class="pill ${s.active !== false ? 'on' : 'off'}">${s.active !== false ? 'Active' : 'Disabled'}</span></td>
           <td style="white-space:nowrap">
@@ -668,18 +813,28 @@
             </button>
           </td>
         </tr>
-      `).join('');
+      `;
+      }).join('');
+    }
+
+    function setRosterView(value) {
+      rosterView = value;
+      const body = document.getElementById('rosterBody');
+      if (body) body.innerHTML = renderRosterRows();
     }
 
     async function refreshRoster() {
       const result = await api('/api/camp/coach/roster');
       roster = result.users || [];
+      progressData.students = roster.filter(u => u.role === 'student');
       const body = document.getElementById('rosterBody');
       if (body) body.innerHTML = renderRosterRows();
+      refreshProgressView();
     }
 
     async function addCamper() {
       const name = document.getElementById('camperName').value.trim();
+      const className = document.getElementById('camperClass').value.trim();
       const errorBox = document.getElementById('camperError');
       const credsBox = document.getElementById('credsBox');
       errorBox.style.display = 'none';
@@ -692,17 +847,19 @@
       try {
         const result = await api('/api/camp/coach/students', {
           method: 'POST',
-          body: JSON.stringify({ name })
+          body: JSON.stringify({ name, className })
         });
         const s = result.student;
         credsBox.innerHTML = `
           ✅ <strong>${esc(s.name)}</strong> added!<br/>
+          Class: <code>${esc(s.className || 'Unassigned')}</code><br/>
           Username: <code>${esc(s.username)}</code><br/>
           Password: <code>${esc(s.password)}</code><br/>
           <span style="font-size:12.5px;color:var(--muted)">Save these now — the password is not shown again.</span>
         `;
         credsBox.style.display = 'block';
         document.getElementById('camperName').value = '';
+        document.getElementById('camperClass').value = '';
         await refreshRoster();
       } catch (err) {
         errorBox.textContent = err.message;
@@ -718,6 +875,18 @@
           body: JSON.stringify({ resetPassword: true })
         });
         alert(`New password for ${name}: ${result.password}\n\nWrite it down — it is not shown again.`);
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    async function updateCamperClass(id, className) {
+      try {
+        await api(`/api/camp/coach/students/${encodeURIComponent(id)}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ className })
+        });
+        await refreshRoster();
       } catch (err) {
         alert(err.message);
       }
@@ -753,6 +922,10 @@
           <a class="btn btn-ghost" href="/camp-hub">View hub as campers see it →</a>
         </div>
 
+        <div class="card">
+          ${renderProgressTab()}
+        </div>
+
         <div class="tabs">
           <button class="tab-btn active" data-tab="schedule" onclick="showTab('schedule')">🗓️ Schedule</button>
           <button class="tab-btn" data-tab="announcements" onclick="showTab('announcements')">📢 Announcements</button>
@@ -767,13 +940,16 @@
 
     async function load() {
       try {
-        const [hubResult, rosterResult] = await Promise.all([
+        const [hubResult, rosterResult, progressResult] = await Promise.all([
           api('/api/camp/hub-data'),
-          api('/api/camp/coach/roster')
+          api('/api/camp/coach/roster'),
+          api('/api/camp/coach/progress')
         ]);
         hubData = hubResult.data;
         roster = rosterResult.users || [];
+        progressData = progressResult || { students: [], days: [], submissions: [] };
         renderShell();
+        refreshProgressView();
       } catch (err) {
         if (err.message !== 'Login required') {
           app.innerHTML = `<div class="loading-state"><p class="loading-text">${esc(err.message)}</p></div>`;

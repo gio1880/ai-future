@@ -411,6 +411,135 @@
       margin-bottom: 6px;
     }
 
+    .assignment-table-wrap {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow-x: auto;
+      margin-bottom: 28px;
+    }
+
+    .assignment-table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+    }
+
+    .assignment-table th,
+    .assignment-table td {
+      text-align: left;
+      vertical-align: top;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+
+    .assignment-table th {
+      background: var(--sun-light);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .assignment-table tr:last-child td { border-bottom: 0; }
+    .assignment-table tr.is-today { background: #fffaf0; }
+    .assignment-table tr.is-past { opacity: 0.72; }
+
+    .assignment-date { font-weight: 900; color: var(--sun-deep); white-space: nowrap; }
+    .assignment-week { color: var(--muted); font-size: 12px; font-weight: 800; margin-top: 3px; }
+    .assignment-title { font-weight: 900; color: var(--ink); margin-bottom: 4px; }
+    .assignment-build { display: inline-block; margin-top: 6px; font-size: 12px; font-weight: 800; color: var(--sky); }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 50px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .status-pill.done { background: var(--grass-light); color: var(--grass); }
+    .status-pill.todo { background: var(--sky-light); color: var(--sky); }
+
+    .mini-link {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 8px;
+      color: var(--sun-deep);
+      font-weight: 900;
+      font-size: 12.5px;
+    }
+
+    .submit-card {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin: 28px 0;
+    }
+
+    .submit-card label {
+      display: block;
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 14px 0 6px;
+    }
+
+    .submit-card select,
+    .submit-card textarea,
+    .submit-card input[type="file"] {
+      width: 100%;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      background: white;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .submit-card textarea { min-height: 110px; resize: vertical; line-height: 1.5; }
+    .submit-card select:focus, .submit-card textarea:focus { border-color: var(--sun); }
+
+    .photo-guidance {
+      background: var(--sky-light);
+      color: var(--sun-deep);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: 13.5px;
+      line-height: 1.5;
+      margin-top: 10px;
+      font-weight: 700;
+    }
+
+    .form-status {
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--muted);
+    }
+
+    .submission-preview {
+      margin-top: 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .submission-preview img {
+      max-width: 220px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+    }
+
     .resource-category { margin-bottom: 26px; }
 
     .cat-label {
@@ -583,6 +712,7 @@
     const userLine = document.getElementById('userLine');
     const rolePill = document.getElementById('rolePill');
     const logoutButton = document.getElementById('logoutButton');
+    let hubState = null;
 
     function esc(v) {
       return String(v == null ? '' : v)
@@ -673,20 +803,100 @@
       `;
     }
 
-    function renderProgress(curriculum) {
+    function submissionFor(dayId, submissions) {
+      return (submissions || []).find(s => s.dayId === dayId);
+    }
+
+    function renderProgress(curriculum, submissions) {
       const days = allDays(curriculum).filter(d => d.date);
-      const today = todayKey();
-      const done = days.filter(d => d.date < today).length;
+      const done = days.filter(d => submissionFor(d.id, submissions)).length;
       const total = days.length;
       const pct = total ? Math.round((done / total) * 100) : 0;
       return `
         <div class="progress-card">
           <div>
             <div class="big-num">${done}<span style="font-size:20px;color:var(--muted)"> / ${total}</span></div>
-            <div class="label">Camp days completed</div>
+            <div class="label">Assignments submitted</div>
           </div>
           <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
           <div style="font-weight:900;font-size:16px;color:var(--sun-deep)">${pct}%</div>
+        </div>
+      `;
+    }
+
+    function renderAssignmentTable(curriculum, submissions) {
+      const today = todayKey();
+      const rows = curriculum.flatMap((week, index) => (week.days || []).map(day => ({ week, index, day })));
+      if (!rows.length) return '<p class="section-sub">No assignments are posted yet.</p>';
+      return `
+        <div class="assignment-table-wrap">
+          <table class="assignment-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Activity / Assignment</th>
+                <th>Sheet</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map(({ week, index, day }) => {
+                const submitted = submissionFor(day.id, submissions);
+                const isToday = day.date === today;
+                const isPast = day.date < today;
+                const assignment = day.assignment || day.activity || 'Your coach will post this assignment soon.';
+                return `
+                  <tr class="${isToday ? 'is-today' : ''} ${isPast ? 'is-past' : ''}">
+                    <td>
+                      <div class="assignment-date">${esc(fmt(day.date, { month: 'short', day: 'numeric' }))}</div>
+                      <div class="assignment-week">W${index + 1} · ${esc(fmt(day.date, { weekday: 'short' }))}</div>
+                    </td>
+                    <td>
+                      <div class="assignment-title">${esc(assignment)}</div>
+                      ${day.activity && day.assignment ? `<div>${esc(day.activity)}</div>` : ''}
+                      ${day.build ? `<span class="assignment-build">Build: ${esc(day.build)}</span>` : ''}
+                    </td>
+                    <td>
+                      ${day.worksheetUrl
+                        ? `<a class="mini-link" href="${esc(day.worksheetUrl)}" target="_blank" rel="noreferrer">${esc(day.worksheetLabel || 'Open worksheet')} →</a>`
+                        : '<span style="color:var(--muted)">No sheet needed</span>'}
+                    </td>
+                    <td>
+                      <span class="status-pill ${submitted ? 'done' : 'todo'}">${submitted ? 'Submitted' : 'To do'}</span>
+                      ${submitted ? `<div class="assignment-week">${esc(fmt(String(submitted.updatedAt || '').slice(0, 10), { month: 'short', day: 'numeric' }))}</div>` : ''}
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderSubmitBox(curriculum, submissions) {
+      const days = allDays(curriculum).filter(d => d.date);
+      const focus = findFocusDay(curriculum);
+      const defaultDayId = focus?.day?.id || days[0]?.id || '';
+      return `
+        <div class="submit-card">
+          <div class="section-title">Submit Your Activity</div>
+          <p class="section-sub">Choose the assignment, write your reflection, and add a picture of your completed work.</p>
+          <label for="submitDay">Assignment</label>
+          <select id="submitDay">
+            ${days.map(day => {
+              const label = `${fmt(day.date, { month: 'short', day: 'numeric' })} - ${(day.assignment || day.activity || 'Assignment').slice(0, 70)}`;
+              return `<option value="${esc(day.id)}" ${day.id === defaultDayId ? 'selected' : ''}>${esc(label)}</option>`;
+            }).join('')}
+          </select>
+          <label for="submitReflection">Reflection / activity notes</label>
+          <textarea id="submitReflection" placeholder="What did you complete? What worked? What would you improve next time?"></textarea>
+          <label for="submitPhoto">Photo of final work</label>
+          <input id="submitPhoto" type="file" accept="image/*" />
+          <div class="photo-guidance">Ask a classmate or a coach to take a picture of you and your final work before submitting.</div>
+          <button class="btn" style="margin-top:14px" onclick="submitActivity()">Submit activity</button>
+          <div class="form-status" id="submitStatus"></div>
+          <div class="submission-preview" id="submissionPreview"></div>
         </div>
       `;
     }
@@ -798,7 +1008,8 @@
     }
 
     function renderDashboard(data) {
-      const { user, camp, curriculum, announcements, resources } = data;
+      hubState = data;
+      const { user, camp, curriculum, announcements, resources, submissions } = data;
       const isCoach = user.role === 'coach';
       userLine.textContent = `${user.name} · ${isCoach ? 'Coach preview' : 'Camper'}`;
       rolePill.textContent = isCoach ? 'Coach' : 'Camper';
@@ -806,7 +1017,7 @@
       app.innerHTML = `
         ${renderHero(camp)}
         ${renderFocus(curriculum)}
-        ${renderProgress(curriculum)}
+        ${renderProgress(curriculum, submissions || [])}
 
         <div class="main-layout">
           <div>
@@ -837,12 +1048,106 @@
       `;
     }
 
+    function renderCampDashboard(data) {
+      hubState = data;
+      const { user, camp, curriculum, announcements, resources, submissions = [] } = data;
+      const isCoach = user.role === 'coach';
+      userLine.textContent = `${user.name} · ${isCoach ? 'Coach preview' : 'Camper'}`;
+      rolePill.textContent = isCoach ? 'Coach' : 'Camper';
+
+      app.innerHTML = `
+        ${renderHero(camp)}
+        ${renderFocus(curriculum)}
+        ${renderProgress(curriculum, submissions)}
+
+        <div class="main-layout">
+          <div>
+            <div class="section-title">Assignment Table</div>
+            <p class="section-sub">Every camp day has an activity. Open any worksheet you need, then submit your reflection and final-work photo.</p>
+            ${renderAssignmentTable(curriculum, submissions)}
+            ${!isCoach ? renderSubmitBox(curriculum, submissions) : ''}
+
+            <div style="margin-top:36px">
+              <div class="section-title">Resources</div>
+              <p class="section-sub">Everything you need for camp: apps, lessons, worksheets, and project research.</p>
+              ${renderResources(resources, user)}
+            </div>
+          </div>
+
+          <aside>
+            <div class="section-title">Announcements</div>
+            <p class="section-sub">Latest updates from your coaches.</p>
+            <div class="announce-list">
+              ${renderAnnouncements(announcements, user)}
+            </div>
+            ${isCoach ? `
+              <div style="margin-top:24px">
+                <a class="btn" style="display:block;text-align:center;padding:14px" href="/camp-hub/coach">Open Coach Dashboard →</a>
+              </div>
+            ` : ''}
+          </aside>
+        </div>
+      `;
+    }
+
+    function imageToDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        if (!file) return resolve('');
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('Could not read the photo'));
+        reader.onload = () => {
+          const img = new Image();
+          img.onerror = () => reject(new Error('Could not load the photo'));
+          img.onload = () => {
+            const max = 1200;
+            const scale = Math.min(1, max / Math.max(img.width, img.height));
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.max(1, Math.round(img.width * scale));
+            canvas.height = Math.max(1, Math.round(img.height * scale));
+            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL('image/jpeg', 0.78));
+          };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function submitActivity() {
+      const status = document.getElementById('submitStatus');
+      const preview = document.getElementById('submissionPreview');
+      const dayId = document.getElementById('submitDay').value;
+      const reflection = document.getElementById('submitReflection').value.trim();
+      const file = document.getElementById('submitPhoto').files[0];
+      status.textContent = 'Saving...';
+      preview.innerHTML = '';
+      try {
+        const photoDataUrl = await imageToDataUrl(file);
+        const response = await fetch('/api/camp/submissions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ dayId, reflection, photoDataUrl })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Could not submit activity');
+        const existingIndex = hubState.submissions.findIndex(s => s.dayId === dayId);
+        if (existingIndex >= 0) hubState.submissions[existingIndex] = result.submission;
+        else hubState.submissions.push(result.submission);
+        preview.innerHTML = `${photoDataUrl ? `<img src="${photoDataUrl}" alt="Submitted activity photo" />` : ''}`;
+        renderCampDashboard(hubState);
+        const nextStatus = document.getElementById('submitStatus');
+        if (nextStatus) nextStatus.textContent = 'Submitted. Your coach can now see it.';
+      } catch (err) {
+        status.textContent = err.message || 'Could not submit activity.';
+      }
+    }
+
     async function loadHub() {
       try {
         const response = await fetch('/api/camp/hub-data');
         const result = await response.json();
         if (!response.ok || !result.success) throw new Error(result.message || 'Login required');
-        renderDashboard(result.data);
+        renderCampDashboard(result.data);
       } catch (err) {
         window.location.href = '/camp-hub/login';
       }
