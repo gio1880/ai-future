@@ -73,9 +73,50 @@ const campSessions = new Map();
 const coachUsersFile = path.join(platformDataDir, 'coach-users.json');
 const coachSessionCookie = 'coach_session';
 const coachSessions = new Map();
-const regularCoachHubs = ['fll-hub', 'camp-hub', 'code-lab-admin'];
+const masterRosterFile = path.join(platformDataDir, 'master-roster.json');
+const regularCoachHubs = [
+	'master-roster',
+	'summer-curriculum',
+	'fll-competitive-curriculum',
+	'ftc-curriculum',
+	'fll-hub',
+	'camp-hub',
+	'code-lab-admin'
+];
 const adminCoachHubs = [...regularCoachHubs, 'payments-admin', 'parent-leads-admin', 'summer-leads-admin'];
 const coachHubDefinitions = {
+	'master-roster': {
+		id: 'master-roster',
+		title: 'Master Roster',
+		category: 'Operations',
+		description: 'Create classes, manage students, and track summer weekly signups across programs.',
+		targetUrl: '/master-roster',
+		grant: 'master-roster'
+	},
+	'summer-curriculum': {
+		id: 'summer-curriculum',
+		title: 'Summer Curriculum',
+		category: 'Curriculum',
+		description: 'Open the summer camp schedule editor with weekly lesson plans, builds, and coach notes.',
+		targetUrl: '/camp-hub/coach',
+		grant: 'summer-curriculum'
+	},
+	'fll-competitive-curriculum': {
+		id: 'fll-competitive-curriculum',
+		title: 'FLL Competitive Curriculum',
+		category: 'Curriculum',
+		description: 'Review the FLL competitive curriculum timeline, assignments, and challenge prep.',
+		targetUrl: '/fll-hub/curriculum',
+		grant: 'fll-competitive-curriculum'
+	},
+	'ftc-curriculum': {
+		id: 'ftc-curriculum',
+		title: 'FTC Curriculum',
+		category: 'Curriculum',
+		description: 'Access the FTC coaching roadmap for robot engineering, Java, CAD, controls, and judging.',
+		targetUrl: '/ftc-curriculum',
+		grant: 'ftc-curriculum'
+	},
 	'fll-hub': {
 		id: 'fll-hub',
 		title: 'FLL Hub',
@@ -240,7 +281,7 @@ app.post('/api/coach/open/:hubId', requireCoachPortalAuth, async (req, res, next
 			return res.status(403).json({ success: false, message: 'You do not have access to this hub' });
 		}
 
-		if (hub.id === 'fll-hub') {
+		if (hub.id === 'fll-hub' || hub.id === 'fll-competitive-curriculum') {
 			const fllUsers = await readFllUsers();
 			const fllUser = fllUsers.find((candidate) => {
 				if (req.coachUser.fllUserId && candidate.id === req.coachUser.fllUserId) return true;
@@ -253,7 +294,7 @@ app.post('/api/coach/open/:hubId', requireCoachPortalAuth, async (req, res, next
 			return res.json({ success: true, url: hub.targetUrl });
 		}
 
-		if (hub.id === 'camp-hub') {
+		if (hub.id === 'camp-hub' || hub.id === 'summer-curriculum') {
 			const campUsers = await readCampUsers();
 			const campUser = campUsers.find((candidate) => {
 				if (req.coachUser.campUserId && candidate.id === req.coachUser.campUserId) return true;
@@ -280,6 +321,140 @@ app.post('/api/coach/open/:hubId', requireCoachPortalAuth, async (req, res, next
 	} catch (err) {
 		console.error('Coach hub open error:', err);
 		return res.status(500).json({ success: false, message: 'Server error opening hub' });
+	}
+});
+
+app.get(['/master-roster', '/master-roster/'], requireCoachPortalAuth, (req, res) => {
+	return res.sendFile(path.join(__dirname, 'master-roster.html'));
+});
+
+app.get(['/ftc-curriculum', '/ftc-curriculum/'], requireCoachPortalAuth, (req, res) => {
+	return res.sendFile(path.join(__dirname, 'ftc-curriculum.html'));
+});
+
+app.get('/api/master-roster', requireCoachPortalAuth, async (req, res) => {
+	try {
+		const roster = await readMasterRoster();
+		return res.json({ success: true, data: publicMasterRoster(roster) });
+	} catch (err) {
+		console.error('Master roster load error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading master roster' });
+	}
+});
+
+app.post('/api/master-roster/classes', requireCoachPortalAuth, async (req, res) => {
+	try {
+		const roster = await readMasterRoster();
+		const classItem = sanitizeMasterClassPayload(req.body || {});
+		if (!classItem) {
+			return res.status(400).json({ success: false, message: 'Class name is required' });
+		}
+		roster.classes.push({ ...classItem, createdAt: new Date().toISOString() });
+		await writeMasterRoster(roster);
+		return res.status(201).json({ success: true, data: publicMasterRoster(roster), class: classItem });
+	} catch (err) {
+		console.error('Master class create error:', err);
+		return res.status(500).json({ success: false, message: 'Server error creating class' });
+	}
+});
+
+app.patch('/api/master-roster/classes/:id', requireCoachPortalAuth, async (req, res) => {
+	try {
+		const roster = await readMasterRoster();
+		const index = roster.classes.findIndex((item) => item.id === req.params.id);
+		if (index === -1) {
+			return res.status(404).json({ success: false, message: 'Class not found' });
+		}
+		const update = sanitizeMasterClassPayload(req.body || {}, roster.classes[index].id);
+		if (!update) {
+			return res.status(400).json({ success: false, message: 'Class name is required' });
+		}
+		roster.classes[index] = {
+			...roster.classes[index],
+			...update,
+			updatedAt: new Date().toISOString()
+		};
+		for (const student of roster.students) {
+			student.enrollments = normalizeMasterEnrollments(student.enrollments, roster.classes, roster.settings.summerWeeks);
+		}
+		await writeMasterRoster(roster);
+		return res.json({ success: true, data: publicMasterRoster(roster), class: roster.classes[index] });
+	} catch (err) {
+		console.error('Master class update error:', err);
+		return res.status(500).json({ success: false, message: 'Server error updating class' });
+	}
+});
+
+app.delete('/api/master-roster/classes/:id', requireCoachPortalAuth, async (req, res) => {
+	try {
+		const roster = await readMasterRoster();
+		const before = roster.classes.length;
+		roster.classes = roster.classes.filter((item) => item.id !== req.params.id);
+		if (roster.classes.length === before) {
+			return res.status(404).json({ success: false, message: 'Class not found' });
+		}
+		for (const student of roster.students) {
+			student.enrollments = (Array.isArray(student.enrollments) ? student.enrollments : [])
+				.filter((enrollment) => enrollment.classId !== req.params.id);
+			student.updatedAt = new Date().toISOString();
+		}
+		await writeMasterRoster(roster);
+		return res.json({ success: true, data: publicMasterRoster(roster) });
+	} catch (err) {
+		console.error('Master class delete error:', err);
+		return res.status(500).json({ success: false, message: 'Server error deleting class' });
+	}
+});
+
+app.post('/api/master-roster/students', requireCoachPortalAuth, async (req, res) => {
+	try {
+		const roster = await readMasterRoster();
+		const student = sanitizeMasterStudentPayload(req.body || {}, roster);
+		if (!student) {
+			return res.status(400).json({ success: false, message: 'Student name is required' });
+		}
+		roster.students.push(student);
+		await writeMasterRoster(roster);
+		return res.status(201).json({ success: true, data: publicMasterRoster(roster), student });
+	} catch (err) {
+		console.error('Master student create error:', err);
+		return res.status(500).json({ success: false, message: 'Server error creating student' });
+	}
+});
+
+app.patch('/api/master-roster/students/:id', requireCoachPortalAuth, async (req, res) => {
+	try {
+		const roster = await readMasterRoster();
+		const index = roster.students.findIndex((item) => item.id === req.params.id);
+		if (index === -1) {
+			return res.status(404).json({ success: false, message: 'Student not found' });
+		}
+		const student = sanitizeMasterStudentPayload(req.body || {}, roster, roster.students[index]);
+		if (!student) {
+			return res.status(400).json({ success: false, message: 'Student name is required' });
+		}
+		roster.students[index] = student;
+		await writeMasterRoster(roster);
+		return res.json({ success: true, data: publicMasterRoster(roster), student });
+	} catch (err) {
+		console.error('Master student update error:', err);
+		return res.status(500).json({ success: false, message: 'Server error updating student' });
+	}
+});
+
+app.delete('/api/master-roster/students/:id', requireCoachPortalAuth, async (req, res) => {
+	try {
+		const roster = await readMasterRoster();
+		const before = roster.students.length;
+		roster.students = roster.students.filter((item) => item.id !== req.params.id);
+		if (roster.students.length === before) {
+			return res.status(404).json({ success: false, message: 'Student not found' });
+		}
+		await writeMasterRoster(roster);
+		return res.json({ success: true, data: publicMasterRoster(roster) });
+	} catch (err) {
+		console.error('Master student delete error:', err);
+		return res.status(500).json({ success: false, message: 'Server error deleting student' });
 	}
 });
 
@@ -720,6 +895,144 @@ function createCampSessionForUser(res, user) {
 		lastSeen: Date.now()
 	});
 	setCampSessionCookie(res, token);
+}
+
+function buildDefaultMasterRoster() {
+	const summerWeeks = [
+		{ id: 'week-1', label: 'Week 1', dates: 'July 6-11, 2026' },
+		{ id: 'week-2', label: 'Week 2', dates: 'July 13-18, 2026' },
+		{ id: 'week-3', label: 'Week 3', dates: 'July 20-25, 2026' },
+		{ id: 'week-4', label: 'Week 4', dates: 'July 27-Aug 1, 2026' },
+		{ id: 'week-5', label: 'Week 5', dates: 'Aug 3-8, 2026' },
+		{ id: 'week-6', label: 'Week 6', dates: 'Aug 10-15, 2026' },
+		{ id: 'week-7', label: 'Week 7', dates: 'Aug 17-22, 2026' },
+		{ id: 'week-8', label: 'Week 8', dates: 'Aug 24-29, 2026' },
+		{ id: 'week-9', label: 'Week 9', dates: 'Aug 31-Sep 5, 2026' }
+	];
+	const now = new Date().toISOString();
+	return {
+		version: 1,
+		updatedAt: now,
+		settings: { summerWeeks },
+		classes: [
+			{ id: 'summer-lego-robotics-1', term: 'summer', program: 'lego-robotics', name: 'Summer LEGO Robotics 1', day: 'Weekly', schedule: 'Summer camp weekly enrollment', active: true, createdAt: now },
+			{ id: 'summer-lego-robotics-2', term: 'summer', program: 'lego-robotics', name: 'Summer LEGO Robotics 2', day: 'Weekly', schedule: 'Summer camp weekly enrollment', active: true, createdAt: now },
+			{ id: 'summer-ftc', term: 'summer', program: 'ftc', name: 'Summer FTC Robotics', day: 'Weekly', schedule: 'Summer camp weekly enrollment', active: true, createdAt: now },
+			{ id: 'fall-sat-lego-robotics-1', term: 'fall', program: 'lego-robotics', name: 'Fall Saturday LEGO Robotics 1', day: 'Saturday', schedule: 'Saturday class', active: true, createdAt: now },
+			{ id: 'fall-sat-lego-robotics-2', term: 'fall', program: 'lego-robotics', name: 'Fall Saturday LEGO Robotics 2', day: 'Saturday', schedule: 'Saturday class', active: true, createdAt: now },
+			{ id: 'fall-sat-ftc', term: 'fall', program: 'ftc', name: 'Fall Saturday FTC Robotics', day: 'Saturday', schedule: 'Saturday class', active: true, createdAt: now },
+			{ id: 'fall-sun-lego-robotics-1', term: 'fall', program: 'lego-robotics', name: 'Fall Sunday LEGO Robotics 1', day: 'Sunday', schedule: 'Sunday class', active: true, createdAt: now },
+			{ id: 'fall-sun-lego-robotics-2', term: 'fall', program: 'lego-robotics', name: 'Fall Sunday LEGO Robotics 2', day: 'Sunday', schedule: 'Sunday class', active: true, createdAt: now },
+			{ id: 'fall-sun-ftc', term: 'fall', program: 'ftc', name: 'Fall Sunday FTC Robotics', day: 'Sunday', schedule: 'Sunday class', active: true, createdAt: now }
+		],
+		students: []
+	};
+}
+
+function normalizeMasterRoster(data) {
+	const fallback = buildDefaultMasterRoster();
+	const source = data && typeof data === 'object' ? data : {};
+	return {
+		version: 1,
+		updatedAt: source.updatedAt || fallback.updatedAt,
+		settings: {
+			summerWeeks: Array.isArray(source.settings?.summerWeeks) ? source.settings.summerWeeks : fallback.settings.summerWeeks
+		},
+		classes: Array.isArray(source.classes) ? source.classes : fallback.classes,
+		students: Array.isArray(source.students) ? source.students : []
+	};
+}
+
+async function initializeMasterRoster() {
+	try {
+		await fs.access(masterRosterFile);
+	} catch (err) {
+		if (err.code !== 'ENOENT') throw err;
+		await writeJsonFile(masterRosterFile, buildDefaultMasterRoster());
+	}
+}
+
+async function readMasterRoster() {
+	return normalizeMasterRoster(await readJsonFile(masterRosterFile, buildDefaultMasterRoster()));
+}
+
+async function writeMasterRoster(roster) {
+	await writeJsonFile(masterRosterFile, {
+		...normalizeMasterRoster(roster),
+		updatedAt: new Date().toISOString()
+	});
+}
+
+function publicMasterRoster(roster) {
+	const normalized = normalizeMasterRoster(roster);
+	return {
+		...normalized,
+		students: normalized.students.map((student) => ({
+			id: student.id,
+			name: student.name,
+			parentName: student.parentName || '',
+			email: student.email || '',
+			phone: student.phone || '',
+			notes: student.notes || '',
+			active: student.active !== false,
+			enrollments: Array.isArray(student.enrollments) ? student.enrollments : [],
+			createdAt: student.createdAt || '',
+			updatedAt: student.updatedAt || ''
+		}))
+	};
+}
+
+function sanitizeMasterClassPayload(body, existingId = '') {
+	const name = cleanMetaString(body.name || '', 100);
+	const term = ['summer', 'fall', 'spring', 'year-round'].includes(body.term) ? body.term : 'fall';
+	const program = ['lego-robotics', 'ftc', 'fll', 'code-lab', 'other'].includes(body.program) ? body.program : 'lego-robotics';
+	const day = cleanMetaString(body.day || '', 40) || (term === 'summer' ? 'Weekly' : 'Saturday');
+	const schedule = cleanMetaString(body.schedule || '', 160);
+	if (!name) return null;
+	return {
+		id: existingId || `${term}-${slugify(name)}-${crypto.randomBytes(3).toString('hex')}`,
+		term,
+		program,
+		name,
+		day,
+		schedule,
+		active: body.active !== false
+	};
+}
+
+function normalizeMasterEnrollments(rawEnrollments, classes, summerWeeks) {
+	const classById = new Map(classes.map((item) => [item.id, item]));
+	const validWeeks = new Set(summerWeeks.map((week) => week.id));
+	const source = Array.isArray(rawEnrollments) ? rawEnrollments : [];
+	const byClass = new Map();
+	for (const item of source) {
+		const classId = cleanMetaString(item.classId || '', 120);
+		const classItem = classById.get(classId);
+		if (!classItem) continue;
+		const weeks = classItem.term === 'summer' && Array.isArray(item.weeks)
+			? Array.from(new Set(item.weeks.filter((weekId) => validWeeks.has(weekId))))
+			: [];
+		byClass.set(classId, { classId, weeks });
+	}
+	return Array.from(byClass.values());
+}
+
+function sanitizeMasterStudentPayload(body, roster, existing = {}) {
+	const name = cleanMetaString(body.name || existing.name || '', 120);
+	if (!name) return null;
+	const now = new Date().toISOString();
+	return {
+		id: existing.id || `student-${slugify(name)}-${crypto.randomBytes(3).toString('hex')}`,
+		name,
+		parentName: cleanMetaString(body.parentName ?? existing.parentName ?? '', 120),
+		email: cleanMetaString(body.email ?? existing.email ?? '', 180),
+		phone: cleanMetaString(body.phone ?? existing.phone ?? '', 80),
+		notes: cleanMetaString(body.notes ?? existing.notes ?? '', 600),
+		active: body.active !== false,
+		enrollments: normalizeMasterEnrollments(body.enrollments ?? existing.enrollments ?? [], roster.classes, roster.settings.summerWeeks),
+		createdAt: existing.createdAt || now,
+		updatedAt: now
+	};
 }
 
 async function requireCampAuth(req, res, next) {
@@ -2770,6 +3083,7 @@ app.use(express.static(path.join(__dirname), {
 initializeFllDataDir()
 	.then(() => initializeCampDataDir())
 	.then(() => initializeCoachDataDir())
+	.then(() => initializeMasterRoster())
 	.then(() => {
 		app.listen(PORT, () => console.log(`AI Future Platform running at http://localhost:${PORT}`));
 	})

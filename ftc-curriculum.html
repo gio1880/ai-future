@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FTC Curriculum | AI Future</title>
+  <style>
+    :root {
+      --ink: #17202c;
+      --muted: #667085;
+      --line: #d8dee8;
+      --brand: #2563ff;
+      --green: #0f766e;
+      --surface: #fff;
+      --page: #f5f7fb;
+      --soft: #eef4ff;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--page);
+    }
+
+    header {
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    h1, h2, h3 { margin: 0; letter-spacing: 0; }
+    h1 { font-size: 1.45rem; }
+    h2 { font-size: 1.08rem; }
+    h3 { font-size: 0.95rem; }
+    p { margin: 0; color: var(--muted); line-height: 1.5; }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      border-color: var(--brand);
+      color: var(--brand);
+    }
+
+    main {
+      display: grid;
+      gap: 18px;
+      padding: 24px 0 48px;
+    }
+
+    .intro, .phase, .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 12px 28px rgba(21, 31, 48, 0.07);
+    }
+
+    .intro {
+      padding: 20px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .phase {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .pill {
+      border-radius: 8px;
+      padding: 4px 7px;
+      color: #31415c;
+      background: var(--soft);
+      font-size: 0.78rem;
+      font-weight: 850;
+    }
+
+    .pill.green {
+      color: #0f5132;
+      background: #e7f7ef;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+      color: #31415c;
+      line-height: 1.5;
+    }
+
+    .panel {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    @media (max-width: 640px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 16px 0;
+      }
+      .actions, .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="shell topbar">
+      <div>
+        <h1>FTC Curriculum</h1>
+        <p>Coach roadmap for FTC robotics classes and team prep.</p>
+      </div>
+      <div class="actions">
+        <a class="btn" href="/coach-portal">Coach Portal</a>
+        <a class="btn" href="/master-roster">Master Roster</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="intro">
+      <h2>FTC Coaching Roadmap</h2>
+      <p>This page gives coaches a shared structure for FTC classes: mechanical systems, Java programming, CAD, controls, testing, judging, and competition readiness.</p>
+      <div class="meta">
+        <span class="pill green">FTC</span>
+        <span class="pill">Fall/Summer adaptable</span>
+        <span class="pill">Coach-only</span>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="phase">
+        <div>
+          <h2>Phase 1: Foundations</h2>
+          <p>Weeks 1-2</p>
+        </div>
+        <ul>
+          <li>FTC kit, control system, safety, tools, and team roles</li>
+          <li>Drivetrain basics, build quality, wiring habits, and inspection mindset</li>
+          <li>Java project setup, OpModes, gamepad input, motors, and servos</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <div>
+          <h2>Phase 2: Mechanisms</h2>
+          <p>Weeks 3-4</p>
+        </div>
+        <ul>
+          <li>Intakes, lifts, arms, linkages, and end effectors</li>
+          <li>Gear ratios, torque/speed tradeoffs, and iteration logs</li>
+          <li>CAD sketches and mechanism review before major rebuilds</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <div>
+          <h2>Phase 3: Controls</h2>
+          <p>Weeks 5-6</p>
+        </div>
+        <ul>
+          <li>Driver controls, field-centric driving, sensors, and telemetry</li>
+          <li>Autonomous path planning, encoders, IMU, and repeatability testing</li>
+          <li>Debugging routines and match-ready code organization</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <div>
+          <h2>Phase 4: Strategy</h2>
+          <p>Weeks 7-8</p>
+        </div>
+        <ul>
+          <li>Game analysis, scoring priorities, cycle time, and match roles</li>
+          <li>Driver practice, failure drills, pit checklist, and repairs</li>
+          <li>Engineering portfolio evidence and judging talking points</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <div>
+          <h2>Phase 5: Competition Readiness</h2>
+          <p>Ongoing</p>
+        </div>
+        <ul>
+          <li>Scrimmages, timed runs, autonomous reliability, and scouting</li>
+          <li>Inspection prep, battery management, tools, spares, and code backups</li>
+          <li>Post-match review and next-practice action items</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>Coach Checklist</h2>
+      <ul>
+        <li>Create FTC classes in the Master Roster and enroll students.</li>
+        <li>Keep a weekly build/programming goal, one measurable test, and one reflection artifact.</li>
+        <li>Capture photos of mechanisms, wiring, CAD, test results, and code milestones for judging.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

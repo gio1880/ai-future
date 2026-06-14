@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-14T21:20:59.619Z",
+  "settings": {
+    "summerWeeks": [
+      {
+        "id": "week-1",
+        "label": "Week 1",
+        "dates": "July 6-11, 2026"
+      },
+      {
+        "id": "week-2",
+        "label": "Week 2",
+        "dates": "July 13-18, 2026"
+      },
+      {
+        "id": "week-3",
+        "label": "Week 3",
+        "dates": "July 20-25, 2026"
+      },
+      {
+        "id": "week-4",
+        "label": "Week 4",
+        "dates": "July 27-Aug 1, 2026"
+      },
+      {
+        "id": "week-5",
+        "label": "Week 5",
+        "dates": "Aug 3-8, 2026"
+      },
+      {
+        "id": "week-6",
+        "label": "Week 6",
+        "dates": "Aug 10-15, 2026"
+      },
+      {
+        "id": "week-7",
+        "label": "Week 7",
+        "dates": "Aug 17-22, 2026"
+      },
+      {
+        "id": "week-8",
+        "label": "Week 8",
+        "dates": "Aug 24-29, 2026"
+      },
+      {
+        "id": "week-9",
+        "label": "Week 9",
+        "dates": "Aug 31-Sep 5, 2026"
+      }
+    ]
+  },
+  "classes": [
+    {
+      "id": "summer-lego-robotics-1",
+      "term": "summer",
+      "program": "lego-robotics",
+      "name": "Summer LEGO Robotics 1",
+      "day": "Weekly",
+      "schedule": "Summer camp weekly enrollment",
+      "active": true,
+      "createdAt": "2026-06-14T21:20:59.619Z"
+    },
+    {
+      "id": "summer-lego-robotics-2",
+      "term": "summer",
+      "program": "lego-robotics",
+      "name": "Summer LEGO Robotics 2",
+      "day": "Weekly",
+      "schedule": "Summer camp weekly enrollment",
+      "active": true,
+      "createdAt": "2026-06-14T21:20:59.619Z"
+    },
+    {
+      "id": "summer-ftc",
+      "term": "summer",
+      "program": "ftc",
+      "name": "Summer FTC Robotics",
+      "day": "Weekly",
+      "schedule": "Summer camp weekly enrollment",
+      "active": true,
+      "createdAt": "2026-06-14T21:20:59.619Z"
+    },
+    {
+      "id": "fall-sat-lego-robotics-1",
+      "term": "fall",
+      "program": "lego-robotics",
+      "name": "Fall Saturday LEGO Robotics 1",
+      "day": "Saturday",
+      "schedule": "Saturday class",
+      "active": true,
+      "createdAt": "2026-06-14T21:20:59.619Z"
+    },
+    {
+      "id": "fall-sat-lego-robotics-2",
+      "term": "fall",
+      "program": "lego-robotics",
+      "name": "Fall Saturday LEGO Robotics 2",
+      "day": "Saturday",
+      "schedule": "Saturday class",
+      "active": true,
+      "createdAt": "2026-06-14T21:20:59.619Z"
+    },
+    {
+      "id": "fall-sat-ftc",
+      "term": "fall",
+      "program": "ftc",
+      "name": "Fall Saturday FTC Robotics",
+      "day": "Saturday",
+      "schedule": "Saturday class",
+      "active": true,
+      "createdAt": "2026-06-14T21:20:59.619Z"
+    },
+    {
+      "id": "fall-sun-lego-robotics-1",
+      "term": "fall",
+      "program": "lego-robotics",
+      "name": "Fall Sunday LEGO Robotics 1",
+      "day": "Sunday",
+      "schedule": "Sunday class",
+      "active": true,
+      "createdAt": "2026-06-14T21:20:59.619Z"
+    },
+    {
+      "id": "fall-sun-lego-robotics-2",
+      "term": "fall",
+      "program": "lego-robotics",
+      "name": "Fall Sunday LEGO Robotics 2",
+      "day": "Sunday",
+      "schedule": "Sunday class",
+      "active": true,
+      "createdAt": "2026-06-14T21:20:59.619Z"
+    },
+    {
+      "id": "fall-sun-ftc",
+      "term": "fall",
+      "program": "ftc",
+      "name": "Fall Sunday FTC Robotics",
+      "day": "Sunday",
+      "schedule": "Sunday class",
+      "active": true,
+      "createdAt": "2026-06-14T21:20:59.619Z"
+    }
+  ],
+  "students": []
+}
