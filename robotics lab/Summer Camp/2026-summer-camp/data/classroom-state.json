@@ -1,0 +1,11 @@
+{
+  "noiseLevel": "partner",
+  "timer": {
+    "label": "Work time",
+    "durationMinutes": 20,
+    "startedAt": "",
+    "pausedRemainingSeconds": 1200,
+    "running": false
+  },
+  "groups": []
+}

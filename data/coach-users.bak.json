@@ -85,16 +85,5 @@
     "campUserId": "camp-coach-default",
     "campUsername": "campcoach",
     "active": true
-  },
-  {
-    "id": "coach-verify-temp",
-    "name": "Verify Temp",
-    "username": "verifytemp",
-    "password_hash": "59012a407262b10d3970cb63326f91eb:a00bbff705ee7b67a819455ccdbd32a1aa21f1706912d47fa305df8975344d0d2441b94f6027e9b81fb06e2b8ccaa8ddb13ffd9064c87f422eea5da8512876ec",
-    "role": "owner",
-    "hubs": [
-      "master-roster"
-    ],
-    "active": true
   }
 ]

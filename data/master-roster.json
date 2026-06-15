@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-14T21:20:59.619Z",
+  "updatedAt": "2026-06-15T15:37:28.666Z",
   "settings": {
     "summerWeeks": [
       {
@@ -106,10 +106,11 @@
       "term": "fall",
       "program": "ftc",
       "name": "Fall Saturday FTC Robotics",
-      "day": "Saturday",
+      "day": "Sunday",
       "schedule": "Saturday class",
       "active": true,
-      "createdAt": "2026-06-14T21:20:59.619Z"
+      "createdAt": "2026-06-14T21:20:59.619Z",
+      "updatedAt": "2026-06-15T15:37:28.666Z"
     },
     {
       "id": "fall-sun-lego-robotics-1",

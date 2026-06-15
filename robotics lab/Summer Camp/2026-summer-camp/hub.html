@@ -540,6 +540,97 @@
       border: 1px solid var(--line);
     }
 
+    .points-card {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .points-total {
+      font-size: 42px;
+      line-height: 1;
+      font-weight: 900;
+      color: var(--sun-deep);
+    }
+
+    .points-breakdown {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .point-feed {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .point-event {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      background: #fbfcfd;
+      font-size: 13px;
+    }
+
+    .point-event strong { display: block; }
+    .point-event span { color: var(--muted); }
+    .point-value { font-weight: 900; color: var(--grass); white-space: nowrap; }
+    .point-value.negative { color: #b42318; }
+
+    .print-request-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .print-request-item {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      background: #fbfcfd;
+    }
+
+    .print-request-item strong { display: block; margin-bottom: 4px; }
+    .print-request-item p { color: var(--muted); font-size: 13px; line-height: 1.5; margin-top: 6px; }
+
+    .classroom-card {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .classroom-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .classroom-tile {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 13px;
+      background: #fbfcfd;
+    }
+
+    .classroom-tile strong { display: block; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+    .timer-readout { font-size: 30px; font-weight: 900; color: var(--sun-deep); }
+    .group-list { display: grid; gap: 10px; margin-top: 14px; }
+    .group-item { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px; background: #fbfcfd; }
+    .group-item h4 { margin: 0 0 5px; font-size: 15px; }
+    .group-item p { margin: 5px 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
+
     .resource-category { margin-bottom: 26px; }
 
     .cat-label {
@@ -773,9 +864,21 @@
       `;
     }
 
-    function renderFocus(curriculum) {
+    function renderFocus(curriculum, enrollment) {
       const focus = findFocusDay(curriculum);
       if (!focus) {
+        if (enrollment && enrollment.source === 'master-roster' && !enrollment.visibleWeekId) {
+          return `
+            <div class="focus-banner">
+              <div class="focus-icon">📋</div>
+              <div class="focus-body">
+                <strong>No camp week assigned</strong>
+                <h2>Your summer weeks are not selected yet</h2>
+                <p>Ask a coach to check your enrollment in the master roster. Once your week is selected, your assignments will appear here.</p>
+              </div>
+            </div>
+          `;
+        }
         return `
           <div class="focus-banner">
             <div class="focus-icon">🎉</div>
@@ -820,6 +923,26 @@
           </div>
           <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
           <div style="font-weight:900;font-size:16px;color:var(--sun-deep)">${pct}%</div>
+        </div>
+      `;
+    }
+
+    function renderEnrollmentNotice(enrollment) {
+      if (!enrollment || !enrollment.visibleWeekLabel) return '';
+      const range = enrollment.visibleWeekRange && enrollment.visibleWeekRange.start
+        ? `${fmt(enrollment.visibleWeekRange.start, { month: 'short', day: 'numeric' })} - ${fmt(enrollment.visibleWeekRange.end, { month: 'short', day: 'numeric' })}`
+        : '';
+      const note = enrollment.source === 'master-roster'
+        ? 'Based on your camp registration.'
+        : 'Showing the next camp week available to this account.';
+      return `
+        <div class="focus-banner" style="background:var(--sky-light);border-color:#bdd7f4">
+          <div class="focus-icon">📌</div>
+          <div class="focus-body">
+            <strong>Your visible camp week</strong>
+            <h2>${esc(enrollment.visibleWeekLabel)}${range ? ` · ${esc(range)}` : ''}</h2>
+            <p>${esc(note)} To keep things clear, this page only shows one week of assignments at a time.</p>
+          </div>
         </div>
       `;
     }
@@ -876,6 +999,14 @@
 
     function renderSubmitBox(curriculum, submissions) {
       const days = allDays(curriculum).filter(d => d.date);
+      if (!days.length) {
+        return `
+          <div class="submit-card">
+            <div class="section-title">Submit Your Activity</div>
+            <p class="section-sub">No assignments are available for this account yet. Ask a coach to check your summer week enrollment.</p>
+          </div>
+        `;
+      }
       const focus = findFocusDay(curriculum);
       const defaultDayId = focus?.day?.id || days[0]?.id || '';
       return `
@@ -899,6 +1030,160 @@
           <div class="submission-preview" id="submissionPreview"></div>
         </div>
       `;
+    }
+
+    function renderPointsCard(points, printRequests) {
+      const data = points || { total: 0, submittedActivities: 0, activityPoints: 0, printBonus: 0, behaviorPoints: 0, skills: {}, events: [] };
+      const skillEntries = Object.entries(data.skills || {}).filter(([, value]) => value !== 0);
+      return `
+        <div class="points-card">
+          <div class="section-title">My Class Points</div>
+          <div class="points-total">${esc(data.total || 0)}</div>
+          <div class="points-breakdown">
+            <span class="status-pill done">${esc(data.submittedActivities || 0)} activities</span>
+            <span class="status-pill todo">${esc(data.activityPoints || 0)} activity points</span>
+            <span class="status-pill todo">${esc(data.printBonus || 0)} print bonus</span>
+            <span class="status-pill ${data.behaviorPoints >= 0 ? 'done' : 'todo'}">${esc(data.behaviorPoints || 0)} class points</span>
+          </div>
+          ${skillEntries.length ? `
+            <div class="points-breakdown">
+              ${skillEntries.map(([skill, value]) => `<span class="status-pill ${value >= 0 ? 'done' : 'todo'}">${esc(skill)} ${value > 0 ? '+' : ''}${esc(value)}</span>`).join('')}
+            </div>
+          ` : ''}
+          ${renderPointFeed(data.events || [])}
+          ${renderPrintRequestList(printRequests || [])}
+        </div>
+      `;
+    }
+
+    function renderPointFeed(events) {
+      if (!events.length) return '<p class="section-sub" style="margin-top:14px">No class points yet. Keep building, helping, and improving.</p>';
+      return `
+        <div class="point-feed">
+          ${events.map(event => `
+            <div class="point-event">
+              <div>
+                <strong>${esc(event.category || 'Class points')}</strong>
+                <span>${esc(event.note || (event.type === 'needs-work' ? 'Needs work' : 'Great job'))}</span>
+              </div>
+              <div class="point-value ${event.points < 0 ? 'negative' : ''}">${event.points > 0 ? '+' : ''}${esc(event.points)}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderPrintRequestList(printRequests) {
+      if (!printRequests.length) {
+        return '<p class="section-sub" style="margin-top:14px">No 3D print requests yet.</p>';
+      }
+      return `
+        <div class="print-request-list">
+          ${printRequests.slice().sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || ''))).map(req => `
+            <div class="print-request-item">
+              <strong>${esc(req.title)}</strong>
+              <span class="status-pill ${req.status === 'completed' || req.status === 'ready' ? 'done' : 'todo'}">${esc(req.status || 'pending')}</span>
+              ${req.pointsAwarded ? `<span class="status-pill done">+${esc(req.pointsAwarded)} points</span>` : ''}
+              <p>${esc(req.coachNotes || req.purpose || '')}</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderPrintRequestForm() {
+      return `
+        <div class="submit-card">
+          <div class="section-title">Request a 3D Print</div>
+          <p class="section-sub">Send your print idea to the coach queue. Explain what it is for so a coach can approve or ask for changes.</p>
+          <label for="printTitle">Project / part name</label>
+          <input id="printTitle" placeholder="e.g. Sensor bracket, artifact base, gear display stand" />
+          <label for="printPurpose">What is it for?</label>
+          <textarea id="printPurpose" placeholder="Describe what this print does, where it goes, and why your team needs it."></textarea>
+          <label for="printDimensions">Approximate size</label>
+          <input id="printDimensions" placeholder="e.g. 80mm x 40mm x 10mm" />
+          <label for="printColor">Preferred color</label>
+          <input id="printColor" placeholder="e.g. black, blue, any color" />
+          <label for="printNotes">Extra notes</label>
+          <textarea id="printNotes" placeholder="Add file link, sketch notes, deadline, or special instructions."></textarea>
+          <button class="btn" style="margin-top:14px" onclick="submitPrintRequest()">Send print request</button>
+          <div class="form-status" id="printStatus"></div>
+        </div>
+      `;
+    }
+
+    function noiseLabel(level) {
+      return {
+        silent: 'Silent',
+        whisper: 'Whisper voices',
+        partner: 'Partner talk',
+        team: 'Team discussion',
+        present: 'Presentation voice'
+      }[level] || 'Partner talk';
+    }
+
+    function timerSeconds(timer) {
+      if (!timer) return 0;
+      if (!timer.running || !timer.startedAt) return Math.max(0, Number(timer.pausedRemainingSeconds || 0));
+      const elapsed = Math.floor((Date.now() - new Date(timer.startedAt).getTime()) / 1000);
+      return Math.max(0, Number(timer.pausedRemainingSeconds || 0) - elapsed);
+    }
+
+    function formatSeconds(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    function renderClassroomCard(classroom) {
+      const state = classroom || {};
+      const timer = state.timer || {};
+      return `
+        <div class="classroom-card">
+          <div class="section-title">Classroom Tools</div>
+          <p class="section-sub">Use this to check the current timer, voice level, and your group setup.</p>
+          <div class="classroom-grid">
+            <div class="classroom-tile">
+              <strong>${esc(timer.label || 'Timer')}</strong>
+              <div class="timer-readout" id="studentTimerReadout" data-started-at="${esc(timer.startedAt || '')}" data-running="${timer.running ? 'true' : 'false'}" data-remaining="${esc(timer.pausedRemainingSeconds || 0)}">${esc(formatSeconds(timerSeconds(timer)))}</div>
+              <p class="section-sub" style="margin:5px 0 0">${timer.running ? 'Running now' : 'Paused / ready'}</p>
+            </div>
+            <div class="classroom-tile">
+              <strong>Noise level</strong>
+              <div class="timer-readout" style="font-size:22px">${esc(noiseLabel(state.noiseLevel))}</div>
+            </div>
+          </div>
+          ${renderStudentGroups(state.groups || [])}
+        </div>
+      `;
+    }
+
+    function renderStudentGroups(groups) {
+      if (!groups.length) return '<p class="section-sub" style="margin-top:14px">No groups posted yet.</p>';
+      return `
+        <div class="group-list">
+          ${groups.map(group => `
+            <div class="group-item">
+              <h4>${esc(group.name)}</h4>
+              ${group.focus ? `<p><strong>Focus:</strong> ${esc(group.focus)}</p>` : ''}
+              ${group.members?.length ? `<p><strong>Members:</strong> ${esc(group.members.join(', '))}</p>` : ''}
+              ${(group.subgroups || []).map(sub => `<p><strong>${esc(sub.name)}:</strong> ${esc((sub.members || []).join(', ') || 'No members listed')}</p>`).join('')}
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function tickStudentTimer() {
+      const el = document.getElementById('studentTimerReadout');
+      if (!el) return;
+      const running = el.dataset.running === 'true';
+      const remaining = Number(el.dataset.remaining || 0);
+      const startedAt = el.dataset.startedAt;
+      const seconds = running && startedAt
+        ? Math.max(0, remaining - Math.floor((Date.now() - new Date(startedAt).getTime()) / 1000))
+        : Math.max(0, remaining);
+      el.textContent = formatSeconds(seconds);
     }
 
     function weekStatus(week) {
@@ -1050,22 +1335,26 @@
 
     function renderCampDashboard(data) {
       hubState = data;
-      const { user, camp, curriculum, announcements, resources, submissions = [] } = data;
+      const { user, camp, curriculum, announcements, resources, submissions = [], enrollment, points, printRequests = [], classroom } = data;
       const isCoach = user.role === 'coach';
       userLine.textContent = `${user.name} · ${isCoach ? 'Coach preview' : 'Camper'}`;
       rolePill.textContent = isCoach ? 'Coach' : 'Camper';
 
       app.innerHTML = `
         ${renderHero(camp)}
-        ${renderFocus(curriculum)}
+        ${renderFocus(curriculum, enrollment)}
         ${renderProgress(curriculum, submissions)}
+        ${!isCoach ? renderEnrollmentNotice(enrollment) : ''}
 
         <div class="main-layout">
           <div>
-            <div class="section-title">Assignment Table</div>
-            <p class="section-sub">Every camp day has an activity. Open any worksheet you need, then submit your reflection and final-work photo.</p>
+            ${!isCoach ? renderClassroomCard(classroom) : ''}
+            ${!isCoach ? renderPointsCard(points, printRequests) : ''}
+            <div class="section-title">This Week's Assignments</div>
+            <p class="section-sub">Only your current camp week is shown here. Open any worksheet you need, then submit your reflection and final-work photo.</p>
             ${renderAssignmentTable(curriculum, submissions)}
             ${!isCoach ? renderSubmitBox(curriculum, submissions) : ''}
+            ${!isCoach ? renderPrintRequestForm() : ''}
 
             <div style="margin-top:36px">
               <div class="section-title">Resources</div>
@@ -1088,6 +1377,7 @@
           </aside>
         </div>
       `;
+      tickStudentTimer();
     }
 
     function imageToDataUrl(file) {
@@ -1142,6 +1432,34 @@
       }
     }
 
+    async function submitPrintRequest() {
+      const status = document.getElementById('printStatus');
+      const payload = {
+        title: document.getElementById('printTitle').value.trim(),
+        purpose: document.getElementById('printPurpose').value.trim(),
+        dimensions: document.getElementById('printDimensions').value.trim(),
+        color: document.getElementById('printColor').value.trim(),
+        notes: document.getElementById('printNotes').value.trim()
+      };
+      status.textContent = 'Sending request...';
+      try {
+        const response = await fetch('/api/camp/print-requests', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Could not send print request');
+        hubState.printRequests = [result.request, ...(hubState.printRequests || [])];
+        hubState.points = result.points || hubState.points;
+        renderCampDashboard(hubState);
+        const nextStatus = document.getElementById('printStatus');
+        if (nextStatus) nextStatus.textContent = 'Request sent to the coach queue.';
+      } catch (err) {
+        status.textContent = err.message || 'Could not send print request.';
+      }
+    }
+
     async function loadHub() {
       try {
         const response = await fetch('/api/camp/hub-data');
@@ -1158,6 +1476,7 @@
       window.location.href = '/camp-hub/login';
     });
 
+    setInterval(tickStudentTimer, 1000);
     loadHub();
   </script>
 </body>

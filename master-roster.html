@@ -4,18 +4,36 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Master Roster | AI Future</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0b2a4a">
+  <link rel="icon" href="/ai%20future%20logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --ink: #17202c;
-      --muted: #667085;
-      --line: #d8dee8;
-      --brand: #2563ff;
-      --brand-dark: #1648cc;
-      --green: #0f766e;
+      /* AI Future brand palette (see index.html) */
+      --navy: #071426;
+      --brand: #0b2a4a;
+      --blue: #1767b4;
+      --blue-soft: #e3effd;
+      --gold: #fece00;
+      --gold-soft: #fff7d6;
+      --orange: #f97316;
+      --orange-soft: #fff1e6;
+      --green: #16a34a;
+      --green-soft: #e7f7ec;
+      --ink: #10233f;
+      --muted: #5f6c80;
+      --line: #dce5ef;
+      --page: #f7f8fa;
+      --surface: #ffffff;
       --danger: #b42318;
-      --page: #f5f7fb;
-      --surface: #fff;
-      --soft: #eef4ff;
+      --danger-soft: #fdecec;
+      --radius: 14px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 20px rgba(11, 42, 74, 0.08);
+      --shadow-lg: 0 24px 70px rgba(7, 20, 38, 0.22);
     }
 
     * { box-sizing: border-box; }
@@ -26,376 +44,468 @@
       background: var(--page);
     }
 
+    a, button, input, select, textarea { font: inherit; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Header ── */
     header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
       border-bottom: 1px solid var(--line);
-      background: var(--surface);
+      background: rgba(255,255,255,0.95);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
     }
 
-    .shell {
-      width: min(1280px, calc(100% - 32px));
-      margin: 0 auto;
-    }
+    .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 
     .topbar {
-      min-height: 72px;
+      min-height: 70px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-    }
-
-    h1, h2, h3 { margin: 0; letter-spacing: 0; }
-    h1 { font-size: 1.45rem; }
-    h2 { font-size: 1rem; }
-    h3 { font-size: 0.95rem; }
-    p { margin: 0; color: var(--muted); line-height: 1.45; }
-
-    .userline {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .actions {
-      display: flex;
+      gap: 16px;
       flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
     }
 
-    a, button {
-      font: inherit;
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img {
+      width: 40px; height: 40px; object-fit: contain;
+      border-radius: 9px; border: 1px solid var(--line); padding: 4px; background: #fff;
     }
+    .brand h1 { margin: 0; font-size: 1.2rem; font-weight: 900; letter-spacing: -0.01em; }
+    .brand .userline { margin-top: 2px; color: var(--muted); font-size: 0.82rem; font-weight: 600; }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 
     .btn {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 9px 12px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 10px 15px;
       color: var(--ink);
       background: #fff;
       font-weight: 800;
-      text-decoration: none;
+      font-size: 0.9rem;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: border-color .15s, background .15s, color .15s, opacity .15s;
+      white-space: nowrap;
+    }
+    .btn:hover { border-color: var(--blue); color: var(--blue); }
+    .btn.primary { border-color: var(--brand); color: #fff; background: var(--brand); }
+    .btn.primary:hover { background: var(--navy); color: #fff; opacity: 1; }
+    .btn.gold { border-color: #e7bd00; color: var(--navy); background: var(--gold); }
+    .btn.gold:hover { background: #ecc400; color: var(--navy); }
+    .btn.danger { color: var(--danger); border-color: #f0c9c4; background: var(--danger-soft); }
+    .btn.danger:hover { background: #f9dbd7; color: var(--danger); }
+    .btn.ghost { background: transparent; }
+    .btn.sm { padding: 7px 11px; font-size: 0.82rem; }
+
+    /* ── Page layout ── */
+    main { padding: 24px 0 64px; }
+
+    .notice {
+      display: none;
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      color: var(--danger);
+      background: var(--danger-soft);
+      border: 1px solid #f0c9c4;
+      font-weight: 700;
     }
 
-    .btn:hover { border-color: var(--brand); color: var(--brand); }
-    .btn.primary {
-      border-color: var(--brand);
-      color: #fff;
-      background: var(--brand);
-    }
-    .btn.primary:hover { background: var(--brand-dark); color: #fff; }
-    .btn.danger { color: var(--danger); }
-
-    main {
+    /* ── Stats ── */
+    .stats {
       display: grid;
-      grid-template-columns: 380px 1fr;
-      gap: 18px;
-      padding: 24px 0 48px;
-    }
-
-    .panel {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--surface);
-      box-shadow: 0 12px 28px rgba(21, 31, 48, 0.07);
-    }
-
-    .panel-head {
-      padding: 18px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .panel-body {
-      display: grid;
-      gap: 16px;
-      padding: 18px;
-    }
-
-    .form-grid {
-      display: grid;
+      grid-template-columns: repeat(4, 1fr);
       gap: 12px;
+      margin-bottom: 20px;
     }
+    .stat {
+      padding: 16px 18px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+    .stat strong { display: block; font-size: 1.7rem; line-height: 1; font-weight: 900; color: var(--brand); }
+    .stat span { display: block; margin-top: 6px; color: var(--muted); font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat.gold strong { color: var(--orange); }
 
-    label {
-      display: grid;
-      gap: 6px;
-      color: #31415c;
-      font-size: 0.88rem;
+    /* ── Tabs ── */
+    .tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+    .tab-btn {
+      padding: 11px 20px;
+      border-radius: 50px;
+      border: 1.5px solid var(--line);
+      background: #fff;
       font-weight: 800;
+      font-size: 0.92rem;
+      cursor: pointer;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .tab-btn.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Toolbar (search + filters + add) ── */
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1.4fr 0.9fr 1fr auto;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .search-wrap { position: relative; }
+    .search-wrap input { padding-left: 38px; }
+    .search-wrap::before {
+      content: "🔎";
+      position: absolute;
+      left: 12px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.95rem;
+      opacity: 0.6;
     }
 
     input, select, textarea {
       width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 10px 11px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 11px 12px;
       color: var(--ink);
       background: #fff;
-      font: inherit;
     }
-
-    textarea { resize: vertical; min-height: 74px; }
+    textarea { resize: vertical; min-height: 70px; }
     input:focus, select:focus, textarea:focus {
-      outline: 3px solid rgba(37, 99, 255, 0.16);
-      border-color: var(--brand);
+      outline: 3px solid rgba(23, 103, 180, 0.16);
+      border-color: var(--blue);
     }
 
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+    /* ── Cards / lists ── */
+    .list { display: grid; gap: 12px; }
+    .card {
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
     }
+    .card-top { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
+    .card h3 { margin: 0; font-size: 1.02rem; font-weight: 900; }
+    .card .sub { margin: 4px 0 0; color: var(--muted); font-size: 0.86rem; line-height: 1.5; }
 
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-
-    .stat {
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fff;
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 1.4rem;
-      line-height: 1;
-    }
-
-    .stat span {
-      color: var(--muted);
-      font-size: 0.82rem;
-      font-weight: 800;
-    }
-
-    .class-list, .student-list, .enrollment-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .class-card, .student-card, .enroll-card {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 14px;
-      background: #fff;
-    }
-
-    .class-card {
-      display: grid;
-      gap: 10px;
-    }
-
-    .class-top, .student-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: flex-start;
-    }
-
-    .meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      margin-top: 8px;
-    }
-
+    .meta { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
     .pill {
-      border-radius: 8px;
-      padding: 4px 7px;
-      color: #31415c;
-      background: var(--soft);
+      border-radius: 50px;
+      padding: 5px 11px;
+      color: var(--brand);
+      background: var(--blue-soft);
       font-size: 0.78rem;
-      font-weight: 850;
+      font-weight: 800;
+      white-space: nowrap;
     }
+    .pill.summer { color: #8a5200; background: var(--orange-soft); }
+    .pill.count { color: var(--green); background: var(--green-soft); }
+    .pill.none { color: var(--muted); background: #eef1f5; }
+    .pill.off { color: var(--danger); background: var(--danger-soft); }
 
-    .pill.green {
-      color: #0f5132;
-      background: #e7f7ef;
-    }
+    .card-actions { display: flex; gap: 8px; flex-shrink: 0; }
 
-    .pill.off {
-      color: #7a2e0e;
-      background: #fff1e8;
-    }
-
-    .filters {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr 1fr;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .check-grid {
-      display: grid;
-      gap: 8px;
-    }
-
-    .check-row {
+    .term-group { margin-bottom: 22px; }
+    .term-group-title {
+      font-size: 0.78rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 0 0 10px;
+      padding-bottom: 8px;
+      border-bottom: 1.5px solid var(--line);
       display: flex;
       align-items: center;
       gap: 8px;
-      font-weight: 700;
-      color: #31415c;
-    }
-
-    .check-row input {
-      width: auto;
-    }
-
-    .week-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-      gap: 7px;
-      margin-top: 9px;
-      padding: 10px;
-      border-radius: 8px;
-      background: #f8fafc;
-    }
-
-    .notice {
-      display: none;
-      padding: 11px 12px;
-      border-radius: 8px;
-      color: var(--danger);
-      background: #fff7f5;
-      border: 1px solid rgba(180, 35, 24, 0.22);
-      font-weight: 750;
     }
 
     .empty {
-      padding: 18px;
-      border: 1px dashed var(--line);
-      border-radius: 8px;
+      padding: 40px 24px;
+      border: 1.5px dashed var(--line);
+      border-radius: var(--radius);
       color: var(--muted);
       background: #fff;
+      text-align: center;
+    }
+    .empty .big { font-size: 2.4rem; display: block; margin-bottom: 10px; }
+    .empty h3 { margin: 0 0 6px; color: var(--ink); font-size: 1.05rem; }
+    .empty p { margin: 0 0 16px; font-size: 0.9rem; }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .section-head .lede h2 { margin: 0; font-size: 1.1rem; font-weight: 900; }
+    .section-head .lede p { margin: 3px 0 0; color: var(--muted); font-size: 0.86rem; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(7, 20, 38, 0.5);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+      display: none;
+      place-items: center;
+      padding: 18px;
+      overflow-y: auto;
+    }
+    .modal-overlay.open { display: grid; }
+    .modal {
+      width: min(560px, 100%);
+      background: var(--surface);
+      border-radius: 18px;
+      box-shadow: var(--shadow-lg);
+      max-height: calc(100vh - 36px);
+      display: flex;
+      flex-direction: column;
+      animation: pop .2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes pop { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: none; } }
+    .modal-head {
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .modal-head h2 { margin: 0; font-size: 1.15rem; font-weight: 900; }
+    .modal-close {
+      border: 0; background: #eef1f5; color: var(--ink);
+      width: 34px; height: 34px; border-radius: 50%;
+      font-size: 1.1rem; cursor: pointer; line-height: 1; flex-shrink: 0;
+    }
+    .modal-close:hover { background: #e2e7ee; }
+    .modal-body { padding: 20px 22px; overflow-y: auto; display: grid; gap: 14px; }
+    .modal-foot {
+      padding: 16px 22px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
     }
 
-    @media (max-width: 980px) {
-      main { grid-template-columns: 1fr; }
-      .filters { grid-template-columns: 1fr; }
+    label.field { display: grid; gap: 6px; color: #31415c; font-size: 0.84rem; font-weight: 800; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .enroll-intro { font-size: 0.84rem; color: var(--muted); margin: 0; }
+    .enroll-group { display: grid; gap: 8px; margin-top: 4px; }
+    .enroll-group-label {
+      font-size: 0.72rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.07em;
+      color: var(--muted); margin-top: 8px;
+    }
+    .enroll-card {
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 12px 13px;
+      background: #fff;
+    }
+    .enroll-card.checked { border-color: var(--blue); background: #f5faff; }
+    .check-row { display: flex; align-items: flex-start; gap: 10px; font-weight: 700; color: #31415c; cursor: pointer; }
+    .check-row input[type=checkbox] { width: 20px; height: 20px; margin-top: 1px; flex-shrink: 0; accent-color: var(--blue); cursor: pointer; }
+    .check-row .label-main { font-weight: 800; }
+    .check-row .label-sub { display: block; font-weight: 600; color: var(--muted); font-size: 0.8rem; margin-top: 1px; }
+
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+      gap: 6px;
+      margin: 10px 0 2px;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      background: var(--orange-soft);
+    }
+    .week-grid .check-row { font-size: 0.82rem; font-weight: 700; }
+    .week-grid input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--orange); }
+
+    @media (max-width: 900px) {
+      .toolbar { grid-template-columns: 1fr 1fr; }
+      .toolbar .search-wrap { grid-column: 1 / -1; }
+      .toolbar .add-btn { grid-column: 1 / -1; }
+      .add-btn .btn { width: 100%; justify-content: center; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
     }
 
-    @media (max-width: 640px) {
-      .topbar { align-items: flex-start; flex-direction: column; padding: 16px 0; }
-      .actions, .btn { width: 100%; }
-      .row, .stats { grid-template-columns: 1fr; }
+    @media (max-width: 560px) {
+      .topbar { padding: 14px 0; }
+      .row2 { grid-template-columns: 1fr; }
+      .card-top { flex-direction: column; }
+      .card-actions { width: 100%; }
+      .card-actions .btn { flex: 1; justify-content: center; }
+    }
+
+    /* Touch devices (iPad / phone): bigger targets, no zoom-on-focus */
+    @media (pointer: coarse) {
+      body { -webkit-tap-highlight-color: transparent; }
+      input, select, textarea { font-size: 16px; }
+      .btn { min-height: 46px; }
+      .tab-btn { min-height: 46px; }
+      .card-actions .btn { min-height: 44px; }
     }
   </style>
 </head>
 <body>
   <header>
     <div class="shell topbar">
-      <div>
-        <h1>Master Roster</h1>
-        <div id="userline" class="userline">Loading...</div>
+      <div class="brand">
+        <img src="/ai%20future%20logo.png" alt="AI Future">
+        <div>
+          <h1>Master Roster</h1>
+          <div id="userline" class="userline">Loading…</div>
+        </div>
       </div>
       <div class="actions">
-        <a class="btn" href="/coach-portal">Coach Portal</a>
+        <a class="btn ghost" href="/coach-portal">← Coach Portal</a>
         <button id="logoutButton" class="btn" type="button">Sign out</button>
       </div>
     </div>
   </header>
 
   <main class="shell">
-    <aside class="panel">
-      <div class="panel-head">
-        <h2 id="studentFormTitle">Add Student</h2>
-        <p>Assign students to summer weeks and fall classes from one place.</p>
-      </div>
-      <div class="panel-body">
-        <div id="notice" class="notice" role="alert"></div>
-        <form id="studentForm" class="form-grid">
-          <input id="studentId" type="hidden">
-          <label>Student name <input id="studentName" required></label>
-          <label>Parent name <input id="parentName"></label>
-          <div class="row">
-            <label>Email <input id="email" type="email"></label>
-            <label>Phone <input id="phone"></label>
-          </div>
-          <label>Notes <textarea id="notes"></textarea></label>
-          <section>
-            <h3>Class Enrollment</h3>
-            <div id="enrollmentControls" class="enrollment-list"></div>
-          </section>
-          <div class="actions">
-            <button class="btn primary" type="submit">Save student</button>
-            <button id="cancelEditButton" class="btn" type="button">Clear</button>
-          </div>
-        </form>
-      </div>
-    </aside>
+    <div id="notice" class="notice" role="alert"></div>
 
-    <section class="panel">
-      <div class="panel-head">
-        <h2>Classes And Students</h2>
-        <p>Create summer/fall classes, then manage who is enrolled.</p>
-      </div>
-      <div class="panel-body">
-        <div class="stats">
-          <div class="stat"><strong id="studentCount">0</strong><span>Students</span></div>
-          <div class="stat"><strong id="classCount">0</strong><span>Classes</span></div>
-          <div class="stat"><strong id="summerCount">0</strong><span>Summer enrollments</span></div>
+    <div class="stats">
+      <div class="stat"><strong id="studentCount">0</strong><span>Students</span></div>
+      <div class="stat"><strong id="classCount">0</strong><span>Classes</span></div>
+      <div class="stat gold"><strong id="summerCount">0</strong><span>Summer spots</span></div>
+      <div class="stat"><strong id="fallCount">0</strong><span>Fall spots</span></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="students" type="button">👧 Students</button>
+      <button class="tab-btn" data-tab="classes" type="button">📚 Classes</button>
+    </div>
+
+    <!-- STUDENTS TAB -->
+    <section class="tab-panel active" id="panel-students">
+      <div class="toolbar">
+        <div class="search-wrap">
+          <input id="searchInput" placeholder="Search by student, parent, email, or phone">
         </div>
-
-        <section class="class-card">
-          <h3>Create Class</h3>
-          <form id="classForm" class="form-grid">
-            <div class="row">
-              <label>Class name <input id="className" required></label>
-              <label>Term
-                <select id="classTerm">
-                  <option value="summer">Summer</option>
-                  <option value="fall" selected>Fall</option>
-                  <option value="spring">Spring</option>
-                  <option value="year-round">Year-round</option>
-                </select>
-              </label>
-            </div>
-            <div class="row">
-              <label>Program
-                <select id="classProgram">
-                  <option value="lego-robotics">LEGO Robotics</option>
-                  <option value="ftc">FTC</option>
-                  <option value="fll">FLL</option>
-                  <option value="code-lab">Code Lab</option>
-                  <option value="other">Other</option>
-                </select>
-              </label>
-              <label>Day <input id="classDay" placeholder="Saturday, Sunday, Weekly"></label>
-            </div>
-            <label>Schedule note <input id="classSchedule" placeholder="Saturday 10:00 AM, summer weekly enrollment, etc."></label>
-            <button class="btn primary" type="submit">Create class</button>
-          </form>
-        </section>
-
-        <section>
-          <div class="filters">
-            <input id="searchInput" placeholder="Search students or parents">
-            <select id="termFilter">
-              <option value="all">All terms</option>
-              <option value="summer">Summer</option>
-              <option value="fall">Fall</option>
-              <option value="spring">Spring</option>
-              <option value="year-round">Year-round</option>
-            </select>
-            <select id="classFilter">
-              <option value="all">All classes</option>
-            </select>
-          </div>
-          <div id="students" class="student-list"></div>
-        </section>
-
-        <section>
-          <h3>Classes</h3>
-          <div id="classes" class="class-list"></div>
-        </section>
+        <select id="termFilter">
+          <option value="all">All terms</option>
+          <option value="summer">Summer</option>
+          <option value="fall">Fall</option>
+          <option value="spring">Spring</option>
+          <option value="year-round">Year-round</option>
+        </select>
+        <select id="classFilter">
+          <option value="all">All classes</option>
+        </select>
+        <div class="add-btn">
+          <button class="btn primary" type="button" onclick="openStudentModal()">➕ Add Student</button>
+        </div>
       </div>
+      <div id="students" class="list"></div>
+    </section>
+
+    <!-- CLASSES TAB -->
+    <section class="tab-panel" id="panel-classes">
+      <div class="section-head">
+        <div class="lede">
+          <h2>Classes</h2>
+          <p>Summer weeks and fall sessions students can be enrolled in.</p>
+        </div>
+        <button class="btn primary" type="button" onclick="openClassModal()">➕ Add Class</button>
+      </div>
+      <div id="classes"></div>
     </section>
   </main>
+
+  <!-- STUDENT MODAL -->
+  <div class="modal-overlay" id="studentOverlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="studentModalTitle">
+      <div class="modal-head">
+        <h2 id="studentModalTitle">Add Student</h2>
+        <button class="modal-close" type="button" onclick="closeStudentModal()" aria-label="Close">✕</button>
+      </div>
+      <form id="studentForm">
+        <div class="modal-body">
+          <input id="studentId" type="hidden">
+          <label class="field">Student name <input id="studentName" required placeholder="First and last name"></label>
+          <label class="field">Parent / guardian <input id="parentName" placeholder="Parent name"></label>
+          <div class="row2">
+            <label class="field">Email <input id="email" type="email" placeholder="parent@email.com"></label>
+            <label class="field">Phone <input id="phone" placeholder="(555) 555-5555"></label>
+          </div>
+          <label class="field">Notes <textarea id="notes" placeholder="Allergies, pickup notes, anything coaches should know"></textarea></label>
+          <div>
+            <h3 style="margin:6px 0 4px;font-size:0.95rem;">Class enrollment</h3>
+            <p class="enroll-intro">Check the classes this student is in. For summer, also pick their weeks.</p>
+            <div id="enrollmentControls" class="enroll-group"></div>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn ghost" type="button" onclick="closeStudentModal()">Cancel</button>
+          <button class="btn primary" type="submit">Save student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CLASS MODAL -->
+  <div class="modal-overlay" id="classOverlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="classModalTitle">
+      <div class="modal-head">
+        <h2 id="classModalTitle">Add Class</h2>
+        <button class="modal-close" type="button" onclick="closeClassModal()" aria-label="Close">✕</button>
+      </div>
+      <form id="classForm">
+        <div class="modal-body">
+          <input id="classId" type="hidden">
+          <label class="field">Class name <input id="className" required placeholder="e.g. Fall Saturday LEGO Robotics 1"></label>
+          <div class="row2">
+            <label class="field">Term
+              <select id="classTerm">
+                <option value="summer">Summer</option>
+                <option value="fall" selected>Fall</option>
+                <option value="spring">Spring</option>
+                <option value="year-round">Year-round</option>
+              </select>
+            </label>
+            <label class="field">Program
+              <select id="classProgram">
+                <option value="lego-robotics">LEGO Robotics</option>
+                <option value="ftc">FTC</option>
+                <option value="fll">FLL</option>
+                <option value="code-lab">Code Lab</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
+          </div>
+          <div class="row2">
+            <label class="field">Day <input id="classDay" placeholder="Saturday, Sunday, Weekly"></label>
+            <label class="field">Schedule note <input id="classSchedule" placeholder="Saturday 10:00 AM"></label>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn ghost" type="button" onclick="closeClassModal()">Cancel</button>
+          <button class="btn primary" type="submit">Save class</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script>
     const state = { user: null, roster: null };
@@ -409,21 +519,26 @@
     const searchInput = document.getElementById('searchInput');
     const termFilter = document.getElementById('termFilter');
     const classFilter = document.getElementById('classFilter');
+    const studentOverlay = document.getElementById('studentOverlay');
+    const classOverlay = document.getElementById('classOverlay');
+
+    const TERM_LABELS = { summer: 'Summer', fall: 'Fall', spring: 'Spring', 'year-round': 'Year-round' };
+    const TERM_ICONS = { summer: '☀️', fall: '🍂', spring: '🌱', 'year-round': '📅' };
+    const TERM_ORDER = ['summer', 'fall', 'spring', 'year-round'];
+    const PROGRAM_LABELS = {
+      'lego-robotics': 'LEGO Robotics', ftc: 'FTC', fll: 'FLL', 'code-lab': 'Code Lab', other: 'Other'
+    };
 
     function esc(value) {
       return String(value == null ? '' : value)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
     }
-
     function showNotice(message) {
       notice.textContent = message || '';
       notice.style.display = message ? 'block' : 'none';
+      if (message) window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-
     async function api(url, options = {}) {
       const response = await fetch(url, {
         ...options,
@@ -433,41 +548,44 @@
       if (!response.ok || !result.success) throw new Error(result.message || 'Request failed');
       return result;
     }
-
-    function classById(id) {
-      return (state.roster.classes || []).find((item) => item.id === id);
-    }
-
+    function classById(id) { return (state.roster.classes || []).find((item) => item.id === id); }
     function enrollmentFor(student, classId) {
       return (student.enrollments || []).find((item) => item.classId === classId) || null;
     }
+    function formatProgram(value) { return PROGRAM_LABELS[value] || value; }
 
-    function formatProgram(value) {
-      return {
-        'lego-robotics': 'LEGO Robotics',
-        ftc: 'FTC',
-        fll: 'FLL',
-        'code-lab': 'Code Lab',
-        other: 'Other'
-      }[value] || value;
+    function groupClassesByTerm() {
+      const groups = {};
+      (state.roster.classes || []).forEach((classItem) => {
+        const term = classItem.term || 'other';
+        (groups[term] = groups[term] || []).push(classItem);
+      });
+      return TERM_ORDER.filter((term) => groups[term]).map((term) => ({ term, classes: groups[term] }));
     }
+
+    /* ── Tabs ── */
+    document.querySelectorAll('.tab-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach((b) => b.classList.toggle('active', b === btn));
+        document.querySelectorAll('.tab-panel').forEach((p) => p.classList.toggle('active', p.id === 'panel-' + btn.dataset.tab));
+      });
+    });
 
     async function load() {
       try {
         const session = await api('/api/coach/session');
         state.user = session.user;
-        userline.textContent = `${session.user.name} · ${session.user.role === 'owner' ? 'Owner/Admin' : 'Coach'}`;
+        userline.textContent = `${session.user.name} · ${session.user.role === 'owner' ? 'Owner / Admin' : 'Coach'}`;
         const roster = await api('/api/master-roster');
         state.roster = roster.data;
         renderAll();
       } catch (err) {
-        if (/login/i.test(err.message)) window.location.href = '/coach-login';
+        if (/login/i.test(err.message)) { window.location.href = '/coach-login'; return; }
         showNotice(err.message);
       }
     }
 
     function renderAll() {
-      renderEnrollmentControls();
       renderClassFilter();
       renderStats();
       renderStudents();
@@ -477,68 +595,22 @@
     function renderStats() {
       const students = state.roster.students || [];
       const classes = state.roster.classes || [];
-      const summerEnrollments = students.reduce((count, student) => {
-        return count + (student.enrollments || []).filter((enrollment) => classById(enrollment.classId)?.term === 'summer').length;
-      }, 0);
+      const countSpots = (term) => students.reduce((count, student) =>
+        count + (student.enrollments || []).filter((e) => classById(e.classId)?.term === term).length, 0);
       document.getElementById('studentCount').textContent = students.length;
       document.getElementById('classCount').textContent = classes.length;
-      document.getElementById('summerCount').textContent = summerEnrollments;
+      document.getElementById('summerCount').textContent = countSpots('summer');
+      document.getElementById('fallCount').textContent = countSpots('fall');
     }
 
     function renderClassFilter() {
       const selected = classFilter.value || 'all';
-      classFilter.innerHTML = '<option value="all">All classes</option>' + state.roster.classes
-        .map((item) => `<option value="${esc(item.id)}">${esc(item.name)}</option>`)
-        .join('');
-      classFilter.value = state.roster.classes.some((item) => item.id === selected) ? selected : 'all';
+      classFilter.innerHTML = '<option value="all">All classes</option>' + (state.roster.classes || [])
+        .map((item) => `<option value="${esc(item.id)}">${esc(item.name)}</option>`).join('');
+      classFilter.value = (state.roster.classes || []).some((item) => item.id === selected) ? selected : 'all';
     }
 
-    function renderEnrollmentControls(student = null) {
-      enrollmentControls.innerHTML = state.roster.classes.map((classItem) => {
-        const enrollment = student ? enrollmentFor(student, classItem.id) : null;
-        const checked = Boolean(enrollment);
-        const weeks = state.roster.settings.summerWeeks || [];
-        const selectedWeeks = new Set(enrollment?.weeks || []);
-        const weekHtml = classItem.term === 'summer' ? `
-          <div class="week-grid" data-weeks-for="${esc(classItem.id)}" style="${checked ? '' : 'display:none'}">
-            ${weeks.map((week) => `
-              <label class="check-row">
-                <input type="checkbox" data-week="${esc(week.id)}" data-class-id="${esc(classItem.id)}" ${selectedWeeks.has(week.id) ? 'checked' : ''}>
-                <span>${esc(week.label)}<br><small>${esc(week.dates)}</small></span>
-              </label>
-            `).join('')}
-          </div>
-        ` : '';
-        return `
-          <div class="enroll-card">
-            <label class="check-row">
-              <input type="checkbox" data-class-check="${esc(classItem.id)}" ${checked ? 'checked' : ''}>
-              <span>${esc(classItem.name)} <small>(${esc(classItem.term)}, ${esc(classItem.day || 'No day')})</small></span>
-            </label>
-            ${weekHtml}
-          </div>
-        `;
-      }).join('') || '<div class="empty">Create a class first.</div>';
-
-      enrollmentControls.querySelectorAll('[data-class-check]').forEach((input) => {
-        input.addEventListener('change', () => {
-          const weeks = enrollmentControls.querySelector(`[data-weeks-for="${CSS.escape(input.dataset.classCheck)}"]`);
-          if (weeks) weeks.style.display = input.checked ? '' : 'none';
-        });
-      });
-    }
-
-    function collectEnrollments() {
-      return Array.from(enrollmentControls.querySelectorAll('[data-class-check]:checked')).map((input) => {
-        const classId = input.dataset.classCheck;
-        const classItem = classById(classId);
-        const weeks = classItem?.term === 'summer'
-          ? Array.from(enrollmentControls.querySelectorAll(`[data-week][data-class-id="${CSS.escape(classId)}"]:checked`)).map((week) => week.dataset.week)
-          : [];
-        return { classId, weeks };
-      });
-    }
-
+    /* ── Students list ── */
     function filteredStudents() {
       const q = searchInput.value.trim().toLowerCase();
       const term = termFilter.value;
@@ -555,110 +627,145 @@
 
     function renderStudents() {
       const students = filteredStudents();
+      const total = (state.roster.students || []).length;
       if (!students.length) {
-        studentsEl.innerHTML = '<div class="empty">No students match this view.</div>';
+        studentsEl.innerHTML = total === 0
+          ? `<div class="empty"><span class="big">👋</span><h3>No students yet</h3><p>Add your first student to start building the roster.</p><button class="btn primary" type="button" onclick="openStudentModal()">➕ Add Student</button></div>`
+          : `<div class="empty"><span class="big">🔍</span><h3>No matches</h3><p>No students match this search or filter. Try clearing the filters.</p></div>`;
         return;
       }
-      studentsEl.innerHTML = students.map((student) => {
+      studentsEl.innerHTML = students.slice().sort((a, b) => a.name.localeCompare(b.name)).map((student) => {
         const enrollments = (student.enrollments || []).map((enrollment) => {
           const classItem = classById(enrollment.classId);
           if (!classItem) return '';
           const weeks = classItem.term === 'summer' && enrollment.weeks?.length
-            ? ` · ${enrollment.weeks.length} week${enrollment.weeks.length === 1 ? '' : 's'}`
-            : '';
-          return `<span class="pill ${classItem.term === 'summer' ? 'green' : ''}">${esc(classItem.name)}${weeks}</span>`;
-        }).join('');
+            ? ` · ${enrollment.weeks.length} wk${enrollment.weeks.length === 1 ? '' : 's'}` : '';
+          return `<span class="pill ${classItem.term === 'summer' ? 'summer' : ''}">${esc(classItem.name)}${weeks}</span>`;
+        }).filter(Boolean).join('');
+        const contactBits = [student.parentName, student.email, student.phone].filter(Boolean).map(esc).join(' · ');
         return `
-          <article class="student-card">
-            <div class="student-top">
+          <article class="card">
+            <div class="card-top">
               <div>
                 <h3>${esc(student.name)}</h3>
-                <p>${esc(student.parentName || 'No parent listed')} · ${esc(student.email || 'No email')} · ${esc(student.phone || 'No phone')}</p>
+                <p class="sub">${contactBits || 'No contact info yet'}</p>
               </div>
-              <div class="actions">
-                <button class="btn" type="button" onclick="editStudent('${esc(student.id)}')">Edit</button>
-                <button class="btn danger" type="button" onclick="deleteStudent('${esc(student.id)}')">Remove</button>
+              <div class="card-actions">
+                <button class="btn sm" type="button" onclick="openStudentModal('${esc(student.id)}')">Edit</button>
+                <button class="btn sm danger" type="button" onclick="deleteStudent('${esc(student.id)}')">Remove</button>
               </div>
             </div>
-            <div class="meta">${enrollments || '<span class="pill off">No classes</span>'}</div>
-            ${student.notes ? `<p style="margin-top:10px">${esc(student.notes)}</p>` : ''}
-          </article>
-        `;
+            <div class="meta">${enrollments || '<span class="pill none">Not enrolled in any class</span>'}</div>
+            ${student.notes ? `<p class="sub" style="margin-top:10px">📝 ${esc(student.notes)}</p>` : ''}
+          </article>`;
       }).join('');
     }
 
+    /* ── Classes list ── */
     function renderClasses() {
-      if (!state.roster.classes.length) {
-        classesEl.innerHTML = '<div class="empty">No classes yet.</div>';
+      if (!(state.roster.classes || []).length) {
+        classesEl.innerHTML = `<div class="empty"><span class="big">📚</span><h3>No classes yet</h3><p>Create a summer or fall class so students can be enrolled.</p><button class="btn primary" type="button" onclick="openClassModal()">➕ Add Class</button></div>`;
         return;
       }
-      classesEl.innerHTML = state.roster.classes.map((classItem) => {
-        const count = state.roster.students.filter((student) => enrollmentFor(student, classItem.id)).length;
-        return `
-          <article class="class-card">
-            <div class="class-top">
-              <div>
-                <h3>${esc(classItem.name)}</h3>
-                <div class="meta">
-                  <span class="pill">${esc(classItem.term)}</span>
-                  <span class="pill">${esc(formatProgram(classItem.program))}</span>
-                  <span class="pill">${esc(classItem.day || 'No day')}</span>
-                  <span class="pill green">${count} student${count === 1 ? '' : 's'}</span>
-                </div>
-                ${classItem.schedule ? `<p style="margin-top:8px">${esc(classItem.schedule)}</p>` : ''}
-              </div>
-              <button class="btn danger" type="button" onclick="deleteClass('${esc(classItem.id)}')">Remove</button>
-            </div>
-          </article>
-        `;
-      }).join('');
+      classesEl.innerHTML = groupClassesByTerm().map((group) => `
+        <div class="term-group">
+          <p class="term-group-title">${TERM_ICONS[group.term] || ''} ${esc(TERM_LABELS[group.term] || group.term)} · ${group.classes.length} class${group.classes.length === 1 ? '' : 'es'}</p>
+          <div class="list">
+            ${group.classes.map((classItem) => {
+              const count = (state.roster.students || []).filter((s) => enrollmentFor(s, classItem.id)).length;
+              return `
+                <article class="card">
+                  <div class="card-top">
+                    <div>
+                      <h3>${esc(classItem.name)}</h3>
+                      <div class="meta">
+                        <span class="pill">${esc(formatProgram(classItem.program))}</span>
+                        <span class="pill">${esc(classItem.day || 'No day')}</span>
+                        <span class="pill count">${count} student${count === 1 ? '' : 's'}</span>
+                      </div>
+                      ${classItem.schedule ? `<p class="sub" style="margin-top:8px">🕒 ${esc(classItem.schedule)}</p>` : ''}
+                    </div>
+                    <div class="card-actions">
+                      <button class="btn sm" type="button" onclick="openClassModal('${esc(classItem.id)}')">Edit</button>
+                      <button class="btn sm danger" type="button" onclick="deleteClass('${esc(classItem.id)}')">Remove</button>
+                    </div>
+                  </div>
+                </article>`;
+            }).join('')}
+          </div>
+        </div>`).join('');
     }
 
-    function resetStudentForm() {
-      studentForm.reset();
-      document.getElementById('studentId').value = '';
-      document.getElementById('studentFormTitle').textContent = 'Add Student';
-      renderEnrollmentControls();
+    /* ── Enrollment picker (inside student modal) ── */
+    function renderEnrollmentControls(student = null) {
+      if (!(state.roster.classes || []).length) {
+        enrollmentControls.innerHTML = '<div class="empty" style="padding:20px"><p>No classes yet — create one in the Classes tab first.</p></div>';
+        return;
+      }
+      const weeks = state.roster.settings.summerWeeks || [];
+      enrollmentControls.innerHTML = groupClassesByTerm().map((group) => `
+        <div class="enroll-group-label">${TERM_ICONS[group.term] || ''} ${esc(TERM_LABELS[group.term] || group.term)}</div>
+        ${group.classes.map((classItem) => {
+          const enrollment = student ? enrollmentFor(student, classItem.id) : null;
+          const checked = Boolean(enrollment);
+          const selectedWeeks = new Set(enrollment?.weeks || []);
+          const weekHtml = classItem.term === 'summer' ? `
+            <div class="week-grid" data-weeks-for="${esc(classItem.id)}" style="${checked ? '' : 'display:none'}">
+              ${weeks.map((week) => `
+                <label class="check-row">
+                  <input type="checkbox" data-week="${esc(week.id)}" data-class-id="${esc(classItem.id)}" ${selectedWeeks.has(week.id) ? 'checked' : ''}>
+                  <span><span class="label-main">${esc(week.label)}</span><span class="label-sub">${esc(week.dates)}</span></span>
+                </label>`).join('')}
+            </div>` : '';
+          return `
+            <div class="enroll-card ${checked ? 'checked' : ''}" data-card-for="${esc(classItem.id)}">
+              <label class="check-row">
+                <input type="checkbox" data-class-check="${esc(classItem.id)}" ${checked ? 'checked' : ''}>
+                <span><span class="label-main">${esc(classItem.name)}</span><span class="label-sub">${esc(formatProgram(classItem.program))} · ${esc(classItem.day || 'No day')}</span></span>
+              </label>
+              ${weekHtml}
+            </div>`;
+        }).join('')}`).join('');
+
+      enrollmentControls.querySelectorAll('[data-class-check]').forEach((input) => {
+        input.addEventListener('change', () => {
+          const id = input.dataset.classCheck;
+          const card = enrollmentControls.querySelector(`[data-card-for="${CSS.escape(id)}"]`);
+          if (card) card.classList.toggle('checked', input.checked);
+          const weeksEl = enrollmentControls.querySelector(`[data-weeks-for="${CSS.escape(id)}"]`);
+          if (weeksEl) weeksEl.style.display = input.checked ? '' : 'none';
+        });
+      });
+    }
+
+    function collectEnrollments() {
+      return Array.from(enrollmentControls.querySelectorAll('[data-class-check]:checked')).map((input) => {
+        const classId = input.dataset.classCheck;
+        const classItem = classById(classId);
+        const weeks = classItem?.term === 'summer'
+          ? Array.from(enrollmentControls.querySelectorAll(`[data-week][data-class-id="${CSS.escape(classId)}"]:checked`)).map((w) => w.dataset.week)
+          : [];
+        return { classId, weeks };
+      });
+    }
+
+    /* ── Student modal ── */
+    window.openStudentModal = function openStudentModal(id) {
       showNotice('');
-    }
-
-    window.editStudent = function editStudent(id) {
-      const student = state.roster.students.find((item) => item.id === id);
-      if (!student) return;
-      document.getElementById('studentId').value = student.id;
-      document.getElementById('studentName').value = student.name || '';
-      document.getElementById('parentName').value = student.parentName || '';
-      document.getElementById('email').value = student.email || '';
-      document.getElementById('phone').value = student.phone || '';
-      document.getElementById('notes').value = student.notes || '';
-      document.getElementById('studentFormTitle').textContent = `Edit ${student.name}`;
+      studentForm.reset();
+      const student = id ? (state.roster.students || []).find((s) => s.id === id) : null;
+      document.getElementById('studentId').value = student ? student.id : '';
+      document.getElementById('studentName').value = student?.name || '';
+      document.getElementById('parentName').value = student?.parentName || '';
+      document.getElementById('email').value = student?.email || '';
+      document.getElementById('phone').value = student?.phone || '';
+      document.getElementById('notes').value = student?.notes || '';
+      document.getElementById('studentModalTitle').textContent = student ? `Edit ${student.name}` : 'Add Student';
       renderEnrollmentControls(student);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      openOverlay(studentOverlay);
+      document.getElementById('studentName').focus();
     };
-
-    window.deleteStudent = async function deleteStudent(id) {
-      if (!confirm('Remove this student from the master roster?')) return;
-      try {
-        const result = await api(`/api/master-roster/students/${encodeURIComponent(id)}`, { method: 'DELETE' });
-        state.roster = result.data;
-        resetStudentForm();
-        renderAll();
-      } catch (err) {
-        showNotice(err.message);
-      }
-    };
-
-    window.deleteClass = async function deleteClass(id) {
-      if (!confirm('Remove this class? Students will be unenrolled from it.')) return;
-      try {
-        const result = await api(`/api/master-roster/classes/${encodeURIComponent(id)}`, { method: 'DELETE' });
-        state.roster = result.data;
-        resetStudentForm();
-        renderAll();
-      } catch (err) {
-        showNotice(err.message);
-      }
-    };
+    window.closeStudentModal = function closeStudentModal() { closeOverlay(studentOverlay); };
 
     studentForm.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -673,18 +780,43 @@
       };
       try {
         const url = id ? `/api/master-roster/students/${encodeURIComponent(id)}` : '/api/master-roster/students';
-        const method = id ? 'PATCH' : 'POST';
-        const result = await api(url, { method, body: JSON.stringify(payload) });
+        const result = await api(url, { method: id ? 'PATCH' : 'POST', body: JSON.stringify(payload) });
         state.roster = result.data;
-        resetStudentForm();
+        closeStudentModal();
         renderAll();
-      } catch (err) {
-        showNotice(err.message);
-      }
+      } catch (err) { showNotice(err.message); }
     });
+
+    window.deleteStudent = async function deleteStudent(id) {
+      const student = (state.roster.students || []).find((s) => s.id === id);
+      if (!confirm(`Remove ${student ? student.name : 'this student'} from the roster?`)) return;
+      try {
+        const result = await api(`/api/master-roster/students/${encodeURIComponent(id)}`, { method: 'DELETE' });
+        state.roster = result.data;
+        renderAll();
+      } catch (err) { showNotice(err.message); }
+    };
+
+    /* ── Class modal ── */
+    window.openClassModal = function openClassModal(id) {
+      showNotice('');
+      classForm.reset();
+      const classItem = id ? (state.roster.classes || []).find((c) => c.id === id) : null;
+      document.getElementById('classId').value = classItem ? classItem.id : '';
+      document.getElementById('className').value = classItem?.name || '';
+      document.getElementById('classTerm').value = classItem?.term || 'fall';
+      document.getElementById('classProgram').value = classItem?.program || 'lego-robotics';
+      document.getElementById('classDay').value = classItem?.day || '';
+      document.getElementById('classSchedule').value = classItem?.schedule || '';
+      document.getElementById('classModalTitle').textContent = classItem ? `Edit ${classItem.name}` : 'Add Class';
+      openOverlay(classOverlay);
+      document.getElementById('className').focus();
+    };
+    window.closeClassModal = function closeClassModal() { closeOverlay(classOverlay); };
 
     classForm.addEventListener('submit', async (event) => {
       event.preventDefault();
+      const id = document.getElementById('classId').value;
       const payload = {
         name: document.getElementById('className').value,
         term: document.getElementById('classTerm').value,
@@ -693,21 +825,38 @@
         schedule: document.getElementById('classSchedule').value
       };
       try {
-        const result = await api('/api/master-roster/classes', { method: 'POST', body: JSON.stringify(payload) });
+        const url = id ? `/api/master-roster/classes/${encodeURIComponent(id)}` : '/api/master-roster/classes';
+        const result = await api(url, { method: id ? 'PATCH' : 'POST', body: JSON.stringify(payload) });
         state.roster = result.data;
-        classForm.reset();
-        document.getElementById('classTerm').value = 'fall';
+        closeClassModal();
         renderAll();
-      } catch (err) {
-        showNotice(err.message);
-      }
+      } catch (err) { showNotice(err.message); }
     });
 
-    document.getElementById('cancelEditButton').addEventListener('click', resetStudentForm);
+    window.deleteClass = async function deleteClass(id) {
+      const classItem = (state.roster.classes || []).find((c) => c.id === id);
+      if (!confirm(`Remove ${classItem ? classItem.name : 'this class'}? Students will be unenrolled from it.`)) return;
+      try {
+        const result = await api(`/api/master-roster/classes/${encodeURIComponent(id)}`, { method: 'DELETE' });
+        state.roster = result.data;
+        renderAll();
+      } catch (err) { showNotice(err.message); }
+    };
+
+    /* ── Overlay helpers ── */
+    function openOverlay(overlay) { overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeOverlay(overlay) { overlay.classList.remove('open'); document.body.style.overflow = ''; }
+    [studentOverlay, classOverlay].forEach((overlay) => {
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) closeOverlay(overlay); });
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { closeOverlay(studentOverlay); closeOverlay(classOverlay); }
+    });
+
     document.getElementById('logoutButton').addEventListener('click', async () => {
       try { await fetch('/api/coach/logout', { method: 'POST' }); } finally { window.location.href = '/coach-login'; }
     });
-    [searchInput, termFilter, classFilter].forEach((element) => element.addEventListener('input', renderStudents));
+    [searchInput, termFilter, classFilter].forEach((el) => el.addEventListener('input', renderStudents));
 
     load();
   </script>

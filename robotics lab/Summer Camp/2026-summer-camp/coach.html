@@ -403,6 +403,73 @@
       margin: 18px 0 8px;
     }
 
+    .print-queue {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .print-queue-card {
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .print-queue-card h4 { margin: 0 0 6px; font-size: 15px; }
+    .print-queue-card p { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 8px 0; }
+    .print-controls { display: grid; grid-template-columns: 160px 110px 1fr auto; gap: 8px; align-items: end; margin-top: 12px; }
+    .print-controls label { display: block; font-size: 11px; font-weight: 900; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
+
+    .dojo-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr 110px 1.5fr auto;
+      gap: 10px;
+      align-items: end;
+      margin-top: 14px;
+    }
+
+    .dojo-panel label {
+      display: block;
+      font-size: 11px;
+      font-weight: 900;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 4px;
+    }
+
+    .dojo-feed {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .classroom-controls {
+      display: grid;
+      gap: 16px;
+    }
+
+    .control-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      align-items: end;
+    }
+
+    .group-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      background: #fbfcfd;
+      margin-top: 10px;
+    }
+
+    .group-card h4 { margin: 0 0 5px; }
+    .group-card p { margin: 5px 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
+
     .error-box {
       background: var(--red-light);
       border: 1.5px solid #f3c4c4;
@@ -482,7 +549,9 @@
     let hubData = null;
     let roster = [];
     let progressData = { students: [], days: [], submissions: [] };
+    let printQueue = [];
     let rosterView = 'class';
+    let classroomState = { noiseLevel: 'partner', timer: { label: 'Work time', durationMinutes: 20, pausedRemainingSeconds: 1200, running: false }, groups: [] };
 
     function esc(v) {
       return String(v == null ? '' : v)
@@ -684,13 +753,118 @@
     }
 
     /* ── Campers tab ── */
+    function renderClassroomControls() {
+      const timer = classroomState.timer || {};
+      return `
+        <div class="section-title">Classroom Tools</div>
+        <p class="section-sub">Set the shared timer, noise level, and group/subgroup structure students see in the summer hub.</p>
+        <div class="classroom-controls">
+          <div class="control-row">
+            <div><label for="timerLabel">Timer label</label><input id="timerLabel" value="${esc(timer.label || 'Work time')}" /></div>
+            <div><label for="timerMinutes">Minutes</label><input id="timerMinutes" type="number" min="1" max="180" value="${esc(timer.durationMinutes || 20)}" /></div>
+            <div><label for="noiseLevel">Noise level</label><select id="noiseLevel">${['silent','whisper','partner','team','present'].map(level => `<option value="${level}" ${level === classroomState.noiseLevel ? 'selected' : ''}>${level}</option>`).join('')}</select></div>
+            <button class="btn btn-primary" onclick="saveClassroomBasics(false)">Save</button>
+            <button class="btn btn-primary" onclick="saveClassroomBasics(true)">Start timer</button>
+            <button class="btn btn-ghost" onclick="pauseClassroomTimer()">Pause</button>
+          </div>
+          <div class="card" style="box-shadow:none">
+            <div class="section-title" style="font-size:16px">Create group</div>
+            <div class="form-grid">
+              <div><label>Group name</label><input id="groupName" placeholder="e.g. Robot Builders, Research Team" /></div>
+              <div><label>Focus</label><input id="groupFocus" placeholder="What should this group work on?" /></div>
+              <div><label>Members</label><textarea id="groupMembers" rows="2" placeholder="One student per line"></textarea></div>
+              <div><label>Subgroups</label><textarea id="groupSubgroups" rows="4" placeholder="Format: Subgroup Name: student, student&#10;Build Team: Maya, Leo&#10;Code Team: Aria, Sam"></textarea></div>
+              <button class="btn btn-primary" onclick="createClassroomGroup()">Create group</button>
+            </div>
+          </div>
+          <div id="groupList">${renderCoachGroups()}</div>
+        </div>
+      `;
+    }
+
+    function renderCoachGroups() {
+      const groups = classroomState.groups || [];
+      if (!groups.length) return '<p class="section-sub">No groups yet.</p>';
+      return groups.map(group => `
+        <div class="group-card">
+          <h4>${esc(group.name)}</h4>
+          ${group.focus ? `<p><strong>Focus:</strong> ${esc(group.focus)}</p>` : ''}
+          ${group.members?.length ? `<p><strong>Members:</strong> ${esc(group.members.join(', '))}</p>` : ''}
+          ${(group.subgroups || []).map(sub => `<p><strong>${esc(sub.name)}:</strong> ${esc((sub.members || []).join(', ') || 'No members listed')}</p>`).join('')}
+          <button class="btn btn-danger" onclick="deleteClassroomGroup('${esc(group.id)}')">Delete group</button>
+        </div>
+      `).join('');
+    }
+
+    function parseLines(value) {
+      return String(value || '').split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+    }
+
+    function parseSubgroups(value) {
+      return parseLines(value).map(line => {
+        const [name, membersText = ''] = line.split(':');
+        return { name: (name || '').trim() || 'Subgroup', members: membersText.split(',').map(item => item.trim()).filter(Boolean) };
+      });
+    }
+
+    async function saveClassroomBasics(startTimer) {
+      const minutes = Math.max(1, Number(document.getElementById('timerMinutes').value || 20));
+      const timer = {
+        label: document.getElementById('timerLabel').value.trim() || 'Work time',
+        durationMinutes: minutes,
+        pausedRemainingSeconds: minutes * 60,
+        running: Boolean(startTimer),
+        startedAt: startTimer ? new Date().toISOString() : ''
+      };
+      const result = await api('/api/camp/coach/classroom', {
+        method: 'PATCH',
+        body: JSON.stringify({ noiseLevel: document.getElementById('noiseLevel').value, timer })
+      });
+      classroomState = result.classroom;
+      document.getElementById('classroomToolsWrap').innerHTML = renderClassroomControls();
+    }
+
+    async function pauseClassroomTimer() {
+      const current = classroomState.timer || {};
+      const elapsed = current.running && current.startedAt ? Math.floor((Date.now() - new Date(current.startedAt).getTime()) / 1000) : 0;
+      const remaining = Math.max(0, Number(current.pausedRemainingSeconds || 0) - elapsed);
+      const result = await api('/api/camp/coach/classroom', {
+        method: 'PATCH',
+        body: JSON.stringify({ timer: { ...current, running: false, startedAt: '', pausedRemainingSeconds: remaining } })
+      });
+      classroomState = result.classroom;
+      document.getElementById('classroomToolsWrap').innerHTML = renderClassroomControls();
+    }
+
+    async function createClassroomGroup() {
+      const result = await api('/api/camp/coach/classroom/groups', {
+        method: 'POST',
+        body: JSON.stringify({
+          name: document.getElementById('groupName').value,
+          focus: document.getElementById('groupFocus').value,
+          members: parseLines(document.getElementById('groupMembers').value),
+          subgroups: parseSubgroups(document.getElementById('groupSubgroups').value)
+        })
+      });
+      classroomState = result.classroom;
+      document.getElementById('classroomToolsWrap').innerHTML = renderClassroomControls();
+    }
+
+    async function deleteClassroomGroup(id) {
+      if (!confirm('Delete this group?')) return;
+      const result = await api(`/api/camp/coach/classroom/groups/${encodeURIComponent(id)}`, { method: 'DELETE' });
+      classroomState = result.classroom;
+      document.getElementById('classroomToolsWrap').innerHTML = renderClassroomControls();
+    }
+
     function renderProgressTab() {
       const classes = ['All', ...Array.from(new Set(progressData.students.map(s => s.className || 'Unassigned'))).sort()];
       const days = progressData.days || [];
       const defaultDay = days.find(d => d.date >= todayKey()) || days[0] || {};
       return `
         <div class="section-title">Student Progress</div>
-        <p class="section-sub">Review every camper submission, including reflections and final-work photos.</p>
+        <p class="section-sub">Award class points, then review camper submissions, reflections, and final-work photos.</p>
+        ${renderDojoPanel()}
         <div class="toolbar">
           <label for="progressClass">Class</label>
           <select id="progressClass" onchange="refreshProgressView()">
@@ -703,6 +877,67 @@
         </div>
         <div id="progressView"></div>
       `;
+    }
+
+    function renderDojoPanel() {
+      const students = (progressData.students || []).filter(s => s.active !== false).sort((a, b) => a.name.localeCompare(b.name));
+      const categories = ['Teamwork', 'Helping Others', 'Creativity', 'Persistence', 'Problem Solving', 'Clean Workspace', 'Leadership', 'Ready to Learn'];
+      return `
+        <div class="dojo-panel">
+          <div>
+            <label for="dojoStudent">Student</label>
+            <select id="dojoStudent">${students.map(s => `<option value="${esc(s.id)}">${esc(s.name)} (${esc(s.points?.total || 0)} pts)</option>`).join('')}</select>
+          </div>
+          <div>
+            <label for="dojoCategory">Skill</label>
+            <select id="dojoCategory">${categories.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('')}</select>
+          </div>
+          <div>
+            <label for="dojoPoints">Points</label>
+            <select id="dojoPoints">
+              <option value="1">+1</option>
+              <option value="2">+2</option>
+              <option value="3">+3</option>
+              <option value="-1">-1</option>
+              <option value="-2">-2</option>
+            </select>
+          </div>
+          <div>
+            <label for="dojoNote">Note</label>
+            <input id="dojoNote" placeholder="Optional: what did they do?" />
+          </div>
+          <button class="btn btn-primary" onclick="awardClassPoint()">Award</button>
+        </div>
+        <div class="dojo-feed">
+          ${(progressData.pointEvents || []).slice().sort((a,b) => String(b.createdAt || '').localeCompare(String(a.createdAt || ''))).slice(0, 8).map(e => `<span class="pill ${e.points >= 0 ? 'on' : 'off'}">${esc(e.studentName)} ${e.points > 0 ? '+' : ''}${esc(e.points)} ${esc(e.category)}</span>`).join('')}
+        </div>
+      `;
+    }
+
+    async function awardClassPoint() {
+      const studentId = document.getElementById('dojoStudent')?.value;
+      const category = document.getElementById('dojoCategory')?.value;
+      const pointsValue = Number(document.getElementById('dojoPoints')?.value || 1);
+      const note = document.getElementById('dojoNote')?.value || '';
+      if (!studentId) return;
+      try {
+        await api('/api/camp/coach/points', {
+          method: 'POST',
+          body: JSON.stringify({
+            studentId,
+            category,
+            points: Math.abs(pointsValue),
+            type: pointsValue < 0 ? 'needs-work' : 'positive',
+            note
+          })
+        });
+        const refreshed = await api('/api/camp/coach/progress');
+        progressData = refreshed || progressData;
+        document.querySelector('.card').innerHTML = renderProgressTab();
+        refreshProgressView();
+      } catch (err) {
+        alert(err.message);
+      }
     }
 
     function refreshProgressView() {
@@ -720,6 +955,7 @@
         return `
           <div class="submission-card ${sub ? '' : 'missing'}">
             <h4>${esc(student.name)}</h4>
+            <span class="pill on">${esc(student.points?.total || 0)} pts</span>
             <span class="pill ${sub ? 'on' : 'off'}">${sub ? 'Submitted' : 'Missing'}</span>
             <p><strong>Class:</strong> ${esc(student.className || 'Unassigned')}</p>
             ${sub ? `
@@ -739,6 +975,74 @@
           <div class="progress-grid">${cards || '<p class="section-sub">No campers match this view.</p>'}</div>
         </div>
       `;
+    }
+
+    function renderPrintQueue() {
+      const pendingFirst = [...printQueue].sort((a, b) => {
+        const rank = { pending: 0, approved: 1, printing: 2, 'needs-changes': 3, ready: 4, completed: 5, declined: 6 };
+        return (rank[a.status] ?? 9) - (rank[b.status] ?? 9) || String(b.createdAt || '').localeCompare(String(a.createdAt || ''));
+      });
+      if (!pendingFirst.length) {
+        return `
+          <div class="section-title">3D Print Queue</div>
+          <p class="section-sub">No student print requests yet.</p>
+        `;
+      }
+      return `
+        <div class="section-title">3D Print Queue</div>
+        <p class="section-sub">Review student print requests, update status, leave notes, and award bonus points.</p>
+        <div class="print-queue">
+          ${pendingFirst.map(req => `
+            <div class="print-queue-card" id="print-${esc(req.id)}">
+              <h4>${esc(req.title)}</h4>
+              <span class="pill ${req.status === 'completed' || req.status === 'ready' ? 'on' : 'none'}">${esc(req.status || 'pending')}</span>
+              <span class="pill count">${esc(req.pointsAwarded || 0)} bonus pts</span>
+              <p><strong>${esc(req.studentName)}</strong> · ${esc(req.className || 'Unassigned')}</p>
+              <p><strong>Purpose:</strong> ${esc(req.purpose)}</p>
+              ${req.dimensions ? `<p><strong>Size:</strong> ${esc(req.dimensions)}</p>` : ''}
+              ${req.color ? `<p><strong>Color:</strong> ${esc(req.color)}</p>` : ''}
+              ${req.notes ? `<p><strong>Student notes:</strong> ${esc(req.notes)}</p>` : ''}
+              <div class="print-controls">
+                <div>
+                  <label>Status</label>
+                  <select data-print-field="status">
+                    ${['pending','approved','printing','ready','completed','needs-changes','declined'].map(status => `<option value="${status}" ${status === req.status ? 'selected' : ''}>${status}</option>`).join('')}
+                  </select>
+                </div>
+                <div>
+                  <label>Points</label>
+                  <input data-print-field="pointsAwarded" type="number" min="0" max="100" value="${esc(req.pointsAwarded || 0)}" />
+                </div>
+                <div>
+                  <label>Coach notes</label>
+                  <input data-print-field="coachNotes" value="${esc(req.coachNotes || '')}" placeholder="Approval notes, changes needed, pickup info..." />
+                </div>
+                <button class="btn btn-primary" onclick="updatePrintRequest('${esc(req.id)}')">Update</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    async function updatePrintRequest(id) {
+      const card = document.getElementById('print-' + id);
+      if (!card) return;
+      const payload = {};
+      card.querySelectorAll('[data-print-field]').forEach(el => { payload[el.dataset.printField] = el.value; });
+      try {
+        const result = await api(`/api/camp/coach/print-requests/${encodeURIComponent(id)}`, {
+          method: 'PATCH',
+          body: JSON.stringify(payload)
+        });
+        printQueue = result.requests || [];
+        const refreshed = await api('/api/camp/coach/progress');
+        progressData = refreshed || progressData;
+        document.getElementById('printQueueWrap').innerHTML = renderPrintQueue();
+        refreshProgressView();
+      } catch (err) {
+        alert(err.message);
+      }
     }
 
     function renderCampersTab() {
@@ -926,6 +1230,14 @@
           ${renderProgressTab()}
         </div>
 
+        <div class="card" id="classroomToolsWrap">
+          ${renderClassroomControls()}
+        </div>
+
+        <div class="card" id="printQueueWrap">
+          ${renderPrintQueue()}
+        </div>
+
         <div class="tabs">
           <button class="tab-btn active" data-tab="schedule" onclick="showTab('schedule')">🗓️ Schedule</button>
           <button class="tab-btn" data-tab="announcements" onclick="showTab('announcements')">📢 Announcements</button>
@@ -940,14 +1252,17 @@
 
     async function load() {
       try {
-        const [hubResult, rosterResult, progressResult] = await Promise.all([
+        const [hubResult, rosterResult, progressResult, printResult] = await Promise.all([
           api('/api/camp/hub-data'),
           api('/api/camp/coach/roster'),
-          api('/api/camp/coach/progress')
+          api('/api/camp/coach/progress'),
+          api('/api/camp/coach/print-requests')
         ]);
         hubData = hubResult.data;
         roster = rosterResult.users || [];
         progressData = progressResult || { students: [], days: [], submissions: [] };
+        printQueue = printResult.requests || [];
+        classroomState = hubData.classroom || classroomState;
         renderShell();
         refreshProgressView();
       } catch (err) {

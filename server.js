@@ -60,6 +60,9 @@ const campUsersFile = path.join(campHubDataDir, 'camp-users.json');
 const campCurriculumFile = path.join(campHubDataDir, 'curriculum.json');
 const campAnnouncementsFile = path.join(campHubDataDir, 'announcements.json');
 const campSubmissionsFile = path.join(campHubDataDir, 'submissions.json');
+const campPrintRequestsFile = path.join(campHubDataDir, 'print-requests.json');
+const campPointEventsFile = path.join(campHubDataDir, 'point-events.json');
+const campClassroomFile = path.join(campHubDataDir, 'classroom-state.json');
 const campSessionCookie = 'camp_session';
 const campDataFileNames = [
 	'camp-users.json',
@@ -67,7 +70,10 @@ const campDataFileNames = [
 	'curriculum.json',
 	'announcements.json',
 	'resources.json',
-	'submissions.json'
+	'submissions.json',
+	'print-requests.json',
+	'point-events.json',
+	'classroom-state.json'
 ];
 const campSessions = new Map();
 const coachUsersFile = path.join(platformDataDir, 'coach-users.json');
@@ -680,6 +686,88 @@ async function readCampSubmissions() {
 	return Array.isArray(submissions) ? submissions : [];
 }
 
+async function readCampPrintRequests() {
+	const requests = await readJsonFile(campPrintRequestsFile, []);
+	return Array.isArray(requests) ? requests : [];
+}
+
+async function readCampPointEvents() {
+	const events = await readJsonFile(campPointEventsFile, []);
+	return Array.isArray(events) ? events : [];
+}
+
+function defaultCampClassroomState() {
+	return {
+		noiseLevel: 'partner',
+		timer: {
+			label: 'Work time',
+			durationMinutes: 20,
+			startedAt: '',
+			pausedRemainingSeconds: 20 * 60,
+			running: false
+		},
+		groups: []
+	};
+}
+
+function normalizeCampClassroomState(state) {
+	const fallback = defaultCampClassroomState();
+	const source = state && typeof state === 'object' ? state : {};
+	const timerSource = source.timer && typeof source.timer === 'object' ? source.timer : {};
+	return {
+		noiseLevel: ['silent', 'whisper', 'partner', 'team', 'present'].includes(source.noiseLevel) ? source.noiseLevel : fallback.noiseLevel,
+		timer: {
+			label: cleanMetaString(timerSource.label || fallback.timer.label, 80),
+			durationMinutes: Number.isFinite(timerSource.durationMinutes) ? timerSource.durationMinutes : fallback.timer.durationMinutes,
+			startedAt: cleanMetaString(timerSource.startedAt || '', 80),
+			pausedRemainingSeconds: Number.isFinite(timerSource.pausedRemainingSeconds) ? Math.max(0, Math.round(timerSource.pausedRemainingSeconds)) : fallback.timer.pausedRemainingSeconds,
+			running: timerSource.running === true
+		},
+		groups: Array.isArray(source.groups) ? source.groups.map((group) => ({
+			id: cleanMetaString(group.id || `group-${crypto.randomBytes(3).toString('hex')}`, 120),
+			name: cleanMetaString(group.name || 'Group', 120),
+			focus: cleanMetaString(group.focus || '', 240),
+			members: Array.isArray(group.members) ? group.members.map((member) => cleanMetaString(member, 80)).filter(Boolean).slice(0, 30) : [],
+			subgroups: Array.isArray(group.subgroups) ? group.subgroups.map((subgroup) => ({
+				id: cleanMetaString(subgroup.id || `subgroup-${crypto.randomBytes(3).toString('hex')}`, 120),
+				name: cleanMetaString(subgroup.name || 'Subgroup', 120),
+				members: Array.isArray(subgroup.members) ? subgroup.members.map((member) => cleanMetaString(member, 80)).filter(Boolean).slice(0, 30) : []
+			})).slice(0, 12) : []
+		})).slice(0, 20) : []
+	};
+}
+
+async function readCampClassroomState() {
+	return normalizeCampClassroomState(await readJsonFile(campClassroomFile, defaultCampClassroomState()));
+}
+
+function campPointsFor(studentId, submissions, printRequests, pointEvents = []) {
+	const submittedActivities = (Array.isArray(submissions) ? submissions : [])
+		.filter((item) => item.studentId === studentId).length;
+	const printBonus = (Array.isArray(printRequests) ? printRequests : [])
+		.filter((item) => item.studentId === studentId)
+		.reduce((sum, item) => sum + (Number.isFinite(item.pointsAwarded) ? item.pointsAwarded : 0), 0);
+	const manualEvents = (Array.isArray(pointEvents) ? pointEvents : []).filter((item) => item.studentId === studentId);
+	const behaviorPoints = manualEvents.reduce((sum, item) => sum + (Number.isFinite(item.points) ? item.points : 0), 0);
+	const skills = manualEvents.reduce((acc, item) => {
+		const key = item.category || 'Other';
+		acc[key] = (acc[key] || 0) + (Number.isFinite(item.points) ? item.points : 0);
+		return acc;
+	}, {});
+	return {
+		total: submittedActivities * 10 + printBonus + behaviorPoints,
+		submittedActivities,
+		activityPoints: submittedActivities * 10,
+		printBonus,
+		behaviorPoints,
+		skills,
+		events: manualEvents
+			.slice()
+			.sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')))
+			.slice(0, 12)
+	};
+}
+
 async function readCoachUsers() {
 	const users = await readJsonFile(coachUsersFile, []);
 	return Array.isArray(users) ? users : [];
@@ -1069,20 +1157,167 @@ function requireCampCoach(req, res, next) {
 	return next();
 }
 
+function normalizedPersonName(value) {
+	return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function weekRangeFor(week) {
+	const days = (Array.isArray(week.days) ? week.days : []).map((day) => day.date).filter(Boolean).sort();
+	return {
+		start: days[0] || '',
+		end: days[days.length - 1] || ''
+	};
+}
+
+function parseMonthName(value) {
+	const months = {
+		jan: 1, january: 1,
+		feb: 2, february: 2,
+		mar: 3, march: 3,
+		apr: 4, april: 4,
+		may: 5,
+		jun: 6, june: 6,
+		jul: 7, july: 7,
+		aug: 8, august: 8,
+		sep: 9, sept: 9, september: 9,
+		oct: 10, october: 10,
+		nov: 11, november: 11,
+		dec: 12, december: 12
+	};
+	return months[String(value || '').toLowerCase()] || null;
+}
+
+function isoDateFor(year, month, day) {
+	if (!year || !month || !day) return '';
+	return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
+function parseRosterWeekRange(week) {
+	const dates = String(week?.dates || '');
+	const yearMatch = dates.match(/(20\d{2})/);
+	const year = yearMatch ? Number(yearMatch[1]) : new Date().getFullYear();
+	let match = dates.match(/([A-Za-z]+)\s+(\d{1,2})\s*-\s*([A-Za-z]+)\s+(\d{1,2})/);
+	if (match) {
+		return {
+			start: isoDateFor(year, parseMonthName(match[1]), Number(match[2])),
+			end: isoDateFor(year, parseMonthName(match[3]), Number(match[4]))
+		};
+	}
+	match = dates.match(/([A-Za-z]+)\s+(\d{1,2})\s*-\s*(\d{1,2})/);
+	if (match) {
+		const month = parseMonthName(match[1]);
+		return {
+			start: isoDateFor(year, month, Number(match[2])),
+			end: isoDateFor(year, month, Number(match[3]))
+		};
+	}
+	return { start: '', end: '' };
+}
+
+function rangesOverlap(a, b) {
+	return Boolean(a?.start && a?.end && b?.start && b?.end && a.start <= b.end && b.start <= a.end);
+}
+
+function mapRosterWeeksToCurriculumWeekIds(rosterWeekIds, rosterWeeks, curriculumWeeks) {
+	const rosterWeekById = new Map((Array.isArray(rosterWeeks) ? rosterWeeks : []).map((week) => [week.id, week]));
+	const curriculumRanges = (Array.isArray(curriculumWeeks) ? curriculumWeeks : []).map((week) => ({
+		id: week.id,
+		range: weekRangeFor(week)
+	}));
+	const mapped = [];
+	for (const rosterWeekId of rosterWeekIds) {
+		const rosterRange = parseRosterWeekRange(rosterWeekById.get(rosterWeekId));
+		const matches = curriculumRanges.filter((item) => rangesOverlap(rosterRange, item.range)).map((item) => item.id);
+		mapped.push(...(matches.length ? matches : [rosterWeekId]));
+	}
+	return Array.from(new Set(mapped));
+}
+
+async function getCampEnrollmentForUser(user, curriculum) {
+	const curriculumWeeks = Array.isArray(curriculum) ? curriculum : [];
+	const validWeekIds = new Set(curriculumWeeks.map((week) => week.id));
+	let source = 'fallback';
+	let enrolledWeekIds = [];
+	let masterStudent = null;
+	let matchedMasterRoster = false;
+
+	try {
+		const roster = await readMasterRoster();
+		const classesById = new Map((roster.classes || []).map((item) => [item.id, item]));
+		const userName = normalizedPersonName(user.name);
+		masterStudent = (roster.students || []).find((student) => {
+			if (user.masterStudentId && student.id === user.masterStudentId) return true;
+			return normalizedPersonName(student.name) === userName;
+		});
+		if (masterStudent) {
+			matchedMasterRoster = true;
+			const weeks = [];
+			for (const enrollment of (Array.isArray(masterStudent.enrollments) ? masterStudent.enrollments : [])) {
+				const classItem = classesById.get(enrollment.classId);
+				if (classItem && classItem.term === 'summer') {
+					weeks.push(...(Array.isArray(enrollment.weeks) ? enrollment.weeks : []));
+				}
+			}
+			enrolledWeekIds = mapRosterWeeksToCurriculumWeekIds(weeks, roster.settings.summerWeeks, curriculumWeeks)
+				.filter((weekId) => validWeekIds.has(weekId));
+			source = 'master-roster';
+		}
+	} catch (err) {
+		console.error('Camp enrollment lookup error:', err);
+	}
+
+	if (!enrolledWeekIds.length && !matchedMasterRoster && Array.isArray(user.enrolledWeekIds)) {
+		enrolledWeekIds = Array.from(new Set(user.enrolledWeekIds.filter((weekId) => validWeekIds.has(weekId))));
+		source = 'camp-user';
+	}
+	if (!enrolledWeekIds.length && !matchedMasterRoster) {
+		enrolledWeekIds = curriculumWeeks.map((week) => week.id).filter(Boolean);
+		source = 'fallback';
+	}
+
+	const today = new Date().toISOString().slice(0, 10);
+	const enrolledWeeks = curriculumWeeks.filter((week) => enrolledWeekIds.includes(week.id));
+	const visibleWeek = enrolledWeeks.find((week) => {
+		const range = weekRangeFor(week);
+		return range.start && range.end && today >= range.start && today <= range.end;
+	}) || enrolledWeeks.find((week) => {
+		const range = weekRangeFor(week);
+		return range.start && today < range.start;
+	}) || enrolledWeeks[enrolledWeeks.length - 1] || null;
+
+	return {
+		source,
+		masterStudentId: masterStudent?.id || user.masterStudentId || null,
+		enrolledWeekIds,
+		visibleWeekId: visibleWeek?.id || null,
+		visibleWeekLabel: visibleWeek?.label || '',
+		visibleWeekRange: visibleWeek ? weekRangeFor(visibleWeek) : null
+	};
+}
+
 async function getCampHubDataFor(user) {
-	const [camp, curriculum, announcements, resources, submissions] = await Promise.all([
+	const [camp, curriculum, announcements, resources, submissions, printRequests, pointEvents, classroom] = await Promise.all([
 		readJsonFile(path.join(campHubDataDir, 'camp.json'), {}),
 		readJsonFile(campCurriculumFile, []),
 		readJsonFile(campAnnouncementsFile, []),
 		readJsonFile(path.join(campHubDataDir, 'resources.json'), []),
-		readCampSubmissions()
+		readCampSubmissions(),
+		readCampPrintRequests(),
+		readCampPointEvents(),
+		readCampClassroomState()
 	]);
 	const isCoach = user.role === 'coach';
 	const visibleAnnouncements = (Array.isArray(announcements) ? announcements : [])
 		.filter((item) => item.audience === 'all' || item.audience === user.role);
 	const visibleResources = (Array.isArray(resources) ? resources : [])
 		.filter((item) => !Array.isArray(item.roles) || item.roles.includes(user.role));
-	const visibleCurriculum = (Array.isArray(curriculum) ? curriculum : []).map((week) => ({
+	const enrollment = isCoach
+		? { source: 'coach', enrolledWeekIds: (Array.isArray(curriculum) ? curriculum : []).map((week) => week.id), visibleWeekId: null, visibleWeekLabel: 'All weeks', visibleWeekRange: null }
+		: await getCampEnrollmentForUser(user, curriculum);
+	const sourceCurriculum = isCoach
+		? (Array.isArray(curriculum) ? curriculum : [])
+		: (Array.isArray(curriculum) ? curriculum : []).filter((week) => week.id === enrollment.visibleWeekId);
+	const visibleCurriculum = sourceCurriculum.map((week) => ({
 		...week,
 		days: (Array.isArray(week.days) ? week.days : []).map((day) => {
 			if (isCoach) return day;
@@ -1096,9 +1331,13 @@ async function getCampHubDataFor(user) {
 		curriculum: visibleCurriculum,
 		announcements: visibleAnnouncements,
 		resources: visibleResources,
+		enrollment,
+		classroom,
+		points: isCoach ? null : campPointsFor(user.id, submissions, printRequests, pointEvents),
+		printRequests: isCoach ? [] : printRequests.filter((item) => item.studentId === user.id),
 		submissions: isCoach
 			? []
-			: submissions.filter((item) => item.studentId === user.id)
+			: submissions.filter((item) => item.studentId === user.id && visibleCurriculum.some((week) => (week.days || []).some((day) => day.id === item.dayId)))
 	};
 }
 
@@ -2804,11 +3043,12 @@ app.post('/api/camp/submissions', requireCampAuth, async (req, res) => {
 		}
 
 		const curriculum = await readJsonFile(campCurriculumFile, []);
-		const day = (Array.isArray(curriculum) ? curriculum : [])
-			.flatMap((week) => Array.isArray(week.days) ? week.days : [])
+		const enrollment = await getCampEnrollmentForUser(req.campUser, curriculum);
+		const visibleWeek = (Array.isArray(curriculum) ? curriculum : []).find((week) => week.id === enrollment.visibleWeekId);
+		const day = (visibleWeek && Array.isArray(visibleWeek.days) ? visibleWeek.days : [])
 			.find((candidate) => candidate.id === dayId);
 		if (!day) {
-			return res.status(404).json({ success: false, message: 'Assignment not found' });
+			return res.status(404).json({ success: false, message: 'Assignment is not available for your current camp week' });
 		}
 
 		const submissions = await readCampSubmissions();
@@ -2838,6 +3078,46 @@ app.post('/api/camp/submissions', requireCampAuth, async (req, res) => {
 	}
 });
 
+app.post('/api/camp/print-requests', requireCampAuth, async (req, res) => {
+	try {
+		if (!req.campUser || req.campUser.role !== 'student') {
+			return res.status(403).json({ success: false, message: 'Camper access required' });
+		}
+		const title = cleanMetaString(req.body.title || '', 120);
+		const purpose = cleanMetaString(req.body.purpose || '', 800);
+		const dimensions = cleanMetaString(req.body.dimensions || '', 160);
+		const color = cleanMetaString(req.body.color || '', 80);
+		const notes = cleanMetaString(req.body.notes || '', 800);
+		if (!title || !purpose) {
+			return res.status(400).json({ success: false, message: 'Project name and purpose are required' });
+		}
+		const requests = await readCampPrintRequests();
+		const now = new Date().toISOString();
+		const request = {
+			id: `print-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
+			studentId: req.campUser.id,
+			studentName: req.campUser.name,
+			className: req.campUser.className || 'Unassigned',
+			title,
+			purpose,
+			dimensions,
+			color,
+			notes,
+			status: 'pending',
+			pointsAwarded: 0,
+			coachNotes: '',
+			createdAt: now,
+			updatedAt: now
+		};
+		requests.push(request);
+		await writeJsonFile(campPrintRequestsFile, requests);
+		return res.status(201).json({ success: true, request, points: campPointsFor(req.campUser.id, await readCampSubmissions(), requests, await readCampPointEvents()) });
+	} catch (err) {
+		console.error('Camp print request error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving print request' });
+	}
+});
+
 app.patch('/api/camp/coach/days/:dayId', requireCampAuth, requireCampCoach, async (req, res) => {
 	try {
 		const curriculum = await readJsonFile(campCurriculumFile, []);
@@ -2863,6 +3143,65 @@ app.patch('/api/camp/coach/days/:dayId', requireCampAuth, requireCampCoach, asyn
 	} catch (err) {
 		console.error('Camp coach day update error:', err);
 		return res.status(500).json({ success: false, message: 'Server error saving the day' });
+	}
+});
+
+app.patch('/api/camp/coach/classroom', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const current = await readCampClassroomState();
+		const next = normalizeCampClassroomState({
+			...current,
+			...(req.body || {}),
+			timer: {
+				...current.timer,
+				...(req.body?.timer && typeof req.body.timer === 'object' ? req.body.timer : {})
+			}
+		});
+		await writeJsonFile(campClassroomFile, next);
+		return res.json({ success: true, classroom: next });
+	} catch (err) {
+		console.error('Camp classroom update error:', err);
+		return res.status(500).json({ success: false, message: 'Server error updating classroom tools' });
+	}
+});
+
+app.post('/api/camp/coach/classroom/groups', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const state = await readCampClassroomState();
+		const group = {
+			id: `group-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
+			name: cleanMetaString(req.body.name || '', 120) || 'New Group',
+			focus: cleanMetaString(req.body.focus || '', 240),
+			members: Array.isArray(req.body.members) ? req.body.members.map((member) => cleanMetaString(member, 80)).filter(Boolean) : [],
+			subgroups: Array.isArray(req.body.subgroups) ? req.body.subgroups.map((subgroup) => ({
+				id: `subgroup-${crypto.randomBytes(3).toString('hex')}`,
+				name: cleanMetaString(subgroup.name || '', 120) || 'Subgroup',
+				members: Array.isArray(subgroup.members) ? subgroup.members.map((member) => cleanMetaString(member, 80)).filter(Boolean) : []
+			})) : []
+		};
+		state.groups.push(group);
+		const next = normalizeCampClassroomState(state);
+		await writeJsonFile(campClassroomFile, next);
+		return res.status(201).json({ success: true, classroom: next, group });
+	} catch (err) {
+		console.error('Camp group create error:', err);
+		return res.status(500).json({ success: false, message: 'Server error creating group' });
+	}
+});
+
+app.delete('/api/camp/coach/classroom/groups/:id', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const state = await readCampClassroomState();
+		const before = state.groups.length;
+		state.groups = state.groups.filter((group) => group.id !== req.params.id);
+		if (state.groups.length === before) {
+			return res.status(404).json({ success: false, message: 'Group not found' });
+		}
+		await writeJsonFile(campClassroomFile, state);
+		return res.json({ success: true, classroom: state });
+	} catch (err) {
+		console.error('Camp group delete error:', err);
+		return res.status(500).json({ success: false, message: 'Server error deleting group' });
 	}
 });
 
@@ -2927,10 +3266,12 @@ app.get('/api/camp/coach/roster', requireCampAuth, requireCampCoach, async (req,
 
 app.get('/api/camp/coach/progress', requireCampAuth, requireCampCoach, async (req, res) => {
 	try {
-		const [users, curriculum, submissions] = await Promise.all([
+		const [users, curriculum, submissions, printRequests, pointEvents] = await Promise.all([
 			readCampUsers(),
 			readJsonFile(campCurriculumFile, []),
-			readCampSubmissions()
+			readCampSubmissions(),
+			readCampPrintRequests(),
+			readCampPointEvents()
 		]);
 		const students = users
 			.filter((user) => user.role === 'student')
@@ -2939,7 +3280,8 @@ app.get('/api/camp/coach/progress', requireCampAuth, requireCampCoach, async (re
 				name: user.name,
 				username: user.username,
 				active: user.active !== false,
-				className: user.className || 'Unassigned'
+				className: user.className || 'Unassigned',
+				points: campPointsFor(user.id, submissions, printRequests, pointEvents)
 			}));
 		const days = (Array.isArray(curriculum) ? curriculum : []).flatMap((week) =>
 			(Array.isArray(week.days) ? week.days : []).map((day) => ({
@@ -2954,10 +3296,87 @@ app.get('/api/camp/coach/progress', requireCampAuth, requireCampCoach, async (re
 				worksheetUrl: day.worksheetUrl || ''
 			}))
 		);
-		return res.json({ success: true, students, days, submissions });
+		return res.json({ success: true, students, days, submissions, printRequests, pointEvents });
 	} catch (err) {
 		console.error('Camp coach progress error:', err);
 		return res.status(500).json({ success: false, message: 'Server error loading progress' });
+	}
+});
+
+app.get('/api/camp/coach/print-requests', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const requests = await readCampPrintRequests();
+		return res.json({ success: true, requests });
+	} catch (err) {
+		console.error('Camp coach print queue error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading print queue' });
+	}
+});
+
+app.patch('/api/camp/coach/print-requests/:id', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const requests = await readCampPrintRequests();
+		const request = requests.find((item) => item.id === req.params.id);
+		if (!request) {
+			return res.status(404).json({ success: false, message: 'Print request not found' });
+		}
+		const statuses = new Set(['pending', 'approved', 'printing', 'ready', 'completed', 'needs-changes', 'declined']);
+		const status = cleanMetaString(req.body.status || '', 40);
+		if (status && statuses.has(status)) request.status = status;
+		if (typeof req.body.coachNotes === 'string') request.coachNotes = cleanMetaString(req.body.coachNotes, 1000);
+		if (req.body.pointsAwarded !== undefined) {
+			const points = Number(req.body.pointsAwarded);
+			request.pointsAwarded = Number.isFinite(points) ? Math.max(0, Math.min(100, Math.round(points))) : 0;
+		}
+		request.updatedAt = new Date().toISOString();
+		await writeJsonFile(campPrintRequestsFile, requests);
+		return res.json({ success: true, request, requests });
+	} catch (err) {
+		console.error('Camp coach print update error:', err);
+		return res.status(500).json({ success: false, message: 'Server error updating print request' });
+	}
+});
+
+app.post('/api/camp/coach/points', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const studentId = cleanMetaString(req.body.studentId || '', 120);
+		const category = cleanMetaString(req.body.category || '', 80) || 'Teamwork';
+		const note = cleanMetaString(req.body.note || '', 500);
+		const type = req.body.type === 'needs-work' ? 'needs-work' : 'positive';
+		const rawPoints = Number(req.body.points);
+		const magnitude = Number.isFinite(rawPoints) ? Math.max(1, Math.min(20, Math.abs(Math.round(rawPoints)))) : 1;
+		const points = type === 'needs-work' ? -magnitude : magnitude;
+		const users = await readCampUsers();
+		const student = users.find((candidate) => candidate.id === studentId && candidate.role === 'student');
+		if (!student) {
+			return res.status(404).json({ success: false, message: 'Camper not found' });
+		}
+		const events = await readCampPointEvents();
+		const event = {
+			id: `point-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
+			studentId: student.id,
+			studentName: student.name,
+			className: student.className || 'Unassigned',
+			category,
+			type,
+			points,
+			note,
+			createdBy: req.campUser.id,
+			createdByName: req.campUser.name,
+			createdAt: new Date().toISOString()
+		};
+		events.push(event);
+		await writeJsonFile(campPointEventsFile, events);
+		const [submissions, printRequests] = await Promise.all([readCampSubmissions(), readCampPrintRequests()]);
+		return res.status(201).json({
+			success: true,
+			event,
+			points: campPointsFor(student.id, submissions, printRequests, events),
+			pointEvents: events
+		});
+	} catch (err) {
+		console.error('Camp coach point event error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving points' });
 	}
 });
 
