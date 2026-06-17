@@ -69,7 +69,7 @@
     "id": "coach-test",
     "name": "Test Coach",
     "username": "coach",
-    "password_hash": "6c80e3f3dc0c96af1cba9c56a6ea8bf1:3d8eed1ac31952639783d89abb7eee323ace28b23164275bbe203877d16fdd913a1309a03cc825ece92a765953cbcf0d041d5b171b107a43a71bdc282ee1393d",
+    "password_hash": "4043d7b5347d539e6314cd50a54d9a97:93a1b6e3782fbef70c1852dd00a00f7ac2f3683fbc2d0b26e157eac0c2e57c32762729e1076bdd73d1f7ba7cc5796870c2a06a235b3785e78a35d727949fea72",
     "role": "coach",
     "hubs": [
       "master-roster",

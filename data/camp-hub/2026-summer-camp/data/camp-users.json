@@ -3,7 +3,7 @@
     "id": "camp-coach-default",
     "name": "Test Coach",
     "username": "coach",
-    "password_hash": "6c80e3f3dc0c96af1cba9c56a6ea8bf1:3d8eed1ac31952639783d89abb7eee323ace28b23164275bbe203877d16fdd913a1309a03cc825ece92a765953cbcf0d041d5b171b107a43a71bdc282ee1393d",
+    "password_hash": "d69544d2fc0aff2733c0aa4906b1669b:bafb172e8f95fdedf6b1abf0653d56a6c909c69ba0ac2a50f01cb9c69e00516cbe9bface6902815ce8537cdabba23e7754d594c1bfc65c3319ef6e7eafd96539",
     "role": "coach",
     "active": true,
     "className": "Coaches"
@@ -36,9 +36,10 @@
     "id": "camp-student-demo",
     "name": "Demo Camper",
     "username": "camper1",
-    "password_hash": "5b27ae6d952a9d118a77c727bc78d369:8f1079a81d2e1ff9d02821354d999628e63c587b24d1642c2792113f3c2f193ccca84f99bd34752cf0b7243dd493af87b25e40d7f07e8c82d089afa2af3eec41",
+    "password_hash": "61454a43e83727861593440ec6acc829:fffde49ce705acbc24efeccb5808e6e6d6b9595d8f739a745bb094897dfc0e75df3ab0bf1fa1220437c38238c0a2f0cc4d7651b5a14bc8dc9454406f4ab6e083",
     "role": "student",
-    "active": true
+    "active": true,
+    "className": "Summer LEGO Robotics 1"
   },
   {
     "id": "camp-coach-verify",
