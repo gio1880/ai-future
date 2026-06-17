@@ -1,11 +1,12 @@
 [
   {
     "id": "camp-coach-default",
-    "name": "Camp Coach",
-    "username": "campcoach",
-    "password_hash": "992319a0e522d381dc27a9f8062bc7d1:233ce8a81987808482261f2c9b189c12419f59039f721802b72868706c0b571f9c3184be9876654e786deee59c3752e19ce07207b1ebcc033601c7f983082670",
+    "name": "Test Coach",
+    "username": "coach",
+    "password_hash": "6c80e3f3dc0c96af1cba9c56a6ea8bf1:3d8eed1ac31952639783d89abb7eee323ace28b23164275bbe203877d16fdd913a1309a03cc825ece92a765953cbcf0d041d5b171b107a43a71bdc282ee1393d",
     "role": "coach",
-    "active": true
+    "active": true,
+    "className": "Coaches"
   },
   {
     "id": "camp-coach-giovanny",
@@ -37,6 +38,14 @@
     "username": "camper1",
     "password_hash": "5b27ae6d952a9d118a77c727bc78d369:8f1079a81d2e1ff9d02821354d999628e63c587b24d1642c2792113f3c2f193ccca84f99bd34752cf0b7243dd493af87b25e40d7f07e8c82d089afa2af3eec41",
     "role": "student",
+    "active": true
+  },
+  {
+    "id": "camp-coach-verify",
+    "name": "Verify Coach",
+    "username": "vcoach",
+    "password_hash": "edc9869ae83ddb3452e114b1cac1fc03:4ddbecbebf88914d4a4cc196014a7f12283d18c93d9507ba98a72a27f5259d300c0f4f8f4e5177b6b0d10d1b0fa2fdbee121af512272929e0603d5ad24498f2f",
+    "role": "coach",
     "active": true
   }
 ]

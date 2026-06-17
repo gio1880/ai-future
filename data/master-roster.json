@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-15T15:37:28.666Z",
+  "updatedAt": "2026-06-17T16:35:59.187Z",
   "settings": {
     "summerWeeks": [
       {
@@ -141,7 +141,772 @@
       "schedule": "Sunday class",
       "active": true,
       "createdAt": "2026-06-14T21:20:59.619Z"
+    },
+    {
+      "id": "code-lab-students",
+      "term": "year-round",
+      "program": "code-lab",
+      "name": "Code Lab Students",
+      "day": "Online / lab",
+      "schedule": "Imported from Code Lab accounts",
+      "active": true,
+      "createdAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "fll-team-history-guardians",
+      "term": "fall",
+      "program": "fll",
+      "name": "FLL - History Guardians",
+      "day": "To be scheduled",
+      "schedule": "Returning team roster setup, BIOGLOW kickoff prep, robot inventory, and documentation routines.",
+      "active": true,
+      "createdAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "fll-team-firefox",
+      "term": "fall",
+      "program": "fll",
+      "name": "FLL - FireFox",
+      "day": "To be scheduled",
+      "schedule": "Returning team roster setup, BIOGLOW kickoff prep, robot reliability, and presentation confidence.",
+      "active": true,
+      "createdAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "fll-team-tidal-engineers",
+      "term": "fall",
+      "program": "fll",
+      "name": "FLL - TiDAL Engineers",
+      "day": "To be scheduled",
+      "schedule": "Returning team roster setup, BIOGLOW kickoff prep, engineering documentation, and mission strategy.",
+      "active": true,
+      "createdAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "fll-team-wcdc-fighters",
+      "term": "fall",
+      "program": "fll",
+      "name": "FLL - WCDC Fighters",
+      "day": "To be scheduled",
+      "schedule": "Returning team roster setup, BIOGLOW kickoff prep, robot fundamentals, and team routines.",
+      "active": true,
+      "createdAt": "2026-06-17T15:19:43.288Z"
     }
   ],
-  "students": []
+  "students": [
+    {
+      "id": "master-code-lab-azhu",
+      "name": "Anthony Zhu",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (azhu); Source id: student-1774671598562-464w5j.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-ktao",
+      "name": "Kyle Tao",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (ktao); Source id: student-1774671598667-04opuh.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-bzeng",
+      "name": "Brian Zeng",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (bzeng); Source id: student-1774671598952-eak4a6.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-jgu",
+      "name": "Jonathan Gu",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (jgu); Source id: student-1774671599038-gz7juj.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-jleung",
+      "name": "Julisa Leung",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (jleung); Source id: student-1774671599153-83tmkg.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-izhu",
+      "name": "Isabella Zhu",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (izhu); Source id: student-1774671599243-ewobpk.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-clian",
+      "name": "Cailey Lian",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (clian); Source id: student-1774671599328-cjv12z.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-smao",
+      "name": "Sam Mao",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (smao); Source id: student-1774671599415-80gytp.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-jzheng",
+      "name": "Jasper Zheng",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (jzheng); Source id: student-1774671599504-mzynh4.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-ozou",
+      "name": "Owen Zou",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (ozou); Source id: student-1774671599595-lb8rjk.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-hryu",
+      "name": "Hwijun Ryu",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (hryu); Source id: student-1774671599681-3o11se.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-jchen",
+      "name": "Jaydan Chen",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (jchen); Source id: student-1774671599770-p6piya.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-eyang",
+      "name": "Eason Yang",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (eyang); Source id: student-1774671599857-fb5ut4.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-fzhang",
+      "name": "Frankie Zhang",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (fzhang); Source id: student-1774671599953-1mg6c9.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-mchen",
+      "name": "Marcus Chen",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (mchen); Source id: student-1774671600067-epmhlq.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-jxiong",
+      "name": "Jayden Xiong",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (jxiong); Source id: student-1774671600152-mioztf.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-aou",
+      "name": "Ariel Ou",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (aou); Source id: student-1774671600236-ackmlo.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-mlin",
+      "name": "Melvin Lin",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (mlin); Source id: student-1774726903978-1grvvb.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-jdoe",
+      "name": "john doe",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (jdoe); Source id: student-1774794277965-uwivttzao.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-hlin",
+      "name": "Harry Lin",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (hlin); Source id: student-1774817638327-kn9ecrr57.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-jzhang",
+      "name": "Jaxson Zhang",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (jzhang); Source id: student-1776538236329-rct4ewewh.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-schen",
+      "name": "Stephen Chen",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (schen); Source id: student-1776538510389-h53296b6z.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-jli",
+      "name": "John Li",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (jli); Source id: student-1776538548139-d2lt7e277.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-ezheng",
+      "name": "Eason Zheng",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (ezheng); Source id: student-1776538743090-pnggtoqq4.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-code-lab-kcao",
+      "name": "Kevin Cao",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from Code Lab account (kcao); Source id: student-1777149889054-snk1h2n.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "code-lab-students",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-fll-hub-clairezhai",
+      "name": "Claire Zhai",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from FLL Hub account (clairezhai); FLL team: team-history-guardians; Source id: student-claire-zhai-33c762.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-history-guardians",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-fll-hub-luketisserant",
+      "name": "Luke Tisserant",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from FLL Hub account (luketisserant); FLL team: team-history-guardians; Source id: student-luke-tisserant-33a686.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-history-guardians",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-fll-hub-masonyuan",
+      "name": "Mason Yuan",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from FLL Hub account (masonyuan); FLL team: team-history-guardians; Source id: student-mason-yuan-1f9680.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-history-guardians",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-fll-hub-isabellafeng",
+      "name": "Isabella Feng",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from FLL Hub account (isabellafeng); FLL team: team-history-guardians; Source id: student-isabella-feng-dde604.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-history-guardians",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-fll-hub-domenicopetrini",
+      "name": "Domenico Petrini",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from FLL Hub account (domenicopetrini); FLL team: team-tidal-engineers; Source id: student-domenico-petrini-6ef9cb.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-tidal-engineers",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-fll-hub-elisfishman",
+      "name": "Elis Fishman",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from FLL Hub account (elisfishman); FLL team: team-tidal-engineers; Source id: student-elis-fishman-e7aa78.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-tidal-engineers",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-fll-hub-isaiahirwin",
+      "name": "Isaiah Irwin",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from FLL Hub account (isaiahirwin); FLL team: team-tidal-engineers; Source id: student-isaiah-irwin-2f1d7b.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-tidal-engineers",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-fll-hub-finnfitzner",
+      "name": "Finn Fitzner",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from FLL Hub account (finnfitzner); FLL team: team-tidal-engineers; Source id: student-finn-fitzner-3e1a78.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-tidal-engineers",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-fll-hub-lawrenceliu",
+      "name": "Lawrence Liu",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from FLL Hub account (lawrenceliu); FLL team: team-firefox; Source id: student-lawrence-liu-cb31cb.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-firefox",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-fll-hub-vincentliu",
+      "name": "Vincent Liu",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from FLL Hub account (vincentliu); FLL team: team-firefox; Source id: student-vincent-liu-36515a.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-firefox",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-fll-hub-thalesliu",
+      "name": "Thales Liu",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from FLL Hub account (thalesliu); FLL team: team-firefox; Source id: student-thales-liu-be7a7e.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-firefox",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-fll-hub-adamzeng",
+      "name": "Adam Zeng",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from FLL Hub account (adamzeng); FLL team: team-firefox; Source id: student-adam-zeng-5bdd20.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-firefox",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-fll-hub-estella",
+      "name": "Estella",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from FLL Hub account (estella); FLL team: team-firefox; Source id: student-estella-6e878f.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-firefox",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-fll-hub-sanjitharnal",
+      "name": "Sanjit Harnal",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from FLL Hub account (sanjitharnal); FLL team: team-wcdc-fighters; Source id: student-sanjit-harnal-b05b32.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-wcdc-fighters",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-fll-hub-masonp",
+      "name": "Mason P.",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from FLL Hub account (masonp); FLL team: team-wcdc-fighters; Source id: student-mason-p-ed2ab1.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-wcdc-fighters",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-fll-hub-winstonlee",
+      "name": "Winston Lee",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from FLL Hub account (winstonlee); FLL team: team-wcdc-fighters; Source id: student-winston-lee-96b448.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-wcdc-fighters",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    },
+    {
+      "id": "master-fll-hub-ethandeng",
+      "name": "Ethan Deng",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Imported from FLL Hub account (ethandeng); FLL team: team-wcdc-fighters; Source id: student-ethan-deng-56ffe3.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-wcdc-fighters",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "updatedAt": "2026-06-17T15:19:43.288Z"
+    }
+  ]
 }

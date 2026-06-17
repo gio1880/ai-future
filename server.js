@@ -35,6 +35,7 @@ const fllTeamMembersFile = path.join(fllHubDataDir, 'team-members.json');
 const fllTeamSchedulesFile = path.join(fllHubDataDir, 'team-schedules.json');
 const fllSeasonSectionsFile = path.join(fllHubDataDir, 'season-sections.json');
 const fllMissionAnalysisFile = path.join(fllHubDataDir, 'mission-analysis.json');
+const codeLabStudentsFile = path.join(__dirname, 'code-lab', 'data', 'students.json');
 const fllSessionCookie = 'fll_session';
 const fllDataFileNames = [
 	'fll-users.json',
@@ -61,8 +62,11 @@ const campCurriculumFile = path.join(campHubDataDir, 'curriculum.json');
 const campAnnouncementsFile = path.join(campHubDataDir, 'announcements.json');
 const campSubmissionsFile = path.join(campHubDataDir, 'submissions.json');
 const campPrintRequestsFile = path.join(campHubDataDir, 'print-requests.json');
+const campProjectSubmissionsFile = path.join(campHubDataDir, 'project-submissions.json');
 const campPointEventsFile = path.join(campHubDataDir, 'point-events.json');
 const campClassroomFile = path.join(campHubDataDir, 'classroom-state.json');
+const campLessonsFile = path.join(campHubDataDir, 'lessons.json');
+const campLiveLessonFile = path.join(campHubDataDir, 'live-lesson.json');
 const campSessionCookie = 'camp_session';
 const campDataFileNames = [
 	'camp-users.json',
@@ -72,8 +76,11 @@ const campDataFileNames = [
 	'resources.json',
 	'submissions.json',
 	'print-requests.json',
+	'project-submissions.json',
 	'point-events.json',
-	'classroom-state.json'
+	'classroom-state.json',
+	'lessons.json',
+	'live-lesson.json'
 ];
 const campSessions = new Map();
 const coachUsersFile = path.join(platformDataDir, 'coach-users.json');
@@ -89,8 +96,17 @@ const regularCoachHubs = [
 	'camp-hub',
 	'code-lab-admin'
 ];
-const adminCoachHubs = [...regularCoachHubs, 'payments-admin', 'parent-leads-admin', 'summer-leads-admin'];
+const adminCoachHubs = [...regularCoachHubs, 'access-control', 'payments-admin', 'parent-leads-admin', 'summer-leads-admin'];
 const coachHubDefinitions = {
+	'access-control': {
+		id: 'access-control',
+		title: 'Access Control',
+		category: 'Admin',
+		description: 'Master backend for coach logins, passwords, hub permissions, and account status.',
+		targetUrl: '/access-control',
+		grant: 'access-control',
+		adminOnly: true
+	},
 	'master-roster': {
 		id: 'master-roster',
 		title: 'Master Roster',
@@ -229,6 +245,10 @@ app.get(['/coach-portal', '/coach-portal/'], requireCoachPortalAuth, (req, res) 
 	return res.sendFile(path.join(__dirname, 'coach-portal.html'));
 });
 
+app.get(['/access-control', '/access-control/'], requireCoachOwner, (req, res) => {
+	return res.sendFile(path.join(__dirname, 'access-control.html'));
+});
+
 app.post('/api/coach/login', async (req, res) => {
 	try {
 		const username = cleanMetaString(req.body.username || '', 80).toLowerCase();
@@ -277,6 +297,117 @@ app.get('/api/coach/session', requireCoachPortalAuth, (req, res) => {
 	});
 });
 
+app.get('/api/coach/admin/users', requireCoachOwner, async (req, res) => {
+	try {
+		const users = await readCoachUsers();
+		return res.json({
+			success: true,
+			users: users.map(publicAdminCoachUser),
+			hubs: Object.values(coachHubDefinitions).map((hub) => ({
+				id: hub.id,
+				title: hub.title,
+				category: hub.category,
+				adminOnly: Boolean(hub.adminOnly)
+			}))
+		});
+	} catch (err) {
+		console.error('Coach admin users load error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading access control' });
+	}
+});
+
+app.post('/api/coach/admin/users', requireCoachOwner, async (req, res) => {
+	try {
+		const users = await readCoachUsers();
+		const payload = sanitizeCoachAdminPayload(req.body || {}, null);
+		if (!payload.name || !payload.username || !payload.password) {
+			return res.status(400).json({ success: false, message: 'Name, username, and password are required' });
+		}
+		if (users.some((user) => String(user.username || '').toLowerCase() === payload.username)) {
+			return res.status(409).json({ success: false, message: 'That username already exists' });
+		}
+		const user = {
+			id: `coach-${slugify(payload.username)}-${crypto.randomBytes(3).toString('hex')}`,
+			name: payload.name,
+			username: payload.username,
+			password_hash: hashScryptPassword(payload.password),
+			role: payload.role,
+			hubs: payload.hubs,
+			fllUserId: `coach-${slugify(payload.username)}`,
+			fllUsername: payload.username,
+			campUserId: `camp-coach-${slugify(payload.username)}`,
+			campUsername: payload.username,
+			active: payload.active
+		};
+		users.push(user);
+		await writeCoachUsers(users);
+		await syncCoachUserToProgramHubs(user);
+		return res.status(201).json({ success: true, user: publicAdminCoachUser(user), users: users.map(publicAdminCoachUser) });
+	} catch (err) {
+		console.error('Coach admin user create error:', err);
+		return res.status(500).json({ success: false, message: 'Server error creating coach' });
+	}
+});
+
+app.patch('/api/coach/admin/users/:id', requireCoachOwner, async (req, res) => {
+	try {
+		const users = await readCoachUsers();
+		const index = users.findIndex((user) => user.id === req.params.id);
+		if (index === -1) {
+			return res.status(404).json({ success: false, message: 'Coach not found' });
+		}
+		const existing = users[index];
+		const payload = sanitizeCoachAdminPayload(req.body || {}, existing);
+		if (!payload.name || !payload.username) {
+			return res.status(400).json({ success: false, message: 'Name and username are required' });
+		}
+		if (users.some((user) => user.id !== existing.id && String(user.username || '').toLowerCase() === payload.username)) {
+			return res.status(409).json({ success: false, message: 'That username already exists' });
+		}
+		const updated = {
+			...existing,
+			name: payload.name,
+			username: payload.username,
+			role: payload.role,
+			hubs: payload.hubs,
+			fllUsername: payload.username,
+			campUsername: payload.username,
+			active: payload.active,
+			updatedAt: new Date().toISOString()
+		};
+		if (payload.password) {
+			updated.password_hash = hashScryptPassword(payload.password);
+		}
+		users[index] = updated;
+		await writeCoachUsers(users);
+		await syncCoachUserToProgramHubs(updated);
+		return res.json({ success: true, user: publicAdminCoachUser(updated), users: users.map(publicAdminCoachUser) });
+	} catch (err) {
+		console.error('Coach admin user update error:', err);
+		return res.status(500).json({ success: false, message: 'Server error updating coach' });
+	}
+});
+
+app.delete('/api/coach/admin/users/:id', requireCoachOwner, async (req, res) => {
+	try {
+		const users = await readCoachUsers();
+		const index = users.findIndex((user) => user.id === req.params.id);
+		if (index === -1) {
+			return res.status(404).json({ success: false, message: 'Coach not found' });
+		}
+		if (users[index].id === req.coachUser.id) {
+			return res.status(400).json({ success: false, message: 'You cannot deactivate your own account' });
+		}
+		users[index] = { ...users[index], active: false, updatedAt: new Date().toISOString() };
+		await writeCoachUsers(users);
+		await syncCoachUserToProgramHubs(users[index]);
+		return res.json({ success: true, users: users.map(publicAdminCoachUser) });
+	} catch (err) {
+		console.error('Coach admin user deactivate error:', err);
+		return res.status(500).json({ success: false, message: 'Server error deactivating coach' });
+	}
+});
+
 app.post('/api/coach/open/:hubId', requireCoachPortalAuth, async (req, res, next) => {
 	try {
 		const hub = coachHubDefinitions[req.params.hubId];
@@ -288,6 +419,7 @@ app.post('/api/coach/open/:hubId', requireCoachPortalAuth, async (req, res, next
 		}
 
 		if (hub.id === 'fll-hub' || hub.id === 'fll-competitive-curriculum') {
+			await syncCoachUserToFllHub(req.coachUser);
 			const fllUsers = await readFllUsers();
 			const fllUser = fllUsers.find((candidate) => {
 				if (req.coachUser.fllUserId && candidate.id === req.coachUser.fllUserId) return true;
@@ -301,6 +433,7 @@ app.post('/api/coach/open/:hubId', requireCoachPortalAuth, async (req, res, next
 		}
 
 		if (hub.id === 'camp-hub' || hub.id === 'summer-curriculum') {
+			await syncCoachUserToCampHub(req.coachUser);
 			const campUsers = await readCampUsers();
 			const campUser = campUsers.find((candidate) => {
 				if (req.coachUser.campUserId && candidate.id === req.coachUser.campUserId) return true;
@@ -340,8 +473,11 @@ app.get(['/ftc-curriculum', '/ftc-curriculum/'], requireCoachPortalAuth, (req, r
 
 app.get('/api/master-roster', requireCoachPortalAuth, async (req, res) => {
 	try {
-		const roster = await readMasterRoster();
-		return res.json({ success: true, data: publicMasterRoster(roster) });
+		const [roster, teams] = await Promise.all([
+			readMasterRoster(),
+			readJsonFile(path.join(fllHubDataDir, 'teams.json'), [])
+		]);
+		return res.json({ success: true, data: publicMasterRoster(roster, teams) });
 	} catch (err) {
 		console.error('Master roster load error:', err);
 		return res.status(500).json({ success: false, message: 'Server error loading master roster' });
@@ -357,7 +493,8 @@ app.post('/api/master-roster/classes', requireCoachPortalAuth, async (req, res) 
 		}
 		roster.classes.push({ ...classItem, createdAt: new Date().toISOString() });
 		await writeMasterRoster(roster);
-		return res.status(201).json({ success: true, data: publicMasterRoster(roster), class: classItem });
+		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
+		return res.status(201).json({ success: true, data: publicMasterRoster(roster, teams), class: classItem });
 	} catch (err) {
 		console.error('Master class create error:', err);
 		return res.status(500).json({ success: false, message: 'Server error creating class' });
@@ -384,7 +521,8 @@ app.patch('/api/master-roster/classes/:id', requireCoachPortalAuth, async (req, 
 			student.enrollments = normalizeMasterEnrollments(student.enrollments, roster.classes, roster.settings.summerWeeks);
 		}
 		await writeMasterRoster(roster);
-		return res.json({ success: true, data: publicMasterRoster(roster), class: roster.classes[index] });
+		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
+		return res.json({ success: true, data: publicMasterRoster(roster, teams), class: roster.classes[index] });
 	} catch (err) {
 		console.error('Master class update error:', err);
 		return res.status(500).json({ success: false, message: 'Server error updating class' });
@@ -405,7 +543,8 @@ app.delete('/api/master-roster/classes/:id', requireCoachPortalAuth, async (req,
 			student.updatedAt = new Date().toISOString();
 		}
 		await writeMasterRoster(roster);
-		return res.json({ success: true, data: publicMasterRoster(roster) });
+		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
+		return res.json({ success: true, data: publicMasterRoster(roster, teams) });
 	} catch (err) {
 		console.error('Master class delete error:', err);
 		return res.status(500).json({ success: false, message: 'Server error deleting class' });
@@ -420,8 +559,10 @@ app.post('/api/master-roster/students', requireCoachPortalAuth, async (req, res)
 			return res.status(400).json({ success: false, message: 'Student name is required' });
 		}
 		roster.students.push(student);
+		await syncMasterStudentHubAccess(student);
 		await writeMasterRoster(roster);
-		return res.status(201).json({ success: true, data: publicMasterRoster(roster), student });
+		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
+		return res.status(201).json({ success: true, data: publicMasterRoster(roster, teams), student });
 	} catch (err) {
 		console.error('Master student create error:', err);
 		return res.status(500).json({ success: false, message: 'Server error creating student' });
@@ -440,8 +581,10 @@ app.patch('/api/master-roster/students/:id', requireCoachPortalAuth, async (req,
 			return res.status(400).json({ success: false, message: 'Student name is required' });
 		}
 		roster.students[index] = student;
+		await syncMasterStudentHubAccess(student);
 		await writeMasterRoster(roster);
-		return res.json({ success: true, data: publicMasterRoster(roster), student });
+		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
+		return res.json({ success: true, data: publicMasterRoster(roster, teams), student });
 	} catch (err) {
 		console.error('Master student update error:', err);
 		return res.status(500).json({ success: false, message: 'Server error updating student' });
@@ -451,13 +594,18 @@ app.patch('/api/master-roster/students/:id', requireCoachPortalAuth, async (req,
 app.delete('/api/master-roster/students/:id', requireCoachPortalAuth, async (req, res) => {
 	try {
 		const roster = await readMasterRoster();
+		const removed = roster.students.find((item) => item.id === req.params.id);
 		const before = roster.students.length;
 		roster.students = roster.students.filter((item) => item.id !== req.params.id);
 		if (roster.students.length === before) {
 			return res.status(404).json({ success: false, message: 'Student not found' });
 		}
+		if (removed) {
+			await removeMasterStudentLinkedAccounts(removed);
+		}
 		await writeMasterRoster(roster);
-		return res.json({ success: true, data: publicMasterRoster(roster) });
+		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
+		return res.json({ success: true, data: publicMasterRoster(roster, teams) });
 	} catch (err) {
 		console.error('Master student delete error:', err);
 		return res.status(500).json({ success: false, message: 'Server error deleting student' });
@@ -623,6 +771,10 @@ async function readFllUsers() {
 	return Array.isArray(users) ? users : [];
 }
 
+async function writeFllUsers(users) {
+	await writeJsonFile(fllUsersFile, Array.isArray(users) ? users : []);
+}
+
 function setCampSessionCookie(res, token) {
 	const maxAge = 7 * 24 * 60 * 60;
 	const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
@@ -681,6 +833,10 @@ async function readCampUsers() {
 	return Array.isArray(users) ? users : [];
 }
 
+async function writeCampUsers(users) {
+	await writeJsonFile(campUsersFile, Array.isArray(users) ? users : []);
+}
+
 async function readCampSubmissions() {
 	const submissions = await readJsonFile(campSubmissionsFile, []);
 	return Array.isArray(submissions) ? submissions : [];
@@ -691,9 +847,123 @@ async function readCampPrintRequests() {
 	return Array.isArray(requests) ? requests : [];
 }
 
+async function readCampProjectSubmissions() {
+	const projects = await readJsonFile(campProjectSubmissionsFile, []);
+	return Array.isArray(projects) ? projects : [];
+}
+
 async function readCampPointEvents() {
 	const events = await readJsonFile(campPointEventsFile, []);
 	return Array.isArray(events) ? events : [];
+}
+
+// ── Live lessons (slide decks broadcast to camper iPads) ──
+function normalizeLessonSlide(slide) {
+	const source = slide && typeof slide === 'object' ? slide : {};
+	const type = source.type === 'question' ? 'question' : 'content';
+	const options = Array.isArray(source.options)
+		? source.options.map((opt) => cleanMetaString(opt, 160)).filter(Boolean).slice(0, 6)
+		: [];
+	let correctIndex = Number.isInteger(source.correctIndex) ? source.correctIndex : -1;
+	if (type !== 'question' || correctIndex < 0 || correctIndex >= options.length) correctIndex = -1;
+	return {
+		id: cleanMetaString(source.id || `slide-${crypto.randomBytes(4).toString('hex')}`, 120),
+		type,
+		title: cleanMetaString(source.title || '', 160),
+		body: cleanMetaString(source.body || '', 2000),
+		image: cleanMetaString(source.image || '', 600),
+		options: type === 'question' ? options : [],
+		correctIndex
+	};
+}
+
+function normalizeLesson(lesson) {
+	const source = lesson && typeof lesson === 'object' ? lesson : {};
+	const slides = Array.isArray(source.slides) ? source.slides.map(normalizeLessonSlide) : [];
+	return {
+		id: cleanMetaString(source.id || `lesson-${crypto.randomBytes(4).toString('hex')}`, 120),
+		title: cleanMetaString(source.title || 'Untitled lesson', 160),
+		updatedAt: source.updatedAt || new Date().toISOString(),
+		slides
+	};
+}
+
+async function readCampLessons() {
+	const lessons = await readJsonFile(campLessonsFile, []);
+	return (Array.isArray(lessons) ? lessons : []).map(normalizeLesson);
+}
+
+async function writeCampLessons(lessons) {
+	await writeJsonFile(campLessonsFile, (Array.isArray(lessons) ? lessons : []).map(normalizeLesson));
+}
+
+function defaultCampLiveLesson() {
+	return { active: false, lessonId: '', lessonTitle: '', slides: [], currentIndex: 0, startedAt: '', responses: {} };
+}
+
+function normalizeCampLiveLesson(state) {
+	const fallback = defaultCampLiveLesson();
+	const source = state && typeof state === 'object' ? state : {};
+	const slides = Array.isArray(source.slides) ? source.slides.map(normalizeLessonSlide) : [];
+	const responses = source.responses && typeof source.responses === 'object' ? source.responses : {};
+	return {
+		active: source.active === true,
+		lessonId: cleanMetaString(source.lessonId || '', 120),
+		lessonTitle: cleanMetaString(source.lessonTitle || '', 160),
+		slides,
+		currentIndex: Number.isInteger(source.currentIndex) ? Math.max(0, Math.min(source.currentIndex, Math.max(0, slides.length - 1))) : 0,
+		startedAt: cleanMetaString(source.startedAt || '', 80),
+		responses
+	};
+}
+
+async function readCampLiveLesson() {
+	return normalizeCampLiveLesson(await readJsonFile(campLiveLessonFile, defaultCampLiveLesson()));
+}
+
+async function writeCampLiveLesson(state) {
+	await writeJsonFile(campLiveLessonFile, normalizeCampLiveLesson(state));
+}
+
+// Student-facing slide: never leak the correct answer.
+function publicLessonSlide(slide) {
+	if (!slide) return null;
+	return {
+		id: slide.id,
+		type: slide.type,
+		title: slide.title,
+		body: slide.body,
+		image: slide.image,
+		options: slide.type === 'question' ? slide.options : []
+	};
+}
+
+function publicLiveStateForStudent(live, studentId) {
+	if (!live || !live.active || !live.slides.length) {
+		return { active: false };
+	}
+	const slide = live.slides[live.currentIndex] || live.slides[0];
+	const slideResponses = (live.responses && live.responses[slide.id]) || {};
+	const mine = slideResponses[studentId];
+	return {
+		active: true,
+		lessonTitle: live.lessonTitle,
+		slideIndex: live.currentIndex,
+		slideCount: live.slides.length,
+		startedAt: live.startedAt,
+		slide: publicLessonSlide(slide),
+		myAnswer: mine && Number.isInteger(mine.choice) ? mine.choice : null
+	};
+}
+
+// Coach-facing tally for the current slide's responses.
+function liveResponseTally(live) {
+	if (!live || !live.slides.length) return { total: 0, counts: [] };
+	const slide = live.slides[live.currentIndex] || live.slides[0];
+	const slideResponses = (live.responses && live.responses[slide.id]) || {};
+	const entries = Object.values(slideResponses);
+	const counts = (slide.options || []).map((_, i) => entries.filter((e) => e && e.choice === i).length);
+	return { total: entries.length, counts };
 }
 
 function defaultCampClassroomState() {
@@ -741,10 +1011,13 @@ async function readCampClassroomState() {
 	return normalizeCampClassroomState(await readJsonFile(campClassroomFile, defaultCampClassroomState()));
 }
 
-function campPointsFor(studentId, submissions, printRequests, pointEvents = []) {
+function campPointsFor(studentId, submissions, printRequests, pointEvents = [], projectSubmissions = []) {
 	const submittedActivities = (Array.isArray(submissions) ? submissions : [])
 		.filter((item) => item.studentId === studentId).length;
 	const printBonus = (Array.isArray(printRequests) ? printRequests : [])
+		.filter((item) => item.studentId === studentId)
+		.reduce((sum, item) => sum + (Number.isFinite(item.pointsAwarded) ? item.pointsAwarded : 0), 0);
+	const projectBonus = (Array.isArray(projectSubmissions) ? projectSubmissions : [])
 		.filter((item) => item.studentId === studentId)
 		.reduce((sum, item) => sum + (Number.isFinite(item.pointsAwarded) ? item.pointsAwarded : 0), 0);
 	const manualEvents = (Array.isArray(pointEvents) ? pointEvents : []).filter((item) => item.studentId === studentId);
@@ -755,10 +1028,11 @@ function campPointsFor(studentId, submissions, printRequests, pointEvents = []) 
 		return acc;
 	}, {});
 	return {
-		total: submittedActivities * 10 + printBonus + behaviorPoints,
+		total: submittedActivities * 10 + printBonus + projectBonus + behaviorPoints,
 		submittedActivities,
 		activityPoints: submittedActivities * 10,
 		printBonus,
+		projectBonus,
 		behaviorPoints,
 		skills,
 		events: manualEvents
@@ -770,7 +1044,29 @@ function campPointsFor(studentId, submissions, printRequests, pointEvents = []) 
 
 async function readCoachUsers() {
 	const users = await readJsonFile(coachUsersFile, []);
-	return Array.isArray(users) ? users : [];
+	return normalizeCoachUsers(Array.isArray(users) ? users : []);
+}
+
+async function writeCoachUsers(users) {
+	await writeJsonFile(coachUsersFile, normalizeCoachUsers(Array.isArray(users) ? users : []));
+}
+
+function normalizeCoachUsers(users) {
+	const validHubs = new Set(Object.keys(coachHubDefinitions));
+	return users.map((user) => {
+		const role = user.role === 'owner' ? 'owner' : 'coach';
+		const hubs = Array.isArray(user.hubs) ? user.hubs.filter((hub) => validHubs.has(hub)) : [];
+		const normalizedHubs = role === 'owner'
+			? Array.from(new Set([...hubs, ...adminCoachHubs]))
+			: Array.from(new Set(hubs));
+		return {
+			...user,
+			username: String(user.username || '').toLowerCase(),
+			role,
+			hubs: normalizedHubs,
+			active: user.active !== false
+		};
+	});
 }
 
 async function initializeCoachDataDir() {
@@ -897,6 +1193,20 @@ function publicCoachUser(user) {
 	};
 }
 
+function publicAdminCoachUser(user) {
+	if (!user) return null;
+	return {
+		id: user.id,
+		name: user.name,
+		username: user.username,
+		role: user.role === 'owner' ? 'owner' : 'coach',
+		hubs: Array.isArray(user.hubs) ? user.hubs : [],
+		active: user.active !== false,
+		fllUsername: user.fllUsername || '',
+		campUsername: user.campUsername || ''
+	};
+}
+
 function coachHasHub(user, hubId) {
 	return Boolean(user && Array.isArray(user.hubs) && user.hubs.includes(hubId));
 }
@@ -911,6 +1221,115 @@ function coachVisibleHubs(user) {
 			description: hub.description,
 			adminOnly: Boolean(hub.adminOnly)
 		}));
+}
+
+function sanitizeCoachHubList(value, role) {
+	const validHubs = new Set(Object.keys(coachHubDefinitions));
+	const requested = Array.isArray(value) ? value : [];
+	if (role === 'owner') return adminCoachHubs.slice();
+	return Array.from(new Set(requested.filter((hub) => validHubs.has(hub) && !coachHubDefinitions[hub].adminOnly)));
+}
+
+function sanitizeCoachAdminPayload(body, existing) {
+	const role = body.role === 'owner' ? 'owner' : 'coach';
+	return {
+		name: cleanMetaString(body.name ?? existing?.name ?? '', 120),
+		username: cleanMetaString(body.username ?? existing?.username ?? '', 80).toLowerCase(),
+		password: typeof body.password === 'string' ? body.password.trim() : '',
+		role,
+		hubs: sanitizeCoachHubList(body.hubs ?? existing?.hubs ?? [], role),
+		active: body.active === undefined ? existing?.active !== false : body.active !== false
+	};
+}
+
+function masterCoachCanAccessHub(user, hubId) {
+	if (!user || user.active === false) return false;
+	return coachHasHub(user, hubId);
+}
+
+function findMatchingMasterCoach(users, username, password, hubId) {
+	const normalizedUsername = String(username || '').toLowerCase();
+	return users.find((candidate) => {
+		if (!masterCoachCanAccessHub(candidate, hubId)) return false;
+		const names = [
+			candidate.username,
+			candidate.fllUsername,
+			candidate.campUsername
+		].map((value) => String(value || '').toLowerCase());
+		return names.includes(normalizedUsername) && verifyScryptPassword(password, candidate.password_hash);
+	}) || null;
+}
+
+async function syncCoachUserToProgramHubs(user) {
+	if (!user) return;
+	await Promise.all([
+		syncCoachUserToFllHub(user),
+		syncCoachUserToCampHub(user)
+	]);
+}
+
+async function syncCoachUserToFllHub(user) {
+	const shouldExist = user.active !== false && (
+		coachHasHub(user, 'fll-hub') || coachHasHub(user, 'fll-competitive-curriculum')
+	);
+	const users = await readFllUsers();
+	const username = String(user.username || user.fllUsername || '').toLowerCase();
+	const existingIndex = users.findIndex((candidate) => {
+		if (user.fllUserId && candidate.id === user.fllUserId) return true;
+		return candidate.role === 'coach' && String(candidate.username || '').toLowerCase() === username;
+	});
+	if (!shouldExist) {
+		if (existingIndex !== -1) {
+			users[existingIndex] = { ...users[existingIndex], active: false };
+			await writeFllUsers(users);
+		}
+		return;
+	}
+	const fllUser = {
+		...(existingIndex === -1 ? {} : users[existingIndex]),
+		id: user.fllUserId || (existingIndex === -1 ? `coach-${slugify(username)}` : users[existingIndex].id),
+		name: user.name,
+		username,
+		password_hash: user.password_hash,
+		role: 'coach',
+		teamId: null,
+		active: true
+	};
+	if (existingIndex === -1) users.unshift(fllUser);
+	else users[existingIndex] = fllUser;
+	await writeFllUsers(users);
+}
+
+async function syncCoachUserToCampHub(user) {
+	const shouldExist = user.active !== false && (
+		coachHasHub(user, 'camp-hub') || coachHasHub(user, 'summer-curriculum')
+	);
+	const users = await readCampUsers();
+	const username = String(user.username || user.campUsername || '').toLowerCase();
+	const existingIndex = users.findIndex((candidate) => {
+		if (user.campUserId && candidate.id === user.campUserId) return true;
+		return candidate.role === 'coach' && String(candidate.username || '').toLowerCase() === username;
+	});
+	if (!shouldExist) {
+		if (existingIndex !== -1) {
+			users[existingIndex] = { ...users[existingIndex], active: false };
+			await writeCampUsers(users);
+		}
+		return;
+	}
+	const campUser = {
+		...(existingIndex === -1 ? {} : users[existingIndex]),
+		id: user.campUserId || (existingIndex === -1 ? `camp-coach-${slugify(username)}` : users[existingIndex].id),
+		name: user.name,
+		username,
+		password_hash: user.password_hash,
+		role: 'coach',
+		className: 'Coaches',
+		active: true
+	};
+	if (existingIndex === -1) users.unshift(campUser);
+	else users[existingIndex] = campUser;
+	await writeCampUsers(users);
 }
 
 async function getCoachUserFromSession(req) {
@@ -948,6 +1367,29 @@ async function requireCoachPortalAuth(req, res, next) {
 	} catch (err) {
 		console.error('Coach portal auth error:', err);
 		return res.status(500).json({ success: false, message: 'Server error checking coach session' });
+	}
+}
+
+async function requireCoachOwner(req, res, next) {
+	try {
+		const user = await getCoachUserFromSession(req);
+		if (!user) {
+			if (req.path.startsWith('/api/')) {
+				return res.status(401).json({ success: false, message: 'Coach login required' });
+			}
+			return res.redirect(302, '/coach-login');
+		}
+		if (user.role !== 'owner' || !coachHasHub(user, 'access-control')) {
+			if (req.path.startsWith('/api/')) {
+				return res.status(403).json({ success: false, message: 'Owner access required' });
+			}
+			return res.redirect(302, '/coach-portal');
+		}
+		req.coachUser = user;
+		return next();
+	} catch (err) {
+		console.error('Coach owner auth error:', err);
+		return res.status(500).json({ success: false, message: 'Server error checking owner access' });
 	}
 }
 
@@ -1051,10 +1493,38 @@ async function writeMasterRoster(roster) {
 	});
 }
 
-function publicMasterRoster(roster) {
+function inferMasterHubAccess(student) {
+	if (Array.isArray(student.hubAccess)) {
+		return Array.from(new Set(student.hubAccess.filter((hub) => ['code-lab', 'fll-hub'].includes(hub))));
+	}
+	const enrollments = Array.isArray(student.enrollments) ? student.enrollments : [];
+	const access = [];
+	if (student.codeLabUserId || enrollments.some((item) => item.classId === 'code-lab-students')) {
+		access.push('code-lab');
+	}
+	if (student.fllUserId || student.fllTeamId || enrollments.some((item) => String(item.classId || '').startsWith('fll-'))) {
+		access.push('fll-hub');
+	}
+	return access;
+}
+
+function inferMasterFllTeamId(student) {
+	if (student.fllTeamId) return student.fllTeamId;
+	const enrollment = (Array.isArray(student.enrollments) ? student.enrollments : [])
+		.find((item) => String(item.classId || '').startsWith('fll-team-'));
+	return enrollment ? String(enrollment.classId).replace(/^fll-/, '') : '';
+}
+
+function publicMasterRoster(roster, fllTeams = []) {
 	const normalized = normalizeMasterRoster(roster);
 	return {
 		...normalized,
+		fllTeams: (Array.isArray(fllTeams) ? fllTeams : []).map((team) => ({
+			id: team.id,
+			name: team.name || '',
+			nickname: team.nickname || team.name || team.id,
+			meetingDays: team.meetingDays || ''
+		})),
 		students: normalized.students.map((student) => ({
 			id: student.id,
 			name: student.name,
@@ -1063,6 +1533,10 @@ function publicMasterRoster(roster) {
 			phone: student.phone || '',
 			notes: student.notes || '',
 			active: student.active !== false,
+			hubAccess: inferMasterHubAccess(student),
+			codeLabUserId: student.codeLabUserId || '',
+			fllUserId: student.fllUserId || '',
+			fllTeamId: inferMasterFllTeamId(student),
 			enrollments: Array.isArray(student.enrollments) ? student.enrollments : [],
 			createdAt: student.createdAt || '',
 			updatedAt: student.updatedAt || ''
@@ -1109,6 +1583,18 @@ function sanitizeMasterStudentPayload(body, roster, existing = {}) {
 	const name = cleanMetaString(body.name || existing.name || '', 120);
 	if (!name) return null;
 	const now = new Date().toISOString();
+	const hubAccess = Array.isArray(body.hubAccess)
+		? Array.from(new Set(body.hubAccess.filter((hub) => ['code-lab', 'fll-hub'].includes(hub))))
+		: inferMasterHubAccess(existing);
+	const fllTeamId = hubAccess.includes('fll-hub')
+		? cleanMetaString(body.fllTeamId ?? existing.fllTeamId ?? inferMasterFllTeamId(existing) ?? '', 120)
+		: '';
+	const enrollments = normalizeMasterEnrollments(body.enrollments ?? existing.enrollments ?? [], roster.classes, roster.settings.summerWeeks)
+		.filter((enrollment) => !String(enrollment.classId || '').startsWith('fll-team-'));
+	const fllClassId = fllTeamId ? `fll-${fllTeamId}` : '';
+	if (fllClassId && roster.classes.some((classItem) => classItem.id === fllClassId)) {
+		enrollments.push({ classId: fllClassId, weeks: [] });
+	}
 	return {
 		id: existing.id || `student-${slugify(name)}-${crypto.randomBytes(3).toString('hex')}`,
 		name,
@@ -1117,10 +1603,168 @@ function sanitizeMasterStudentPayload(body, roster, existing = {}) {
 		phone: cleanMetaString(body.phone ?? existing.phone ?? '', 80),
 		notes: cleanMetaString(body.notes ?? existing.notes ?? '', 600),
 		active: body.active !== false,
-		enrollments: normalizeMasterEnrollments(body.enrollments ?? existing.enrollments ?? [], roster.classes, roster.settings.summerWeeks),
+		hubAccess,
+		codeLabUserId: cleanMetaString(existing.codeLabUserId || body.codeLabUserId || '', 160),
+		fllUserId: cleanMetaString(existing.fllUserId || body.fllUserId || '', 160),
+		fllTeamId,
+		enrollments,
 		createdAt: existing.createdAt || now,
 		updatedAt: now
 	};
+}
+
+async function readCodeLabStudents() {
+	const students = await readJsonFile(codeLabStudentsFile, []);
+	return Array.isArray(students) ? students : [];
+}
+
+async function writeCodeLabStudents(students) {
+	await writeJsonFile(codeLabStudentsFile, Array.isArray(students) ? students : []);
+}
+
+function findStudentAccount(accounts, student, idField) {
+	if (!Array.isArray(accounts) || !student) return null;
+	const wantedId = student[idField];
+	if (wantedId) {
+		const byId = accounts.find((account) => account.id === wantedId);
+		if (byId) return byId;
+	}
+	const studentName = normalizedPersonName(student.name);
+	return accounts.find((account) =>
+		account.role === 'student' && normalizedPersonName(account.name) === studentName
+	) || null;
+}
+
+function appendRosterNote(notes, addition) {
+	const current = cleanMetaString(notes || '', 600);
+	if (!addition || current.includes(addition)) return current;
+	return cleanMetaString(current ? `${current}\n${addition}` : addition, 600);
+}
+
+async function syncMasterStudentHubAccess(student) {
+	if (!student || !student.name) return student;
+	const access = new Set(inferMasterHubAccess(student));
+	const now = new Date().toISOString();
+
+	const codeLabStudents = await readCodeLabStudents();
+	let codeLabAccount = findStudentAccount(codeLabStudents, student, 'codeLabUserId');
+	if (access.has('code-lab')) {
+		if (!codeLabAccount) {
+			const existingUsernames = new Set(codeLabStudents.map((account) => String(account.username || '').toLowerCase()));
+			const username = uniqueUsername(student.name, existingUsernames);
+			const password = generateStudentPassword();
+			codeLabAccount = {
+				id: `student-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`,
+				name: student.name,
+				username,
+				password_hash: hashScryptPassword(password),
+				role: 'student',
+				active: true,
+				created_at: now
+			};
+			codeLabStudents.push(codeLabAccount);
+			student.notes = appendRosterNote(student.notes, `Code Lab login created: ${username} / ${password}`);
+		}
+		codeLabAccount.name = student.name;
+		codeLabAccount.active = true;
+		student.codeLabUserId = codeLabAccount.id;
+	} else if (codeLabAccount) {
+		codeLabAccount.active = false;
+		student.codeLabUserId = codeLabAccount.id;
+	}
+	await writeCodeLabStudents(codeLabStudents);
+
+	const [fllUsers, members, teams] = await Promise.all([
+		readFllUsers(),
+		readJsonFile(fllTeamMembersFile, []),
+		readJsonFile(path.join(fllHubDataDir, 'teams.json'), [])
+	]);
+	const validTeamIds = new Set((Array.isArray(teams) ? teams : []).map((team) => team.id));
+	const requestedTeamId = validTeamIds.has(student.fllTeamId) ? student.fllTeamId : null;
+	let fllAccount = findStudentAccount(fllUsers, student, 'fllUserId');
+
+	if (access.has('fll-hub')) {
+		if (!fllAccount) {
+			const existingUsernames = new Set(fllUsers.map((account) => String(account.username || '').toLowerCase()));
+			const username = uniqueUsername(student.name, existingUsernames);
+			const password = generateStudentPassword();
+			fllAccount = {
+				id: `student-${slugify(student.name)}-${crypto.randomBytes(3).toString('hex')}`,
+				name: student.name,
+				username,
+				password_hash: hashScryptPassword(password),
+				role: 'student',
+				teamId: requestedTeamId,
+				active: true
+			};
+			fllUsers.push(fllAccount);
+			student.notes = appendRosterNote(student.notes, `FLL Hub login created: ${username} / ${password}`);
+		}
+		fllAccount.name = student.name;
+		fllAccount.teamId = requestedTeamId;
+		fllAccount.active = true;
+		student.fllUserId = fllAccount.id;
+		student.fllTeamId = requestedTeamId || '';
+	} else if (fllAccount) {
+		fllAccount.active = false;
+		fllAccount.teamId = null;
+		student.fllUserId = fllAccount.id;
+		student.fllTeamId = '';
+	}
+
+	if (fllAccount) {
+		const existingMember = members.find((member) => member.studentId === fllAccount.id);
+		if (access.has('fll-hub') && requestedTeamId) {
+			if (existingMember) {
+				existingMember.teamId = requestedTeamId;
+				existingMember.displayName = student.name;
+				existingMember.initials = initialsFromName(student.name);
+			} else {
+				members.push({
+					teamId: requestedTeamId,
+					studentId: fllAccount.id,
+					displayName: student.name,
+					role: 'Team member',
+					initials: initialsFromName(student.name)
+				});
+			}
+		} else if (existingMember) {
+			members.splice(members.indexOf(existingMember), 1);
+		}
+	}
+
+	await Promise.all([
+		writeJsonFile(fllUsersFile, fllUsers),
+		writeJsonFile(fllTeamMembersFile, members)
+	]);
+
+	return student;
+}
+
+// Fully remove the Code Lab and FLL Hub accounts that were provisioned for a
+// master-roster student. Used when the student is deleted from the roster, so no
+// deactivated orphan accounts linger. Matching reuses findStudentAccount (stored
+// id first, then a same-name student fallback) — the same link the sync trusts.
+async function removeMasterStudentLinkedAccounts(student) {
+	if (!student) return;
+
+	const codeLabStudents = await readCodeLabStudents();
+	const codeLabAccount = findStudentAccount(codeLabStudents, student, 'codeLabUserId');
+	if (codeLabAccount) {
+		await writeCodeLabStudents(codeLabStudents.filter((account) => account.id !== codeLabAccount.id));
+	}
+
+	const [fllUsers, members] = await Promise.all([
+		readFllUsers(),
+		readJsonFile(fllTeamMembersFile, [])
+	]);
+	const fllAccount = findStudentAccount(fllUsers, student, 'fllUserId');
+	if (fllAccount) {
+		await Promise.all([
+			writeJsonFile(fllUsersFile, fllUsers.filter((account) => account.id !== fllAccount.id)),
+			writeJsonFile(fllTeamMembersFile, (Array.isArray(members) ? members : []).filter((member) => member.studentId !== fllAccount.id))
+		]);
+	}
 }
 
 async function requireCampAuth(req, res, next) {
@@ -1296,13 +1940,14 @@ async function getCampEnrollmentForUser(user, curriculum) {
 }
 
 async function getCampHubDataFor(user) {
-	const [camp, curriculum, announcements, resources, submissions, printRequests, pointEvents, classroom] = await Promise.all([
+	const [camp, curriculum, announcements, resources, submissions, printRequests, projectSubmissions, pointEvents, classroom] = await Promise.all([
 		readJsonFile(path.join(campHubDataDir, 'camp.json'), {}),
 		readJsonFile(campCurriculumFile, []),
 		readJsonFile(campAnnouncementsFile, []),
 		readJsonFile(path.join(campHubDataDir, 'resources.json'), []),
 		readCampSubmissions(),
 		readCampPrintRequests(),
+		readCampProjectSubmissions(),
 		readCampPointEvents(),
 		readCampClassroomState()
 	]);
@@ -1333,8 +1978,9 @@ async function getCampHubDataFor(user) {
 		resources: visibleResources,
 		enrollment,
 		classroom,
-		points: isCoach ? null : campPointsFor(user.id, submissions, printRequests, pointEvents),
+		points: isCoach ? null : campPointsFor(user.id, submissions, printRequests, pointEvents, projectSubmissions),
 		printRequests: isCoach ? [] : printRequests.filter((item) => item.studentId === user.id),
+		projectSubmissions: isCoach ? [] : projectSubmissions.filter((item) => item.studentId === user.id),
 		submissions: isCoach
 			? []
 			: submissions.filter((item) => item.studentId === user.id && visibleCurriculum.some((week) => (week.days || []).some((day) => day.id === item.dayId)))
@@ -1623,6 +2269,113 @@ function groupStudentTasks(tasks, nextClassInfo) {
 	};
 }
 
+function buildFllCodingFoundationsTask(user) {
+	const studentId = user?.id || 'student';
+	return {
+		id: `task-coding-foundations-${studentId}`,
+		assignmentId: 'assignment-coding-foundations',
+		teamId: user?.teamId || '',
+		assignedTo: studentId,
+		title: 'Coding Foundations Check: Pybricks Logic and PID',
+		description: [
+			'This check helps coaches understand how you reason about robot code. Focus on explaining your thinking, not just naming a command.',
+			'Use complete thoughts. If you are unsure, write what you would test on the robot and what evidence would prove your idea.',
+			'Topics include Python/Pybricks logic, loops, conditionals, gyro turns, encoder distance, speed, acceleration, and the basic idea of PID control.'
+		].join('\n\n'),
+		category: 'Robot Game',
+		section: 'robot-game',
+		type: 'lesson',
+		workContext: 'home',
+		status: 'todo',
+		dueDate: '2026-07-22',
+		codeExample: [
+			'from pybricks.hubs import PrimeHub',
+			'from pybricks.pupdevices import Motor',
+			'from pybricks.parameters import Port, Direction',
+			'from pybricks.tools import wait',
+			'',
+			'hub = PrimeHub()',
+			'left = Motor(Port.A, Direction.COUNTERCLOCKWISE)',
+			'right = Motor(Port.B)',
+			'',
+			'target_angle = 0',
+			'base_speed = 350',
+			'kp = 4',
+			'',
+			'left.reset_angle(0)',
+			'right.reset_angle(0)',
+			'hub.imu.reset_heading(0)',
+			'',
+			'while (abs(left.angle()) + abs(right.angle())) / 2 < 720:',
+			'    error = target_angle - hub.imu.heading()',
+			'    correction = kp * error',
+			'    left.run(base_speed - correction)',
+			'    right.run(base_speed + correction)',
+			'    wait(10)',
+			'',
+			'left.stop()',
+			'right.stop()'
+		].join('\n'),
+		questions: [
+			{
+				id: 'logic-flow',
+				type: 'textarea',
+				label: 'Read the code. Explain the logic of the while loop in your own words. What condition keeps it running, and what condition makes it stop?',
+				placeholder: 'Mention the encoder angles, the average distance, and why the robot eventually exits the loop...'
+			},
+			{
+				id: 'gyro-error',
+				type: 'textarea',
+				label: 'The robot wants to drive straight at heading 0. If hub.imu.heading() reads -6 degrees, what is the error? Which side should speed up or slow down, and why?',
+				placeholder: 'Show the error calculation and explain the correction in robot movement words...'
+			},
+			{
+				id: 'if-logic',
+				type: 'textarea',
+				label: 'Write pseudocode or Python logic for this idea: if the gyro heading is more than 3 degrees to the right, adjust left and right motor speeds to turn back toward the target; otherwise keep driving straight.',
+				placeholder: 'Use if / else logic. It does not need to be perfect Pybricks syntax, but the reasoning should be clear...'
+			},
+			{
+				id: 'speed-acceleration',
+				type: 'textarea',
+				label: 'Explain the difference between speed and acceleration for an FLL robot. Why might a robot miss a mission if it jumps instantly to a very high speed?',
+				placeholder: 'Think about wheel slip, attachments shaking, stopping distance, and repeatability...'
+			},
+			{
+				id: 'encoder-reasoning',
+				type: 'textarea',
+				label: 'A robot drives forward until the average motor encoder angle reaches 720 degrees. What does using the average of left and right encoders protect against? What problem could still happen?',
+				placeholder: 'Reason about one wheel moving more than the other, drift, wheel slip, or the robot being bumped...'
+			},
+			{
+				id: 'pid-concepts',
+				type: 'textarea',
+				label: 'In PID control, what do P, I, and D each try to fix? Give a robot example for at least P and D.',
+				placeholder: 'P reacts to current error, I reacts to error that builds up over time, D reacts to how fast error is changing...'
+			},
+			{
+				id: 'debug-plan',
+				type: 'textarea',
+				label: 'Your robot turns past the target angle every time. What are two code or tuning changes you would try, and what data would you collect to decide if it improved?',
+				placeholder: 'Think about lowering kp, adding D, slowing speed, logging gyro angle, testing multiple runs...'
+			},
+			{
+				id: 'foundation-reflection',
+				type: 'text',
+				label: 'What is one coding concept from this check that you want more practice with?',
+				placeholder: 'Loops, if statements, Pybricks syntax, gyro, encoders, PID, debugging...'
+			}
+		],
+		createdBy: 'system-coding-foundations',
+		createdAt: '2026-06-17T00:00:00.000Z',
+		updatedAt: '2026-06-17T00:00:00.000Z'
+	};
+}
+
+function isGeneratedFllCodingTaskId(taskId, user) {
+	return taskId === `task-coding-foundations-${user?.id || ''}`;
+}
+
 function visibleFllResources(resources, user) {
 	return (Array.isArray(resources) ? resources : []).filter((resource) => {
 		const roles = Array.isArray(resource.roles) ? resource.roles : [];
@@ -1682,6 +2435,11 @@ async function getFllStudentDashboardFor(user) {
 	const myTasks = (Array.isArray(tasks) ? tasks : [])
 		.filter((task) => task.teamId === user.teamId && task.assignedTo === user.id)
 		.sort((a, b) => String(a.dueDate || '').localeCompare(String(b.dueDate || '')));
+	const codingFoundationsTask = buildFllCodingFoundationsTask(user);
+	if (!myTasks.some((task) => task.id === codingFoundationsTask.id)) {
+		myTasks.push(codingFoundationsTask);
+		myTasks.sort((a, b) => String(a.dueDate || '').localeCompare(String(b.dueDate || '')));
+	}
 	const teamMilestones = (Array.isArray(milestones) ? milestones : []).filter((group) => group.teamId === user.teamId);
 	const myWorkLogs = (Array.isArray(workLogs) ? workLogs : [])
 		.filter((log) => log.teamId === user.teamId && log.studentId === user.id)
@@ -2288,10 +3046,23 @@ app.post('/api/fll/login', async (req, res) => {
 	try {
 		const username = cleanMetaString(req.body.username || '', 80).toLowerCase();
 		const password = typeof req.body.password === 'string' ? req.body.password : '';
-		const users = await readFllUsers();
-		const user = users.find((candidate) => candidate.username.toLowerCase() === username && candidate.active !== false);
+		const [users, coachUsers] = await Promise.all([readFllUsers(), readCoachUsers()]);
+		let user = users.find((candidate) => candidate.username.toLowerCase() === username && candidate.active !== false);
+		const masterCoach = findMatchingMasterCoach(coachUsers, username, password, 'fll-hub')
+			|| findMatchingMasterCoach(coachUsers, username, password, 'fll-competitive-curriculum');
 
-		if (!user || !verifyScryptPassword(password, user.password_hash)) {
+		if (masterCoach) {
+			await syncCoachUserToFllHub(masterCoach);
+			const syncedUsers = await readFllUsers();
+			user = syncedUsers.find((candidate) => {
+				if (masterCoach.fllUserId && candidate.id === masterCoach.fllUserId) return true;
+				return candidate.role === 'coach' && String(candidate.username || '').toLowerCase() === String(masterCoach.fllUsername || masterCoach.username || '').toLowerCase();
+			});
+		} else if (!user || !verifyScryptPassword(password, user.password_hash)) {
+			return res.status(401).json({ success: false, message: 'Invalid FLL username or password' });
+		}
+
+		if (!user || user.active === false) {
 			return res.status(401).json({ success: false, message: 'Invalid FLL username or password' });
 		}
 
@@ -2852,7 +3623,11 @@ app.post('/api/fll/tasks/:id/status', requireFllAuth, requireFllStudent, async (
 		if (!Array.isArray(tasks)) {
 			return res.status(500).json({ success: false, message: 'Task data is invalid' });
 		}
-		const task = tasks.find((candidate) => candidate.id === req.params.id);
+		let task = tasks.find((candidate) => candidate.id === req.params.id);
+		if (!task && isGeneratedFllCodingTaskId(req.params.id, req.fllUser)) {
+			task = buildFllCodingFoundationsTask(req.fllUser);
+			tasks.push(task);
+		}
 		if (!task || task.teamId !== req.fllUser.teamId || task.assignedTo !== req.fllUser.id) {
 			return res.status(403).json({ success: false, message: 'You can only update your own assigned tasks' });
 		}
@@ -2872,7 +3647,12 @@ app.post('/api/fll/tasks/:id/work-log', requireFllAuth, requireFllStudent, async
 		if (!Array.isArray(tasks)) {
 			return res.status(500).json({ success: false, message: 'Task data is invalid' });
 		}
-		const task = tasks.find((candidate) => candidate.id === req.params.id);
+		let task = tasks.find((candidate) => candidate.id === req.params.id);
+		if (!task && isGeneratedFllCodingTaskId(req.params.id, req.fllUser)) {
+			task = buildFllCodingFoundationsTask(req.fllUser);
+			tasks.push(task);
+			await writeJsonFile(fllTasksFile, tasks);
+		}
 		if (!task || task.teamId !== req.fllUser.teamId || task.assignedTo !== req.fllUser.id) {
 			return res.status(403).json({ success: false, message: 'You can only log work for your own assigned tasks' });
 		}
@@ -2960,10 +3740,23 @@ app.post('/api/camp/login', async (req, res) => {
 	try {
 		const username = cleanMetaString(req.body.username || '', 80).toLowerCase();
 		const password = typeof req.body.password === 'string' ? req.body.password : '';
-		const users = await readCampUsers();
-		const user = users.find((candidate) => candidate.username.toLowerCase() === username && candidate.active !== false);
+		const [users, coachUsers] = await Promise.all([readCampUsers(), readCoachUsers()]);
+		let user = users.find((candidate) => candidate.username.toLowerCase() === username && candidate.active !== false);
+		const masterCoach = findMatchingMasterCoach(coachUsers, username, password, 'camp-hub')
+			|| findMatchingMasterCoach(coachUsers, username, password, 'summer-curriculum');
 
-		if (!user || !verifyScryptPassword(password, user.password_hash)) {
+		if (masterCoach) {
+			await syncCoachUserToCampHub(masterCoach);
+			const syncedUsers = await readCampUsers();
+			user = syncedUsers.find((candidate) => {
+				if (masterCoach.campUserId && candidate.id === masterCoach.campUserId) return true;
+				return candidate.role === 'coach' && String(candidate.username || '').toLowerCase() === String(masterCoach.campUsername || masterCoach.username || '').toLowerCase();
+			});
+		} else if (!user || !verifyScryptPassword(password, user.password_hash)) {
+			return res.status(401).json({ success: false, message: 'Invalid camp username or password' });
+		}
+
+		if (!user || user.active === false) {
 			return res.status(401).json({ success: false, message: 'Invalid camp username or password' });
 		}
 
@@ -3118,6 +3911,59 @@ app.post('/api/camp/print-requests', requireCampAuth, async (req, res) => {
 	}
 });
 
+app.post('/api/camp/projects', requireCampAuth, async (req, res) => {
+	try {
+		if (!req.campUser || req.campUser.role !== 'student') {
+			return res.status(403).json({ success: false, message: 'Camper access required' });
+		}
+		const title = cleanMetaString(req.body.title || '', 140);
+		const projectType = cleanMetaString(req.body.projectType || '', 80) || 'Project';
+		const description = cleanMetaString(req.body.description || '', 1200);
+		const reflection = cleanMetaString(req.body.reflection || '', 1200);
+		const linkUrl = cleanMetaString(req.body.linkUrl || '', 1000);
+		const photoDataUrl = typeof req.body.photoDataUrl === 'string' ? req.body.photoDataUrl : '';
+		if (!title || !description) {
+			return res.status(400).json({ success: false, message: 'Project title and description are required' });
+		}
+		if (linkUrl && !/^https?:\/\//i.test(linkUrl)) {
+			return res.status(400).json({ success: false, message: 'Project link must start with http:// or https://' });
+		}
+		if (photoDataUrl && (!photoDataUrl.startsWith('data:image/') || photoDataUrl.length > 8 * 1024 * 1024)) {
+			return res.status(400).json({ success: false, message: 'Photo must be an image under 8 MB after compression' });
+		}
+		const projects = await readCampProjectSubmissions();
+		const now = new Date().toISOString();
+		const project = {
+			id: `project-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
+			studentId: req.campUser.id,
+			studentName: req.campUser.name,
+			className: req.campUser.className || 'Unassigned',
+			title,
+			projectType,
+			description,
+			reflection,
+			linkUrl,
+			photoDataUrl,
+			status: 'submitted',
+			pointsAwarded: 0,
+			coachFeedback: '',
+			createdAt: now,
+			updatedAt: now
+		};
+		projects.push(project);
+		await writeJsonFile(campProjectSubmissionsFile, projects);
+		const [submissions, printRequests, pointEvents] = await Promise.all([readCampSubmissions(), readCampPrintRequests(), readCampPointEvents()]);
+		return res.status(201).json({
+			success: true,
+			project,
+			points: campPointsFor(req.campUser.id, submissions, printRequests, pointEvents, projects)
+		});
+	} catch (err) {
+		console.error('Camp project submission error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving project' });
+	}
+});
+
 app.patch('/api/camp/coach/days/:dayId', requireCampAuth, requireCampCoach, async (req, res) => {
 	try {
 		const curriculum = await readJsonFile(campCurriculumFile, []);
@@ -3244,6 +4090,154 @@ app.delete('/api/camp/coach/announcements/:id', requireCampAuth, requireCampCoac
 	}
 });
 
+// ── Live lessons: coach authoring + presenting ──
+app.get('/api/camp/coach/lessons', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const [lessons, live] = await Promise.all([readCampLessons(), readCampLiveLesson()]);
+		return res.json({ success: true, lessons, live: { active: live.active, lessonId: live.lessonId, currentIndex: live.currentIndex, slideCount: live.slides.length } });
+	} catch (err) {
+		console.error('Camp lessons load error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading lessons' });
+	}
+});
+
+app.post('/api/camp/coach/lessons', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const title = cleanMetaString(req.body.title || '', 160);
+		if (!title) return res.status(400).json({ success: false, message: 'Lesson title is required' });
+		const lessons = await readCampLessons();
+		const incoming = normalizeLesson({ ...req.body, title, updatedAt: new Date().toISOString() });
+		const existingId = cleanMetaString(req.body.id || '', 120);
+		const index = existingId ? lessons.findIndex((l) => l.id === existingId) : -1;
+		if (index >= 0) {
+			incoming.id = lessons[index].id;
+			lessons[index] = incoming;
+		} else {
+			lessons.push(incoming);
+		}
+		await writeCampLessons(lessons);
+		return res.status(index >= 0 ? 200 : 201).json({ success: true, lessons, lesson: incoming });
+	} catch (err) {
+		console.error('Camp lesson save error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving lesson' });
+	}
+});
+
+app.delete('/api/camp/coach/lessons/:id', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const lessons = await readCampLessons();
+		const remaining = lessons.filter((l) => l.id !== req.params.id);
+		if (remaining.length === lessons.length) return res.status(404).json({ success: false, message: 'Lesson not found' });
+		await writeCampLessons(remaining);
+		// If the deleted lesson was live, stop the broadcast.
+		const live = await readCampLiveLesson();
+		if (live.lessonId === req.params.id && live.active) {
+			await writeCampLiveLesson({ ...live, active: false });
+		}
+		return res.json({ success: true, lessons: remaining });
+	} catch (err) {
+		console.error('Camp lesson delete error:', err);
+		return res.status(500).json({ success: false, message: 'Server error deleting lesson' });
+	}
+});
+
+app.get('/api/camp/coach/live', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const live = await readCampLiveLesson();
+		return res.json({ success: true, live, tally: liveResponseTally(live) });
+	} catch (err) {
+		console.error('Camp live load error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading live lesson' });
+	}
+});
+
+app.post('/api/camp/coach/live/start', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const lessonId = cleanMetaString(req.body.lessonId || '', 120);
+		const lessons = await readCampLessons();
+		const lesson = lessons.find((l) => l.id === lessonId);
+		if (!lesson) return res.status(404).json({ success: false, message: 'Lesson not found' });
+		if (!lesson.slides.length) return res.status(400).json({ success: false, message: 'Add at least one slide before starting' });
+		const live = normalizeCampLiveLesson({
+			active: true,
+			lessonId: lesson.id,
+			lessonTitle: lesson.title,
+			slides: lesson.slides,
+			currentIndex: 0,
+			startedAt: new Date().toISOString(),
+			responses: {}
+		});
+		await writeCampLiveLesson(live);
+		return res.json({ success: true, live, tally: liveResponseTally(live) });
+	} catch (err) {
+		console.error('Camp live start error:', err);
+		return res.status(500).json({ success: false, message: 'Server error starting lesson' });
+	}
+});
+
+app.post('/api/camp/coach/live/goto', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const live = await readCampLiveLesson();
+		if (!live.active) return res.status(400).json({ success: false, message: 'No lesson is live' });
+		const index = Number(req.body.index);
+		if (!Number.isInteger(index) || index < 0 || index >= live.slides.length) {
+			return res.status(400).json({ success: false, message: 'Invalid slide index' });
+		}
+		live.currentIndex = index;
+		await writeCampLiveLesson(live);
+		return res.json({ success: true, live, tally: liveResponseTally(live) });
+	} catch (err) {
+		console.error('Camp live goto error:', err);
+		return res.status(500).json({ success: false, message: 'Server error changing slide' });
+	}
+});
+
+app.post('/api/camp/coach/live/stop', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const live = await readCampLiveLesson();
+		live.active = false;
+		await writeCampLiveLesson(live);
+		return res.json({ success: true, live: { active: false } });
+	} catch (err) {
+		console.error('Camp live stop error:', err);
+		return res.status(500).json({ success: false, message: 'Server error stopping lesson' });
+	}
+});
+
+// ── Live lessons: camper viewing + answering (any signed-in camp user) ──
+app.get('/api/camp/live', requireCampAuth, async (req, res) => {
+	try {
+		const live = await readCampLiveLesson();
+		return res.json({ success: true, state: publicLiveStateForStudent(live, req.campUser.id) });
+	} catch (err) {
+		console.error('Camp live state error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading live lesson' });
+	}
+});
+
+app.post('/api/camp/live/answer', requireCampAuth, async (req, res) => {
+	try {
+		const live = await readCampLiveLesson();
+		if (!live.active || !live.slides.length) return res.status(400).json({ success: false, message: 'No lesson is live' });
+		const slideId = cleanMetaString(req.body.slideId || '', 120);
+		const current = live.slides[live.currentIndex];
+		if (!current || current.id !== slideId || current.type !== 'question') {
+			return res.status(400).json({ success: false, message: 'That question is not open' });
+		}
+		const choice = Number(req.body.choice);
+		if (!Number.isInteger(choice) || choice < 0 || choice >= current.options.length) {
+			return res.status(400).json({ success: false, message: 'Invalid choice' });
+		}
+		if (!live.responses[slideId]) live.responses[slideId] = {};
+		live.responses[slideId][req.campUser.id] = { choice, name: req.campUser.name, at: new Date().toISOString() };
+		await writeCampLiveLesson(live);
+		return res.json({ success: true, myAnswer: choice });
+	} catch (err) {
+		console.error('Camp live answer error:', err);
+		return res.status(500).json({ success: false, message: 'Server error submitting answer' });
+	}
+});
+
 app.get('/api/camp/coach/roster', requireCampAuth, requireCampCoach, async (req, res) => {
 	try {
 		const users = await readCampUsers();
@@ -3266,13 +4260,24 @@ app.get('/api/camp/coach/roster', requireCampAuth, requireCampCoach, async (req,
 
 app.get('/api/camp/coach/progress', requireCampAuth, requireCampCoach, async (req, res) => {
 	try {
-		const [users, curriculum, submissions, printRequests, pointEvents] = await Promise.all([
+		const [users, curriculum, submissions, printRequests, projectSubmissions, pointEvents, masterRoster] = await Promise.all([
 			readCampUsers(),
 			readJsonFile(campCurriculumFile, []),
 			readCampSubmissions(),
 			readCampPrintRequests(),
-			readCampPointEvents()
+			readCampProjectSubmissions(),
+			readCampPointEvents(),
+			readMasterRoster()
 		]);
+		const summerClasses = (masterRoster.classes || [])
+			.filter((item) => item.term === 'summer' && item.active !== false)
+			.map((item) => ({
+				id: item.id,
+				name: item.name,
+				program: item.program || '',
+				day: item.day || '',
+				schedule: item.schedule || ''
+			}));
 		const students = users
 			.filter((user) => user.role === 'student')
 			.map((user) => ({
@@ -3281,7 +4286,7 @@ app.get('/api/camp/coach/progress', requireCampAuth, requireCampCoach, async (re
 				username: user.username,
 				active: user.active !== false,
 				className: user.className || 'Unassigned',
-				points: campPointsFor(user.id, submissions, printRequests, pointEvents)
+				points: campPointsFor(user.id, submissions, printRequests, pointEvents, projectSubmissions)
 			}));
 		const days = (Array.isArray(curriculum) ? curriculum : []).flatMap((week) =>
 			(Array.isArray(week.days) ? week.days : []).map((day) => ({
@@ -3296,10 +4301,44 @@ app.get('/api/camp/coach/progress', requireCampAuth, requireCampCoach, async (re
 				worksheetUrl: day.worksheetUrl || ''
 			}))
 		);
-		return res.json({ success: true, students, days, submissions, printRequests, pointEvents });
+		return res.json({ success: true, students, days, submissions, printRequests, projectSubmissions, pointEvents, summerClasses });
 	} catch (err) {
 		console.error('Camp coach progress error:', err);
 		return res.status(500).json({ success: false, message: 'Server error loading progress' });
+	}
+});
+
+app.get('/api/camp/coach/projects', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const projects = await readCampProjectSubmissions();
+		return res.json({ success: true, projects });
+	} catch (err) {
+		console.error('Camp coach project queue error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading projects' });
+	}
+});
+
+app.patch('/api/camp/coach/projects/:id', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const projects = await readCampProjectSubmissions();
+		const project = projects.find((item) => item.id === req.params.id);
+		if (!project) {
+			return res.status(404).json({ success: false, message: 'Project submission not found' });
+		}
+		const statuses = new Set(['submitted', 'reviewing', 'approved', 'featured', 'needs-revision']);
+		const status = cleanMetaString(req.body.status || '', 40);
+		if (status && statuses.has(status)) project.status = status;
+		if (typeof req.body.coachFeedback === 'string') project.coachFeedback = cleanMetaString(req.body.coachFeedback, 1000);
+		if (req.body.pointsAwarded !== undefined) {
+			const points = Number(req.body.pointsAwarded);
+			project.pointsAwarded = Number.isFinite(points) ? Math.max(0, Math.min(100, Math.round(points))) : 0;
+		}
+		project.updatedAt = new Date().toISOString();
+		await writeJsonFile(campProjectSubmissionsFile, projects);
+		return res.json({ success: true, project, projects });
+	} catch (err) {
+		console.error('Camp coach project update error:', err);
+		return res.status(500).json({ success: false, message: 'Server error updating project' });
 	}
 });
 
@@ -3367,11 +4406,11 @@ app.post('/api/camp/coach/points', requireCampAuth, requireCampCoach, async (req
 		};
 		events.push(event);
 		await writeJsonFile(campPointEventsFile, events);
-		const [submissions, printRequests] = await Promise.all([readCampSubmissions(), readCampPrintRequests()]);
+		const [submissions, printRequests, projectSubmissions] = await Promise.all([readCampSubmissions(), readCampPrintRequests(), readCampProjectSubmissions()]);
 		return res.status(201).json({
 			success: true,
 			event,
-			points: campPointsFor(student.id, submissions, printRequests, events),
+			points: campPointsFor(student.id, submissions, printRequests, events, projectSubmissions),
 			pointEvents: events
 		});
 	} catch (err) {

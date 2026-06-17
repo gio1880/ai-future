@@ -771,6 +771,75 @@
       .resource-link { padding: 8px 0; }
       .resource-card:hover { transform: none; }
     }
+
+    /* ── Live lesson: join banner ── */
+    .live-banner {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 80;
+      background: linear-gradient(135deg, var(--sun-deep), #14365a);
+      color: #fff; padding: 16px 20px;
+      display: none; align-items: center; gap: 14px; justify-content: center; flex-wrap: wrap;
+      box-shadow: 0 -6px 24px rgba(7,20,38,0.25);
+    }
+    .live-banner.show { display: flex; }
+    .live-banner .lb-dot { width: 10px; height: 10px; border-radius: 50%; background: #ff5a5a; animation: lvpulse 1.2s infinite; }
+    @keyframes lvpulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .live-banner .lb-text { font-weight: 800; font-size: 15px; }
+    .live-banner .lb-join {
+      background: var(--gold); color: var(--sun-deep); border: 0; border-radius: 50px;
+      font-weight: 900; font-size: 16px; padding: 12px 26px; cursor: pointer; min-height: 48px;
+    }
+    .live-banner .lb-join:hover { background: #ffd84d; }
+
+    /* ── Live lesson: full-screen camper view ── */
+    .live-overlay {
+      position: fixed; inset: 0; z-index: 100; background: var(--bg);
+      display: none; flex-direction: column;
+    }
+    .live-overlay.show { display: flex; }
+    .lo-bar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 14px 18px; background: var(--sun-deep); color: #fff; flex-shrink: 0;
+    }
+    .lo-bar .lo-title { font-weight: 900; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+    .lo-bar .lo-actions { display: flex; gap: 8px; }
+    .lo-btn {
+      background: rgba(255,255,255,0.16); color: #fff; border: 1.5px solid rgba(255,255,255,0.3);
+      border-radius: 10px; font-weight: 800; font-size: 14px; padding: 10px 16px; cursor: pointer; min-height: 46px;
+    }
+    .lo-btn:hover { background: rgba(255,255,255,0.28); }
+    .lo-btn.gold { background: var(--gold); color: var(--sun-deep); border-color: var(--gold); }
+    .lo-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: clamp(20px, 4vw, 48px); display: flex; flex-direction: column; }
+    .lo-content { max-width: 760px; margin: 0 auto; width: 100%; }
+    .lo-kicker { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: var(--sun-deep); margin-bottom: 10px; }
+    .lo-content h1 { font-size: clamp(26px, 5vw, 42px); font-weight: 900; line-height: 1.12; margin-bottom: 16px; }
+    .lo-content .lo-text { font-size: clamp(18px, 2.6vw, 24px); line-height: 1.6; white-space: pre-wrap; color: var(--ink); }
+    .lo-content img { max-width: 100%; max-height: 46vh; border-radius: 14px; margin-top: 18px; border: 1px solid var(--line); }
+    .lo-counter { text-align: center; color: var(--muted); font-weight: 800; font-size: 13px; padding: 10px; flex-shrink: 0; }
+
+    .lo-answers { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 26px; }
+    .lo-answer {
+      display: flex; align-items: center; gap: 12px; text-align: left;
+      border: 0; border-radius: 16px; padding: 22px 20px; cursor: pointer;
+      font-size: clamp(17px, 2.4vw, 22px); font-weight: 800; color: #fff; min-height: 84px;
+      transition: transform 0.1s, box-shadow 0.15s; box-shadow: 0 4px 14px rgba(7,20,38,0.12);
+    }
+    .lo-answer:hover { transform: translateY(-2px); }
+    .lo-answer .lo-key { width: 34px; height: 34px; border-radius: 9px; background: rgba(255,255,255,0.25); display: grid; place-items: center; font-size: 18px; flex-shrink: 0; }
+    .lo-answer.a0 { background: #e8583a; }
+    .lo-answer.a1 { background: #1767b4; }
+    .lo-answer.a2 { background: #f59e0b; }
+    .lo-answer.a3 { background: #16a34a; }
+    .lo-answer.a4 { background: #7c51d4; }
+    .lo-answer.a5 { background: #0ea5e9; }
+    .lo-answer.chosen { outline: 5px solid var(--sun-deep); }
+    .lo-answer.dim { opacity: 0.5; }
+    .lo-answered-msg {
+      margin-top: 22px; background: var(--grass-light); border: 1.5px solid #bce5c8; color: #14663b;
+      border-radius: 14px; padding: 16px 18px; font-size: 17px; font-weight: 800; text-align: center;
+    }
+    .lo-waiting { text-align: center; color: var(--muted); margin-top: 12vh; }
+    .lo-waiting .big { font-size: 52px; display: block; margin-bottom: 14px; }
+    @media (max-width: 520px) { .lo-answers { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -797,6 +866,26 @@
       <p class="loading-text">Loading your camp hub…</p>
     </div>
   </main>
+
+  <!-- Live lesson join banner -->
+  <div class="live-banner" id="liveBanner">
+    <span class="lb-dot"></span>
+    <span class="lb-text" id="liveBannerTitle">A lesson is live</span>
+    <button class="lb-join" id="liveJoinBtn" type="button">🎥 Join lesson</button>
+  </div>
+
+  <!-- Live lesson full-screen view -->
+  <div class="live-overlay" id="liveOverlay" role="dialog" aria-modal="true">
+    <div class="lo-bar">
+      <div class="lo-title"><span class="lb-dot"></span><span id="liveOverlayTitle">Live lesson</span></div>
+      <div class="lo-actions">
+        <button class="lo-btn gold" id="liveRefreshBtn" type="button">🔄 Refresh</button>
+        <button class="lo-btn" id="liveLeaveBtn" type="button">Leave</button>
+      </div>
+    </div>
+    <div class="lo-body" id="liveOverlayBody"></div>
+    <div class="lo-counter" id="liveOverlayCounter"></div>
+  </div>
 
   <script>
     const app = document.getElementById('app');
@@ -1032,8 +1121,8 @@
       `;
     }
 
-    function renderPointsCard(points, printRequests) {
-      const data = points || { total: 0, submittedActivities: 0, activityPoints: 0, printBonus: 0, behaviorPoints: 0, skills: {}, events: [] };
+    function renderPointsCard(points, printRequests, projectSubmissions) {
+      const data = points || { total: 0, submittedActivities: 0, activityPoints: 0, printBonus: 0, projectBonus: 0, behaviorPoints: 0, skills: {}, events: [] };
       const skillEntries = Object.entries(data.skills || {}).filter(([, value]) => value !== 0);
       return `
         <div class="points-card">
@@ -1043,6 +1132,7 @@
             <span class="status-pill done">${esc(data.submittedActivities || 0)} activities</span>
             <span class="status-pill todo">${esc(data.activityPoints || 0)} activity points</span>
             <span class="status-pill todo">${esc(data.printBonus || 0)} print bonus</span>
+            <span class="status-pill todo">${esc(data.projectBonus || 0)} project bonus</span>
             <span class="status-pill ${data.behaviorPoints >= 0 ? 'done' : 'todo'}">${esc(data.behaviorPoints || 0)} class points</span>
           </div>
           ${skillEntries.length ? `
@@ -1052,6 +1142,7 @@
           ` : ''}
           ${renderPointFeed(data.events || [])}
           ${renderPrintRequestList(printRequests || [])}
+          ${renderProjectSubmissionList(projectSubmissions || [])}
         </div>
       `;
     }
@@ -1108,6 +1199,56 @@
           <textarea id="printNotes" placeholder="Add file link, sketch notes, deadline, or special instructions."></textarea>
           <button class="btn" style="margin-top:14px" onclick="submitPrintRequest()">Send print request</button>
           <div class="form-status" id="printStatus"></div>
+        </div>
+      `;
+    }
+
+    function renderProjectSubmissionList(projectSubmissions) {
+      if (!projectSubmissions.length) {
+        return '<p class="section-sub" style="margin-top:14px">No project submissions yet.</p>';
+      }
+      return `
+        <div class="print-request-list">
+          ${projectSubmissions.slice().sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || ''))).map(project => `
+            <div class="print-request-item">
+              <strong>${esc(project.title)}</strong>
+              <span class="status-pill ${project.status === 'approved' || project.status === 'featured' ? 'done' : 'todo'}">${esc(project.status || 'submitted')}</span>
+              ${project.pointsAwarded ? `<span class="status-pill done">+${esc(project.pointsAwarded)} points</span>` : ''}
+              <p>${esc(project.coachFeedback || project.description || '')}</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderProjectSubmissionForm() {
+      return `
+        <div class="submit-card">
+          <div class="section-title">Submit a Project</div>
+          <p class="section-sub">Turn in a bigger build, design, code project, presentation, or prototype for coach review.</p>
+          <label for="projectTitle">Project title</label>
+          <input id="projectTitle" placeholder="e.g. Rescue robot claw, Scratch maze game, city model" />
+          <label for="projectType">Project type</label>
+          <select id="projectType">
+            <option>Robot build</option>
+            <option>Code project</option>
+            <option>3D design</option>
+            <option>Research / presentation</option>
+            <option>Team prototype</option>
+            <option>Other</option>
+          </select>
+          <label for="projectDescription">What did you make?</label>
+          <textarea id="projectDescription" placeholder="Describe what your project does and what you want your coach to notice."></textarea>
+          <label for="projectReflection">Reflection</label>
+          <textarea id="projectReflection" placeholder="What was challenging? What did you improve? What would you do next?"></textarea>
+          <label for="projectLink">Project link</label>
+          <input id="projectLink" placeholder="Optional: https://..." />
+          <label for="projectPhoto">Photo of final project</label>
+          <input id="projectPhoto" type="file" accept="image/*" />
+          <div class="photo-guidance">Ask a classmate or a coach to take a picture of you and your final work before submitting.</div>
+          <button class="btn" style="margin-top:14px" onclick="submitProject()">Submit project</button>
+          <div class="form-status" id="projectStatus"></div>
+          <div class="submission-preview" id="projectPreview"></div>
         </div>
       `;
     }
@@ -1335,7 +1476,7 @@
 
     function renderCampDashboard(data) {
       hubState = data;
-      const { user, camp, curriculum, announcements, resources, submissions = [], enrollment, points, printRequests = [], classroom } = data;
+      const { user, camp, curriculum, announcements, resources, submissions = [], enrollment, points, printRequests = [], projectSubmissions = [], classroom } = data;
       const isCoach = user.role === 'coach';
       userLine.textContent = `${user.name} · ${isCoach ? 'Coach preview' : 'Camper'}`;
       rolePill.textContent = isCoach ? 'Coach' : 'Camper';
@@ -1349,11 +1490,12 @@
         <div class="main-layout">
           <div>
             ${!isCoach ? renderClassroomCard(classroom) : ''}
-            ${!isCoach ? renderPointsCard(points, printRequests) : ''}
+            ${!isCoach ? renderPointsCard(points, printRequests, projectSubmissions) : ''}
             <div class="section-title">This Week's Assignments</div>
             <p class="section-sub">Only your current camp week is shown here. Open any worksheet you need, then submit your reflection and final-work photo.</p>
             ${renderAssignmentTable(curriculum, submissions)}
             ${!isCoach ? renderSubmitBox(curriculum, submissions) : ''}
+            ${!isCoach ? renderProjectSubmissionForm() : ''}
             ${!isCoach ? renderPrintRequestForm() : ''}
 
             <div style="margin-top:36px">
@@ -1460,6 +1602,39 @@
       }
     }
 
+    async function submitProject() {
+      const status = document.getElementById('projectStatus');
+      const preview = document.getElementById('projectPreview');
+      const file = document.getElementById('projectPhoto').files[0];
+      const payload = {
+        title: document.getElementById('projectTitle').value.trim(),
+        projectType: document.getElementById('projectType').value,
+        description: document.getElementById('projectDescription').value.trim(),
+        reflection: document.getElementById('projectReflection').value.trim(),
+        linkUrl: document.getElementById('projectLink').value.trim()
+      };
+      status.textContent = 'Submitting project...';
+      preview.innerHTML = '';
+      try {
+        const photoDataUrl = await imageToDataUrl(file);
+        const response = await fetch('/api/camp/projects', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...payload, photoDataUrl })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Could not submit project');
+        hubState.projectSubmissions = [result.project, ...(hubState.projectSubmissions || [])];
+        hubState.points = result.points || hubState.points;
+        preview.innerHTML = `${photoDataUrl ? `<img src="${photoDataUrl}" alt="Submitted project photo" />` : ''}`;
+        renderCampDashboard(hubState);
+        const nextStatus = document.getElementById('projectStatus');
+        if (nextStatus) nextStatus.textContent = 'Project submitted. Your coach can now review it.';
+      } catch (err) {
+        status.textContent = err.message || 'Could not submit project.';
+      }
+    }
+
     async function loadHub() {
       try {
         const response = await fetch('/api/camp/hub-data');
@@ -1476,8 +1651,123 @@
       window.location.href = '/camp-hub/login';
     });
 
+    /* ── Live lesson (camper) ── */
+    let lvState = null;
+    let lvJoined = false;
+    let lvRenderKey = '';
+    const liveBanner = document.getElementById('liveBanner');
+    const liveOverlay = document.getElementById('liveOverlay');
+    const liveOverlayBody = document.getElementById('liveOverlayBody');
+
+    function escLv(v) {
+      return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    async function pollLive() {
+      try {
+        const r = await fetch('/api/camp/live').then(x => x.json());
+        lvState = r && r.success ? r.state : { active: false };
+      } catch (err) { return; }
+      // Banner shows only when a lesson is live and the camper hasn't joined.
+      if (lvState && lvState.active && !lvJoined) {
+        document.getElementById('liveBannerTitle').textContent = (lvState.lessonTitle || 'A lesson') + ' is live';
+        liveBanner.classList.add('show');
+      } else {
+        liveBanner.classList.remove('show');
+      }
+      if (lvJoined) renderLiveOverlay();
+    }
+
+    function joinLive() {
+      lvJoined = true;
+      lvRenderKey = '';
+      liveOverlay.classList.add('show');
+      liveBanner.classList.remove('show');
+      document.body.style.overflow = 'hidden';
+      renderLiveOverlay();
+      pollLive();
+    }
+    function leaveLive() {
+      lvJoined = false;
+      liveOverlay.classList.remove('show');
+      document.body.style.overflow = '';
+      pollLive();
+    }
+
+    function renderLiveOverlay() {
+      document.getElementById('liveOverlayTitle').textContent = (lvState && lvState.lessonTitle) || 'Live lesson';
+      const counter = document.getElementById('liveOverlayCounter');
+      if (!lvState || !lvState.active) {
+        const key = 'ended';
+        if (lvRenderKey !== key) {
+          lvRenderKey = key;
+          liveOverlayBody.innerHTML = `
+            <div class="lo-waiting"><span class="big">👋</span>
+              <h1 style="font-size:26px">The lesson has ended</h1>
+              <p style="font-size:18px;margin-top:8px">Nice work today! You can close this and go back to your hub.</p>
+              <button class="lo-btn gold" style="margin-top:20px" onclick="leaveLive()">Back to my hub</button>
+            </div>`;
+        }
+        counter.textContent = '';
+        return;
+      }
+      const s = lvState.slide || {};
+      const isQ = s.type === 'question';
+      const key = `${s.id}|${lvState.slideIndex}|${isQ ? (lvState.myAnswer == null ? 'na' : lvState.myAnswer) : 'c'}`;
+      counter.textContent = `Slide ${(lvState.slideIndex || 0) + 1} of ${lvState.slideCount || 1}`;
+      if (lvRenderKey === key) return; // avoid flicker when nothing changed
+      lvRenderKey = key;
+
+      if (isQ) {
+        const answered = lvState.myAnswer != null;
+        liveOverlayBody.innerHTML = `
+          <div class="lo-content">
+            <div class="lo-kicker">❓ Question — tap your answer</div>
+            <h1>${escLv(s.title)}</h1>
+            ${s.body ? `<div class="lo-text">${escLv(s.body)}</div>` : ''}
+            ${s.image ? `<img src="${escLv(s.image)}" alt="" onerror="this.style.display='none'">` : ''}
+            <div class="lo-answers">
+              ${(s.options || []).map((opt, j) => `
+                <button class="lo-answer a${j} ${answered && lvState.myAnswer === j ? 'chosen' : ''} ${answered && lvState.myAnswer !== j ? 'dim' : ''}" onclick="answerLive(${j})">
+                  <span class="lo-key">${String.fromCharCode(65 + j)}</span><span>${escLv(opt)}</span>
+                </button>`).join('')}
+            </div>
+            ${answered ? `<div class="lo-answered-msg">✓ Answer sent! You can change it until your coach moves on.</div>` : ''}
+          </div>`;
+      } else {
+        liveOverlayBody.innerHTML = `
+          <div class="lo-content">
+            <div class="lo-kicker">📄 Follow along</div>
+            <h1>${escLv(s.title)}</h1>
+            ${s.body ? `<div class="lo-text">${escLv(s.body)}</div>` : ''}
+            ${s.image ? `<img src="${escLv(s.image)}" alt="" onerror="this.style.display='none'">` : ''}
+          </div>`;
+      }
+    }
+
+    async function answerLive(choice) {
+      if (!lvState || !lvState.slide) return;
+      try {
+        const r = await fetch('/api/camp/live/answer', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slideId: lvState.slide.id, choice })
+        }).then(x => x.json());
+        if (r && r.success) { lvState.myAnswer = choice; lvRenderKey = ''; renderLiveOverlay(); }
+        else if (r && r.message) { /* question may have moved on */ pollLive(); }
+      } catch (err) { /* ignore, next poll recovers */ }
+    }
+
+    document.getElementById('liveJoinBtn').addEventListener('click', joinLive);
+    document.getElementById('liveLeaveBtn').addEventListener('click', leaveLive);
+    document.getElementById('liveRefreshBtn').addEventListener('click', () => { lvRenderKey = ''; pollLive(); });
+    window.answerLive = answerLive;
+    window.leaveLive = leaveLive;
+
     setInterval(tickStudentTimer, 1000);
+    setInterval(pollLive, 3000);
     loadHub();
+    pollLive();
   </script>
 </body>
 </html>

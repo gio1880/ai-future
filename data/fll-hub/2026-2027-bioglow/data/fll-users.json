@@ -1,7 +1,7 @@
 [
   {
     "id": "coach-default",
-    "name": "Coach",
+    "name": "Test Coach",
     "username": "coach",
     "password_hash": "6c80e3f3dc0c96af1cba9c56a6ea8bf1:3d8eed1ac31952639783d89abb7eee323ace28b23164275bbe203877d16fdd913a1309a03cc825ece92a765953cbcf0d041d5b171b107a43a71bdc282ee1393d",
     "role": "coach",

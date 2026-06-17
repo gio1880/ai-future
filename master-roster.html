@@ -51,24 +51,18 @@
     header {
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 30;
       border-bottom: 1px solid var(--line);
       background: rgba(255,255,255,0.95);
       -webkit-backdrop-filter: blur(14px);
       backdrop-filter: blur(14px);
     }
-
-    .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
-
+    .shell { width: min(1240px, calc(100% - 32px)); margin: 0 auto; }
     .topbar {
       min-height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
     }
-
     .brand { display: flex; align-items: center; gap: 12px; }
     .brand img {
       width: 40px; height: 40px; object-fit: contain;
@@ -76,25 +70,18 @@
     }
     .brand h1 { margin: 0; font-size: 1.2rem; font-weight: 900; letter-spacing: -0.01em; }
     .brand .userline { margin-top: 2px; color: var(--muted); font-size: 0.82rem; font-weight: 600; }
-
     .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 
     .btn {
-      border: 1.5px solid var(--line);
-      border-radius: var(--radius-sm);
-      padding: 10px 15px;
-      color: var(--ink);
-      background: #fff;
-      font-weight: 800;
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
+      border: 1.5px solid var(--line); border-radius: var(--radius-sm);
+      padding: 10px 15px; color: var(--ink); background: #fff;
+      font-weight: 800; font-size: 0.9rem; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 7px;
       transition: border-color .15s, background .15s, color .15s, opacity .15s;
       white-space: nowrap;
     }
     .btn:hover { border-color: var(--blue); color: var(--blue); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .btn.primary { border-color: var(--brand); color: #fff; background: var(--brand); }
     .btn.primary:hover { background: var(--navy); color: #fff; opacity: 1; }
     .btn.gold { border-color: #e7bd00; color: var(--navy); background: var(--gold); }
@@ -105,263 +92,277 @@
     .btn.sm { padding: 7px 11px; font-size: 0.82rem; }
 
     /* ── Page layout ── */
-    main { padding: 24px 0 64px; }
-
+    main { padding: 22px 0 64px; }
     .notice {
-      display: none;
-      margin-bottom: 16px;
-      padding: 12px 14px;
-      border-radius: var(--radius-sm);
-      color: var(--danger);
-      background: var(--danger-soft);
-      border: 1px solid #f0c9c4;
-      font-weight: 700;
+      display: none; margin-bottom: 16px; padding: 12px 14px;
+      border-radius: var(--radius-sm); color: var(--danger);
+      background: var(--danger-soft); border: 1px solid #f0c9c4; font-weight: 700;
     }
+    .notice.ok { color: #0f5132; background: var(--green-soft); border-color: #b8e1c2; }
 
     /* ── Stats ── */
     .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-bottom: 20px;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 12px; margin-bottom: 20px;
     }
     .stat {
-      padding: 16px 18px;
-      border: 1.5px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--surface);
-      box-shadow: var(--shadow);
+      padding: 15px 18px; border: 1.5px solid var(--line);
+      border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow);
     }
-    .stat strong { display: block; font-size: 1.7rem; line-height: 1; font-weight: 900; color: var(--brand); }
-    .stat span { display: block; margin-top: 6px; color: var(--muted); font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat strong { display: block; font-size: 1.6rem; line-height: 1; font-weight: 900; color: var(--brand); }
+    .stat span { display: block; margin-top: 6px; color: var(--muted); font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
     .stat.gold strong { color: var(--orange); }
 
     /* ── Tabs ── */
     .tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
     .tab-btn {
-      padding: 11px 20px;
-      border-radius: 50px;
-      border: 1.5px solid var(--line);
-      background: #fff;
-      font-weight: 800;
-      font-size: 0.92rem;
-      cursor: pointer;
-      color: var(--muted);
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
+      padding: 11px 20px; border-radius: 50px; border: 1.5px solid var(--line);
+      background: #fff; font-weight: 800; font-size: 0.92rem; cursor: pointer;
+      color: var(--muted); display: inline-flex; align-items: center; gap: 7px;
     }
     .tab-btn.active { background: var(--brand); border-color: var(--brand); color: #fff; }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
 
-    /* ── Toolbar (search + filters + add) ── */
+    /* ── Toolbar ── */
     .toolbar {
-      display: grid;
-      grid-template-columns: 1.4fr 0.9fr 1fr auto;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 18px;
+      display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px;
     }
-    .search-wrap { position: relative; }
+    .search-wrap { position: relative; flex: 1 1 260px; min-width: 200px; }
     .search-wrap input { padding-left: 38px; }
     .search-wrap::before {
-      content: "🔎";
-      position: absolute;
-      left: 12px; top: 50%;
-      transform: translateY(-50%);
-      font-size: 0.95rem;
-      opacity: 0.6;
+      content: "🔎"; position: absolute; left: 12px; top: 50%;
+      transform: translateY(-50%); font-size: 0.95rem; opacity: 0.6;
     }
+    .toolbar select { flex: 0 1 170px; }
+    .toolbar .spacer { flex: 1 1 auto; }
 
     input, select, textarea {
-      width: 100%;
-      border: 1.5px solid var(--line);
-      border-radius: var(--radius-sm);
-      padding: 11px 12px;
-      color: var(--ink);
-      background: #fff;
+      width: 100%; border: 1.5px solid var(--line); border-radius: var(--radius-sm);
+      padding: 11px 12px; color: var(--ink); background: #fff;
     }
     textarea { resize: vertical; min-height: 70px; }
-    input:focus, select:focus, textarea:focus {
-      outline: 3px solid rgba(23, 103, 180, 0.16);
-      border-color: var(--blue);
-    }
+    input:focus, select:focus, textarea:focus { outline: 3px solid rgba(23,103,180,0.16); border-color: var(--blue); }
 
-    /* ── Cards / lists ── */
-    .list { display: grid; gap: 12px; }
-    .card {
-      border: 1.5px solid var(--line);
-      border-radius: var(--radius);
-      padding: 16px 18px;
-      background: var(--surface);
+    /* ── Bulk bar ── */
+    .bulk-bar {
+      display: none; align-items: center; gap: 10px; flex-wrap: wrap;
+      background: var(--brand); color: #fff; border-radius: var(--radius);
+      padding: 12px 16px; margin-bottom: 14px; position: sticky; top: 78px; z-index: 15;
       box-shadow: var(--shadow);
     }
-    .card-top { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
-    .card h3 { margin: 0; font-size: 1.02rem; font-weight: 900; }
-    .card .sub { margin: 4px 0 0; color: var(--muted); font-size: 0.86rem; line-height: 1.5; }
+    .bulk-bar.show { display: flex; }
+    .bulk-bar .count { font-weight: 900; }
+    .bulk-bar .btn { padding: 8px 12px; font-size: 0.84rem; }
+    .bulk-bar .spacer { flex: 1 1 auto; }
 
-    .meta { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+    /* ── Table ── */
+    .table-wrap {
+      border: 1.5px solid var(--line); border-radius: var(--radius);
+      background: var(--surface); box-shadow: var(--shadow); overflow-x: auto;
+    }
+    table.roster { width: 100%; border-collapse: collapse; min-width: 820px; }
+    table.roster th, table.roster td {
+      text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line);
+      font-size: 0.88rem; vertical-align: middle;
+    }
+    table.roster thead th {
+      font-size: 0.72rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em;
+      color: var(--muted); background: #f4f7fb; position: sticky; top: 0; white-space: nowrap;
+    }
+    table.roster thead th.sortable { cursor: pointer; user-select: none; }
+    table.roster thead th.sortable:hover { color: var(--brand); }
+    table.roster thead th .arrow { opacity: 0.4; font-size: 0.7rem; }
+    table.roster thead th.sorted .arrow { opacity: 1; color: var(--brand); }
+    table.roster tbody tr:hover { background: #f8fbff; }
+    table.roster tbody tr.selected { background: var(--blue-soft); }
+    table.roster tr:last-child td { border-bottom: 0; }
+    .col-check { width: 42px; text-align: center; }
+    .col-check input { width: 18px; height: 18px; accent-color: var(--brand); cursor: pointer; }
+    .cell-name { font-weight: 800; }
+    .cell-name .cl-id { display: block; font-weight: 600; font-size: 0.74rem; color: var(--muted); margin-top: 1px; }
+    .cell-contact { color: var(--muted); font-size: 0.82rem; line-height: 1.45; }
+    .cell-actions { white-space: nowrap; text-align: right; }
+    .cell-actions .btn { padding: 6px 10px; font-size: 0.78rem; }
+
     .pill {
-      border-radius: 50px;
-      padding: 5px 11px;
-      color: var(--brand);
-      background: var(--blue-soft);
-      font-size: 0.78rem;
-      font-weight: 800;
-      white-space: nowrap;
+      display: inline-block; border-radius: 50px; padding: 3px 9px; margin: 2px 3px 2px 0;
+      color: var(--brand); background: var(--blue-soft); font-size: 0.74rem; font-weight: 800; white-space: nowrap;
     }
     .pill.summer { color: #8a5200; background: var(--orange-soft); }
     .pill.count { color: var(--green); background: var(--green-soft); }
     .pill.none { color: var(--muted); background: #eef1f5; }
     .pill.off { color: var(--danger); background: var(--danger-soft); }
+    .pill.access { color: #0b5c7a; background: #e3f7fd; }
+    .pill.team { color: #765000; background: var(--gold-soft); }
 
-    .card-actions { display: flex; gap: 8px; flex-shrink: 0; }
-
-    .term-group { margin-bottom: 22px; }
+    /* ── By class / team view ── */
+    .term-group { margin-bottom: 26px; }
     .term-group-title {
-      font-size: 0.78rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      margin: 0 0 10px;
-      padding-bottom: 8px;
-      border-bottom: 1.5px solid var(--line);
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--muted); margin: 0 0 12px; padding-bottom: 8px; border-bottom: 1.5px solid var(--line);
+      display: flex; align-items: center; gap: 8px;
     }
+    .list { display: grid; gap: 12px; }
+    .roster-card {
+      border: 1.5px solid var(--line); border-radius: var(--radius);
+      background: var(--surface); box-shadow: var(--shadow); overflow: hidden;
+    }
+    .roster-card-head {
+      display: flex; justify-content: space-between; gap: 14px; align-items: flex-start;
+      padding: 15px 18px; cursor: pointer;
+    }
+    .roster-card-head:hover { background: #f8fbff; }
+    .roster-card-head h3 { margin: 0; font-size: 1rem; font-weight: 900; }
+    .roster-card .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .roster-card .sub { margin: 8px 0 0; color: var(--muted); font-size: 0.84rem; }
+    .roster-card-actions { display: flex; gap: 8px; flex-shrink: 0; align-items: center; }
+    .roster-toggle { font-size: 1.1rem; color: var(--muted); transition: transform .15s; }
+    .roster-card.open .roster-toggle { transform: rotate(180deg); }
+    .roster-card-body { display: none; border-top: 1px solid var(--line); padding: 14px 18px; }
+    .roster-card.open .roster-card-body { display: block; }
+    .enrolled-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 9px 11px; border: 1px solid var(--line); border-radius: var(--radius-sm);
+      background: #fff; margin-bottom: 7px;
+    }
+    .enrolled-row .who { font-weight: 700; font-size: 0.88rem; }
+    .enrolled-row .who small { display: block; font-weight: 600; color: var(--muted); font-size: 0.76rem; }
+    .enrolled-row .x {
+      border: 0; background: var(--danger-soft); color: var(--danger); cursor: pointer;
+      width: 28px; height: 28px; border-radius: 7px; font-size: 0.9rem; flex-shrink: 0;
+    }
+    .enrolled-row .x:hover { background: #f7d0cb; }
+    .add-to { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .add-to select { flex: 1 1 200px; }
 
+    /* ── Empty ── */
     .empty {
-      padding: 40px 24px;
-      border: 1.5px dashed var(--line);
-      border-radius: var(--radius);
-      color: var(--muted);
-      background: #fff;
-      text-align: center;
+      padding: 40px 24px; border: 1.5px dashed var(--line); border-radius: var(--radius);
+      color: var(--muted); background: #fff; text-align: center;
     }
     .empty .big { font-size: 2.4rem; display: block; margin-bottom: 10px; }
     .empty h3 { margin: 0 0 6px; color: var(--ink); font-size: 1.05rem; }
     .empty p { margin: 0 0 16px; font-size: 0.9rem; }
 
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .loading-card {
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      display: grid;
       gap: 12px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
+    }
+    .loading-line {
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #eef2f7 0%, #f8fafc 45%, #eef2f7 90%);
+      background-size: 220% 100%;
+      animation: shimmer 1.1s ease-in-out infinite;
+    }
+    .loading-line.sm { width: 28%; }
+    .loading-line.md { width: 52%; }
+    .loading-line.lg { width: 82%; }
+    @keyframes shimmer { from { background-position: 120% 0; } to { background-position: -80% 0; } }
+
+    .section-head {
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      margin-bottom: 16px; flex-wrap: wrap;
     }
     .section-head .lede h2 { margin: 0; font-size: 1.1rem; font-weight: 900; }
     .section-head .lede p { margin: 3px 0 0; color: var(--muted); font-size: 0.86rem; }
 
     /* ── Modal ── */
     .modal-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 60;
-      background: rgba(7, 20, 38, 0.5);
-      -webkit-backdrop-filter: blur(4px);
-      backdrop-filter: blur(4px);
-      display: none;
-      place-items: center;
-      padding: 18px;
-      overflow-y: auto;
+      position: fixed; inset: 0; z-index: 60; background: rgba(7,20,38,0.5);
+      -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+      display: none; place-items: center; padding: 18px; overflow-y: auto;
     }
     .modal-overlay.open { display: grid; }
     .modal {
-      width: min(560px, 100%);
-      background: var(--surface);
-      border-radius: 18px;
-      box-shadow: var(--shadow-lg);
-      max-height: calc(100vh - 36px);
-      display: flex;
-      flex-direction: column;
-      animation: pop .2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      width: min(560px, 100%); background: var(--surface); border-radius: 18px;
+      box-shadow: var(--shadow-lg); max-height: calc(100dvh - 36px);
+      display: flex; flex-direction: column; overflow: hidden;
+      animation: pop .2s cubic-bezier(0.34,1.56,0.64,1);
     }
     @keyframes pop { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: none; } }
     .modal-head {
-      padding: 20px 22px;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
+      padding: 20px 22px; border-bottom: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      flex: 0 0 auto;
     }
     .modal-head h2 { margin: 0; font-size: 1.15rem; font-weight: 900; }
     .modal-close {
-      border: 0; background: #eef1f5; color: var(--ink);
-      width: 34px; height: 34px; border-radius: 50%;
-      font-size: 1.1rem; cursor: pointer; line-height: 1; flex-shrink: 0;
+      border: 0; background: #eef1f5; color: var(--ink); width: 34px; height: 34px;
+      border-radius: 50%; font-size: 1.1rem; cursor: pointer; line-height: 1; flex-shrink: 0;
     }
     .modal-close:hover { background: #e2e7ee; }
-    .modal-body { padding: 20px 22px; overflow-y: auto; display: grid; gap: 14px; }
-    .modal-foot {
-      padding: 16px 22px;
-      border-top: 1px solid var(--line);
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      flex-wrap: wrap;
+    .modal form { display: flex; flex: 1; flex-direction: column; min-height: 0; }
+    .modal-body {
+      flex: 1; min-height: 0; padding: 20px 22px; overflow-y: auto; display: grid; gap: 14px;
+      transition: box-shadow .15s ease;
     }
-
+    .modal.is-overflowing .modal-body {
+      box-shadow:
+        inset 0 14px 12px -16px rgba(7,20,38,0.42),
+        inset 0 -14px 12px -16px rgba(7,20,38,0.42);
+    }
+    .modal-foot {
+      padding: 16px 22px; border-top: 1px solid var(--line);
+      display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap;
+      flex: 0 0 auto;
+    }
     label.field { display: grid; gap: 6px; color: #31415c; font-size: 0.84rem; font-weight: 800; }
     .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .hint { font-size: 0.82rem; color: var(--muted); margin: 0; line-height: 1.5; }
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.8rem;
+      background: #f4f7fb; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px;
+    }
 
     .enroll-intro { font-size: 0.84rem; color: var(--muted); margin: 0; }
     .enroll-group { display: grid; gap: 8px; margin-top: 4px; }
-    .enroll-group-label {
-      font-size: 0.72rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.07em;
-      color: var(--muted); margin-top: 8px;
-    }
-    .enroll-card {
-      border: 1.5px solid var(--line);
-      border-radius: var(--radius-sm);
-      padding: 12px 13px;
-      background: #fff;
-    }
+    .enroll-group-label { font-size: 0.72rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-top: 8px; }
+    .enroll-card { border: 1.5px solid var(--line); border-radius: var(--radius-sm); padding: 12px 13px; background: #fff; }
     .enroll-card.checked { border-color: var(--blue); background: #f5faff; }
     .check-row { display: flex; align-items: flex-start; gap: 10px; font-weight: 700; color: #31415c; cursor: pointer; }
     .check-row input[type=checkbox] { width: 20px; height: 20px; margin-top: 1px; flex-shrink: 0; accent-color: var(--blue); cursor: pointer; }
     .check-row .label-main { font-weight: 800; }
     .check-row .label-sub { display: block; font-weight: 600; color: var(--muted); font-size: 0.8rem; margin-top: 1px; }
-
     .week-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
-      gap: 6px;
-      margin: 10px 0 2px;
-      padding: 10px;
-      border-radius: var(--radius-sm);
-      background: var(--orange-soft);
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); gap: 6px;
+      margin: 10px 0 2px; padding: 10px; border-radius: var(--radius-sm); background: var(--orange-soft);
     }
     .week-grid .check-row { font-size: 0.82rem; font-weight: 700; }
     .week-grid input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--orange); }
 
-    @media (max-width: 900px) {
-      .toolbar { grid-template-columns: 1fr 1fr; }
-      .toolbar .search-wrap { grid-column: 1 / -1; }
-      .toolbar .add-btn { grid-column: 1 / -1; }
-      .add-btn .btn { width: 100%; justify-content: center; }
+    .access-grid { display: grid; gap: 10px; }
+    .access-card { border: 1.5px solid var(--line); border-radius: var(--radius-sm); padding: 12px 13px; background: #fff; }
+    .access-card.checked { border-color: var(--blue); background: #f5faff; }
+    .team-picker { display: none; margin-top: 10px; }
+    .team-picker.visible { display: grid; }
+
+    @media (max-width: 760px) {
       .stats { grid-template-columns: repeat(2, 1fr); }
+      .bulk-bar { top: 70px; }
     }
-
     @media (max-width: 560px) {
-      .topbar { padding: 14px 0; }
+      .modal-overlay { padding: 8px; }
+      .modal { max-height: calc(100dvh - 16px); }
+      .modal-head { padding: 16px 18px; }
+      .modal-body { padding: 16px 18px; }
+      .modal-foot { padding: 14px 18px; }
       .row2 { grid-template-columns: 1fr; }
-      .card-top { flex-direction: column; }
-      .card-actions { width: 100%; }
-      .card-actions .btn { flex: 1; justify-content: center; }
+      .toolbar select { flex: 1 1 100%; }
     }
-
     /* Touch devices (iPad / phone): bigger targets, no zoom-on-focus */
     @media (pointer: coarse) {
       body { -webkit-tap-highlight-color: transparent; }
       input, select, textarea { font-size: 16px; }
       .btn { min-height: 46px; }
       .tab-btn { min-height: 46px; }
-      .card-actions .btn { min-height: 44px; }
+      .col-check input { width: 22px; height: 22px; }
     }
   </style>
 </head>
@@ -394,38 +395,45 @@
 
     <div class="tabs">
       <button class="tab-btn active" data-tab="students" type="button">👧 Students</button>
-      <button class="tab-btn" data-tab="classes" type="button">📚 Classes</button>
+      <button class="tab-btn" data-tab="classes" type="button">📚 Classes &amp; Teams</button>
     </div>
 
     <!-- STUDENTS TAB -->
     <section class="tab-panel active" id="panel-students">
       <div class="toolbar">
         <div class="search-wrap">
-          <input id="searchInput" placeholder="Search by student, parent, email, or phone">
+          <input id="searchInput" placeholder="Search name, parent, email, or phone">
         </div>
-        <select id="termFilter">
+        <select id="termFilter" aria-label="Filter by term">
           <option value="all">All terms</option>
           <option value="summer">Summer</option>
           <option value="fall">Fall</option>
           <option value="spring">Spring</option>
           <option value="year-round">Year-round</option>
         </select>
-        <select id="classFilter">
-          <option value="all">All classes</option>
-        </select>
-        <div class="add-btn">
-          <button class="btn primary" type="button" onclick="openStudentModal()">➕ Add Student</button>
-        </div>
+        <select id="classFilter" aria-label="Filter by class"><option value="all">All classes</option></select>
+        <div class="spacer"></div>
+        <button class="btn" type="button" onclick="openImportModal()">⬆️ Import</button>
+        <button class="btn" type="button" onclick="exportCsv()">⬇️ Export</button>
+        <button class="btn primary" type="button" onclick="openStudentModal()">➕ Add Student</button>
       </div>
-      <div id="students" class="list"></div>
+
+      <div class="bulk-bar" id="bulkBar">
+        <span class="count" id="bulkCount">0 selected</span>
+        <span class="spacer"></span>
+        <button class="btn gold" type="button" onclick="openBulkModal()">Bulk actions ▾</button>
+        <button class="btn ghost" style="color:#fff;border-color:rgba(255,255,255,0.4)" type="button" onclick="clearSelection()">Clear</button>
+      </div>
+
+      <div id="students"></div>
     </section>
 
-    <!-- CLASSES TAB -->
+    <!-- CLASSES & TEAMS TAB -->
     <section class="tab-panel" id="panel-classes">
       <div class="section-head">
         <div class="lede">
-          <h2>Classes</h2>
-          <p>Summer weeks and fall sessions students can be enrolled in.</p>
+          <h2>Classes &amp; Teams</h2>
+          <p>See who is in each class or FLL team. Tap a card to view and manage its roster.</p>
         </div>
         <button class="btn primary" type="button" onclick="openClassModal()">➕ Add Class</button>
       </div>
@@ -450,6 +458,27 @@
             <label class="field">Phone <input id="phone" placeholder="(555) 555-5555"></label>
           </div>
           <label class="field">Notes <textarea id="notes" placeholder="Allergies, pickup notes, anything coaches should know"></textarea></label>
+          <div>
+            <h3 style="margin:6px 0 4px;font-size:0.95rem;">Hub access</h3>
+            <p class="enroll-intro">Choose which student hubs this student can use. FLL access can also assign or remove them from a team.</p>
+            <div class="access-grid" id="hubAccessControls">
+              <div class="access-card" data-access-card="code-lab">
+                <label class="check-row">
+                  <input type="checkbox" id="accessCodeLab" value="code-lab">
+                  <span><span class="label-main">Code Lab</span><span class="label-sub">Enable their Code Lab student account.</span></span>
+                </label>
+              </div>
+              <div class="access-card" data-access-card="fll-hub">
+                <label class="check-row">
+                  <input type="checkbox" id="accessFllHub" value="fll-hub">
+                  <span><span class="label-main">FLL Hub</span><span class="label-sub">Enable their FLL dashboard and team assignments.</span></span>
+                </label>
+                <label class="field team-picker" id="fllTeamPicker">FLL team
+                  <select id="fllTeamId"></select>
+                </label>
+              </div>
+            </div>
+          </div>
           <div>
             <h3 style="margin:6px 0 4px;font-size:0.95rem;">Class enrollment</h3>
             <p class="enroll-intro">Check the classes this student is in. For summer, also pick their weeks.</p>
@@ -507,13 +536,101 @@
     </div>
   </div>
 
+  <!-- BULK ACTION MODAL -->
+  <div class="modal-overlay" id="bulkOverlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="bulkModalTitle">
+      <div class="modal-head">
+        <h2 id="bulkModalTitle">Bulk actions</h2>
+        <button class="modal-close" type="button" onclick="closeBulkModal()" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="hint" id="bulkSummary">0 students selected.</p>
+        <label class="field">Action
+          <select id="bulkAction">
+            <option value="enroll">Enroll in a class</option>
+            <option value="unenroll">Remove from a class</option>
+            <option value="team">Assign / change FLL team</option>
+            <option value="codelab">Code Lab access</option>
+            <option value="delete">Remove students from roster</option>
+          </select>
+        </label>
+        <div id="bulkClassWrap" class="field" style="display:none">
+          <label class="field">Class
+            <select id="bulkClass"></select>
+          </label>
+          <div id="bulkWeekWrap" class="week-grid" style="display:none"></div>
+        </div>
+        <div id="bulkTeamWrap" class="field" style="display:none">
+          <label class="field">FLL team
+            <select id="bulkTeam"></select>
+          </label>
+          <p class="hint">Assigning a team turns on FLL Hub access for these students.</p>
+        </div>
+        <div id="bulkCodelabWrap" class="field" style="display:none">
+          <label class="field">Code Lab access
+            <select id="bulkCodelab">
+              <option value="grant">Grant access</option>
+              <option value="revoke">Remove access</option>
+            </select>
+          </label>
+        </div>
+        <p id="bulkDeleteWarn" class="hint" style="display:none;color:var(--danger);font-weight:700">This permanently removes the selected students from the master roster.</p>
+        <p class="hint" id="bulkProgress" style="display:none"></p>
+      </div>
+      <div class="modal-foot">
+        <button class="btn ghost" type="button" onclick="closeBulkModal()">Cancel</button>
+        <button class="btn primary" id="bulkApply" type="button" onclick="applyBulk()">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMPORT MODAL -->
+  <div class="modal-overlay" id="importOverlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
+      <div class="modal-head">
+        <h2 id="importModalTitle">Import students from CSV</h2>
+        <button class="modal-close" type="button" onclick="closeImportModal()" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="hint">Upload or paste a CSV with these columns (a header row is optional):</p>
+        <p class="mono">name, parent, email, phone, notes</p>
+        <label class="field">Choose a .csv file
+          <input id="importFile" type="file" accept=".csv,text/csv" style="padding:9px">
+        </label>
+        <label class="field">…or paste CSV / one name per line
+          <textarea id="importText" rows="6" placeholder="Maya Chen, Lin Chen, lin@email.com, 555-1234&#10;Sam Park, Jen Park, jen@email.com"></textarea>
+        </label>
+        <button class="btn" type="button" onclick="previewImport()">Preview</button>
+        <div id="importPreview"></div>
+        <p class="hint" id="importProgress" style="display:none"></p>
+      </div>
+      <div class="modal-foot">
+        <button class="btn ghost" type="button" onclick="closeImportModal()">Cancel</button>
+        <button class="btn primary" id="importApply" type="button" onclick="runImport()" disabled>Import students</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const state = { user: null, roster: null };
+    const state = {
+      user: null,
+      roster: null,
+      selected: new Set(),
+      sort: { key: 'name', dir: 1 },
+      importRows: [],
+      activeTab: 'students',
+      classesDirty: true,
+      renderQueued: false
+    };
     const userline = document.getElementById('userline');
     const notice = document.getElementById('notice');
     const studentsEl = document.getElementById('students');
     const classesEl = document.getElementById('classes');
     const enrollmentControls = document.getElementById('enrollmentControls');
+    const accessCodeLab = document.getElementById('accessCodeLab');
+    const accessFllHub = document.getElementById('accessFllHub');
+    const fllTeamId = document.getElementById('fllTeamId');
+    const fllTeamPicker = document.getElementById('fllTeamPicker');
     const studentForm = document.getElementById('studentForm');
     const classForm = document.getElementById('classForm');
     const searchInput = document.getElementById('searchInput');
@@ -521,62 +638,69 @@
     const classFilter = document.getElementById('classFilter');
     const studentOverlay = document.getElementById('studentOverlay');
     const classOverlay = document.getElementById('classOverlay');
+    const bulkOverlay = document.getElementById('bulkOverlay');
+    const importOverlay = document.getElementById('importOverlay');
 
     const TERM_LABELS = { summer: 'Summer', fall: 'Fall', spring: 'Spring', 'year-round': 'Year-round' };
     const TERM_ICONS = { summer: '☀️', fall: '🍂', spring: '🌱', 'year-round': '📅' };
     const TERM_ORDER = ['summer', 'fall', 'spring', 'year-round'];
-    const PROGRAM_LABELS = {
-      'lego-robotics': 'LEGO Robotics', ftc: 'FTC', fll: 'FLL', 'code-lab': 'Code Lab', other: 'Other'
-    };
+    const PROGRAM_LABELS = { 'lego-robotics': 'LEGO Robotics', ftc: 'FTC', fll: 'FLL', 'code-lab': 'Code Lab', other: 'Other' };
 
-    function esc(value) {
-      return String(value == null ? '' : value)
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    function esc(v) {
+      return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
     }
-    function showNotice(message) {
+    function showNotice(message, ok) {
       notice.textContent = message || '';
+      notice.className = 'notice' + (ok ? ' ok' : '');
       notice.style.display = message ? 'block' : 'none';
       if (message) window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     async function api(url, options = {}) {
-      const response = await fetch(url, {
-        ...options,
-        headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }
-      });
+      const response = await fetch(url, { ...options, headers: { 'Content-Type': 'application/json', ...(options.headers || {}) } });
       const result = await response.json();
       if (!response.ok || !result.success) throw new Error(result.message || 'Request failed');
       return result;
     }
-    function classById(id) { return (state.roster.classes || []).find((item) => item.id === id); }
-    function enrollmentFor(student, classId) {
-      return (student.enrollments || []).find((item) => item.classId === classId) || null;
-    }
+    function students() { return state.roster?.students || []; }
+    function classes() { return state.roster?.classes || []; }
+    function studentById(id) { return students().find((s) => s.id === id); }
+    function classById(id) { return classes().find((item) => item.id === id); }
+    function fllTeamById(id) { return (state.roster?.fllTeams || []).find((item) => item.id === id); }
+    function enrollmentFor(student, classId) { return (student.enrollments || []).find((item) => item.classId === classId) || null; }
     function formatProgram(value) { return PROGRAM_LABELS[value] || value; }
+    function hasHub(student, hubId) { return Array.isArray(student?.hubAccess) && student.hubAccess.includes(hubId); }
+    function formatTeamName(teamId) { const team = fllTeamById(teamId); return team ? (team.nickname || team.name || team.id) : teamId; }
+    // Enrollments excluding FLL-team-managed classes (server derives those from fllTeamId)
+    function manualEnrollments(student) { return (student.enrollments || []).filter((e) => !String(e.classId || '').startsWith('fll-')); }
 
     function groupClassesByTerm() {
       const groups = {};
-      (state.roster.classes || []).forEach((classItem) => {
-        const term = classItem.term || 'other';
-        (groups[term] = groups[term] || []).push(classItem);
-      });
-      return TERM_ORDER.filter((term) => groups[term]).map((term) => ({ term, classes: groups[term] }));
+      classes().forEach((c) => { const t = c.term || 'other'; (groups[t] = groups[t] || []).push(c); });
+      return TERM_ORDER.filter((t) => groups[t]).map((t) => ({ term: t, classes: groups[t] }));
     }
 
     /* ── Tabs ── */
     document.querySelectorAll('.tab-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
+        state.activeTab = btn.dataset.tab;
         document.querySelectorAll('.tab-btn').forEach((b) => b.classList.toggle('active', b === btn));
         document.querySelectorAll('.tab-panel').forEach((p) => p.classList.toggle('active', p.id === 'panel-' + btn.dataset.tab));
+        if (state.activeTab === 'classes' && state.roster && state.classesDirty) {
+          renderClasses();
+        }
       });
     });
 
     async function load() {
+      renderLoadingState();
       try {
-        const session = await api('/api/coach/session');
+        const [session, roster] = await Promise.all([
+          api('/api/coach/session'),
+          api('/api/master-roster')
+        ]);
         state.user = session.user;
         userline.textContent = `${session.user.name} · ${session.user.role === 'owner' ? 'Owner / Admin' : 'Coach'}`;
-        const roster = await api('/api/master-roster');
         state.roster = roster.data;
         renderAll();
       } catch (err) {
@@ -585,37 +709,57 @@
       }
     }
 
+    function loadingCards(count = 5) {
+      return Array.from({ length: count }).map(() => `
+        <div class="loading-card" aria-hidden="true">
+          <span class="loading-line sm"></span>
+          <span class="loading-line lg"></span>
+          <span class="loading-line md"></span>
+        </div>
+      `).join('');
+    }
+
+    function renderLoadingState() {
+      studentsEl.innerHTML = loadingCards(6);
+      classesEl.innerHTML = loadingCards(3);
+      document.getElementById('studentCount').textContent = '...';
+      document.getElementById('classCount').textContent = '...';
+      document.getElementById('summerCount').textContent = '...';
+      document.getElementById('fallCount').textContent = '...';
+    }
+
     function renderAll() {
+      // prune selection to existing students
+      state.selected.forEach((id) => { if (!studentById(id)) state.selected.delete(id); });
       renderClassFilter();
       renderStats();
       renderStudents();
-      renderClasses();
+      if (state.activeTab === 'classes') renderClasses();
+      else state.classesDirty = true;
+      renderBulkBar();
     }
 
     function renderStats() {
-      const students = state.roster.students || [];
-      const classes = state.roster.classes || [];
-      const countSpots = (term) => students.reduce((count, student) =>
-        count + (student.enrollments || []).filter((e) => classById(e.classId)?.term === term).length, 0);
-      document.getElementById('studentCount').textContent = students.length;
-      document.getElementById('classCount').textContent = classes.length;
+      const countSpots = (term) => students().reduce((c, s) => c + (s.enrollments || []).filter((e) => classById(e.classId)?.term === term).length, 0);
+      document.getElementById('studentCount').textContent = students().length;
+      document.getElementById('classCount').textContent = classes().length;
       document.getElementById('summerCount').textContent = countSpots('summer');
       document.getElementById('fallCount').textContent = countSpots('fall');
     }
 
     function renderClassFilter() {
       const selected = classFilter.value || 'all';
-      classFilter.innerHTML = '<option value="all">All classes</option>' + (state.roster.classes || [])
+      classFilter.innerHTML = '<option value="all">All classes</option>' + classes()
         .map((item) => `<option value="${esc(item.id)}">${esc(item.name)}</option>`).join('');
-      classFilter.value = (state.roster.classes || []).some((item) => item.id === selected) ? selected : 'all';
+      classFilter.value = classes().some((item) => item.id === selected) ? selected : 'all';
     }
 
-    /* ── Students list ── */
+    /* ── Students table ── */
     function filteredStudents() {
       const q = searchInput.value.trim().toLowerCase();
       const term = termFilter.value;
       const classId = classFilter.value;
-      return (state.roster.students || []).filter((student) => {
+      const list = students().filter((student) => {
         const haystack = `${student.name} ${student.parentName} ${student.email} ${student.phone}`.toLowerCase();
         if (q && !haystack.includes(q)) return false;
         const enrollments = student.enrollments || [];
@@ -623,82 +767,253 @@
         if (term !== 'all' && !enrollments.some((item) => classById(item.classId)?.term === term)) return false;
         return true;
       });
+      const { key, dir } = state.sort;
+      return list.sort((a, b) => {
+        let av, bv;
+        if (key === 'classes') { av = (a.enrollments || []).length; bv = (b.enrollments || []).length; }
+        else { av = String(a[key] || '').toLowerCase(); bv = String(b[key] || '').toLowerCase(); }
+        if (av < bv) return -1 * dir;
+        if (av > bv) return 1 * dir;
+        return String(a.name).localeCompare(b.name);
+      });
+    }
+
+    function classPills(student) {
+      const pills = (student.enrollments || []).map((enrollment) => {
+        const classItem = classById(enrollment.classId);
+        if (!classItem) return '';
+        const weeks = classItem.term === 'summer' && enrollment.weeks?.length ? ` · ${enrollment.weeks.length}wk` : '';
+        return `<span class="pill ${classItem.term === 'summer' ? 'summer' : ''}">${esc(classItem.name)}${weeks}</span>`;
+      }).filter(Boolean).join('');
+      return pills || '<span class="pill none">No classes</span>';
+    }
+    function accessPills(student) {
+      const a = [];
+      if (hasHub(student, 'code-lab')) a.push('<span class="pill access">Code Lab</span>');
+      if (hasHub(student, 'fll-hub')) {
+        a.push('<span class="pill access">FLL Hub</span>');
+        a.push(student.fllTeamId ? `<span class="pill team">${esc(formatTeamName(student.fllTeamId))}</span>` : '<span class="pill none">No team</span>');
+      }
+      return a.join('') || '<span class="pill none">—</span>';
+    }
+
+    function sortArrow(key) {
+      if (state.sort.key !== key) return '<span class="arrow">↕</span>';
+      return `<span class="arrow">${state.sort.dir === 1 ? '↑' : '↓'}</span>`;
     }
 
     function renderStudents() {
-      const students = filteredStudents();
-      const total = (state.roster.students || []).length;
-      if (!students.length) {
+      const rows = filteredStudents();
+      const total = students().length;
+      if (!rows.length) {
         studentsEl.innerHTML = total === 0
-          ? `<div class="empty"><span class="big">👋</span><h3>No students yet</h3><p>Add your first student to start building the roster.</p><button class="btn primary" type="button" onclick="openStudentModal()">➕ Add Student</button></div>`
-          : `<div class="empty"><span class="big">🔍</span><h3>No matches</h3><p>No students match this search or filter. Try clearing the filters.</p></div>`;
+          ? `<div class="empty"><span class="big">👋</span><h3>No students yet</h3><p>Add students one at a time, or import a CSV list.</p><button class="btn primary" type="button" onclick="openStudentModal()">➕ Add Student</button></div>`
+          : `<div class="empty"><span class="big">🔍</span><h3>No matches</h3><p>No students match this search or filter.</p></div>`;
         return;
       }
-      studentsEl.innerHTML = students.slice().sort((a, b) => a.name.localeCompare(b.name)).map((student) => {
-        const enrollments = (student.enrollments || []).map((enrollment) => {
-          const classItem = classById(enrollment.classId);
-          if (!classItem) return '';
-          const weeks = classItem.term === 'summer' && enrollment.weeks?.length
-            ? ` · ${enrollment.weeks.length} wk${enrollment.weeks.length === 1 ? '' : 's'}` : '';
-          return `<span class="pill ${classItem.term === 'summer' ? 'summer' : ''}">${esc(classItem.name)}${weeks}</span>`;
-        }).filter(Boolean).join('');
-        const contactBits = [student.parentName, student.email, student.phone].filter(Boolean).map(esc).join(' · ');
-        return `
-          <article class="card">
-            <div class="card-top">
-              <div>
-                <h3>${esc(student.name)}</h3>
-                <p class="sub">${contactBits || 'No contact info yet'}</p>
-              </div>
-              <div class="card-actions">
-                <button class="btn sm" type="button" onclick="openStudentModal('${esc(student.id)}')">Edit</button>
-                <button class="btn sm danger" type="button" onclick="deleteStudent('${esc(student.id)}')">Remove</button>
+      const allSelected = rows.every((s) => state.selected.has(s.id));
+      studentsEl.innerHTML = `
+        <div class="table-wrap">
+          <table class="roster">
+            <thead>
+              <tr>
+                <th class="col-check"><input type="checkbox" id="selectAll" ${allSelected ? 'checked' : ''} title="Select all"></th>
+                <th class="sortable ${state.sort.key === 'name' ? 'sorted' : ''}" data-sort="name">Name ${sortArrow('name')}</th>
+                <th>Parent &amp; contact</th>
+                <th class="sortable ${state.sort.key === 'classes' ? 'sorted' : ''}" data-sort="classes">Classes ${sortArrow('classes')}</th>
+                <th>Hub access &amp; team</th>
+                <th class="cell-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map((student) => {
+                const contact = [student.parentName, student.email, student.phone].filter(Boolean).map(esc).join('<br>') || '<span style="opacity:0.6">No contact info</span>';
+                return `
+                  <tr class="${state.selected.has(student.id) ? 'selected' : ''}" data-row="${esc(student.id)}">
+                    <td class="col-check"><input type="checkbox" data-select="${esc(student.id)}" ${state.selected.has(student.id) ? 'checked' : ''}></td>
+                    <td class="cell-name">${esc(student.name)}${student.notes ? `<span class="cl-id">📝 ${esc(student.notes.slice(0, 40))}${student.notes.length > 40 ? '…' : ''}</span>` : ''}</td>
+                    <td class="cell-contact">${contact}</td>
+                    <td>${classPills(student)}</td>
+                    <td>${accessPills(student)}</td>
+                    <td class="cell-actions">
+                      <button class="btn sm" type="button" onclick="openStudentModal('${esc(student.id)}')">Edit</button>
+                      <button class="btn sm danger" type="button" onclick="deleteStudent('${esc(student.id)}')">✕</button>
+                    </td>
+                  </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>`;
+
+      const selectAll = document.getElementById('selectAll');
+      if (selectAll) selectAll.addEventListener('change', () => {
+        rows.forEach((s) => { if (selectAll.checked) state.selected.add(s.id); else state.selected.delete(s.id); });
+        renderStudents(); renderBulkBar();
+      });
+      studentsEl.querySelectorAll('[data-select]').forEach((cb) => {
+        cb.addEventListener('change', () => {
+          if (cb.checked) state.selected.add(cb.dataset.select); else state.selected.delete(cb.dataset.select);
+          const tr = cb.closest('tr'); if (tr) tr.classList.toggle('selected', cb.checked);
+          renderBulkBar();
+        });
+      });
+      studentsEl.querySelectorAll('th.sortable').forEach((th) => {
+        th.addEventListener('click', () => {
+          const key = th.dataset.sort;
+          if (state.sort.key === key) state.sort.dir *= -1; else state.sort = { key, dir: 1 };
+          renderStudents();
+        });
+      });
+    }
+
+    /* ── Bulk bar ── */
+    function renderBulkBar() {
+      const bar = document.getElementById('bulkBar');
+      const n = state.selected.size;
+      document.getElementById('bulkCount').textContent = `${n} selected`;
+      bar.classList.toggle('show', n > 0);
+    }
+    window.clearSelection = function clearSelection() {
+      state.selected.clear(); renderStudents(); renderBulkBar();
+    };
+
+    /* ── By class / team view ── */
+    function renderClasses() {
+      state.classesDirty = false;
+      const blocks = [];
+      const classGroups = groupClassesByTerm();
+      if (classGroups.length) {
+        blocks.push(classGroups.map((group) => `
+          <div class="term-group">
+            <p class="term-group-title">${TERM_ICONS[group.term] || ''} ${esc(TERM_LABELS[group.term] || group.term)} · ${group.classes.length} class${group.classes.length === 1 ? '' : 'es'}</p>
+            <div class="list">
+              ${group.classes.map((classItem) => rosterCardForClass(classItem)).join('')}
+            </div>
+          </div>`).join(''));
+      }
+      const teams = state.roster.fllTeams || [];
+      if (teams.length) {
+        blocks.push(`
+          <div class="term-group">
+            <p class="term-group-title">🤖 FLL Teams · ${teams.length} team${teams.length === 1 ? '' : 's'}</p>
+            <div class="list">${teams.map((team) => rosterCardForTeam(team)).join('')}</div>
+          </div>`);
+      }
+      classesEl.innerHTML = blocks.join('') || `<div class="empty"><span class="big">📚</span><h3>No classes yet</h3><p>Create a class so students can be enrolled.</p><button class="btn primary" type="button" onclick="openClassModal()">➕ Add Class</button></div>`;
+      wireRosterCards();
+    }
+
+    function rosterCardForClass(classItem) {
+      const enrolled = students().filter((s) => enrollmentFor(s, classItem.id));
+      const others = students().filter((s) => !enrollmentFor(s, classItem.id));
+      return `
+        <article class="roster-card" data-card>
+          <div class="roster-card-head" data-toggle>
+            <div>
+              <h3>${esc(classItem.name)}</h3>
+              <div class="meta">
+                <span class="pill">${esc(formatProgram(classItem.program))}</span>
+                <span class="pill">${esc(classItem.day || 'No day')}</span>
+                <span class="pill count">${enrolled.length} student${enrolled.length === 1 ? '' : 's'}</span>
               </div>
             </div>
-            <div class="meta">${enrollments || '<span class="pill none">Not enrolled in any class</span>'}</div>
-            ${student.notes ? `<p class="sub" style="margin-top:10px">📝 ${esc(student.notes)}</p>` : ''}
-          </article>`;
-      }).join('');
-    }
-
-    /* ── Classes list ── */
-    function renderClasses() {
-      if (!(state.roster.classes || []).length) {
-        classesEl.innerHTML = `<div class="empty"><span class="big">📚</span><h3>No classes yet</h3><p>Create a summer or fall class so students can be enrolled.</p><button class="btn primary" type="button" onclick="openClassModal()">➕ Add Class</button></div>`;
-        return;
-      }
-      classesEl.innerHTML = groupClassesByTerm().map((group) => `
-        <div class="term-group">
-          <p class="term-group-title">${TERM_ICONS[group.term] || ''} ${esc(TERM_LABELS[group.term] || group.term)} · ${group.classes.length} class${group.classes.length === 1 ? '' : 'es'}</p>
-          <div class="list">
-            ${group.classes.map((classItem) => {
-              const count = (state.roster.students || []).filter((s) => enrollmentFor(s, classItem.id)).length;
-              return `
-                <article class="card">
-                  <div class="card-top">
-                    <div>
-                      <h3>${esc(classItem.name)}</h3>
-                      <div class="meta">
-                        <span class="pill">${esc(formatProgram(classItem.program))}</span>
-                        <span class="pill">${esc(classItem.day || 'No day')}</span>
-                        <span class="pill count">${count} student${count === 1 ? '' : 's'}</span>
-                      </div>
-                      ${classItem.schedule ? `<p class="sub" style="margin-top:8px">🕒 ${esc(classItem.schedule)}</p>` : ''}
-                    </div>
-                    <div class="card-actions">
-                      <button class="btn sm" type="button" onclick="openClassModal('${esc(classItem.id)}')">Edit</button>
-                      <button class="btn sm danger" type="button" onclick="deleteClass('${esc(classItem.id)}')">Remove</button>
-                    </div>
-                  </div>
-                </article>`;
-            }).join('')}
+            <div class="roster-card-actions">
+              <button class="btn sm" type="button" onclick="event.stopPropagation();openClassModal('${esc(classItem.id)}')">Edit</button>
+              <button class="btn sm danger" type="button" onclick="event.stopPropagation();deleteClass('${esc(classItem.id)}')">Remove</button>
+              <span class="roster-toggle">⌄</span>
+            </div>
           </div>
-        </div>`).join('');
+          <div class="roster-card-body">
+            ${enrolled.length ? enrolled.sort((a,b)=>a.name.localeCompare(b.name)).map((s) => {
+              const wk = classItem.term === 'summer' ? (enrollmentFor(s, classItem.id)?.weeks?.length || 0) : null;
+              return `<div class="enrolled-row">
+                <span class="who">${esc(s.name)}${wk != null ? `<small>${wk} week${wk === 1 ? '' : 's'} selected</small>` : (s.parentName ? `<small>${esc(s.parentName)}</small>` : '')}</span>
+                <button class="x" type="button" title="Remove from class" onclick="unenrollOne('${esc(s.id)}','${esc(classItem.id)}')">✕</button>
+              </div>`;
+            }).join('') : '<p class="hint">No students enrolled yet.</p>'}
+            ${others.length ? `
+              <div class="add-to">
+                <select data-add-class="${esc(classItem.id)}">
+                  <option value="">+ Add a student…</option>
+                  ${others.sort((a,b)=>a.name.localeCompare(b.name)).map((s) => `<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('')}
+                </select>
+              </div>` : ''}
+          </div>
+        </article>`;
     }
 
-    /* ── Enrollment picker (inside student modal) ── */
+    function rosterCardForTeam(team) {
+      const roster = students().filter((s) => s.fllTeamId === team.id);
+      return `
+        <article class="roster-card" data-card>
+          <div class="roster-card-head" data-toggle>
+            <div>
+              <h3>${esc(team.nickname || team.name || team.id)}</h3>
+              <div class="meta">
+                <span class="pill team">FLL Team</span>
+                ${team.meetingDays ? `<span class="pill">${esc(team.meetingDays)}</span>` : ''}
+                <span class="pill count">${roster.length} student${roster.length === 1 ? '' : 's'}</span>
+              </div>
+            </div>
+            <div class="roster-card-actions"><span class="roster-toggle">⌄</span></div>
+          </div>
+          <div class="roster-card-body">
+            ${roster.length ? roster.sort((a,b)=>a.name.localeCompare(b.name)).map((s) => `
+              <div class="enrolled-row">
+                <span class="who">${esc(s.name)}${s.parentName ? `<small>${esc(s.parentName)}</small>` : ''}</span>
+                <button class="x" type="button" title="Remove from team" onclick="removeFromTeam('${esc(s.id)}')">✕</button>
+              </div>`).join('') : '<p class="hint">No students on this team yet. Assign students from the Students tab or their profile.</p>'}
+          </div>
+        </article>`;
+    }
+
+    function wireRosterCards() {
+      classesEl.querySelectorAll('[data-card]').forEach((card) => {
+        const head = card.querySelector('[data-toggle]');
+        head.addEventListener('click', () => card.classList.toggle('open'));
+      });
+      classesEl.querySelectorAll('[data-add-class]').forEach((sel) => {
+        sel.addEventListener('change', () => {
+          const studentId = sel.value; const classId = sel.dataset.addClass;
+          if (studentId) enrollOne(studentId, classId);
+        });
+        sel.addEventListener('click', (e) => e.stopPropagation());
+      });
+    }
+
+    /* ── Quick enroll / unenroll from class view (reuses student PATCH) ── */
+    async function patchStudentEnrollments(student, enrollments) {
+      const result = await api(`/api/master-roster/students/${encodeURIComponent(student.id)}`, {
+        method: 'PATCH', body: JSON.stringify({ enrollments })
+      });
+      state.roster = result.data;
+    }
+    window.enrollOne = async function enrollOne(studentId, classId) {
+      const student = studentById(studentId); if (!student) return;
+      const classItem = classById(classId);
+      const list = manualEnrollments(student).filter((e) => e.classId !== classId);
+      list.push({ classId, weeks: classItem?.term === 'summer' ? (state.roster.settings.summerWeeks || []).map((w) => w.id) : [] });
+      try { await patchStudentEnrollments(student, list); renderAll(); showNotice(`Added ${student.name} to ${classItem?.name || 'class'}.`, true); }
+      catch (err) { showNotice(err.message); }
+    };
+    window.unenrollOne = async function unenrollOne(studentId, classId) {
+      const student = studentById(studentId); if (!student) return;
+      const list = manualEnrollments(student).filter((e) => e.classId !== classId);
+      try { await patchStudentEnrollments(student, list); renderAll(); }
+      catch (err) { showNotice(err.message); }
+    };
+    window.removeFromTeam = async function removeFromTeam(studentId) {
+      const student = studentById(studentId); if (!student) return;
+      if (!confirm(`Remove ${student.name} from their FLL team?`)) return;
+      try {
+        const result = await api(`/api/master-roster/students/${encodeURIComponent(studentId)}`, { method: 'PATCH', body: JSON.stringify({ fllTeamId: '' }) });
+        state.roster = result.data; renderAll();
+      } catch (err) { showNotice(err.message); }
+    };
+
+    /* ── Enrollment picker (student modal) ── */
     function renderEnrollmentControls(student = null) {
-      if (!(state.roster.classes || []).length) {
+      if (!classes().length) {
         enrollmentControls.innerHTML = '<div class="empty" style="padding:20px"><p>No classes yet — create one in the Classes tab first.</p></div>';
         return;
       }
@@ -734,26 +1049,44 @@
           if (card) card.classList.toggle('checked', input.checked);
           const weeksEl = enrollmentControls.querySelector(`[data-weeks-for="${CSS.escape(id)}"]`);
           if (weeksEl) weeksEl.style.display = input.checked ? '' : 'none';
+          updateOpenModalOverflow();
         });
       });
     }
-
     function collectEnrollments() {
       return Array.from(enrollmentControls.querySelectorAll('[data-class-check]:checked')).map((input) => {
         const classId = input.dataset.classCheck;
         const classItem = classById(classId);
         const weeks = classItem?.term === 'summer'
-          ? Array.from(enrollmentControls.querySelectorAll(`[data-week][data-class-id="${CSS.escape(classId)}"]:checked`)).map((w) => w.dataset.week)
-          : [];
+          ? Array.from(enrollmentControls.querySelectorAll(`[data-week][data-class-id="${CSS.escape(classId)}"]:checked`)).map((w) => w.dataset.week) : [];
         return { classId, weeks };
       });
     }
 
     /* ── Student modal ── */
+    function renderFllTeamOptions(selectedTeamId = '') {
+      const teams = state.roster.fllTeams || [];
+      fllTeamId.innerHTML = '<option value="">No team / remove from team</option>' + teams
+        .map((team) => `<option value="${esc(team.id)}" ${team.id === selectedTeamId ? 'selected' : ''}>${esc(team.nickname || team.name || team.id)}</option>`).join('');
+      fllTeamId.value = teams.some((team) => team.id === selectedTeamId) ? selectedTeamId : '';
+    }
+    function updateHubAccessUi() {
+      fllTeamPicker.classList.toggle('visible', accessFllHub.checked);
+      document.querySelectorAll('[data-access-card]').forEach((card) => {
+        const input = card.dataset.accessCard === 'code-lab' ? accessCodeLab : accessFllHub;
+        card.classList.toggle('checked', Boolean(input?.checked));
+      });
+      updateOpenModalOverflow();
+    }
+    function collectHubAccess() {
+      return [accessCodeLab.checked ? 'code-lab' : '', accessFllHub.checked ? 'fll-hub' : ''].filter(Boolean);
+    }
+    [accessCodeLab, accessFllHub].forEach((input) => input.addEventListener('change', updateHubAccessUi));
+
     window.openStudentModal = function openStudentModal(id) {
       showNotice('');
       studentForm.reset();
-      const student = id ? (state.roster.students || []).find((s) => s.id === id) : null;
+      const student = id ? studentById(id) : null;
       document.getElementById('studentId').value = student ? student.id : '';
       document.getElementById('studentName').value = student?.name || '';
       document.getElementById('parentName').value = student?.parentName || '';
@@ -761,6 +1094,10 @@
       document.getElementById('phone').value = student?.phone || '';
       document.getElementById('notes').value = student?.notes || '';
       document.getElementById('studentModalTitle').textContent = student ? `Edit ${student.name}` : 'Add Student';
+      accessCodeLab.checked = hasHub(student, 'code-lab');
+      accessFllHub.checked = hasHub(student, 'fll-hub');
+      renderFllTeamOptions(student?.fllTeamId || '');
+      updateHubAccessUi();
       renderEnrollmentControls(student);
       openOverlay(studentOverlay);
       document.getElementById('studentName').focus();
@@ -776,24 +1113,23 @@
         email: document.getElementById('email').value,
         phone: document.getElementById('phone').value,
         notes: document.getElementById('notes').value,
+        hubAccess: collectHubAccess(),
+        fllTeamId: accessFllHub.checked ? fllTeamId.value : '',
         enrollments: collectEnrollments()
       };
       try {
         const url = id ? `/api/master-roster/students/${encodeURIComponent(id)}` : '/api/master-roster/students';
         const result = await api(url, { method: id ? 'PATCH' : 'POST', body: JSON.stringify(payload) });
-        state.roster = result.data;
-        closeStudentModal();
-        renderAll();
+        state.roster = result.data; closeStudentModal(); renderAll();
       } catch (err) { showNotice(err.message); }
     });
 
     window.deleteStudent = async function deleteStudent(id) {
-      const student = (state.roster.students || []).find((s) => s.id === id);
+      const student = studentById(id);
       if (!confirm(`Remove ${student ? student.name : 'this student'} from the roster?`)) return;
       try {
         const result = await api(`/api/master-roster/students/${encodeURIComponent(id)}`, { method: 'DELETE' });
-        state.roster = result.data;
-        renderAll();
+        state.roster = result.data; state.selected.delete(id); renderAll();
       } catch (err) { showNotice(err.message); }
     };
 
@@ -801,7 +1137,7 @@
     window.openClassModal = function openClassModal(id) {
       showNotice('');
       classForm.reset();
-      const classItem = id ? (state.roster.classes || []).find((c) => c.id === id) : null;
+      const classItem = id ? classById(id) : null;
       document.getElementById('classId').value = classItem ? classItem.id : '';
       document.getElementById('className').value = classItem?.name || '';
       document.getElementById('classTerm').value = classItem?.term || 'fall';
@@ -827,36 +1163,276 @@
       try {
         const url = id ? `/api/master-roster/classes/${encodeURIComponent(id)}` : '/api/master-roster/classes';
         const result = await api(url, { method: id ? 'PATCH' : 'POST', body: JSON.stringify(payload) });
-        state.roster = result.data;
-        closeClassModal();
-        renderAll();
+        state.roster = result.data; closeClassModal(); renderAll();
       } catch (err) { showNotice(err.message); }
     });
 
     window.deleteClass = async function deleteClass(id) {
-      const classItem = (state.roster.classes || []).find((c) => c.id === id);
+      const classItem = classById(id);
       if (!confirm(`Remove ${classItem ? classItem.name : 'this class'}? Students will be unenrolled from it.`)) return;
       try {
         const result = await api(`/api/master-roster/classes/${encodeURIComponent(id)}`, { method: 'DELETE' });
-        state.roster = result.data;
-        renderAll();
+        state.roster = result.data; renderAll();
       } catch (err) { showNotice(err.message); }
     };
 
+    /* ── Bulk actions ── */
+    const bulkAction = document.getElementById('bulkAction');
+    const bulkClass = document.getElementById('bulkClass');
+    const bulkTeam = document.getElementById('bulkTeam');
+    window.openBulkModal = function openBulkModal() {
+      if (!state.selected.size) return;
+      document.getElementById('bulkSummary').textContent = `${state.selected.size} student${state.selected.size === 1 ? '' : 's'} selected.`;
+      bulkClass.innerHTML = classes().filter((c) => !c.id.startsWith('fll-')).map((c) => `<option value="${esc(c.id)}">${esc(c.name)} (${esc(TERM_LABELS[c.term] || c.term)})</option>`).join('') || '<option value="">No classes</option>';
+      bulkTeam.innerHTML = '<option value="">Remove from team</option>' + (state.roster.fllTeams || []).map((t) => `<option value="${esc(t.id)}">${esc(t.nickname || t.name || t.id)}</option>`).join('');
+      document.getElementById('bulkProgress').style.display = 'none';
+      document.getElementById('bulkApply').disabled = false;
+      bulkAction.value = 'enroll';
+      updateBulkUi();
+      openOverlay(bulkOverlay);
+    };
+    window.closeBulkModal = function closeBulkModal() { closeOverlay(bulkOverlay); };
+    function updateBulkUi() {
+      const a = bulkAction.value;
+      document.getElementById('bulkClassWrap').style.display = (a === 'enroll' || a === 'unenroll') ? '' : 'none';
+      document.getElementById('bulkTeamWrap').style.display = a === 'team' ? '' : 'none';
+      document.getElementById('bulkCodelabWrap').style.display = a === 'codelab' ? '' : 'none';
+      document.getElementById('bulkDeleteWarn').style.display = a === 'delete' ? '' : 'none';
+      updateBulkWeeks();
+      updateOpenModalOverflow();
+    }
+    function updateBulkWeeks() {
+      const wrap = document.getElementById('bulkWeekWrap');
+      const classItem = classById(bulkClass.value);
+      if (bulkAction.value === 'enroll' && classItem?.term === 'summer') {
+        const weeks = state.roster.settings.summerWeeks || [];
+        wrap.innerHTML = weeks.map((w) => `<label class="check-row"><input type="checkbox" data-bulk-week="${esc(w.id)}" checked><span><span class="label-main">${esc(w.label)}</span><span class="label-sub">${esc(w.dates)}</span></span></label>`).join('');
+        wrap.style.display = '';
+      } else { wrap.style.display = 'none'; wrap.innerHTML = ''; }
+      updateOpenModalOverflow();
+    }
+    bulkAction.addEventListener('change', updateBulkUi);
+    bulkClass.addEventListener('change', updateBulkWeeks);
+
+    window.applyBulk = async function applyBulk() {
+      const ids = Array.from(state.selected);
+      if (!ids.length) return;
+      const action = bulkAction.value;
+      const progress = document.getElementById('bulkProgress');
+      const applyBtn = document.getElementById('bulkApply');
+      if (action === 'delete' && !confirm(`Permanently remove ${ids.length} student${ids.length === 1 ? '' : 's'} from the roster?`)) return;
+      applyBtn.disabled = true;
+      progress.style.display = 'block';
+      let done = 0, failed = 0;
+      for (const id of ids) {
+        const student = studentById(id);
+        if (!student) { continue; }
+        progress.textContent = `Working… ${done + 1} of ${ids.length}`;
+        try {
+          if (action === 'delete') {
+            await api(`/api/master-roster/students/${encodeURIComponent(id)}`, { method: 'DELETE' });
+          } else if (action === 'enroll') {
+            const classItem = classById(bulkClass.value);
+            const weeks = classItem?.term === 'summer'
+              ? Array.from(document.querySelectorAll('[data-bulk-week]:checked')).map((w) => w.dataset.bulkWeek) : [];
+            const list = manualEnrollments(student).filter((e) => e.classId !== bulkClass.value);
+            list.push({ classId: bulkClass.value, weeks });
+            await api(`/api/master-roster/students/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify({ enrollments: list }) });
+          } else if (action === 'unenroll') {
+            const list = manualEnrollments(student).filter((e) => e.classId !== bulkClass.value);
+            await api(`/api/master-roster/students/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify({ enrollments: list }) });
+          } else if (action === 'team') {
+            const teamId = bulkTeam.value;
+            if (teamId) {
+              const access = Array.from(new Set([...(student.hubAccess || []), 'fll-hub']));
+              await api(`/api/master-roster/students/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify({ hubAccess: access, fllTeamId: teamId }) });
+            } else {
+              await api(`/api/master-roster/students/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify({ fllTeamId: '' }) });
+            }
+          } else if (action === 'codelab') {
+            const grant = document.getElementById('bulkCodelab').value === 'grant';
+            const set = new Set(student.hubAccess || []);
+            if (grant) set.add('code-lab'); else set.delete('code-lab');
+            await api(`/api/master-roster/students/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify({ hubAccess: Array.from(set) }) });
+          }
+          done++;
+        } catch (err) { failed++; }
+      }
+      // refresh roster
+      try { const fresh = await api('/api/master-roster'); state.roster = fresh.data; } catch (e) {}
+      if (action === 'delete') state.selected.clear();
+      closeBulkModal();
+      renderAll();
+      showNotice(`Updated ${done} student${done === 1 ? '' : 's'}${failed ? `, ${failed} failed` : ''}.`, failed === 0);
+    };
+
+    /* ── CSV export ── */
+    function csvCell(v) {
+      const s = String(v == null ? '' : v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    }
+    window.exportCsv = function exportCsv() {
+      const header = ['Name', 'Parent', 'Email', 'Phone', 'Classes', 'FLL Team', 'Hub Access', 'Notes'];
+      const lines = [header.map(csvCell).join(',')];
+      students().slice().sort((a, b) => a.name.localeCompare(b.name)).forEach((s) => {
+        const classNames = (s.enrollments || []).map((e) => {
+          const c = classById(e.classId); if (!c) return '';
+          const wk = c.term === 'summer' && e.weeks?.length ? ` (${e.weeks.length}wk)` : '';
+          return c.name + wk;
+        }).filter(Boolean).join('; ');
+        lines.push([
+          s.name, s.parentName, s.email, s.phone, classNames,
+          s.fllTeamId ? formatTeamName(s.fllTeamId) : '',
+          (s.hubAccess || []).join(' '), s.notes
+        ].map(csvCell).join(','));
+      });
+      const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `master-roster-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    };
+
+    /* ── CSV import ── */
+    function parseCsv(text) {
+      const rows = []; let row = [], field = '', inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        if (inQuotes) {
+          if (ch === '"') { if (text[i + 1] === '"') { field += '"'; i++; } else inQuotes = false; }
+          else field += ch;
+        } else if (ch === '"') inQuotes = true;
+        else if (ch === ',') { row.push(field); field = ''; }
+        else if (ch === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+        else if (ch === '\r') { /* skip */ }
+        else field += ch;
+      }
+      if (field.length || row.length) { row.push(field); rows.push(row); }
+      return rows.filter((r) => r.some((c) => String(c).trim()));
+    }
+    function rowsToStudents(rows) {
+      if (!rows.length) return [];
+      const header = rows[0].map((c) => c.trim().toLowerCase());
+      const looksLikeHeader = header.some((h) => ['name', 'student', 'parent', 'email', 'phone', 'notes'].includes(h));
+      const dataRows = looksLikeHeader ? rows.slice(1) : rows;
+      const idx = looksLikeHeader
+        ? { name: header.findIndex((h) => h === 'name' || h === 'student'), parent: header.findIndex((h) => h.includes('parent')), email: header.findIndex((h) => h === 'email'), phone: header.findIndex((h) => h === 'phone'), notes: header.findIndex((h) => h === 'notes') }
+        : { name: 0, parent: 1, email: 2, phone: 3, notes: 4 };
+      const cell = (r, i) => (i >= 0 && r[i] != null ? String(r[i]) : '').trim();
+      return dataRows.map((r) => ({
+        name: cell(r, idx.name >= 0 ? idx.name : 0),
+        parentName: cell(r, idx.parent),
+        email: cell(r, idx.email),
+        phone: cell(r, idx.phone),
+        notes: cell(r, idx.notes)
+      })).filter((s) => s.name);
+    }
+    window.openImportModal = function openImportModal() {
+      document.getElementById('importFile').value = '';
+      document.getElementById('importText').value = '';
+      document.getElementById('importPreview').innerHTML = '';
+      document.getElementById('importProgress').style.display = 'none';
+      document.getElementById('importApply').disabled = true;
+      state.importRows = [];
+      openOverlay(importOverlay);
+    };
+    window.closeImportModal = function closeImportModal() { closeOverlay(importOverlay); };
+    document.getElementById('importFile').addEventListener('change', (e) => {
+      const file = e.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => { document.getElementById('importText').value = reader.result; previewImport(); };
+      reader.readAsText(file);
+    });
+    window.previewImport = function previewImport() {
+      const text = document.getElementById('importText').value.trim();
+      const preview = document.getElementById('importPreview');
+      if (!text) {
+        preview.innerHTML = '<p class="hint">Nothing to preview yet.</p>';
+        document.getElementById('importApply').disabled = true;
+        updateModalOverflow(importOverlay);
+        return;
+      }
+      const parsed = rowsToStudents(parseCsv(text));
+      state.importRows = parsed;
+      if (!parsed.length) {
+        preview.innerHTML = '<p class="hint" style="color:var(--danger)">No valid rows found. Each row needs at least a name.</p>';
+        document.getElementById('importApply').disabled = true;
+        updateModalOverflow(importOverlay);
+        return;
+      }
+      preview.innerHTML = `
+        <p class="hint" style="color:#0f5132;font-weight:700">Found ${parsed.length} student${parsed.length === 1 ? '' : 's'} to import:</p>
+        <div class="table-wrap" style="max-height:200px;overflow:auto">
+          <table class="roster" style="min-width:0">
+            <thead><tr><th>Name</th><th>Parent</th><th>Email</th><th>Phone</th></tr></thead>
+            <tbody>${parsed.slice(0, 50).map((s) => `<tr><td class="cell-name">${esc(s.name)}</td><td class="cell-contact">${esc(s.parentName)}</td><td class="cell-contact">${esc(s.email)}</td><td class="cell-contact">${esc(s.phone)}</td></tr>`).join('')}</tbody>
+          </table>
+        </div>
+        ${parsed.length > 50 ? `<p class="hint">…and ${parsed.length - 50} more.</p>` : ''}`;
+      document.getElementById('importApply').disabled = false;
+      updateModalOverflow(importOverlay);
+    };
+    window.runImport = async function runImport() {
+      const rows = state.importRows;
+      if (!rows.length) return;
+      const progress = document.getElementById('importProgress');
+      const applyBtn = document.getElementById('importApply');
+      applyBtn.disabled = true; progress.style.display = 'block';
+      let done = 0, failed = 0;
+      for (const s of rows) {
+        progress.textContent = `Importing… ${done + 1} of ${rows.length}`;
+        try {
+          await api('/api/master-roster/students', { method: 'POST', body: JSON.stringify({ ...s, hubAccess: [], fllTeamId: '', enrollments: [] }) });
+          done++;
+        } catch (err) { failed++; }
+      }
+      try { const fresh = await api('/api/master-roster'); state.roster = fresh.data; } catch (e) {}
+      closeImportModal(); renderAll();
+      showNotice(`Imported ${done} student${done === 1 ? '' : 's'}${failed ? `, ${failed} failed` : ''}.`, failed === 0);
+    };
+
     /* ── Overlay helpers ── */
-    function openOverlay(overlay) { overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
-    function closeOverlay(overlay) { overlay.classList.remove('open'); document.body.style.overflow = ''; }
-    [studentOverlay, classOverlay].forEach((overlay) => {
+    function updateModalOverflow(overlay) {
+      const modal = overlay?.querySelector('.modal');
+      const body = overlay?.querySelector('.modal-body');
+      if (!modal || !body) return;
+      modal.classList.toggle('is-overflowing', body.scrollHeight > body.clientHeight + 2);
+    }
+    function updateOpenModalOverflow() {
+      document.querySelectorAll('.modal-overlay.open').forEach(updateModalOverflow);
+    }
+    function openOverlay(overlay) {
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(() => updateModalOverflow(overlay));
+    }
+    function closeOverlay(overlay) {
+      overlay.classList.remove('open');
+      const modal = overlay.querySelector('.modal');
+      if (modal) modal.classList.remove('is-overflowing');
+      document.body.style.overflow = document.querySelector('.modal-overlay.open') ? 'hidden' : '';
+    }
+    [studentOverlay, classOverlay, bulkOverlay, importOverlay].forEach((overlay) => {
       overlay.addEventListener('click', (e) => { if (e.target === overlay) closeOverlay(overlay); });
     });
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') { closeOverlay(studentOverlay); closeOverlay(classOverlay); }
+      if (e.key === 'Escape') [studentOverlay, classOverlay, bulkOverlay, importOverlay].forEach(closeOverlay);
     });
+    window.addEventListener('resize', updateOpenModalOverflow);
 
     document.getElementById('logoutButton').addEventListener('click', async () => {
       try { await fetch('/api/coach/logout', { method: 'POST' }); } finally { window.location.href = '/coach-login'; }
     });
-    [searchInput, termFilter, classFilter].forEach((el) => el.addEventListener('input', renderStudents));
+    function scheduleStudentRender() {
+      if (state.renderQueued) return;
+      state.renderQueued = true;
+      requestAnimationFrame(() => {
+        state.renderQueued = false;
+        renderStudents();
+        renderBulkBar();
+      });
+    }
+    [searchInput, termFilter, classFilter].forEach((el) => el.addEventListener('input', scheduleStudentRender));
 
     load();
   </script>

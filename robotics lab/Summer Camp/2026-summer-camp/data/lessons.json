@@ -1,0 +1,203 @@
+[
+  {
+    "id": "lesson-lego-basics-balloon-car",
+    "title": "Day 1: Meet LEGO + Balloon-Powered Car",
+    "updatedAt": "2026-06-17T00:00:00.000Z",
+    "slides": [
+      {
+        "id": "slide-welcome",
+        "type": "content",
+        "title": "Welcome to Robotics Camp!",
+        "body": "Today we get to know our most important tool: LEGO Technic pieces. By the end of class you'll know the names we use in the lab AND you'll build a car powered by nothing but a balloon. No motors, no code — just smart building!",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "slide-what-is-lego",
+        "type": "content",
+        "title": "What is LEGO Technic?",
+        "body": "Regular LEGO bricks stack on top of each other. LEGO Technic pieces connect side-to-side with pins and axles, so we can build strong machines that move. These are the same pieces real engineers use to test ideas.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "slide-beam",
+        "type": "content",
+        "title": "Piece #1: The Beam",
+        "body": "The BEAM is the long piece with round holes. It's the skeleton of almost everything we build. We count beams by their holes — a '5 beam' has 5 holes. Find a beam in your kit and hold it up!",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "slide-pin",
+        "type": "content",
+        "title": "Piece #2: The Pin",
+        "body": "PINS connect beams together. Black/blue pins are FRICTION pins — they grip and stay put. Gray pins are SMOOTH — they let parts spin freely. Push a pin through two beams to join them.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "slide-axle",
+        "type": "content",
+        "title": "Piece #3: The Axle",
+        "body": "The AXLE is the stick shaped like a plus sign (+). It spins to turn wheels and gears. Axles come in different lengths — we count them by studs. Wheels go on axles!",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "slide-bushing-connector",
+        "type": "content",
+        "title": "Pieces #4: Bushings & Connectors",
+        "body": "A BUSHING is the little ring that slides onto an axle to stop it from sliding out. CONNECTORS join axles and pins at angles. These small pieces hold the whole machine together.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "slide-q-beam",
+        "type": "question",
+        "title": "Quick check: which piece is the skeleton?",
+        "body": "Which LEGO Technic piece is the long one with round holes that we build everything around?",
+        "image": "",
+        "options": ["Beam", "Axle", "Pin", "Tire"],
+        "correctIndex": 0
+      },
+      {
+        "id": "slide-q-axle",
+        "type": "question",
+        "title": "Quick check: what spins?",
+        "body": "Which piece is shaped like a plus sign and spins to turn wheels and gears?",
+        "image": "",
+        "options": ["Axle", "Beam", "Bushing", "Pin"],
+        "correctIndex": 0
+      },
+      {
+        "id": "slide-balloon-intro",
+        "type": "content",
+        "title": "Today's Build: Balloon-Powered Car",
+        "body": "We'll build a car with NO motor. We blow up a balloon, let the air rush out the back, and that push sends the car forward. That push-back is a real science rule: every action has an equal and opposite reaction!",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "slide-balloon-steps",
+        "type": "content",
+        "title": "Build Steps",
+        "body": "1) Build a flat beam frame.  2) Add 2 axles with 4 wheels — make sure they spin freely (smooth pins!).  3) Attach the balloon so its opening points OUT the back.  4) Blow it up through a straw, set it down, and let go!",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "slide-q-balloon",
+        "type": "question",
+        "title": "Quick check: what powers our car?",
+        "body": "What actually makes the balloon car roll forward?",
+        "image": "",
+        "options": ["Air rushing out the back", "A hidden motor", "Batteries", "Magnets"],
+        "correctIndex": 0
+      },
+      {
+        "id": "slide-challenge",
+        "type": "content",
+        "title": "Your Challenge",
+        "body": "Make your car roll as FAR as possible. Try it, change one thing, and try again — that's engineering! Ideas: lighter frame, bigger wheels, less rubbing on the axles. Ready, set, build!",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ]
+  },
+  {
+    "id": "lesson-lego-bridge-challenge",
+    "title": "Day 2: LEGO Bridge Challenge",
+    "updatedAt": "2026-06-17T00:00:00.000Z",
+    "slides": [
+      {
+        "id": "bridge-welcome",
+        "type": "content",
+        "title": "Today's Challenge: Build a Bridge",
+        "body": "Today we use LEGO beams, pins, axles, and connectors to build a bridge. The goal is not just to make it look cool. The goal is to make it strong enough to hold weight.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "bridge-strong-shapes",
+        "type": "content",
+        "title": "Strong Shapes",
+        "body": "Triangles are strong because they do not squash out of shape easily. Rectangles can wobble unless we brace them. Engineers add diagonal supports to make bridges stronger.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "bridge-q-bracing",
+        "type": "question",
+        "title": "Which support usually makes a bridge stronger?",
+        "body": "Think about the shape that keeps a frame from wobbling.",
+        "image": "",
+        "options": ["Diagonal brace", "Loose wheel", "Long straw", "Decoration only"],
+        "correctIndex": 0
+      },
+      {
+        "id": "bridge-test",
+        "type": "content",
+        "title": "Build, Test, Improve",
+        "body": "Build a bridge across a gap. Test it with small weights. If it bends, add supports, shorten weak spans, or brace the sides. Change one thing at a time so you know what helped.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ]
+  },
+  {
+    "id": "lesson-lego-tower-challenge",
+    "title": "Day 3: LEGO Tower Challenge",
+    "updatedAt": "2026-06-17T00:00:00.000Z",
+    "slides": [
+      {
+        "id": "tower-welcome",
+        "type": "content",
+        "title": "Today's Challenge: Build a Tower",
+        "body": "Today we build upward. A good tower is tall, stable, and not too heavy at the top. Your job is to make it stand without tipping.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "tower-base",
+        "type": "content",
+        "title": "Start With a Strong Base",
+        "body": "A wide base helps a tower stay upright. If the top is heavy and the base is narrow, the tower tips more easily. Engineers call this balance and stability.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "tower-q-base",
+        "type": "question",
+        "title": "What helps a tower stay stable?",
+        "body": "Choose the best engineering choice.",
+        "image": "",
+        "options": ["A wide base", "A tiny base", "All the weight at the top", "No connections"],
+        "correctIndex": 0
+      },
+      {
+        "id": "tower-challenge",
+        "type": "content",
+        "title": "Tower Rules",
+        "body": "Build the tallest tower you can. It must stand on its own for 10 seconds. After your first test, improve one thing: base width, bracing, symmetry, or weight.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ]
+  }
+]

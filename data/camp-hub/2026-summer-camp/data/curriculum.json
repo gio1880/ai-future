@@ -2,36 +2,36 @@
   {
     "id": "week-1",
     "label": "Week 1",
-    "theme": "Meet the SPIKE Prime",
-    "goal": "Get comfortable with the kit, motors, and first programs.",
+    "theme": "Meet LEGO: Build Before Code",
+    "goal": "Learn the LEGO Technic pieces by name and build strong machines and structures — no motors or coding yet.",
     "days": [
       {
         "id": "day-2026-06-29",
         "date": "2026-06-29",
-        "activity": "Introduction to archaeology and project overview. Before students begin their projects, students will learn about the SPIKE Prime kit.",
-        "build": "Hopper",
-        "coachNotes": ""
+        "activity": "Get to know LEGO Technic! We learn the names we use in the lab for every piece — beams, axles, pins, bushings, and connectors — then build a balloon-powered car that rolls with no motor and no code.",
+        "build": "Balloon-Powered Car",
+        "coachNotes": "Present the 'Day 1: Meet LEGO + Balloon-Powered Car' live lesson from the Live Lesson tab so campers can follow the piece names and build steps on their iPads. Goal of the build challenge: roll the farthest. Have balloons and straws ready."
       },
       {
         "id": "day-2026-06-30",
         "date": "2026-06-30",
-        "activity": "Students will continue to test how different LEGO parts can influence the way their robots move.",
-        "build": "Bunny",
-        "coachNotes": ""
+        "activity": "Engineering challenge: build a LEGO bridge that can hold weight across a gap. We talk about beams, supports, and what makes a structure strong, then test how much each bridge can hold.",
+        "build": "LEGO Bridge",
+        "coachNotes": "Use books or a set gap to span. Test with weights (washers/coins) and compare designs. Reinforce beam + pin vocabulary from Day 1."
       },
       {
         "id": "day-2026-07-01",
         "date": "2026-07-01",
-        "activity": "Students will learn about basic programming concepts.",
-        "build": "Virtual Counter",
-        "coachNotes": ""
+        "activity": "Tower challenge: build the tallest LEGO tower that can stand on its own. We explore balance, a wide base, and stability before the big build-off.",
+        "build": "LEGO Tower",
+        "coachNotes": "Measure heights and celebrate the tallest free-standing tower. Talk about base width vs. height and why tall things tip."
       },
       {
         "id": "day-2026-07-02",
         "date": "2026-07-02",
-        "activity": "Students will continue to learn how to program and will learn how to use a distance sensor.",
-        "build": "Turtle",
-        "coachNotes": ""
+        "activity": "Free-build design challenge: campers combine everything from the week — strong beams, spinning axles, sturdy bases — to design and present their own LEGO creation.",
+        "build": "Design Challenge",
+        "coachNotes": "Let campers pick a mini-prompt (vehicle, structure, or machine). Short share-out at the end. Transitions into SPIKE Prime next week."
       }
     ]
   },

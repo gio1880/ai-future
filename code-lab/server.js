@@ -420,6 +420,9 @@ app.post('/api/login', async (req, res) => {
     if (!student) {
       return res.json({ success: false, error: 'Invalid credentials' });
     }
+    if (student.active === false) {
+      return res.json({ success: false, error: 'This Code Lab account is not active' });
+    }
 
     const passwordMatch = verifyPassword(password, student.password_hash);
     if (!passwordMatch) {
