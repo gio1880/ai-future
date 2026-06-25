@@ -1,0 +1,21 @@
+[
+  {
+    "id": "begin-1781909581322-bbe1b5",
+    "dayId": "day-2026-07-06",
+    "studentId": "camp-student-demo",
+    "studentName": "Demo Student",
+    "className": "Summer LEGO Robotics 1",
+    "questions": [
+      "What part of \"Students will learn about gears, gear ratio, torque, and speed.\" sounds most interesting or surprising to you?",
+      "Before we begin, what do you predict will be the trickiest part of building or testing Geared Car?",
+      "If you were the engineer leading this lesson, what would you try first and why?"
+    ],
+    "answers": [
+      "Gears are interesting because small parts can change how a robot moves.",
+      "I predict choosing the right gear ratio will be tricky.",
+      "I would compare a fast gear setup and a strong gear setup first."
+    ],
+    "updatedAt": "2026-06-19T22:53:01.322Z",
+    "submittedAt": "2026-06-19T22:53:01.322Z"
+  }
+]

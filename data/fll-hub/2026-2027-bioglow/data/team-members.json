@@ -117,5 +117,12 @@
     "displayName": "Ethan Deng",
     "role": "Team member",
     "initials": "ED"
+  },
+  {
+    "teamId": "team-history-guardians",
+    "studentId": "student-demo",
+    "displayName": "Demo Student",
+    "role": "Team member",
+    "initials": "DS"
   }
 ]

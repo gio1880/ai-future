@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>My Hubs | AI Future</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0b2a4a">
+  <link rel="icon" href="/ai%20future%20logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand: #001B3F; --navy: #073E77; --blue: #2563FF; --gold: #FECE00;
+      --ink: #1A2335; --muted: #64748B; --line: #E2E8F0; --page: #FAFAF6;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif; color: var(--ink); background: var(--page);
+      min-height: 100vh; -webkit-font-smoothing: antialiased;
+      padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
+    }
+    button { font: inherit; }
+    .wrap { width: min(980px, calc(100% - 48px)); margin: 0 auto; }
+
+    header {
+      background: var(--brand); color: #fff; border-radius: 0 0 28px 28px;
+      box-shadow: 0 8px 30px rgba(11,42,74,.22);
+    }
+    header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 0; }
+    .brand { display: flex; align-items: center; gap: 13px; }
+    .brand img { width: 48px; height: 48px; object-fit: contain; border-radius: 13px; background: #fff; padding: 5px; }
+    .brand .t strong { display: block; font-size: 17px; font-weight: 900; }
+    .brand .t span { font-size: 13px; color: #b9cbe0; font-weight: 700; }
+    .signout {
+      border: 0; background: rgba(255,255,255,.14); color: #fff; font-weight: 800; font-size: 15px;
+      padding: 13px 20px; border-radius: 999px; cursor: pointer; min-height: 50px; transition: background .15s;
+    }
+    .signout:hover { background: rgba(255,255,255,.26); }
+
+    main { padding: 30px 0 90px; }
+    .hello { font-size: clamp(32px, 5.5vw, 50px); font-weight: 900; letter-spacing: -.02em; margin: 6px 0 4px; }
+    .hello em { font-style: normal; color: var(--blue); }
+    .hello .wave { display: inline-block; transform-origin: 70% 70%; animation: wave 2.6s ease-in-out infinite; }
+    @keyframes wave { 0%,60%,100% { transform: rotate(0); } 10% { transform: rotate(16deg); } 20% { transform: rotate(-8deg); } 30% { transform: rotate(14deg); } 40% { transform: rotate(-4deg); } }
+    .lede { color: var(--muted); font-size: 18px; font-weight: 700; margin: 0 0 30px; }
+
+    .notice { display: none; margin: 0 0 22px; padding: 15px 18px; border-radius: 16px; color: #9b2424; background: #fff1f1; border: 2px solid #f4cccc; font-weight: 800; font-size: 15px; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 22px; }
+
+    .tile {
+      --accent: var(--blue); --tint: #eaf2fb;
+      position: relative; display: flex; flex-direction: column; align-items: flex-start; text-align: left; width: 100%;
+      background: #fff; border: 0; border-radius: 28px; padding: 26px; cursor: pointer; overflow: hidden;
+      box-shadow: 0 6px 22px rgba(18,33,57,.09);
+      transition: transform .16s ease, box-shadow .16s ease;
+    }
+    .tile::after { content: ""; position: absolute; inset: 0; border: 3px solid transparent; border-radius: 28px; transition: border-color .16s; pointer-events: none; }
+    .tile:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(18,33,57,.18); }
+    .tile:hover::after { border-color: var(--accent); }
+    .tile:active { transform: translateY(-2px) scale(.98); }
+    .tile .ico {
+      width: 88px; height: 88px; border-radius: 26px; display: grid; place-items: center; font-size: 46px;
+      background: var(--tint); margin-bottom: 18px;
+    }
+    .tile h3 { margin: 0 0 6px; font-size: 25px; font-weight: 900; letter-spacing: -.01em; }
+    .tile p { margin: 0 0 20px; color: var(--muted); font-size: 16px; line-height: 1.5; font-weight: 600; flex: 1; }
+    .tile .go {
+      align-self: stretch; min-height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; gap: 9px;
+      background: var(--accent); color: #fff; font-size: 18px; font-weight: 900; transition: filter .15s;
+    }
+    .tile:hover .go { filter: brightness(.93); }
+    .tile[aria-busy="true"] { pointer-events: none; opacity: .75; }
+    .tile[aria-busy="true"] .go .arrow { animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .tile.code-lab { --accent: #2563FF; --tint: #e7edff; }
+    .tile.fll-hub { --accent: #073E77; --tint: #e3ecf6; }
+    .tile.summer-camp { --accent: #ea580c; --tint: #fdeede; }
+
+    .empty { background: #fff; border-radius: 28px; padding: 60px 28px; text-align: center; box-shadow: 0 6px 22px rgba(18,33,57,.09); }
+    .empty .big { font-size: 60px; display: block; margin-bottom: 14px; }
+    .empty h3 { margin: 0 0 6px; font-size: 24px; font-weight: 900; }
+    .empty p { margin: 0; color: var(--muted); font-size: 17px; font-weight: 700; }
+
+    .loading { min-height: 60vh; display: grid; place-items: center; color: var(--muted); font-weight: 800; }
+    .loading .dot { width: 14px; height: 14px; border-radius: 999px; background: var(--blue); display: inline-block; margin: 0 5px; animation: bob 1s infinite ease-in-out; }
+    .loading .dot:nth-child(2) { animation-delay: .15s; }
+    .loading .dot:nth-child(3) { animation-delay: .3s; }
+    @keyframes bob { 0%, 100% { transform: translateY(0); opacity: .4; } 50% { transform: translateY(-10px); opacity: 1; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="brand">
+        <img id="brandLogo" alt="AI Future">
+        <div class="t"><strong>My Hubs</strong><span id="userline">Loading…</span></div>
+      </div>
+      <button class="signout" id="logoutButton" type="button">Sign out</button>
+    </div>
+  </header>
+  <main>
+    <div class="wrap" id="app">
+      <div class="loading"><div><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
+    </div>
+  </main>
+  <script>
+    const DEMO = /[?&]demo\b/.test(location.search);
+    // Production serves the logo at /ai future logo.png; in preview use the bundled copy.
+    (function(){
+      const isProd = /aifuture|ai-future|render\.com/i.test(location.hostname);
+      document.getElementById('brandLogo').src = isProd ? '/ai%20future%20logo.png' : 'ai-future-logo.png';
+    })();
+    const app = document.getElementById('app');
+    const userline = document.getElementById('userline');
+    const esc = v => String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+
+    const DEMO_DATA = { student: { name: 'Maya Rivera' }, hubs: [
+      { id:'code-lab', icon:'💻', title:'Code Lab', desc:'Build games and apps with block & Python coding.' },
+      { id:'fll-hub', icon:'🤖', title:'Robotics Hub', desc:'FIRST LEGO League missions, builds, and team notes.' },
+      { id:'summer-camp', icon:'☀️', title:'Summer Camp', desc:'Your daily schedule, projects, and camp updates.' },
+    ] };
+
+    async function load() {
+      if (DEMO) { render(DEMO_DATA); return; }
+      try {
+        const r = await fetch('/api/student/session', { cache: 'no-store' });
+        if (!r.ok) { window.location.href = '/student-login'; return; }
+        render(await r.json());
+      } catch (err) { window.location.href = '/student-login'; }
+    }
+
+    function render(data) {
+      const firstName = (data.student.name || 'there').split(' ')[0];
+      userline.textContent = data.student.name || '';
+      const hubs = data.hubs || [];
+      app.innerHTML = `
+        <h1 class="hello">Hi <em>${esc(firstName)}</em> <span class="wave">👋</span></h1>
+        <p class="lede">${hubs.length ? 'Pick a hub to jump back in!' : ''}</p>
+        <div id="notice" class="notice" role="alert"></div>
+        ${hubs.length ? `
+          <div class="grid">
+            ${hubs.map(h => `
+              <button class="tile ${esc(h.id)}" data-hub="${esc(h.id)}" type="button">
+                <span class="ico">${h.icon || '🔗'}</span>
+                <h3>${esc(h.title)}</h3>
+                <p>${esc(h.desc || '')}</p>
+                <span class="go">Enter <span class="arrow" aria-hidden="true">→</span></span>
+              </button>`).join('')}
+          </div>` : `
+          <div class="empty"><span class="big">🎒</span>
+            <h3>No hubs yet</h3>
+            <p>You're not signed up for any hubs right now. Ask your coach to add you!</p>
+          </div>`}
+      `;
+      app.querySelectorAll('.tile').forEach(btn => btn.addEventListener('click', () => openHub(btn.dataset.hub, btn)));
+    }
+
+    function showNotice(msg) {
+      const n = document.getElementById('notice'); if (!n) return;
+      n.textContent = msg || ''; n.style.display = msg ? 'block' : 'none';
+    }
+
+    async function openHub(hubId, tile) {
+      showNotice('');
+      tile.setAttribute('aria-busy', 'true');
+      if (DEMO) { setTimeout(() => { showNotice('Demo preview — “' + hubId + '” would open here.'); tile.removeAttribute('aria-busy'); }, 700); return; }
+      try {
+        const response = await fetch(`/api/student/open/${encodeURIComponent(hubId)}`, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+        const result = await response.json();
+        if (!response.ok || !result.success || !result.url) throw new Error(result.message || 'Could not open this hub.');
+        window.location.href = result.url;
+      } catch (err) {
+        showNotice(err.message || 'Could not open this hub.');
+        tile.removeAttribute('aria-busy');
+      }
+    }
+
+    document.getElementById('logoutButton').addEventListener('click', async () => {
+      if (DEMO) { showNotice('Demo preview — sign out is disabled.'); return; }
+      try { await fetch('/api/student/logout', { method: 'POST' }); } finally { window.location.href = '/student-login'; }
+    });
+
+    load();
+  </script>
+</body>
+</html>

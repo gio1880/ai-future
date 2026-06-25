@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 3: Balloon Powered Car</title>
+  <style>
+    :root{--bg:#bfe0ff;--card:#eef7ff;--ink:#17324d;--accent:#073e77;--yellow:#fece00;--shadow:rgba(7,62,119,.18);}*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#8fc4f4;color:var(--ink)}.deck{width:100%}.slide{min-height:100vh;padding:44px 64px;background:var(--bg);border-bottom:10px solid #8fc4f4;display:flex;flex-direction:column;justify-content:center;gap:24px;page-break-after:always}h1{margin:0;font-size:58px;line-height:1.05;color:#102e4a}h2{margin:0;font-size:46px;color:#102e4a}h3{margin:0 0 12px;font-size:30px;color:var(--accent)}p,li{font-size:26px;line-height:1.3}.subtitle{font-size:32px;max-width:980px;line-height:1.25}.big-card,.card{background:var(--card);border:4px solid var(--accent);border-radius:22px;padding:28px;box-shadow:0 10px 0 var(--shadow)}.card{border-width:3px;border-radius:18px;box-shadow:0 8px 0 var(--shadow)}.badge{display:inline-block;width:max-content;background:var(--yellow);border:3px solid var(--accent);border-radius:999px;padding:10px 18px;font-size:24px;font-weight:bold;color:#122b45}.badge.original{background:#fff}.goal{font-size:40px;line-height:1.3;font-weight:bold}.goal strong{color:var(--accent)}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:28px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.center{text-align:center}.teacher-note{background:#fff9d6;border:3px dashed var(--accent);border-radius:16px;padding:20px;font-size:25px}.topbar{display:flex;align-items:center;gap:18px}.small-label{font-size:24px;font-weight:bold;color:#102e4a}.original-slide{padding:28px;background:#bfe0ff}.image-frame{width:100%;max-width:1180px;margin:0 auto;background:white;border:4px solid var(--accent);border-radius:22px;overflow:hidden;box-shadow:0 10px 0 var(--shadow)}.image-frame img{display:block;width:100%;height:auto}.rule{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px;font-size:28px}.icon{min-width:44px;height:44px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--yellow);border:3px solid var(--accent);font-weight:bold}.question{font-size:30px;padding:16px 20px;border-left:10px solid var(--yellow);background:white;border-radius:12px;margin-bottom:14px}.questions{padding-bottom:16px}.compare-row{display:grid;grid-template-columns:1fr 80px 1fr;gap:18px;align-items:center}.arrow{font-size:56px;font-weight:bold;text-align:center;color:var(--accent)}.axle-demo{height:220px;position:relative;margin:12px 0}.wheel{position:absolute;top:72px;width:76px;height:76px;border:10px solid var(--accent);border-radius:50%;background:#fff}.wheel.left{left:14%}.wheel.right{right:14%}.axle-line{position:absolute;left:18%;right:18%;top:107px;height:16px;background:var(--yellow);border:3px solid var(--accent);border-radius:999px}.car-demo{height:240px;position:relative;margin:8px 0 18px}.car-body{position:absolute;left:18%;right:18%;bottom:62px;height:76px;background:#fff;border:4px solid var(--accent);border-radius:18px}.car-wheel{position:absolute;bottom:24px;width:70px;height:70px;border:8px solid var(--accent);border-radius:50%;background:var(--card)}.car-wheel.left{left:24%}.car-wheel.right{right:24%}.balloon{position:absolute;left:34%;top:16px;width:190px;height:90px;background:var(--yellow);border:4px solid var(--accent);border-radius:55% 55% 45% 45%}.nozzle{position:absolute;right:27%;top:74px;width:75px;height:18px;background:#fff;border:3px solid var(--accent)}.motion-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}.motion-card{background:#fff;border:3px solid var(--accent);border-radius:16px;padding:22px;text-align:center}.motion-card .symbol{font-size:52px;font-weight:bold;color:var(--accent)}@media print{body{background:white}.slide{min-height:100vh}}@media (max-width:900px){.slide{padding:36px 28px}h1{font-size:42px}h2{font-size:36px}p,li,.rule{font-size:22px}.grid-2,.grid-3,.compare-row,.motion-row{grid-template-columns:1fr}.goal{font-size:30px}.arrow{font-size:40px}.axle-demo,.car-demo{height:190px}}
+    html,body{height:100%;overflow:hidden}.deck{width:100vw;height:100vh;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:auto;-ms-overflow-style:none;scrollbar-width:none}.deck::-webkit-scrollbar{display:none}.slide{width:100vw;min-width:100vw;height:100vh;min-height:100vh;flex:0 0 100vw;overflow:hidden;scroll-snap-align:start;border-bottom:0}.slide-nav{position:fixed;right:18px;bottom:18px;z-index:20;display:flex;align-items:center;gap:10px}.slide-nav button{width:46px;height:46px;border-radius:50%;border:3px solid var(--accent);background:#fff;color:var(--accent);font-size:26px;font-weight:bold;cursor:pointer;box-shadow:0 5px 0 var(--shadow)}.slide-nav a{height:46px;min-width:76px;border-radius:999px;border:3px solid var(--accent);background:#fff;color:var(--accent);font-size:18px;font-weight:bold;cursor:pointer;box-shadow:0 5px 0 var(--shadow);display:inline-flex;align-items:center;justify-content:center;text-decoration:none;padding:0 14px}.slide-nav button:disabled{opacity:.45;cursor:default}.slide-counter{background:rgba(255,255,255,.92);border:3px solid var(--accent);border-radius:999px;padding:9px 14px;font-size:18px;font-weight:bold;color:#102e4a}.original-slide .image-frame{max-height:calc(100vh - 128px);display:flex;align-items:center;justify-content:center}.original-slide .image-frame img{width:100%;height:100%;max-height:calc(100vh - 140px);object-fit:contain}@media (max-width:900px),(max-height:840px){.slide{padding:20px 22px;gap:12px}p,ul,ol{margin-top:0;margin-bottom:0}h1{font-size:32px}h2{font-size:29px}h3{font-size:20px;margin-bottom:6px}p,li,.rule{font-size:16px;line-height:1.18}.subtitle{font-size:18px}.goal{font-size:22px}.big-card,.card{padding:14px;border-width:3px;border-radius:14px;box-shadow:0 5px 0 var(--shadow)}.grid-2{grid-template-columns:repeat(2,1fr);gap:12px}.grid-3{grid-template-columns:repeat(3,1fr);gap:12px}.compare-row{grid-template-columns:1fr 38px 1fr;gap:10px}.motion-row{grid-template-columns:repeat(2,1fr);gap:12px}.teacher-note{font-size:16px;padding:12px}.badge{font-size:16px;padding:6px 10px}.topbar{gap:8px}.small-label{font-size:16px}.image-frame{border-width:3px;border-radius:14px}.arrow{font-size:30px}.axle-demo{height:120px}.wheel{top:38px;width:46px;height:46px;border-width:7px}.axle-line{top:60px;height:12px}.motion-card{padding:12px}.motion-card .symbol{font-size:28px}.icon{min-width:28px;height:28px}.question{font-size:17px;padding:9px 10px;margin-bottom:8px}.slide-nav{right:10px;bottom:10px}.slide-nav button{width:38px;height:38px;font-size:22px}.slide-nav a{height:38px;min-width:62px;font-size:15px;padding:0 10px}.slide-counter{font-size:15px;padding:7px 10px}}@media print{html,body{height:auto;overflow:visible}.deck{display:block;width:100%;height:auto;overflow:visible}.slide{width:100%;min-width:0;height:auto;min-height:100vh;overflow:visible;page-break-after:always}.slide-nav{display:none}}
+  </style>
+</head>
+<body>
+  <main class="deck">
+
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 1</span><span class="small-label">Lesson 3: Intro to SPIKE Prime</span></div>
+      <div class="image-frame"><img src="lesson3_assets/original-slide-01.jpg" alt="Original PDF slide 1: Lesson 3 Intro to SPIKE Prime" /></div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+      <h1>Quick Review: Lesson 2</h1>
+      <div class="grid-3">
+        <div class="card center">
+          <h3>Triangles</h3>
+          <p>Triangles helped our bridges stay rigid instead of wiggling.</p>
+        </div>
+        <div class="card center">
+          <h3>Tension</h3>
+          <p>Some bridge members were pulled and stretched.</p>
+        </div>
+        <div class="card center">
+          <h3>Compression</h3>
+          <p>Some bridge members were pushed and squeezed.</p>
+        </div>
+      </div>
+      <div class="teacher-note"><strong>Ask students:</strong> Where did your bridge bend, and what helped it hold more weight?</div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+      <h1>Today's Goal</h1>
+      <div class="big-card">
+        <p class="goal">Today I will learn how <strong>axles</strong>, <strong>wheels</strong>, and <strong>balloon propulsion</strong> work together so I can build a car that moves farther and faster.</p>
+      </div>
+      <p class="subtitle">The goal is not just to make it move. The goal is to improve the design using evidence from testing.</p>
+    </section>
+
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 2</span><span class="small-label">SPIKE Prime Materials: Axle</span></div>
+      <div class="image-frame"><img src="lesson3_assets/original-slide-02.jpg" alt="Original PDF slide 2: SPIKE Prime Materials - Axle" /></div>
+    </section>
+
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 3</span><span class="small-label">SPIKE Prime Materials: Axle Connectors</span></div>
+      <div class="image-frame"><img src="lesson3_assets/original-slide-03.jpg" alt="Original PDF slide 3: SPIKE Prime Materials - Axle Connectors" /></div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+      <h2>New Piece Focus: Axles Make Motion</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Pins Hold</h3>
+          <p>Pins are great when you want beams and frames to stay connected.</p>
+          <p>They helped us build towers and bridges.</p>
+        </div>
+        <div class="card">
+          <h3>Axles Turn</h3>
+          <p>Axles are great when you want wheels, gears, or arms to rotate together.</p>
+          <p>They help a car roll straight and smoothly.</p>
+        </div>
+      </div>
+      <div class="big-card"><p><strong>Rule to remember:</strong> If the part needs to spin, check whether it needs an axle.</p></div>
+    </section>
+
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 4</span><span class="small-label">LEGO Technic Axle Building Tips</span></div>
+      <div class="image-frame"><img src="lesson3_assets/original-slide-04.jpg" alt="Original PDF slide 4: LEGO Technic Axle Building Tips" /></div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+      <h2>Build Check: Can Your Wheels Spin Freely?</h2>
+      <div class="grid-2">
+        <div class="card center">
+          <div class="axle-demo">
+            <div class="axle-line"></div>
+            <div class="wheel left"></div>
+            <div class="wheel right"></div>
+          </div>
+          <h3>Aligned Axle</h3>
+          <p>The wheels sit on the same straight axle and can rotate smoothly.</p>
+        </div>
+        <div class="card">
+          <h3>Three Quick Tests</h3>
+          <div class="rule"><span class="icon">1</span><span>Spin each wheel with your finger.</span></div>
+          <div class="rule"><span class="icon">2</span><span>Roll the car gently on the table.</span></div>
+          <div class="rule"><span class="icon">3</span><span>Look for rubbing, wobbling, or crooked axles.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 5</span><span class="small-label">Balloon Propulsion and Newton's Third Law</span></div>
+      <div class="image-frame"><img src="lesson3_assets/original-slide-05.jpg" alt="Original PDF slide 5: Balloon Propulsion and Newton's Third Law" /></div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+      <h2>Cause and Effect: Why the Car Moves</h2>
+      <div class="compare-row">
+        <div class="card center">
+          <h3>Action</h3>
+          <p>Air rushes backward out of the balloon.</p>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="card center">
+          <h3>Reaction</h3>
+          <p>The car is pushed forward across the floor.</p>
+        </div>
+      </div>
+      <div class="motion-row">
+        <div class="motion-card"><div class="symbol">&larr; Air</div><p>Air moves backward.</p></div>
+        <div class="motion-card"><div class="symbol">Car &rarr;</div><p>Car moves forward.</p></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">BioGlow Mission</span>
+      <h2>BioGlow Mission: Power the Rover</h2>
+      <div class="big-card">
+        <p class="goal">The BioGlow team needs a small rover to carry samples through the habitat. It has no motor today, so engineers will power it with stored air from a balloon.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card center">
+          <h3>Smooth Axles</h3>
+          <p>Wheels need to spin freely so the rover does not waste energy.</p>
+        </div>
+        <div class="card center">
+          <h3>Less Friction</h3>
+          <p>Parts should not rub against the wheels or block motion.</p>
+        </div>
+        <div class="card center">
+          <h3>Air Push</h3>
+          <p>Air moves backward, and the rover moves forward.</p>
+        </div>
+      </div>
+      <div class="teacher-note"><strong>Mission prompt:</strong> How can your team help the rover travel farther using the same balloon?</div>
+    </section>
+
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 6</span><span class="small-label">Today's Building Challenge: Balloon Powered Car</span></div>
+      <div class="image-frame"><img src="lesson3_assets/original-slide-06.jpg" alt="Original PDF slide 6: Today's Building Challenge - Balloon Powered Car" /></div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+      <h2>Challenge Rules: Balloon Powered Car</h2>
+      <div class="grid-2">
+        <div class="card">
+          <div class="rule"><span class="icon">1</span><span>The balloon is the only power source.</span></div>
+          <div class="rule"><span class="icon">2</span><span>The car must start behind the line.</span></div>
+          <div class="rule"><span class="icon">3</span><span>Hands off after release.</span></div>
+        </div>
+        <div class="card">
+          <div class="rule"><span class="icon">4</span><span>Measure from the start line to where the car stops.</span></div>
+          <div class="rule"><span class="icon">5</span><span>Test at least two design changes.</span></div>
+          <div class="rule"><span class="icon">6</span><span>Record your best distance and fastest 1-foot time.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+      <h2>Improve Your Design</h2>
+      <div class="grid-3">
+        <div class="card center">
+          <h3>Reduce Friction</h3>
+          <p>Check whether wheels rub against beams or connectors.</p>
+        </div>
+        <div class="card center">
+          <h3>Keep It Straight</h3>
+          <p>Line up axles so the car does not curve too much.</p>
+        </div>
+        <div class="card center">
+          <h3>Control Air</h3>
+          <p>Point the balloon nozzle backward so the car moves forward.</p>
+        </div>
+      </div>
+      <div class="teacher-note"><strong>Iteration prompt:</strong> Change one thing, test again, and compare the result.</div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+      <h2>After Testing: Reflection</h2>
+      <div class="big-card questions">
+        <div class="question">1. What design helped your car travel farther?</div>
+        <div class="question">2. What slowed your car down?</div>
+        <div class="question">3. Did your axles and wheels spin smoothly?</div>
+        <div class="question">4. What would you change if you had 10 more minutes?</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Teacher Slide</span>
+      <h2>Quick Lesson Flow</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Before Building</h3>
+          <ul>
+            <li>Review bridges, triangles, tension, and compression.</li>
+            <li>Introduce axles and axle connectors.</li>
+            <li>Explain how axles help wheels spin and stay aligned.</li>
+            <li>Connect balloon propulsion to Newton's Third Law.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>During / After Building</h3>
+          <ul>
+            <li>Build the balloon powered car.</li>
+            <li>Check wheel spin and axle alignment.</li>
+            <li>Run distance and sprint tests.</li>
+            <li>Make one change at a time and retest.</li>
+            <li>Reflect on what improved performance.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <div class="slide-nav" aria-label="Slide controls">
+    <a class="home-link" href="../index.html" aria-label="Back to home page">Home</a>
+    <button type="button" data-prev aria-label="Previous slide">&lsaquo;</button>
+    <span class="slide-counter" aria-live="polite">1 / 1</span>
+    <button type="button" data-next aria-label="Next slide">&rsaquo;</button>
+  </div>
+  <script>
+    (() => {
+      const deck = document.querySelector('.deck');
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const prev = document.querySelector('[data-prev]');
+      const next = document.querySelector('[data-next]');
+      const counter = document.querySelector('.slide-counter');
+      let index = 0;
+      let scrollTimer;
+      deck.tabIndex = 0;
+
+      const update = () => {
+        index = Math.max(0, Math.min(slides.length - 1, Math.round(deck.scrollLeft / deck.clientWidth)));
+        counter.textContent = `${index + 1} / ${slides.length}`;
+        prev.disabled = index === 0;
+        next.disabled = index === slides.length - 1;
+      };
+
+      const goTo = (target) => {
+        index = Math.max(0, Math.min(slides.length - 1, target));
+        deck.scrollTo({ left: index * deck.clientWidth, behavior: 'auto' });
+        update();
+      };
+
+      prev.addEventListener('click', () => goTo(index - 1));
+      next.addEventListener('click', () => goTo(index + 1));
+      deck.addEventListener('scroll', () => {
+        window.clearTimeout(scrollTimer);
+        scrollTimer = window.setTimeout(update, 80);
+      });
+      window.addEventListener('resize', () => goTo(index));
+      const handleKey = (event) => {
+        if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+        const key = String(event.key || '').toLowerCase();
+        const code = String(event.code || '').toLowerCase();
+        const nextKeys = ['arrowright', 'right', 'pagedown'];
+        const prevKeys = ['arrowleft', 'left', 'pageup'];
+        let target = null;
+        update();
+        if (nextKeys.includes(key) || nextKeys.includes(code)) target = index + 1;
+        if (prevKeys.includes(key) || prevKeys.includes(code)) target = index - 1;
+        if (key === 'home' || code === 'home') target = 0;
+        if (key === 'end' || code === 'end') target = slides.length - 1;
+        if (target === null) return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+        goTo(target);
+      };
+      document.addEventListener('keydown', handleKey, true);
+      deck.focus({ preventScroll: true });
+      update();
+    })();
+  </script>
+</body>
+</html>

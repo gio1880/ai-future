@@ -3,7 +3,7 @@
     "id": "coach-default",
     "name": "Test Coach",
     "username": "coach",
-    "password_hash": "6c80e3f3dc0c96af1cba9c56a6ea8bf1:3d8eed1ac31952639783d89abb7eee323ace28b23164275bbe203877d16fdd913a1309a03cc825ece92a765953cbcf0d041d5b171b107a43a71bdc282ee1393d",
+    "password_hash": "4043d7b5347d539e6314cd50a54d9a97:93a1b6e3782fbef70c1852dd00a00f7ac2f3683fbc2d0b26e157eac0c2e57c32762729e1076bdd73d1f7ba7cc5796870c2a06a235b3785e78a35d727949fea72",
     "role": "coach",
     "teamId": null,
     "active": true
@@ -186,6 +186,15 @@
     "password_hash": "b2cfb266976d9474ec78403461560d2e:45562e111b6a9b8670e8371c6b61b5e89e360824afd01c0e95d66b9c056de0346c5af75bec4ae774231ad5149d15152bad872d9b5c10d517dbeb592b207a5219",
     "role": "student",
     "teamId": "team-wcdc-fighters",
+    "active": true
+  },
+  {
+    "id": "student-demo",
+    "name": "Demo Student",
+    "username": "demo-student",
+    "password_hash": "4e60b402c12850060edb0d4562e364e1:def98038f74bb11ca7405a6d0e20bf6cbc2d114d1103e27e074e63130acc6c69eb6b6df4dcfa48a7731be15dd7fc46c8df9ab44da6874513e313749a2962274d",
+    "role": "student",
+    "teamId": "team-history-guardians",
     "active": true
   }
 ]

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 4: Catapult Engineering</title>
+  <style>
+    :root{--bg:#bfe0ff;--card:#eef7ff;--ink:#17324d;--accent:#073e77;--yellow:#fece00;--shadow:rgba(7,62,119,.18);}*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#8fc4f4;color:var(--ink)}.deck{width:100%}.slide{min-height:100vh;padding:44px 64px;background:var(--bg);border-bottom:10px solid #8fc4f4;display:flex;flex-direction:column;justify-content:center;gap:24px;page-break-after:always}h1{margin:0;font-size:58px;line-height:1.05;color:#102e4a}h2{margin:0;font-size:46px;color:#102e4a}h3{margin:0 0 12px;font-size:30px;color:var(--accent)}p,li{font-size:26px;line-height:1.3}.subtitle{font-size:32px;max-width:980px;line-height:1.25}.big-card,.card{background:var(--card);border:4px solid var(--accent);border-radius:22px;padding:28px;box-shadow:0 10px 0 var(--shadow)}.card{border-width:3px;border-radius:18px;box-shadow:0 8px 0 var(--shadow)}.badge{display:inline-block;width:max-content;background:var(--yellow);border:3px solid var(--accent);border-radius:999px;padding:10px 18px;font-size:24px;font-weight:bold;color:#122b45}.badge.original{background:#fff}.goal{font-size:40px;line-height:1.3;font-weight:bold}.goal strong{color:var(--accent)}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:28px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.center{text-align:center}.teacher-note{background:#fff9d6;border:3px dashed var(--accent);border-radius:16px;padding:20px;font-size:25px}.topbar{display:flex;align-items:center;gap:18px}.small-label{font-size:24px;font-weight:bold;color:#102e4a}.original-slide{padding:28px;background:#bfe0ff}.image-frame{width:100%;max-width:1180px;margin:0 auto;background:white;border:4px solid var(--accent);border-radius:22px;overflow:hidden;box-shadow:0 10px 0 var(--shadow)}.image-frame img{display:block;width:100%;height:auto}.rule{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px;font-size:28px}.icon{min-width:44px;height:44px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--yellow);border:3px solid var(--accent);font-weight:bold}.question{font-size:30px;padding:16px 20px;border-left:10px solid var(--yellow);background:white;border-radius:12px;margin-bottom:14px}.questions{padding-bottom:16px}.catapult-demo{height:260px;position:relative;margin:0 auto;width:100%;max-width:520px}.catapult-base{position:absolute;left:10%;right:10%;bottom:36px;height:24px;background:var(--accent);border-radius:8px}.catapult-arm{position:absolute;left:27%;bottom:58px;width:280px;height:18px;background:var(--yellow);border:3px solid var(--accent);border-radius:999px;transform:rotate(-26deg);transform-origin:22px 9px}.catapult-fulcrum{position:absolute;left:25%;bottom:46px;width:0;height:0;border-left:44px solid transparent;border-right:44px solid transparent;border-bottom:86px solid var(--accent)}.projectile{position:absolute;right:17%;top:38px;width:48px;height:48px;border-radius:50%;background:#fff;border:4px solid var(--accent)}.trajectory{position:absolute;left:50%;right:12%;top:28px;height:110px;border-top:6px dashed var(--accent);border-radius:50%}.target{height:190px;position:relative}.target-ring{position:absolute;left:50%;top:22px;transform:translateX(-50%);width:150px;height:150px;border-radius:50%;border:12px solid var(--accent);background:radial-gradient(circle,#fece00 0 20%,#fff 21% 47%,#eef7ff 48% 100%)}.meter{display:grid;grid-template-columns:1fr 1fr;gap:18px}.meter .card{min-height:180px}@media print{body{background:white}.slide{min-height:100vh}}@media (max-width:900px){.slide{padding:36px 28px}h1{font-size:42px}h2{font-size:36px}p,li,.rule{font-size:22px}.grid-2,.grid-3,.meter{grid-template-columns:1fr}.goal{font-size:30px}.catapult-demo{height:220px}.catapult-arm{width:220px}}
+    html,body{height:100%;overflow:hidden}.deck{width:100vw;height:100vh;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:auto;-ms-overflow-style:none;scrollbar-width:none}.deck::-webkit-scrollbar{display:none}.slide{width:100vw;min-width:100vw;height:100vh;min-height:100vh;flex:0 0 100vw;overflow:hidden;scroll-snap-align:start;border-bottom:0}.slide-nav{position:fixed;right:18px;bottom:18px;z-index:20;display:flex;align-items:center;gap:10px}.slide-nav button{width:46px;height:46px;border-radius:50%;border:3px solid var(--accent);background:#fff;color:var(--accent);font-size:26px;font-weight:bold;cursor:pointer;box-shadow:0 5px 0 var(--shadow)}.slide-nav a{height:46px;min-width:76px;border-radius:999px;border:3px solid var(--accent);background:#fff;color:var(--accent);font-size:18px;font-weight:bold;cursor:pointer;box-shadow:0 5px 0 var(--shadow);display:inline-flex;align-items:center;justify-content:center;text-decoration:none;padding:0 14px}.slide-nav button:disabled{opacity:.45;cursor:default}.slide-counter{background:rgba(255,255,255,.92);border:3px solid var(--accent);border-radius:999px;padding:9px 14px;font-size:18px;font-weight:bold;color:#102e4a}.original-slide .image-frame{max-height:calc(100vh - 128px);display:flex;align-items:center;justify-content:center}.original-slide .image-frame img{width:100%;height:100%;max-height:calc(100vh - 140px);object-fit:contain}@media (max-width:900px),(max-height:840px){.slide{padding:20px 22px;gap:12px}p,ul,ol{margin-top:0;margin-bottom:0}h1{font-size:32px}h2{font-size:29px}h3{font-size:20px;margin-bottom:6px}p,li,.rule{font-size:16px;line-height:1.18}.subtitle{font-size:18px}.goal{font-size:22px}.big-card,.card{padding:14px;border-width:3px;border-radius:14px;box-shadow:0 5px 0 var(--shadow)}.grid-2,.meter{grid-template-columns:repeat(2,1fr);gap:12px}.grid-3{grid-template-columns:repeat(3,1fr);gap:12px}.meter .card{min-height:0}.teacher-note{font-size:16px;padding:12px}.badge{font-size:16px;padding:6px 10px}.topbar{gap:8px}.small-label{font-size:16px}.image-frame{border-width:3px;border-radius:14px}.catapult-demo{height:130px}.catapult-base{bottom:20px;height:14px}.catapult-arm{width:145px;height:12px;bottom:34px}.catapult-fulcrum{bottom:22px;border-left-width:24px;border-right-width:24px;border-bottom-width:48px}.projectile{width:28px;height:28px;top:20px}.trajectory{top:18px;height:60px}.target{height:100px}.target-ring{width:82px;height:82px;border-width:8px;top:8px}.icon{min-width:28px;height:28px}.question{font-size:17px;padding:9px 10px;margin-bottom:8px}.slide-nav{right:10px;bottom:10px}.slide-nav button{width:38px;height:38px;font-size:22px}.slide-nav a{height:38px;min-width:62px;font-size:15px;padding:0 10px}.slide-counter{font-size:15px;padding:7px 10px}}@media print{html,body{height:auto;overflow:visible}.deck{display:block;width:100%;height:auto;overflow:visible}.slide{width:100%;min-width:0;height:auto;min-height:100vh;overflow:visible;page-break-after:always}.slide-nav{display:none}}
+  </style>
+</head>
+<body>
+  <main class="deck">
+
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 1</span><span class="small-label">Lesson 4: Intro to SPIKE Prime</span></div>
+      <div class="image-frame"><img src="lesson4_assets/original-slide-01.jpg" alt="Original PDF slide 1: Lesson 4 Intro to SPIKE Prime" /></div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+      <h1>Quick Review: Lesson 3</h1>
+      <div class="grid-3">
+        <div class="card center">
+          <h3>Stored Air</h3>
+          <p>The balloon stored energy that became motion.</p>
+        </div>
+        <div class="card center">
+          <h3>Motion Testing</h3>
+          <p>Teams measured distance and speed to improve their car.</p>
+        </div>
+        <div class="card center">
+          <h3>Iteration</h3>
+          <p>Changing one design feature helped teams compare results.</p>
+        </div>
+      </div>
+      <div class="teacher-note"><strong>Ask students:</strong> What made your balloon car move farther, and how did testing help?</div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+      <h1>Today's Goal</h1>
+      <div class="big-card">
+        <p class="goal">Today I will learn how <strong>stored energy</strong>, <strong>levers</strong>, and <strong>stability</strong> help engineers build a catapult that launches far and aims accurately.</p>
+      </div>
+      <p class="subtitle">The goal is not just power. The goal is control: launch the projectile where you want it to go.</p>
+    </section>
+
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 2</span><span class="small-label">Stored Energy: Elastic Potential Energy</span></div>
+      <div class="image-frame"><img src="lesson4_assets/original-slide-02.jpg" alt="Original PDF slide 2: Stored Energy" /></div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+      <h2>Energy Story: Stretch, Store, Release</h2>
+      <div class="grid-3">
+        <div class="card center">
+          <h3>Stretch</h3>
+          <p>A rubber band changes shape when you pull it back.</p>
+        </div>
+        <div class="card center">
+          <h3>Store</h3>
+          <p>The stretched rubber band holds elastic potential energy.</p>
+        </div>
+        <div class="card center">
+          <h3>Release</h3>
+          <p>Stored energy becomes motion and launches the projectile.</p>
+        </div>
+      </div>
+      <div class="teacher-note"><strong>Safety note:</strong> Launch only the approved projectile and aim only at the test area.</div>
+    </section>
+
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 3</span><span class="small-label">Levers</span></div>
+      <div class="image-frame"><img src="lesson4_assets/original-slide-03.jpg" alt="Original PDF slide 3: Levers" /></div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+      <h2>Catapult Parts in Engineering Language</h2>
+      <div class="grid-2">
+        <div class="card center">
+          <div class="catapult-demo">
+            <div class="trajectory"></div>
+            <div class="projectile"></div>
+            <div class="catapult-base"></div>
+            <div class="catapult-fulcrum"></div>
+            <div class="catapult-arm"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="rule"><span class="icon">F</span><span><strong>Fulcrum:</strong> the pivot point.</span></div>
+          <div class="rule"><span class="icon">E</span><span><strong>Effort:</strong> where force is applied.</span></div>
+          <div class="rule"><span class="icon">L</span><span><strong>Load:</strong> the projectile being launched.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 4</span><span class="small-label">Stability</span></div>
+      <div class="image-frame"><img src="lesson4_assets/original-slide-04.jpg" alt="Original PDF slide 4: Stability" /></div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+      <h2>Build Check: Stable Before Powerful</h2>
+      <div class="grid-3">
+        <div class="card center">
+          <h3>Wide Base</h3>
+          <p>A wider base helps the catapult stay down when the arm swings.</p>
+        </div>
+        <div class="card center">
+          <h3>Strong Frame</h3>
+          <p>Connected beams keep the structure from twisting or separating.</p>
+        </div>
+        <div class="card center">
+          <h3>Reinforcement</h3>
+          <p>Extra supports help the catapult survive repeated launches.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 5</span><span class="small-label">Accuracy vs Distance</span></div>
+      <div class="image-frame"><img src="lesson4_assets/original-slide-05.jpg" alt="Original PDF slide 5: Accuracy vs Distance" /></div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">BioGlow Mission</span>
+      <h2>BioGlow Mission: Launch the Glow Marker</h2>
+      <div class="big-card">
+        <p class="goal">The BioGlow team needs to send a glowing marker across the habitat to show the next safe work zone. Engineers must choose between launching far and landing accurately.</p>
+      </div>
+      <div class="meter">
+        <div class="card center">
+          <h3>Distance</h3>
+          <p>Can your launcher send the marker far enough to reach the zone?</p>
+        </div>
+        <div class="card center">
+          <div class="target"><div class="target-ring"></div></div>
+          <h3>Accuracy</h3>
+          <p>Can your launcher hit the target instead of just flying far?</p>
+        </div>
+      </div>
+      <div class="teacher-note"><strong>Mission prompt:</strong> What design change gives you more control without losing too much distance?</div>
+    </section>
+
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 6</span><span class="small-label">Challenge 1: Distance Competition</span></div>
+      <div class="image-frame"><img src="lesson4_assets/original-slide-06.jpg" alt="Original PDF slide 6: Challenge 1 Distance Competition" /></div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+      <h2>Challenge 1 Rules: Longest Launch</h2>
+      <div class="grid-2">
+        <div class="card">
+          <div class="rule"><span class="icon">1</span><span>Use the same projectile for every team.</span></div>
+          <div class="rule"><span class="icon">2</span><span>Launch from the same line.</span></div>
+          <div class="rule"><span class="icon">3</span><span>Measure from the line to where the projectile first lands.</span></div>
+        </div>
+        <div class="card">
+          <div class="rule"><span class="icon">4</span><span>Each team gets 3 attempts.</span></div>
+          <div class="rule"><span class="icon">5</span><span>Record the best distance.</span></div>
+          <div class="rule"><span class="icon">6</span><span>Change one part and test again if time allows.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 7</span><span class="small-label">Challenge 2: Target Accuracy</span></div>
+      <div class="image-frame"><img src="lesson4_assets/original-slide-07.jpg" alt="Original PDF slide 7: Challenge 2 Target Accuracy" /></div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+      <h2>Challenge 2 Rules: Best Accuracy</h2>
+      <div class="grid-2">
+        <div class="card">
+          <div class="rule"><span class="icon">1</span><span>Place the target 6 inches from the catapult.</span></div>
+          <div class="rule"><span class="icon">2</span><span>Keep the catapult behind the launch line.</span></div>
+          <div class="rule"><span class="icon">3</span><span>Each team gets 3 shots.</span></div>
+        </div>
+        <div class="card">
+          <div class="rule"><span class="icon">4</span><span>Adjust one design feature at a time.</span></div>
+          <div class="rule"><span class="icon">5</span><span>Record hits, misses, and near misses.</span></div>
+          <div class="rule"><span class="icon">6</span><span>The highest score wins the accuracy round.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+      <h2>After Testing: Reflection</h2>
+      <div class="big-card questions">
+        <div class="question">1. What helped your catapult launch farther?</div>
+        <div class="question">2. What helped your catapult aim more accurately?</div>
+        <div class="question">3. Did a longer arm make the launcher better or harder to control?</div>
+        <div class="question">4. What would you change if you had 10 more minutes?</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Teacher Slide</span>
+      <h2>Quick Lesson Flow</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Before Building</h3>
+          <ul>
+            <li>Review stored energy from the balloon car.</li>
+            <li>Introduce elastic potential energy.</li>
+            <li>Explain fulcrum, effort, and load.</li>
+            <li>Review stability before launch power.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>During / After Building</h3>
+          <ul>
+            <li>Build and reinforce the catapult.</li>
+            <li>Run distance trials.</li>
+            <li>Adjust for target accuracy.</li>
+            <li>Compare distance, accuracy, and control.</li>
+            <li>Reflect on the best design tradeoff.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <div class="slide-nav" aria-label="Slide controls">
+    <a class="home-link" href="../index.html" aria-label="Back to home page">Home</a>
+    <button type="button" data-prev aria-label="Previous slide">&lsaquo;</button>
+    <span class="slide-counter" aria-live="polite">1 / 1</span>
+    <button type="button" data-next aria-label="Next slide">&rsaquo;</button>
+  </div>
+  <script>
+    (() => {
+      const deck = document.querySelector('.deck');
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const prev = document.querySelector('[data-prev]');
+      const next = document.querySelector('[data-next]');
+      const counter = document.querySelector('.slide-counter');
+      let index = 0;
+      let scrollTimer;
+      deck.tabIndex = 0;
+
+      const update = () => {
+        index = Math.max(0, Math.min(slides.length - 1, Math.round(deck.scrollLeft / deck.clientWidth)));
+        counter.textContent = `${index + 1} / ${slides.length}`;
+        prev.disabled = index === 0;
+        next.disabled = index === slides.length - 1;
+      };
+
+      const goTo = (target) => {
+        index = Math.max(0, Math.min(slides.length - 1, target));
+        deck.scrollTo({ left: index * deck.clientWidth, behavior: 'auto' });
+        update();
+      };
+
+      prev.addEventListener('click', () => goTo(index - 1));
+      next.addEventListener('click', () => goTo(index + 1));
+      deck.addEventListener('scroll', () => {
+        window.clearTimeout(scrollTimer);
+        scrollTimer = window.setTimeout(update, 80);
+      });
+      window.addEventListener('resize', () => goTo(index));
+      const handleKey = (event) => {
+        if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+        const key = String(event.key || '').toLowerCase();
+        const code = String(event.code || '').toLowerCase();
+        const nextKeys = ['arrowright', 'right', 'pagedown'];
+        const prevKeys = ['arrowleft', 'left', 'pageup'];
+        let target = null;
+        update();
+        if (nextKeys.includes(key) || nextKeys.includes(code)) target = index + 1;
+        if (prevKeys.includes(key) || prevKeys.includes(code)) target = index - 1;
+        if (key === 'home' || code === 'home') target = 0;
+        if (key === 'end' || code === 'end') target = slides.length - 1;
+        if (target === null) return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+        goTo(target);
+      };
+      document.addEventListener('keydown', handleKey, true);
+      deck.focus({ preventScroll: true });
+      update();
+    })();
+  </script>
+</body>
+</html>

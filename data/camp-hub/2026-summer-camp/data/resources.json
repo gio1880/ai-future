@@ -62,6 +62,19 @@
     "label": "Coach Curriculum Notes",
     "description": "Day-by-day coach notes live in the schedule editor — open any day to add prep notes for the team.",
     "url": "/camp-hub/coach",
-    "roles": ["coach"]
+    "roles": [
+      "coach"
+    ]
+  },
+  {
+    "id": "lesson-deck-home",
+    "category": "Coach Materials",
+    "type": "Folder",
+    "label": "Lesson Deck Home",
+    "description": "Polished teacher-facing HTML decks for the 16 Summer Camp lessons.",
+    "url": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/index.html",
+    "roles": [
+      "coach"
+    ]
   }
 ]

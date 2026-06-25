@@ -1,113 +1,105 @@
 [
   {
-    "id": "lesson-lego-basics-balloon-car",
-    "title": "Day 1: Meet LEGO + Balloon-Powered Car",
-    "updatedAt": "2026-06-17T00:00:00.000Z",
+    "id": "w1-mon-intro-lego-technic",
+    "title": "Week 1 - Monday: Intro to LEGO Technic",
+    "updatedAt": "2026-06-25T00:00:00.000Z",
     "slides": [
       {
-        "id": "slide-welcome",
+        "id": "l1-intro",
         "type": "content",
-        "title": "Welcome to Robotics Camp!",
-        "body": "Today we get to know our most important tool: LEGO Technic pieces. By the end of class you'll know the names we use in the lab AND you'll build a car powered by nothing but a balloon. No motors, no code — just smart building!",
+        "title": "Intro to LEGO Technic",
+        "body": "Today we build: Tallest Tower. Build the tallest freestanding Technic tower that stays stable for 10 seconds.",
         "image": "",
         "options": [],
         "correctIndex": -1
       },
       {
-        "id": "slide-what-is-lego",
+        "id": "l1-goal",
         "type": "content",
-        "title": "What is LEGO Technic?",
-        "body": "Regular LEGO bricks stack on top of each other. LEGO Technic pieces connect side-to-side with pins and axles, so we can build strong machines that move. These are the same pieces real engineers use to test ideas.",
+        "title": "Mission Goal",
+        "body": "Build the tallest freestanding Technic tower that stays stable for 10 seconds.",
         "image": "",
         "options": [],
         "correctIndex": -1
       },
       {
-        "id": "slide-beam",
+        "id": "l1-vocab",
         "type": "content",
-        "title": "Piece #1: The Beam",
-        "body": "The BEAM is the long piece with round holes. It's the skeleton of almost everything we build. We count beams by their holes — a '5 beam' has 5 holes. Find a beam in your kit and hold it up!",
+        "title": "Key Ideas",
+        "body": "Beams are the long structural pieces. Pins are the connectors that hold beams together. Wide bases and diagonal braces help structures stay stable.",
         "image": "",
         "options": [],
         "correctIndex": -1
       },
       {
-        "id": "slide-pin",
-        "type": "content",
-        "title": "Piece #2: The Pin",
-        "body": "PINS connect beams together. Black/blue pins are FRICTION pins — they grip and stay put. Gray pins are SMOOTH — they let parts spin freely. Push a pin through two beams to join them.",
-        "image": "",
-        "options": [],
-        "correctIndex": -1
-      },
-      {
-        "id": "slide-axle",
-        "type": "content",
-        "title": "Piece #3: The Axle",
-        "body": "The AXLE is the stick shaped like a plus sign (+). It spins to turn wheels and gears. Axles come in different lengths — we count them by studs. Wheels go on axles!",
-        "image": "",
-        "options": [],
-        "correctIndex": -1
-      },
-      {
-        "id": "slide-bushing-connector",
-        "type": "content",
-        "title": "Pieces #4: Bushings & Connectors",
-        "body": "A BUSHING is the little ring that slides onto an axle to stop it from sliding out. CONNECTORS join axles and pins at angles. These small pieces hold the whole machine together.",
-        "image": "",
-        "options": [],
-        "correctIndex": -1
-      },
-      {
-        "id": "slide-q-beam",
+        "id": "l1-check",
         "type": "question",
-        "title": "Quick check: which piece is the skeleton?",
-        "body": "Which LEGO Technic piece is the long one with round holes that we build everything around?",
+        "title": "Quick Check",
+        "body": "Which idea matters most for today's Tallest Tower challenge?",
         "image": "",
-        "options": ["Beam", "Axle", "Pin", "Tire"],
+        "options": [
+          "beams",
+          "Decoration only",
+          "Random guessing",
+          "Skipping tests"
+        ],
         "correctIndex": 0
       },
       {
-        "id": "slide-q-axle",
-        "type": "question",
-        "title": "Quick check: what spins?",
-        "body": "Which piece is shaped like a plus sign and spins to turn wheels and gears?",
-        "image": "",
-        "options": ["Axle", "Beam", "Bushing", "Pin"],
-        "correctIndex": 0
-      },
-      {
-        "id": "slide-balloon-intro",
+        "id": "l1-brief",
         "type": "content",
-        "title": "Today's Build: Balloon-Powered Car",
-        "body": "We'll build a car with NO motor. We blow up a balloon, let the air rush out the back, and that push sends the car forward. That push-back is a real science rule: every action has an equal and opposite reaction!",
+        "title": "Build Brief",
+        "body": "Project: learn how LEGO Technic beams and pins connect, then build the tallest freestanding tower that can stand on its own for 10 seconds.",
         "image": "",
         "options": [],
         "correctIndex": -1
       },
       {
-        "id": "slide-balloon-steps",
+        "id": "l1-fair-test",
         "type": "content",
-        "title": "Build Steps",
-        "body": "1) Build a flat beam frame.  2) Add 2 axles with 4 wheels — make sure they spin freely (smooth pins!).  3) Attach the balloon so its opening points OUT the back.  4) Blow it up through a straw, set it down, and let go!",
+        "title": "Fair Testing",
+        "body": "Same floor, same tower rules, hands off for 10 seconds, measure only after the tower stands on its own.",
         "image": "",
         "options": [],
         "correctIndex": -1
       },
       {
-        "id": "slide-q-balloon",
+        "id": "l1-predict",
         "type": "question",
-        "title": "Quick check: what powers our car?",
-        "body": "What actually makes the balloon car roll forward?",
+        "title": "Predict",
+        "body": "What should engineers change between trials?",
         "image": "",
-        "options": ["Air rushing out the back", "A hidden motor", "Batteries", "Magnets"],
+        "options": [
+          "One thing at a time",
+          "Everything at once",
+          "Nothing at all",
+          "Only the team name"
+        ],
         "correctIndex": 0
       },
       {
-        "id": "slide-challenge",
+        "id": "l1-improve",
         "type": "content",
-        "title": "Your Challenge",
-        "body": "Make your car roll as FAR as possible. Try it, change one thing, and try again — that's engineering! Ideas: lighter frame, bigger wheels, less rubbing on the axles. Ready, set, build!",
+        "title": "Improve Your Design",
+        "body": "If the tower leans, widen the base, tighten weak joints, or add a diagonal brace before testing again.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l1-deck",
+        "type": "content",
+        "title": "Teacher Deck",
+        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%201/lesson1_lego_technic_assets_version.html",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l1-reflect",
+        "type": "content",
+        "title": "Reflect and Share",
+        "body": "What made your tower stronger? What was the single best change you made?",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -115,42 +107,106 @@
     ]
   },
   {
-    "id": "lesson-lego-bridge-challenge",
-    "title": "Day 2: LEGO Bridge Challenge",
-    "updatedAt": "2026-06-17T00:00:00.000Z",
+    "id": "w1-tue-bridge-engineering",
+    "title": "Week 1 - Tuesday: Bridge Engineering",
+    "updatedAt": "2026-06-25T00:00:00.000Z",
     "slides": [
       {
-        "id": "bridge-welcome",
+        "id": "l2-intro",
         "type": "content",
-        "title": "Today's Challenge: Build a Bridge",
-        "body": "Today we use LEGO beams, pins, axles, and connectors to build a bridge. The goal is not just to make it look cool. The goal is to make it strong enough to hold weight.",
+        "title": "Bridge Engineering",
+        "body": "Today we build: Strongest Bridge. Build a bridge that spans the gap and holds the most load without collapsing.",
         "image": "",
         "options": [],
         "correctIndex": -1
       },
       {
-        "id": "bridge-strong-shapes",
+        "id": "l2-goal",
         "type": "content",
-        "title": "Strong Shapes",
-        "body": "Triangles are strong because they do not squash out of shape easily. Rectangles can wobble unless we brace them. Engineers add diagonal supports to make bridges stronger.",
+        "title": "Mission Goal",
+        "body": "Build a bridge that spans the gap and holds the most load without collapsing.",
         "image": "",
         "options": [],
         "correctIndex": -1
       },
       {
-        "id": "bridge-q-bracing",
+        "id": "l2-vocab",
+        "type": "content",
+        "title": "Key Ideas",
+        "body": "A support carries weight down to the table or floor. A brace helps a structure keep its shape. Triangles resist bending better than squares.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l2-check",
         "type": "question",
-        "title": "Which support usually makes a bridge stronger?",
-        "body": "Think about the shape that keeps a frame from wobbling.",
+        "title": "Quick Check",
+        "body": "Which idea matters most for today's Strongest Bridge challenge?",
         "image": "",
-        "options": ["Diagonal brace", "Loose wheel", "Long straw", "Decoration only"],
+        "options": [
+          "triangles",
+          "Decoration only",
+          "Random guessing",
+          "Skipping tests"
+        ],
         "correctIndex": 0
       },
       {
-        "id": "bridge-test",
+        "id": "l2-brief",
         "type": "content",
-        "title": "Build, Test, Improve",
-        "body": "Build a bridge across a gap. Test it with small weights. If it bends, add supports, shorten weak spans, or brace the sides. Change one thing at a time so you know what helped.",
+        "title": "Build Brief",
+        "body": "Project: engineer a Technic bridge across a gap and test how triangles, supports, and bracing help it hold more weight.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l2-fair-test",
+        "type": "content",
+        "title": "Fair Testing",
+        "body": "Use the same gap, same load pieces, and add weight one piece at a time until the bridge bends or fails.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l2-predict",
+        "type": "question",
+        "title": "Predict",
+        "body": "What should engineers change between trials?",
+        "image": "",
+        "options": [
+          "One thing at a time",
+          "Everything at once",
+          "Nothing at all",
+          "Only the team name"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l2-improve",
+        "type": "content",
+        "title": "Improve Your Design",
+        "body": "Find the weak spot, then add a brace or support there before the next trial.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l2-deck",
+        "type": "content",
+        "title": "Teacher Deck",
+        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%202/lesson2_bridge_assets_version.html",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l2-reflect",
+        "type": "content",
+        "title": "Reflect and Share",
+        "body": "Where did your bridge fail first? How did triangles or supports change the result?",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -158,42 +214,1497 @@
     ]
   },
   {
-    "id": "lesson-lego-tower-challenge",
-    "title": "Day 3: LEGO Tower Challenge",
-    "updatedAt": "2026-06-17T00:00:00.000Z",
+    "id": "w1-wed-balloon-powered-car",
+    "title": "Week 1 - Wednesday: Balloon Powered Car",
+    "updatedAt": "2026-06-25T00:00:00.000Z",
     "slides": [
       {
-        "id": "tower-welcome",
+        "id": "l3-intro",
         "type": "content",
-        "title": "Today's Challenge: Build a Tower",
-        "body": "Today we build upward. A good tower is tall, stable, and not too heavy at the top. Your job is to make it stand without tipping.",
+        "title": "Balloon Powered Car",
+        "body": "Today we build: Balloon-Powered Car. Build a balloon-powered car that rolls as far as possible from one release.",
         "image": "",
         "options": [],
         "correctIndex": -1
       },
       {
-        "id": "tower-base",
+        "id": "l3-goal",
         "type": "content",
-        "title": "Start With a Strong Base",
-        "body": "A wide base helps a tower stay upright. If the top is heavy and the base is narrow, the tower tips more easily. Engineers call this balance and stability.",
+        "title": "Mission Goal",
+        "body": "Build a balloon-powered car that rolls as far as possible from one release.",
         "image": "",
         "options": [],
         "correctIndex": -1
       },
       {
-        "id": "tower-q-base",
+        "id": "l3-vocab",
+        "type": "content",
+        "title": "Key Ideas",
+        "body": "An axle lets wheels spin. Friction slows motion. Air rushing out of the balloon pushes the car forward.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l3-check",
         "type": "question",
-        "title": "What helps a tower stay stable?",
-        "body": "Choose the best engineering choice.",
+        "title": "Quick Check",
+        "body": "Which idea matters most for today's Balloon-Powered Car challenge?",
         "image": "",
-        "options": ["A wide base", "A tiny base", "All the weight at the top", "No connections"],
+        "options": [
+          "wheels and axles",
+          "Decoration only",
+          "Random guessing",
+          "Skipping tests"
+        ],
         "correctIndex": 0
       },
       {
-        "id": "tower-challenge",
+        "id": "l3-brief",
         "type": "content",
-        "title": "Tower Rules",
-        "body": "Build the tallest tower you can. It must stand on its own for 10 seconds. After your first test, improve one thing: base width, bracing, symmetry, or weight.",
+        "title": "Build Brief",
+        "body": "Project: build a car powered only by air from a balloon, then tune the frame, wheels, and balloon direction for the farthest roll.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l3-fair-test",
+        "type": "content",
+        "title": "Fair Testing",
+        "body": "Use the same start line, same floor, and one balloon release per trial. Measure total distance traveled.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l3-predict",
+        "type": "question",
+        "title": "Predict",
+        "body": "What should engineers change between trials?",
+        "image": "",
+        "options": [
+          "One thing at a time",
+          "Everything at once",
+          "Nothing at all",
+          "Only the team name"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l3-improve",
+        "type": "content",
+        "title": "Improve Your Design",
+        "body": "Free sticky wheels, aim the balloon straight backward, reduce extra weight, and test one change at a time.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l3-deck",
+        "type": "content",
+        "title": "Teacher Deck",
+        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%203/lesson3_spike_prime_assets_version.html",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l3-reflect",
+        "type": "content",
+        "title": "Reflect and Share",
+        "body": "What caused the car to go straight or curve? Which change improved distance the most?",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ]
+  },
+  {
+    "id": "w1-thu-catapult-engineering",
+    "title": "Week 1 - Thursday: Catapult Engineering",
+    "updatedAt": "2026-06-25T00:00:00.000Z",
+    "slides": [
+      {
+        "id": "l4-intro",
+        "type": "content",
+        "title": "Catapult Engineering",
+        "body": "Today we build: Catapult. Build a catapult that launches a soft target into a target zone safely and repeatedly.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l4-goal",
+        "type": "content",
+        "title": "Mission Goal",
+        "body": "Build a catapult that launches a soft target into a target zone safely and repeatedly.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l4-vocab",
+        "type": "content",
+        "title": "Key Ideas",
+        "body": "A lever swings around a pivot. Stored energy is energy waiting to be released, like a stretched rubber band.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l4-check",
+        "type": "question",
+        "title": "Quick Check",
+        "body": "Which idea matters most for today's Catapult challenge?",
+        "image": "",
+        "options": [
+          "levers",
+          "Decoration only",
+          "Random guessing",
+          "Skipping tests"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l4-brief",
+        "type": "content",
+        "title": "Build Brief",
+        "body": "Project: build a safe Technic catapult that uses a lever and stored energy to launch a soft target toward a marked zone.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l4-fair-test",
+        "type": "content",
+        "title": "Fair Testing",
+        "body": "Use the same soft target, same start position, and same target zone. Track both distance and accuracy.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l4-predict",
+        "type": "question",
+        "title": "Predict",
+        "body": "What should engineers change between trials?",
+        "image": "",
+        "options": [
+          "One thing at a time",
+          "Everything at once",
+          "Nothing at all",
+          "Only the team name"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l4-improve",
+        "type": "content",
+        "title": "Improve Your Design",
+        "body": "Change the arm length, rubber band stretch, or base stability one at a time.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l4-deck",
+        "type": "content",
+        "title": "Teacher Deck",
+        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%204/lesson4_catapult_assets_version.html",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l4-reflect",
+        "type": "content",
+        "title": "Reflect and Share",
+        "body": "What made your launch more accurate? What made it go farther?",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ]
+  },
+  {
+    "id": "w2-mon-rubber-band-car",
+    "title": "Week 2 - Monday: Rubber Band Car",
+    "updatedAt": "2026-06-25T00:00:00.000Z",
+    "slides": [
+      {
+        "id": "l5-intro",
+        "type": "content",
+        "title": "Rubber Band Car",
+        "body": "Today we build: Rubber Band Car. Build a car powered only by a wound rubber band.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l5-goal",
+        "type": "content",
+        "title": "Mission Goal",
+        "body": "Build a car powered only by a wound rubber band.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l5-vocab",
+        "type": "content",
+        "title": "Key Ideas",
+        "body": "Elastic energy is stored when a rubber band stretches or twists. Traction helps wheels push against the floor instead of slipping.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l5-check",
+        "type": "question",
+        "title": "Quick Check",
+        "body": "Which idea matters most for today's Rubber Band Car challenge?",
+        "image": "",
+        "options": [
+          "elastic energy",
+          "Decoration only",
+          "Random guessing",
+          "Skipping tests"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l5-brief",
+        "type": "content",
+        "title": "Build Brief",
+        "body": "Project: build a rubber-band-powered car and test how stored elastic energy turns into distance and speed.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l5-fair-test",
+        "type": "content",
+        "title": "Fair Testing",
+        "body": "Use the same start line and floor. Count winds consistently and measure distance after release.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l5-predict",
+        "type": "question",
+        "title": "Predict",
+        "body": "What should engineers change between trials?",
+        "image": "",
+        "options": [
+          "One thing at a time",
+          "Everything at once",
+          "Nothing at all",
+          "Only the team name"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l5-improve",
+        "type": "content",
+        "title": "Improve Your Design",
+        "body": "Adjust wheel size, traction, frame weight, or number of winds one change at a time.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l5-deck",
+        "type": "content",
+        "title": "Teacher Deck",
+        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%205/lesson5_rubber_band_car.html",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l5-reflect",
+        "type": "content",
+        "title": "Reflect and Share",
+        "body": "Did your car need more speed, more grip, or less friction?",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ]
+  },
+  {
+    "id": "w2-tue-elevator-lift",
+    "title": "Week 2 - Tuesday: Elevator / Lift",
+    "updatedAt": "2026-06-25T00:00:00.000Z",
+    "slides": [
+      {
+        "id": "l6-intro",
+        "type": "content",
+        "title": "Elevator / Lift",
+        "body": "Today we build: Elevator / Lift. Raise a small load as high and smoothly as possible.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l6-goal",
+        "type": "content",
+        "title": "Mission Goal",
+        "body": "Raise a small load as high and smoothly as possible.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l6-vocab",
+        "type": "content",
+        "title": "Key Ideas",
+        "body": "A pulley changes the direction of a pull. A winch winds string around an axle to lift a load.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l6-check",
+        "type": "question",
+        "title": "Quick Check",
+        "body": "Which idea matters most for today's Elevator / Lift challenge?",
+        "image": "",
+        "options": [
+          "pulleys",
+          "Decoration only",
+          "Random guessing",
+          "Skipping tests"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l6-brief",
+        "type": "content",
+        "title": "Build Brief",
+        "body": "Project: build an elevator or lift that raises a small cargo load smoothly and safely.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l6-fair-test",
+        "type": "content",
+        "title": "Fair Testing",
+        "body": "Use the same cargo load and measure from the floor or table to the final raised height.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l6-predict",
+        "type": "question",
+        "title": "Predict",
+        "body": "What should engineers change between trials?",
+        "image": "",
+        "options": [
+          "One thing at a time",
+          "Everything at once",
+          "Nothing at all",
+          "Only the team name"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l6-improve",
+        "type": "content",
+        "title": "Improve Your Design",
+        "body": "Add guides, reduce rubbing, strengthen the tower, or improve the crank.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l6-deck",
+        "type": "content",
+        "title": "Teacher Deck",
+        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%206/lesson6_elevator_lift.html",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l6-reflect",
+        "type": "content",
+        "title": "Reflect and Share",
+        "body": "What kept the lift from tipping, jamming, or dropping the load?",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ]
+  },
+  {
+    "id": "w2-wed-ferris-wheel",
+    "title": "Week 2 - Wednesday: Ferris Wheel",
+    "updatedAt": "2026-06-25T00:00:00.000Z",
+    "slides": [
+      {
+        "id": "l7-intro",
+        "type": "content",
+        "title": "Ferris Wheel",
+        "body": "Today we build: Ferris Wheel. Build a balanced rotating wheel with a strong axle support.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l7-goal",
+        "type": "content",
+        "title": "Mission Goal",
+        "body": "Build a balanced rotating wheel with a strong axle support.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l7-vocab",
+        "type": "content",
+        "title": "Key Ideas",
+        "body": "Rotation is spinning around an axis. Balance means weight is spread so the wheel does not wobble or fall to one side.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l7-check",
+        "type": "question",
+        "title": "Quick Check",
+        "body": "Which idea matters most for today's Ferris Wheel challenge?",
+        "image": "",
+        "options": [
+          "rotation",
+          "Decoration only",
+          "Random guessing",
+          "Skipping tests"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l7-brief",
+        "type": "content",
+        "title": "Build Brief",
+        "body": "Project: build a Ferris wheel that rotates smoothly, stays balanced, and carries small passenger cars.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l7-fair-test",
+        "type": "content",
+        "title": "Fair Testing",
+        "body": "Turn the wheel through a full rotation and watch for wobble, rubbing, or uneven weight.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l7-predict",
+        "type": "question",
+        "title": "Predict",
+        "body": "What should engineers change between trials?",
+        "image": "",
+        "options": [
+          "One thing at a time",
+          "Everything at once",
+          "Nothing at all",
+          "Only the team name"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l7-improve",
+        "type": "content",
+        "title": "Improve Your Design",
+        "body": "Center the axle, balance opposite sides, and strengthen the support frame.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l7-deck",
+        "type": "content",
+        "title": "Teacher Deck",
+        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%207/lesson7_ferris_wheel.html",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l7-reflect",
+        "type": "content",
+        "title": "Reflect and Share",
+        "body": "Where did the wheel wobble? How did balance change the spin?",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ]
+  },
+  {
+    "id": "w2-thu-marble-run",
+    "title": "Week 2 - Thursday: Marble Run",
+    "updatedAt": "2026-06-25T00:00:00.000Z",
+    "slides": [
+      {
+        "id": "l8-intro",
+        "type": "content",
+        "title": "Marble Run",
+        "body": "Today we build: Marble Run. Build a marble run with the longest reliable ride time.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l8-goal",
+        "type": "content",
+        "title": "Mission Goal",
+        "body": "Build a marble run with the longest reliable ride time.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l8-vocab",
+        "type": "content",
+        "title": "Key Ideas",
+        "body": "Gravity pulls the marble downward. Slope controls speed. Barriers keep the marble on the track.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l8-check",
+        "type": "question",
+        "title": "Quick Check",
+        "body": "Which idea matters most for today's Marble Run challenge?",
+        "image": "",
+        "options": [
+          "gravity",
+          "Decoration only",
+          "Random guessing",
+          "Skipping tests"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l8-brief",
+        "type": "content",
+        "title": "Build Brief",
+        "body": "Project: design a marble run that uses gravity, slope, barriers, and supports to create the longest reliable ride.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l8-fair-test",
+        "type": "content",
+        "title": "Fair Testing",
+        "body": "Use the same marble and start point. Time from release to finish only if the marble completes the run.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l8-predict",
+        "type": "question",
+        "title": "Predict",
+        "body": "What should engineers change between trials?",
+        "image": "",
+        "options": [
+          "One thing at a time",
+          "Everything at once",
+          "Nothing at all",
+          "Only the team name"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l8-improve",
+        "type": "content",
+        "title": "Improve Your Design",
+        "body": "Lower steep sections, add walls at failure points, and strengthen sagging supports.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l8-deck",
+        "type": "content",
+        "title": "Teacher Deck",
+        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%208/lesson8_marble_run.html",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l8-reflect",
+        "type": "content",
+        "title": "Reflect and Share",
+        "body": "Which part of the track controlled speed best? Where did reliability improve?",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ]
+  },
+  {
+    "id": "w3-mon-boat-raft",
+    "title": "Week 3 - Monday: Boat / Raft",
+    "updatedAt": "2026-06-25T00:00:00.000Z",
+    "slides": [
+      {
+        "id": "l9-intro",
+        "type": "content",
+        "title": "Boat / Raft",
+        "body": "Today we build: Boat / Raft. Build a floating platform that carries cargo without sinking or tipping.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l9-goal",
+        "type": "content",
+        "title": "Mission Goal",
+        "body": "Build a floating platform that carries cargo without sinking or tipping.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l9-vocab",
+        "type": "content",
+        "title": "Key Ideas",
+        "body": "Buoyancy is the upward push of water. Balance keeps weight spread so the raft does not tip.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l9-check",
+        "type": "question",
+        "title": "Quick Check",
+        "body": "Which idea matters most for today's Boat / Raft challenge?",
+        "image": "",
+        "options": [
+          "buoyancy",
+          "Decoration only",
+          "Random guessing",
+          "Skipping tests"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l9-brief",
+        "type": "content",
+        "title": "Build Brief",
+        "body": "Project: build a boat or raft that floats, stays balanced, and carries as much cargo as possible.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l9-fair-test",
+        "type": "content",
+        "title": "Fair Testing",
+        "body": "Use the same water bin and same cargo pieces. Add cargo one piece at a time until the raft fails.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l9-predict",
+        "type": "question",
+        "title": "Predict",
+        "body": "What should engineers change between trials?",
+        "image": "",
+        "options": [
+          "One thing at a time",
+          "Everything at once",
+          "Nothing at all",
+          "Only the team name"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l9-improve",
+        "type": "content",
+        "title": "Improve Your Design",
+        "body": "Spread the load, widen the raft, lower the center of mass, or add flotation support.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l9-deck",
+        "type": "content",
+        "title": "Teacher Deck",
+        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%209/lesson9_boat_raft.html",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l9-reflect",
+        "type": "content",
+        "title": "Reflect and Share",
+        "body": "What made the raft tip or sink? What design carried the most load?",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ]
+  },
+  {
+    "id": "w3-tue-gripper",
+    "title": "Week 3 - Tuesday: Gripper",
+    "updatedAt": "2026-06-25T00:00:00.000Z",
+    "slides": [
+      {
+        "id": "l10-intro",
+        "type": "content",
+        "title": "Gripper",
+        "body": "Today we build: Gripper. Build a hand-operated mechanism that can pick up, hold, move, and release an object.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l10-goal",
+        "type": "content",
+        "title": "Mission Goal",
+        "body": "Build a hand-operated mechanism that can pick up, hold, move, and release an object.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l10-vocab",
+        "type": "content",
+        "title": "Key Ideas",
+        "body": "A pivot is a turning point. A linkage connects parts so one motion creates another motion.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l10-check",
+        "type": "question",
+        "title": "Quick Check",
+        "body": "Which idea matters most for today's Gripper challenge?",
+        "image": "",
+        "options": [
+          "pivots",
+          "Decoration only",
+          "Random guessing",
+          "Skipping tests"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l10-brief",
+        "type": "content",
+        "title": "Build Brief",
+        "body": "Project: build a gripper that opens, closes, picks up objects, and releases them with control.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l10-fair-test",
+        "type": "content",
+        "title": "Fair Testing",
+        "body": "Use the same test objects and count a success only when the gripper lifts and releases under control.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l10-predict",
+        "type": "question",
+        "title": "Predict",
+        "body": "What should engineers change between trials?",
+        "image": "",
+        "options": [
+          "One thing at a time",
+          "Everything at once",
+          "Nothing at all",
+          "Only the team name"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l10-improve",
+        "type": "content",
+        "title": "Improve Your Design",
+        "body": "Adjust jaw shape, add friction at the tips, strengthen pivots, or change linkage length.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l10-deck",
+        "type": "content",
+        "title": "Teacher Deck",
+        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2010/lesson10_gripper.html",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l10-reflect",
+        "type": "content",
+        "title": "Reflect and Share",
+        "body": "What helped the gripper hold without crushing or dropping the object?",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ]
+  },
+  {
+    "id": "w3-wed-arm-with-gripper",
+    "title": "Week 3 - Wednesday: Arm with Gripper",
+    "updatedAt": "2026-06-25T00:00:00.000Z",
+    "slides": [
+      {
+        "id": "l11-intro",
+        "type": "content",
+        "title": "Arm with Gripper",
+        "body": "Today we build: Arm with Gripper. Move an object from one zone to another using a stable arm and gripper.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l11-goal",
+        "type": "content",
+        "title": "Mission Goal",
+        "body": "Move an object from one zone to another using a stable arm and gripper.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l11-vocab",
+        "type": "content",
+        "title": "Key Ideas",
+        "body": "Leverage changes how force works across an arm. A longer arm reaches farther but can tip or bend more easily.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l11-check",
+        "type": "question",
+        "title": "Quick Check",
+        "body": "Which idea matters most for today's Arm with Gripper challenge?",
+        "image": "",
+        "options": [
+          "reach",
+          "Decoration only",
+          "Random guessing",
+          "Skipping tests"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l11-brief",
+        "type": "content",
+        "title": "Build Brief",
+        "body": "Project: combine an arm and gripper so the mechanism can reach, lift, move, and release a small object.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l11-fair-test",
+        "type": "content",
+        "title": "Fair Testing",
+        "body": "Use the same object and target zones. Count success when the arm moves the object without dropping it.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l11-predict",
+        "type": "question",
+        "title": "Predict",
+        "body": "What should engineers change between trials?",
+        "image": "",
+        "options": [
+          "One thing at a time",
+          "Everything at once",
+          "Nothing at all",
+          "Only the team name"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l11-improve",
+        "type": "content",
+        "title": "Improve Your Design",
+        "body": "Widen the base, shorten weak arm sections, strengthen joints, or improve the gripper tips.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l11-deck",
+        "type": "content",
+        "title": "Teacher Deck",
+        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2011/lesson11_arm_with_gripper.html",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l11-reflect",
+        "type": "content",
+        "title": "Reflect and Share",
+        "body": "What was the hardest part: reaching, lifting, gripping, or releasing?",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ]
+  },
+  {
+    "id": "w3-thu-simple-car",
+    "title": "Week 3 - Thursday: Simple Car",
+    "updatedAt": "2026-06-25T00:00:00.000Z",
+    "slides": [
+      {
+        "id": "l12-intro",
+        "type": "content",
+        "title": "Simple Car",
+        "body": "Today we build: Simple Car. Build a reliable rolling chassis that travels straight and stays together.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l12-goal",
+        "type": "content",
+        "title": "Mission Goal",
+        "body": "Build a reliable rolling chassis that travels straight and stays together.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l12-vocab",
+        "type": "content",
+        "title": "Key Ideas",
+        "body": "A chassis is the car frame. Wheelbase is the distance between front and rear axles. Parallel axles help the car roll straight.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l12-check",
+        "type": "question",
+        "title": "Quick Check",
+        "body": "Which idea matters most for today's Simple Car challenge?",
+        "image": "",
+        "options": [
+          "chassis",
+          "Decoration only",
+          "Random guessing",
+          "Skipping tests"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l12-brief",
+        "type": "content",
+        "title": "Build Brief",
+        "body": "Project: build a sturdy simple car chassis that rolls straight and can become the base for sensor and steering challenges.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l12-fair-test",
+        "type": "content",
+        "title": "Fair Testing",
+        "body": "Push from the same start line and watch whether the car rolls straight, curves, wobbles, or drags.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l12-predict",
+        "type": "question",
+        "title": "Predict",
+        "body": "What should engineers change between trials?",
+        "image": "",
+        "options": [
+          "One thing at a time",
+          "Everything at once",
+          "Nothing at all",
+          "Only the team name"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l12-improve",
+        "type": "content",
+        "title": "Improve Your Design",
+        "body": "Straighten axles, free rubbing wheels, strengthen the frame, and leave room for a hub or sensor.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l12-deck",
+        "type": "content",
+        "title": "Teacher Deck",
+        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2012/lesson12_simple_car.html",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l12-reflect",
+        "type": "content",
+        "title": "Reflect and Share",
+        "body": "Why does a robot car need a strong, straight chassis before it gets sensors?",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ]
+  },
+  {
+    "id": "w4-mon-distance-sensor-car",
+    "title": "Week 4 - Monday: Car with Distance Sensor",
+    "updatedAt": "2026-06-25T00:00:00.000Z",
+    "slides": [
+      {
+        "id": "l13-intro",
+        "type": "content",
+        "title": "Car with Distance Sensor",
+        "body": "Today we build: Car with Distance Sensor. Program a car to drive forward and stop before touching a wall.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l13-goal",
+        "type": "content",
+        "title": "Mission Goal",
+        "body": "Program a car to drive forward and stop before touching a wall.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l13-vocab",
+        "type": "content",
+        "title": "Key Ideas",
+        "body": "A distance sensor measures how far away an object is. A threshold is the number where the program changes behavior.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l13-check",
+        "type": "question",
+        "title": "Quick Check",
+        "body": "Which idea matters most for today's Car with Distance Sensor challenge?",
+        "image": "",
+        "options": [
+          "distance sensor",
+          "Decoration only",
+          "Random guessing",
+          "Skipping tests"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l13-brief",
+        "type": "content",
+        "title": "Build Brief",
+        "body": "Project: add a SPIKE Prime distance sensor to a car and program it to stop before hitting an obstacle.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l13-fair-test",
+        "type": "content",
+        "title": "Fair Testing",
+        "body": "Use the same wall, same start line, and same speed. Measure where the car stops.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l13-predict",
+        "type": "question",
+        "title": "Predict",
+        "body": "What should engineers change between trials?",
+        "image": "",
+        "options": [
+          "One thing at a time",
+          "Everything at once",
+          "Nothing at all",
+          "Only the team name"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l13-improve",
+        "type": "content",
+        "title": "Improve Your Design",
+        "body": "Change the distance threshold, slow the car, aim the sensor, or clear LEGO from the sensor view.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l13-deck",
+        "type": "content",
+        "title": "Teacher Deck",
+        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2013/lesson13_distance_sensor_car.html",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l13-reflect",
+        "type": "content",
+        "title": "Reflect and Share",
+        "body": "What threshold stopped the car safely without stopping too early?",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ]
+  },
+  {
+    "id": "w4-tue-color-sensor-car",
+    "title": "Week 4 - Tuesday: Car with Color Sensor",
+    "updatedAt": "2026-06-25T00:00:00.000Z",
+    "slides": [
+      {
+        "id": "l14-intro",
+        "type": "content",
+        "title": "Car with Color Sensor",
+        "body": "Today we build: Car with Color Sensor. Program a car to respond when its color sensor sees a marker.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l14-goal",
+        "type": "content",
+        "title": "Mission Goal",
+        "body": "Program a car to respond when its color sensor sees a marker.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l14-vocab",
+        "type": "content",
+        "title": "Key Ideas",
+        "body": "A color sensor reads the color beneath it. Detection works best when the sensor is close, centered, and moving slowly enough.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l14-check",
+        "type": "question",
+        "title": "Quick Check",
+        "body": "Which idea matters most for today's Car with Color Sensor challenge?",
+        "image": "",
+        "options": [
+          "color detection",
+          "Decoration only",
+          "Random guessing",
+          "Skipping tests"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l14-brief",
+        "type": "content",
+        "title": "Build Brief",
+        "body": "Project: add a color sensor to a car and program it to react to floor colors or line markers.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l14-fair-test",
+        "type": "content",
+        "title": "Fair Testing",
+        "body": "Use the same colored tape, sensor height, and speed for each trial before changing one variable.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l14-predict",
+        "type": "question",
+        "title": "Predict",
+        "body": "What should engineers change between trials?",
+        "image": "",
+        "options": [
+          "One thing at a time",
+          "Everything at once",
+          "Nothing at all",
+          "Only the team name"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l14-improve",
+        "type": "content",
+        "title": "Improve Your Design",
+        "body": "Lower the sensor, slow the car, center it over the tape, or improve the color contrast.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l14-deck",
+        "type": "content",
+        "title": "Teacher Deck",
+        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2014/lesson14_color_sensor_car.html",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l14-reflect",
+        "type": "content",
+        "title": "Reflect and Share",
+        "body": "What made the color easier or harder for the robot to read?",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ]
+  },
+  {
+    "id": "w4-wed-self-parking-steering-car",
+    "title": "Week 4 - Wednesday: Self-Parking Steering Car",
+    "updatedAt": "2026-06-25T00:00:00.000Z",
+    "slides": [
+      {
+        "id": "l15-intro",
+        "type": "content",
+        "title": "Self-Parking Steering Car",
+        "body": "Today we build: Self-Parking Steering Car. Build a steering car that parks itself inside a target box.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l15-goal",
+        "type": "content",
+        "title": "Mission Goal",
+        "body": "Build a steering car that parks itself inside a target box.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l15-vocab",
+        "type": "content",
+        "title": "Key Ideas",
+        "body": "Steering turns the front wheels. Turning radius is the size of the curve the car makes. A sequence is a set of programmed steps in order.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l15-check",
+        "type": "question",
+        "title": "Quick Check",
+        "body": "Which idea matters most for today's Self-Parking Steering Car challenge?",
+        "image": "",
+        "options": [
+          "steering pivots",
+          "Decoration only",
+          "Random guessing",
+          "Skipping tests"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l15-brief",
+        "type": "content",
+        "title": "Build Brief",
+        "body": "Project: build steering control and tune a driving sequence so the car parks inside a marked box.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l15-fair-test",
+        "type": "content",
+        "title": "Fair Testing",
+        "body": "Use the same start pose and parking box. Run the same sequence until changing one distance, angle, or time.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l15-predict",
+        "type": "question",
+        "title": "Predict",
+        "body": "What should engineers change between trials?",
+        "image": "",
+        "options": [
+          "One thing at a time",
+          "Everything at once",
+          "Nothing at all",
+          "Only the team name"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l15-improve",
+        "type": "content",
+        "title": "Improve Your Design",
+        "body": "Tune steering angle, drive distance, speed, and straighten timing one change at a time.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l15-deck",
+        "type": "content",
+        "title": "Teacher Deck",
+        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2015/lesson15_self_parking_steering_car.html",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l15-reflect",
+        "type": "content",
+        "title": "Reflect and Share",
+        "body": "Which step controlled parking accuracy the most?",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ]
+  },
+  {
+    "id": "w4-thu-steering-race",
+    "title": "Week 4 - Thursday: Steering Race",
+    "updatedAt": "2026-06-25T00:00:00.000Z",
+    "slides": [
+      {
+        "id": "l16-intro",
+        "type": "content",
+        "title": "Steering Race",
+        "body": "Today we build: Steering Race. Complete the race course with the best balance of speed and control.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l16-goal",
+        "type": "content",
+        "title": "Mission Goal",
+        "body": "Complete the race course with the best balance of speed and control.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l16-vocab",
+        "type": "content",
+        "title": "Key Ideas",
+        "body": "Control means the car does what you intend. Reliability means it can repeat a run without falling apart or leaving the course.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l16-check",
+        "type": "question",
+        "title": "Quick Check",
+        "body": "Which idea matters most for today's Steering Race challenge?",
+        "image": "",
+        "options": [
+          "control",
+          "Decoration only",
+          "Random guessing",
+          "Skipping tests"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l16-brief",
+        "type": "content",
+        "title": "Build Brief",
+        "body": "Project: tune a steering car for a course where control, reliability, and clean driving matter as much as speed.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l16-fair-test",
+        "type": "content",
+        "title": "Fair Testing",
+        "body": "Use the same course and start line. Track clean completion before comparing speed.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l16-predict",
+        "type": "question",
+        "title": "Predict",
+        "body": "What should engineers change between trials?",
+        "image": "",
+        "options": [
+          "One thing at a time",
+          "Everything at once",
+          "Nothing at all",
+          "Only the team name"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l16-improve",
+        "type": "content",
+        "title": "Improve Your Design",
+        "body": "Slow down for turns, tighten loose joints, improve steering return, and practice consistent starts.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l16-deck",
+        "type": "content",
+        "title": "Teacher Deck",
+        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2016/lesson16_steering_race.html",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l16-reflect",
+        "type": "content",
+        "title": "Reflect and Share",
+        "body": "Where did control matter more than speed? What are you proudest of from the four weeks?",
         "image": "",
         "options": [],
         "correctIndex": -1

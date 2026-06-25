@@ -548,6 +548,9 @@
       font-size: 18px;
       box-shadow: inset 0 -10px 0 rgba(7,20,38,0.12), var(--shadow);
     }
+    /* Cartoon-monster avatars (match the camper view) sit in a clean container */
+    .student-avatar.monster { background: transparent; box-shadow: none; border-radius: 0; width: 64px; height: 66px; }
+    .award-avatar.monster { background: transparent !important; }
 
     .student-figure-card h4 {
       font-size: 14px;
@@ -713,6 +716,39 @@
     .lesson-card h4 { font-size: 16px; font-weight: 900; margin-bottom: 3px; }
     .lesson-card .meta { font-size: 12.5px; color: var(--muted); }
     .lesson-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .warmup-box {
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 14px;
+      margin: 14px 0;
+    }
+    .warmup-box h4 { margin: 0 0 8px; font-size: 15px; font-weight: 900; }
+    .warmup-q {
+      width: 100%;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: inherit;
+      font-size: 14px;
+      margin-bottom: 8px;
+      resize: vertical;
+    }
+    .warmup-panel {
+      border: 1.5px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: var(--card-shadow);
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+    .warmup-summary { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 14px; }
+    .warmup-answer {
+      border-top: 1px solid var(--line);
+      padding: 11px 0;
+    }
+    .warmup-answer strong { display: block; font-size: 13px; margin-bottom: 3px; }
+    .warmup-answer p { margin: 0; color: var(--muted); line-height: 1.45; }
     .live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--red); margin-right: 5px; animation: pulse 1.2s infinite; }
     @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
@@ -780,6 +816,227 @@
       .sidebar { flex-basis: auto; width: 100%; position: static; }
       .sidebar nav { grid-auto-flow: column; grid-auto-columns: max-content; overflow-x: auto; }
     }
+
+    /* ============================================================
+       MODERN OVERHAUL (overrides — keep at end of stylesheet)
+       ============================================================ */
+    :root {
+      --shell-bg: #f1f5f9;
+      --card-shadow: 0 1px 2px rgba(16,33,55,0.04), 0 8px 24px rgba(16,33,55,0.06);
+      --card-radius: 18px;
+    }
+    body { background: var(--shell-bg); }
+
+    /* App shell: full-width, sidebar tucks right under the sticky header */
+    .page { max-width: 1280px; padding: 18px 22px 80px; }
+    .dash { gap: 22px; align-items: flex-start; }
+
+    /* Sidebar as a clean rail */
+    .sidebar {
+      flex-basis: 248px;
+      top: 80px;
+      padding: 14px;
+      border: 1px solid #e6edf5;
+      border-radius: var(--card-radius);
+      box-shadow: var(--card-shadow);
+      background: #fff;
+    }
+    .sidebar-tools {
+      display: grid; gap: 10px;
+      padding: 4px 4px 14px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+    .sidebar-tools label {
+      display: block; font-size: 10.5px; font-weight: 900; text-transform: uppercase;
+      letter-spacing: 0.07em; color: var(--muted); margin-bottom: 6px;
+    }
+    .sidebar-tools select {
+      width: 100%; border: 1.5px solid var(--line); border-radius: 10px;
+      padding: 10px 12px; background: var(--bg); color: var(--ink); font-weight: 700; font-size: 14px;
+    }
+    .sidebar-tools .btn { width: 100%; justify-content: center; }
+
+    .sidebar nav { gap: 3px; }
+    .nav-item {
+      position: relative; gap: 12px; padding: 12px 14px; border-radius: 12px;
+      font-size: 14.5px; color: #3b4a5e;
+    }
+    .nav-item:hover { background: var(--sun-light); color: var(--ink); }
+    .nav-item.active {
+      background: linear-gradient(100deg, var(--sun-deep), #14365a); color: #fff;
+      box-shadow: 0 6px 16px rgba(11,42,74,0.22);
+    }
+    .nav-item.active::before {
+      content: ""; position: absolute; left: 5px; top: 50%; transform: translateY(-50%);
+      width: 4px; height: 20px; border-radius: 4px; background: var(--gold);
+    }
+    .nav-item .nav-ico { font-size: 18px; }
+    .nav-badge { box-shadow: 0 2px 6px rgba(220,38,38,0.3); }
+
+    /* Toggle button: a touch friendlier */
+    .sidebar-toggle { border-color: #e6edf5; box-shadow: var(--card-shadow); background: #fff; }
+    .sidebar-toggle:hover { background: var(--sun-light); border-color: var(--sun-mid); }
+
+    /* Page heading now lives in the main column, above the active view */
+    .dash-main { display: flex; flex-direction: column; }
+    .page-head {
+      margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid #e6edf5;
+      align-items: flex-end;
+    }
+    .page-title { font-size: 24px; letter-spacing: -0.02em; }
+    .page-sub { font-size: 13.5px; }
+
+    /* Cards & section headers refreshed */
+    .card {
+      border: 1px solid #e6edf5; border-radius: var(--card-radius);
+      box-shadow: var(--card-shadow); padding: 22px;
+    }
+    .section-title { font-size: 18px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 9px; }
+    .section-sub { font-size: 13.5px; line-height: 1.55; }
+
+    /* ── Classroom tools (rebuilt) ── */
+    .cl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+    .cl-card {
+      border: 1px solid #e6edf5; border-radius: 16px; background: #fff;
+      box-shadow: var(--card-shadow); padding: 18px; display: flex; flex-direction: column;
+    }
+    .cl-card-title { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .cl-field { margin-bottom: 12px; }
+    .cl-field label { display: block; font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; }
+    .cl-field input, .cl-field textarea {
+      width: 100%; border: 1.5px solid var(--line); border-radius: 10px; padding: 11px 12px;
+      font-size: 14px; background: var(--bg); color: var(--ink); outline: none; resize: vertical;
+    }
+    .cl-field input:focus, .cl-field textarea:focus { border-color: var(--sun); background: #fff; }
+    .cl-row2 { display: grid; grid-template-columns: 1fr 110px; gap: 10px; }
+
+    .timer-display {
+      text-align: center; padding: 14px; margin: 4px 0 14px;
+      background: linear-gradient(180deg, var(--sun-light), #fff);
+      border: 1px solid var(--sun-mid); border-radius: 14px;
+    }
+    .timer-display .t-time { font-size: 44px; font-weight: 900; line-height: 1; color: var(--sun-deep); font-variant-numeric: tabular-nums; }
+    .timer-display .t-state { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px; color: var(--muted); }
+    .timer-display.is-running .t-state { color: var(--grass); }
+    .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn-group .btn { flex: 1; justify-content: center; min-width: 84px; }
+
+    .seg { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .seg-btn {
+      border: 1.5px solid var(--line); background: var(--bg); border-radius: 10px;
+      padding: 12px 6px; font-weight: 800; font-size: 12.5px; cursor: pointer; color: var(--muted);
+      display: flex; flex-direction: column; align-items: center; gap: 4px; text-transform: capitalize;
+    }
+    .seg-btn .seg-ico { font-size: 18px; }
+    .seg-btn:hover { border-color: var(--sun-mid); }
+    .seg-btn.active { background: var(--sun-deep); border-color: var(--sun-deep); color: #fff; }
+
+    .group-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+    .group-tile {
+      border: 1px solid #e6edf5; border-left: 4px solid var(--sun); border-radius: 14px;
+      background: #fff; box-shadow: var(--card-shadow); padding: 15px 16px;
+    }
+    .group-tile h4 { margin: 0 0 8px; font-size: 15px; font-weight: 900; }
+    .group-tile .g-focus { font-size: 12.5px; color: var(--muted); margin: 0 0 10px; line-height: 1.45; }
+    .group-tile .g-chiprow { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
+    .g-chip { background: var(--sun-light); color: var(--sun-deep); border-radius: 50px; font-size: 11.5px; font-weight: 800; padding: 3px 9px; }
+    .g-sub { font-size: 12.5px; margin: 6px 0 0; }
+    .g-sub strong { color: var(--ink); }
+    .group-tile .g-del { margin-top: 12px; }
+
+    /* ── Fullscreen presenter ── */
+    .presenter-bar .fs-btn {
+      background: rgba(255,255,255,0.16); color: #fff; border: 1.5px solid rgba(255,255,255,0.3);
+      border-radius: 10px; font-weight: 800; font-size: 14px; padding: 9px 13px; cursor: pointer; min-height: 42px;
+    }
+    .presenter-bar .fs-btn:hover { background: rgba(255,255,255,0.28); }
+    .presenter:fullscreen { display: flex; flex-direction: column; background: #fff; }
+    .presenter:fullscreen .slide-show { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 5vh 8vw; }
+    .presenter:fullscreen .slide-show h2 { font-size: clamp(34px, 6vw, 68px); }
+    .presenter:fullscreen .slide-show .body { font-size: clamp(22px, 3.4vw, 40px); }
+    .presenter:fullscreen .slide-show img { max-height: 50vh; }
+    .presenter:-webkit-full-screen .slide-show { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+    /* ── ClassDojo-style board: tappable camper cards ── */
+    .student-figure-card.tappable {
+      cursor: pointer; border: 1.5px solid var(--line); background: #fff; text-align: center;
+      transition: transform 0.12s, box-shadow 0.15s, border-color 0.15s; font: inherit; color: inherit;
+    }
+    .student-figure-card.tappable:hover { transform: translateY(-3px); border-color: var(--sun-mid); box-shadow: 0 10px 26px rgba(11,42,74,0.14); }
+    .student-figure-card.tappable:active { transform: scale(0.97); }
+    .student-points { transition: transform 0.2s; }
+
+    /* ── Award / manage modals ── */
+    .award-overlay {
+      position: fixed; inset: 0; z-index: 90; background: rgba(7,20,38,0.55);
+      -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+      display: none; place-items: center; padding: 18px; overflow-y: auto;
+    }
+    .award-overlay.open { display: grid; }
+    .award-modal {
+      width: min(560px, 100%); background: #fff; border-radius: 22px; box-shadow: 0 24px 70px rgba(7,20,38,0.3);
+      max-height: calc(100vh - 36px); overflow-y: auto; padding: 20px 22px; position: relative;
+      animation: pop .2s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes pop { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: none; } }
+    .award-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+    .award-avatar { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 900; font-size: 20px; flex-shrink: 0; }
+    .award-who { flex: 1; min-width: 0; }
+    .award-who h3 { margin: 0; font-size: 21px; font-weight: 900; }
+    .award-total { font-size: 14px; font-weight: 800; color: var(--sun-deep); margin-top: 2px; }
+    .award-close { border: 0; background: #eef1f5; color: var(--ink); width: 36px; height: 36px; border-radius: 50%; font-size: 1.1rem; cursor: pointer; flex-shrink: 0; }
+    .award-close:hover { background: #e2e7ee; }
+
+    .skill-section-label { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; margin: 16px 0 10px; }
+    .skill-section-label.pos { color: var(--grass); }
+    .skill-section-label.neg { color: var(--red); }
+    .skill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+    .skill-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center;
+      border: 2px solid var(--line); border-radius: 16px; background: #fff; padding: 14px 8px; cursor: pointer;
+      font: inherit; transition: transform 0.1s, box-shadow 0.15s, background 0.15s;
+    }
+    .skill-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(11,42,74,0.12); }
+    .skill-btn:active { transform: scale(0.94); }
+    .skill-btn.pos { border-color: #bce5c8; }
+    .skill-btn.pos:hover { background: var(--grass-light); }
+    .skill-btn.neg { border-color: #f3c4c4; }
+    .skill-btn.neg:hover { background: var(--red-light); }
+    .skill-btn .skill-ico { font-size: 28px; line-height: 1; }
+    .skill-btn .skill-name { font-size: 13px; font-weight: 800; line-height: 1.2; }
+    .skill-btn .skill-pts { font-size: 13px; font-weight: 900; }
+    .skill-btn.pos .skill-pts { color: var(--grass); }
+    .skill-btn.neg .skill-pts { color: var(--red); }
+
+    .award-fx {
+      position: absolute; top: 40%; left: 50%; transform: translate(-50%,-50%);
+      font-size: 56px; font-weight: 900; pointer-events: none; opacity: 0; z-index: 5;
+      text-shadow: 0 4px 18px rgba(0,0,0,0.18);
+    }
+    .award-fx.pos { color: var(--grass); }
+    .award-fx.neg { color: var(--red); }
+    @keyframes awardPop {
+      0% { opacity: 0; transform: translate(-50%,-30%) scale(0.5); }
+      30% { opacity: 1; transform: translate(-50%,-55%) scale(1.15); }
+      100% { opacity: 0; transform: translate(-50%,-85%) scale(1); }
+    }
+
+    .skill-manage-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+    .pos-label { color: var(--grass) !important; }
+    .neg-label { color: var(--red) !important; }
+    .skill-manage-row { display: flex; align-items: center; gap: 10px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; margin-bottom: 8px; background: #fff; }
+    .skill-manage-row .sm-ico { font-size: 20px; }
+    .skill-manage-row .sm-name { flex: 1; font-weight: 800; font-size: 14px; }
+    .skill-manage-row .btn { padding: 6px 10px; font-size: 12px; }
+    .skill-add { border-top: 1px solid var(--line); padding-top: 14px; }
+    .skill-add-grid { display: grid; grid-template-columns: 60px 1fr 70px 130px auto; gap: 8px; align-items: center; }
+    .skill-add-grid input, .skill-add-grid select { border: 1.5px solid var(--line); border-radius: 10px; padding: 10px; font: inherit; font-size: 14px; background: #fff; color: var(--ink); width: 100%; }
+
+    @media (max-width: 560px) {
+      .skill-manage-cols { grid-template-columns: 1fr; }
+      .skill-add-grid { grid-template-columns: 60px 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -809,6 +1066,25 @@
     </div>
   </main>
 
+  <!-- Award points modal (ClassDojo-style) -->
+  <div class="award-overlay" id="awardOverlay" onclick="if(event.target===this)closeAward()">
+    <div class="award-modal">
+      <div id="awardModalBody"></div>
+      <div class="award-fx" id="awardFx" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <!-- Manage skills modal -->
+  <div class="award-overlay" id="skillsOverlay" onclick="if(event.target===this)closeManageSkills()">
+    <div class="award-modal">
+      <div class="award-head">
+        <h3 style="margin:0;font-size:18px;font-weight:900;flex:1">⚙️ Manage Skills</h3>
+        <button class="award-close" type="button" onclick="closeManageSkills()" aria-label="Close">✕</button>
+      </div>
+      <div id="skillsModalBody"></div>
+    </div>
+  </div>
+
   <script>
     const app = document.getElementById('app');
     const userLine = document.getElementById('userLine');
@@ -826,6 +1102,8 @@
     let liveState = null;
     let livePollTimer = null;
     let lessonDraft = null;
+    let warmupResponses = null;
+    let warmupSelectedDayId = '';
 
     function esc(v) {
       return String(v == null ? '' : v)
@@ -847,6 +1125,18 @@
       if (!value) return '';
       const date = new Date(`${value}T12:00:00`);
       return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString(undefined, opts);
+    }
+
+    function defaultBeginQuestions(day) {
+      const custom = Array.isArray(day.beginLessonQuestions) ? day.beginLessonQuestions.filter(Boolean).slice(0, 3) : [];
+      if (custom.length >= 3) return custom.slice(0, 3);
+      const activity = day.activity || day.assignment || 'today\'s challenge';
+      const build = day.build || day.assignment || activity || 'this project';
+      return [...custom,
+        `What part of "${activity}" sounds most interesting or surprising to you?`,
+        `Before we begin, what do you predict will be the trickiest part of building or testing ${build}?`,
+        'If you were the engineer leading this lesson, what would you try first and why?'
+      ].slice(0, 3);
     }
 
     function formatProgramLabel(program) {
@@ -914,8 +1204,19 @@
                     <input data-field="worksheetLabel" value="${esc(day.worksheetLabel || '')}" placeholder="e.g. Gear Ratio Worksheet" />
                     <label>Worksheet or PDF URL</label>
                     <input data-field="worksheetUrl" value="${esc(day.worksheetUrl || '')}" placeholder="https://... or /path/to/file.pdf" />
+                    ${day.lessonDeckUrl ? `<a class="mini-link" href="${esc(day.lessonDeckUrl)}" target="_blank" rel="noreferrer">Open Lesson Deck -></a>` : ''}
+                    <label>Lesson deck URL</label>
+                    <input data-field="lessonDeckUrl" value="${esc(day.lessonDeckUrl || '')}" placeholder="/robotics lab/Summer Camp/2026-summer-camp/lessons/..." />
                     <label>Coach notes (private — coaches only)</label>
                     <textarea rows="2" data-field="coachNotes">${esc(day.coachNotes)}</textarea>
+                    <div class="warmup-box">
+                      <h4>Begin Lesson Questions</h4>
+                      <p class="section-sub" style="margin-bottom:10px">Campers answer these before the live lesson starts.</p>
+                      ${defaultBeginQuestions(day).map((question, qIndex) => `
+                        <textarea class="warmup-q" rows="2" data-begin-question="${qIndex}" placeholder="Warm-up question ${qIndex + 1}">${esc(question)}</textarea>
+                      `).join('')}
+                      <button class="mini-btn" type="button" onclick="resetBeginQuestions('${esc(day.id)}')">Reset to defaults</button>
+                    </div>
                     <div class="day-save-row">
                       <button class="btn btn-primary" onclick="saveDay('${esc(day.id)}')">Save day</button>
                       <span class="save-status" id="status-${esc(day.id)}"></span>
@@ -935,13 +1236,16 @@
       if (!box) return;
       const payload = {};
       box.querySelectorAll('[data-field]').forEach(el => { payload[el.dataset.field] = el.value; });
+      payload.beginLessonQuestions = [...box.querySelectorAll('[data-begin-question]')].map(el => el.value);
       status.textContent = 'Saving…';
       status.style.color = 'var(--muted)';
       try {
-        await api(`/api/camp/coach/days/${encodeURIComponent(dayId)}`, {
+        const result = await api(`/api/camp/coach/days/${encodeURIComponent(dayId)}`, {
           method: 'PATCH',
           body: JSON.stringify(payload)
         });
+        const localDay = (hubData.curriculum || []).flatMap(week => week.days || []).find(item => item.id === dayId);
+        if (localDay && result.day) Object.assign(localDay, result.day);
         status.textContent = 'Saved ✓';
         status.style.color = 'var(--grass)';
         setTimeout(() => { status.textContent = ''; }, 2500);
@@ -952,6 +1256,16 @@
     }
 
     /* ── Announcements tab ── */
+    function resetBeginQuestions(dayId) {
+      const day = (hubData.curriculum || []).flatMap(week => week.days || []).find(item => item.id === dayId);
+      const box = document.getElementById('day-' + dayId);
+      if (!day || !box) return;
+      const draft = { ...day, beginLessonQuestions: [] };
+      box.querySelectorAll('[data-field]').forEach(el => { draft[el.dataset.field] = el.value; });
+      const questions = defaultBeginQuestions(draft);
+      box.querySelectorAll('[data-begin-question]').forEach((el, index) => { el.value = questions[index] || ''; });
+    }
+
     function renderAnnouncementsTab(announcements) {
       return `
         <div class="section-title">Announcements</div>
@@ -1038,30 +1352,77 @@
     }
 
     /* ── Campers tab ── */
+    const NOISE_LEVELS = [
+      { id: 'silent', ico: '🤫', label: 'Silent' },
+      { id: 'whisper', ico: '🔉', label: 'Whisper' },
+      { id: 'partner', ico: '👥', label: 'Partner' },
+      { id: 'team', ico: '👫', label: 'Team' },
+      { id: 'present', ico: '🙌', label: 'Present' }
+    ];
+
+    function coachTimerRemaining() {
+      const t = classroomState.timer || {};
+      const base = Number(t.pausedRemainingSeconds || 0);
+      if (t.running && t.startedAt) {
+        const elapsed = Math.floor((Date.now() - new Date(t.startedAt).getTime()) / 1000);
+        return Math.max(0, base - elapsed);
+      }
+      return base;
+    }
+    function fmtClock(sec) {
+      const m = Math.floor(sec / 60), s = sec % 60;
+      return `${m}:${String(s).padStart(2, '0')}`;
+    }
+
     function renderClassroomControls() {
       const timer = classroomState.timer || {};
+      const running = !!timer.running;
       return `
-        <div class="section-title">Classroom Tools</div>
-        <p class="section-sub">Set the shared timer, noise level, and group/subgroup structure students see in the summer hub.</p>
-        <div class="classroom-controls">
-          <div class="control-row">
-            <div><label for="timerLabel">Timer label</label><input id="timerLabel" value="${esc(timer.label || 'Work time')}" /></div>
-            <div><label for="timerMinutes">Minutes</label><input id="timerMinutes" type="number" min="1" max="180" value="${esc(timer.durationMinutes || 20)}" /></div>
-            <div><label for="noiseLevel">Noise level</label><select id="noiseLevel">${['silent','whisper','partner','team','present'].map(level => `<option value="${level}" ${level === classroomState.noiseLevel ? 'selected' : ''}>${level}</option>`).join('')}</select></div>
-            <button class="btn btn-primary" onclick="saveClassroomBasics(false)">Save</button>
-            <button class="btn btn-primary" onclick="saveClassroomBasics(true)">Start timer</button>
-            <button class="btn btn-ghost" onclick="pauseClassroomTimer()">Pause</button>
-          </div>
-          <div class="card" style="box-shadow:none">
-            <div class="section-title" style="font-size:16px">Create group</div>
-            <div class="form-grid">
-              <div><label>Group name</label><input id="groupName" placeholder="e.g. Robot Builders, Research Team" /></div>
-              <div><label>Focus</label><input id="groupFocus" placeholder="What should this group work on?" /></div>
-              <div><label>Members</label><textarea id="groupMembers" rows="2" placeholder="One student per line"></textarea></div>
-              <div><label>Subgroups</label><textarea id="groupSubgroups" rows="4" placeholder="Format: Subgroup Name: student, student&#10;Build Team: Maya, Leo&#10;Code Team: Aria, Sam"></textarea></div>
-              <button class="btn btn-primary" onclick="createClassroomGroup()">Create group</button>
+        <div class="section-title">🎛️ Classroom Tools</div>
+        <p class="section-sub">Set the shared timer, noise level, and groups that campers see live in their hub.</p>
+        <div class="cl-grid">
+          <div class="cl-card">
+            <div class="cl-card-title">⏱️ Shared timer</div>
+            <div class="timer-display ${running ? 'is-running' : ''}">
+              <div class="t-time" id="coachTimerTime">${fmtClock(coachTimerRemaining())}</div>
+              <div class="t-state">${running ? '● Running' : 'Paused'}</div>
+            </div>
+            <div class="cl-row2">
+              <div class="cl-field" style="margin:0"><label for="timerLabel">Label</label><input id="timerLabel" value="${esc(timer.label || 'Work time')}" placeholder="Work time" /></div>
+              <div class="cl-field" style="margin:0"><label for="timerMinutes">Minutes</label><input id="timerMinutes" type="number" min="1" max="180" value="${esc(timer.durationMinutes || 20)}" /></div>
+            </div>
+            <div class="btn-group" style="margin-top:14px">
+              <button class="btn btn-primary" onclick="saveClassroomBasics(true)">▶ Start</button>
+              <button class="btn btn-ghost" onclick="pauseClassroomTimer()">⏸ Pause</button>
+              <button class="btn btn-ghost" onclick="saveClassroomBasics(false)">↻ Reset</button>
             </div>
           </div>
+
+          <div class="cl-card">
+            <div class="cl-card-title">🔊 Noise level</div>
+            <p class="section-sub" style="margin:-6px 0 12px">Tap the level for right now — campers see it instantly.</p>
+            <div class="seg">
+              ${NOISE_LEVELS.map(n => `
+                <button class="seg-btn ${classroomState.noiseLevel === n.id ? 'active' : ''}" onclick="setNoise('${n.id}')">
+                  <span class="seg-ico">${n.ico}</span>${n.label}
+                </button>`).join('')}
+            </div>
+          </div>
+        </div>
+
+        <div class="cl-card" style="margin-top:16px">
+          <div class="cl-card-title">👥 Create a group</div>
+          <div class="cl-row2" style="grid-template-columns:1fr 1fr">
+            <div class="cl-field"><label>Group name</label><input id="groupName" placeholder="e.g. Robot Builders" /></div>
+            <div class="cl-field"><label>Focus</label><input id="groupFocus" placeholder="What should this group work on?" /></div>
+          </div>
+          <div class="cl-field"><label>Members (one per line)</label><textarea id="groupMembers" rows="2" placeholder="Maya&#10;Leo&#10;Aria"></textarea></div>
+          <div class="cl-field"><label>Subgroups (optional — “Name: student, student”)</label><textarea id="groupSubgroups" rows="3" placeholder="Build Team: Maya, Leo&#10;Code Team: Aria, Sam"></textarea></div>
+          <div><button class="btn btn-primary" onclick="createClassroomGroup()">＋ Create group</button></div>
+        </div>
+
+        <div style="margin-top:18px">
+          <div class="cl-card-title" style="margin-bottom:12px">📋 Groups (${(classroomState.groups || []).length})</div>
           <div id="groupList">${renderCoachGroups()}</div>
         </div>
       `;
@@ -1069,16 +1430,32 @@
 
     function renderCoachGroups() {
       const groups = classroomState.groups || [];
-      if (!groups.length) return '<p class="section-sub">No groups yet.</p>';
-      return groups.map(group => `
-        <div class="group-card">
+      if (!groups.length) return '<div class="empty-curriculum">No groups yet — create one above.</div>';
+      return `<div class="group-grid">${groups.map(group => `
+        <div class="group-tile">
           <h4>${esc(group.name)}</h4>
-          ${group.focus ? `<p><strong>Focus:</strong> ${esc(group.focus)}</p>` : ''}
-          ${group.members?.length ? `<p><strong>Members:</strong> ${esc(group.members.join(', '))}</p>` : ''}
-          ${(group.subgroups || []).map(sub => `<p><strong>${esc(sub.name)}:</strong> ${esc((sub.members || []).join(', ') || 'No members listed')}</p>`).join('')}
-          <button class="btn btn-danger" onclick="deleteClassroomGroup('${esc(group.id)}')">Delete group</button>
+          ${group.focus ? `<p class="g-focus">🎯 ${esc(group.focus)}</p>` : ''}
+          ${group.members?.length ? `<div class="g-chiprow">${group.members.map(m => `<span class="g-chip">${esc(m)}</span>`).join('')}</div>` : ''}
+          ${(group.subgroups || []).map(sub => `<p class="g-sub"><strong>${esc(sub.name)}:</strong> ${esc((sub.members || []).join(', ') || 'No members')}</p>`).join('')}
+          <button class="btn btn-danger g-del" onclick="deleteClassroomGroup('${esc(group.id)}')">Delete</button>
         </div>
-      `).join('');
+      `).join('')}</div>`;
+    }
+
+    function setNoise(level) {
+      classroomState.noiseLevel = level;
+      document.querySelectorAll('#view-classroom .seg-btn').forEach(b => b.classList.toggle('active', b.getAttribute('onclick').includes(`'${level}'`)));
+      api('/api/camp/coach/classroom', { method: 'PATCH', body: JSON.stringify({ noiseLevel: level, timer: classroomState.timer || {} }) })
+        .then(r => { classroomState = r.classroom; })
+        .catch(err => alert(err.message));
+    }
+
+    function tickCoachTimer() {
+      const el = document.getElementById('coachTimerTime');
+      if (!el) return;
+      const t = classroomState.timer || {};
+      if (!t.running) return;
+      el.textContent = fmtClock(coachTimerRemaining());
     }
 
     function parseLines(value) {
@@ -1103,7 +1480,7 @@
       };
       const result = await api('/api/camp/coach/classroom', {
         method: 'PATCH',
-        body: JSON.stringify({ noiseLevel: document.getElementById('noiseLevel').value, timer })
+        body: JSON.stringify({ noiseLevel: classroomState.noiseLevel, timer })
       });
       classroomState = result.classroom;
       document.getElementById('classroomToolsWrap').innerHTML = renderClassroomControls();
@@ -1235,74 +1612,68 @@
       return colors[n % colors.length];
     }
 
+    // Same cute "monster" cartoon avatar campers see in their hub — keeps each
+    // student's character consistent across the camper view and the coach board.
+    function monsterAvatar(seed) {
+      let h = 2166136261;
+      const s = String(seed || 'camper');
+      for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+      const pick = (n) => { h = (Math.imul(h, 48271)) >>> 0; return h % n; };
+      const bodyColors = ['#ff6b6b','#4dabf7','#51cf66','#ffd43b','#cc5de8','#ff922b','#22b8cf','#f783ac','#9775fa','#20c997','#ffa94d','#63e6be','#ff8787','#74c0fc'];
+      const body = bodyColors[pick(bodyColors.length)];
+      const eyeCount = 1 + pick(3);
+      const horn = pick(3);
+      const mouth = pick(3);
+      let top = '';
+      if (horn === 0) top = `<path d="M22 14 L26 3 L30 14 Z" fill="${body}"/><path d="M34 14 L38 3 L42 14 Z" fill="${body}"/>`;
+      else if (horn === 1) top = `<line x1="22" y1="14" x2="19" y2="5" stroke="${body}" stroke-width="2.5"/><circle cx="19" cy="4" r="3.5" fill="${body}"/><line x1="42" y1="14" x2="45" y2="5" stroke="${body}" stroke-width="2.5"/><circle cx="45" cy="4" r="3.5" fill="${body}"/>`;
+      else top = `<path d="M18 16 Q32 0 46 16" fill="none" stroke="${body}" stroke-width="3.5" stroke-linecap="round"/>`;
+      const eyePos = eyeCount === 1 ? [32] : eyeCount === 2 ? [25, 39] : [21, 32, 43];
+      let eyes = '';
+      eyePos.forEach((x) => { eyes += `<circle cx="${x}" cy="31" r="6" fill="#fff"/><circle cx="${x}" cy="32" r="3" fill="#22303f"/>`; });
+      let mo = '';
+      if (mouth === 0) mo = '<path d="M24 45 Q32 53 40 45" fill="none" stroke="#22303f" stroke-width="2.5" stroke-linecap="round"/>';
+      else if (mouth === 1) mo = '<path d="M25 45 h14 a3 3 0 0 1 -14 0 z" fill="#22303f"/><rect x="29" y="45" width="2" height="4" fill="#fff"/><rect x="34" y="45" width="2" height="4" fill="#fff"/>';
+      else mo = '<ellipse cx="32" cy="46" rx="4" ry="4.5" fill="#22303f"/>';
+      return `<svg viewBox="0 0 64 66" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" aria-hidden="true">${top}<rect x="13" y="15" width="38" height="41" rx="17" fill="${body}"/>${eyes}${mo}<ellipse cx="32" cy="61" rx="15" ry="3" fill="rgba(0,0,0,0.08)"/></svg>`;
+    }
+
+    function campSkills() {
+      const list = (classroomState && Array.isArray(classroomState.skills)) ? classroomState.skills : [];
+      return list;
+    }
+
     function renderClassDojoBoard(className) {
       const classes = classSummaries();
       const classItem = classes.find(item => item.name === className) || classes[0];
       const students = classItem?.students || [];
-      const categories = ['Teamwork', 'Helping Others', 'Creativity', 'Persistence', 'Problem Solving', 'Clean Workspace', 'Leadership', 'Ready to Learn'];
       const recent = (progressData.pointEvents || [])
         .filter(e => !classItem || (e.className || 'Unassigned') === classItem.name)
         .slice()
         .sort((a,b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')))
-        .slice(0, 10);
+        .slice(0, 12);
       return `
         <div class="dojo-class-board">
           <div class="dojo-board-head">
             <div>
               <div class="section-title" style="font-size:17px">${esc(classItem?.name || 'Class board')}</div>
-              <p class="section-sub">${students.length} camper${students.length === 1 ? '' : 's'} on this board.${classItem?.schedule ? ` ${esc(classItem.schedule)}` : ''}</p>
+              <p class="section-sub">Tap a camper to give points for a skill. 🔊 Sound plays on every point.</p>
             </div>
-            <div class="dojo-board-tools">
-              <select id="dojoCategory">${categories.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('')}</select>
-              <input id="dojoNote" placeholder="Optional note" />
-            </div>
+            <button class="btn btn-ghost" type="button" onclick="openManageSkills()">⚙️ Manage skills</button>
           </div>
           <div class="student-figure-grid">
             ${students.map(student => `
-              <div class="student-figure-card">
-                <div class="student-avatar" style="background:${avatarColor(student.id)}">${esc(initials(student.name))}</div>
+              <button class="student-figure-card tappable" type="button" onclick="openAward('${esc(student.id)}')">
+                <div class="student-avatar monster">${monsterAvatar(student.id)}</div>
                 <h4>${esc(student.name)}</h4>
-                <div class="student-points">${esc(student.points?.total || 0)}</div>
-                <div class="point-actions">
-                  <button class="btn btn-primary" type="button" onclick="awardClassPoint('${esc(student.id)}', 1)">+1</button>
-                  <button class="btn btn-primary" type="button" onclick="awardClassPoint('${esc(student.id)}', 2)">+2</button>
-                  <button class="btn btn-ghost" type="button" onclick="awardClassPoint('${esc(student.id)}', -1)">-1</button>
-                </div>
-              </div>
+                <div class="student-points" id="board-pts-${esc(student.id)}">${esc(student.points?.total || 0)}</div>
+              </button>
             `).join('') || '<p class="section-sub">No active campers in this class yet.</p>'}
           </div>
-          <div class="dojo-feed">
-            ${recent.map(e => `<span class="pill ${e.points >= 0 ? 'on' : 'off'}">${esc(e.studentName)} ${e.points > 0 ? '+' : ''}${esc(e.points)} ${esc(e.category)}</span>`).join('')}
-          </div>
+          ${recent.length ? `<div class="dojo-feed">
+            ${recent.map(e => `<span class="pill ${e.points >= 0 ? 'on' : 'off'}">${e.icon ? esc(e.icon) + ' ' : ''}${esc(e.studentName)} ${e.points > 0 ? '+' : ''}${esc(e.points)}</span>`).join('')}
+          </div>` : ''}
         </div>
-        <details>
-          <summary class="section-sub" style="cursor:pointer;font-weight:800">Manual point award</summary>
-          <div class="dojo-panel">
-          <div>
-            <label for="dojoStudent">Student</label>
-            <select id="dojoStudent">${students.map(s => `<option value="${esc(s.id)}">${esc(s.name)} (${esc(s.points?.total || 0)} pts)</option>`).join('')}</select>
-          </div>
-          <div>
-            <label for="dojoManualCategory">Skill</label>
-            <select id="dojoManualCategory">${categories.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('')}</select>
-          </div>
-          <div>
-            <label for="dojoPoints">Points</label>
-            <select id="dojoPoints">
-              <option value="1">+1</option>
-              <option value="2">+2</option>
-              <option value="3">+3</option>
-              <option value="-1">-1</option>
-              <option value="-2">-2</option>
-            </select>
-          </div>
-          <div>
-            <label for="dojoManualNote">Note</label>
-            <input id="dojoManualNote" placeholder="Optional: what did they do?" />
-          </div>
-          <button class="btn btn-primary" type="button" onclick="awardClassPoint()">Award</button>
-          </div>
-        </details>
       `;
     }
 
@@ -1316,36 +1687,189 @@
       refreshProgressView();
     }
 
-    async function awardClassPoint(studentIdArg, pointsArg) {
-      const studentId = studentIdArg || document.getElementById('dojoStudent')?.value;
-      const quickCategory = document.getElementById('dojoCategory')?.value;
-      const manualCategory = document.getElementById('dojoManualCategory')?.value;
-      const category = studentIdArg ? quickCategory : manualCategory;
-      const pointsValue = Number(pointsArg ?? document.getElementById('dojoPoints')?.value ?? 1);
-      const note = studentIdArg ? (document.getElementById('dojoNote')?.value || '') : (document.getElementById('dojoManualNote')?.value || '');
-      if (!studentId) return;
+    /* ── Sounds (Web Audio — no files needed) ── */
+    let pointAudioCtx = null;
+    function playPointSound(positive) {
       try {
-        await api('/api/camp/coach/points', {
-          method: 'POST',
-          body: JSON.stringify({
-            studentId,
-            category,
-            points: Math.abs(pointsValue),
-            type: pointsValue < 0 ? 'needs-work' : 'positive',
-            note
-          })
+        pointAudioCtx = pointAudioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        if (pointAudioCtx.state === 'suspended') pointAudioCtx.resume();
+        const ctx = pointAudioCtx;
+        const now = ctx.currentTime;
+        const notes = positive ? [523.25, 659.25, 783.99] : [349.23, 261.63];
+        const step = positive ? 0.085 : 0.14;
+        notes.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = positive ? 'triangle' : 'sine';
+          osc.frequency.value = freq;
+          const t = now + i * step;
+          gain.gain.setValueAtTime(0.0001, t);
+          gain.gain.exponentialRampToValueAtTime(positive ? 0.28 : 0.22, t + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t + (positive ? 0.22 : 0.3));
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(t); osc.stop(t + 0.35);
         });
+      } catch (err) { /* audio not available — silent */ }
+    }
+
+    /* ── Award modal (tap a camper → tap a skill) ── */
+    let awardStudentId = null;
+
+    function studentById(id) {
+      return (progressData.students || []).find(s => s.id === id);
+    }
+
+    window.openAward = function openAward(studentId) {
+      awardStudentId = studentId;
+      // Prime audio on the user gesture so the first sound is allowed to play.
+      try { pointAudioCtx = pointAudioCtx || new (window.AudioContext || window.webkitAudioContext)(); if (pointAudioCtx.state === 'suspended') pointAudioCtx.resume(); } catch (e) {}
+      renderAwardModal();
+      document.getElementById('awardOverlay').classList.add('open');
+    };
+    window.closeAward = function closeAward() {
+      document.getElementById('awardOverlay').classList.remove('open');
+      awardStudentId = null;
+    };
+
+    function renderAwardModal() {
+      const student = studentById(awardStudentId);
+      if (!student) return;
+      const skills = campSkills();
+      const positive = skills.filter(s => s.type !== 'negative');
+      const negative = skills.filter(s => s.type === 'negative');
+      const skillBtn = (s) => `
+        <button class="skill-btn ${s.type === 'negative' ? 'neg' : 'pos'}" type="button" onclick="awardSkill('${esc(s.id)}')">
+          <span class="skill-ico">${esc(s.icon || '⭐')}</span>
+          <span class="skill-name">${esc(s.name)}</span>
+          <span class="skill-pts">${s.type === 'negative' ? '−' : '+'}${esc(s.points)}</span>
+        </button>`;
+      document.getElementById('awardModalBody').innerHTML = `
+        <div class="award-head">
+          <div class="award-avatar monster">${monsterAvatar(student.id)}</div>
+          <div class="award-who">
+            <h3>${esc(student.name)}</h3>
+            <div class="award-total" id="awardTotal">${esc(student.points?.total || 0)} points</div>
+          </div>
+          <button class="award-close" type="button" onclick="closeAward()" aria-label="Close">✕</button>
+        </div>
+        ${positive.length ? `<div class="skill-section-label pos">➕ Great job!</div><div class="skill-grid">${positive.map(skillBtn).join('')}</div>` : ''}
+        ${negative.length ? `<div class="skill-section-label neg">➖ Let's fix it</div><div class="skill-grid">${negative.map(skillBtn).join('')}</div>` : ''}
+        <p class="section-sub" style="margin-top:14px;text-align:center">Keep tapping to give more — close when you're done.</p>
+      `;
+    }
+
+    window.awardSkill = async function awardSkill(skillId) {
+      const skill = campSkills().find(s => s.id === skillId);
+      const student = studentById(awardStudentId);
+      if (!skill || !student) return;
+      const positive = skill.type !== 'negative';
+      playPointSound(positive);
+      // Optimistic UI: bump the totals immediately, flash the button.
+      const delta = positive ? skill.points : -skill.points;
+      flashAward(skill, positive);
+      try {
+        const res = await api('/api/camp/coach/points', {
+          method: 'POST',
+          body: JSON.stringify({ studentId: student.id, category: skill.name, icon: skill.icon, points: skill.points, type: positive ? 'positive' : 'needs-work' })
+        });
+        // update local cache so the modal + board reflect the new total
+        if (res.points && typeof res.points.total === 'number') {
+          student.points = res.points;
+        } else if (student.points) {
+          student.points.total = (Number(student.points.total) || 0) + delta;
+        }
+        const at = document.getElementById('awardTotal');
+        if (at) at.textContent = `${student.points?.total || 0} points`;
+        const bp = document.getElementById('board-pts-' + student.id);
+        if (bp) bp.textContent = student.points?.total || 0;
+        // refresh feed/tiles quietly
         const refreshed = await api('/api/camp/coach/progress');
         progressData = refreshed || progressData;
-        const wrap = document.getElementById('progressToolsWrap');
-        if (wrap) wrap.innerHTML = renderProgressTab();
+        const feed = document.querySelector('#dojoClassBoard .dojo-feed');
+        if (feed) { document.getElementById('dojoClassBoard').innerHTML = renderClassDojoBoard(selectedClassName); }
         const sideTools = document.getElementById('sidebarTools');
         if (sideTools) sideTools.innerHTML = renderSidebarTools();
-        refreshProgressView();
       } catch (err) {
         alert(err.message);
       }
+    };
+
+    function flashAward(skill, positive) {
+      const fx = document.getElementById('awardFx');
+      if (!fx) return;
+      fx.textContent = `${skill.icon || (positive ? '⭐' : '⚠️')} ${positive ? '+' : '−'}${skill.points}`;
+      fx.className = 'award-fx ' + (positive ? 'pos' : 'neg');
+      fx.style.animation = 'none';
+      void fx.offsetWidth;
+      fx.style.animation = 'awardPop 0.7s ease';
     }
+
+    /* ── Manage skills ── */
+    window.openManageSkills = function openManageSkills() {
+      renderManageSkills();
+      document.getElementById('skillsOverlay').classList.add('open');
+    };
+    window.closeManageSkills = function closeManageSkills() {
+      document.getElementById('skillsOverlay').classList.remove('open');
+    };
+    function renderManageSkills() {
+      const skills = campSkills();
+      const row = (s) => `
+        <div class="skill-manage-row">
+          <span class="sm-ico">${esc(s.icon || '⭐')}</span>
+          <span class="sm-name">${esc(s.name)}</span>
+          <span class="pill ${s.type === 'negative' ? 'off' : 'on'}">${s.type === 'negative' ? '−' : '+'}${esc(s.points)}</span>
+          <button class="btn btn-danger" type="button" onclick="deleteSkill('${esc(s.id)}')">Delete</button>
+        </div>`;
+      document.getElementById('skillsModalBody').innerHTML = `
+        <div class="skill-manage-cols">
+          <div>
+            <div class="cl-card-title pos-label">➕ Positive skills (earn points)</div>
+            ${skills.filter(s => s.type !== 'negative').map(row).join('') || '<p class="section-sub">None yet.</p>'}
+          </div>
+          <div>
+            <div class="cl-card-title neg-label">➖ Negative skills (lose points)</div>
+            ${skills.filter(s => s.type === 'negative').map(row).join('') || '<p class="section-sub">None yet.</p>'}
+          </div>
+        </div>
+        <div class="skill-add">
+          <div class="cl-card-title">Add a skill</div>
+          <div class="skill-add-grid">
+            <input id="newSkillIcon" maxlength="2" placeholder="⭐" />
+            <input id="newSkillName" placeholder="Skill name (e.g. Sharing)" />
+            <input id="newSkillPoints" type="number" min="1" max="10" value="1" />
+            <select id="newSkillType">
+              <option value="positive">Positive (+)</option>
+              <option value="negative">Negative (−)</option>
+            </select>
+            <button class="btn btn-primary" type="button" onclick="addSkill()">Add</button>
+          </div>
+        </div>
+      `;
+    }
+    window.addSkill = async function addSkill() {
+      const name = document.getElementById('newSkillName').value.trim();
+      if (!name) { alert('Give the skill a name.'); return; }
+      const payload = {
+        name,
+        icon: document.getElementById('newSkillIcon').value.trim() || (document.getElementById('newSkillType').value === 'negative' ? '⚠️' : '⭐'),
+        points: Number(document.getElementById('newSkillPoints').value) || 1,
+        type: document.getElementById('newSkillType').value
+      };
+      try {
+        const res = await api('/api/camp/coach/skills', { method: 'POST', body: JSON.stringify(payload) });
+        classroomState = res.classroom || classroomState;
+        renderManageSkills();
+      } catch (err) { alert(err.message); }
+    };
+    window.deleteSkill = async function deleteSkill(id) {
+      if (!confirm('Delete this skill?')) return;
+      try {
+        const res = await api(`/api/camp/coach/skills/${encodeURIComponent(id)}`, { method: 'DELETE' });
+        classroomState = res.classroom || classroomState;
+        renderManageSkills();
+      } catch (err) { alert(err.message); }
+    };
 
     function refreshProgressView() {
       const classFilter = document.getElementById('progressClass')?.value || 'All';
@@ -1767,20 +2291,19 @@
       const { user, camp, curriculum, announcements } = hubData;
       userLine.textContent = `${user.name} · Coach`;
       app.innerHTML = `
-        <div class="page-head">
-          <div>
-            <div class="page-title">${esc(camp.name)} ${esc(camp.year)}</div>
-            <p class="page-sub">${esc(fmt(camp.startDate, { month: 'long', day: 'numeric' }))} – ${esc(fmt(camp.endDate, { month: 'long', day: 'numeric' }))} · ${esc(camp.scheduleNote || '')}</p>
-          </div>
-          <a class="btn btn-ghost" href="/camp-hub">View hub as campers see it →</a>
-        </div>
-
         <div class="dash" id="dash">
           <aside class="sidebar" id="sidebar">
             <div id="sidebarTools">${renderSidebarTools()}</div>
             <nav id="sidebarNav">${renderNav()}</nav>
           </aside>
           <div class="dash-main">
+            <div class="page-head">
+              <div>
+                <div class="page-title">${esc(camp.name)} ${esc(camp.year)}</div>
+                <p class="page-sub">${esc(fmt(camp.startDate, { month: 'long', day: 'numeric' }))} – ${esc(fmt(camp.endDate, { month: 'long', day: 'numeric' }))} · ${esc(camp.scheduleNote || '')}</p>
+              </div>
+              <a class="btn btn-ghost" href="/camp-hub">View hub as campers see it →</a>
+            </div>
             <div class="view ${activeView === 'schedule' ? 'active' : ''}" id="view-schedule">${renderScheduleTab(curriculum)}</div>
             <div class="view ${activeView === 'livelesson' ? 'active' : ''}" id="view-livelesson"><div id="liveLessonWrap"></div></div>
             <div class="view ${activeView === 'announcements' ? 'active' : ''}" id="view-announcements">${renderAnnouncementsTab(announcements)}</div>
@@ -1802,6 +2325,8 @@
         const res = await api('/api/camp/coach/lessons');
         lessons = res.lessons || [];
         liveState = res.live && res.live.active ? { active: true, ...res.live } : { active: false };
+        if (!warmupSelectedDayId) warmupSelectedDayId = defaultWarmupDayId();
+        await loadWarmupResponses(warmupSelectedDayId, false);
         refreshNavBadges();
         if (liveState.active) {
           await pollLive();
@@ -1819,8 +2344,91 @@
       const wrap = document.getElementById('liveLessonWrap');
       if (!wrap) return;
       if (lessonDraft) { wrap.innerHTML = renderLessonEditor(); return; }
-      if (liveState && liveState.active) { wrap.innerHTML = renderPresenter(); return; }
-      wrap.innerHTML = renderLessonList();
+      if (liveState && liveState.active) {
+        // Update the presenter IN PLACE if it already exists, so the fullscreen
+        // element (#presenterEl) is never removed from the DOM (which would drop
+        // the coach out of fullscreen on every poll / slide change).
+        const existing = document.getElementById('presenterEl');
+        if (existing) {
+          existing.innerHTML = renderPresenterInner();
+          const warm = document.getElementById('warmupResponsesPanel');
+          if (warm) warm.innerHTML = renderWarmupResponsesPanel();
+        }
+        else { wrap.innerHTML = renderWarmupResponsesPanel() + renderPresenter(); }
+        return;
+      }
+      wrap.innerHTML = renderWarmupResponsesPanel() + renderLessonList();
+    }
+
+    function campDaysForWarmup() {
+      return (hubData?.curriculum || []).flatMap(week => (week.days || []).map(day => ({ ...day, weekLabel: week.label, weekTheme: week.theme || '' }))).filter(day => day.id);
+    }
+
+    function defaultWarmupDayId() {
+      const days = campDaysForWarmup().filter(day => day.date).sort((a, b) => a.date.localeCompare(b.date));
+      const today = todayKey();
+      return days.find(day => day.date === today)?.id || days.find(day => day.date > today)?.id || days[0]?.id || '';
+    }
+
+    async function loadWarmupResponses(dayId, rerender = true) {
+      const selected = dayId || warmupSelectedDayId || defaultWarmupDayId();
+      warmupSelectedDayId = selected;
+      if (!selected) return;
+      try {
+        warmupResponses = await api(`/api/camp/coach/begin-lesson-responses?dayId=${encodeURIComponent(selected)}`);
+        if (rerender && activeView === 'livelesson' && !lessonDraft) {
+          const panel = document.getElementById('warmupResponsesPanel');
+          if (panel) panel.innerHTML = renderWarmupResponsesPanel();
+          else renderLiveLessonWrap();
+        }
+      } catch (err) {
+        warmupResponses = { error: err.message };
+      }
+    }
+
+    function renderWarmupResponsesPanel() {
+      const days = campDaysForWarmup();
+      if (!warmupSelectedDayId) warmupSelectedDayId = defaultWarmupDayId();
+      const selectedDay = days.find(day => day.id === warmupSelectedDayId) || days[0];
+      const data = warmupResponses && warmupResponses.day?.id === warmupSelectedDayId ? warmupResponses : null;
+      const answered = data?.answeredCount || 0;
+      const total = data?.totalStudents || 0;
+      return `
+        <div class="warmup-panel" id="warmupResponsesPanel">
+          <div class="section-title" style="font-size:18px">Begin Lesson Warm-ups</div>
+          <p class="section-sub">Review student answers while the class settles and before you start presenting.</p>
+          <div class="form-grid" style="grid-template-columns:minmax(220px,1fr) auto">
+            <div>
+              <label for="warmupDaySelect">Assignment day</label>
+              <select id="warmupDaySelect" onchange="loadWarmupResponses(this.value)">
+                ${days.map(day => `<option value="${esc(day.id)}" ${day.id === warmupSelectedDayId ? 'selected' : ''}>${esc(fmt(day.date, { month: 'short', day: 'numeric' }))} - ${esc((day.assignment || day.activity || day.build || 'Assignment').slice(0, 70))}</option>`).join('')}
+              </select>
+            </div>
+            <div style="align-self:end"><button class="btn btn-ghost" onclick="loadWarmupResponses(warmupSelectedDayId)">Refresh</button></div>
+          </div>
+          ${selectedDay ? `<div class="warmup-summary">
+            <span class="status-pill done">${answered} answered</span>
+            <span class="status-pill todo">${Math.max(0, total - answered)} waiting</span>
+            <span class="status-pill todo">${esc(selectedDay.weekLabel || '')}</span>
+          </div>` : ''}
+          ${data ? renderWarmupResponseGroups(data) : '<p class="section-sub">Choose a day or press Refresh to load warm-up answers.</p>'}
+        </div>
+      `;
+    }
+
+    function renderWarmupResponseGroups(data) {
+      if (data.error) return `<p class="section-sub">${esc(data.error)}</p>`;
+      const unanswered = data.unanswered || [];
+      const groups = data.byQuestion || [];
+      return `
+        ${groups.map((group, index) => `
+          <div class="warmup-answer">
+            <strong>Q${index + 1}: ${esc(group.question)}</strong>
+            ${(group.answers || []).length ? group.answers.map(item => `<p><b>${esc(item.studentName)}:</b> ${esc(item.answer)}</p>`).join('') : '<p>No answers yet.</p>'}
+          </div>
+        `).join('')}
+        ${unanswered.length ? `<div class="warmup-answer"><strong>Still waiting</strong><p>${esc(unanswered.map(item => item.name).join(', '))}</p></div>` : ''}
+      `;
     }
 
     function renderLessonList() {
@@ -2006,6 +2614,7 @@
       try {
         const res = await api('/api/camp/coach/live');
         liveState = res.live; lastTally = res.tally || { total: 0, counts: [] };
+        await loadWarmupResponses(warmupSelectedDayId, false);
         if (!liveState.active) { stopLivePolling(); refreshNavBadges(); }
         if (activeView === 'livelesson' && !lessonDraft) renderLiveLessonWrap();
       } catch (err) { /* keep last view */ }
@@ -2013,7 +2622,8 @@
     function startLivePolling() { stopLivePolling(); livePollTimer = setInterval(pollLive, 3000); }
     function stopLivePolling() { if (livePollTimer) { clearInterval(livePollTimer); livePollTimer = null; } }
 
-    function renderPresenter() {
+    // Inner content of #presenterEl — re-rendered in place so fullscreen survives polls/navigation.
+    function renderPresenterInner() {
       const s = liveState.slides[liveState.currentIndex] || liveState.slides[0];
       const isQ = s.type === 'question';
       const thumbs = liveState.slides.map((sl, i) =>
@@ -2036,29 +2646,33 @@
         </div>`;
       }
       return `
-        <div class="section-title">🎥 Presenting: ${esc(liveState.lessonTitle)}</div>
-        <p class="section-sub"><span class="live-dot"></span>Live now — campers can join from their iPad. Use Prev/Next (or the numbers) to move everyone's screen.</p>
-        <div class="presenter">
-          <div class="presenter-bar">
-            <div>
-              <div class="title">${esc(liveState.lessonTitle)}</div>
-              <div class="counter">Slide ${liveState.currentIndex + 1} of ${liveState.slides.length}</div>
-            </div>
-            <div class="presenter-controls">
-              <button class="btn btn-ghost" onclick="livePrev()" ${liveState.currentIndex === 0 ? 'disabled' : ''}>◀ Prev</button>
-              <button class="btn btn-ghost" onclick="liveNext()" ${liveState.currentIndex >= liveState.slides.length - 1 ? 'disabled' : ''}>Next ▶</button>
-              <button class="btn btn-danger" onclick="liveStop()">■ End</button>
-            </div>
+        <div class="presenter-bar">
+          <div>
+            <div class="title">${esc(liveState.lessonTitle)}</div>
+            <div class="counter">Slide ${liveState.currentIndex + 1} of ${liveState.slides.length}</div>
           </div>
-          <div class="slide-show ${isQ ? 'q' : ''}">
-            <div class="slide-kicker">${isQ ? '❓ Question' : '📄 ' + ('Slide ' + (liveState.currentIndex + 1))}</div>
-            <h2>${esc(s.title) || '<span style=\"color:var(--muted)\">(no title)</span>'}</h2>
-            ${s.body ? `<div class="body">${esc(s.body)}</div>` : ''}
-            ${s.image ? `<img src="${esc(s.image)}" alt="" onerror="this.style.display='none'">` : ''}
-            ${tallyHtml}
+          <div class="presenter-controls">
+            <button class="fs-btn" onclick="toggleFullscreen('presenterEl')" title="Full screen (for the TV)">⛶ Full screen</button>
+            <button class="btn btn-ghost" onclick="livePrev()" ${liveState.currentIndex === 0 ? 'disabled' : ''}>◀ Prev</button>
+            <button class="btn btn-ghost" onclick="liveNext()" ${liveState.currentIndex >= liveState.slides.length - 1 ? 'disabled' : ''}>Next ▶</button>
+            <button class="btn btn-danger" onclick="liveStop()">■ End</button>
           </div>
-          <div class="slide-thumbs">${thumbs}</div>
-        </div>`;
+        </div>
+        <div class="slide-show ${isQ ? 'q' : ''}">
+          <div class="slide-kicker">${isQ ? '❓ Question' : '📄 ' + ('Slide ' + (liveState.currentIndex + 1))}</div>
+          <h2>${esc(s.title) || '<span style=\"color:var(--muted)\">(no title)</span>'}</h2>
+          ${s.body ? `<div class="body">${esc(s.body)}</div>` : ''}
+          ${s.image ? `<img src="${esc(s.image)}" alt="" onerror="this.style.display='none'">` : ''}
+          ${tallyHtml}
+        </div>
+        <div class="slide-thumbs">${thumbs}</div>`;
+    }
+
+    function renderPresenter() {
+      return `
+        <div class="section-title presenter-heading">🎥 Presenting: ${esc(liveState.lessonTitle)}</div>
+        <p class="section-sub presenter-heading"><span class="live-dot"></span>Live now — campers can join from their iPad. Use Prev/Next (or the numbers) to move everyone's screen.</p>
+        <div class="presenter" id="presenterEl">${renderPresenterInner()}</div>`;
     }
 
     async function load() {
@@ -2093,6 +2707,20 @@
 
     document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
     window.addEventListener('beforeunload', stopLivePolling);
+
+    function toggleFullscreen(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const doc = document;
+      if (doc.fullscreenElement || doc.webkitFullscreenElement) {
+        (doc.exitFullscreen || doc.webkitExitFullscreen || function(){}).call(doc);
+      } else {
+        (el.requestFullscreen || el.webkitRequestFullscreen || function(){}).call(el);
+      }
+    }
+    window.toggleFullscreen = toggleFullscreen;
+
+    setInterval(tickCoachTimer, 1000);
 
     load();
   </script>

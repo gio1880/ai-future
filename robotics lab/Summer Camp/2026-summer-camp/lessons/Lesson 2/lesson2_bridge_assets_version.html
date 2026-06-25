@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 2: Intro to SPIKE Prime Bridge</title>
+  <style>
+    :root{--bg:#bfe0ff;--card:#eef7ff;--ink:#17324d;--accent:#073e77;--yellow:#fece00;--shadow:rgba(7,62,119,.18);}*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#8fc4f4;color:var(--ink)}.deck{width:100%}.slide{min-height:100vh;padding:44px 64px;background:var(--bg);border-bottom:10px solid #8fc4f4;display:flex;flex-direction:column;justify-content:center;gap:24px;page-break-after:always}h1{margin:0;font-size:58px;line-height:1.05;color:#102e4a}h2{margin:0;font-size:46px;color:#102e4a}h3{margin:0 0 12px;font-size:30px;color:var(--accent)}p,li,td,th{font-size:26px;line-height:1.3}.subtitle{font-size:32px;max-width:980px;line-height:1.25}.big-card,.card,.prompt,.force-card,.shape-card,.mini-card{background:var(--card);border:4px solid var(--accent);border-radius:22px;padding:28px;box-shadow:0 10px 0 var(--shadow)}.card,.prompt,.force-card,.shape-card,.mini-card{border-width:3px;border-radius:18px;box-shadow:0 8px 0 var(--shadow)}.badge{display:inline-block;width:max-content;background:var(--yellow);border:3px solid var(--accent);border-radius:999px;padding:10px 18px;font-size:24px;font-weight:bold;color:#122b45}.badge.original{background:#fff}.goal{font-size:40px;line-height:1.3;font-weight:bold}.goal strong,.goal b{color:var(--accent)}.grid-2,.two-col,.shape-row{display:grid;grid-template-columns:1fr 1fr;gap:28px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.grid-6{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.center{text-align:center}.teacher-note{background:#fff9d6;border:3px dashed var(--accent);border-radius:16px;padding:20px;font-size:25px}.topbar{display:flex;align-items:center;gap:18px}.small-label{font-size:24px;font-weight:bold;color:#102e4a}.original-slide{padding:28px;background:#bfe0ff}.image-frame{width:100%;max-width:1180px;margin:0 auto;background:white;border:4px solid var(--accent);border-radius:22px;overflow:hidden;box-shadow:0 10px 0 var(--shadow)}.image-frame img{display:block;width:100%;height:auto}.pill-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:20px}.pill-row span{background:#fff;border:2px solid var(--accent);border-radius:999px;padding:10px 16px;font-size:24px}.checklist,.rules,.reflection{display:grid;gap:18px}.checklist div,.rules div,.reflection p{background:rgba(255,255,255,.86);border:3px solid var(--accent);border-radius:16px;padding:20px 24px;font-size:26px;line-height:1.3}.checklist div{border-left:12px solid var(--yellow)}.rules{grid-template-columns:1fr 1fr}.reflection{grid-template-columns:1fr 1fr}.compare{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:3px solid var(--accent);border-radius:18px;background:var(--card);box-shadow:0 8px 0 var(--shadow)}.compare th,.compare td{padding:18px 22px;border-bottom:2px solid var(--accent);border-right:2px solid var(--accent);text-align:left}.compare th:last-child,.compare td:last-child{border-right:0}.compare tr:last-child td{border-bottom:0}.compare th{background:#fff}.big-idea,.warning,.big-text{background:#fff;border:3px solid var(--accent);border-radius:16px;padding:18px 24px;font-size:30px;line-height:1.25;text-align:center}.warning{background:#fff9d6}.prompt,.force-card,.shape-card,.mini-card{text-align:center}.emoji{font-size:76px;font-weight:900;letter-spacing:0}.rectangle-shape{width:260px;height:170px;border:12px solid var(--accent);margin:15px auto 28px}.triangle-shape{width:0;height:0;border-left:135px solid transparent;border-right:135px solid transparent;border-bottom:220px solid var(--accent);margin:0 auto 28px;position:relative}.triangle-shape:after{content:"";position:absolute;left:-105px;top:50px;width:0;height:0;border-left:105px solid transparent;border-right:105px solid transparent;border-bottom:170px solid var(--bg)}@media print{body{background:white}.slide{min-height:100vh}}@media (max-width:900px){.slide{padding:36px 28px}h1{font-size:42px}h2{font-size:36px}p,li,td,th,.checklist div,.rules div,.reflection p{font-size:22px}.grid-2,.grid-3,.grid-6,.two-col,.shape-row,.rules,.reflection{grid-template-columns:1fr}.goal{font-size:30px}.emoji{font-size:58px}.rectangle-shape{width:210px;height:135px}.triangle-shape{border-left-width:110px;border-right-width:110px;border-bottom-width:180px}.triangle-shape:after{left:-85px;top:42px;border-left-width:85px;border-right-width:85px;border-bottom-width:138px}}
+    html,body{height:100%;overflow:hidden}.deck{width:100vw;height:100vh;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:auto;-ms-overflow-style:none;scrollbar-width:none}.deck::-webkit-scrollbar{display:none}.slide{width:100vw;min-width:100vw;height:100vh;min-height:100vh;flex:0 0 100vw;overflow:hidden;scroll-snap-align:start;border-bottom:0}.slide-nav{position:fixed;right:18px;bottom:18px;z-index:20;display:flex;align-items:center;gap:10px}.slide-nav button{width:46px;height:46px;border-radius:50%;border:3px solid var(--accent);background:#fff;color:var(--accent);font-size:26px;font-weight:bold;cursor:pointer;box-shadow:0 5px 0 var(--shadow)}.slide-nav a{height:46px;min-width:76px;border-radius:999px;border:3px solid var(--accent);background:#fff;color:var(--accent);font-size:18px;font-weight:bold;cursor:pointer;box-shadow:0 5px 0 var(--shadow);display:inline-flex;align-items:center;justify-content:center;text-decoration:none;padding:0 14px}.slide-nav button:disabled{opacity:.45;cursor:default}.slide-counter{background:rgba(255,255,255,.92);border:3px solid var(--accent);border-radius:999px;padding:9px 14px;font-size:18px;font-weight:bold;color:#102e4a}.original-slide .image-frame{max-height:calc(100vh - 128px);display:flex;align-items:center;justify-content:center}.original-slide .image-frame img{width:100%;height:100%;max-height:calc(100vh - 140px);object-fit:contain}@media (max-width:900px),(max-height:840px){.slide{padding:20px 22px;gap:12px}p,ul,ol{margin-top:0;margin-bottom:0}h1{font-size:32px}h2{font-size:25px}h3{font-size:20px;margin-bottom:6px}p,li,td,th,.rules div,.reflection p,.checklist div{font-size:16px;line-height:1.18}.subtitle{font-size:18px}.goal{font-size:22px}.big-card,.card,.prompt,.force-card,.shape-card,.mini-card{padding:14px;border-width:3px;border-radius:14px;box-shadow:0 5px 0 var(--shadow)}.grid-2,.two-col,.shape-row,.rules,.reflection{grid-template-columns:repeat(2,1fr);gap:12px}.grid-3,.grid-6{grid-template-columns:repeat(3,1fr);gap:12px}.teacher-note{font-size:16px;padding:12px}.badge{font-size:16px;padding:6px 10px}.topbar{gap:8px}.small-label{font-size:16px}.image-frame{border-width:3px;border-radius:14px}.big-idea,.warning,.big-text{font-size:18px;padding:10px 12px}.emoji{font-size:44px}.rectangle-shape{width:110px;height:76px;border-width:8px;margin:8px auto 12px}.triangle-shape{border-left-width:60px;border-right-width:60px;border-bottom-width:100px;margin-bottom:12px}.triangle-shape:after{left:-45px;top:28px;border-left-width:45px;border-right-width:45px;border-bottom-width:72px}.slide-nav{right:10px;bottom:10px}.slide-nav button{width:38px;height:38px;font-size:22px}.slide-nav a{height:38px;min-width:62px;font-size:15px;padding:0 10px}.slide-counter{font-size:15px;padding:7px 10px}}@media print{html,body{height:auto;overflow:visible}.deck{display:block;width:100%;height:auto;overflow:visible}.slide{width:100%;min-width:0;height:auto;min-height:100vh;overflow:visible;page-break-after:always}.slide-nav{display:none}}
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 1</span><span class="small-label">Original Lesson 2 slide 1</span></div>
+      <div class="image-frame"><img src="lesson2_assets/original-slide-01.jpg" alt="Original Lesson 2 slide 1" /></div>
+    </section>
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+<h1>Quick Review: Lesson 1</h1>
+        
+<div class="two-col">
+  <div class="card">
+    <h2>What made our towers strong?</h2>
+    <ul>
+      <li><b>Strong</b> — holds weight without breaking</li>
+      <li><b>Rigid</b> — does not bend, wiggle, or twist easily</li>
+      <li><b>Stable</b> — does not fall over easily</li>
+    </ul>
+  </div>
+  <div class="prompt">
+    <h2>Turn & Talk</h2>
+    <p>What helped your tower stand taller?</p>
+    <div class="pill-row"><span>Wide base</span><span>Strong connections</span><span>Better supports</span></div>
+  </div>
+</div>
+    </section>
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+<h1>Today’s Goal</h1>
+        
+<div class="goal">
+  <p>Today I will learn how <b>triangles, tension, and compression</b> help engineers build strong bridges.</p>
+</div>
+<div class="checklist">
+  <div>✓ Explain tension and compression</div>
+  <div>✓ Use triangles to make a bridge rigid</div>
+  <div>✓ Build a bridge that spans a gap and holds weight</div>
+</div>
+    </section>
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+<h1>From Towers to Bridges</h1>
+        
+<table class="compare">
+  <tr><th>Lesson 1: Tower</th><th>Lesson 2: Bridge</th></tr>
+  <tr><td>Goal: build tall</td><td>Goal: build across</td></tr>
+  <tr><td>Needs to be stable</td><td>Needs to hold weight</td></tr>
+  <tr><td>Wide base helps</td><td>Triangles help</td></tr>
+  <tr><td>Fights tipping</td><td>Fights bending</td></tr>
+</table>
+<div class="big-idea">Big idea: both towers and bridges need to be <b>strong, rigid, and stable</b>.</div>
+    </section>
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 2</span><span class="small-label">Original Lesson 2 slide 2</span></div>
+      <div class="image-frame"><img src="lesson2_assets/original-slide-02.jpg" alt="Original Lesson 2 slide 2" /></div>
+    </section>
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 3</span><span class="small-label">Original Lesson 2 slide 3</span></div>
+      <div class="image-frame"><img src="lesson2_assets/original-slide-03.jpg" alt="Original Lesson 2 slide 3" /></div>
+    </section>
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 4</span><span class="small-label">Original Lesson 2 slide 4</span></div>
+      <div class="image-frame"><img src="lesson2_assets/original-slide-04.jpg" alt="Original Lesson 2 slide 4" /></div>
+    </section>
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+<h1>Technic Pieces We Will Use Today</h1>
+        
+<div class="grid-6">
+  <div class="mini-card"><h2>Beams</h2><p>Main bridge members</p></div>
+  <div class="mini-card"><h2>Angled Beams</h2><p>Great for triangles</p></div>
+  <div class="mini-card"><h2>Pins</h2><p>Connect members</p></div>
+  <div class="mini-card"><h2>Axles / Connectors</h2><p>Hold parts in line</p></div>
+  <div class="mini-card"><h2>Frames</h2><p>Rigid base shapes</p></div>
+  <div class="mini-card"><h2>Plates</h2><p>Support the load</p></div>
+</div>
+<div class="big-idea">Today we are using these pieces to build <b>members</b> and <b>triangles</b>.</div>
+    </section>
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 5</span><span class="small-label">Original Lesson 2 slide 5</span></div>
+      <div class="image-frame"><img src="lesson2_assets/original-slide-05.jpg" alt="Original Lesson 2 slide 5" /></div>
+    </section>
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 6</span><span class="small-label">Original Lesson 2 slide 6</span></div>
+      <div class="image-frame"><img src="lesson2_assets/original-slide-06.jpg" alt="Original Lesson 2 slide 6" /></div>
+    </section>
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+<h1>Try It: Pull vs. Push</h1>
+        
+<div class="two-col">
+  <div class="force-card">
+    <div class="emoji">↔</div>
+    <h2>Tension</h2>
+    <p>Pull your hands apart.</p>
+    <p>The structure is being <b>stretched</b>.</p>
+  </div>
+  <div class="force-card">
+    <div class="emoji">→←</div>
+    <h2>Compression</h2>
+    <p>Push your hands together.</p>
+    <p>The structure is being <b>squeezed</b>.</p>
+  </div>
+</div>
+<div class="big-idea">Bridge connection: the top may get squeezed, while the bottom may get stretched.</div>
+    </section>
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 7</span><span class="small-label">Original Lesson 2 slide 7</span></div>
+      <div class="image-frame"><img src="lesson2_assets/original-slide-07.jpg" alt="Original Lesson 2 slide 7" /></div>
+    </section>
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+<h1>Bridge Members in LEGO Language</h1>
+        
+<div class="two-col">
+  <div class="card">
+    <h2>What is a member?</h2>
+    <p>A <b>member</b> is one piece of a structure.</p>
+    <ul>
+      <li>Beam</li>
+      <li>Axle</li>
+      <li>Frame</li>
+      <li>Diagonal support</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>Ties & Struts</h2>
+    <p><b>Tie</b> = member being pulled</p>
+    <p><b>Strut</b> = member being pushed</p>
+    <div class="big-text">Ties pull. Struts push.</div>
+  </div>
+</div>
+    </section>
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 8</span><span class="small-label">Original Lesson 2 slide 8</span></div>
+      <div class="image-frame"><img src="lesson2_assets/original-slide-08.jpg" alt="Original Lesson 2 slide 8" /></div>
+    </section>
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 9</span><span class="small-label">Original Lesson 2 slide 9</span></div>
+      <div class="image-frame"><img src="lesson2_assets/original-slide-09.jpg" alt="Original Lesson 2 slide 9" /></div>
+    </section>
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 10</span><span class="small-label">Original Lesson 2 slide 10</span></div>
+      <div class="image-frame"><img src="lesson2_assets/original-slide-10.jpg" alt="Original Lesson 2 slide 10" /></div>
+    </section>
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+<h1>Which Shape Is Stronger?</h1>
+        
+<div class="shape-row">
+  <div class="shape-card">
+    <div class="rectangle-shape"></div>
+    <h2>Rectangle</h2>
+    <p>Can wiggle and change shape.</p>
+  </div>
+  <div class="shape-card">
+    <div class="triangle-shape"></div>
+    <h2>Triangle</h2>
+    <p>Locks the shape in place.</p>
+  </div>
+</div>
+<div class="big-idea">A bridge becomes more <b>rigid</b> when we add diagonal beams and triangles.</div>
+    </section>
+    <section class="slide original-slide">
+      <div class="topbar"><span class="badge original">Original Slide 11</span><span class="small-label">Original Lesson 2 slide 11</span></div>
+      <div class="image-frame"><img src="lesson2_assets/original-slide-11.jpg" alt="Original Lesson 2 slide 11" /></div>
+    </section>
+    <section class="slide">
+      <span class="badge">BioGlow Mission</span>
+      <h1>BioGlow Mission: Cross the Glow Stream</h1>
+      <div class="big-card">
+        <p class="goal">The BioGlow habitat has a glowing stream running through the work zone. Engineers need a bridge that can carry supplies across without collapsing.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card center">
+          <h2>Span the Gap</h2>
+          <p>Your bridge must reach from one side of the stream to the other.</p>
+        </div>
+        <div class="card center">
+          <h2>Hold the Load</h2>
+          <p>The bridge needs to carry materials in the center.</p>
+        </div>
+        <div class="card center">
+          <h2>Use Triangles</h2>
+          <p>Triangles help control bending, tension, and compression.</p>
+        </div>
+      </div>
+      <div class="teacher-note"><strong>Mission prompt:</strong> Where should your team add diagonal supports so the bridge stays rigid?</div>
+    </section>
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+<h1>Improved Bridge Challenge Rules</h1>
+        
+<div class="rules">
+  <div><b>1.</b> Span a <b>14-inch gap</b>.</div>
+  <div><b>2.</b> Stand without being held.</div>
+  <div><b>3.</b> Hold a cup in the center.</div>
+  <div><b>4.</b> Hold as many marbles as possible.</div>
+  <div><b>5.</b> Use at least <b>two triangles</b>.</div>
+  <div><b>6.</b> Stay standing for <b>10 seconds</b>.</div>
+</div>
+<div class="warning">Testing rule: once testing begins, hands must be off the bridge.</div>
+    </section>
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+<h1>Fair Build Rules</h1>
+        
+<div class="rules">
+  <div>Each team gets the same starting pieces.</div>
+  <div>Use only pieces from your team bin.</div>
+  <div>No taking pieces from another team.</div>
+  <div>Ask before trading pieces.</div>
+  <div>When the timer ends, hands go up.</div>
+</div>
+    </section>
+    <section class="slide">
+      <span class="badge">Added Slide</span>
+<h1>Bridge Reflection</h1>
+        
+<div class="reflection">
+  <p>Where did your bridge bend the most?</p>
+  <p>Did your bridge use triangles?</p>
+  <p>Was your bridge strong, rigid, and stable?</p>
+  <p>What part was in tension?</p>
+  <p>What part was in compression?</p>
+  <p>What would you change with 10 more minutes?</p>
+</div>
+    </section>
+  </main>
+  <div class="slide-nav" aria-label="Slide controls">
+    <a class="home-link" href="../index.html" aria-label="Back to home page">Home</a>
+    <button type="button" data-prev aria-label="Previous slide">&lsaquo;</button>
+    <span class="slide-counter" aria-live="polite">1 / 1</span>
+    <button type="button" data-next aria-label="Next slide">&rsaquo;</button>
+  </div>
+  <script>
+    (() => {
+      const deck = document.querySelector('.deck');
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const prev = document.querySelector('[data-prev]');
+      const next = document.querySelector('[data-next]');
+      const counter = document.querySelector('.slide-counter');
+      let index = 0;
+      let scrollTimer;
+      deck.tabIndex = 0;
+
+      const update = () => {
+        index = Math.max(0, Math.min(slides.length - 1, Math.round(deck.scrollLeft / deck.clientWidth)));
+        counter.textContent = `${index + 1} / ${slides.length}`;
+        prev.disabled = index === 0;
+        next.disabled = index === slides.length - 1;
+      };
+
+      const goTo = (target) => {
+        index = Math.max(0, Math.min(slides.length - 1, target));
+        deck.scrollTo({ left: index * deck.clientWidth, behavior: 'auto' });
+        update();
+      };
+
+      prev.addEventListener('click', () => goTo(index - 1));
+      next.addEventListener('click', () => goTo(index + 1));
+      deck.addEventListener('scroll', () => {
+        window.clearTimeout(scrollTimer);
+        scrollTimer = window.setTimeout(update, 80);
+      });
+      window.addEventListener('resize', () => goTo(index));
+      const handleKey = (event) => {
+        if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+        const key = String(event.key || '').toLowerCase();
+        const code = String(event.code || '').toLowerCase();
+        const nextKeys = ['arrowright', 'right', 'pagedown'];
+        const prevKeys = ['arrowleft', 'left', 'pageup'];
+        let target = null;
+        update();
+        if (nextKeys.includes(key) || nextKeys.includes(code)) target = index + 1;
+        if (prevKeys.includes(key) || prevKeys.includes(code)) target = index - 1;
+        if (key === 'home' || code === 'home') target = 0;
+        if (key === 'end' || code === 'end') target = slides.length - 1;
+        if (target === null) return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+        goTo(target);
+      };
+      document.addEventListener('keydown', handleKey, true);
+      deck.focus({ preventScroll: true });
+      update();
+    })();
+  </script>
+</body>
+</html>

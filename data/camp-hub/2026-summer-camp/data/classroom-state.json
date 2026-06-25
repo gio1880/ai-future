@@ -7,5 +7,91 @@
     "pausedRemainingSeconds": 1200,
     "running": false
   },
-  "groups": []
+  "groups": [],
+  "skills": [
+    {
+      "id": "skill-teamwork",
+      "name": "Teamwork",
+      "icon": "🤝",
+      "points": 1,
+      "type": "positive"
+    },
+    {
+      "id": "skill-helping",
+      "name": "Helping Others",
+      "icon": "💙",
+      "points": 1,
+      "type": "positive"
+    },
+    {
+      "id": "skill-creativity",
+      "name": "Creativity",
+      "icon": "🎨",
+      "points": 1,
+      "type": "positive"
+    },
+    {
+      "id": "skill-persistence",
+      "name": "Persistence",
+      "icon": "💪",
+      "points": 1,
+      "type": "positive"
+    },
+    {
+      "id": "skill-problem-solving",
+      "name": "Problem Solving",
+      "icon": "🧩",
+      "points": 1,
+      "type": "positive"
+    },
+    {
+      "id": "skill-focused",
+      "name": "Focused",
+      "icon": "🎯",
+      "points": 1,
+      "type": "positive"
+    },
+    {
+      "id": "skill-clean-up",
+      "name": "Clean Workspace",
+      "icon": "🧹",
+      "points": 1,
+      "type": "positive"
+    },
+    {
+      "id": "skill-leadership",
+      "name": "Leadership",
+      "icon": "⭐",
+      "points": 2,
+      "type": "positive"
+    },
+    {
+      "id": "skill-off-task",
+      "name": "Off Task",
+      "icon": "😵‍💫",
+      "points": 1,
+      "type": "negative"
+    },
+    {
+      "id": "skill-not-listening",
+      "name": "Not Listening",
+      "icon": "🙉",
+      "points": 1,
+      "type": "negative"
+    },
+    {
+      "id": "skill-unkind",
+      "name": "Unkind",
+      "icon": "💔",
+      "points": 1,
+      "type": "negative"
+    },
+    {
+      "id": "skill-unsafe",
+      "name": "Unsafe",
+      "icon": "⚠️",
+      "points": 2,
+      "type": "negative"
+    }
+  ]
 }

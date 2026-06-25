@@ -504,6 +504,7 @@
         <div class="modal-body">
           <input id="classId" type="hidden">
           <label class="field">Class name <input id="className" required placeholder="e.g. Fall Saturday LEGO Robotics 1"></label>
+          <label class="field">Student class code <input id="classCode" placeholder="e.g. G23"></label>
           <div class="row2">
             <label class="field">Term
               <select id="classTerm">
@@ -836,6 +837,7 @@
                     <td>${classPills(student)}</td>
                     <td>${accessPills(student)}</td>
                     <td class="cell-actions">
+                      <button class="btn sm" type="button" title="Show / reset their one student-portal login" onclick="resetStudentLogin('${esc(student.id)}','${esc(student.name)}')">🔑 Login</button>
                       <button class="btn sm" type="button" onclick="openStudentModal('${esc(student.id)}')">Edit</button>
                       <button class="btn sm danger" type="button" onclick="deleteStudent('${esc(student.id)}')">✕</button>
                     </td>
@@ -913,6 +915,7 @@
               <h3>${esc(classItem.name)}</h3>
               <div class="meta">
                 <span class="pill">${esc(formatProgram(classItem.program))}</span>
+                ${classItem.classCode ? `<span class="pill">Code: ${esc(classItem.classCode)}</span>` : ''}
                 <span class="pill">${esc(classItem.day || 'No day')}</span>
                 <span class="pill count">${enrolled.length} student${enrolled.length === 1 ? '' : 's'}</span>
               </div>
@@ -1121,6 +1124,9 @@
         const url = id ? `/api/master-roster/students/${encodeURIComponent(id)}` : '/api/master-roster/students';
         const result = await api(url, { method: id ? 'PATCH' : 'POST', body: JSON.stringify(payload) });
         state.roster = result.data; closeStudentModal(); renderAll();
+        if (!id && result.portalLogin) {
+          showNotice(`🔑 ${payload.name}'s Student Hub login — Username: ${result.portalLogin.username}   Password: ${result.portalLogin.password}   ·   They sign in at /student-login. Write this down; it won't show again.`, true);
+        }
       } catch (err) { showNotice(err.message); }
     });
 
@@ -1133,6 +1139,16 @@
       } catch (err) { showNotice(err.message); }
     };
 
+    // Show/reset a student's single Student Portal login (one login → all their hubs).
+    window.resetStudentLogin = async function resetStudentLogin(id, name) {
+      if (!confirm(`Reset ${name}'s student-portal login? Their old password (if any) stops working. You'll see the new one to give them.`)) return;
+      try {
+        const result = await api(`/api/master-roster/students/${encodeURIComponent(id)}/portal-login`, { method: 'POST' });
+        if (result.data) { state.roster = result.data; renderAll(); }
+        showNotice(`🔑 ${name}'s Student Hub login — Username: ${result.login.username}   Password: ${result.login.password}   ·   They sign in at /student-login. Write this down; it won't show again.`, true);
+      } catch (err) { showNotice(err.message); }
+    };
+
     /* ── Class modal ── */
     window.openClassModal = function openClassModal(id) {
       showNotice('');
@@ -1140,6 +1156,7 @@
       const classItem = id ? classById(id) : null;
       document.getElementById('classId').value = classItem ? classItem.id : '';
       document.getElementById('className').value = classItem?.name || '';
+      document.getElementById('classCode').value = classItem?.classCode || '';
       document.getElementById('classTerm').value = classItem?.term || 'fall';
       document.getElementById('classProgram').value = classItem?.program || 'lego-robotics';
       document.getElementById('classDay').value = classItem?.day || '';
@@ -1155,6 +1172,7 @@
       const id = document.getElementById('classId').value;
       const payload = {
         name: document.getElementById('className').value,
+        classCode: document.getElementById('classCode').value,
         term: document.getElementById('classTerm').value,
         program: document.getElementById('classProgram').value,
         day: document.getElementById('classDay').value,

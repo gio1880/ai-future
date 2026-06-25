@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-17T16:35:59.187Z",
+  "updatedAt": "2026-06-25T20:55:50.006Z",
   "settings": {
     "summerWeeks": [
       {
@@ -55,31 +55,37 @@
       "id": "summer-lego-robotics-1",
       "term": "summer",
       "program": "lego-robotics",
-      "name": "Summer LEGO Robotics 1",
+      "name": "Summer LEGO Robotics G2-3",
       "day": "Weekly",
-      "schedule": "Summer camp weekly enrollment",
+      "schedule": "Summer camp G2-3 LEGO Robotics class",
       "active": true,
-      "createdAt": "2026-06-14T21:20:59.619Z"
+      "createdAt": "2026-06-14T21:20:59.619Z",
+      "updatedAt": "2026-06-25T20:54:29.541Z",
+      "classCode": "G23"
     },
     {
       "id": "summer-lego-robotics-2",
       "term": "summer",
       "program": "lego-robotics",
-      "name": "Summer LEGO Robotics 2",
+      "name": "Summer LEGO Robotics G4-5",
       "day": "Weekly",
-      "schedule": "Summer camp weekly enrollment",
+      "schedule": "Summer camp G4-5 LEGO Robotics class",
       "active": true,
-      "createdAt": "2026-06-14T21:20:59.619Z"
+      "createdAt": "2026-06-14T21:20:59.619Z",
+      "updatedAt": "2026-06-25T20:54:29.553Z",
+      "classCode": "G45"
     },
     {
       "id": "summer-ftc",
       "term": "summer",
       "program": "ftc",
-      "name": "Summer FTC Robotics",
+      "name": "Summer FTC Robotics G6+",
       "day": "Weekly",
-      "schedule": "Summer camp weekly enrollment",
+      "schedule": "Summer camp G6+ FTC robotics class",
       "active": true,
-      "createdAt": "2026-06-14T21:20:59.619Z"
+      "createdAt": "2026-06-14T21:20:59.619Z",
+      "updatedAt": "2026-06-25T20:54:29.553Z",
+      "classCode": "G6PLUS"
     },
     {
       "id": "fall-sat-lego-robotics-1",
@@ -200,16 +206,29 @@
       "parentName": "",
       "email": "",
       "phone": "",
-      "notes": "Imported from Code Lab account (azhu); Source id: student-1774671598562-464w5j.",
+      "notes": "Imported from Code Lab account (azhu); Source id: student-1774671598562-464w5j.\nSummer 2026 roster: G6+ (G8); class Summer FTC Robotics G6+.",
       "active": true,
       "enrollments": [
         {
           "classId": "code-lab-students",
           "weeks": []
+        },
+        {
+          "classId": "summer-ftc",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "anthonyzhu",
+      "summerGradeBand": "G6+",
+      "grade": "G8",
+      "campUserId": "camp-student-anthony-zhu"
     },
     {
       "id": "master-code-lab-ktao",
@@ -217,16 +236,28 @@
       "parentName": "",
       "email": "",
       "phone": "",
-      "notes": "Imported from Code Lab account (ktao); Source id: student-1774671598667-04opuh.",
+      "notes": "Imported from Code Lab account (ktao); Source id: student-1774671598667-04opuh.\nSummer 2026 roster: G4-5; class Summer LEGO Robotics G4-5.",
       "active": true,
       "enrollments": [
         {
           "classId": "code-lab-students",
           "weeks": []
+        },
+        {
+          "classId": "summer-lego-robotics-2",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "kyletao",
+      "summerGradeBand": "G4-5",
+      "campUserId": "camp-student-kyle-tao"
     },
     {
       "id": "master-code-lab-bzeng",
@@ -243,7 +274,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "brianzeng"
     },
     {
       "id": "master-code-lab-jgu",
@@ -260,7 +292,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "jonathangu"
     },
     {
       "id": "master-code-lab-jleung",
@@ -268,16 +301,28 @@
       "parentName": "",
       "email": "",
       "phone": "",
-      "notes": "Imported from Code Lab account (jleung); Source id: student-1774671599153-83tmkg.",
+      "notes": "Imported from Code Lab account (jleung); Source id: student-1774671599153-83tmkg.\nSummer 2026 roster: G4-5; class Summer LEGO Robotics G4-5.",
       "active": true,
       "enrollments": [
         {
           "classId": "code-lab-students",
           "weeks": []
+        },
+        {
+          "classId": "summer-lego-robotics-2",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "julisaleung",
+      "summerGradeBand": "G4-5",
+      "campUserId": "camp-student-julisa-leung"
     },
     {
       "id": "master-code-lab-izhu",
@@ -285,16 +330,29 @@
       "parentName": "",
       "email": "",
       "phone": "",
-      "notes": "Imported from Code Lab account (izhu); Source id: student-1774671599243-ewobpk.",
+      "notes": "Imported from Code Lab account (izhu); Source id: student-1774671599243-ewobpk.\nSummer 2026 roster: G6+ (G9); class Summer FTC Robotics G6+.",
       "active": true,
       "enrollments": [
         {
           "classId": "code-lab-students",
           "weeks": []
+        },
+        {
+          "classId": "summer-ftc",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "isabellazhu",
+      "summerGradeBand": "G6+",
+      "grade": "G9",
+      "campUserId": "camp-student-isabella-zhu"
     },
     {
       "id": "master-code-lab-clian",
@@ -302,16 +360,28 @@
       "parentName": "",
       "email": "",
       "phone": "",
-      "notes": "Imported from Code Lab account (clian); Source id: student-1774671599328-cjv12z.",
+      "notes": "Imported from Code Lab account (clian); Source id: student-1774671599328-cjv12z.\nSummer 2026 roster: G4-5; class Summer LEGO Robotics G4-5.",
       "active": true,
       "enrollments": [
         {
           "classId": "code-lab-students",
           "weeks": []
+        },
+        {
+          "classId": "summer-lego-robotics-2",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "caileylian",
+      "summerGradeBand": "G4-5",
+      "campUserId": "camp-student-cailey-lian"
     },
     {
       "id": "master-code-lab-smao",
@@ -319,16 +389,28 @@
       "parentName": "",
       "email": "",
       "phone": "",
-      "notes": "Imported from Code Lab account (smao); Source id: student-1774671599415-80gytp.",
+      "notes": "Imported from Code Lab account (smao); Source id: student-1774671599415-80gytp.\nSummer 2026 roster: G2-3; class Summer LEGO Robotics G2-3.",
       "active": true,
       "enrollments": [
         {
           "classId": "code-lab-students",
           "weeks": []
+        },
+        {
+          "classId": "summer-lego-robotics-1",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "sammao",
+      "summerGradeBand": "G2-3",
+      "campUserId": "camp-student-sam-mao"
     },
     {
       "id": "master-code-lab-jzheng",
@@ -336,16 +418,28 @@
       "parentName": "",
       "email": "",
       "phone": "",
-      "notes": "Imported from Code Lab account (jzheng); Source id: student-1774671599504-mzynh4.",
+      "notes": "Imported from Code Lab account (jzheng); Source id: student-1774671599504-mzynh4.\nSummer 2026 roster: G4-5; class Summer LEGO Robotics G4-5.",
       "active": true,
       "enrollments": [
         {
           "classId": "code-lab-students",
           "weeks": []
+        },
+        {
+          "classId": "summer-lego-robotics-2",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "jasperzheng",
+      "summerGradeBand": "G4-5",
+      "campUserId": "camp-student-jasper-zheng"
     },
     {
       "id": "master-code-lab-ozou",
@@ -353,16 +447,28 @@
       "parentName": "",
       "email": "",
       "phone": "",
-      "notes": "Imported from Code Lab account (ozou); Source id: student-1774671599595-lb8rjk.",
+      "notes": "Imported from Code Lab account (ozou); Source id: student-1774671599595-lb8rjk.\nSummer 2026 roster: G2-3; class Summer LEGO Robotics G2-3.",
       "active": true,
       "enrollments": [
         {
           "classId": "code-lab-students",
           "weeks": []
+        },
+        {
+          "classId": "summer-lego-robotics-1",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "owenzou",
+      "summerGradeBand": "G2-3",
+      "campUserId": "camp-student-owen-zou"
     },
     {
       "id": "master-code-lab-hryu",
@@ -370,16 +476,28 @@
       "parentName": "",
       "email": "",
       "phone": "",
-      "notes": "Imported from Code Lab account (hryu); Source id: student-1774671599681-3o11se.",
+      "notes": "Imported from Code Lab account (hryu); Source id: student-1774671599681-3o11se.\nSummer 2026 roster: G4-5; class Summer LEGO Robotics G4-5.",
       "active": true,
       "enrollments": [
         {
           "classId": "code-lab-students",
           "weeks": []
+        },
+        {
+          "classId": "summer-lego-robotics-2",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "hwijunryu",
+      "summerGradeBand": "G4-5",
+      "campUserId": "camp-student-hwijun-ryu"
     },
     {
       "id": "master-code-lab-jchen",
@@ -396,7 +514,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "jaydanchen"
     },
     {
       "id": "master-code-lab-eyang",
@@ -413,7 +532,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "easonyang"
     },
     {
       "id": "master-code-lab-fzhang",
@@ -430,7 +550,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "frankiezhang"
     },
     {
       "id": "master-code-lab-mchen",
@@ -438,16 +559,28 @@
       "parentName": "",
       "email": "",
       "phone": "",
-      "notes": "Imported from Code Lab account (mchen); Source id: student-1774671600067-epmhlq.",
+      "notes": "Imported from Code Lab account (mchen); Source id: student-1774671600067-epmhlq.\nSummer 2026 roster: G4-5; class Summer LEGO Robotics G4-5.",
       "active": true,
       "enrollments": [
         {
           "classId": "code-lab-students",
           "weeks": []
+        },
+        {
+          "classId": "summer-lego-robotics-2",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "marcuschen",
+      "summerGradeBand": "G4-5",
+      "campUserId": "camp-student-marcus-chen"
     },
     {
       "id": "master-code-lab-jxiong",
@@ -464,7 +597,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "jaydenxiong"
     },
     {
       "id": "master-code-lab-aou",
@@ -472,16 +606,28 @@
       "parentName": "",
       "email": "",
       "phone": "",
-      "notes": "Imported from Code Lab account (aou); Source id: student-1774671600236-ackmlo.",
+      "notes": "Imported from Code Lab account (aou); Source id: student-1774671600236-ackmlo.\nSummer 2026 roster: G6+; class Summer FTC Robotics G6+.",
       "active": true,
       "enrollments": [
         {
           "classId": "code-lab-students",
           "weeks": []
+        },
+        {
+          "classId": "summer-ftc",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "arielou",
+      "summerGradeBand": "G6+",
+      "campUserId": "camp-student-ariel-ou"
     },
     {
       "id": "master-code-lab-mlin",
@@ -498,7 +644,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "melvinlin"
     },
     {
       "id": "master-code-lab-jdoe",
@@ -515,7 +662,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "johndoe"
     },
     {
       "id": "master-code-lab-hlin",
@@ -532,7 +680,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "harrylin"
     },
     {
       "id": "master-code-lab-jzhang",
@@ -549,7 +698,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "jaxsonzhang"
     },
     {
       "id": "master-code-lab-schen",
@@ -566,7 +716,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "stephenchen"
     },
     {
       "id": "master-code-lab-jli",
@@ -583,7 +734,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "johnli"
     },
     {
       "id": "master-code-lab-ezheng",
@@ -600,7 +752,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "easonzheng"
     },
     {
       "id": "master-code-lab-kcao",
@@ -617,7 +770,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "kevincao"
     },
     {
       "id": "master-fll-hub-clairezhai",
@@ -634,7 +788,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "clairezhai"
     },
     {
       "id": "master-fll-hub-luketisserant",
@@ -651,7 +806,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "luketisserant"
     },
     {
       "id": "master-fll-hub-masonyuan",
@@ -668,7 +824,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "masonyuan"
     },
     {
       "id": "master-fll-hub-isabellafeng",
@@ -685,7 +842,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "isabellafeng"
     },
     {
       "id": "master-fll-hub-domenicopetrini",
@@ -702,7 +860,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "domenicopetrini"
     },
     {
       "id": "master-fll-hub-elisfishman",
@@ -719,7 +878,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "elisfishman"
     },
     {
       "id": "master-fll-hub-isaiahirwin",
@@ -736,7 +896,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "isaiahirwin"
     },
     {
       "id": "master-fll-hub-finnfitzner",
@@ -753,7 +914,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "finnfitzner"
     },
     {
       "id": "master-fll-hub-lawrenceliu",
@@ -770,7 +932,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "lawrenceliu"
     },
     {
       "id": "master-fll-hub-vincentliu",
@@ -787,7 +950,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "vincentliu"
     },
     {
       "id": "master-fll-hub-thalesliu",
@@ -804,7 +968,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "thalesliu"
     },
     {
       "id": "master-fll-hub-adamzeng",
@@ -821,7 +986,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "adamzeng"
     },
     {
       "id": "master-fll-hub-estella",
@@ -838,7 +1004,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "estella"
     },
     {
       "id": "master-fll-hub-sanjitharnal",
@@ -855,7 +1022,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "sanjitharnal"
     },
     {
       "id": "master-fll-hub-masonp",
@@ -872,7 +1040,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "masonp"
     },
     {
       "id": "master-fll-hub-winstonlee",
@@ -889,7 +1058,8 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "winstonlee"
     },
     {
       "id": "master-fll-hub-ethandeng",
@@ -906,7 +1076,434 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z"
+      "updatedAt": "2026-06-17T15:19:43.288Z",
+      "portalUsername": "ethandeng"
+    },
+    {
+      "id": "master-demo-student",
+      "name": "Demo Student",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Demo login for testing the unified Student Hub. Username: demo-student. Password: summer123.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "fll-team-history-guardians",
+          "weeks": []
+        }
+      ],
+      "createdAt": "2026-06-19T17:41:33.553Z",
+      "portalUsername": "demo-student",
+      "portalPassword_hash": "05de0a7ebde4c5a8a67939597388b84f:cf85117acb8b88b41aeb70d1fce454b4250845ac1267319dd83a0de7b4cdd76c8c0b0c503060dbf3cda22e0153a0b4a660d3ff625c51ee4753a2e2405f42ad29",
+      "fllUserId": "student-demo",
+      "fllTeamId": "team-history-guardians",
+      "hubAccess": [
+        "fll-hub"
+      ],
+      "updatedAt": "2026-06-25T20:50:03.287Z"
+    },
+    {
+      "id": "master-summer-2026-ella-xue",
+      "name": "Ella Xue",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Summer 2026 roster: G2-3; class Summer LEGO Robotics G2-3.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "summer-lego-robotics-1",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
+        }
+      ],
+      "createdAt": "2026-06-25T20:50:03.287Z",
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "ellaxue",
+      "summerGradeBand": "G2-3",
+      "campUserId": "camp-student-ella-xue",
+      "lastStudentPortalLoginAt": "2026-06-25T20:55:50.006Z"
+    },
+    {
+      "id": "master-summer-2026-ella-zheng",
+      "name": "Ella Zheng",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Summer 2026 roster: G2-3; class Summer LEGO Robotics G2-3.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "summer-lego-robotics-1",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
+        }
+      ],
+      "createdAt": "2026-06-25T20:50:03.287Z",
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "ellazheng",
+      "summerGradeBand": "G2-3",
+      "campUserId": "camp-student-ella-zheng"
+    },
+    {
+      "id": "master-summer-2026-caitlin-lian",
+      "name": "Caitlin Lian",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Summer 2026 roster: G2-3; class Summer LEGO Robotics G2-3.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "summer-lego-robotics-1",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
+        }
+      ],
+      "createdAt": "2026-06-25T20:50:03.287Z",
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "caitlinlian",
+      "summerGradeBand": "G2-3",
+      "campUserId": "camp-student-caitlin-lian"
+    },
+    {
+      "id": "master-summer-2026-andrew-lin",
+      "name": "Andrew Lin",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Summer 2026 roster: G2-3; class Summer LEGO Robotics G2-3.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "summer-lego-robotics-1",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
+        }
+      ],
+      "createdAt": "2026-06-25T20:50:03.287Z",
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "andrewlin",
+      "summerGradeBand": "G2-3",
+      "campUserId": "camp-student-andrew-lin"
+    },
+    {
+      "id": "master-summer-2026-jaiden-lin",
+      "name": "Jaiden Lin",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Summer 2026 roster: G2-3; class Summer LEGO Robotics G2-3.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "summer-lego-robotics-1",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
+        }
+      ],
+      "createdAt": "2026-06-25T20:50:03.287Z",
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "jaidenlin",
+      "summerGradeBand": "G2-3",
+      "campUserId": "camp-student-jaiden-lin"
+    },
+    {
+      "id": "master-summer-2026-anthony-shen",
+      "name": "Anthony Shen",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Summer 2026 roster: G2-3; class Summer LEGO Robotics G2-3.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "summer-lego-robotics-1",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
+        }
+      ],
+      "createdAt": "2026-06-25T20:50:03.287Z",
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "anthonyshen",
+      "summerGradeBand": "G2-3",
+      "campUserId": "camp-student-anthony-shen"
+    },
+    {
+      "id": "master-summer-2026-siyu-zhu",
+      "name": "Siyu Zhu",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Summer 2026 roster: G2-3; class Summer LEGO Robotics G2-3.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "summer-lego-robotics-1",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
+        }
+      ],
+      "createdAt": "2026-06-25T20:50:03.287Z",
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "siyuzhu",
+      "summerGradeBand": "G2-3",
+      "campUserId": "camp-student-siyu-zhu"
+    },
+    {
+      "id": "master-summer-2026-size-zhu",
+      "name": "Size Zhu",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Summer 2026 roster: G2-3; class Summer LEGO Robotics G2-3.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "summer-lego-robotics-1",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
+        }
+      ],
+      "createdAt": "2026-06-25T20:50:03.287Z",
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "sizezhu",
+      "summerGradeBand": "G2-3",
+      "campUserId": "camp-student-size-zhu"
+    },
+    {
+      "id": "master-summer-2026-claire-chen",
+      "name": "Claire Chen",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Summer 2026 roster: G2-3; class Summer LEGO Robotics G2-3.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "summer-lego-robotics-1",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
+        }
+      ],
+      "createdAt": "2026-06-25T20:50:03.287Z",
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "clairechen",
+      "summerGradeBand": "G2-3",
+      "campUserId": "camp-student-claire-chen"
+    },
+    {
+      "id": "master-summer-2026-olivia-zhu",
+      "name": "Olivia Zhu",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Summer 2026 roster: G2-3; class Summer LEGO Robotics G2-3.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "summer-lego-robotics-1",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
+        }
+      ],
+      "createdAt": "2026-06-25T20:50:03.287Z",
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "oliviazhu",
+      "summerGradeBand": "G2-3",
+      "campUserId": "camp-student-olivia-zhu"
+    },
+    {
+      "id": "master-summer-2026-olivia-xue",
+      "name": "Olivia Xue",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Summer 2026 roster: G4-5; class Summer LEGO Robotics G4-5.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "summer-lego-robotics-2",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
+        }
+      ],
+      "createdAt": "2026-06-25T20:50:03.287Z",
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "oliviaxue",
+      "summerGradeBand": "G4-5",
+      "campUserId": "camp-student-olivia-xue"
+    },
+    {
+      "id": "master-summer-2026-olivia-li",
+      "name": "Olivia Li",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Summer 2026 roster: G4-5; class Summer LEGO Robotics G4-5.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "summer-lego-robotics-2",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
+        }
+      ],
+      "createdAt": "2026-06-25T20:50:03.287Z",
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "oliviali",
+      "summerGradeBand": "G4-5",
+      "campUserId": "camp-student-olivia-li"
+    },
+    {
+      "id": "master-summer-2026-gracelyn-pan",
+      "name": "Gracelyn Pan",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Summer 2026 roster: G4-5; class Summer LEGO Robotics G4-5.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "summer-lego-robotics-2",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
+        }
+      ],
+      "createdAt": "2026-06-25T20:50:03.287Z",
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "gracelynpan",
+      "summerGradeBand": "G4-5",
+      "campUserId": "camp-student-gracelyn-pan"
+    },
+    {
+      "id": "master-summer-2026-christina",
+      "name": "Christina",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Summer 2026 roster: G6+; class Summer FTC Robotics G6+.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "summer-ftc",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
+        }
+      ],
+      "createdAt": "2026-06-25T20:50:03.287Z",
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "christina",
+      "summerGradeBand": "G6+",
+      "campUserId": "camp-student-christina"
+    },
+    {
+      "id": "master-summer-2026-aaron-zheng",
+      "name": "Aaron Zheng",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Summer 2026 roster: G6+; class Summer FTC Robotics G6+.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "summer-ftc",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
+        }
+      ],
+      "createdAt": "2026-06-25T20:50:03.287Z",
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "aaronzheng",
+      "summerGradeBand": "G6+",
+      "campUserId": "camp-student-aaron-zheng"
+    },
+    {
+      "id": "master-summer-2026-eli",
+      "name": "Eli",
+      "parentName": "",
+      "email": "",
+      "phone": "",
+      "notes": "Summer 2026 roster: G6+ (G9); class Summer FTC Robotics G6+.",
+      "active": true,
+      "enrollments": [
+        {
+          "classId": "summer-ftc",
+          "weeks": [
+            "week-1",
+            "week-2",
+            "week-3",
+            "week-4"
+          ]
+        }
+      ],
+      "createdAt": "2026-06-25T20:50:03.287Z",
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "portalUsername": "eli",
+      "summerGradeBand": "G6+",
+      "grade": "G9",
+      "campUserId": "camp-student-eli"
     }
   ]
 }

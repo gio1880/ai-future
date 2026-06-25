@@ -1,0 +1,2112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Summer Camp Hub | AI Future</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#0b2a4a" />
+  <link rel="icon" href="/ai%20future%20logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* AI Future brand palette (see index.html) */
+      --sun: #f97316;
+      --sun-deep: #0b2a4a;
+      --sun-light: #fff4e8;
+      --sun-mid: #fdd9b5;
+      --gold: #fece00;
+      --sky: #1767b4;
+      --sky-light: #e3effd;
+      --grass: #16a34a;
+      --grass-light: #e7f7ec;
+      --purple: #7c51d4;
+      --purple-light: #f0ebfd;
+      --ink: #10233f;
+      --muted: #5f6c80;
+      --line: #dce5ef;
+      --bg: #f7f8fa;
+      --white: #ffffff;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 20px rgba(11, 42, 74, 0.08);
+      --shadow-hover: 0 8px 32px rgba(11, 42, 74, 0.16);
+      --hero-img: url("/robotics%20lab/Summer%20Camp/2026-summer-camp/assets/hero.jpg");
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255,255,255,0.94);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 11px; }
+
+    .brand img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      padding: 4px;
+      background: white;
+    }
+
+    .brand-text strong { display: block; font-size: 15px; font-weight: 800; }
+    .brand-text span { display: block; font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+
+    .chip {
+      padding: 6px 12px;
+      border-radius: 50px;
+      border: 1.5px solid var(--line);
+      font-size: 13px;
+      font-weight: 700;
+      background: white;
+      color: var(--muted);
+    }
+
+    .chip.sun { background: var(--sun-light); border-color: var(--sun-mid); color: var(--sun-deep); }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      border: 0;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      background: var(--ink);
+      color: white;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.82; }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    .hero-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      background:
+        linear-gradient(140deg, rgba(7, 20, 38, 0.92) 0%, rgba(23, 103, 180, 0.72) 100%),
+        var(--hero-img) center / cover;
+      color: white;
+      padding: clamp(28px, 5vw, 52px);
+      margin-bottom: 28px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.72);
+      margin-bottom: 10px;
+    }
+
+    .hero-title {
+      font-size: clamp(36px, 7.5vw, 64px);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title em { font-style: normal; color: var(--gold); }
+
+    .hero-sub {
+      font-size: 16px;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.88);
+      margin-top: 14px;
+      max-width: 540px;
+    }
+
+    .hero-date-badge {
+      background: rgba(255,255,255,0.18);
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-radius: var(--radius-sm);
+      padding: 18px 22px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .hero-date-badge .date-label {
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 6px;
+    }
+
+    .hero-date-badge .date-val { font-size: 18px; font-weight: 900; }
+
+    .focus-banner {
+      background: #fff7d6;
+      border: 2px solid #f5d96e;
+      border-radius: var(--radius);
+      padding: 22px 26px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .focus-icon { font-size: 36px; line-height: 1; flex-shrink: 0; margin-top: 2px; }
+
+    .focus-body strong {
+      display: block;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #8a6a00;
+      margin-bottom: 4px;
+    }
+
+    .focus-body h2 { font-size: 20px; font-weight: 900; color: #5a4400; margin-bottom: 6px; }
+    .focus-body p { font-size: 15px; color: #6b5200; line-height: 1.6; }
+
+    .focus-build-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: white;
+      border: 1.5px solid #f0dc8e;
+      border-radius: 50px;
+      padding: 5px 13px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #8a6a00;
+      margin-top: 10px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 900;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-sub { font-size: 14px; color: var(--muted); margin-bottom: 18px; }
+
+    .progress-card {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+
+    .progress-card .big-num {
+      font-size: 38px;
+      font-weight: 900;
+      color: var(--sun-deep);
+      line-height: 1;
+    }
+
+    .progress-card .label { font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+
+    .progress-track {
+      flex: 1;
+      min-width: 200px;
+      height: 12px;
+      background: var(--sun-light);
+      border-radius: 50px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 50px;
+      background: linear-gradient(90deg, var(--gold), var(--sun));
+      transition: width 0.5s ease;
+    }
+
+    .week-card {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .week-card.is-current { border-color: var(--sun); box-shadow: var(--shadow-hover); }
+
+    .week-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px 22px;
+      cursor: pointer;
+      user-select: none;
+      flex-wrap: wrap;
+    }
+
+    .week-card.is-current .week-head {
+      background: linear-gradient(135deg, var(--sun-light), white);
+    }
+
+    .week-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .week-num {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--sun-light);
+      color: var(--sun-deep);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .week-card.is-current .week-num { background: var(--sun); color: white; }
+    .week-card.is-past .week-num { background: var(--grass-light); color: var(--grass); }
+
+    .week-title { font-size: 17px; font-weight: 900; }
+    .week-dates { font-size: 12.5px; color: var(--muted); font-weight: 700; margin-top: 2px; }
+
+    .week-badge {
+      padding: 5px 12px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .week-badge.now { background: var(--sun); color: white; }
+    .week-badge.done { background: var(--grass-light); color: var(--grass); }
+    .week-badge.soon { background: var(--sky-light); color: var(--sky); }
+
+    .week-toggle {
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--sun-deep);
+      margin-left: auto;
+    }
+
+    .week-body { display: none; border-top: 1px solid var(--line); }
+    .week-card.open .week-body { display: block; }
+
+    .week-goal {
+      padding: 12px 22px;
+      background: var(--bg);
+      font-size: 13.5px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .day-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .day-row:last-child { border-bottom: 0; }
+    .day-row.is-today { background: var(--sun-light); }
+    .day-row.is-past { opacity: 0.6; }
+
+    .begin-lesson-btn {
+      flex: none; margin-left: auto; align-self: center;
+      border: 0; border-radius: 12px; padding: 12px 18px; font-weight: 800; font-size: 14px;
+      min-height: 46px; white-space: nowrap; cursor: pointer;
+      background: #e7ecf4; color: #9aa6b6;
+    }
+    .begin-lesson-btn[disabled] { cursor: not-allowed; }
+    .begin-lesson-btn.now {
+      background: var(--gold); color: var(--sun-deep);
+      box-shadow: 0 6px 16px rgba(254,206,0,.45); animation: blPulse 1.8s ease-in-out infinite;
+    }
+    .begin-lesson-btn.now:hover { filter: brightness(.96); }
+    @keyframes blPulse { 0%,100% { transform: scale(1); box-shadow: 0 6px 16px rgba(254,206,0,.45); } 50% { transform: scale(1.04); box-shadow: 0 8px 22px rgba(254,206,0,.6); } }
+    @media (max-width: 580px) { .begin-lesson-btn { margin-left: 0; width: 100%; } }
+
+    .day-date {
+      flex-shrink: 0;
+      width: 76px;
+      text-align: center;
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 8px 6px;
+    }
+
+    .day-row.is-today .day-date { border-color: var(--sun); }
+
+    .day-date .dow {
+      font-size: 10.5px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    .day-date .dom { font-size: 19px; font-weight: 900; margin-top: 1px; }
+
+    .day-info { flex: 1; min-width: 0; }
+
+    .day-activity { font-size: 14px; line-height: 1.55; }
+    .day-activity.empty { color: var(--muted); font-style: italic; }
+
+    .day-build {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      background: var(--sky-light);
+      color: var(--sky);
+      border-radius: 50px;
+      padding: 4px 11px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .today-tag {
+      display: inline-block;
+      background: var(--sun);
+      color: white;
+      border-radius: 50px;
+      padding: 2px 9px;
+      font-size: 10.5px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    .assignment-table-wrap {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow-x: auto;
+      margin-bottom: 28px;
+    }
+
+    .assignment-table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+    }
+
+    .assignment-table th,
+    .assignment-table td {
+      text-align: left;
+      vertical-align: top;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+
+    .assignment-table th {
+      background: var(--sun-light);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .assignment-table tr:last-child td { border-bottom: 0; }
+    .assignment-table tr.is-today { background: #fffaf0; }
+    .assignment-table tr.is-past { opacity: 0.72; }
+
+    .assignment-date { font-weight: 900; color: var(--sun-deep); white-space: nowrap; }
+    .assignment-week { color: var(--muted); font-size: 12px; font-weight: 800; margin-top: 3px; }
+    .assignment-title { font-weight: 900; color: var(--ink); margin-bottom: 4px; }
+    .assignment-build { display: inline-block; margin-top: 6px; font-size: 12px; font-weight: 800; color: var(--sky); }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 50px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .status-pill.done { background: var(--grass-light); color: var(--grass); }
+    .status-pill.todo { background: var(--sky-light); color: var(--sky); }
+
+    .mini-link {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 8px;
+      color: var(--sun-deep);
+      font-weight: 900;
+      font-size: 12.5px;
+    }
+
+    .submit-card {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin: 28px 0;
+    }
+
+    .submit-card label {
+      display: block;
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 14px 0 6px;
+    }
+
+    .submit-card select,
+    .submit-card textarea,
+    .submit-card input[type="file"] {
+      width: 100%;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      background: white;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .submit-card textarea { min-height: 110px; resize: vertical; line-height: 1.5; }
+    .submit-card select:focus, .submit-card textarea:focus { border-color: var(--sun); }
+
+    .photo-guidance {
+      background: var(--sky-light);
+      color: var(--sun-deep);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: 13.5px;
+      line-height: 1.5;
+      margin-top: 10px;
+      font-weight: 700;
+    }
+
+    .form-status {
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--muted);
+    }
+
+    .submission-preview {
+      margin-top: 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .submission-preview img {
+      max-width: 220px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+    }
+
+    .points-card {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .points-total {
+      font-size: 42px;
+      line-height: 1;
+      font-weight: 900;
+      color: var(--sun-deep);
+    }
+
+    .points-breakdown {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .point-feed {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .point-event {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      background: #fbfcfd;
+      font-size: 13px;
+    }
+
+    .point-event strong { display: block; }
+    .point-event span { color: var(--muted); }
+    .point-value { font-weight: 900; color: var(--grass); white-space: nowrap; }
+    .point-value.negative { color: #b42318; }
+
+    .print-request-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .print-request-item {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      background: #fbfcfd;
+    }
+
+    .print-request-item strong { display: block; margin-bottom: 4px; }
+    .print-request-item p { color: var(--muted); font-size: 13px; line-height: 1.5; margin-top: 6px; }
+
+    .classroom-card {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .classroom-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .classroom-tile {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 13px;
+      background: #fbfcfd;
+    }
+
+    .classroom-tile strong { display: block; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+    .timer-readout { font-size: 30px; font-weight: 900; color: var(--sun-deep); }
+    .group-list { display: grid; gap: 10px; margin-top: 14px; }
+    .group-item { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px; background: #fbfcfd; }
+    .group-item h4 { margin: 0 0 5px; font-size: 15px; }
+    .group-item p { margin: 5px 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
+
+    .resource-category { margin-bottom: 26px; }
+
+    .cat-label {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1.5px solid var(--line);
+    }
+
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .resource-card {
+      background: white;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--line);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.18s, transform 0.18s;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .resource-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+
+    .resource-name { font-size: 15px; font-weight: 800; line-height: 1.35; }
+
+    .resource-type-badge {
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 9px;
+      border-radius: 50px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .type-Website { background: var(--sky-light); color: var(--sky); }
+    .type-Video   { background: #fdeee9; color: #e8583a; }
+    .type-Reading { background: var(--grass-light); color: var(--grass); }
+    .type-Folder  { background: var(--purple-light); color: var(--purple); }
+
+    .resource-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .resource-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+    .resource-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--sun-deep);
+      margin-top: auto;
+    }
+
+    .announce-list { display: grid; gap: 14px; }
+
+    .announce-card {
+      background: white;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--line);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .announce-card.coach-only { border-left: 4px solid var(--sun); }
+
+    .announce-date {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 5px;
+    }
+
+    .announce-title { font-size: 16px; font-weight: 900; margin-bottom: 6px; }
+    .announce-body { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    .main-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) 330px;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .loading-state {
+      min-height: 60vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .loading-spinner {
+      font-size: 48px;
+      animation: spin 1.5s linear infinite;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text { font-size: 16px; font-weight: 700; color: var(--muted); }
+
+    @media (max-width: 900px) {
+      .main-layout { grid-template-columns: 1fr; }
+      .hero-card { grid-template-columns: 1fr; }
+      .hero-date-badge { align-self: flex-start; }
+    }
+
+    @media (max-width: 580px) {
+      .page { padding-inline: 14px; }
+      .hero-card { padding: 24px 20px; }
+      .day-row { flex-direction: column; gap: 10px; }
+      .day-date { width: 100%; display: flex; gap: 10px; align-items: baseline; justify-content: center; }
+    }
+
+    /* Touch devices (iPad/phone): comfortable tap targets, no tap flash or hover-only effects */
+    @media (pointer: coarse) {
+      body { -webkit-tap-highlight-color: transparent; }
+      .btn, .chip { min-height: 44px; display: inline-flex; align-items: center; }
+      .week-head { padding: 20px 22px; }
+      .resource-link { padding: 8px 0; }
+      .resource-card:hover { transform: none; }
+    }
+
+    /* ── Live lesson: join banner ── */
+    .live-banner {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 80;
+      background: linear-gradient(135deg, var(--sun-deep), #14365a);
+      color: #fff; padding: 16px 20px;
+      display: none; align-items: center; gap: 14px; justify-content: center; flex-wrap: wrap;
+      box-shadow: 0 -6px 24px rgba(7,20,38,0.25);
+    }
+    .live-banner.show { display: flex; }
+    .live-banner .lb-dot { width: 10px; height: 10px; border-radius: 50%; background: #ff5a5a; animation: lvpulse 1.2s infinite; }
+    @keyframes lvpulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .live-banner .lb-text { font-weight: 800; font-size: 15px; }
+    .live-banner .lb-join {
+      background: var(--gold); color: var(--sun-deep); border: 0; border-radius: 50px;
+      font-weight: 900; font-size: 16px; padding: 12px 26px; cursor: pointer; min-height: 48px;
+    }
+    .live-banner .lb-join:hover { background: #ffd84d; }
+
+    /* ── Live lesson: full-screen camper view ── */
+    .live-overlay {
+      position: fixed; inset: 0; z-index: 100; background: var(--bg);
+      display: none; flex-direction: column;
+    }
+    .live-overlay.show { display: flex; }
+    .lo-bar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 14px 18px; background: var(--sun-deep); color: #fff; flex-shrink: 0;
+    }
+    .lo-bar .lo-title { font-weight: 900; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+    .lo-bar .lo-actions { display: flex; gap: 8px; }
+    .lo-btn {
+      background: rgba(255,255,255,0.16); color: #fff; border: 1.5px solid rgba(255,255,255,0.3);
+      border-radius: 10px; font-weight: 800; font-size: 14px; padding: 10px 16px; cursor: pointer; min-height: 46px;
+    }
+    .lo-btn:hover { background: rgba(255,255,255,0.28); }
+    .lo-btn.gold { background: var(--gold); color: var(--sun-deep); border-color: var(--gold); }
+    .lo-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: clamp(20px, 4vw, 48px); display: flex; flex-direction: column; }
+    .lo-content { max-width: 760px; margin: 0 auto; width: 100%; }
+    .lo-kicker { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: var(--sun-deep); margin-bottom: 10px; }
+    .lo-content h1 { font-size: clamp(26px, 5vw, 42px); font-weight: 900; line-height: 1.12; margin-bottom: 16px; }
+    .lo-content .lo-text { font-size: clamp(18px, 2.6vw, 24px); line-height: 1.6; white-space: pre-wrap; color: var(--ink); }
+    .lo-content img { max-width: 100%; max-height: 46vh; border-radius: 14px; margin-top: 18px; border: 1px solid var(--line); }
+    .lo-counter { text-align: center; color: var(--muted); font-weight: 800; font-size: 13px; padding: 10px; flex-shrink: 0; }
+
+    .lo-answers { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 26px; }
+    .lo-answer {
+      display: flex; align-items: center; gap: 12px; text-align: left;
+      border: 0; border-radius: 16px; padding: 22px 20px; cursor: pointer;
+      font-size: clamp(17px, 2.4vw, 22px); font-weight: 800; color: #fff; min-height: 84px;
+      transition: transform 0.1s, box-shadow 0.15s; box-shadow: 0 4px 14px rgba(7,20,38,0.12);
+    }
+    .lo-answer:hover { transform: translateY(-2px); }
+    .lo-answer .lo-key { width: 34px; height: 34px; border-radius: 9px; background: rgba(255,255,255,0.25); display: grid; place-items: center; font-size: 18px; flex-shrink: 0; }
+    .lo-answer.a0 { background: #e8583a; }
+    .lo-answer.a1 { background: #1767b4; }
+    .lo-answer.a2 { background: #f59e0b; }
+    .lo-answer.a3 { background: #16a34a; }
+    .lo-answer.a4 { background: #7c51d4; }
+    .lo-answer.a5 { background: #0ea5e9; }
+    .lo-answer.chosen { outline: 5px solid var(--sun-deep); }
+    .lo-answer.dim { opacity: 0.5; }
+    .lo-answered-msg {
+      margin-top: 22px; background: var(--grass-light); border: 1.5px solid #bce5c8; color: #14663b;
+      border-radius: 14px; padding: 16px 18px; font-size: 17px; font-weight: 800; text-align: center;
+    }
+    .lo-waiting { text-align: center; color: var(--muted); margin-top: 12vh; }
+    .lo-waiting .big { font-size: 52px; display: block; margin-bottom: 14px; }
+    @media (max-width: 520px) { .lo-answers { grid-template-columns: 1fr; } }
+
+    /* ════════════════════════════════════════════════════════════
+       iPad OPTIMIZATION LAYER — touch-first sizing, safe areas,
+       responsive tables, quick-nav. Layered on top of base styles.
+       ════════════════════════════════════════════════════════════ */
+
+    /* Safe-area insets for notch / home indicator */
+    .topbar { padding-top: env(safe-area-inset-top); }
+    .topbar-inner { padding-inline: max(20px, env(safe-area-inset-left)) max(20px, env(safe-area-inset-right)); }
+    .page { padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+    .live-banner { padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+
+    /* Comfortable reading width on big iPad-landscape screens */
+    .page, .topbar-inner { max-width: 1180px; }
+
+    /* ── Touch sizing (iPad/phone) ── */
+    @media (pointer: coarse) {
+      body { font-size: 16.5px; }
+      .btn { padding: 13px 22px; font-size: 15px; border-radius: 12px; }
+      .chip { padding: 10px 16px; font-size: 14px; }
+      .brand img { width: 42px; height: 42px; }
+      .brand-text strong { font-size: 16px; }
+      .brand-text span { font-size: 13px; }
+
+      .section-title { font-size: 24px; }
+      .section-sub { font-size: 15px; }
+
+      /* Week accordions: big tap rows + larger toggle */
+      .week-head { padding: 22px 22px; }
+      .week-title { font-size: 18px; }
+      .week-toggle { font-size: 30px; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; background: var(--sun-light); }
+      .day-row { padding: 18px 22px; }
+      .day-activity { font-size: 15.5px; }
+
+      /* Forms: large, finger-friendly fields */
+      .submit-card { padding: 24px; }
+      .submit-card label { font-size: 13px; margin-top: 18px; }
+      .submit-card select,
+      .submit-card textarea,
+      .submit-card input[type="text"],
+      .submit-card input:not([type]),
+      .submit-card input[type="file"] {
+        font-size: 16px; /* prevents iOS auto-zoom on focus */
+        padding: 15px 16px;
+        border-radius: 12px;
+        min-height: 54px;
+      }
+      .submit-card textarea { min-height: 130px; }
+      .submit-card .btn { width: 100%; padding: 16px; font-size: 16px; }
+      .submit-card input[type="file"] { padding: 13px 16px; }
+
+      /* Resource & announce cards a touch larger */
+      .resource-card { padding: 20px; }
+      .resource-name { font-size: 16px; }
+      .resource-link { padding: 10px 0; font-size: 14px; }
+      .announce-title { font-size: 17px; }
+      .announce-body { font-size: 15px; }
+
+      /* No hover-lift jitter on touch */
+      .resource-card:hover, .week-card:hover { transform: none; }
+    }
+
+    /* ── Responsive assignment table → stacked cards (all iPad sizes) ── */
+    @media (max-width: 1200px) {
+      .assignment-table-wrap { overflow: visible; border: 0; box-shadow: none; background: transparent; }
+      .assignment-table { min-width: 0; }
+      .assignment-table, .assignment-table tbody, .assignment-table tr, .assignment-table td { display: block; width: 100%; }
+      .assignment-table thead { display: none; }
+      .assignment-table tr {
+        background: white; border: 1.5px solid var(--line); border-radius: var(--radius);
+        box-shadow: var(--shadow); margin-bottom: 14px; padding: 6px 4px;
+      }
+      .assignment-table tr.is-today { border-color: var(--sun); }
+      .assignment-table td {
+        border-bottom: 1px solid var(--line); padding: 12px 16px;
+        display: flex; justify-content: space-between; align-items: baseline; gap: 18px; text-align: right;
+      }
+      .assignment-table td:last-child { border-bottom: 0; }
+      .assignment-table td::before {
+        content: attr(data-label); flex: none; text-align: left;
+        font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted);
+      }
+      .assignment-table td[data-label="Activity"] { flex-direction: column; align-items: flex-start; text-align: left; }
+    }
+
+    /* iPad landscape: keep two columns but give the schedule more room */
+    @media (min-width: 901px) and (max-width: 1200px) {
+      .main-layout { grid-template-columns: minmax(0, 1.7fr) 300px; gap: 24px; }
+    }
+
+    /* ── Sticky section quick-nav (added via JS) ── */
+    .quick-nav {
+      position: sticky; top: 0; z-index: 18;
+      background: rgba(255,255,255,0.96);
+      -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+      display: none;
+    }
+    .quick-nav.show { display: block; }
+    .quick-nav-inner {
+      max-width: 1180px; margin: 0 auto;
+      display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      padding: 10px max(16px, env(safe-area-inset-left));
+      scrollbar-width: none;
+    }
+    .quick-nav-inner::-webkit-scrollbar { display: none; }
+    .quick-nav-chip {
+      flex: none; white-space: nowrap; cursor: pointer;
+      border: 1.5px solid var(--line); background: white; color: var(--muted);
+      border-radius: 50px; padding: 10px 16px; font-size: 14px; font-weight: 800;
+      min-height: 44px; display: inline-flex; align-items: center; gap: 6px;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .quick-nav-chip.active { background: var(--sun-deep); color: white; border-color: var(--sun-deep); }
+  </style>
+  <link rel="stylesheet" href="af-hub-system.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <img id="brandLogo" alt="AI Future" />
+        <div class="brand-text">
+          <strong>Summer Camp Hub</strong>
+          <span id="userLine">Loading…</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="chip sun" id="rolePill">Camper</span>
+        <button class="btn" id="logoutButton">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page" id="app">
+    <div class="loading-state">
+      <span class="loading-spinner">☀️</span>
+      <p class="loading-text">Loading your camp hub…</p>
+    </div>
+  </main>
+
+  <!-- Live lesson join banner -->
+  <div class="live-banner" id="liveBanner">
+    <span class="lb-dot"></span>
+    <span class="lb-text" id="liveBannerTitle">A lesson is live</span>
+    <button class="lb-join" id="liveJoinBtn" type="button">🎥 Join lesson</button>
+  </div>
+
+  <!-- Live lesson full-screen view -->
+  <div class="live-overlay" id="liveOverlay" role="dialog" aria-modal="true">
+    <div class="lo-bar">
+      <div class="lo-title"><span class="lb-dot"></span><span id="liveOverlayTitle">Live lesson</span></div>
+      <div class="lo-actions">
+        <button class="lo-btn" id="liveFullscreenBtn" type="button" title="Full screen">⛶</button>
+        <button class="lo-btn gold" id="liveRefreshBtn" type="button">🔄 Refresh</button>
+        <button class="lo-btn" id="liveLeaveBtn" type="button">Leave</button>
+      </div>
+    </div>
+    <div class="lo-body" id="liveOverlayBody"></div>
+    <div class="lo-counter" id="liveOverlayCounter"></div>
+  </div>
+
+  <script>
+    const app = document.getElementById('app');
+    const userLine = document.getElementById('userLine');
+    const rolePill = document.getElementById('rolePill');
+    const logoutButton = document.getElementById('logoutButton');
+    let hubState = null;
+
+    /* ── iPad preview helpers ── */
+    const DEMO = /[?&]demo\b/.test(location.search) || /claudeusercontent|localhost|127\.0\.0\.1/i.test(location.hostname);
+    // Resolve brand + hero assets for both production and preview.
+    (function () {
+      const isProd = /aifuture|ai-future|render\.com/i.test(location.hostname);
+      document.getElementById('brandLogo').src = isProd ? '/ai%20future%20logo.png' : 'ai-future-logo.png';
+      if (!isProd) document.documentElement.style.setProperty('--hero-img', 'url("camp-assets/hero.jpg")');
+    })();
+
+    function esc(v) {
+      return String(v == null ? '' : v)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function parseDate(value) {
+      if (!value) return null;
+      const date = new Date(`${value}T12:00:00`);
+      return Number.isNaN(date.getTime()) ? null : date;
+    }
+
+    function todayKey() {
+      const now = new Date();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      return `${now.getFullYear()}-${m}-${d}`;
+    }
+
+    function fmt(value, opts) {
+      const date = parseDate(value);
+      return date ? date.toLocaleDateString(undefined, opts) : '';
+    }
+
+    function allDays(curriculum) {
+      return curriculum.flatMap(week => Array.isArray(week.days) ? week.days : []);
+    }
+
+    function findFocusDay(curriculum) {
+      const days = allDays(curriculum).filter(d => d.date).sort((a, b) => a.date.localeCompare(b.date));
+      const today = todayKey();
+      const exact = days.find(d => d.date === today);
+      if (exact) return { day: exact, isToday: true };
+      const next = days.find(d => d.date > today);
+      if (next) return { day: next, isToday: false };
+      return null;
+    }
+
+    function renderHero(camp) {
+      const start = fmt(camp.startDate, { month: 'short', day: 'numeric' });
+      const end = fmt(camp.endDate, { month: 'short', day: 'numeric' });
+      return `
+        <div class="hero-card">
+          <div>
+            <div class="hero-eyebrow">${esc(camp.year)} · ${esc(camp.scheduleNote || '')}</div>
+            <div class="hero-title">Summer <em>Camp</em></div>
+            <p class="hero-sub">${esc(camp.themeSummary || '')}</p>
+          </div>
+          <div class="hero-date-badge">
+            <div class="date-label">Camp runs</div>
+            <div class="date-val">${esc(start)} – ${esc(end)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFocus(curriculum, enrollment) {
+      const focus = findFocusDay(curriculum);
+      if (!focus) {
+        if (enrollment && enrollment.source === 'master-roster' && !enrollment.visibleWeekId) {
+          return `
+            <div class="focus-banner">
+              <div class="focus-icon">📋</div>
+              <div class="focus-body">
+                <strong>No camp week assigned</strong>
+                <h2>Your summer weeks are not selected yet</h2>
+                <p>Ask a coach to check your enrollment in the master roster. Once your week is selected, your assignments will appear here.</p>
+              </div>
+            </div>
+          `;
+        }
+        return `
+          <div class="focus-banner">
+            <div class="focus-icon">🎉</div>
+            <div class="focus-body">
+              <strong>That's a wrap</strong>
+              <h2>Camp is complete — amazing work this summer!</h2>
+              <p>Check announcements for next steps and fall program info.</p>
+            </div>
+          </div>
+        `;
+      }
+      const { day, isToday } = focus;
+      const dateLabel = fmt(day.date, { weekday: 'long', month: 'long', day: 'numeric' });
+      const activity = day.activity || 'Your coach will post today’s plan soon — check back!';
+      return `
+        <div class="focus-banner">
+          <div class="focus-icon">${isToday ? '🎯' : '⏭️'}</div>
+          <div class="focus-body">
+            <strong>${isToday ? 'Today at camp' : 'Next camp day'} · ${esc(dateLabel)}</strong>
+            <h2>${isToday ? 'Here’s the plan for today' : 'Get ready for what’s next'}</h2>
+            <p>${esc(activity)}</p>
+            ${day.build ? `<span class="focus-build-tag">🔧 Build: ${esc(day.build)}</span>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    function submissionFor(dayId, submissions) {
+      return (submissions || []).find(s => s.dayId === dayId);
+    }
+
+    function renderProgress(curriculum, submissions) {
+      const days = allDays(curriculum).filter(d => d.date);
+      const done = days.filter(d => submissionFor(d.id, submissions)).length;
+      const total = days.length;
+      const pct = total ? Math.round((done / total) * 100) : 0;
+      return `
+        <div class="progress-card">
+          <div>
+            <div class="big-num">${done}<span style="font-size:20px;color:var(--muted)"> / ${total}</span></div>
+            <div class="label">Assignments submitted</div>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <div style="font-weight:900;font-size:16px;color:var(--sun-deep)">${pct}%</div>
+        </div>
+      `;
+    }
+
+    function renderEnrollmentNotice(enrollment) {
+      if (!enrollment || !enrollment.visibleWeekLabel) return '';
+      const range = enrollment.visibleWeekRange && enrollment.visibleWeekRange.start
+        ? `${fmt(enrollment.visibleWeekRange.start, { month: 'short', day: 'numeric' })} - ${fmt(enrollment.visibleWeekRange.end, { month: 'short', day: 'numeric' })}`
+        : '';
+      const note = enrollment.source === 'master-roster'
+        ? 'Based on your camp registration.'
+        : 'Showing the next camp week available to this account.';
+      return `
+        <div class="focus-banner" style="background:var(--sky-light);border-color:#bdd7f4">
+          <div class="focus-icon">📌</div>
+          <div class="focus-body">
+            <strong>Your visible camp week</strong>
+            <h2>${esc(enrollment.visibleWeekLabel)}${range ? ` · ${esc(range)}` : ''}</h2>
+            <p>${esc(note)} To keep things clear, this page only shows one week of assignments at a time.</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAssignmentTable(curriculum, submissions) {
+      const today = todayKey();
+      const rows = curriculum.flatMap((week, index) => (week.days || []).map(day => ({ week, index, day })));
+      if (!rows.length) return '<p class="section-sub">No assignments are posted yet.</p>';
+      return `
+        <div class="assignment-table-wrap">
+          <table class="assignment-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Activity / Assignment</th>
+                <th>Sheet</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map(({ week, index, day }) => {
+                const submitted = submissionFor(day.id, submissions);
+                const isToday = day.date === today;
+                const isPast = day.date < today;
+                const assignment = day.assignment || day.activity || 'Your coach will post this assignment soon.';
+                return `
+                  <tr class="${isToday ? 'is-today' : ''} ${isPast ? 'is-past' : ''}">
+                    <td data-label="Date">
+                      <div class="assignment-date">${esc(fmt(day.date, { month: 'short', day: 'numeric' }))}</div>
+                      <div class="assignment-week">W${index + 1} · ${esc(fmt(day.date, { weekday: 'short' }))}</div>
+                    </td>
+                    <td data-label="Activity">
+                      <div class="assignment-title">${esc(assignment)}</div>
+                      ${day.activity && day.assignment ? `<div>${esc(day.activity)}</div>` : ''}
+                      ${day.build ? `<span class="assignment-build">Build: ${esc(day.build)}</span>` : ''}
+                    </td>
+                    <td data-label="Sheet">
+                      ${day.worksheetUrl
+                        ? `<a class="mini-link" href="${esc(day.worksheetUrl)}" target="_blank" rel="noreferrer">${esc(day.worksheetLabel || 'Open worksheet')} →</a>`
+                        : '<span style="color:var(--muted)">No sheet needed</span>'}
+                    </td>
+                    <td data-label="Status">
+                      <span class="status-pill ${submitted ? 'done' : 'todo'}">${submitted ? 'Submitted' : 'To do'}</span>
+                      ${submitted ? `<div class="assignment-week">${esc(fmt(String(submitted.updatedAt || '').slice(0, 10), { month: 'short', day: 'numeric' }))}</div>` : ''}
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderSubmitBox(curriculum, submissions) {
+      const days = allDays(curriculum).filter(d => d.date);
+      if (!days.length) {
+        return `
+          <div class="submit-card">
+            <div class="section-title">Submit Your Activity</div>
+            <p class="section-sub">No assignments are available for this account yet. Ask a coach to check your summer week enrollment.</p>
+          </div>
+        `;
+      }
+      const focus = findFocusDay(curriculum);
+      const defaultDayId = focus?.day?.id || days[0]?.id || '';
+      return `
+        <div class="submit-card">
+          <div class="section-title">Submit Your Activity</div>
+          <p class="section-sub">Choose the assignment, write your reflection, and add a picture of your completed work.</p>
+          <label for="submitDay">Assignment</label>
+          <select id="submitDay">
+            ${days.map(day => {
+              const label = `${fmt(day.date, { month: 'short', day: 'numeric' })} - ${(day.assignment || day.activity || 'Assignment').slice(0, 70)}`;
+              return `<option value="${esc(day.id)}" ${day.id === defaultDayId ? 'selected' : ''}>${esc(label)}</option>`;
+            }).join('')}
+          </select>
+          <label for="submitReflection">Reflection / activity notes</label>
+          <textarea id="submitReflection" placeholder="What did you complete? What worked? What would you improve next time?"></textarea>
+          <label for="submitPhoto">Photo of final work</label>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:4px">
+            <input id="submitPhoto" type="file" accept="image/*" style="display:none" onchange="document.getElementById('submitPhotoName').textContent=this.files[0]?this.files[0].name:''" />
+            <button type="button" class="btn" onclick="pickPhoto('submitPhoto', true)">📷 Take a photo</button>
+            <button type="button" class="btn" style="background:#fff;color:var(--ink);border:1.5px solid var(--line)" onclick="pickPhoto('submitPhoto', false)">🖼️ Choose photo</button>
+            <span id="submitPhotoName" style="font-size:13px;color:var(--muted);font-weight:700"></span>
+          </div>
+          <div class="photo-guidance">Ask a classmate or a coach to take a picture of you and your final work before submitting.</div>
+          <button class="btn" style="margin-top:14px" onclick="submitActivity()">Submit activity</button>
+          <div class="form-status" id="submitStatus"></div>
+          <div class="submission-preview" id="submissionPreview"></div>
+        </div>
+      `;
+    }
+
+    function renderPointsCard(points, printRequests, projectSubmissions) {
+      const data = points || { total: 0, submittedActivities: 0, activityPoints: 0, printBonus: 0, projectBonus: 0, behaviorPoints: 0, skills: {}, events: [] };
+      const skillEntries = Object.entries(data.skills || {}).filter(([, value]) => value !== 0);
+      return `
+        <div class="points-card">
+          <div class="section-title">My Class Points</div>
+          <div class="points-total">${esc(data.total || 0)}</div>
+          <div class="points-breakdown">
+            <span class="status-pill done">${esc(data.submittedActivities || 0)} activities</span>
+            <span class="status-pill todo">${esc(data.activityPoints || 0)} activity points</span>
+            <span class="status-pill todo">${esc(data.printBonus || 0)} print bonus</span>
+            <span class="status-pill todo">${esc(data.projectBonus || 0)} project bonus</span>
+            <span class="status-pill ${data.behaviorPoints >= 0 ? 'done' : 'todo'}">${esc(data.behaviorPoints || 0)} class points</span>
+          </div>
+          ${skillEntries.length ? `
+            <div class="points-breakdown">
+              ${skillEntries.map(([skill, value]) => `<span class="status-pill ${value >= 0 ? 'done' : 'todo'}">${esc(skill)} ${value > 0 ? '+' : ''}${esc(value)}</span>`).join('')}
+            </div>
+          ` : ''}
+          ${renderPointFeed(data.events || [])}
+          ${renderPrintRequestList(printRequests || [])}
+          ${renderProjectSubmissionList(projectSubmissions || [])}
+        </div>
+      `;
+    }
+
+    function renderPointFeed(events) {
+      if (!events.length) return '<p class="section-sub" style="margin-top:14px">No class points yet. Keep building, helping, and improving.</p>';
+      return `
+        <div class="point-feed">
+          ${events.map(event => `
+            <div class="point-event">
+              <div>
+                <strong>${esc(event.category || 'Class points')}</strong>
+                <span>${esc(event.note || (event.type === 'needs-work' ? 'Needs work' : 'Great job'))}</span>
+              </div>
+              <div class="point-value ${event.points < 0 ? 'negative' : ''}">${event.points > 0 ? '+' : ''}${esc(event.points)}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderPrintRequestList(printRequests) {
+      if (!printRequests.length) {
+        return '<p class="section-sub" style="margin-top:14px">No 3D print requests yet.</p>';
+      }
+      return `
+        <div class="print-request-list">
+          ${printRequests.slice().sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || ''))).map(req => `
+            <div class="print-request-item">
+              <strong>${esc(req.title)}</strong>
+              <span class="status-pill ${req.status === 'completed' || req.status === 'ready' ? 'done' : 'todo'}">${esc(req.status || 'pending')}</span>
+              ${req.pointsAwarded ? `<span class="status-pill done">+${esc(req.pointsAwarded)} points</span>` : ''}
+              <p>${esc(req.coachNotes || req.purpose || '')}</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderPrintRequestForm() {
+      return `
+        <div class="submit-card">
+          <div class="section-title">Request a 3D Print</div>
+          <p class="section-sub">Send your print idea to the coach queue. Explain what it is for so a coach can approve or ask for changes.</p>
+          <label for="printTitle">Project / part name</label>
+          <input id="printTitle" placeholder="e.g. Sensor bracket, artifact base, gear display stand" />
+          <label for="printPurpose">What is it for?</label>
+          <textarea id="printPurpose" placeholder="Describe what this print does, where it goes, and why your team needs it."></textarea>
+          <label for="printDimensions">Approximate size</label>
+          <input id="printDimensions" placeholder="e.g. 80mm x 40mm x 10mm" />
+          <label for="printColor">Preferred color</label>
+          <input id="printColor" placeholder="e.g. black, blue, any color" />
+          <label for="printNotes">Extra notes</label>
+          <textarea id="printNotes" placeholder="Add file link, sketch notes, deadline, or special instructions."></textarea>
+          <button class="btn" style="margin-top:14px" onclick="submitPrintRequest()">Send print request</button>
+          <div class="form-status" id="printStatus"></div>
+        </div>
+      `;
+    }
+
+    function renderProjectSubmissionList(projectSubmissions) {
+      if (!projectSubmissions.length) {
+        return '<p class="section-sub" style="margin-top:14px">No project submissions yet.</p>';
+      }
+      return `
+        <div class="print-request-list">
+          ${projectSubmissions.slice().sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || ''))).map(project => `
+            <div class="print-request-item">
+              <strong>${esc(project.title)}</strong>
+              <span class="status-pill ${project.status === 'approved' || project.status === 'featured' ? 'done' : 'todo'}">${esc(project.status || 'submitted')}</span>
+              ${project.pointsAwarded ? `<span class="status-pill done">+${esc(project.pointsAwarded)} points</span>` : ''}
+              <p>${esc(project.coachFeedback || project.description || '')}</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderProjectSubmissionForm() {
+      return `
+        <div class="submit-card">
+          <div class="section-title">Submit a Project</div>
+          <p class="section-sub">Turn in a bigger build, design, code project, presentation, or prototype for coach review.</p>
+          <label for="projectTitle">Project title</label>
+          <input id="projectTitle" placeholder="e.g. Rescue robot claw, Scratch maze game, city model" />
+          <label for="projectType">Project type</label>
+          <select id="projectType">
+            <option>Robot build</option>
+            <option>Code project</option>
+            <option>3D design</option>
+            <option>Research / presentation</option>
+            <option>Team prototype</option>
+            <option>Other</option>
+          </select>
+          <label for="projectDescription">What did you make?</label>
+          <textarea id="projectDescription" placeholder="Describe what your project does and what you want your coach to notice."></textarea>
+          <label for="projectReflection">Reflection</label>
+          <textarea id="projectReflection" placeholder="What was challenging? What did you improve? What would you do next?"></textarea>
+          <label for="projectLink">Project link</label>
+          <input id="projectLink" placeholder="Optional: https://..." />
+          <label for="projectPhoto">Photo of final project</label>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:4px">
+            <input id="projectPhoto" type="file" accept="image/*" style="display:none" onchange="document.getElementById('projectPhotoName').textContent=this.files[0]?this.files[0].name:''" />
+            <button type="button" class="btn" onclick="pickPhoto('projectPhoto', true)">📷 Take a photo</button>
+            <button type="button" class="btn" style="background:#fff;color:var(--ink);border:1.5px solid var(--line)" onclick="pickPhoto('projectPhoto', false)">🖼️ Choose photo</button>
+            <span id="projectPhotoName" style="font-size:13px;color:var(--muted);font-weight:700"></span>
+          </div>
+          <div class="photo-guidance">Ask a classmate or a coach to take a picture of you and your final work before submitting.</div>
+          <button class="btn" style="margin-top:14px" onclick="submitProject()">Submit project</button>
+          <div class="form-status" id="projectStatus"></div>
+          <div class="submission-preview" id="projectPreview"></div>
+        </div>
+      `;
+    }
+
+    function noiseLabel(level) {
+      return {
+        silent: 'Silent',
+        whisper: 'Whisper voices',
+        partner: 'Partner talk',
+        team: 'Team discussion',
+        present: 'Presentation voice'
+      }[level] || 'Partner talk';
+    }
+
+    function timerSeconds(timer) {
+      if (!timer) return 0;
+      if (!timer.running || !timer.startedAt) return Math.max(0, Number(timer.pausedRemainingSeconds || 0));
+      const elapsed = Math.floor((Date.now() - new Date(timer.startedAt).getTime()) / 1000);
+      return Math.max(0, Number(timer.pausedRemainingSeconds || 0) - elapsed);
+    }
+
+    function formatSeconds(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    function renderClassroomCard(classroom) {
+      const state = classroom || {};
+      const timer = state.timer || {};
+      return `
+        <div class="classroom-card">
+          <div class="section-title">Classroom Tools</div>
+          <p class="section-sub">Use this to check the current timer, voice level, and your group setup.</p>
+          <div class="classroom-grid">
+            <div class="classroom-tile">
+              <strong>${esc(timer.label || 'Timer')}</strong>
+              <div class="timer-readout" id="studentTimerReadout" data-started-at="${esc(timer.startedAt || '')}" data-running="${timer.running ? 'true' : 'false'}" data-remaining="${esc(timer.pausedRemainingSeconds || 0)}">${esc(formatSeconds(timerSeconds(timer)))}</div>
+              <p class="section-sub" style="margin:5px 0 0">${timer.running ? 'Running now' : 'Paused / ready'}</p>
+            </div>
+            <div class="classroom-tile">
+              <strong>Noise level</strong>
+              <div class="timer-readout" style="font-size:22px">${esc(noiseLabel(state.noiseLevel))}</div>
+            </div>
+          </div>
+          ${renderStudentGroups(state.groups || [])}
+        </div>
+      `;
+    }
+
+    function renderStudentGroups(groups) {
+      if (!groups.length) return '<p class="section-sub" style="margin-top:14px">No groups posted yet.</p>';
+      return `
+        <div class="group-list">
+          ${groups.map(group => `
+            <div class="group-item">
+              <h4>${esc(group.name)}</h4>
+              ${group.focus ? `<p><strong>Focus:</strong> ${esc(group.focus)}</p>` : ''}
+              ${group.members?.length ? `<p><strong>Members:</strong> ${esc(group.members.join(', '))}</p>` : ''}
+              ${(group.subgroups || []).map(sub => `<p><strong>${esc(sub.name)}:</strong> ${esc((sub.members || []).join(', ') || 'No members listed')}</p>`).join('')}
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function tickStudentTimer() {
+      const el = document.getElementById('studentTimerReadout');
+      if (!el) return;
+      const running = el.dataset.running === 'true';
+      const remaining = Number(el.dataset.remaining || 0);
+      const startedAt = el.dataset.startedAt;
+      const seconds = running && startedAt
+        ? Math.max(0, remaining - Math.floor((Date.now() - new Date(startedAt).getTime()) / 1000))
+        : Math.max(0, remaining);
+      el.textContent = formatSeconds(seconds);
+    }
+
+    function weekStatus(week) {
+      const dates = (week.days || []).map(d => d.date).filter(Boolean).sort();
+      if (!dates.length) return 'soon';
+      const today = todayKey();
+      if (today > dates[dates.length - 1]) return 'done';
+      if (today >= dates[0]) return 'now';
+      return 'soon';
+    }
+
+    function renderBuildingDocs(docs) {
+      if (!Array.isArray(docs) || !docs.length) return '';
+      return `
+        <div class="submit-card" style="margin-bottom:18px">
+          <div class="section-title" style="display:flex;align-items:center;gap:8px">📐 Building instructions</div>
+          <p class="section-sub">Follow these step-by-step PDFs from your coach as you build.</p>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
+            ${docs.map(d => `
+              <a href="${esc(d.url || '#')}" target="_blank" rel="noreferrer" style="display:flex;align-items:center;gap:14px;padding:14px;border:1.5px solid var(--line);border-radius:12px;text-decoration:none;color:inherit">
+                <span style="flex:none;width:44px;height:52px;border-radius:7px;background:#fdecec;color:#d6453d;display:grid;place-items:center;font-weight:900;font-size:12px;border:1px solid #f6cfcd">PDF</span>
+                <span style="flex:1;min-width:0"><span style="display:block;font-weight:800;font-size:15px">${esc(d.title)}</span><span style="color:var(--muted);font-weight:600;font-size:13px">${esc(d.meta || '')}</span></span>
+                <span style="flex:none;font-weight:800;color:var(--sun-deep)">Open →</span>
+              </a>`).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCurrentWeek(curriculum) {
+      const focus = findFocusDay(curriculum);
+      let index = curriculum.findIndex(w => weekStatus(w) === 'now');
+      if (index < 0 && focus) index = curriculum.findIndex(w => (w.days || []).some(d => d.id === focus.day.id));
+      if (index < 0) index = 0;
+      const week = curriculum[index];
+      if (!week) return '';
+      return `
+        <div class="section-title">🗓️ This week</div>
+        <p class="section-sub">Your current week's plan, day by day. Today is highlighted.</p>
+        ${renderWeek(week, index)}
+      `;
+    }
+
+    function renderWeek(week, index) {
+      const status = weekStatus(week);
+      const today = todayKey();
+      const dates = (week.days || []).map(d => d.date).filter(Boolean).sort();
+      const range = dates.length
+        ? `${fmt(dates[0], { month: 'short', day: 'numeric' })} – ${fmt(dates[dates.length - 1], { month: 'short', day: 'numeric' })}`
+        : 'Dates TBD';
+      const badge = status === 'now'
+        ? '<span class="week-badge now">This week</span>'
+        : status === 'done'
+          ? '<span class="week-badge done">Done ✓</span>'
+          : '<span class="week-badge soon">Coming up</span>';
+
+      const dayRows = (week.days || []).map(day => {
+        const isToday = day.date === today;
+        const isPast = day.date < today;
+        return `
+          <div class="day-row ${isToday ? 'is-today' : ''} ${isPast ? 'is-past' : ''}">
+            <div class="day-date">
+              <div class="dow">${esc(fmt(day.date, { weekday: 'short' }))}</div>
+              <div class="dom">${esc(fmt(day.date, { month: 'numeric', day: 'numeric' }))}</div>
+            </div>
+            <div class="day-info">
+              ${isToday ? '<span class="today-tag">Today</span>' : ''}
+              <div class="day-activity ${day.activity ? '' : 'empty'}">${esc(day.activity || 'Plan coming soon — your coach will fill this in.')}</div>
+              ${day.build ? `<span class="day-build">🔧 ${esc(day.build)}</span>` : ''}
+            </div>
+            ${isToday
+              ? `<button type="button" class="begin-lesson-btn now" onclick="beginLesson('${esc(day.id)}')">▶ Begin lesson</button>`
+              : `<button type="button" class="begin-lesson-btn" disabled title="${isPast ? 'This day has passed' : 'Available on the day'}">Begin lesson</button>`}
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="week-card ${status === 'now' ? 'is-current open' : ''} ${status === 'done' ? 'is-past' : ''}" id="week-${esc(week.id)}">
+          <div class="week-head" onclick="toggleWeek('${esc(week.id)}')">
+            <div class="week-label">
+              <div class="week-num">W${index + 1}</div>
+              <div>
+                <div class="week-title">${esc(week.label)}${week.theme ? ` · ${esc(week.theme)}` : ''}</div>
+                <div class="week-dates">${esc(range)}</div>
+              </div>
+            </div>
+            ${badge}
+            <span class="week-toggle">+</span>
+          </div>
+          <div class="week-body">
+            ${week.goal ? `<div class="week-goal">🥅 ${esc(week.goal)}</div>` : ''}
+            ${dayRows}
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleWeek(weekId) {
+      const card = document.getElementById('week-' + weekId);
+      if (card) card.classList.toggle('open');
+    }
+
+    function renderResources(resources, user) {
+      const visible = resources.filter(r => !Array.isArray(r.roles) || r.roles.includes(user.role));
+      const grouped = {};
+      visible.forEach(r => {
+        const cat = r.category || 'Other';
+        if (!grouped[cat]) grouped[cat] = [];
+        grouped[cat].push(r);
+      });
+      const icons = { Website: '🌐', Video: '▶️', Reading: '📖', Folder: '📁' };
+      return Object.entries(grouped).map(([cat, items]) => `
+        <div class="resource-category">
+          <div class="cat-label">${esc(cat)}</div>
+          <div class="resource-grid">
+            ${items.map(item => `
+              <div class="resource-card">
+                <div class="resource-card-top">
+                  <div class="resource-name">${icons[item.type] || '🔗'} ${esc(item.label)}</div>
+                  <span class="resource-type-badge type-${esc(item.type)}">${esc(item.type)}</span>
+                </div>
+                <p class="resource-desc">${esc(item.description)}</p>
+                <a class="resource-link" href="${esc(item.url)}" target="_blank" rel="noreferrer">Open resource →</a>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderAnnouncements(announcements, user) {
+      const visible = announcements.filter(a => a.audience === 'all' || a.audience === user.role);
+      if (!visible.length) return '<p style="color:var(--muted);font-size:14px">No announcements yet — check back soon!</p>';
+      return visible.map(a => `
+        <div class="announce-card ${a.audience === 'coach' ? 'coach-only' : ''}">
+          ${a.date ? `<div class="announce-date">${esc(a.date)}</div>` : ''}
+          <div class="announce-title">${esc(a.title)}</div>
+          <p class="announce-body">${esc(a.body)}</p>
+        </div>
+      `).join('');
+    }
+
+    function renderDashboard(data) {
+      hubState = data;
+      const { user, camp, curriculum, announcements, resources, submissions } = data;
+      const isCoach = user.role === 'coach';
+      userLine.textContent = `${user.name} · ${isCoach ? 'Coach preview' : 'Camper'}`;
+      rolePill.textContent = isCoach ? 'Coach' : 'Camper';
+
+      app.innerHTML = `
+        ${renderHero(camp)}
+        ${renderFocus(curriculum)}
+        ${renderProgress(curriculum, submissions || [])}
+
+        <div class="main-layout">
+          <div>
+            <div class="section-title">🗓️ Weekly Schedule</div>
+            <p class="section-sub">Tap a week to see each day's plan and build. Today is always highlighted.</p>
+            ${curriculum.map((week, i) => renderWeek(week, i)).join('')}
+
+            <div style="margin-top:36px">
+              <div class="section-title">📚 Resources</div>
+              <p class="section-sub">Everything you need for camp — apps, lessons, and project research.</p>
+              ${renderResources(resources, user)}
+            </div>
+          </div>
+
+          <aside>
+            <div class="section-title">📢 Announcements</div>
+            <p class="section-sub">Latest updates from your coaches.</p>
+            <div class="announce-list">
+              ${renderAnnouncements(announcements, user)}
+            </div>
+            ${isCoach ? `
+              <div style="margin-top:24px">
+                <a class="btn" style="display:block;text-align:center;padding:14px" href="/camp-hub/coach">Open Coach Dashboard →</a>
+              </div>
+            ` : ''}
+          </aside>
+        </div>
+      `;
+    }
+
+    function renderCampDashboard(data) {
+      hubState = data;
+      const { user, camp, curriculum, announcements, resources, submissions = [], enrollment, points, printRequests = [], projectSubmissions = [], classroom, buildingDocs = [] } = data;
+      const isCoach = user.role === 'coach';
+      userLine.textContent = `${user.name} · ${isCoach ? 'Coach preview' : 'Camper'}`;
+      rolePill.textContent = isCoach ? 'Coach' : 'Camper';
+
+      app.innerHTML = `
+        <nav class="af-tabs" id="campTabs" role="tablist">
+          <button class="af-tab" data-tab="today" type="button">☀️ Today</button>
+          <button class="af-tab" data-tab="schedule" type="button">🗓️ Schedule</button>
+          <button class="af-tab" data-tab="assignments" type="button">📝 Assignments</button>
+          ${!isCoach ? '<button class="af-tab" data-tab="projects" type="button">🛠️ Projects</button>' : ''}
+          ${!isCoach ? '<button class="af-tab" data-tab="points" type="button">⭐ Points</button>' : ''}
+          <button class="af-tab" data-tab="resources" type="button">📚 Resources</button>
+          <button class="af-tab" data-tab="announce" type="button">📢 News</button>
+        </nav>
+
+        <section class="af-panel" data-panel="today">
+          ${renderCurrentWeek(curriculum)}
+          ${renderProgress(curriculum, submissions)}
+          ${!isCoach ? renderClassroomCard(classroom) : ''}
+          ${renderFocus(curriculum, enrollment)}
+        </section>
+
+        <section class="af-panel" data-panel="schedule">
+          <div class="section-title">🗓️ Weekly Schedule</div>
+          <p class="section-sub">Tap a week to see each day's plan and build. Today is always highlighted.</p>
+          ${curriculum.map((week, i) => renderWeek(week, i)).join('')}
+        </section>
+
+        <section class="af-panel" data-panel="assignments">
+          <div class="section-title">📝 This Week's Assignments</div>
+          <p class="section-sub">Open any worksheet you need, then submit your reflection and final-work photo.</p>
+          ${renderBuildingDocs(buildingDocs)}
+          ${renderAssignmentTable(curriculum, submissions)}
+          ${!isCoach ? renderSubmitBox(curriculum, submissions) : ''}
+        </section>
+
+        ${!isCoach ? `<section class="af-panel" data-panel="projects">
+          ${renderProjectSubmissionForm()}
+          ${renderPrintRequestForm()}
+        </section>` : ''}
+
+        ${!isCoach ? `<section class="af-panel" data-panel="points">
+          ${renderPointsCard(points, printRequests, projectSubmissions)}
+        </section>` : ''}
+
+        <section class="af-panel" data-panel="resources">
+          <div class="section-title">📚 Resources</div>
+          <p class="section-sub">Everything you need for camp: apps, lessons, worksheets, and project research.</p>
+          ${renderResources(resources, user)}
+        </section>
+
+        <section class="af-panel" data-panel="announce">
+          <div class="section-title">📢 Announcements</div>
+          <p class="section-sub">Latest updates from your coaches.</p>
+          <div class="announce-list">${renderAnnouncements(announcements, user)}</div>
+          ${isCoach ? `<div style="margin-top:24px"><a class="btn" style="display:block;text-align:center" href="/camp-hub/coach">Open Coach Dashboard →</a></div>` : ''}
+        </section>
+      `;
+      setupCampTabs();
+      tickStudentTimer();
+    }
+
+    function setupCampTabs() {
+      const tabsEl = document.getElementById('campTabs');
+      if (!tabsEl) return;
+      const panels = [...app.querySelectorAll('.af-panel')];
+      const tabs = [...tabsEl.querySelectorAll('.af-tab')];
+      const names = tabs.map(t => t.dataset.tab);
+      let active = localStorage.getItem('campTab');
+      if (!names.includes(active)) active = names[0];
+      function show(name) {
+        active = name;
+        try { localStorage.setItem('campTab', name); } catch (e) {}
+        tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+        panels.forEach(p => p.classList.toggle('active', p.dataset.panel === name));
+      }
+      tabs.forEach(t => t.addEventListener('click', () => { show(t.dataset.tab); }));
+      show(active);
+    }
+
+    function imageToDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        if (!file) return resolve('');
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('Could not read the photo'));
+        reader.onload = () => {
+          const img = new Image();
+          img.onerror = () => reject(new Error('Could not load the photo'));
+          img.onload = () => {
+            const max = 1200;
+            const scale = Math.min(1, max / Math.max(img.width, img.height));
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.max(1, Math.round(img.width * scale));
+            canvas.height = Math.max(1, Math.round(img.height * scale));
+            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL('image/jpeg', 0.78));
+          };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function pickPhoto(inputId, useCamera) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      if (useCamera) input.setAttribute('capture', 'environment');
+      else input.removeAttribute('capture');
+      input.click();
+    }
+
+    async function submitActivity() {
+      const status = document.getElementById('submitStatus');
+      const preview = document.getElementById('submissionPreview');
+      const dayId = document.getElementById('submitDay').value;
+      const reflection = document.getElementById('submitReflection').value.trim();
+      const file = document.getElementById('submitPhoto').files[0];
+      status.textContent = 'Saving...';
+      preview.innerHTML = '';
+      try {
+        const photoDataUrl = await imageToDataUrl(file);
+        const response = await fetch('/api/camp/submissions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ dayId, reflection, photoDataUrl })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Could not submit activity');
+        const existingIndex = hubState.submissions.findIndex(s => s.dayId === dayId);
+        if (existingIndex >= 0) hubState.submissions[existingIndex] = result.submission;
+        else hubState.submissions.push(result.submission);
+        preview.innerHTML = `${photoDataUrl ? `<img src="${photoDataUrl}" alt="Submitted activity photo" />` : ''}`;
+        renderCampDashboard(hubState);
+        const nextStatus = document.getElementById('submitStatus');
+        if (nextStatus) nextStatus.textContent = 'Submitted. Your coach can now see it.';
+      } catch (err) {
+        status.textContent = err.message || 'Could not submit activity.';
+      }
+    }
+
+    async function submitPrintRequest() {
+      const status = document.getElementById('printStatus');
+      const payload = {
+        title: document.getElementById('printTitle').value.trim(),
+        purpose: document.getElementById('printPurpose').value.trim(),
+        dimensions: document.getElementById('printDimensions').value.trim(),
+        color: document.getElementById('printColor').value.trim(),
+        notes: document.getElementById('printNotes').value.trim()
+      };
+      status.textContent = 'Sending request...';
+      try {
+        const response = await fetch('/api/camp/print-requests', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Could not send print request');
+        hubState.printRequests = [result.request, ...(hubState.printRequests || [])];
+        hubState.points = result.points || hubState.points;
+        renderCampDashboard(hubState);
+        const nextStatus = document.getElementById('printStatus');
+        if (nextStatus) nextStatus.textContent = 'Request sent to the coach queue.';
+      } catch (err) {
+        status.textContent = err.message || 'Could not send print request.';
+      }
+    }
+
+    async function submitProject() {
+      const status = document.getElementById('projectStatus');
+      const preview = document.getElementById('projectPreview');
+      const file = document.getElementById('projectPhoto').files[0];
+      const payload = {
+        title: document.getElementById('projectTitle').value.trim(),
+        projectType: document.getElementById('projectType').value,
+        description: document.getElementById('projectDescription').value.trim(),
+        reflection: document.getElementById('projectReflection').value.trim(),
+        linkUrl: document.getElementById('projectLink').value.trim()
+      };
+      status.textContent = 'Submitting project...';
+      preview.innerHTML = '';
+      try {
+        const photoDataUrl = await imageToDataUrl(file);
+        const response = await fetch('/api/camp/projects', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...payload, photoDataUrl })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Could not submit project');
+        hubState.projectSubmissions = [result.project, ...(hubState.projectSubmissions || [])];
+        hubState.points = result.points || hubState.points;
+        preview.innerHTML = `${photoDataUrl ? `<img src="${photoDataUrl}" alt="Submitted project photo" />` : ''}`;
+        renderCampDashboard(hubState);
+        const nextStatus = document.getElementById('projectStatus');
+        if (nextStatus) nextStatus.textContent = 'Project submitted. Your coach can now review it.';
+      } catch (err) {
+        status.textContent = err.message || 'Could not submit project.';
+      }
+    }
+
+    const DEMO_DATA = {
+      user: { name: 'Maya Rivera', role: 'camper' },
+      camp: {
+        year: '2026', scheduleNote: 'Mon–Fri · 9am–3pm',
+        themeSummary: 'Five weeks of robotics, coding, and design. Build real robots, code missions, and create your own projects.',
+        startDate: '2026-06-15', endDate: '2026-07-17'
+      },
+      enrollment: { visibleWeekLabel: 'Week 1 · Robotics Foundations', visibleWeekRange: { start: '2026-06-15', end: '2026-06-19' }, source: 'master-roster' },
+      curriculum: [
+        { id: 'w1', label: 'Week 1', theme: 'Robotics Foundations', goal: 'Build, sense, and code your first mission robot.', days: [
+          { id: 'd-0615', date: '2026-06-15', activity: 'Kickoff: meet your team and build your first drive base.', build: 'Drive base v1' },
+          { id: 'd-0616', date: '2026-06-16', activity: 'Sensor day — add the color sensor and test line following.', build: 'Line follower' },
+          { id: 'd-0617', date: '2026-06-17', activity: 'Block-coding challenge: program your bot through the maze.', build: 'Maze run' },
+          { id: 'd-0618', date: '2026-06-18', activity: 'Bioglow mission build — attach the arm and grab the artifact.', build: 'Artifact arm', assignment: 'Build & test the artifact arm, then submit a photo of your run.', worksheetUrl: '#', worksheetLabel: 'Artifact arm sheet' },
+          { id: 'd-0619', date: '2026-06-19', activity: 'Showcase & reflection — demo your robot to the group.', build: 'Final demo' }
+        ] },
+        { id: 'w2', label: 'Week 2', theme: 'Coding & Python', goal: 'Move from blocks to real Python.', days: [
+          { id: 'd-0622', date: '2026-06-22', activity: 'Intro to Python — first programs and variables.' },
+          { id: 'd-0623', date: '2026-06-23', activity: 'Loops and sensors with MicroPython.' }
+        ] }
+      ],
+      submissions: [
+        { dayId: 'd-0615', updatedAt: '2026-06-15' },
+        { dayId: 'd-0616', updatedAt: '2026-06-16' },
+        { dayId: 'd-0617', updatedAt: '2026-06-17' }
+      ],
+      points: {
+        total: 145, submittedActivities: 3, activityPoints: 90, printBonus: 15, projectBonus: 20, behaviorPoints: 20,
+        skills: { Teamwork: 10, Focus: 5, Cleanup: -5 },
+        events: [
+          { category: 'Activity submitted', note: 'Line follower reflection', points: 30 },
+          { category: 'Teamwork', note: 'Helped a teammate debug', points: 10, type: 'good' },
+          { category: 'Cleanup', note: 'Left parts out', points: -5, type: 'needs-work' }
+        ]
+      },
+      classroom: {
+        timer: { label: 'Build time', running: true, startedAt: new Date(Date.now() - 5 * 60000).toISOString(), pausedRemainingSeconds: 1500 },
+        noiseLevel: 'partner',
+        groups: [ { name: 'Team Bioglow', focus: 'Artifact arm', members: ['Maya', 'Liam', 'Ava', 'Noah'] } ]
+      },
+      printRequests: [ { title: 'Sensor bracket', status: 'pending', purpose: 'Holds the color sensor at the front of the bot.', createdAt: '2026-06-17' } ],
+      projectSubmissions: [ { title: 'Maze-run robot', status: 'approved', pointsAwarded: 20, coachFeedback: 'Great consistency — nice clean turns!', createdAt: '2026-06-17' } ],
+      buildingDocs: [
+        { title: 'Drive Base v1 — build steps', meta: 'Week 1 · Mon · 24 pages', url: '#' },
+        { title: 'Color Sensor Attachment', meta: 'Week 1 · Tue · 9 pages', url: '#' }
+      ],
+      resources: [
+        { category: 'Apps & Tools', type: 'Website', label: 'Pybricks Coding', description: 'Program your LEGO robot in Python from the browser.', url: '#', roles: ['camper', 'coach'] },
+        { category: 'Apps & Tools', type: 'Website', label: 'Scratch', description: 'Block-based coding for games and animations.', url: '#', roles: ['camper', 'coach'] },
+        { category: 'Lessons', type: 'Video', label: 'Line Following 101', description: 'How color sensors steer your robot.', url: '#', roles: ['camper', 'coach'] },
+        { category: 'Project Research', type: 'Reading', label: 'Bioglow Mission Brief', description: 'This season’s challenge and scoring guide.', url: '#', roles: ['camper', 'coach'] }
+      ],
+      announcements: [
+        { date: 'Jun 17', title: 'Showcase is Friday!', body: 'Invite a family member to watch your team demo at 2pm Friday.', audience: 'all' },
+        { date: 'Jun 16', title: 'Bring a water bottle', body: 'It’s warm this week — stay hydrated during outdoor testing.', audience: 'all' }
+      ]
+    };
+
+    async function loadHub() {
+      if (DEMO) { renderCampDashboard(DEMO_DATA); return; }
+      try {
+        const response = await fetch('/api/camp/hub-data');
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Login required');
+        renderCampDashboard(result.data);
+      } catch (err) {
+        window.location.href = '/camp-hub/login';
+      }
+    }
+
+    logoutButton.addEventListener('click', async () => {
+      if (DEMO) { return; }
+      await fetch('/api/camp/logout', { method: 'POST' });
+      window.location.href = '/camp-hub/login';
+    });
+
+    /* ── Live lesson (camper) ── */
+    let lvState = null;
+    let lvJoined = false;
+    let lvRenderKey = '';
+    const liveBanner = document.getElementById('liveBanner');
+    const liveOverlay = document.getElementById('liveOverlay');
+    const liveOverlayBody = document.getElementById('liveOverlayBody');
+
+    /* Demo live lesson so the feature is visible in preview. Refresh advances slides. */
+    const DEMO_LIVE = {
+      lessonTitle: 'Line Following 101',
+      slides: [
+        { id: 's1', type: 'content', title: 'Today: teach your robot to follow a line', body: 'We\u2019ll use the color sensor to keep the robot on the black track. Get your bot and a track ready!' },
+        { id: 's2', type: 'question', title: 'Which sensor helps the robot follow a line?', options: ['Touch sensor', 'Color sensor', 'Distance sensor', 'Gyro sensor'] },
+        { id: 's3', type: 'question', title: 'If the sensor sees white, the line is to the\u2026', options: ['Left \u2014 turn left', 'Right \u2014 turn right', 'It depends which side we follow', 'Stop the robot'] },
+        { id: 's4', type: 'content', title: 'Great work! \ud83c\udf89', body: 'You programmed a line follower. Next we\u2019ll add speed control.' }
+      ],
+      idx: 0
+    };
+    function demoLiveState() {
+      const s = DEMO_LIVE.slides[DEMO_LIVE.idx];
+      return { active: true, lessonTitle: DEMO_LIVE.lessonTitle, slide: s, slideIndex: DEMO_LIVE.idx, slideCount: DEMO_LIVE.slides.length, myAnswer: lvState && lvState.slide && lvState.slide.id === s.id ? lvState.myAnswer : null };
+    }
+
+    function escLv(v) {
+      return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    async function pollLive() {
+      if (DEMO) { lvState = demoLiveState(); }
+      else {
+        try {
+          const r = await fetch('/api/camp/live').then(x => x.json());
+          lvState = r && r.success ? r.state : { active: false };
+        } catch (err) { return; }
+      }
+      // Banner shows only when a lesson is live and the camper hasn't joined.
+      if (lvState && lvState.active && !lvJoined) {
+        document.getElementById('liveBannerTitle').textContent = (lvState.lessonTitle || 'A lesson') + ' is live';
+        liveBanner.classList.add('show');
+      } else {
+        liveBanner.classList.remove('show');
+      }
+      if (lvJoined) renderLiveOverlay();
+    }
+
+    function beginLesson(dayId) {
+      if (lvState && lvState.active) { joinLive(); return; }
+      campToast("Your coach hasn't started today's lesson yet — the Begin button lights up when it's live!");
+    }
+    function campToast(msg) {
+      let t = document.getElementById('campToast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'campToast';
+        t.style.cssText = 'position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(160%);background:var(--sun-deep);color:#fff;font-weight:800;padding:14px 22px;border-radius:999px;box-shadow:0 10px 30px rgba(7,20,38,.3);transition:transform .25s;z-index:200;max-width:90vw;text-align:center';
+        document.body.appendChild(t);
+      }
+      t.textContent = msg;
+      t.style.transform = 'translateX(-50%) translateY(0)';
+      clearTimeout(t._t);
+      t._t = setTimeout(() => { t.style.transform = 'translateX(-50%) translateY(160%)'; }, 2600);
+    }
+    window.beginLesson = beginLesson;
+
+    function joinLive() {
+      lvJoined = true;
+      lvRenderKey = '';
+      liveOverlay.classList.add('show');
+      liveBanner.classList.remove('show');
+      document.body.style.overflow = 'hidden';
+      renderLiveOverlay();
+      pollLive();
+    }
+    function leaveLive() {
+      lvJoined = false;
+      liveOverlay.classList.remove('show');
+      document.body.style.overflow = '';
+      pollLive();
+    }
+
+    function renderLiveOverlay() {
+      document.getElementById('liveOverlayTitle').textContent = (lvState && lvState.lessonTitle) || 'Live lesson';
+      const counter = document.getElementById('liveOverlayCounter');
+      if (!lvState || !lvState.active) {
+        const key = 'ended';
+        if (lvRenderKey !== key) {
+          lvRenderKey = key;
+          liveOverlayBody.innerHTML = `
+            <div class="lo-waiting"><span class="big">👋</span>
+              <h1 style="font-size:26px">The lesson has ended</h1>
+              <p style="font-size:18px;margin-top:8px">Nice work today! You can close this and go back to your hub.</p>
+              <button class="lo-btn gold" style="margin-top:20px" onclick="leaveLive()">Back to my hub</button>
+            </div>`;
+        }
+        counter.textContent = '';
+        return;
+      }
+      const s = lvState.slide || {};
+      const isQ = s.type === 'question';
+      const key = `${s.id}|${lvState.slideIndex}|${isQ ? (lvState.myAnswer == null ? 'na' : lvState.myAnswer) : 'c'}`;
+      counter.textContent = `Slide ${(lvState.slideIndex || 0) + 1} of ${lvState.slideCount || 1}`;
+      if (lvRenderKey === key) return; // avoid flicker when nothing changed
+      lvRenderKey = key;
+
+      if (isQ) {
+        const answered = lvState.myAnswer != null;
+        liveOverlayBody.innerHTML = `
+          <div class="lo-content">
+            <div class="lo-kicker">❓ Question — tap your answer</div>
+            <h1>${escLv(s.title)}</h1>
+            ${s.body ? `<div class="lo-text">${escLv(s.body)}</div>` : ''}
+            ${s.image ? `<img src="${escLv(s.image)}" alt="" onerror="this.style.display='none'">` : ''}
+            <div class="lo-answers">
+              ${(s.options || []).map((opt, j) => `
+                <button class="lo-answer a${j} ${answered && lvState.myAnswer === j ? 'chosen' : ''} ${answered && lvState.myAnswer !== j ? 'dim' : ''}" onclick="answerLive(${j})">
+                  <span class="lo-key">${String.fromCharCode(65 + j)}</span><span>${escLv(opt)}</span>
+                </button>`).join('')}
+            </div>
+            ${answered ? `<div class="lo-answered-msg">✓ Answer sent! You can change it until your coach moves on.</div>` : ''}
+          </div>`;
+      } else {
+        liveOverlayBody.innerHTML = `
+          <div class="lo-content">
+            <div class="lo-kicker">📄 Follow along</div>
+            <h1>${escLv(s.title)}</h1>
+            ${s.body ? `<div class="lo-text">${escLv(s.body)}</div>` : ''}
+            ${s.image ? `<img src="${escLv(s.image)}" alt="" onerror="this.style.display='none'">` : ''}
+          </div>`;
+      }
+    }
+
+    async function answerLive(choice) {
+      if (!lvState || !lvState.slide) return;
+      if (DEMO) { lvState.myAnswer = choice; lvRenderKey = ''; renderLiveOverlay(); return; }
+      try {
+        const r = await fetch('/api/camp/live/answer', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slideId: lvState.slide.id, choice })
+        }).then(x => x.json());
+        if (r && r.success) { lvState.myAnswer = choice; lvRenderKey = ''; renderLiveOverlay(); }
+        else if (r && r.message) { /* question may have moved on */ pollLive(); }
+      } catch (err) { /* ignore, next poll recovers */ }
+    }
+
+    document.getElementById('liveJoinBtn').addEventListener('click', joinLive);
+    document.getElementById('liveLeaveBtn').addEventListener('click', leaveLive);
+    document.getElementById('liveRefreshBtn').addEventListener('click', () => {
+      if (DEMO) { DEMO_LIVE.idx = (DEMO_LIVE.idx + 1) % DEMO_LIVE.slides.length; }
+      lvRenderKey = ''; pollLive();
+    });
+    document.getElementById('liveFullscreenBtn').addEventListener('click', () => {
+      const el = document.getElementById('liveOverlay');
+      const doc = document;
+      if (doc.fullscreenElement || doc.webkitFullscreenElement) {
+        (doc.exitFullscreen || doc.webkitExitFullscreen || function(){}).call(doc);
+      } else {
+        (el.requestFullscreen || el.webkitRequestFullscreen || function(){}).call(el);
+      }
+    });
+    window.answerLive = answerLive;
+    window.leaveLive = leaveLive;
+
+    setInterval(tickStudentTimer, 1000);
+    setInterval(pollLive, 3000);
+    loadHub();
+    pollLive();
+  </script>
+</body>
+</html>

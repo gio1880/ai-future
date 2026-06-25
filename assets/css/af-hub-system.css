@@ -1,0 +1,273 @@
+/* ════════════════════════════════════════════════════════════════════
+   AI FUTURE — UNIFIED STUDENT HUB SYSTEM
+   One source of truth for the Summer Camp hub and the FLL season hub.
+   Link this LAST in each hub's <head> (after its inline <style>) so its
+   token + component rules win the cascade and both hubs look identical.
+   Drives both hubs' existing class vocabularies:
+     Camp:  .topbar .hero-card .week-card .submit-card .btn .chip ...
+     FLL:   .appbar .team-home .panel .card .tab button .btn-primary ...
+   ════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap');
+
+/* ── 1. Unified brand tokens ──────────────────────────────────────────
+   Redefine BOTH hubs' variable names to the AI Future palette. Anything
+   either app draws with var() instantly snaps to the shared system. */
+:root {
+  /* canonical brand */
+  --af-navy:      #073E77;
+  --af-deep-navy: #001B3F;
+  --af-gold:      #FECE00;
+  --af-blue:      #2563FF;
+  --af-blue-soft: #E7EDFF;
+  --af-sun:       #F97316;
+  --af-sun-soft:  #FFF1E4;
+  --af-green:     #1E8A5B;
+  --af-green-soft:#E4F4EC;
+  --af-amber:     #F59E0B;
+  --af-red:       #E11D48;
+  --af-purple:    #6D4AFF;
+  --af-ink:       #14233B;
+  --af-muted:     #64748B;
+  --af-line:      #E7ECF5;
+  --af-page:      #EEF3FC;
+  --af-card:      #FFFFFF;
+
+  --af-r:    22px;
+  --af-r-sm: 14px;
+  --af-r-pill: 999px;
+  --af-display: 'Fredoka', 'Inter', system-ui, sans-serif;
+  --af-shadow:   0 2px 4px rgba(7,62,119,.04), 0 10px 26px rgba(7,62,119,.08);
+  --af-shadow-h: 0 16px 40px rgba(7,62,119,.18);
+
+  /* ── Camp hub variable remap ── */
+  --ink: var(--af-ink);
+  --muted: var(--af-muted);
+  --line: var(--af-line);
+  --bg: var(--af-page);
+  --white: var(--af-card);
+  --sun: var(--af-sun);
+  --sun-deep: var(--af-navy);
+  --sun-light: var(--af-sun-soft);
+  --sun-mid: #FAD7B5;
+  --gold: var(--af-gold);
+  --sky: var(--af-blue);
+  --sky-light: var(--af-blue-soft);
+  --grass: var(--af-green);
+  --grass-light: var(--af-green-soft);
+  --purple: var(--af-purple);
+  --purple-light: #ECE7FF;
+  --radius: var(--af-r);
+  --radius-sm: var(--af-r-sm);
+  --shadow: var(--af-shadow);
+  --shadow-hover: var(--af-shadow-h);
+
+  /* ── FLL hub variable remap ── */
+  --card: var(--af-card);
+  --green: var(--af-navy);          /* FLL primary action → brand navy */
+  --green-dark: var(--af-deep-navy);
+  --blue: var(--af-blue);
+  --blue-soft: var(--af-blue-soft);
+  --amber: var(--af-amber);
+  --red: var(--af-red);
+}
+
+/* ── 2. Base type ─────────────────────────────────────────────────── */
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+  background: var(--af-page) !important;
+  color: var(--af-ink);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Rounded, friendly display font for all headings (modern + kid-friendly) */
+h1, h2, h3, .hero-title, .section-title, .cat-grid-title, .console-title,
+.week-title, .week-num, .big-num, .brand strong, .brand-title strong, .brand-text strong,
+.welcome-name, .focus-body h2, .hello, .pv-title, .lo-content h1, .points-total {
+  font-family: var(--af-display) !important;
+  letter-spacing: 0 !important;
+  font-weight: 600 !important;
+}
+
+/* ── 3. App bar / top bar ─────────────────────────────────────────── */
+.appbar, .topbar {
+  background: rgba(255,255,255,.92) !important;
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--af-line) !important;
+  padding-top: env(safe-area-inset-top);
+}
+.appbar-inner, .topbar-inner {
+  max-width: 1180px;
+  padding-left: max(20px, env(safe-area-inset-left));
+  padding-right: max(20px, env(safe-area-inset-right));
+  height: auto; min-height: 64px; padding-top: 10px; padding-bottom: 10px;
+}
+.brand-title strong, .brand-text strong { white-space: nowrap; }
+.brand img { border-radius: 10px !important; }
+.brand-title strong, .brand-text strong { color: var(--af-deep-navy); }
+
+/* ── 4. Hero (camp .hero-card + FLL .team-home + FLL welcome) ─────── */
+.hero-card, .team-home {
+  border-radius: var(--af-r) !important;
+  border: 0 !important;
+  box-shadow: var(--af-shadow) !important;
+}
+.team-home {
+  background:
+    linear-gradient(120deg, rgba(0,27,63,.92), rgba(7,62,119,.72)),
+    var(--fll-hero, url("/robotics%20lab/FLL%20Teams/25_26_season_pictures/fll-25-26-003.png")) center / cover !important;
+}
+.hero-title em, .team-home .accent { color: var(--af-gold); }
+
+/* FLL in-page welcome banner + first-run onboarding hero → unified navy */
+.welcome-banner, .ws-hero {
+  background: linear-gradient(125deg, var(--af-deep-navy) 0%, var(--af-navy) 100%) !important;
+  color: #fff !important;
+}
+.welcome-banner { border-radius: var(--af-r) !important; }
+.ws-card { border-radius: var(--af-r) !important; overflow: hidden; }
+.ws-hero h2 em, .welcome-banner em, .welcome-name em { color: var(--af-gold) !important; }
+.ws-cta { background: var(--af-navy) !important; color: #fff !important; }
+.ws-cta:hover { background: var(--af-deep-navy) !important; }
+.welcome-top { background: transparent !important; }
+
+/* ── 5. Cards ─────────────────────────────────────────────────────── */
+.panel, .card, .assignment-card, .task-card, .resource-card, .milestone-card,
+.log-card, .work-form, .vision-card, .start-card, .action-card,
+.week-card, .submit-card, .progress-card, .points-card, .classroom-card,
+.announce-card, .focus-banner {
+  border-radius: var(--af-r) !important;
+  border: 1px solid var(--af-line) !important;
+  box-shadow: var(--af-shadow) !important;
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+@media (hover: hover) {
+  .card:hover, .panel:hover, .resource-card:hover, .task-card:hover,
+  .action-card:hover, .vision-card:hover, .milestone-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--af-shadow-h) !important;
+  }
+}
+.announce-card.coach-only { border-left: 4px solid var(--af-sun) !important; }
+
+/* ── 6. Buttons (unified: navy primary, gold CTA) ─────────────────── */
+button, .btn, .btn-primary, .ta-submit-btn, .cv-add-btn, .reflection-submit,
+.video-finish-btn {
+  border-radius: var(--af-r-sm) !important;
+  font-weight: 700;
+  transition: transform .14s cubic-bezier(.34,1.56,.64,1), background .15s, box-shadow .15s !important;
+}
+button, .btn, .btn-primary, .ta-submit-btn, .cv-add-btn, .reflection-submit,
+.video-finish-btn {
+  background: var(--af-navy) !important;
+  color: #fff !important;
+}
+@media (hover: hover) {
+  button:hover, .btn:hover, .btn-primary:hover, .ta-submit-btn:hover,
+  .cv-add-btn:hover, .reflection-submit:hover, .video-finish-btn:hover {
+    background: var(--af-deep-navy) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(7,62,119,.26) !important;
+  }
+}
+button:active, .btn:active, .btn-primary:active { transform: translateY(0) scale(.98) !important; }
+.btn-outline {
+  background: transparent !important; color: var(--af-navy) !important;
+  border: 2px solid var(--af-navy) !important;
+}
+.btn-outline:hover { background: rgba(7,62,119,.08) !important; }
+
+/* ── 7. Tabs + filter chips (shared pill treatment) ───────────────── */
+.tabs, .af-tabs {
+  display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; margin: 16px 0 22px; padding: 4px 0 6px;
+}
+.tabs::-webkit-scrollbar, .af-tabs::-webkit-scrollbar { display: none; }
+.tab, .af-tab, .filter-chip, .chip, .link-chip {
+  flex: none; white-space: nowrap; cursor: pointer;
+  border: 2px solid var(--af-line) !important;
+  background: #fff !important; color: var(--af-muted) !important;
+  border-radius: var(--af-r-pill) !important;
+  padding: 11px 18px !important; font-size: 14px !important; font-weight: 700 !important;
+  min-height: 44px; display: inline-flex; align-items: center; gap: 7px;
+  transition: transform .14s cubic-bezier(.34,1.56,.64,1), background .15s, color .15s, border-color .15s, box-shadow .15s;
+}
+.tab.active, .af-tab.active, .filter-chip.active {
+  background: var(--af-navy) !important; color: #fff !important;
+  border-color: var(--af-navy) !important;
+  box-shadow: 0 6px 16px rgba(7,62,119,.28) !important;
+  transform: translateY(-1px);
+}
+.chip.sun { background: var(--af-sun-soft) !important; color: var(--af-deep-navy) !important; border-color: var(--af-sun-mid, #FAD7B5) !important; }
+
+/* tab panels (shown one at a time) */
+.af-panel { display: none; }
+.af-panel.active { display: block; animation: afFade .2s ease; }
+@keyframes afFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ── 8. Status pills / tags / badges → brand tints ────────────────── */
+.status-pill.done, .tag.lab, .ta-badge-done, .cal-chip.done {
+  background: var(--af-green-soft) !important; color: var(--af-green) !important;
+}
+.status-pill.todo, .tag.class, .ta-badge-type, .cal-chip.season {
+  background: var(--af-blue-soft) !important; color: var(--af-blue) !important;
+}
+.tag.home, .ta-badge-due, .cal-chip.due {
+  background: var(--af-sun-soft) !important; color: #b45309 !important;
+}
+
+/* ── 9. Forms — finger-friendly on touch ──────────────────────────── */
+input[type="text"], input[type="search"], input:not([type]), select, textarea {
+  border-radius: var(--af-r-sm) !important;
+  border: 1.5px solid var(--af-line) !important;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--af-navy) !important; outline: none; }
+
+/* ── 10. Progress / accent fills ──────────────────────────────────── */
+.progress-fill { background: linear-gradient(90deg, var(--af-gold), var(--af-sun)) !important; }
+.progress-bar-fill { background: var(--af-blue) !important; }
+
+/* ── 11. Page safe areas + room for any bottom banners ────────────── */
+.page {
+  max-width: 1180px;
+  padding-left: max(20px, env(safe-area-inset-left));
+  padding-right: max(20px, env(safe-area-inset-right));
+  padding-bottom: calc(64px + env(safe-area-inset-bottom));
+}
+
+/* ── 12. Touch sizing (iPad / phone) ──────────────────────────────── */
+@media (pointer: coarse) {
+  body { font-size: 16.5px; }
+  button, .btn, .btn-primary { padding: 13px 22px !important; font-size: 15px !important; min-height: 48px; }
+  .tab, .af-tab, .filter-chip, .chip { min-height: 46px; }
+  input[type="text"], input[type="search"], input:not([type]), select, textarea {
+    font-size: 16px !important; /* stop iOS focus-zoom */ padding: 14px 15px !important; min-height: 52px;
+  }
+  textarea { min-height: 120px; }
+  .week-head { padding: 20px 22px !important; }
+  .resource-card:hover, .card:hover, .week-card:hover, .panel:hover { transform: none !important; }
+}
+
+/* ── 13. Responsive table → cards (camp assignment table) ─────────── */
+@media (max-width: 1200px) {
+  .assignment-table-wrap { overflow: visible !important; border: 0 !important; box-shadow: none !important; background: transparent !important; }
+  .assignment-table, .assignment-table tbody, .assignment-table tr, .assignment-table td { display: block; width: 100%; }
+  .assignment-table thead { display: none; }
+  .assignment-table { min-width: 0 !important; }
+  .assignment-table tr {
+    background: #fff; border: 1.5px solid var(--af-line); border-radius: var(--af-r);
+    box-shadow: var(--af-shadow); margin-bottom: 14px; padding: 6px 4px;
+  }
+  .assignment-table tr.is-today { border-color: var(--af-sun); }
+  .assignment-table td {
+    border-bottom: 1px solid var(--af-line); padding: 12px 16px;
+    display: flex; justify-content: space-between; align-items: baseline; gap: 18px; text-align: right;
+  }
+  .assignment-table td:last-child { border-bottom: 0; }
+  .assignment-table td::before {
+    content: attr(data-label); flex: none; text-align: left;
+    font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; color: var(--af-muted);
+  }
+  .assignment-table td[data-label="Activity"] { flex-direction: column; align-items: flex-start; text-align: left; }
+}

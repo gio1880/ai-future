@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Student BIOGLOW Home | AI Future FLL</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" href="/ai%20future%20logo.png" type="image/png" />
@@ -2782,6 +2782,58 @@
       .cal-legend { gap: 8px; }
     }
   </style>
+  <link rel="stylesheet" href="/assets/css/af-hub-system.css" />
+  <style>
+    .live-banner {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 80;
+      display: none; align-items: center; gap: 14px;
+      background: linear-gradient(135deg, var(--sun-deep), #14365a);
+      color: #fff; padding: 16px 22px;
+      padding-bottom: calc(16px + env(safe-area-inset-bottom));
+      box-shadow: 0 -6px 24px rgba(7,20,38,0.25);
+    }
+    .live-banner.show { display: flex; }
+    .lb-dot { width: 10px; height: 10px; border-radius: 50%; background: #ff5a5a; animation: lvpulse 1.2s infinite; flex: none; }
+    @keyframes lvpulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .live-banner .lb-text { font-weight: 800; font-size: 15px; }
+    .live-banner .lb-join {
+      margin-left: auto; min-height: 48px; border: 0; border-radius: 999px;
+      background: var(--gold); color: var(--sun-deep); font-weight: 900;
+      font-size: 16px; padding: 12px 26px; cursor: pointer;
+    }
+    .live-overlay { position: fixed; inset: 0; z-index: 100; background: var(--bg); display: none; flex-direction: column; }
+    .live-overlay.show { display: flex; }
+    .lo-bar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 14px 18px; padding-top: calc(14px + env(safe-area-inset-top));
+      background: var(--sun-deep); color: #fff; flex-shrink: 0;
+    }
+    .lo-title { font-weight: 900; display: flex; align-items: center; gap: 8px; }
+    .lo-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .lo-btn {
+      min-height: 46px; border-radius: 10px; border: 1.5px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.16); color: #fff; font-weight: 800;
+      font-size: 14px; padding: 10px 16px; cursor: pointer;
+    }
+    .lo-btn.gold { background: var(--gold); color: var(--sun-deep); border-color: var(--gold); }
+    .lo-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: clamp(20px, 4vw, 48px); }
+    .lo-content { max-width: 760px; margin: 0 auto; width: 100%; }
+    .lo-kicker { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: var(--sun-deep); margin-bottom: 10px; }
+    .lo-content h1 { font-size: clamp(26px, 5vw, 42px); line-height: 1.12; margin: 0 0 16px; }
+    .lo-text { font-size: clamp(18px, 2.6vw, 24px); line-height: 1.6; white-space: pre-wrap; }
+    .lo-content img { max-width: 100%; max-height: 46vh; border-radius: 14px; margin-top: 18px; border: 1px solid var(--line); }
+    .lo-counter { text-align: center; color: var(--muted); font-weight: 800; font-size: 13px; padding: 10px; }
+    .lo-answers { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 26px; }
+    .lo-answer { display: flex; align-items: center; gap: 12px; text-align: left; border: 0; border-radius: 16px; padding: 22px 20px; min-height: 84px; color: #fff; font-size: clamp(17px, 2.4vw, 22px); font-weight: 800; cursor: pointer; }
+    .lo-answer .lo-key { width: 34px; height: 34px; border-radius: 9px; background: rgba(255,255,255,0.25); display: grid; place-items: center; flex: none; }
+    .lo-answer.a0 { background: #e8583a; } .lo-answer.a1 { background: #1767b4; } .lo-answer.a2 { background: #f59e0b; }
+    .lo-answer.a3 { background: #16a34a; } .lo-answer.a4 { background: #7c51d4; } .lo-answer.a5 { background: #0ea5e9; }
+    .lo-answer.chosen { outline: 5px solid var(--sun-deep); } .lo-answer.dim { opacity: 0.5; }
+    .lo-answered-msg { margin-top: 22px; background: var(--grass-light); border: 1.5px solid #bce5c8; color: #14663b; border-radius: 14px; padding: 16px 18px; font-size: 17px; font-weight: 800; text-align: center; }
+    .lo-waiting { text-align: center; color: var(--muted); margin-top: 12vh; }
+    .lo-waiting .big { font-size: 52px; display: block; margin-bottom: 14px; }
+    @media (max-width: 520px) { .lo-answers { grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body>
   <header class="appbar">
@@ -2852,12 +2904,37 @@
   </main>
   <div class="toast" id="toast" role="status"></div>
 
+  <div class="live-banner" id="liveBanner">
+    <span class="lb-dot"></span>
+    <span class="lb-text" id="liveBannerTitle">A lesson is live</span>
+    <button class="lb-join" id="liveJoinBtn" type="button">Join lesson</button>
+  </div>
+
+  <div class="live-overlay" id="liveOverlay" role="dialog" aria-modal="true">
+    <div class="lo-bar">
+      <div class="lo-title"><span class="lb-dot"></span><span id="liveOverlayTitle">Live lesson</span></div>
+      <div class="lo-actions">
+        <button class="lo-btn" id="liveFullscreenBtn" type="button" title="Full screen">Full screen</button>
+        <button class="lo-btn gold" id="liveRefreshBtn" type="button">Refresh</button>
+        <button class="lo-btn" id="liveLeaveBtn" type="button">Leave</button>
+      </div>
+    </div>
+    <div class="lo-body" id="liveOverlayBody"></div>
+    <div class="lo-counter" id="liveOverlayCounter"></div>
+  </div>
+
   <script>
     const app = document.getElementById('app');
     const userLine = document.getElementById('userLine');
     const teamPill = document.getElementById('teamPill');
     const logoutButton = document.getElementById('logoutButton');
     const toast = document.getElementById('toast');
+    const liveBanner = document.getElementById('liveBanner');
+    const liveOverlay = document.getElementById('liveOverlay');
+    const liveOverlayBody = document.getElementById('liveOverlayBody');
+    let lvState = null;
+    let lvJoined = false;
+    let lvRenderKey = '';
     let activeResourceCategory = 'All';
     let latestData = null;
 
@@ -4665,12 +4742,145 @@
       }
     }
 
+    function escLv(v) {
+      return String(v == null ? '' : v)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    async function pollLive() {
+      try {
+        const r = await fetch('/api/fll/live', { cache: 'no-store' }).then(x => x.json());
+        lvState = r && r.success ? r.state : { active: false };
+      } catch (err) {
+        return;
+      }
+
+      if (lvState && lvState.active && !lvJoined) {
+        document.getElementById('liveBannerTitle').textContent = `${lvState.lessonTitle || 'A lesson'} is live`;
+        liveBanner.classList.add('show');
+      } else {
+        liveBanner.classList.remove('show');
+      }
+
+      if (lvJoined) renderLiveOverlay();
+    }
+
+    function joinLive() {
+      lvJoined = true;
+      lvRenderKey = '';
+      liveOverlay.classList.add('show');
+      liveBanner.classList.remove('show');
+      document.body.style.overflow = 'hidden';
+      renderLiveOverlay();
+      pollLive();
+    }
+
+    function leaveLive() {
+      lvJoined = false;
+      liveOverlay.classList.remove('show');
+      document.body.style.overflow = '';
+      pollLive();
+    }
+
+    function renderLiveOverlay() {
+      document.getElementById('liveOverlayTitle').textContent = (lvState && lvState.lessonTitle) || 'Live lesson';
+      const counter = document.getElementById('liveOverlayCounter');
+      if (!lvState || !lvState.active) {
+        if (lvRenderKey !== 'ended') {
+          lvRenderKey = 'ended';
+          liveOverlayBody.innerHTML = `
+            <div class="lo-waiting">
+              <span class="big">Done</span>
+              <h1 style="font-size:26px">The lesson has ended</h1>
+              <p style="font-size:18px;margin-top:8px">Great work today. You can close this and go back to your hub.</p>
+              <button class="lo-btn gold" style="margin-top:20px" onclick="leaveLive()">Back to my hub</button>
+            </div>`;
+        }
+        counter.textContent = '';
+        return;
+      }
+
+      const s = lvState.slide || {};
+      const isQuestion = s.type === 'question';
+      const key = `${s.id}|${lvState.slideIndex}|${isQuestion ? (lvState.myAnswer == null ? 'na' : lvState.myAnswer) : 'content'}`;
+      counter.textContent = `Slide ${(lvState.slideIndex || 0) + 1} of ${lvState.slideCount || 1} - your coach controls the pace`;
+      if (lvRenderKey === key) return;
+      lvRenderKey = key;
+
+      if (isQuestion) {
+        const answered = lvState.myAnswer != null;
+        liveOverlayBody.innerHTML = `
+          <div class="lo-content">
+            <div class="lo-kicker">Question - tap your answer</div>
+            <h1>${escLv(s.title)}</h1>
+            ${s.body ? `<div class="lo-text">${escLv(s.body)}</div>` : ''}
+            ${s.image ? `<img src="${escLv(s.image)}" alt="" onerror="this.style.display='none'">` : ''}
+            <div class="lo-answers">
+              ${(s.options || []).map((opt, j) => `
+                <button class="lo-answer a${j} ${answered && lvState.myAnswer === j ? 'chosen' : ''} ${answered && lvState.myAnswer !== j ? 'dim' : ''}" onclick="answerLive(${j})">
+                  <span class="lo-key">${String.fromCharCode(65 + j)}</span><span>${escLv(opt)}</span>
+                </button>`).join('')}
+            </div>
+            ${answered ? '<div class="lo-answered-msg">Answer sent. You can change it until your coach moves on.</div>' : ''}
+          </div>`;
+      } else {
+        liveOverlayBody.innerHTML = `
+          <div class="lo-content">
+            <div class="lo-kicker">Follow along</div>
+            <h1>${escLv(s.title)}</h1>
+            ${s.body ? `<div class="lo-text">${escLv(s.body)}</div>` : ''}
+            ${s.image ? `<img src="${escLv(s.image)}" alt="" onerror="this.style.display='none'">` : ''}
+          </div>`;
+      }
+    }
+
+    async function answerLive(choice) {
+      if (!lvState || !lvState.slide) return;
+      try {
+        const r = await fetch('/api/fll/live/answer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slideId: lvState.slide.id, choice })
+        }).then(x => x.json());
+        if (r && r.success) {
+          lvState.myAnswer = choice;
+          lvRenderKey = '';
+          renderLiveOverlay();
+        } else {
+          pollLive();
+        }
+      } catch (err) {
+        pollLive();
+      }
+    }
+
+    document.getElementById('liveJoinBtn').addEventListener('click', joinLive);
+    document.getElementById('liveLeaveBtn').addEventListener('click', leaveLive);
+    document.getElementById('liveRefreshBtn').addEventListener('click', () => { lvRenderKey = ''; pollLive(); });
+    document.getElementById('liveFullscreenBtn').addEventListener('click', () => {
+      const el = document.getElementById('liveOverlay');
+      const doc = document;
+      if (doc.fullscreenElement || doc.webkitFullscreenElement) {
+        (doc.exitFullscreen || doc.webkitExitFullscreen || function () {}).call(doc);
+      } else {
+        (el.requestFullscreen || el.webkitRequestFullscreen || function () {}).call(el);
+      }
+    });
+    window.answerLive = answerLive;
+    window.leaveLive = leaveLive;
+
     logoutButton.addEventListener('click', async () => {
       await fetch('/api/fll/logout', { method: 'POST' });
       window.location.href = '/fll-hub/login';
     });
 
+    setInterval(pollLive, 3000);
     loadDashboard();
+    pollLive();
   </script>
 </body>
 </html>

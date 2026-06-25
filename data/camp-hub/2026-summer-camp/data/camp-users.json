@@ -3,7 +3,7 @@
     "id": "camp-coach-default",
     "name": "Test Coach",
     "username": "coach",
-    "password_hash": "d69544d2fc0aff2733c0aa4906b1669b:bafb172e8f95fdedf6b1abf0653d56a6c909c69ba0ac2a50f01cb9c69e00516cbe9bface6902815ce8537cdabba23e7754d594c1bfc65c3319ef6e7eafd96539",
+    "password_hash": "4043d7b5347d539e6314cd50a54d9a97:93a1b6e3782fbef70c1852dd00a00f7ac2f3683fbc2d0b26e157eac0c2e57c32762729e1076bdd73d1f7ba7cc5796870c2a06a235b3785e78a35d727949fea72",
     "role": "coach",
     "active": true,
     "className": "Coaches"
@@ -33,20 +33,273 @@
     "active": true
   },
   {
-    "id": "camp-student-demo",
-    "name": "Demo Camper",
-    "username": "camper1",
-    "password_hash": "61454a43e83727861593440ec6acc829:fffde49ce705acbc24efeccb5808e6e6d6b9595d8f739a745bb094897dfc0e75df3ab0bf1fa1220437c38238c0a2f0cc4d7651b5a14bc8dc9454406f4ab6e083",
+    "id": "camp-student-ella-xue",
+    "name": "Ella Xue",
+    "username": "ellaxue",
+    "password_hash": "163ac455f2766e73285fd16e5c952272:c02300cc00153d54e51b70309e303e3acea1bc185622c2bf7d6934447fab6253cc95a4458ba28574b1264b46b34c6e2b161624e2dcac3a3e8b1f976f9ad4f4d0",
     "role": "student",
     "active": true,
-    "className": "Summer LEGO Robotics 1"
+    "className": "Summer LEGO Robotics G2-3",
+    "masterStudentId": "master-summer-2026-ella-xue"
   },
   {
-    "id": "camp-coach-verify",
-    "name": "Verify Coach",
-    "username": "vcoach",
-    "password_hash": "edc9869ae83ddb3452e114b1cac1fc03:4ddbecbebf88914d4a4cc196014a7f12283d18c93d9507ba98a72a27f5259d300c0f4f8f4e5177b6b0d10d1b0fa2fdbee121af512272929e0603d5ad24498f2f",
-    "role": "coach",
-    "active": true
+    "id": "camp-student-ella-zheng",
+    "name": "Ella Zheng",
+    "username": "ellazheng",
+    "password_hash": "039b6ae4c898f3ea3ba264a7c0ba4afe:19e125f143b783a977e70d6b9c0f67d317c61e676c575961c84c697b3aa1c9c5f40444962b2f672b20455a83216b7f354b4b991a61fab65ed14a18575ba67fcd",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G2-3",
+    "masterStudentId": "master-summer-2026-ella-zheng"
+  },
+  {
+    "id": "camp-student-sam-mao",
+    "name": "Sam Mao",
+    "username": "sammao",
+    "password_hash": "f8a4105902299621752da5842c811f93:51bd5aad6af1ffd1c597735ed65a32c6c6b2bc21856cb67f1de6bde10f50cf8899efbe6ea2facaf7ca3f3638c8664be8c441a2b6f3ff0b48fd801053ed2050df",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G2-3",
+    "masterStudentId": "master-code-lab-smao"
+  },
+  {
+    "id": "camp-student-owen-zou",
+    "name": "Owen Zou",
+    "username": "owenzou",
+    "password_hash": "3ef44d0269624f1f0995a0a3421e5843:2a0016785470ac46fff71a54e87df807f6cdc2029f010ed0dce2a3ce36ed49ad764487773709df0e9b228f90e4286563751f36b71c405ca425204d4abf1df403",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G2-3",
+    "masterStudentId": "master-code-lab-ozou"
+  },
+  {
+    "id": "camp-student-caitlin-lian",
+    "name": "Caitlin Lian",
+    "username": "caitlinlian",
+    "password_hash": "a4a87fca1fc57667158ddc0ab01ffd0a:21b368904659246584815e97522bc21ef089d5b4c954dcd156f230bc6018b0490f810b13e6c60665563a4f84d085efc68e161bb6fbaf616160d52d825be0a1d2",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G2-3",
+    "masterStudentId": "master-summer-2026-caitlin-lian"
+  },
+  {
+    "id": "camp-student-andrew-lin",
+    "name": "Andrew Lin",
+    "username": "andrewlin",
+    "password_hash": "e469ff190798566e34f31a907bcbf99b:a9ca0de88e1477b55b67bdb356f18b6d84f37bb65f64ef9f2d37cd038e5fc3b818b4e74666ad5f6c6ca7cb2293b2e190f65fcb7cf166ef4ee7132f007aab0128",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G2-3",
+    "masterStudentId": "master-summer-2026-andrew-lin"
+  },
+  {
+    "id": "camp-student-jaiden-lin",
+    "name": "Jaiden Lin",
+    "username": "jaidenlin",
+    "password_hash": "97998d8e939a83e6a55d4090a5b68aca:552dfcf56e0281645f33a158b32dc553cea4b383d90680370b051b5bc28c7fcdcbe39d0e9c2bbe6ff61e2b0415eb40337ba54255bd8b47ca6c9d50c5014f653b",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G2-3",
+    "masterStudentId": "master-summer-2026-jaiden-lin"
+  },
+  {
+    "id": "camp-student-anthony-shen",
+    "name": "Anthony Shen",
+    "username": "anthonyshen",
+    "password_hash": "60501dfcf7681cdc94ef7f632cf2095e:91c6026ec00bfe87886abec16a63cd1e79c2559e84284e0033e73f95081af1898f646a511526d873403366dae83a20fb3de605b977f671d09729876bbc1ead45",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G2-3",
+    "masterStudentId": "master-summer-2026-anthony-shen"
+  },
+  {
+    "id": "camp-student-siyu-zhu",
+    "name": "Siyu Zhu",
+    "username": "siyuzhu",
+    "password_hash": "fdf6a38c9368e4463d19e4ee0f032c8f:c019b05e462fd0847141066927b5b30b9c6104fc75ef37a582645dccd99119349bfa9c75eceb8dcac79d78645c1bf440abc6270fe9752ea2231da472fd2feef1",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G2-3",
+    "masterStudentId": "master-summer-2026-siyu-zhu"
+  },
+  {
+    "id": "camp-student-size-zhu",
+    "name": "Size Zhu",
+    "username": "sizezhu",
+    "password_hash": "d882b3aa5455f92a72288628e15365eb:94be17d7b26f6c8d48469bf3dda8572eb70b31db414c958a19ed09ddef8c748411982653eb71eb4a945db284d75ac014b4b89fe1e4511319ab6d4f260a3be554",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G2-3",
+    "masterStudentId": "master-summer-2026-size-zhu"
+  },
+  {
+    "id": "camp-student-claire-chen",
+    "name": "Claire Chen",
+    "username": "clairechen",
+    "password_hash": "67cfde394264aabd0e276253c40bd4de:c420dbd58b8cf668f79f63a3870479e87d4d0aeb7be2293a17e2a863bdb56bd43d91f90f7a9b04af897f010f18e7ec3c6d0354899baaedc2fdbd2c988038ecdf",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G2-3",
+    "masterStudentId": "master-summer-2026-claire-chen"
+  },
+  {
+    "id": "camp-student-olivia-zhu",
+    "name": "Olivia Zhu",
+    "username": "oliviazhu",
+    "password_hash": "f422560988c80e49810f77723a90c26c:28c5997da9cf7cd612b9ba254f28c2f8d306a94d0aec85b6179f74f754454151e0a412aeeb00f202084800ed8617a960657e48d1dc47572ca8b0af3704fa7149",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G2-3",
+    "masterStudentId": "master-summer-2026-olivia-zhu"
+  },
+  {
+    "id": "camp-student-marcus-chen",
+    "name": "Marcus Chen",
+    "username": "marcuschen",
+    "password_hash": "4e41b32b02b07d5031a29b9ec3d6c300:6bdab21d1db3646b3fc66596d119cfdb33b0f909bf8c0a48edecfa9baf2f1bf4221645c484770e0d3b60ac2d08eb5e6a738d6f3f797a3d40d48e425730c543df",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G4-5",
+    "masterStudentId": "master-code-lab-mchen"
+  },
+  {
+    "id": "camp-student-olivia-xue",
+    "name": "Olivia Xue",
+    "username": "oliviaxue",
+    "password_hash": "625d49805ad710171fd10a2c25d92211:f08ba9acda26471921f00d70f0b7094f9aa841883481b439db9e0d8efd5abe01798c88105ffc4f912aa66137f08db600fcb543bfa0768d4246b217284cd88882",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G4-5",
+    "masterStudentId": "master-summer-2026-olivia-xue"
+  },
+  {
+    "id": "camp-student-olivia-li",
+    "name": "Olivia Li",
+    "username": "oliviali",
+    "password_hash": "fcf36de8582e5efe9a67144ef7250101:154dc5b6330a906b97ea1d7d91895585187f73f6f1fe513bac334e1d7863608ea77b8ca2383f5fcd8d0b8c7ec038a126d9403e5f2944a8f02f0d95eb77ee4484",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G4-5",
+    "masterStudentId": "master-summer-2026-olivia-li"
+  },
+  {
+    "id": "camp-student-cailey-lian",
+    "name": "Cailey Lian",
+    "username": "caileylian",
+    "password_hash": "0083ad43a59f50f2358b33d66d51d51f:2a2df8b44584825cc169df1442463180f616c9755326c97fe7c65f3a1e8e1ad5db984418de79737c3d0988d8a3fb27cef6b6fa43ae77611ab60efebad4b4ace2",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G4-5",
+    "masterStudentId": "master-code-lab-clian"
+  },
+  {
+    "id": "camp-student-hwijun-ryu",
+    "name": "Hwijun Ryu",
+    "username": "hwijunryu",
+    "password_hash": "8bd3f60b1e83d9bbf3e6ed5cb554ed22:4c20368e87617397d488861f981c6a76acf8d0971f5486d48b8b4049e616825137ed2bd96a4e91957d496da15c4b8bf0abcc63e2653cd07e50599f21985a9eb0",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G4-5",
+    "masterStudentId": "master-code-lab-hryu"
+  },
+  {
+    "id": "camp-student-jasper-zheng",
+    "name": "Jasper Zheng",
+    "username": "jasperzheng",
+    "password_hash": "547f46792cb581cc526e9ca479f574c3:8f54158fdd87a16a34a11be4501320c0d43f755d1dcb6e3abd463f27eaf61da6da32b522f1423e8b4d9cc077f2bd3641beb1760a55a95a27d8a794102eaff1bd",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G4-5",
+    "masterStudentId": "master-code-lab-jzheng"
+  },
+  {
+    "id": "camp-student-kyle-tao",
+    "name": "Kyle Tao",
+    "username": "kyletao",
+    "password_hash": "1d87590b6ac392e75bc8cdf5a7cbb348:f33e2735b7449128a830186a092d4ea58aa697428ddd01213a858d43585164e9681c14bb1bdcf9029a3a1cc22307e419b46c53e17b4f6d9f208d80f4b1060d11",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G4-5",
+    "masterStudentId": "master-code-lab-ktao"
+  },
+  {
+    "id": "camp-student-julisa-leung",
+    "name": "Julisa Leung",
+    "username": "julisaleung",
+    "password_hash": "25bb67066f9944168ef65c7218ec1ddc:b6f7b571f419b295252226da8e459c70e5f9cf89625a2c60e7a3fca791c8c9a249dc38378ac87a742df608bbec8471adff0f1263dd07513a9b61c3401aba2923",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G4-5",
+    "masterStudentId": "master-code-lab-jleung"
+  },
+  {
+    "id": "camp-student-gracelyn-pan",
+    "name": "Gracelyn Pan",
+    "username": "gracelynpan",
+    "password_hash": "2f052efb4c8e95e228a325b109a3f2da:fb717a65a9cabb8f7bf084579e75ab4c5d7acd267a23c69a9acad0cc012be3ce534dc7dfabada5739afdeffc9307e41a46e303177ea73d9a4b8e73eb0cbaabee",
+    "role": "student",
+    "active": true,
+    "className": "Summer LEGO Robotics G4-5",
+    "masterStudentId": "master-summer-2026-gracelyn-pan"
+  },
+  {
+    "id": "camp-student-christina",
+    "name": "Christina",
+    "username": "christina",
+    "password_hash": "692b3a6246ef2f2aa6905d39598fc712:4a3b064d33f6b0c5348cc1a43c5b213ee7b8c73a4b44a71b70a5167081b9b9e37791faf75acfe439eb9b454712db1ee4f665292460326bceeb91621a53cf1e81",
+    "role": "student",
+    "active": true,
+    "className": "Summer FTC Robotics G6+",
+    "masterStudentId": "master-summer-2026-christina"
+  },
+  {
+    "id": "camp-student-aaron-zheng",
+    "name": "Aaron Zheng",
+    "username": "aaronzheng",
+    "password_hash": "25ac7f4a89fada7473e50d4ed7bb0eb9:f8d4f3c8d3326180b948bdff04070511afda861a0e27c2697212f2e7d6860f15d6ad8f206ed9e309be6d22060541876e63e58f3f2f596eae39754cc1896bacd8",
+    "role": "student",
+    "active": true,
+    "className": "Summer FTC Robotics G6+",
+    "masterStudentId": "master-summer-2026-aaron-zheng"
+  },
+  {
+    "id": "camp-student-ariel-ou",
+    "name": "Ariel Ou",
+    "username": "arielou",
+    "password_hash": "590c9ea933c599cf445df011b77f9402:0b907a547140a12c5327ddbe0784a773fc6813d98bbd3501552aa7c851d3ececb057ee98c08d7e803bbd1ebe8f581e500b4e34e7859fdb1e3093508d4288049e",
+    "role": "student",
+    "active": true,
+    "className": "Summer FTC Robotics G6+",
+    "masterStudentId": "master-code-lab-aou"
+  },
+  {
+    "id": "camp-student-anthony-zhu",
+    "name": "Anthony Zhu",
+    "username": "anthonyzhu",
+    "password_hash": "6cbac4d3951788b4f209c7b73b355451:399e890cb978e4738b6933d509558897e9b8967df6631d0fa2df4d26cfb33931020e0bb971a3247e769258912313983e3037ff9fd077c283da8b42599cfcad30",
+    "role": "student",
+    "active": true,
+    "className": "Summer FTC Robotics G6+",
+    "masterStudentId": "master-code-lab-azhu"
+  },
+  {
+    "id": "camp-student-isabella-zhu",
+    "name": "Isabella Zhu",
+    "username": "isabellazhu",
+    "password_hash": "49a455f29bb99f59fb6321348e11fe00:03b602dda2ec84557a318bbb455fd0e032537bb8c21842f41e588e8da14e243e6369f9e74b3716cdd4f1510adb12287f0ef360c5884958c9f184f79f2385583e",
+    "role": "student",
+    "active": true,
+    "className": "Summer FTC Robotics G6+",
+    "masterStudentId": "master-code-lab-izhu"
+  },
+  {
+    "id": "camp-student-eli",
+    "name": "Eli",
+    "username": "eli",
+    "password_hash": "0e7879aa476c3438a5b1c32131feeaf0:5997579f64fa3899ade57f75bee77f365cc11c938b06684663259cd5b1bc2871d8b2b7f6f6ca70a4e9bca4a8461e73268253c30703e3fa6d78ccd1ffc776f36e",
+    "role": "student",
+    "active": true,
+    "className": "Summer FTC Robotics G6+",
+    "masterStudentId": "master-summer-2026-eli"
   }
 ]

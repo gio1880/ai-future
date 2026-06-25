@@ -400,6 +400,33 @@ app.post('/api/internal/coach-login', (req, res) => {
   return res.json({ success: true, user: req.session.user, url: req.body.redirectTo || '/admin' });
 });
 
+// Internal bridge: the AI Future student portal signs a student into Code Lab
+// without their Code Lab password (it has already authenticated them centrally).
+app.post('/api/internal/student-login', (req, res) => {
+  const bridgeSecret = req.headers['x-coach-bridge-secret'];
+  if (bridgeSecret !== COACH_BRIDGE_SECRET) {
+    return res.status(404).json({ success: false, error: 'Not found' });
+  }
+  const studentId = req.body && req.body.studentId;
+  const username = req.body && req.body.username;
+  let student = null;
+  if (studentId) student = findStudentById(studentId);
+  if (!student && username) student = findStudentByUsername(username);
+  if (!student) {
+    return res.status(404).json({ success: false, error: 'Code Lab student not found' });
+  }
+  if (student.active === false) {
+    return res.status(403).json({ success: false, error: 'This Code Lab account is not active' });
+  }
+  req.session.user = {
+    id: student.id,
+    name: student.name,
+    username: student.username,
+    role: 'student'
+  };
+  return res.json({ success: true, user: req.session.user, url: req.body.redirectTo || '/codelab/app' });
+});
+
 // ============================================
 // AUTH API ENDPOINTS
 // ============================================

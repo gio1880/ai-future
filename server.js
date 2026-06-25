@@ -35,6 +35,7 @@ const fllTeamMembersFile = path.join(fllHubDataDir, 'team-members.json');
 const fllTeamSchedulesFile = path.join(fllHubDataDir, 'team-schedules.json');
 const fllSeasonSectionsFile = path.join(fllHubDataDir, 'season-sections.json');
 const fllMissionAnalysisFile = path.join(fllHubDataDir, 'mission-analysis.json');
+const fllLiveLessonFile = path.join(fllHubDataDir, 'live-lesson.json');
 const codeLabStudentsFile = path.join(__dirname, 'code-lab', 'data', 'students.json');
 const fllSessionCookie = 'fll_session';
 const fllDataFileNames = [
@@ -51,7 +52,8 @@ const fllDataFileNames = [
 	'teams.json',
 	'timeline.json',
 	'announcements.json',
-	'resources.json'
+	'resources.json',
+	'live-lesson.json'
 ];
 const fllSessions = new Map();
 const campHubDir = path.join(__dirname, 'robotics lab', 'Summer Camp', '2026-summer-camp');
@@ -67,6 +69,7 @@ const campPointEventsFile = path.join(campHubDataDir, 'point-events.json');
 const campClassroomFile = path.join(campHubDataDir, 'classroom-state.json');
 const campLessonsFile = path.join(campHubDataDir, 'lessons.json');
 const campLiveLessonFile = path.join(campHubDataDir, 'live-lesson.json');
+const campBeginLessonResponsesFile = path.join(campHubDataDir, 'begin-lesson-responses.json');
 const campSessionCookie = 'camp_session';
 const campDataFileNames = [
 	'camp-users.json',
@@ -80,13 +83,16 @@ const campDataFileNames = [
 	'point-events.json',
 	'classroom-state.json',
 	'lessons.json',
-	'live-lesson.json'
+	'live-lesson.json',
+	'begin-lesson-responses.json'
 ];
 const campSessions = new Map();
 const coachUsersFile = path.join(platformDataDir, 'coach-users.json');
 const coachSessionCookie = 'coach_session';
 const coachSessions = new Map();
 const masterRosterFile = path.join(platformDataDir, 'master-roster.json');
+const studentPortalCookie = 'student_session';
+const studentPortalSessions = new Map();
 const regularCoachHubs = [
 	'master-roster',
 	'summer-curriculum',
@@ -559,10 +565,11 @@ app.post('/api/master-roster/students', requireCoachPortalAuth, async (req, res)
 			return res.status(400).json({ success: false, message: 'Student name is required' });
 		}
 		roster.students.push(student);
+		const portalLogin = assignStudentPortalLogin(student, roster);
 		await syncMasterStudentHubAccess(student);
 		await writeMasterRoster(roster);
 		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
-		return res.status(201).json({ success: true, data: publicMasterRoster(roster, teams), student });
+		return res.status(201).json({ success: true, data: publicMasterRoster(roster, teams), student, portalLogin });
 	} catch (err) {
 		console.error('Master student create error:', err);
 		return res.status(500).json({ success: false, message: 'Server error creating student' });
@@ -609,6 +616,156 @@ app.delete('/api/master-roster/students/:id', requireCoachPortalAuth, async (req
 	} catch (err) {
 		console.error('Master student delete error:', err);
 		return res.status(500).json({ success: false, message: 'Server error deleting student' });
+	}
+});
+
+// Generate (or reset) a student's single portal login. Returns the plaintext password once.
+function assignStudentPortalLogin(student, roster) {
+	const taken = new Set(roster.students
+		.filter((s) => s !== student)
+		.map((s) => String(s.portalUsername || '').toLowerCase())
+		.filter(Boolean));
+	if (!student.portalUsername) student.portalUsername = uniqueUsername(student.name, taken);
+	const password = generateStudentPassword();
+	student.portalPassword_hash = hashScryptPassword(password);
+	return { username: student.portalUsername, password };
+}
+
+// Coach: create or reset a student's central portal login (reveals the password once).
+app.post('/api/master-roster/students/:id/portal-login', requireCoachPortalAuth, async (req, res) => {
+	try {
+		const roster = await readMasterRoster();
+		const student = roster.students.find((s) => s.id === req.params.id);
+		if (!student) return res.status(404).json({ success: false, message: 'Student not found' });
+		const login = assignStudentPortalLogin(student, roster);
+		await writeMasterRoster(roster);
+		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
+		return res.json({ success: true, login, data: publicMasterRoster(roster, teams) });
+	} catch (err) {
+		console.error('Student portal login reset error:', err);
+		return res.status(500).json({ success: false, message: 'Server error setting student login' });
+	}
+});
+
+// ── Student central portal: pages + auth + hub bridges ──
+app.get(['/student-login', '/student-login/'], (req, res) => {
+	return res.sendFile(path.join(__dirname, 'student-login.html'));
+});
+
+app.get(['/student-portal', '/student-portal/'], requireStudentAuth, (req, res) => {
+	return res.sendFile(path.join(__dirname, 'student-portal.html'));
+});
+
+app.post('/api/student/login', async (req, res) => {
+	try {
+		const classCode = normalizeClassCode(req.body.classCode || '');
+		const username = cleanMetaString(req.body.username || '', 80).toLowerCase();
+		const password = typeof req.body.password === 'string' ? req.body.password : '';
+		if (!username) {
+			return res.status(400).json({ success: false, message: 'Username is required' });
+		}
+		if (!classCode && !password) {
+			return res.status(400).json({ success: false, message: 'Class code and username are required' });
+		}
+		const roster = await ensureStudentPortalUsernames();
+		let classItem = null;
+		let student = null;
+		if (classCode) {
+			classItem = (roster.classes || []).find((item) =>
+				item.active !== false && normalizeClassCode(item.classCode || '') === classCode
+			);
+			student = roster.students.find((s) =>
+				String(s.portalUsername || '').toLowerCase() === username
+				&& s.active !== false
+				&& classItem
+				&& studentIsInClass(s, classItem.id)
+			);
+			if (!classItem || !student) {
+				return res.status(401).json({ success: false, message: 'Check your class code and username, then try again.' });
+			}
+		} else {
+			student = roster.students.find((s) => String(s.portalUsername || '').toLowerCase() === username && s.active !== false);
+			if (!student || !student.portalPassword_hash || !verifyScryptPassword(password, student.portalPassword_hash)) {
+				return res.status(401).json({ success: false, message: 'Invalid username or password' });
+			}
+		}
+		student.lastStudentPortalLoginAt = new Date().toISOString();
+		await writeMasterRoster(roster);
+		if (classItem?.term === 'summer') await resolveCampAccountForStudent(student, roster);
+		const token = crypto.randomBytes(32).toString('hex');
+		studentPortalSessions.set(token, { studentId: student.id, createdAt: Date.now(), lastSeen: Date.now() });
+		setStudentSessionCookie(res, token);
+		return res.json({ success: true, redirectTo: '/student-portal' });
+	} catch (err) {
+		console.error('Student login error:', err);
+		return res.status(500).json({ success: false, message: 'Server error signing in' });
+	}
+});
+
+app.post('/api/student/logout', (req, res) => {
+	const session = getStudentSession(req);
+	if (session) studentPortalSessions.delete(session.token);
+	clearStudentSessionCookie(res);
+	return res.json({ success: true });
+});
+
+app.get('/api/student/session', requireStudentAuth, (req, res) => {
+	const hubs = studentPortalHubIds(req.rosterStudent, req.masterRoster)
+		.map((id) => STUDENT_HUB_DEFS[id])
+		.filter(Boolean);
+	return res.json({
+		success: true,
+		student: { name: req.rosterStudent.name, username: req.rosterStudent.portalUsername || '' },
+		hubs
+	});
+});
+
+app.post('/api/student/open/:hubId', requireStudentAuth, async (req, res, next) => {
+	try {
+		const hubId = req.params.hubId;
+		const student = req.rosterStudent;
+		const roster = req.masterRoster;
+		if (!studentPortalHubIds(student, roster).includes(hubId)) {
+			return res.status(403).json({ success: false, message: 'You are not signed up for that hub' });
+		}
+
+		if (hubId === 'fll-hub') {
+			const fllUsers = await readFllUsers();
+			let fllUser = student.fllUserId ? fllUsers.find((u) => u.id === student.fllUserId) : null;
+			if (!fllUser) {
+				const wanted = normalizedPersonName(student.name);
+				fllUser = fllUsers.find((u) => u.role === 'student' && normalizedPersonName(u.name) === wanted);
+			}
+			if (!fllUser || fllUser.active === false) {
+				return res.status(404).json({ success: false, message: 'Your FLL account is not set up yet — ask your coach.' });
+			}
+			createFllSessionForUser(res, fllUser);
+			return res.json({ success: true, url: STUDENT_HUB_DEFS['fll-hub'].url });
+		}
+
+		if (hubId === 'summer-camp') {
+			const campAccount = await resolveCampAccountForStudent(student, roster);
+			if (!campAccount) {
+				return res.status(404).json({ success: false, message: 'Your camp account is not set up yet — ask your coach.' });
+			}
+			createCampSessionForUser(res, campAccount);
+			return res.json({ success: true, url: STUDENT_HUB_DEFS['summer-camp'].url });
+		}
+
+		if (hubId === 'code-lab') {
+			if (!student.codeLabUserId) {
+				return res.status(404).json({ success: false, message: 'Your Code Lab account is not set up yet — ask your coach.' });
+			}
+			req.url = '/api/internal/student-login';
+			req.headers['x-coach-bridge-secret'] = codeLabApp.coachBridgeSecret;
+			req.body = { studentId: student.codeLabUserId, redirectTo: STUDENT_HUB_DEFS['code-lab'].url };
+			return codeLabApp(req, res, next);
+		}
+
+		return res.status(404).json({ success: false, message: 'Unknown hub' });
+	} catch (err) {
+		console.error('Student hub open error:', err);
+		return res.status(500).json({ success: false, message: 'Server error opening hub' });
 	}
 });
 
@@ -857,6 +1014,56 @@ async function readCampPointEvents() {
 	return Array.isArray(events) ? events : [];
 }
 
+async function readCampBeginLessonResponses() {
+	const responses = await readJsonFile(campBeginLessonResponsesFile, []);
+	return Array.isArray(responses) ? responses : [];
+}
+
+function beginLessonQuestionsForDay(day) {
+	const source = day && typeof day === 'object' ? day : {};
+	const custom = Array.isArray(source.beginLessonQuestions)
+		? source.beginLessonQuestions.map((question) => cleanMetaString(question, 260)).filter(Boolean).slice(0, 3)
+		: [];
+	if (custom.length >= 3) return custom.slice(0, 3);
+	const activity = cleanMetaString(source.activity || source.assignment || 'today\'s challenge', 220);
+	const build = cleanMetaString(source.build || source.assignment || activity || 'this project', 120);
+	const defaults = [
+		`What part of "${activity}" sounds most interesting or surprising to you?`,
+		`Before we begin, what do you predict will be the trickiest part of building or testing ${build}?`,
+		`If you were the engineer leading this lesson, what would you try first and why?`
+	];
+	return [...custom, ...defaults].slice(0, 3);
+}
+
+function publicBeginLessonDay(day) {
+	if (!day) return null;
+	return {
+		id: day.id,
+		date: day.date || '',
+		activity: day.activity || '',
+		assignment: day.assignment || day.activity || '',
+		build: day.build || '',
+		questions: beginLessonQuestionsForDay(day)
+	};
+}
+
+function findCampDay(curriculum, dayId) {
+	for (const week of Array.isArray(curriculum) ? curriculum : []) {
+		const day = (Array.isArray(week.days) ? week.days : []).find((candidate) => candidate.id === dayId);
+		if (day) return { week, day };
+	}
+	return null;
+}
+
+async function findAvailableCampDayForUser(user, dayId) {
+	const curriculum = await readJsonFile(campCurriculumFile, []);
+	const enrollment = await getCampEnrollmentForUser(user, curriculum);
+	const visibleWeek = (Array.isArray(curriculum) ? curriculum : []).find((week) => week.id === enrollment.visibleWeekId);
+	const day = (visibleWeek && Array.isArray(visibleWeek.days) ? visibleWeek.days : [])
+		.find((candidate) => candidate.id === dayId);
+	return { curriculum, enrollment, day };
+}
+
 // ── Live lessons (slide decks broadcast to camper iPads) ──
 function normalizeLessonSlide(slide) {
 	const source = slide && typeof slide === 'object' ? slide : {};
@@ -925,6 +1132,14 @@ async function writeCampLiveLesson(state) {
 	await writeJsonFile(campLiveLessonFile, normalizeCampLiveLesson(state));
 }
 
+async function readFllLiveLesson() {
+	return normalizeCampLiveLesson(await readJsonFile(fllLiveLessonFile, defaultCampLiveLesson()));
+}
+
+async function writeFllLiveLesson(state) {
+	await writeJsonFile(fllLiveLessonFile, normalizeCampLiveLesson(state));
+}
+
 // Student-facing slide: never leak the correct answer.
 function publicLessonSlide(slide) {
 	if (!slide) return null;
@@ -966,6 +1181,36 @@ function liveResponseTally(live) {
 	return { total: entries.length, counts };
 }
 
+function defaultCampSkills() {
+	return [
+		{ id: 'skill-teamwork', name: 'Teamwork', icon: '🤝', points: 1, type: 'positive' },
+		{ id: 'skill-helping', name: 'Helping Others', icon: '💙', points: 1, type: 'positive' },
+		{ id: 'skill-creativity', name: 'Creativity', icon: '🎨', points: 1, type: 'positive' },
+		{ id: 'skill-persistence', name: 'Persistence', icon: '💪', points: 1, type: 'positive' },
+		{ id: 'skill-problem-solving', name: 'Problem Solving', icon: '🧩', points: 1, type: 'positive' },
+		{ id: 'skill-focused', name: 'Focused', icon: '🎯', points: 1, type: 'positive' },
+		{ id: 'skill-clean-up', name: 'Clean Workspace', icon: '🧹', points: 1, type: 'positive' },
+		{ id: 'skill-leadership', name: 'Leadership', icon: '⭐', points: 2, type: 'positive' },
+		{ id: 'skill-off-task', name: 'Off Task', icon: '😵‍💫', points: 1, type: 'negative' },
+		{ id: 'skill-not-listening', name: 'Not Listening', icon: '🙉', points: 1, type: 'negative' },
+		{ id: 'skill-unkind', name: 'Unkind', icon: '💔', points: 1, type: 'negative' },
+		{ id: 'skill-unsafe', name: 'Unsafe', icon: '⚠️', points: 2, type: 'negative' }
+	];
+}
+
+function normalizeCampSkill(skill) {
+	const source = skill && typeof skill === 'object' ? skill : {};
+	const type = source.type === 'negative' ? 'negative' : 'positive';
+	const points = Number.isFinite(Number(source.points)) ? Math.max(1, Math.min(10, Math.round(Math.abs(Number(source.points))))) : 1;
+	return {
+		id: cleanMetaString(source.id || `skill-${crypto.randomBytes(4).toString('hex')}`, 120),
+		name: cleanMetaString(source.name || 'Skill', 60),
+		icon: cleanMetaString(source.icon || (type === 'negative' ? '⚠️' : '⭐'), 8),
+		points,
+		type
+	};
+}
+
 function defaultCampClassroomState() {
 	return {
 		noiseLevel: 'partner',
@@ -976,7 +1221,8 @@ function defaultCampClassroomState() {
 			pausedRemainingSeconds: 20 * 60,
 			running: false
 		},
-		groups: []
+		groups: [],
+		skills: defaultCampSkills()
 	};
 }
 
@@ -1003,7 +1249,8 @@ function normalizeCampClassroomState(state) {
 				name: cleanMetaString(subgroup.name || 'Subgroup', 120),
 				members: Array.isArray(subgroup.members) ? subgroup.members.map((member) => cleanMetaString(member, 80)).filter(Boolean).slice(0, 30) : []
 			})).slice(0, 12) : []
-		})).slice(0, 20) : []
+		})).slice(0, 20) : [],
+		skills: Array.isArray(source.skills) ? source.skills.map(normalizeCampSkill).slice(0, 40) : defaultCampSkills()
 	};
 }
 
@@ -1445,9 +1692,9 @@ function buildDefaultMasterRoster() {
 		updatedAt: now,
 		settings: { summerWeeks },
 		classes: [
-			{ id: 'summer-lego-robotics-1', term: 'summer', program: 'lego-robotics', name: 'Summer LEGO Robotics 1', day: 'Weekly', schedule: 'Summer camp weekly enrollment', active: true, createdAt: now },
-			{ id: 'summer-lego-robotics-2', term: 'summer', program: 'lego-robotics', name: 'Summer LEGO Robotics 2', day: 'Weekly', schedule: 'Summer camp weekly enrollment', active: true, createdAt: now },
-			{ id: 'summer-ftc', term: 'summer', program: 'ftc', name: 'Summer FTC Robotics', day: 'Weekly', schedule: 'Summer camp weekly enrollment', active: true, createdAt: now },
+			{ id: 'summer-lego-robotics-1', term: 'summer', program: 'lego-robotics', name: 'Summer LEGO Robotics G2-3', classCode: 'G23', day: 'Weekly', schedule: 'Summer camp G2-3 LEGO Robotics class', active: true, createdAt: now },
+			{ id: 'summer-lego-robotics-2', term: 'summer', program: 'lego-robotics', name: 'Summer LEGO Robotics G4-5', classCode: 'G45', day: 'Weekly', schedule: 'Summer camp G4-5 LEGO Robotics class', active: true, createdAt: now },
+			{ id: 'summer-ftc', term: 'summer', program: 'ftc', name: 'Summer FTC Robotics G6+', classCode: 'G6PLUS', day: 'Weekly', schedule: 'Summer camp G6+ FTC robotics class', active: true, createdAt: now },
 			{ id: 'fall-sat-lego-robotics-1', term: 'fall', program: 'lego-robotics', name: 'Fall Saturday LEGO Robotics 1', day: 'Saturday', schedule: 'Saturday class', active: true, createdAt: now },
 			{ id: 'fall-sat-lego-robotics-2', term: 'fall', program: 'lego-robotics', name: 'Fall Saturday LEGO Robotics 2', day: 'Saturday', schedule: 'Saturday class', active: true, createdAt: now },
 			{ id: 'fall-sat-ftc', term: 'fall', program: 'ftc', name: 'Fall Saturday FTC Robotics', day: 'Saturday', schedule: 'Saturday class', active: true, createdAt: now },
@@ -1536,8 +1783,12 @@ function publicMasterRoster(roster, fllTeams = []) {
 			hubAccess: inferMasterHubAccess(student),
 			codeLabUserId: student.codeLabUserId || '',
 			fllUserId: student.fllUserId || '',
+			campUserId: student.campUserId || '',
 			fllTeamId: inferMasterFllTeamId(student),
 			enrollments: Array.isArray(student.enrollments) ? student.enrollments : [],
+			portalUsername: student.portalUsername || '',
+			hasPortalPassword: Boolean(student.portalPassword_hash),
+			portalHubs: studentPortalHubIds(student, normalized),
 			createdAt: student.createdAt || '',
 			updatedAt: student.updatedAt || ''
 		}))
@@ -1550,12 +1801,14 @@ function sanitizeMasterClassPayload(body, existingId = '') {
 	const program = ['lego-robotics', 'ftc', 'fll', 'code-lab', 'other'].includes(body.program) ? body.program : 'lego-robotics';
 	const day = cleanMetaString(body.day || '', 40) || (term === 'summer' ? 'Weekly' : 'Saturday');
 	const schedule = cleanMetaString(body.schedule || '', 160);
+	const classCode = normalizeClassCode(body.classCode || '');
 	if (!name) return null;
 	return {
 		id: existingId || `${term}-${slugify(name)}-${crypto.randomBytes(3).toString('hex')}`,
 		term,
 		program,
 		name,
+		classCode,
 		day,
 		schedule,
 		active: body.active !== false
@@ -1606,8 +1859,11 @@ function sanitizeMasterStudentPayload(body, roster, existing = {}) {
 		hubAccess,
 		codeLabUserId: cleanMetaString(existing.codeLabUserId || body.codeLabUserId || '', 160),
 		fllUserId: cleanMetaString(existing.fllUserId || body.fllUserId || '', 160),
+		campUserId: cleanMetaString(existing.campUserId || body.campUserId || '', 160),
 		fllTeamId,
 		enrollments,
+		portalUsername: cleanMetaString(existing.portalUsername || '', 80),
+		portalPassword_hash: existing.portalPassword_hash || '',
 		createdAt: existing.createdAt || now,
 		updatedAt: now
 	};
@@ -1620,6 +1876,138 @@ async function readCodeLabStudents() {
 
 async function writeCodeLabStudents(students) {
 	await writeJsonFile(codeLabStudentsFile, Array.isArray(students) ? students : []);
+}
+
+// ── Student central portal: one login → reach Code Lab / FLL / Summer Camp ──
+const STUDENT_HUB_DEFS = {
+	'code-lab': { id: 'code-lab', title: 'Code Lab', icon: '🧩', url: '/codelab/app', desc: 'Coding lessons, challenges, and your dashboard.' },
+	'fll-hub': { id: 'fll-hub', title: 'FLL Hub', icon: '🤖', url: '/fll-hub/student', desc: 'Your FIRST LEGO League team dashboard.' },
+	'summer-camp': { id: 'summer-camp', title: 'Summer Camp', icon: '☀️', url: '/camp-hub', desc: 'Daily activities, live lessons, and points.' }
+};
+
+function summerEnrolled(student, roster) {
+	const summerIds = new Set((roster && Array.isArray(roster.classes) ? roster.classes : [])
+		.filter((c) => c.term === 'summer').map((c) => c.id));
+	return (Array.isArray(student.enrollments) ? student.enrollments : []).some((e) => summerIds.has(e.classId));
+}
+
+function studentPortalHubIds(student, roster) {
+	const ids = [];
+	const access = inferMasterHubAccess(student);
+	if (access.includes('code-lab')) ids.push('code-lab');
+	if (access.includes('fll-hub')) ids.push('fll-hub');
+	if (summerEnrolled(student, roster)) ids.push('summer-camp');
+	return ids;
+}
+
+function normalizeClassCode(value) {
+	return String(value || '').toUpperCase().replace(/[^A-Z0-9]+/g, '');
+}
+
+function studentIsInClass(student, classId) {
+	return (Array.isArray(student?.enrollments) ? student.enrollments : [])
+		.some((enrollment) => enrollment.classId === classId);
+}
+
+function setStudentSessionCookie(res, token) {
+	const maxAge = 7 * 24 * 60 * 60;
+	const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
+	res.setHeader('Set-Cookie', `${studentPortalCookie}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${secure}`);
+}
+function clearStudentSessionCookie(res) {
+	res.setHeader('Set-Cookie', `${studentPortalCookie}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`);
+}
+function getStudentSession(req) {
+	const token = parseCookies(req)[studentPortalCookie];
+	if (!token) return null;
+	const session = studentPortalSessions.get(token);
+	if (!session) return null;
+	if (Date.now() - session.lastSeen > 7 * 24 * 60 * 60 * 1000) {
+		studentPortalSessions.delete(token);
+		return null;
+	}
+	session.lastSeen = Date.now();
+	return { token, ...session };
+}
+
+// Ensure every roster student has a stable portal username (passwords are set on reset).
+async function ensureStudentPortalUsernames() {
+	const roster = await readMasterRoster();
+	const taken = new Set(roster.students.map((s) => String(s.portalUsername || '').toLowerCase()).filter(Boolean));
+	let changed = false;
+	for (const student of roster.students) {
+		if (!student.portalUsername) {
+			student.portalUsername = uniqueUsername(student.name, taken);
+			taken.add(student.portalUsername.toLowerCase());
+			changed = true;
+		}
+	}
+	if (changed) await writeMasterRoster(roster);
+	return roster;
+}
+
+async function requireStudentAuth(req, res, next) {
+	try {
+		const session = getStudentSession(req);
+		if (!session) {
+			if (req.path.startsWith('/api/')) return res.status(401).json({ success: false, message: 'Student login required' });
+			return res.redirect(302, '/student-login');
+		}
+		const roster = await readMasterRoster();
+		const student = roster.students.find((s) => s.id === session.studentId && s.active !== false);
+		if (!student) {
+			studentPortalSessions.delete(session.token);
+			clearStudentSessionCookie(res);
+			if (req.path.startsWith('/api/')) return res.status(401).json({ success: false, message: 'Student login required' });
+			return res.redirect(302, '/student-login');
+		}
+		req.rosterStudent = student;
+		req.masterRoster = roster;
+		return next();
+	} catch (err) {
+		console.error('Student auth error:', err);
+		return res.status(500).json({ success: false, message: 'Server error checking student session' });
+	}
+}
+
+// Find or provision the camp account linked to a roster student (by stored id, then name).
+async function resolveCampAccountForStudent(student, roster) {
+	const campUsers = await readCampUsers();
+	let account = null;
+	if (student.campUserId) account = campUsers.find((u) => u.id === student.campUserId && u.role === 'student');
+	if (!account) {
+		const wanted = normalizedPersonName(student.name);
+		account = campUsers.find((u) => u.role === 'student' && normalizedPersonName(u.name) === wanted);
+	}
+	if (account) {
+		if (student.campUserId !== account.id) {
+			const fresh = await readMasterRoster();
+			const target = fresh.students.find((s) => s.id === student.id);
+			if (target) { target.campUserId = account.id; await writeMasterRoster(fresh); }
+		}
+		return account;
+	}
+	// Provision a new camp account
+	const existingUsernames = new Set(campUsers.map((u) => String(u.username || '').toLowerCase()));
+	const username = uniqueUsername(student.name, existingUsernames);
+	const summerClass = (Array.isArray(student.enrollments) ? student.enrollments : [])
+		.map((e) => (roster.classes || []).find((c) => c.id === e.classId))
+		.find((c) => c && c.term === 'summer');
+	account = {
+		id: `camp-student-${slugify(student.name)}-${crypto.randomBytes(3).toString('hex')}`,
+		name: student.name,
+		username,
+		password_hash: hashScryptPassword(generateStudentPassword()),
+		role: 'student',
+		active: true,
+		className: summerClass ? summerClass.name : 'Summer Camp'
+	};
+	campUsers.push(account);
+	await writeCampUsers(campUsers);
+	const fresh = await readMasterRoster();
+	const target = fresh.students.find((s) => s.id === student.id);
+	if (target) { target.campUserId = account.id; await writeMasterRoster(fresh); }
+	return account;
 }
 
 function findStudentAccount(accounts, student, idField) {
@@ -1940,7 +2328,7 @@ async function getCampEnrollmentForUser(user, curriculum) {
 }
 
 async function getCampHubDataFor(user) {
-	const [camp, curriculum, announcements, resources, submissions, printRequests, projectSubmissions, pointEvents, classroom] = await Promise.all([
+	const [camp, curriculum, announcements, resources, submissions, printRequests, projectSubmissions, pointEvents, classroom, beginLessonResponses, campUsers] = await Promise.all([
 		readJsonFile(path.join(campHubDataDir, 'camp.json'), {}),
 		readJsonFile(campCurriculumFile, []),
 		readJsonFile(campAnnouncementsFile, []),
@@ -1949,9 +2337,22 @@ async function getCampHubDataFor(user) {
 		readCampPrintRequests(),
 		readCampProjectSubmissions(),
 		readCampPointEvents(),
-		readCampClassroomState()
+		readCampClassroomState(),
+		readCampBeginLessonResponses(),
+		readCampUsers()
 	]);
 	const isCoach = user.role === 'coach';
+	// Classmates (same class) with point totals — powers the camper class board.
+	const myClassName = user.className || '';
+	const classmates = isCoach ? [] : (Array.isArray(campUsers) ? campUsers : [])
+		.filter((u) => u.role === 'student' && u.active !== false && (u.className || '') === myClassName)
+		.map((u) => ({
+			id: u.id,
+			name: u.name,
+			isMe: u.id === user.id,
+			points: campPointsFor(u.id, submissions, printRequests, pointEvents, projectSubmissions).total
+		}))
+		.sort((a, b) => a.name.localeCompare(b.name));
 	const visibleAnnouncements = (Array.isArray(announcements) ? announcements : [])
 		.filter((item) => item.audience === 'all' || item.audience === user.role);
 	const visibleResources = (Array.isArray(resources) ? resources : [])
@@ -1978,9 +2379,14 @@ async function getCampHubDataFor(user) {
 		resources: visibleResources,
 		enrollment,
 		classroom,
+		className: myClassName,
+		classmates,
 		points: isCoach ? null : campPointsFor(user.id, submissions, printRequests, pointEvents, projectSubmissions),
 		printRequests: isCoach ? [] : printRequests.filter((item) => item.studentId === user.id),
 		projectSubmissions: isCoach ? [] : projectSubmissions.filter((item) => item.studentId === user.id),
+		beginLessonResponses: isCoach
+			? []
+			: beginLessonResponses.filter((item) => item.studentId === user.id && visibleCurriculum.some((week) => (week.days || []).some((day) => day.id === item.dayId))),
 		submissions: isCoach
 			? []
 			: submissions.filter((item) => item.studentId === user.id && visibleCurriculum.some((week) => (week.days || []).some((day) => day.id === item.dayId)))
@@ -3138,6 +3544,39 @@ app.get('/api/fll/student-dashboard', requireFllAuth, requireFllStudent, async (
 
 // ── Coach backend: roster + team + student management ─────────────────────
 
+app.get('/api/fll/live', requireFllAuth, requireFllStudent, async (req, res) => {
+	try {
+		const live = await readFllLiveLesson();
+		return res.json({ success: true, state: publicLiveStateForStudent(live, req.fllUser.id) });
+	} catch (err) {
+		console.error('FLL live state error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading live lesson' });
+	}
+});
+
+app.post('/api/fll/live/answer', requireFllAuth, requireFllStudent, async (req, res) => {
+	try {
+		const live = await readFllLiveLesson();
+		if (!live.active || !live.slides.length) return res.status(400).json({ success: false, message: 'No lesson is live' });
+		const slideId = cleanMetaString(req.body.slideId || '', 120);
+		const current = live.slides[live.currentIndex];
+		if (!current || current.id !== slideId || current.type !== 'question') {
+			return res.status(400).json({ success: false, message: 'That question is not open' });
+		}
+		const choice = Number(req.body.choice);
+		if (!Number.isInteger(choice) || choice < 0 || choice >= current.options.length) {
+			return res.status(400).json({ success: false, message: 'Invalid choice' });
+		}
+		if (!live.responses[slideId]) live.responses[slideId] = {};
+		live.responses[slideId][req.fllUser.id] = { choice, name: req.fllUser.name, at: new Date().toISOString() };
+		await writeFllLiveLesson(live);
+		return res.json({ success: true, myAnswer: choice });
+	} catch (err) {
+		console.error('FLL live answer error:', err);
+		return res.status(500).json({ success: false, message: 'Server error submitting answer' });
+	}
+});
+
 app.get(['/fll-hub/coach', '/fll-hub/coach/'], requireFllAuth, (req, res) => {
 	if (req.fllUser.role !== 'coach') {
 		return res.redirect(302, '/fll-hub/student');
@@ -3817,6 +4256,66 @@ app.get('/api/camp/hub-data', requireCampAuth, async (req, res) => {
 	}
 });
 
+app.get('/api/camp/begin-lesson/:dayId', requireCampAuth, async (req, res) => {
+	try {
+		if (!req.campUser || req.campUser.role !== 'student') {
+			return res.status(403).json({ success: false, message: 'Camper access required' });
+		}
+		const dayId = cleanMetaString(req.params.dayId || '', 120);
+		const { day } = await findAvailableCampDayForUser(req.campUser, dayId);
+		if (!day) {
+			return res.status(404).json({ success: false, message: 'Lesson warm-up is not available for your current camp week' });
+		}
+		const responses = await readCampBeginLessonResponses();
+		const response = responses.find((item) => item.dayId === dayId && item.studentId === req.campUser.id) || null;
+		return res.json({ success: true, day: publicBeginLessonDay(day), response });
+	} catch (err) {
+		console.error('Camp begin lesson load error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading begin lesson questions' });
+	}
+});
+
+app.post('/api/camp/begin-lesson/:dayId', requireCampAuth, async (req, res) => {
+	try {
+		if (!req.campUser || req.campUser.role !== 'student') {
+			return res.status(403).json({ success: false, message: 'Camper access required' });
+		}
+		const dayId = cleanMetaString(req.params.dayId || '', 120);
+		const { day } = await findAvailableCampDayForUser(req.campUser, dayId);
+		if (!day) {
+			return res.status(404).json({ success: false, message: 'Lesson warm-up is not available for your current camp week' });
+		}
+		const questions = beginLessonQuestionsForDay(day);
+		const answers = Array.isArray(req.body.answers)
+			? req.body.answers.map((answer) => cleanMetaString(answer, 900)).slice(0, questions.length)
+			: [];
+		if (answers.length !== questions.length || answers.some((answer) => !answer.trim())) {
+			return res.status(400).json({ success: false, message: 'Answer every warm-up question before beginning the lesson' });
+		}
+		const responses = await readCampBeginLessonResponses();
+		const now = new Date().toISOString();
+		const existing = responses.find((item) => item.dayId === dayId && item.studentId === req.campUser.id);
+		const payload = {
+			id: existing?.id || `begin-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
+			dayId,
+			studentId: req.campUser.id,
+			studentName: req.campUser.name,
+			className: req.campUser.className || 'Unassigned',
+			questions,
+			answers,
+			updatedAt: now,
+			submittedAt: existing?.submittedAt || now
+		};
+		if (existing) Object.assign(existing, payload);
+		else responses.push(payload);
+		await writeJsonFile(campBeginLessonResponsesFile, responses);
+		return res.status(existing ? 200 : 201).json({ success: true, response: payload });
+	} catch (err) {
+		console.error('Camp begin lesson save error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving begin lesson answers' });
+	}
+});
+
 app.post('/api/camp/submissions', requireCampAuth, async (req, res) => {
 	try {
 		if (!req.campUser || req.campUser.role !== 'student') {
@@ -3977,6 +4476,13 @@ app.patch('/api/camp/coach/days/:dayId', requireCampAuth, requireCampCoach, asyn
 				if (typeof req.body.assignment === 'string') day.assignment = cleanMetaString(req.body.assignment, 900);
 				if (typeof req.body.worksheetLabel === 'string') day.worksheetLabel = cleanMetaString(req.body.worksheetLabel, 120);
 				if (typeof req.body.worksheetUrl === 'string') day.worksheetUrl = cleanMetaString(req.body.worksheetUrl, 1000);
+				if (typeof req.body.lessonDeckUrl === 'string') day.lessonDeckUrl = cleanMetaString(req.body.lessonDeckUrl, 1000);
+				if (Array.isArray(req.body.beginLessonQuestions)) {
+					day.beginLessonQuestions = req.body.beginLessonQuestions
+						.map((question) => cleanMetaString(question, 260))
+						.filter(Boolean)
+						.slice(0, 3);
+				}
 				updatedDay = day;
 				break;
 			}
@@ -3989,6 +4495,51 @@ app.patch('/api/camp/coach/days/:dayId', requireCampAuth, requireCampCoach, asyn
 	} catch (err) {
 		console.error('Camp coach day update error:', err);
 		return res.status(500).json({ success: false, message: 'Server error saving the day' });
+	}
+});
+
+app.get('/api/camp/coach/begin-lesson-responses', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const dayId = cleanMetaString(req.query.dayId || '', 120);
+		const [curriculum, responses, users] = await Promise.all([
+			readJsonFile(campCurriculumFile, []),
+			readCampBeginLessonResponses(),
+			readCampUsers()
+		]);
+		const match = dayId ? findCampDay(curriculum, dayId) : null;
+		if (dayId && !match) {
+			return res.status(404).json({ success: false, message: 'Camp day not found' });
+		}
+		const day = match?.day || null;
+		const questions = day ? beginLessonQuestionsForDay(day) : [];
+		const dayResponses = dayId ? responses.filter((item) => item.dayId === dayId) : [];
+		const studentUsers = users.filter((user) => user.role === 'student' && user.active !== false);
+		const answeredIds = new Set(dayResponses.map((item) => item.studentId));
+		const unanswered = studentUsers
+			.filter((user) => !answeredIds.has(user.id))
+			.map((user) => ({ id: user.id, name: user.name, className: user.className || 'Unassigned' }));
+		const byQuestion = questions.map((question, index) => ({
+			question,
+			answers: dayResponses.map((response) => ({
+				studentId: response.studentId,
+				studentName: response.studentName,
+				className: response.className || 'Unassigned',
+				answer: response.answers?.[index] || '',
+				updatedAt: response.updatedAt || response.submittedAt || ''
+			})).filter((item) => item.answer)
+		}));
+		return res.json({
+			success: true,
+			day: day ? publicBeginLessonDay(day) : null,
+			totalStudents: studentUsers.length,
+			answeredCount: dayResponses.length,
+			unanswered,
+			responses: dayResponses,
+			byQuestion
+		});
+	} catch (err) {
+		console.error('Camp begin lesson coach responses error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading warm-up responses' });
 	}
 });
 
@@ -4048,6 +4599,47 @@ app.delete('/api/camp/coach/classroom/groups/:id', requireCampAuth, requireCampC
 	} catch (err) {
 		console.error('Camp group delete error:', err);
 		return res.status(500).json({ success: false, message: 'Server error deleting group' });
+	}
+});
+
+// ── ClassDojo-style skills (positive + negative) ──
+app.post('/api/camp/coach/skills', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const state = await readCampClassroomState();
+		if (!cleanMetaString(req.body.name || '', 60)) {
+			return res.status(400).json({ success: false, message: 'Skill name is required' });
+		}
+		const incoming = normalizeCampSkill(req.body);
+		const existingId = cleanMetaString(req.body.id || '', 120);
+		const index = existingId ? state.skills.findIndex((s) => s.id === existingId) : -1;
+		if (index >= 0) {
+			incoming.id = state.skills[index].id;
+			state.skills[index] = incoming;
+		} else {
+			state.skills.push(incoming);
+		}
+		const next = normalizeCampClassroomState(state);
+		await writeJsonFile(campClassroomFile, next);
+		return res.status(index >= 0 ? 200 : 201).json({ success: true, classroom: next, skill: incoming });
+	} catch (err) {
+		console.error('Camp skill save error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving skill' });
+	}
+});
+
+app.delete('/api/camp/coach/skills/:id', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const state = await readCampClassroomState();
+		const before = state.skills.length;
+		state.skills = state.skills.filter((s) => s.id !== req.params.id);
+		if (state.skills.length === before) {
+			return res.status(404).json({ success: false, message: 'Skill not found' });
+		}
+		await writeJsonFile(campClassroomFile, state);
+		return res.json({ success: true, classroom: state });
+	} catch (err) {
+		console.error('Camp skill delete error:', err);
+		return res.status(500).json({ success: false, message: 'Server error deleting skill' });
 	}
 });
 
@@ -4380,6 +4972,7 @@ app.post('/api/camp/coach/points', requireCampAuth, requireCampCoach, async (req
 	try {
 		const studentId = cleanMetaString(req.body.studentId || '', 120);
 		const category = cleanMetaString(req.body.category || '', 80) || 'Teamwork';
+		const icon = cleanMetaString(req.body.icon || '', 8);
 		const note = cleanMetaString(req.body.note || '', 500);
 		const type = req.body.type === 'needs-work' ? 'needs-work' : 'positive';
 		const rawPoints = Number(req.body.points);
@@ -4397,6 +4990,7 @@ app.post('/api/camp/coach/points', requireCampAuth, requireCampCoach, async (req
 			studentName: student.name,
 			className: student.className || 'Unassigned',
 			category,
+			icon,
 			type,
 			points,
 			note,
@@ -4542,6 +5136,7 @@ initializeFllDataDir()
 	.then(() => initializeCampDataDir())
 	.then(() => initializeCoachDataDir())
 	.then(() => initializeMasterRoster())
+	.then(() => ensureStudentPortalUsernames())
 	.then(() => {
 		app.listen(PORT, () => console.log(`AI Future Platform running at http://localhost:${PORT}`));
 	})
