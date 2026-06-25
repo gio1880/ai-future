@@ -3,7 +3,7 @@
     "id": "coach-giovanny",
     "name": "Giovanny De Los Angeles",
     "username": "giovanny",
-    "password_hash": "de22bd002f7d669318dfd1d296cf3dde:02025cf66c774b2d8c84e0db4f6473c25a430276f40f44fb1a763c08c72131853db3e73843228bd0baef2bf2f3c20ba303f517c0aee4787979c3e0b8d89c3a5c",
+    "password_hash": "",
     "role": "owner",
     "hubs": [
       "master-roster",
@@ -15,19 +15,21 @@
       "code-lab-admin",
       "payments-admin",
       "parent-leads-admin",
-      "summer-leads-admin"
+      "summer-leads-admin",
+      "access-control"
     ],
     "fllUserId": "coach-giovanny",
     "fllUsername": "giovanny",
     "campUserId": "camp-coach-giovanny",
     "campUsername": "giovanny",
-    "active": true
+    "active": true,
+    "needsPasswordSetup": true
   },
   {
     "id": "coach-anik",
     "name": "Anik Rashid",
     "username": "anik",
-    "password_hash": "0a078432c8e32a39b178f6bed8c35064:3bf5fef2b786a8124d4ed83e3a1e0a62aaadf2b2cc41bd10cc45b458367bb1e5077c5f74debf28f9fae895cec0feba491577870323d0c7fe66b5270759383f54",
+    "password_hash": "",
     "role": "coach",
     "hubs": [
       "master-roster",
@@ -42,13 +44,14 @@
     "fllUsername": "anik",
     "campUserId": "camp-coach-anik",
     "campUsername": "anik",
-    "active": true
+    "active": true,
+    "needsPasswordSetup": true
   },
   {
     "id": "coach-rose",
     "name": "Rose Zhu",
     "username": "rose",
-    "password_hash": "dba1ffd08688af7a21bfc51c184a2167:0b13c161895f35cdb5775b8bfe94f7a7a57201d1297e2355b6ab530815fab3e57e059c3165c004dbe23f77a73a87a08b953d277a4ab3199af87f14ca63c34fa8",
+    "password_hash": "",
     "role": "coach",
     "hubs": [
       "master-roster",
@@ -63,13 +66,14 @@
     "fllUsername": "rose",
     "campUserId": "camp-coach-rose",
     "campUsername": "rose",
-    "active": true
+    "active": true,
+    "needsPasswordSetup": true
   },
   {
     "id": "coach-test",
     "name": "Test Coach",
     "username": "coach",
-    "password_hash": "4043d7b5347d539e6314cd50a54d9a97:93a1b6e3782fbef70c1852dd00a00f7ac2f3683fbc2d0b26e157eac0c2e57c32762729e1076bdd73d1f7ba7cc5796870c2a06a235b3785e78a35d727949fea72",
+    "password_hash": "",
     "role": "coach",
     "hubs": [
       "master-roster",
@@ -84,6 +88,8 @@
     "fllUsername": "coach",
     "campUserId": "camp-coach-default",
     "campUsername": "campcoach",
-    "active": true
+    "active": true,
+    "needsPasswordSetup": true,
+    "updatedAt": "2026-06-25T21:41:43.080Z"
   }
 ]

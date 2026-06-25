@@ -82,7 +82,7 @@
       font-size: 0.93rem;
     }
 
-    input {
+    input, select {
       width: 100%;
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -92,10 +92,20 @@
       background: #fff;
     }
 
-    input:focus {
+    input:focus, select:focus {
       outline: 3px solid rgba(37, 99, 255, 0.18);
       border-color: var(--brand);
     }
+
+    .link-btn {
+      background: none; border: 0; color: var(--brand); font: inherit; font-weight: 700;
+      cursor: pointer; padding: 0; text-decoration: underline; width: auto;
+    }
+    .link-btn:hover { background: none; color: var(--brand-dark); }
+    .toggle-row { text-align: center; margin-top: 4px; font-size: 0.92rem; color: var(--muted); }
+    .ok { color: #0f5132; font-weight: 700; }
+    [hidden] { display: none !important; }
+    h1.small { font-size: 1.35rem; }
 
     button {
       border: 0;
@@ -138,11 +148,12 @@
     <div class="brand">
       <div class="mark">AI</div>
       <div>
-        <h1>Coach Login</h1>
-        <p>One sign-in for your AI Future staff tools.</p>
+        <h1 id="title">Coach Login</h1>
+        <p id="subtitle">One sign-in for your AI Future staff tools.</p>
       </div>
     </div>
 
+    <!-- LOG IN -->
     <form id="loginForm" autocomplete="on">
       <label>
         Username
@@ -153,50 +164,124 @@
         <input id="password" name="password" type="password" autocomplete="current-password" required>
       </label>
       <button id="submitButton" type="submit">Log in</button>
-      <div id="error" class="error" role="alert"></div>
+      <div id="loginError" class="error" role="alert"></div>
+      <div class="toggle-row">First time here? <button type="button" class="link-btn" id="toSetup">Set your password</button></div>
     </form>
 
-    <div class="helper">Use your existing coach username and password.</div>
+    <!-- FIRST-TIME SETUP -->
+    <form id="setupForm" autocomplete="off" hidden>
+      <label>
+        Your name
+        <select id="coachSelect" required></select>
+      </label>
+      <label>
+        Setup code <span style="font-weight:500;color:var(--muted)">(ask your admin)</span>
+        <input id="setupCode" autocomplete="off" required>
+      </label>
+      <label>
+        New password
+        <input id="newPassword" type="password" autocomplete="new-password" minlength="6" required>
+      </label>
+      <label>
+        Confirm password
+        <input id="confirmPassword" type="password" autocomplete="new-password" minlength="6" required>
+      </label>
+      <button id="setupButton" type="submit">Set password &amp; log in</button>
+      <div id="setupMsg" class="error" role="alert"></div>
+      <div class="toggle-row">Already set up? <button type="button" class="link-btn" id="toLogin">Back to log in</button></div>
+    </form>
+
+    <div class="helper" id="helper">Enter your coach username and password.</div>
   </main>
 
   <script>
-    const form = document.getElementById('loginForm');
-    const error = document.getElementById('error');
+    const loginForm = document.getElementById('loginForm');
+    const setupForm = document.getElementById('setupForm');
+    const loginError = document.getElementById('loginError');
+    const setupMsg = document.getElementById('setupMsg');
     const submitButton = document.getElementById('submitButton');
+    const setupButton = document.getElementById('setupButton');
+    const coachSelect = document.getElementById('coachSelect');
+    const title = document.getElementById('title');
+    const subtitle = document.getElementById('subtitle');
+    const helper = document.getElementById('helper');
 
     async function checkSession() {
       try {
         const response = await fetch('/api/coach/session', { cache: 'no-store' });
-        if (response.ok) {
-          window.location.href = '/coach-portal';
-        }
+        if (response.ok) window.location.href = '/coach-portal';
       } catch (_) {}
     }
 
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      error.textContent = '';
-      submitButton.disabled = true;
-      submitButton.textContent = 'Logging in...';
+    async function loadSetupList() {
+      try {
+        const r = await fetch('/api/coach/setup/list', { cache: 'no-store' });
+        const data = await r.json();
+        const list = (data && data.coaches) || [];
+        coachSelect.innerHTML = list.length
+          ? list.map(c => `<option value="${c.username}">${c.name} (username: ${c.username})</option>`).join('')
+          : '<option value="">No accounts need setup</option>';
+        return list.length;
+      } catch (_) { return 0; }
+    }
 
+    function showSetup() {
+      loginForm.hidden = true; setupForm.hidden = false;
+      title.textContent = 'Set Your Password';
+      title.classList.add('small');
+      subtitle.textContent = 'First time? Pick your name, enter the setup code, and choose a password.';
+      helper.textContent = 'Your username is shown next to your name — you can use it to log in next time.';
+      loadSetupList();
+    }
+    function showLogin() {
+      setupForm.hidden = true; loginForm.hidden = false;
+      title.textContent = 'Coach Login'; title.classList.remove('small');
+      subtitle.textContent = 'One sign-in for your AI Future staff tools.';
+      helper.textContent = 'Enter your coach username and password.';
+    }
+
+    document.getElementById('toSetup').addEventListener('click', showSetup);
+    document.getElementById('toLogin').addEventListener('click', showLogin);
+
+    loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      loginError.textContent = '';
+      submitButton.disabled = true; submitButton.textContent = 'Logging in...';
       try {
         const response = await fetch('/api/coach/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            username: document.getElementById('username').value,
-            password: document.getElementById('password').value
-          })
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: document.getElementById('username').value, password: document.getElementById('password').value })
         });
         const result = await response.json();
         if (!response.ok || !result.success) {
+          if (result.needsSetup) { showSetup(); setupMsg.textContent = result.message; throw new Error(''); }
           throw new Error(result.message || 'Login failed');
         }
         window.location.href = result.redirectTo || '/coach-portal';
       } catch (err) {
-        error.textContent = err.message || 'Login failed';
-        submitButton.disabled = false;
-        submitButton.textContent = 'Log in';
+        if (err.message) loginError.textContent = err.message;
+        submitButton.disabled = false; submitButton.textContent = 'Log in';
+      }
+    });
+
+    setupForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      setupMsg.textContent = '';
+      const pw = document.getElementById('newPassword').value;
+      const confirm = document.getElementById('confirmPassword').value;
+      if (pw !== confirm) { setupMsg.textContent = 'Passwords do not match.'; return; }
+      setupButton.disabled = true; setupButton.textContent = 'Setting up...';
+      try {
+        const response = await fetch('/api/coach/setup', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: coachSelect.value, code: document.getElementById('setupCode').value, password: pw })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Setup failed');
+        window.location.href = result.redirectTo || '/coach-portal';
+      } catch (err) {
+        setupMsg.textContent = err.message || 'Setup failed';
+        setupButton.disabled = false; setupButton.textContent = 'Set password & log in';
       }
     });
 

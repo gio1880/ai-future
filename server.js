@@ -90,6 +90,8 @@ const campSessions = new Map();
 const coachUsersFile = path.join(platformDataDir, 'coach-users.json');
 const coachSessionCookie = 'coach_session';
 const coachSessions = new Map();
+// Shared one-time code coaches enter to claim their account and set a password.
+const coachSetupCode = process.env.COACH_SETUP_CODE || 'aifuture2026';
 const masterRosterFile = path.join(platformDataDir, 'master-roster.json');
 const studentPortalCookie = 'student_session';
 const studentPortalSessions = new Map();
@@ -262,6 +264,9 @@ app.post('/api/coach/login', async (req, res) => {
 		const users = await readCoachUsers();
 		const user = users.find((candidate) => String(candidate.username || '').toLowerCase() === username && candidate.active !== false);
 
+		if (user && coachNeedsSetup(user)) {
+			return res.status(403).json({ success: false, needsSetup: true, message: 'This account needs a password. Choose "First time? Set your password" below.' });
+		}
 		if (!user || !verifyScryptPassword(password, user.password_hash)) {
 			return res.status(401).json({ success: false, message: 'Invalid coach username or password' });
 		}
@@ -293,6 +298,69 @@ app.post('/api/coach/logout', (req, res) => {
 	}
 	clearCoachSessionCookie(res);
 	return res.json({ success: true });
+});
+
+// A coach account "needs setup" when it has no usable password yet.
+function coachNeedsSetup(user) {
+	return user && user.active !== false && (user.needsPasswordSetup === true || !user.password_hash);
+}
+
+// First-time onboarding: list coaches who still need to set a password.
+app.get('/api/coach/setup/list', async (req, res) => {
+	try {
+		const users = await readCoachUsers();
+		return res.json({
+			success: true,
+			coaches: users.filter(coachNeedsSetup).map((u) => ({ name: u.name, username: u.username }))
+		});
+	} catch (err) {
+		console.error('Coach setup list error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading setup list' });
+	}
+});
+
+// First-time onboarding: a coach claims their account with the shared code and sets a password.
+app.post('/api/coach/setup', async (req, res) => {
+	try {
+		const username = cleanMetaString(req.body.username || '', 80).toLowerCase();
+		const code = String(req.body.code || '');
+		const password = typeof req.body.password === 'string' ? req.body.password : '';
+		if (code.trim() !== coachSetupCode) {
+			return res.status(403).json({ success: false, message: 'That setup code is not correct. Ask your admin for the code.' });
+		}
+		if (password.length < 6) {
+			return res.status(400).json({ success: false, message: 'Password must be at least 6 characters.' });
+		}
+		const users = await readCoachUsers();
+		const index = users.findIndex((u) => String(u.username || '').toLowerCase() === username);
+		if (index === -1) {
+			return res.status(404).json({ success: false, message: 'Coach not found. Pick your name from the list.' });
+		}
+		if (!coachNeedsSetup(users[index])) {
+			return res.status(409).json({ success: false, message: 'This account already has a password — use "Log in" instead.' });
+		}
+		users[index] = {
+			...users[index],
+			password_hash: hashScryptPassword(password),
+			needsPasswordSetup: false,
+			updatedAt: new Date().toISOString()
+		};
+		await writeCoachUsers(users);
+		// Propagate the new password to the coach's camp + FLL accounts so every login works.
+		await syncCoachUserToProgramHubs(users[index]);
+		const token = crypto.randomBytes(32).toString('hex');
+		coachSessions.set(token, {
+			userId: users[index].id,
+			hubs: Array.isArray(users[index].hubs) ? users[index].hubs : [],
+			createdAt: Date.now(),
+			lastSeen: Date.now()
+		});
+		setCoachSessionCookie(res, token);
+		return res.json({ success: true, redirectTo: '/coach-portal' });
+	} catch (err) {
+		console.error('Coach setup error:', err);
+		return res.status(500).json({ success: false, message: 'Server error setting your password' });
+	}
 });
 
 app.get('/api/coach/session', requireCoachPortalAuth, (req, res) => {
