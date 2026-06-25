@@ -9,6 +9,8 @@ services:
         value: production
       - key: SESSION_SECRET
         generateValue: true          # Render generates a secure random value once
+      - key: COACH_SETUP_CODE
+        sync: false
       - key: DATA_DIR
         value: /var/data
       # Optional. If unset, FLL hub data is stored at

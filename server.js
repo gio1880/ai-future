@@ -305,13 +305,15 @@ function coachNeedsSetup(user) {
 	return user && user.active !== false && (user.needsPasswordSetup === true || !user.password_hash);
 }
 
-// First-time onboarding: list coaches who still need to set a password.
+// Coach onboarding: list active coaches who may set or reset their password.
 app.get('/api/coach/setup/list', async (req, res) => {
 	try {
 		const users = await readCoachUsers();
 		return res.json({
 			success: true,
-			coaches: users.filter(coachNeedsSetup).map((u) => ({ name: u.name, username: u.username }))
+			coaches: users
+				.filter((u) => u.active !== false)
+				.map((u) => ({ name: u.name, username: u.username, needsSetup: coachNeedsSetup(u) }))
 		});
 	} catch (err) {
 		console.error('Coach setup list error:', err);
@@ -335,9 +337,6 @@ app.post('/api/coach/setup', async (req, res) => {
 		const index = users.findIndex((u) => String(u.username || '').toLowerCase() === username);
 		if (index === -1) {
 			return res.status(404).json({ success: false, message: 'Coach not found. Pick your name from the list.' });
-		}
-		if (!coachNeedsSetup(users[index])) {
-			return res.status(409).json({ success: false, message: 'This account already has a password — use "Log in" instead.' });
 		}
 		users[index] = {
 			...users[index],
@@ -1368,15 +1367,19 @@ async function writeCoachUsers(users) {
 
 function normalizeCoachUsers(users) {
 	const validHubs = new Set(Object.keys(coachHubDefinitions));
+	const takenUsernames = new Set();
 	return users.map((user) => {
 		const role = user.role === 'owner' ? 'owner' : 'coach';
+		let username = String(user.username || '').toLowerCase();
+		if (!username) username = uniqueUsername(user.name || 'coach', takenUsernames);
+		else takenUsernames.add(username);
 		const hubs = Array.isArray(user.hubs) ? user.hubs.filter((hub) => validHubs.has(hub)) : [];
 		const normalizedHubs = role === 'owner'
 			? Array.from(new Set([...hubs, ...adminCoachHubs]))
 			: Array.from(new Set(hubs));
 		return {
 			...user,
-			username: String(user.username || '').toLowerCase(),
+			username,
 			role,
 			hubs: normalizedHubs,
 			active: user.active !== false

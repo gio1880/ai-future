@@ -165,7 +165,7 @@
       </label>
       <button id="submitButton" type="submit">Log in</button>
       <div id="loginError" class="error" role="alert"></div>
-      <div class="toggle-row">First time here? <button type="button" class="link-btn" id="toSetup">Set your password</button></div>
+      <div class="toggle-row">Need access? <button type="button" class="link-btn" id="toSetup">Set or reset your password</button></div>
     </form>
 
     <!-- FIRST-TIME SETUP -->
@@ -219,18 +219,18 @@
         const data = await r.json();
         const list = (data && data.coaches) || [];
         coachSelect.innerHTML = list.length
-          ? list.map(c => `<option value="${c.username}">${c.name} (username: ${c.username})</option>`).join('')
-          : '<option value="">No accounts need setup</option>';
+          ? list.map(c => `<option value="${c.username}">${c.name} (username: ${c.username})${c.needsSetup ? ' - needs setup' : ''}</option>`).join('')
+          : '<option value="">No coach accounts found</option>';
         return list.length;
       } catch (_) { return 0; }
     }
 
     function showSetup() {
       loginForm.hidden = true; setupForm.hidden = false;
-      title.textContent = 'Set Your Password';
+      title.textContent = 'Set or Reset Password';
       title.classList.add('small');
-      subtitle.textContent = 'First time? Pick your name, enter the setup code, and choose a password.';
-      helper.textContent = 'Your username is shown next to your name — you can use it to log in next time.';
+      subtitle.textContent = 'Pick your name, enter the setup code, and choose a password.';
+      helper.textContent = 'Your username is shown next to your name. Use this same password for Coach Portal, Camp Hub, and FLL Hub.';
       loadSetupList();
     }
     function showLogin() {
