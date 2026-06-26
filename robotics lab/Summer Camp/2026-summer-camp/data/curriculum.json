@@ -11,10 +11,10 @@
         "activity": "Project: learn how LEGO Technic beams and pins connect, then build the tallest freestanding tower that can stand on its own for 10 seconds.",
         "assignment": "Build and test a tall Technic tower. Record what made it stable and what you changed after your first test.",
         "build": "Tallest Tower",
-        "lessonDeckUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%201/lesson1_lego_technic_assets_version.html",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%201/lesson1_lego_technic_assets_version.html",
         "worksheetLabel": "Original PDF",
-        "worksheetUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%201/summer%20camp%20week%201%20lesson%201.pdf",
-        "coachNotes": "Open Lesson Deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%201/lesson1_lego_technic_assets_version.html. Concepts: beams, pins, stability, wide bases. Measure each tower after it stands independently for 10 seconds.",
+        "worksheetUrl": "/camp-hub/lessons/Lesson%201/summer%20camp%20week%201%20lesson%201.pdf",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%201/lesson1_lego_technic_assets_version.html. Concepts: beams, pins, stability, wide bases. Measure each tower after it stands independently for 10 seconds.",
         "beginLessonQuestions": [
           "What do you already know about Tallest Tower?",
           "What is one thing your team should test carefully today?",
@@ -27,10 +27,10 @@
         "activity": "Project: engineer a Technic bridge across a gap and test how triangles, supports, and bracing help it hold more weight.",
         "assignment": "Build a bridge across the test gap. Record where it bent first and what reinforcement helped most.",
         "build": "Strongest Bridge",
-        "lessonDeckUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%202/lesson2_bridge_assets_version.html",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%202/lesson2_bridge_assets_version.html",
         "worksheetLabel": "Original PDF",
-        "worksheetUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%202/summer%20camp%20week%201%20lesson%202.pdf",
-        "coachNotes": "Open Lesson Deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%202/lesson2_bridge_assets_version.html. Concepts: tension, compression, supports, triangular bracing. Test with the same gap and add weight gradually.",
+        "worksheetUrl": "/camp-hub/lessons/Lesson%202/summer%20camp%20week%201%20lesson%202.pdf",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%202/lesson2_bridge_assets_version.html. Concepts: tension, compression, supports, triangular bracing. Test with the same gap and add weight gradually.",
         "beginLessonQuestions": [
           "What do you already know about Strongest Bridge?",
           "What is one thing your team should test carefully today?",
@@ -43,10 +43,10 @@
         "activity": "Project: build a car powered only by air from a balloon, then tune the frame, wheels, and balloon direction for the farthest roll.",
         "assignment": "Build and test a balloon car. Record your best distance and one design change that made it roll farther.",
         "build": "Balloon-Powered Car",
-        "lessonDeckUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%203/lesson3_spike_prime_assets_version.html",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%203/lesson3_spike_prime_assets_version.html",
         "worksheetLabel": "Original PDF",
-        "worksheetUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%203/summer%20camp%20week%201%20lesson%203.pdf",
-        "coachNotes": "Open Lesson Deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%203/lesson3_spike_prime_assets_version.html. Concepts: axles, wheel alignment, friction, air propulsion. Have balloons and straws ready; measure from the same start line.",
+        "worksheetUrl": "/camp-hub/lessons/Lesson%203/summer%20camp%20week%201%20lesson%203.pdf",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%203/lesson3_spike_prime_assets_version.html. Concepts: axles, wheel alignment, friction, air propulsion. Have balloons and straws ready; measure from the same start line.",
         "beginLessonQuestions": [
           "What do you already know about Balloon-Powered Car?",
           "What is one thing your team should test carefully today?",
@@ -59,17 +59,18 @@
         "activity": "Project: build a safe Technic catapult that uses a lever and stored energy to launch a soft target toward a marked zone.",
         "assignment": "Build and test a catapult. Record how you balanced launch distance, accuracy, and safety.",
         "build": "Catapult",
-        "lessonDeckUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%204/lesson4_catapult_assets_version.html",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%204/lesson4_catapult_assets_version.html",
         "worksheetLabel": "Original PDF",
-        "worksheetUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%204/summer%20camp%20week%201%20lesson%204.pdf",
-        "coachNotes": "Open Lesson Deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%204/lesson4_catapult_assets_version.html. Concepts: lever, fulcrum, stored energy, accuracy. Use only soft projectiles and aim away from people.",
+        "worksheetUrl": "/camp-hub/lessons/Lesson%204/summer%20camp%20week%201%20lesson%204.pdf",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%204/lesson4_catapult_assets_version.html. Concepts: lever, fulcrum, stored energy, accuracy. Use only soft projectiles and aim away from people.",
         "beginLessonQuestions": [
           "What do you already know about Catapult?",
           "What is one thing your team should test carefully today?",
           "What will make this build successful?"
         ]
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4"
   },
   {
     "id": "week-2",
@@ -83,10 +84,10 @@
         "activity": "Project: build a rubber-band-powered car and test how stored elastic energy turns into distance and speed.",
         "assignment": "Build a rubber band car. Record your best distance and what happened when you changed winds, wheels, or weight.",
         "build": "Rubber Band Car",
-        "lessonDeckUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%205/lesson5_rubber_band_car.html",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%205/lesson5_rubber_band_car.html",
         "worksheetLabel": "",
         "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%205/lesson5_rubber_band_car.html. Concepts: stored elastic energy, axle drive, traction, speed versus distance. Keep winding rules consistent.",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%205/lesson5_rubber_band_car.html. Concepts: stored elastic energy, axle drive, traction, speed versus distance. Keep winding rules consistent.",
         "beginLessonQuestions": [
           "What do you already know about Rubber Band Car?",
           "What is one thing your team should test carefully today?",
@@ -99,10 +100,10 @@
         "activity": "Project: build an elevator or lift that raises a small cargo load smoothly and safely.",
         "assignment": "Build a lift. Record the height reached, the load carried, and the design change that made lifting smoother.",
         "build": "Elevator / Lift",
-        "lessonDeckUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%206/lesson6_elevator_lift.html",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%206/lesson6_elevator_lift.html",
         "worksheetLabel": "",
         "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%206/lesson6_elevator_lift.html. Concepts: pulleys, winches, guides, balanced loads. Use a small cargo box and measure lift height.",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%206/lesson6_elevator_lift.html. Concepts: pulleys, winches, guides, balanced loads. Use a small cargo box and measure lift height.",
         "beginLessonQuestions": [
           "What do you already know about Elevator / Lift?",
           "What is one thing your team should test carefully today?",
@@ -115,10 +116,10 @@
         "activity": "Project: build a Ferris wheel that rotates smoothly, stays balanced, and carries small passenger cars.",
         "assignment": "Build a Ferris wheel. Record how you balanced the wheel and what helped it spin smoothly.",
         "build": "Ferris Wheel",
-        "lessonDeckUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%207/lesson7_ferris_wheel.html",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%207/lesson7_ferris_wheel.html",
         "worksheetLabel": "",
         "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%207/lesson7_ferris_wheel.html. Concepts: center axle, balance, rotation, crank motion. Encourage symmetric weight around the wheel.",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%207/lesson7_ferris_wheel.html. Concepts: center axle, balance, rotation, crank motion. Encourage symmetric weight around the wheel.",
         "beginLessonQuestions": [
           "What do you already know about Ferris Wheel?",
           "What is one thing your team should test carefully today?",
@@ -131,17 +132,18 @@
         "activity": "Project: design a marble run that uses gravity, slope, barriers, and supports to create the longest reliable ride.",
         "assignment": "Build a marble run. Record total ride time and the place where the marble was most likely to fail.",
         "build": "Marble Run",
-        "lessonDeckUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%208/lesson8_marble_run.html",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%208/lesson8_marble_run.html",
         "worksheetLabel": "",
         "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%208/lesson8_marble_run.html. Concepts: gravity, slope, speed control, barriers. Time only completed runs.",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%208/lesson8_marble_run.html. Concepts: gravity, slope, speed control, barriers. Time only completed runs.",
         "beginLessonQuestions": [
           "What do you already know about Marble Run?",
           "What is one thing your team should test carefully today?",
           "What will make this build successful?"
         ]
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4"
   },
   {
     "id": "week-3",
@@ -155,10 +157,10 @@
         "activity": "Project: build a boat or raft that floats, stays balanced, and carries as much cargo as possible.",
         "assignment": "Build a boat or raft. Record how much cargo it carried and what helped it stay balanced.",
         "build": "Boat / Raft",
-        "lessonDeckUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%209/lesson9_boat_raft.html",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%209/lesson9_boat_raft.html",
         "worksheetLabel": "",
         "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%209/lesson9_boat_raft.html. Concepts: buoyancy, center of mass, load capacity. Test in a bin and add cargo gradually.",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%209/lesson9_boat_raft.html. Concepts: buoyancy, center of mass, load capacity. Test in a bin and add cargo gradually.",
         "beginLessonQuestions": [
           "What do you already know about Boat / Raft?",
           "What is one thing your team should test carefully today?",
@@ -171,10 +173,10 @@
         "activity": "Project: build a gripper that opens, closes, picks up objects, and releases them with control.",
         "assignment": "Build a gripper. Record which object was easiest or hardest to grab and why.",
         "build": "Gripper",
-        "lessonDeckUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2010/lesson10_gripper.html",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%2010/lesson10_gripper.html",
         "worksheetLabel": "",
         "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2010/lesson10_gripper.html. Concepts: pivots, linkages, friction, grip force. Test several object shapes and sizes.",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2010/lesson10_gripper.html. Concepts: pivots, linkages, friction, grip force. Test several object shapes and sizes.",
         "beginLessonQuestions": [
           "What do you already know about Gripper?",
           "What is one thing your team should test carefully today?",
@@ -187,10 +189,10 @@
         "activity": "Project: combine an arm and gripper so the mechanism can reach, lift, move, and release a small object.",
         "assignment": "Build an arm with a gripper. Record how far it reached and what kept the base stable.",
         "build": "Arm with Gripper",
-        "lessonDeckUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2011/lesson11_arm_with_gripper.html",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%2011/lesson11_arm_with_gripper.html",
         "worksheetLabel": "",
         "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2011/lesson11_arm_with_gripper.html. Concepts: leverage, reach, payload, stable bases. Reuse or improve the gripper from Lesson 10.",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2011/lesson11_arm_with_gripper.html. Concepts: leverage, reach, payload, stable bases. Reuse or improve the gripper from Lesson 10.",
         "beginLessonQuestions": [
           "What do you already know about Arm with Gripper?",
           "What is one thing your team should test carefully today?",
@@ -203,17 +205,18 @@
         "activity": "Project: build a sturdy simple car chassis that rolls straight and can become the base for sensor and steering challenges.",
         "assignment": "Build a simple car. Record how straight it rolled and what you adjusted to reduce wobble or drag.",
         "build": "Simple Car",
-        "lessonDeckUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2012/lesson12_simple_car.html",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%2012/lesson12_simple_car.html",
         "worksheetLabel": "",
         "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2012/lesson12_simple_car.html. Concepts: chassis, axle alignment, wheelbase, friction. Keep good builds for Week 4 sensor upgrades.",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2012/lesson12_simple_car.html. Concepts: chassis, axle alignment, wheelbase, friction. Keep good builds for Week 4 sensor upgrades.",
         "beginLessonQuestions": [
           "What do you already know about Simple Car?",
           "What is one thing your team should test carefully today?",
           "What will make this build successful?"
         ]
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4"
   },
   {
     "id": "week-4",
@@ -227,10 +230,10 @@
         "activity": "Project: add a SPIKE Prime distance sensor to a car and program it to stop before hitting an obstacle.",
         "assignment": "Build and code a distance-sensor car. Record the stop distance that worked best and why.",
         "build": "Car with Distance Sensor",
-        "lessonDeckUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2013/lesson13_distance_sensor_car.html",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%2013/lesson13_distance_sensor_car.html",
         "worksheetLabel": "",
         "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2013/lesson13_distance_sensor_car.html. Concepts: sensor input, thresholds, obstacle detection. Mount the distance sensor forward and tune the stop distance.",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2013/lesson13_distance_sensor_car.html. Concepts: sensor input, thresholds, obstacle detection. Mount the distance sensor forward and tune the stop distance.",
         "beginLessonQuestions": [
           "What do you already know about Car with Distance Sensor?",
           "What is one thing your team should test carefully today?",
@@ -243,10 +246,10 @@
         "activity": "Project: add a color sensor to a car and program it to react to floor colors or line markers.",
         "assignment": "Build and code a color-sensor car. Record how sensor height, speed, and lighting affected detection.",
         "build": "Car with Color Sensor",
-        "lessonDeckUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2014/lesson14_color_sensor_car.html",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%2014/lesson14_color_sensor_car.html",
         "worksheetLabel": "",
         "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2014/lesson14_color_sensor_car.html. Concepts: color detection, sensor mounting, line/color reading. Use colored tape and start with stop-on-red.",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2014/lesson14_color_sensor_car.html. Concepts: color detection, sensor mounting, line/color reading. Use colored tape and start with stop-on-red.",
         "beginLessonQuestions": [
           "What do you already know about Car with Color Sensor?",
           "What is one thing your team should test carefully today?",
@@ -259,10 +262,10 @@
         "activity": "Project: build steering control and tune a driving sequence so the car parks inside a marked box.",
         "assignment": "Build and tune a self-parking steering car. Record the sequence change that improved parking accuracy.",
         "build": "Self-Parking Steering Car",
-        "lessonDeckUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2015/lesson15_self_parking_steering_car.html",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%2015/lesson15_self_parking_steering_car.html",
         "worksheetLabel": "",
         "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2015/lesson15_self_parking_steering_car.html. Concepts: steering linkage, turning radius, sequence tuning. Mark a parking box with tape and adjust one number at a time.",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2015/lesson15_self_parking_steering_car.html. Concepts: steering linkage, turning radius, sequence tuning. Mark a parking box with tape and adjust one number at a time.",
         "beginLessonQuestions": [
           "What do you already know about Self-Parking Steering Car?",
           "What is one thing your team should test carefully today?",
@@ -275,16 +278,17 @@
         "activity": "Project: tune a steering car for a course where control, reliability, and clean driving matter as much as speed.",
         "assignment": "Run the steering race course. Record your best clean run and the tuning choice that improved control.",
         "build": "Steering Race",
-        "lessonDeckUrl": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2016/lesson16_steering_race.html",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%2016/lesson16_steering_race.html",
         "worksheetLabel": "",
         "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2016/lesson16_steering_race.html. Concepts: speed versus accuracy, steering return, course navigation. Clean controlled runs beat crashes.",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2016/lesson16_steering_race.html. Concepts: speed versus accuracy, steering return, course navigation. Clean controlled runs beat crashes.",
         "beginLessonQuestions": [
           "What do you already know about Steering Race?",
           "What is one thing your team should test carefully today?",
           "What will make this build successful?"
         ]
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4"
   }
 ]

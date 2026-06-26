@@ -58,6 +58,8 @@ const fllDataFileNames = [
 const fllSessions = new Map();
 const campHubDir = path.join(__dirname, 'robotics lab', 'Summer Camp', '2026-summer-camp');
 const campSeedDataDir = path.join(campHubDir, 'data');
+const lessonBuildingDir = path.join(__dirname, 'Lesson Building');
+const lessonBuildingSource = 'lesson-building-2026-weeks-1-4';
 const campHubDataDir = process.env.CAMP_DATA_DIR || path.join(platformDataDir, 'camp-hub', '2026-summer-camp', 'data');
 const campUsersFile = path.join(campHubDataDir, 'camp-users.json');
 const campCurriculumFile = path.join(campHubDataDir, 'curriculum.json');
@@ -93,6 +95,7 @@ const coachSessions = new Map();
 // Shared one-time code coaches enter to claim their account and set a password.
 const coachSetupCode = process.env.COACH_SETUP_CODE || 'aifuture2026';
 const masterRosterFile = path.join(platformDataDir, 'master-roster.json');
+const summerRosterSource = 'summer-2026-screenshot-grade-roster';
 const studentPortalCookie = 'student_session';
 const studentPortalSessions = new Map();
 const regularCoachHubs = [
@@ -386,6 +389,15 @@ app.get('/api/coach/admin/users', requireCoachOwner, async (req, res) => {
 	} catch (err) {
 		console.error('Coach admin users load error:', err);
 		return res.status(500).json({ success: false, message: 'Server error loading access control' });
+	}
+});
+
+app.get('/api/coach/admin/data-health', requireCoachOwner, async (req, res) => {
+	try {
+		return res.json(await buildDataHealthReport());
+	} catch (err) {
+		console.error('Data health report error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading data health report' });
 	}
 });
 
@@ -971,6 +983,118 @@ async function writeJsonFile(filePath, data) {
 	await fs.writeFile(filePath, JSON.stringify(data, null, 2));
 }
 
+async function fileSha256(filePath) {
+	try {
+		const raw = await fs.readFile(filePath);
+		return crypto.createHash('sha256').update(raw).digest('hex');
+	} catch (err) {
+		if (err.code === 'ENOENT') return '';
+		throw err;
+	}
+}
+
+async function safeJsonSummary(filePath) {
+	try {
+		const value = await readJsonFile(filePath, null);
+		if (Array.isArray(value)) return { type: 'array', count: value.length };
+		if (value && typeof value === 'object') return { type: 'object', keys: Object.keys(value).length };
+		return { type: typeof value, count: 0 };
+	} catch (err) {
+		return { type: 'invalid-json', error: err.message };
+	}
+}
+
+async function compareSeedDataFiles(label, seedDir, activeDir, fileNames, classifications = {}) {
+	const rows = [];
+	for (const fileName of fileNames) {
+		const seedFile = path.join(seedDir, fileName);
+		const activeFile = path.join(activeDir, fileName);
+		const [seedHash, activeHash, seedSummary, activeSummary] = await Promise.all([
+			fileSha256(seedFile),
+			fileSha256(activeFile),
+			safeJsonSummary(seedFile),
+			safeJsonSummary(activeFile)
+		]);
+		rows.push({
+			area: label,
+			fileName,
+			classification: classifications[fileName] || 'seed-backed',
+			matchesSeed: Boolean(seedHash && activeHash && seedHash === activeHash),
+			activeMissing: !activeHash,
+			seedSummary,
+			activeSummary
+		});
+	}
+	return rows;
+}
+
+async function buildDataHealthReport() {
+	const fllClassifications = {
+		'fll-users.json': 'runtime-users',
+		'team-members.json': 'runtime-roster',
+		'teams.json': 'runtime-teams',
+		'work-logs.json': 'runtime-submissions',
+		'live-lesson.json': 'runtime-live-state'
+	};
+	const campClassifications = {
+		'camp-users.json': 'managed-summer-roster',
+		'curriculum.json': 'managed-lesson-building',
+		'lessons.json': 'managed-lesson-building',
+		'resources.json': 'managed-lesson-building-resource',
+		'classroom-state.json': 'runtime-classroom',
+		'live-lesson.json': 'runtime-live-state',
+		'begin-lesson-responses.json': 'runtime-student-work',
+		'submissions.json': 'runtime-student-work',
+		'print-requests.json': 'runtime-student-work',
+		'project-submissions.json': 'runtime-student-work',
+		'point-events.json': 'runtime-points',
+		'announcements.json': 'runtime-coach-content'
+	};
+	const [fllFiles, campFiles, roster] = await Promise.all([
+		compareSeedDataFiles('FLL Hub', fllSeedDataDir, fllHubDataDir, fllDataFileNames, fllClassifications),
+		compareSeedDataFiles('Summer Camp Hub', campSeedDataDir, campHubDataDir, campDataFileNames, campClassifications),
+		readMasterRoster()
+	]);
+	const rosterSummary = {
+		area: 'Master Roster',
+		fileName: 'master-roster.json',
+		classification: 'managed-summer-roster',
+		summer2026Ready: hasSummer2026Roster(roster),
+		activeSummerClasses: (roster.classes || []).filter((item) => item.term === 'summer' && item.active !== false).map((item) => item.name),
+		summer2026Students: (roster.students || []).filter((student) => student.summerRosterSource === summerRosterSource).length
+	};
+	const findings = [...fllFiles, ...campFiles].filter((item) =>
+		item.activeMissing
+		|| (item.classification === 'seed-backed' && !item.matchesSeed)
+		|| (item.classification.startsWith('managed') && item.activeSummary.type === 'invalid-json')
+	);
+	if (!rosterSummary.summer2026Ready) findings.push(rosterSummary);
+	return {
+		success: true,
+		generatedAt: new Date().toISOString(),
+		findings,
+		files: [...fllFiles, ...campFiles],
+		roster: rosterSummary
+	};
+}
+
+async function logDataHealthReport() {
+	try {
+		const report = await buildDataHealthReport();
+		const findings = Array.isArray(report.findings) ? report.findings : [];
+		if (!findings.length) {
+			console.log('Data health check passed: no stale seed-backed files detected.');
+			return;
+		}
+		console.warn(`Data health check found ${findings.length} item(s) to review.`);
+		for (const item of findings.slice(0, 12)) {
+			console.warn(`- ${item.area || 'Data'} / ${item.fileName || 'unknown'} (${item.classification || 'unknown'})`);
+		}
+	} catch (err) {
+		console.warn('Data health check failed:', err.message);
+	}
+}
+
 async function initializeFllDataDir() {
 	await fs.mkdir(fllHubDataDir, { recursive: true });
 	await Promise.all(fllDataFileNames.map(async (fileName) => {
@@ -1050,6 +1174,58 @@ async function initializeCampDataDir() {
 			}
 		}
 	}));
+	await migrateCampLessonBuildingData();
+}
+
+function hasLessonBuildingCurriculum(curriculum) {
+	if (!Array.isArray(curriculum) || curriculum.length !== 4) return false;
+	return curriculum.every((week) => {
+		if (!week || week.lessonSource !== lessonBuildingSource || !Array.isArray(week.days)) return false;
+		return week.days.every((day) => !day.lessonDeckUrl || String(day.lessonDeckUrl).startsWith('/camp-hub/lessons/'));
+	});
+}
+
+function hasLessonBuildingLessons(lessons) {
+	return Array.isArray(lessons)
+		&& lessons.length === 16
+		&& lessons.every((lesson) => lesson && lesson.lessonSource === lessonBuildingSource);
+}
+
+async function migrateCampLessonBuildingData() {
+	const seedCurriculumFile = path.join(campSeedDataDir, 'curriculum.json');
+	const seedLessonsFile = path.join(campSeedDataDir, 'lessons.json');
+	const seedCurriculum = await readJsonFile(seedCurriculumFile, []);
+	const seedLessons = await readJsonFile(seedLessonsFile, []);
+	const currentCurriculum = await readJsonFile(campCurriculumFile, []);
+	const currentLessons = await readJsonFile(campLessonsFile, []);
+
+	if (hasLessonBuildingCurriculum(seedCurriculum) && !hasLessonBuildingCurriculum(currentCurriculum)) {
+		await writeJsonFile(campCurriculumFile, seedCurriculum);
+	}
+	if (hasLessonBuildingLessons(seedLessons) && !hasLessonBuildingLessons(currentLessons)) {
+		await writeJsonFile(campLessonsFile, seedLessons);
+	}
+
+	const resourcesFile = path.join(campHubDataDir, 'resources.json');
+	const resources = await readJsonFile(resourcesFile, []);
+	if (Array.isArray(resources)) {
+		const lessonDeckResource = {
+			id: 'lesson-deck-home',
+			category: 'Coach Materials',
+			type: 'Folder',
+			label: 'Lesson Decks',
+			description: 'Exact teacher-facing HTML decks from the Lesson Building folder for Lessons 1-16.',
+			url: '/camp-hub/lessons/index.html',
+			roles: ['coach']
+		};
+		const existing = resources.find((item) => item && item.id === lessonDeckResource.id);
+		if (!existing || existing.url !== lessonDeckResource.url || existing.label !== lessonDeckResource.label) {
+			await writeJsonFile(resourcesFile, [
+				...resources.filter((item) => item && item.id !== lessonDeckResource.id),
+				lessonDeckResource
+			]);
+		}
+	}
 }
 
 async function readCampUsers() {
@@ -1157,6 +1333,8 @@ function normalizeLesson(lesson) {
 	return {
 		id: cleanMetaString(source.id || `lesson-${crypto.randomBytes(4).toString('hex')}`, 120),
 		title: cleanMetaString(source.title || 'Untitled lesson', 160),
+		lessonSource: cleanMetaString(source.lessonSource || '', 120),
+		deckUrl: cleanMetaString(source.deckUrl || '', 1000),
 		updatedAt: source.updatedAt || new Date().toISOString(),
 		slides
 	};
@@ -1777,6 +1955,46 @@ function buildDefaultMasterRoster() {
 	};
 }
 
+function summer2026RosterClasses(now = new Date().toISOString()) {
+	return [
+		{ id: 'summer-lego-robotics-1', term: 'summer', program: 'lego-robotics', name: 'Summer LEGO Robotics G2-3', classCode: 'G23', day: 'Weekly', schedule: 'Summer camp G2-3 LEGO Robotics class', active: true, createdAt: now, summerRosterSource },
+		{ id: 'summer-lego-robotics-2', term: 'summer', program: 'lego-robotics', name: 'Summer LEGO Robotics G4-5', classCode: 'G45', day: 'Weekly', schedule: 'Summer camp G4-5 LEGO Robotics class', active: true, createdAt: now, summerRosterSource },
+		{ id: 'summer-ftc', term: 'summer', program: 'ftc', name: 'Summer FTC Robotics G6+', classCode: 'G6PLUS', day: 'Weekly', schedule: 'Summer camp G6+ FTC robotics class', active: true, createdAt: now, summerRosterSource }
+	];
+}
+
+function summer2026RosterStudents() {
+	return [
+		{ name: 'Ella Xue', classId: 'summer-lego-robotics-1', gradeBand: 'G2-3' },
+		{ name: 'Ella Zheng', classId: 'summer-lego-robotics-1', gradeBand: 'G2-3' },
+		{ name: 'Sam Mao', classId: 'summer-lego-robotics-1', gradeBand: 'G2-3' },
+		{ name: 'Owen Zou', classId: 'summer-lego-robotics-1', gradeBand: 'G2-3' },
+		{ name: 'Caitlin Lian', classId: 'summer-lego-robotics-1', gradeBand: 'G2-3' },
+		{ name: 'Andrew Lin', classId: 'summer-lego-robotics-1', gradeBand: 'G2-3' },
+		{ name: 'Jaiden Lin', classId: 'summer-lego-robotics-1', gradeBand: 'G2-3' },
+		{ name: 'Anthony Shen', classId: 'summer-lego-robotics-1', gradeBand: 'G2-3' },
+		{ name: 'Siyu Zhu', classId: 'summer-lego-robotics-1', gradeBand: 'G2-3' },
+		{ name: 'Size Zhu', classId: 'summer-lego-robotics-1', gradeBand: 'G2-3' },
+		{ name: 'Claire Chen', classId: 'summer-lego-robotics-1', gradeBand: 'G2-3' },
+		{ name: 'Olivia Zhu', classId: 'summer-lego-robotics-1', gradeBand: 'G2-3' },
+		{ name: 'Marcus Chen', classId: 'summer-lego-robotics-2', gradeBand: 'G4-5' },
+		{ name: 'Olivia Xue', classId: 'summer-lego-robotics-2', gradeBand: 'G4-5' },
+		{ name: 'Olivia Li', classId: 'summer-lego-robotics-2', gradeBand: 'G4-5' },
+		{ name: 'Cailey Lian', classId: 'summer-lego-robotics-2', gradeBand: 'G4-5' },
+		{ name: 'Hwjiun Ryu', classId: 'summer-lego-robotics-2', gradeBand: 'G4-5' },
+		{ name: 'Jasper Zheng', classId: 'summer-lego-robotics-2', gradeBand: 'G4-5' },
+		{ name: 'Kyle Tao', classId: 'summer-lego-robotics-2', gradeBand: 'G4-5' },
+		{ name: 'Julisa Leung', classId: 'summer-lego-robotics-2', gradeBand: 'G4-5' },
+		{ name: 'Gracelyn Pan', classId: 'summer-lego-robotics-2', gradeBand: 'G4-5' },
+		{ name: 'Christina', classId: 'summer-ftc', gradeBand: 'G6+' },
+		{ name: 'Aaron Zheng', classId: 'summer-ftc', gradeBand: 'G6+' },
+		{ name: 'Ariel Ou', classId: 'summer-ftc', gradeBand: 'G6+' },
+		{ name: 'Anthony Zhu', classId: 'summer-ftc', gradeBand: 'G6+', grade: 'G8' },
+		{ name: 'Isabella Zhu', classId: 'summer-ftc', gradeBand: 'G6+', grade: 'G9' },
+		{ name: 'Eli', classId: 'summer-ftc', gradeBand: 'G6+', grade: 'G9' }
+	];
+}
+
 function normalizeMasterRoster(data) {
 	const fallback = buildDefaultMasterRoster();
 	const source = data && typeof data === 'object' ? data : {};
@@ -1809,6 +2027,151 @@ async function writeMasterRoster(roster) {
 		...normalizeMasterRoster(roster),
 		updatedAt: new Date().toISOString()
 	});
+}
+
+function hasSummer2026Roster(roster) {
+	const normalized = normalizeMasterRoster(roster);
+	const requiredClasses = new Set(summer2026RosterClasses().map((item) => item.id));
+	const activeSummerClasses = normalized.classes
+		.filter((item) => item.term === 'summer' && item.active !== false)
+		.map((item) => item.id);
+	if (activeSummerClasses.length !== requiredClasses.size || activeSummerClasses.some((id) => !requiredClasses.has(id))) return false;
+	const expected = summer2026RosterStudents();
+	return expected.every((entry) => normalized.students.some((student) =>
+		normalizedPersonName(student.name) === normalizedPersonName(entry.name)
+		&& student.summerRosterSource === summerRosterSource
+		&& (Array.isArray(student.enrollments) ? student.enrollments : []).some((enrollment) => enrollment.classId === entry.classId)
+	));
+}
+
+function summerClassNameForId(classId) {
+	const item = summer2026RosterClasses().find((classItem) => classItem.id === classId);
+	return item ? item.name : 'Summer Camp';
+}
+
+async function migrateSummer2026RosterData() {
+	const roster = await readMasterRoster();
+	if (hasSummer2026Roster(roster)) return roster;
+
+	const now = new Date().toISOString();
+	const targetClasses = summer2026RosterClasses(now);
+	const targetClassIds = new Set(targetClasses.map((item) => item.id));
+	const allSummerClassIds = new Set([
+		...targetClassIds,
+		...(roster.classes || []).filter((item) => item.term === 'summer').map((item) => item.id)
+	]);
+
+	const nextClasses = (roster.classes || [])
+		.filter((item) => !targetClassIds.has(item.id))
+		.map((item) => item.term === 'summer' ? { ...item, active: false, updatedAt: now } : item);
+	for (const classItem of targetClasses) {
+		const existing = (roster.classes || []).find((item) => item.id === classItem.id);
+		nextClasses.push({ ...existing, ...classItem, createdAt: existing?.createdAt || classItem.createdAt, updatedAt: now });
+	}
+
+	const students = Array.isArray(roster.students) ? roster.students.map((student) => ({ ...student })) : [];
+	const studentsByName = new Map(students.map((student) => [normalizedPersonName(student.name), student]));
+	const targetNames = new Set();
+	const weeks = ['week-1', 'week-2', 'week-3', 'week-4'];
+
+	for (const entry of summer2026RosterStudents()) {
+		const key = normalizedPersonName(entry.name);
+		targetNames.add(key);
+		let student = studentsByName.get(key);
+		if (!student) {
+			student = {
+				id: `master-summer-2026-${slugify(entry.name)}`,
+				name: entry.name,
+				parentName: '',
+				email: '',
+				phone: '',
+				notes: '',
+				active: true,
+				enrollments: [],
+				createdAt: now
+			};
+			students.push(student);
+			studentsByName.set(key, student);
+		}
+		const nonSummerEnrollments = (Array.isArray(student.enrollments) ? student.enrollments : [])
+			.filter((enrollment) => !allSummerClassIds.has(enrollment.classId));
+		student.name = entry.name;
+		student.active = true;
+		student.enrollments = [...nonSummerEnrollments, { classId: entry.classId, weeks }];
+		student.summerGradeBand = entry.gradeBand;
+		if (entry.grade) student.grade = entry.grade;
+		else if (student.grade && String(student.grade).startsWith('G')) delete student.grade;
+		student.summerRosterSource = summerRosterSource;
+		student.notes = appendRosterNote(student.notes || '', `Summer 2026 roster: ${entry.gradeBand}${entry.grade ? ` (${entry.grade})` : ''}; class ${summerClassNameForId(entry.classId)}.`);
+		student.updatedAt = now;
+	}
+
+	for (const student of students) {
+		const key = normalizedPersonName(student.name);
+		if (targetNames.has(key)) continue;
+		const enrollments = Array.isArray(student.enrollments) ? student.enrollments : [];
+		const filtered = enrollments.filter((enrollment) => !allSummerClassIds.has(enrollment.classId));
+		if (filtered.length !== enrollments.length) {
+			student.enrollments = filtered;
+			student.updatedAt = now;
+		}
+	}
+
+	const migratedRoster = { ...roster, classes: nextClasses, students, updatedAt: now };
+	await writeMasterRoster(migratedRoster);
+	await syncSummer2026CampUsers(migratedRoster);
+	return readMasterRoster();
+}
+
+async function syncSummer2026CampUsers(roster) {
+	const now = new Date().toISOString();
+	const campUsers = await readCampUsers();
+	const existingUsernames = new Set(campUsers.map((user) => String(user.username || '').toLowerCase()).filter(Boolean));
+	const targetNames = new Set(summer2026RosterStudents().map((entry) => normalizedPersonName(entry.name)));
+	const rosterByName = new Map((roster.students || []).map((student) => [normalizedPersonName(student.name), student]));
+
+	for (const user of campUsers) {
+		if (user.role === 'student' && !targetNames.has(normalizedPersonName(user.name)) && user.summerRosterSource !== summerRosterSource) {
+			user.active = false;
+			user.updatedAt = now;
+		}
+	}
+
+	for (const entry of summer2026RosterStudents()) {
+		const key = normalizedPersonName(entry.name);
+		const rosterStudent = rosterByName.get(key);
+		let account = null;
+		if (rosterStudent?.campUserId) {
+			account = campUsers.find((user) => user.id === rosterStudent.campUserId && user.role === 'student');
+		}
+		if (!account) {
+			account = campUsers.find((user) => user.role === 'student' && normalizedPersonName(user.name) === key);
+		}
+		if (!account) {
+			const username = uniqueUsername(entry.name, existingUsernames);
+			existingUsernames.add(username.toLowerCase());
+			account = {
+				id: `camp-student-${slugify(entry.name)}`,
+				username,
+				password_hash: hashScryptPassword(generateStudentPassword()),
+				role: 'student',
+				createdAt: now
+			};
+			campUsers.push(account);
+		}
+		account.name = entry.name;
+		account.active = true;
+		account.className = summerClassNameForId(entry.classId);
+		account.masterStudentId = rosterStudent?.id || account.masterStudentId || '';
+		account.summerGradeBand = entry.gradeBand;
+		if (entry.grade) account.grade = entry.grade;
+		account.summerRosterSource = summerRosterSource;
+		account.updatedAt = now;
+		if (rosterStudent && rosterStudent.campUserId !== account.id) rosterStudent.campUserId = account.id;
+	}
+
+	await writeCampUsers(campUsers);
+	await writeMasterRoster(roster);
 }
 
 function inferMasterHubAccess(student) {
@@ -2438,7 +2801,7 @@ async function getCampHubDataFor(user) {
 		...week,
 		days: (Array.isArray(week.days) ? week.days : []).map((day) => {
 			if (isCoach) return day;
-			const { coachNotes, ...studentDay } = day;
+			const { coachNotes, lessonDeckUrl, worksheetLabel, worksheetUrl, ...studentDay } = day;
 			return studentDay;
 		})
 	}));
@@ -4222,6 +4585,16 @@ app.use('/codelab/api', (req, res, next) => {
 app.use('/api', (req, res, next) => {
 	// Camp hub API routes are registered later on this app — skip the codeLab proxy.
 	if (req.path.startsWith('/camp/')) return next();
+	const localApiPrefixes = [
+		'/coach/',
+		'/master-roster',
+		'/student/',
+		'/parent-inquiry',
+		'/summer-inquiry',
+		'/summer-traffic',
+		'/fll/'
+	];
+	if (localApiPrefixes.some((prefix) => req.path === prefix || req.path.startsWith(prefix))) return next();
 	req.url = `/api${req.url}`;
 	codeLabApp(req, res, next);
 });
@@ -4234,6 +4607,24 @@ app.use('/fll-assets', (req, res, next) => {
 app.get(['/camp-hub/login', '/camp-hub/login/'], (req, res) => {
 	res.sendFile(path.join(campHubDir, 'login.html'));
 });
+
+app.get('/camp-hub/lessons', requireCampAuth, (req, res) => {
+	if (req.campUser.role !== 'coach') {
+		return res.status(403).send('Coach access required');
+	}
+	return res.redirect(302, '/camp-hub/lessons/index.html');
+});
+
+app.use('/camp-hub/lessons', requireCampAuth, (req, res, next) => {
+	if (req.campUser.role !== 'coach') {
+		return res.status(403).send('Coach access required');
+	}
+	return next();
+}, express.static(lessonBuildingDir, {
+	index: ['index.html'],
+	etag: true,
+	lastModified: true
+}));
 
 app.get(['/camp-hub', '/camp-hub/'], requireCampAuth, (req, res) => {
 	res.sendFile(path.join(campHubDir, 'hub.html'));
@@ -5149,10 +5540,39 @@ app.patch('/api/camp/coach/students/:id', requireCampAuth, requireCampCoach, asy
 	}
 });
 
+app.use('/api', (req, res) => {
+	return res.status(404).json({
+		success: false,
+		message: 'API endpoint not found. Redeploy the latest site version if this feature was just added.'
+	});
+});
+
+function encodePathForUrl(filePath) {
+	return String(filePath || '')
+		.split('/')
+		.filter(Boolean)
+		.map((part) => encodeURIComponent(part))
+		.join('/');
+}
+
 app.use((req, res, next) => {
 	const requestPath = decodeURIComponent(req.path || '');
 	const fllStaticRoot = '/robotics lab/FLL Teams/2026-2027-bioglow';
 	const campStaticRoot = '/robotics lab/Summer Camp/2026-summer-camp';
+	if (requestPath === '/Lesson Building' || requestPath.startsWith('/Lesson Building/')) {
+		return requireCampAuth(req, res, () => {
+			if (req.campUser.role !== 'coach') return res.status(403).send('Coach access required');
+			const suffix = requestPath.slice('/Lesson Building'.length).replace(/^\/+/, '') || 'index.html';
+			return res.redirect(302, `/camp-hub/lessons/${encodePathForUrl(suffix)}`);
+		});
+	}
+	if (requestPath === `${campStaticRoot}/lessons` || requestPath.startsWith(`${campStaticRoot}/lessons/`)) {
+		return requireCampAuth(req, res, () => {
+			if (req.campUser.role !== 'coach') return res.status(403).send('Coach access required');
+			const suffix = requestPath.slice(`${campStaticRoot}/lessons`.length).replace(/^\/+/, '') || 'index.html';
+			return res.redirect(302, `/camp-hub/lessons/${encodePathForUrl(suffix)}`);
+		});
+	}
 	if (requestPath.startsWith(`${campStaticRoot}/data/`)) {
 		return res.status(404).send('Not found');
 	}
@@ -5207,7 +5627,9 @@ initializeFllDataDir()
 	.then(() => initializeCampDataDir())
 	.then(() => initializeCoachDataDir())
 	.then(() => initializeMasterRoster())
+	.then(() => migrateSummer2026RosterData())
 	.then(() => ensureStudentPortalUsernames())
+	.then(() => logDataHealthReport())
 	.then(() => {
 		app.listen(PORT, () => console.log(`AI Future Platform running at http://localhost:${PORT}`));
 	})

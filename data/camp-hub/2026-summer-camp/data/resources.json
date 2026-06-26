@@ -70,9 +70,9 @@
     "id": "lesson-deck-home",
     "category": "Coach Materials",
     "type": "Folder",
-    "label": "Lesson Deck Home",
-    "description": "Polished teacher-facing HTML decks for the 16 Summer Camp lessons.",
-    "url": "/robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/index.html",
+    "label": "Lesson Decks",
+    "description": "Exact teacher-facing HTML decks from the Lesson Building folder for Lessons 1-16.",
+    "url": "/camp-hub/lessons/index.html",
     "roles": [
       "coach"
     ]

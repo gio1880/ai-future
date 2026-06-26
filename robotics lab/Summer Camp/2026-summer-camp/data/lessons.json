@@ -90,7 +90,7 @@
         "id": "l1-deck",
         "type": "content",
         "title": "Teacher Deck",
-        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%201/lesson1_lego_technic_assets_version.html",
+        "body": "Full teacher deck: /camp-hub/lessons/Lesson%201/lesson1_lego_technic_assets_version.html",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -104,7 +104,9 @@
         "options": [],
         "correctIndex": -1
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/Lesson%201/lesson1_lego_technic_assets_version.html"
   },
   {
     "id": "w1-tue-bridge-engineering",
@@ -197,7 +199,7 @@
         "id": "l2-deck",
         "type": "content",
         "title": "Teacher Deck",
-        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%202/lesson2_bridge_assets_version.html",
+        "body": "Full teacher deck: /camp-hub/lessons/Lesson%202/lesson2_bridge_assets_version.html",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -211,7 +213,9 @@
         "options": [],
         "correctIndex": -1
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/Lesson%202/lesson2_bridge_assets_version.html"
   },
   {
     "id": "w1-wed-balloon-powered-car",
@@ -304,7 +308,7 @@
         "id": "l3-deck",
         "type": "content",
         "title": "Teacher Deck",
-        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%203/lesson3_spike_prime_assets_version.html",
+        "body": "Full teacher deck: /camp-hub/lessons/Lesson%203/lesson3_spike_prime_assets_version.html",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -318,7 +322,9 @@
         "options": [],
         "correctIndex": -1
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/Lesson%203/lesson3_spike_prime_assets_version.html"
   },
   {
     "id": "w1-thu-catapult-engineering",
@@ -411,7 +417,7 @@
         "id": "l4-deck",
         "type": "content",
         "title": "Teacher Deck",
-        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%204/lesson4_catapult_assets_version.html",
+        "body": "Full teacher deck: /camp-hub/lessons/Lesson%204/lesson4_catapult_assets_version.html",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -425,7 +431,9 @@
         "options": [],
         "correctIndex": -1
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/Lesson%204/lesson4_catapult_assets_version.html"
   },
   {
     "id": "w2-mon-rubber-band-car",
@@ -518,7 +526,7 @@
         "id": "l5-deck",
         "type": "content",
         "title": "Teacher Deck",
-        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%205/lesson5_rubber_band_car.html",
+        "body": "Full teacher deck: /camp-hub/lessons/Lesson%205/lesson5_rubber_band_car.html",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -532,7 +540,9 @@
         "options": [],
         "correctIndex": -1
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/Lesson%205/lesson5_rubber_band_car.html"
   },
   {
     "id": "w2-tue-elevator-lift",
@@ -625,7 +635,7 @@
         "id": "l6-deck",
         "type": "content",
         "title": "Teacher Deck",
-        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%206/lesson6_elevator_lift.html",
+        "body": "Full teacher deck: /camp-hub/lessons/Lesson%206/lesson6_elevator_lift.html",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -639,7 +649,9 @@
         "options": [],
         "correctIndex": -1
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/Lesson%206/lesson6_elevator_lift.html"
   },
   {
     "id": "w2-wed-ferris-wheel",
@@ -732,7 +744,7 @@
         "id": "l7-deck",
         "type": "content",
         "title": "Teacher Deck",
-        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%207/lesson7_ferris_wheel.html",
+        "body": "Full teacher deck: /camp-hub/lessons/Lesson%207/lesson7_ferris_wheel.html",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -746,7 +758,9 @@
         "options": [],
         "correctIndex": -1
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/Lesson%207/lesson7_ferris_wheel.html"
   },
   {
     "id": "w2-thu-marble-run",
@@ -839,7 +853,7 @@
         "id": "l8-deck",
         "type": "content",
         "title": "Teacher Deck",
-        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%208/lesson8_marble_run.html",
+        "body": "Full teacher deck: /camp-hub/lessons/Lesson%208/lesson8_marble_run.html",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -853,7 +867,9 @@
         "options": [],
         "correctIndex": -1
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/Lesson%208/lesson8_marble_run.html"
   },
   {
     "id": "w3-mon-boat-raft",
@@ -946,7 +962,7 @@
         "id": "l9-deck",
         "type": "content",
         "title": "Teacher Deck",
-        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%209/lesson9_boat_raft.html",
+        "body": "Full teacher deck: /camp-hub/lessons/Lesson%209/lesson9_boat_raft.html",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -960,7 +976,9 @@
         "options": [],
         "correctIndex": -1
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/Lesson%209/lesson9_boat_raft.html"
   },
   {
     "id": "w3-tue-gripper",
@@ -1053,7 +1071,7 @@
         "id": "l10-deck",
         "type": "content",
         "title": "Teacher Deck",
-        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2010/lesson10_gripper.html",
+        "body": "Full teacher deck: /camp-hub/lessons/Lesson%2010/lesson10_gripper.html",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -1067,7 +1085,9 @@
         "options": [],
         "correctIndex": -1
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/Lesson%2010/lesson10_gripper.html"
   },
   {
     "id": "w3-wed-arm-with-gripper",
@@ -1160,7 +1180,7 @@
         "id": "l11-deck",
         "type": "content",
         "title": "Teacher Deck",
-        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2011/lesson11_arm_with_gripper.html",
+        "body": "Full teacher deck: /camp-hub/lessons/Lesson%2011/lesson11_arm_with_gripper.html",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -1174,7 +1194,9 @@
         "options": [],
         "correctIndex": -1
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/Lesson%2011/lesson11_arm_with_gripper.html"
   },
   {
     "id": "w3-thu-simple-car",
@@ -1267,7 +1289,7 @@
         "id": "l12-deck",
         "type": "content",
         "title": "Teacher Deck",
-        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2012/lesson12_simple_car.html",
+        "body": "Full teacher deck: /camp-hub/lessons/Lesson%2012/lesson12_simple_car.html",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -1281,7 +1303,9 @@
         "options": [],
         "correctIndex": -1
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/Lesson%2012/lesson12_simple_car.html"
   },
   {
     "id": "w4-mon-distance-sensor-car",
@@ -1374,7 +1398,7 @@
         "id": "l13-deck",
         "type": "content",
         "title": "Teacher Deck",
-        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2013/lesson13_distance_sensor_car.html",
+        "body": "Full teacher deck: /camp-hub/lessons/Lesson%2013/lesson13_distance_sensor_car.html",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -1388,7 +1412,9 @@
         "options": [],
         "correctIndex": -1
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/Lesson%2013/lesson13_distance_sensor_car.html"
   },
   {
     "id": "w4-tue-color-sensor-car",
@@ -1481,7 +1507,7 @@
         "id": "l14-deck",
         "type": "content",
         "title": "Teacher Deck",
-        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2014/lesson14_color_sensor_car.html",
+        "body": "Full teacher deck: /camp-hub/lessons/Lesson%2014/lesson14_color_sensor_car.html",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -1495,7 +1521,9 @@
         "options": [],
         "correctIndex": -1
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/Lesson%2014/lesson14_color_sensor_car.html"
   },
   {
     "id": "w4-wed-self-parking-steering-car",
@@ -1588,7 +1616,7 @@
         "id": "l15-deck",
         "type": "content",
         "title": "Teacher Deck",
-        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2015/lesson15_self_parking_steering_car.html",
+        "body": "Full teacher deck: /camp-hub/lessons/Lesson%2015/lesson15_self_parking_steering_car.html",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -1602,7 +1630,9 @@
         "options": [],
         "correctIndex": -1
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/Lesson%2015/lesson15_self_parking_steering_car.html"
   },
   {
     "id": "w4-thu-steering-race",
@@ -1695,7 +1725,7 @@
         "id": "l16-deck",
         "type": "content",
         "title": "Teacher Deck",
-        "body": "Full teacher deck: /robotics%20lab/Summer%20Camp/2026-summer-camp/lessons/Lesson%2016/lesson16_steering_race.html",
+        "body": "Full teacher deck: /camp-hub/lessons/Lesson%2016/lesson16_steering_race.html",
         "image": "",
         "options": [],
         "correctIndex": -1
@@ -1709,6 +1739,8 @@
         "options": [],
         "correctIndex": -1
       }
-    ]
+    ],
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/Lesson%2016/lesson16_steering_race.html"
   }
 ]

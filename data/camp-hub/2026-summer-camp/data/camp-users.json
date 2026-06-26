@@ -40,7 +40,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G2-3",
-    "masterStudentId": "master-summer-2026-ella-xue"
+    "masterStudentId": "master-summer-2026-ella-xue",
+    "summerGradeBand": "G2-3",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-ella-zheng",
@@ -50,7 +53,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G2-3",
-    "masterStudentId": "master-summer-2026-ella-zheng"
+    "masterStudentId": "master-summer-2026-ella-zheng",
+    "summerGradeBand": "G2-3",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-sam-mao",
@@ -60,7 +66,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G2-3",
-    "masterStudentId": "master-code-lab-smao"
+    "masterStudentId": "master-code-lab-smao",
+    "summerGradeBand": "G2-3",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-owen-zou",
@@ -70,7 +79,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G2-3",
-    "masterStudentId": "master-code-lab-ozou"
+    "masterStudentId": "master-code-lab-ozou",
+    "summerGradeBand": "G2-3",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-caitlin-lian",
@@ -80,7 +92,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G2-3",
-    "masterStudentId": "master-summer-2026-caitlin-lian"
+    "masterStudentId": "master-summer-2026-caitlin-lian",
+    "summerGradeBand": "G2-3",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-andrew-lin",
@@ -90,7 +105,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G2-3",
-    "masterStudentId": "master-summer-2026-andrew-lin"
+    "masterStudentId": "master-summer-2026-andrew-lin",
+    "summerGradeBand": "G2-3",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-jaiden-lin",
@@ -100,7 +118,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G2-3",
-    "masterStudentId": "master-summer-2026-jaiden-lin"
+    "masterStudentId": "master-summer-2026-jaiden-lin",
+    "summerGradeBand": "G2-3",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-anthony-shen",
@@ -110,7 +131,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G2-3",
-    "masterStudentId": "master-summer-2026-anthony-shen"
+    "masterStudentId": "master-summer-2026-anthony-shen",
+    "summerGradeBand": "G2-3",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-siyu-zhu",
@@ -120,7 +144,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G2-3",
-    "masterStudentId": "master-summer-2026-siyu-zhu"
+    "masterStudentId": "master-summer-2026-siyu-zhu",
+    "summerGradeBand": "G2-3",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-size-zhu",
@@ -130,7 +157,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G2-3",
-    "masterStudentId": "master-summer-2026-size-zhu"
+    "masterStudentId": "master-summer-2026-size-zhu",
+    "summerGradeBand": "G2-3",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-claire-chen",
@@ -140,7 +170,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G2-3",
-    "masterStudentId": "master-summer-2026-claire-chen"
+    "masterStudentId": "master-summer-2026-claire-chen",
+    "summerGradeBand": "G2-3",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-olivia-zhu",
@@ -150,7 +183,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G2-3",
-    "masterStudentId": "master-summer-2026-olivia-zhu"
+    "masterStudentId": "master-summer-2026-olivia-zhu",
+    "summerGradeBand": "G2-3",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-marcus-chen",
@@ -160,7 +196,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G4-5",
-    "masterStudentId": "master-code-lab-mchen"
+    "masterStudentId": "master-code-lab-mchen",
+    "summerGradeBand": "G4-5",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-olivia-xue",
@@ -170,7 +209,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G4-5",
-    "masterStudentId": "master-summer-2026-olivia-xue"
+    "masterStudentId": "master-summer-2026-olivia-xue",
+    "summerGradeBand": "G4-5",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-olivia-li",
@@ -180,7 +222,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G4-5",
-    "masterStudentId": "master-summer-2026-olivia-li"
+    "masterStudentId": "master-summer-2026-olivia-li",
+    "summerGradeBand": "G4-5",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-cailey-lian",
@@ -190,7 +235,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G4-5",
-    "masterStudentId": "master-code-lab-clian"
+    "masterStudentId": "master-code-lab-clian",
+    "summerGradeBand": "G4-5",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-hwijun-ryu",
@@ -198,9 +246,10 @@
     "username": "hwijunryu",
     "password_hash": "8bd3f60b1e83d9bbf3e6ed5cb554ed22:4c20368e87617397d488861f981c6a76acf8d0971f5486d48b8b4049e616825137ed2bd96a4e91957d496da15c4b8bf0abcc63e2653cd07e50599f21985a9eb0",
     "role": "student",
-    "active": true,
+    "active": false,
     "className": "Summer LEGO Robotics G4-5",
-    "masterStudentId": "master-code-lab-hryu"
+    "masterStudentId": "master-code-lab-hryu",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-jasper-zheng",
@@ -210,7 +259,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G4-5",
-    "masterStudentId": "master-code-lab-jzheng"
+    "masterStudentId": "master-code-lab-jzheng",
+    "summerGradeBand": "G4-5",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-kyle-tao",
@@ -220,7 +272,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G4-5",
-    "masterStudentId": "master-code-lab-ktao"
+    "masterStudentId": "master-code-lab-ktao",
+    "summerGradeBand": "G4-5",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-julisa-leung",
@@ -230,7 +285,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G4-5",
-    "masterStudentId": "master-code-lab-jleung"
+    "masterStudentId": "master-code-lab-jleung",
+    "summerGradeBand": "G4-5",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-gracelyn-pan",
@@ -240,7 +298,10 @@
     "role": "student",
     "active": true,
     "className": "Summer LEGO Robotics G4-5",
-    "masterStudentId": "master-summer-2026-gracelyn-pan"
+    "masterStudentId": "master-summer-2026-gracelyn-pan",
+    "summerGradeBand": "G4-5",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-christina",
@@ -250,7 +311,10 @@
     "role": "student",
     "active": true,
     "className": "Summer FTC Robotics G6+",
-    "masterStudentId": "master-summer-2026-christina"
+    "masterStudentId": "master-summer-2026-christina",
+    "summerGradeBand": "G6+",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-aaron-zheng",
@@ -260,7 +324,10 @@
     "role": "student",
     "active": true,
     "className": "Summer FTC Robotics G6+",
-    "masterStudentId": "master-summer-2026-aaron-zheng"
+    "masterStudentId": "master-summer-2026-aaron-zheng",
+    "summerGradeBand": "G6+",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-ariel-ou",
@@ -270,7 +337,10 @@
     "role": "student",
     "active": true,
     "className": "Summer FTC Robotics G6+",
-    "masterStudentId": "master-code-lab-aou"
+    "masterStudentId": "master-code-lab-aou",
+    "summerGradeBand": "G6+",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-anthony-zhu",
@@ -280,7 +350,11 @@
     "role": "student",
     "active": true,
     "className": "Summer FTC Robotics G6+",
-    "masterStudentId": "master-code-lab-azhu"
+    "masterStudentId": "master-code-lab-azhu",
+    "summerGradeBand": "G6+",
+    "grade": "G8",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-isabella-zhu",
@@ -290,7 +364,11 @@
     "role": "student",
     "active": true,
     "className": "Summer FTC Robotics G6+",
-    "masterStudentId": "master-code-lab-izhu"
+    "masterStudentId": "master-code-lab-izhu",
+    "summerGradeBand": "G6+",
+    "grade": "G9",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   },
   {
     "id": "camp-student-eli",
@@ -300,6 +378,24 @@
     "role": "student",
     "active": true,
     "className": "Summer FTC Robotics G6+",
-    "masterStudentId": "master-summer-2026-eli"
+    "masterStudentId": "master-summer-2026-eli",
+    "summerGradeBand": "G6+",
+    "grade": "G9",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
+  },
+  {
+    "id": "camp-student-hwjiun-ryu",
+    "username": "hwjiunryu",
+    "password_hash": "4b9cc9bbee2c1a0356b08df6bf9d4e62:b5719845e3d513000ad3dbff02db09c033559125a69905d25061d5e8a1b364e4291cdc9240e7d800d4ad56924e1d9ac8209b0f5d3768116fc090047186c751b5",
+    "role": "student",
+    "createdAt": "2026-06-25T22:57:26.696Z",
+    "name": "Hwjiun Ryu",
+    "active": true,
+    "className": "Summer LEGO Robotics G4-5",
+    "masterStudentId": "master-summer-2026-hwjiun-ryu",
+    "summerGradeBand": "G4-5",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-25T22:57:26.696Z"
   }
 ]

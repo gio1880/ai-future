@@ -238,6 +238,23 @@
 
     .day-edit textarea:focus, .day-edit input:focus { border-color: var(--sun); }
 
+    .deck-open-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 8px 0 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      background: var(--sky);
+      color: white;
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 6px 16px rgba(0,0,0,.12);
+    }
+
+    .deck-open-btn:hover { filter: brightness(.96); }
+
     .day-save-row {
       display: flex;
       align-items: center;
@@ -1204,9 +1221,9 @@
                     <input data-field="worksheetLabel" value="${esc(day.worksheetLabel || '')}" placeholder="e.g. Gear Ratio Worksheet" />
                     <label>Worksheet or PDF URL</label>
                     <input data-field="worksheetUrl" value="${esc(day.worksheetUrl || '')}" placeholder="https://... or /path/to/file.pdf" />
-                    ${day.lessonDeckUrl ? `<a class="mini-link" href="${esc(day.lessonDeckUrl)}" target="_blank" rel="noreferrer">Open Lesson Deck -></a>` : ''}
+                    ${day.lessonDeckUrl ? `<a class="deck-open-btn" href="${esc(day.lessonDeckUrl)}" target="_blank" rel="noreferrer">Open exact Lesson Building deck</a>` : ''}
                     <label>Lesson deck URL</label>
-                    <input data-field="lessonDeckUrl" value="${esc(day.lessonDeckUrl || '')}" placeholder="/robotics lab/Summer Camp/2026-summer-camp/lessons/..." />
+                    <input data-field="lessonDeckUrl" value="${esc(day.lessonDeckUrl || '')}" placeholder="/camp-hub/lessons/..." />
                     <label>Coach notes (private — coaches only)</label>
                     <textarea rows="2" data-field="coachNotes">${esc(day.coachNotes)}</textarea>
                     <div class="warmup-box">
