@@ -1074,6 +1074,7 @@ async function buildDataHealthReport() {
 		|| (item.classification.startsWith('managed') && item.activeSummary.type === 'invalid-json')
 	);
 	if (!rosterSummary.summer2026Ready) findings.push(rosterSummary);
+	if (!rosterSummary.demoStudentReady) findings.push({ ...rosterSummary, issue: 'Demo student account is missing' });
 	return {
 		success: true,
 		generatedAt: new Date().toISOString(),
@@ -2143,14 +2144,29 @@ async function migrateSummer2026RosterData() {
 		}
 	}
 
-	const demoIndex = students.findIndex((student) => student.id === summerDemoStudentId || String(student.portalUsername || '').toLowerCase() === 'demo');
-	const demoStudent = { ...(demoIndex >= 0 ? students[demoIndex] : {}), ...summerDemoStudentTemplate(now), createdAt: demoIndex >= 0 ? (students[demoIndex].createdAt || now) : now };
-	if (demoIndex >= 0) students[demoIndex] = demoStudent;
-	else students.push(demoStudent);
-
 	const migratedRoster = { ...roster, classes: nextClasses, students, updatedAt: now };
 	await writeMasterRoster(migratedRoster);
 	await syncSummer2026CampUsers(migratedRoster);
+	return readMasterRoster();
+}
+
+async function ensureSummerDemoStudent() {
+	const roster = await readMasterRoster();
+	const now = new Date().toISOString();
+	const students = Array.isArray(roster.students) ? roster.students.map((student) => ({ ...student })) : [];
+	const demoIndex = students.findIndex((student) => student.id === summerDemoStudentId || String(student.portalUsername || '').toLowerCase() === 'demo');
+	const existing = demoIndex >= 0 ? students[demoIndex] : {};
+	const demoStudent = {
+		...existing,
+		...summerDemoStudentTemplate(now),
+		createdAt: existing.createdAt || now,
+		updatedAt: now
+	};
+	if (demoIndex >= 0) students[demoIndex] = demoStudent;
+	else students.push(demoStudent);
+	const nextRoster = { ...roster, students, updatedAt: now };
+	await writeMasterRoster(nextRoster);
+	await syncSummer2026CampUsers(nextRoster);
 	return readMasterRoster();
 }
 
@@ -5685,6 +5701,7 @@ initializeFllDataDir()
 	.then(() => initializeCoachDataDir())
 	.then(() => initializeMasterRoster())
 	.then(() => migrateSummer2026RosterData())
+	.then(() => ensureSummerDemoStudent())
 	.then(() => ensureStudentPortalUsernames())
 	.then(() => logDataHealthReport())
 	.then(() => {
