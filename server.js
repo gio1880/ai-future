@@ -96,6 +96,8 @@ const coachSessions = new Map();
 const coachSetupCode = process.env.COACH_SETUP_CODE || 'aifuture2026';
 const masterRosterFile = path.join(platformDataDir, 'master-roster.json');
 const summerRosterSource = 'summer-2026-screenshot-grade-roster';
+const summerDemoStudentId = 'master-demo-summer-camper';
+const summerDemoCampUserId = 'camp-demo-summer-camper';
 const studentPortalCookie = 'student_session';
 const studentPortalSessions = new Map();
 const regularCoachHubs = [
@@ -750,14 +752,16 @@ app.post('/api/student/login', async (req, res) => {
 		let classItem = null;
 		let student = null;
 		if (classCode) {
-			classItem = (roster.classes || []).find((item) =>
-				item.active !== false && normalizeClassCode(item.classCode || '') === classCode
-			);
+			classItem = classCode === 'DEMO'
+				? { id: 'demo-summer-camp', term: 'summer', name: 'Demo Summer Camp', classCode: 'DEMO', active: true }
+				: (roster.classes || []).find((item) =>
+					item.active !== false && normalizeClassCode(item.classCode || '') === classCode
+				);
 			student = roster.students.find((s) =>
 				String(s.portalUsername || '').toLowerCase() === username
 				&& s.active !== false
 				&& classItem
-				&& studentIsInClass(s, classItem.id)
+				&& (classCode === 'DEMO' ? s.demoAccount === true : studentIsInClass(s, classItem.id))
 			);
 			if (!classItem || !student) {
 				return res.status(401).json({ success: false, message: 'Check your class code and username, then try again.' });
@@ -1061,7 +1065,8 @@ async function buildDataHealthReport() {
 		classification: 'managed-summer-roster',
 		summer2026Ready: hasSummer2026Roster(roster),
 		activeSummerClasses: (roster.classes || []).filter((item) => item.term === 'summer' && item.active !== false).map((item) => item.name),
-		summer2026Students: (roster.students || []).filter((student) => student.summerRosterSource === summerRosterSource).length
+		summer2026Students: (roster.students || []).filter((student) => student.summerRosterSource === summerRosterSource && student.demoAccount !== true).length,
+		demoStudentReady: (roster.students || []).some((student) => student.demoAccount === true && String(student.portalUsername || '').toLowerCase() === 'demo')
 	};
 	const findings = [...fllFiles, ...campFiles].filter((item) =>
 		item.activeMissing
@@ -1995,6 +2000,26 @@ function summer2026RosterStudents() {
 	];
 }
 
+function summerDemoStudentTemplate(now = new Date().toISOString()) {
+	return {
+		id: summerDemoStudentId,
+		name: 'Demo Student',
+		parentName: '',
+		email: '',
+		phone: '',
+		notes: 'Demo account for staff testing. Not a real camper.',
+		active: true,
+		demoAccount: true,
+		enrollments: [{ classId: 'summer-lego-robotics-1', weeks: ['week-1', 'week-2', 'week-3', 'week-4'] }],
+		portalUsername: 'demo',
+		summerGradeBand: 'Demo',
+		summerRosterSource,
+		campUserId: summerDemoCampUserId,
+		createdAt: now,
+		updatedAt: now
+	};
+}
+
 function normalizeMasterRoster(data) {
 	const fallback = buildDefaultMasterRoster();
 	const source = data && typeof data === 'object' ? data : {};
@@ -2107,6 +2132,7 @@ async function migrateSummer2026RosterData() {
 	}
 
 	for (const student of students) {
+		if (student.demoAccount === true) continue;
 		const key = normalizedPersonName(student.name);
 		if (targetNames.has(key)) continue;
 		const enrollments = Array.isArray(student.enrollments) ? student.enrollments : [];
@@ -2116,6 +2142,11 @@ async function migrateSummer2026RosterData() {
 			student.updatedAt = now;
 		}
 	}
+
+	const demoIndex = students.findIndex((student) => student.id === summerDemoStudentId || String(student.portalUsername || '').toLowerCase() === 'demo');
+	const demoStudent = { ...(demoIndex >= 0 ? students[demoIndex] : {}), ...summerDemoStudentTemplate(now), createdAt: demoIndex >= 0 ? (students[demoIndex].createdAt || now) : now };
+	if (demoIndex >= 0) students[demoIndex] = demoStudent;
+	else students.push(demoStudent);
 
 	const migratedRoster = { ...roster, classes: nextClasses, students, updatedAt: now };
 	await writeMasterRoster(migratedRoster);
@@ -2131,6 +2162,7 @@ async function syncSummer2026CampUsers(roster) {
 	const rosterByName = new Map((roster.students || []).map((student) => [normalizedPersonName(student.name), student]));
 
 	for (const user of campUsers) {
+		if (user.demoAccount === true) continue;
 		if (user.role === 'student' && !targetNames.has(normalizedPersonName(user.name)) && user.summerRosterSource !== summerRosterSource) {
 			user.active = false;
 			user.updatedAt = now;
@@ -2169,6 +2201,31 @@ async function syncSummer2026CampUsers(roster) {
 		account.updatedAt = now;
 		if (rosterStudent && rosterStudent.campUserId !== account.id) rosterStudent.campUserId = account.id;
 	}
+
+	const demoRosterStudent = (roster.students || []).find((student) => student.id === summerDemoStudentId || String(student.portalUsername || '').toLowerCase() === 'demo');
+	let demoAccount = campUsers.find((user) => user.id === summerDemoCampUserId || user.demoAccount === true || String(user.username || '').toLowerCase() === 'demo');
+	if (!demoAccount) {
+		demoAccount = {
+			id: summerDemoCampUserId,
+			username: 'demo',
+			password_hash: hashScryptPassword(generateStudentPassword()),
+			role: 'student',
+			createdAt: now
+		};
+		campUsers.push(demoAccount);
+	}
+	demoAccount.id = summerDemoCampUserId;
+	demoAccount.name = 'Demo Student';
+	demoAccount.username = 'demo';
+	demoAccount.role = 'student';
+	demoAccount.active = true;
+	demoAccount.className = 'Demo Student';
+	demoAccount.masterStudentId = demoRosterStudent?.id || summerDemoStudentId;
+	demoAccount.demoAccount = true;
+	demoAccount.summerGradeBand = 'Demo';
+	demoAccount.summerRosterSource = summerRosterSource;
+	demoAccount.updatedAt = now;
+	if (demoRosterStudent && demoRosterStudent.campUserId !== demoAccount.id) demoRosterStudent.campUserId = demoAccount.id;
 
 	await writeCampUsers(campUsers);
 	await writeMasterRoster(roster);
@@ -4028,7 +4085,7 @@ app.get('/api/fll/coach/roster', requireFllAuth, requireFllCoach, async (req, re
 			readJsonFile(path.join(fllHubDataDir, 'season.json'), {})
 		]);
 		const students = users
-			.filter((user) => user.role === 'student')
+			.filter((user) => user.role === 'student' && user.demoAccount !== true)
 			.map((user) => ({
 				id: user.id,
 				name: user.name,

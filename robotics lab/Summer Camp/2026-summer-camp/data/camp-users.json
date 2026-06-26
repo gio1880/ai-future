@@ -301,5 +301,20 @@
     "active": true,
     "className": "Summer FTC Robotics G6+",
     "masterStudentId": "master-summer-2026-eli"
+  },
+  {
+    "id": "camp-demo-summer-camper",
+    "username": "demo",
+    "password_hash": "",
+    "role": "student",
+    "createdAt": "2026-06-26T23:13:12.327Z",
+    "name": "Demo Student",
+    "active": true,
+    "className": "Demo Student",
+    "masterStudentId": "master-demo-summer-camper",
+    "demoAccount": true,
+    "summerGradeBand": "Demo",
+    "summerRosterSource": "summer-2026-screenshot-grade-roster",
+    "updatedAt": "2026-06-26T23:13:12.327Z"
   }
 ]
