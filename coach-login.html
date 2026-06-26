@@ -171,8 +171,8 @@
     <!-- FIRST-TIME SETUP -->
     <form id="setupForm" autocomplete="off" hidden>
       <label>
-        Your name
-        <select id="coachSelect" required></select>
+        Username
+        <input id="setupUsername" autocomplete="username" required>
       </label>
       <label>
         Setup code <span style="font-weight:500;color:var(--muted)">(ask your admin)</span>
@@ -201,7 +201,7 @@
     const setupMsg = document.getElementById('setupMsg');
     const submitButton = document.getElementById('submitButton');
     const setupButton = document.getElementById('setupButton');
-    const coachSelect = document.getElementById('coachSelect');
+    const setupUsername = document.getElementById('setupUsername');
     const title = document.getElementById('title');
     const subtitle = document.getElementById('subtitle');
     const helper = document.getElementById('helper');
@@ -225,30 +225,13 @@
       }
     }
 
-    async function loadSetupList() {
-      try {
-        const r = await fetch('/api/coach/setup/list', { cache: 'no-store' });
-        const data = await parseJsonResponse(r, 'Could not load the coach setup list. The site may need the latest deploy.');
-        if (!r.ok || !data.success) throw new Error(data.message || 'Could not load the coach setup list.');
-        const list = (data && data.coaches) || [];
-        coachSelect.innerHTML = list.length
-          ? list.map(c => `<option value="${c.username}">${c.name} (username: ${c.username})${c.needsSetup ? ' - needs setup' : ''}</option>`).join('')
-          : '<option value="">No coach accounts found</option>';
-        return list.length;
-      } catch (err) {
-        setupMsg.textContent = err.message || 'Could not load the coach setup list.';
-        coachSelect.innerHTML = '<option value="">Coach list unavailable</option>';
-        return 0;
-      }
-    }
-
     function showSetup() {
       loginForm.hidden = true; setupForm.hidden = false;
       title.textContent = 'Set or Reset Password';
       title.classList.add('small');
-      subtitle.textContent = 'Pick your name, enter the setup code, and choose a password.';
-      helper.textContent = 'Your username is shown next to your name. Use this same password for Coach Portal, Camp Hub, and FLL Hub.';
-      loadSetupList();
+      subtitle.textContent = 'Enter your username and the setup code, then choose a password.';
+      helper.textContent = 'Use this same password for Coach Portal, Camp Hub, and FLL Hub.';
+      setupUsername.focus();
     }
     function showLogin() {
       setupForm.hidden = true; loginForm.hidden = false;
@@ -291,7 +274,7 @@
       try {
         const response = await fetch('/api/coach/setup', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: coachSelect.value, code: document.getElementById('setupCode').value, password: pw })
+          body: JSON.stringify({ username: setupUsername.value, code: document.getElementById('setupCode').value, password: pw })
         });
         const result = await parseJsonResponse(response, 'Password setup returned an unexpected response. The site may need the latest deploy.');
         if (!response.ok || !result.success) throw new Error(result.message || 'Setup failed');

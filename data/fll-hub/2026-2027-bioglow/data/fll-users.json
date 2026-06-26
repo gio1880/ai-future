@@ -3,7 +3,7 @@
     "id": "coach-default",
     "name": "Test Coach",
     "username": "coach",
-    "password_hash": "b69af1e4823402b21ff5b2b9b20fe07c:41597e88921815f903a47818cf8819a96fec4467e6d21f19a1603a293fb5d9025576397a3d7c226e3390bca60bdfc79a4d55101090f23ceeb9fb675e8667d836",
+    "password_hash": "b1ec0df310fbdbc58a307e1ef7cfa998:23d2cd6a7ffbfc5dc5a5e7a193ce0f7c56770a5c4ac1c4dc3717dfe469d0698f1d08e64693df8b6e5514f7a7fc25929dc3681bb37d8d7cd451dfb100f195c370",
     "role": "coach",
     "teamId": null,
     "active": true

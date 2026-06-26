@@ -1054,6 +1054,22 @@
       .skill-manage-cols { grid-template-columns: 1fr; }
       .skill-add-grid { grid-template-columns: 60px 1fr; }
     }
+
+    /* ── Lesson Slides (present exact decks) ── */
+    .teacher-decks { margin-bottom: 22px; border: 1.5px solid var(--sun-mid); }
+    .teacher-decks .present-today {
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 16px; padding: 14px 22px; margin: 4px 0 18px; text-decoration: none;
+    }
+    .deck-list { display: grid; gap: 8px; }
+    .deck-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 12px 14px; border: 1.5px solid var(--line); border-radius: var(--radius-sm); background: #fff;
+    }
+    .deck-row.is-today { border-color: var(--sun); background: var(--sun-light); }
+    .deck-row .deck-info strong { display: block; font-size: 14px; }
+    .deck-row .deck-build { font-size: 12.5px; color: var(--muted); font-weight: 700; }
+    .deck-row .btn { text-decoration: none; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -2448,10 +2464,38 @@
       `;
     }
 
+    // The exact Lesson Building decks (rich HTML slideshows) — coaches present these on the TV.
+    function renderTeacherDecks() {
+      const today = todayKey();
+      const days = [];
+      (hubData.curriculum || []).forEach(week => (week.days || []).forEach(day => {
+        if (day.lessonDeckUrl) days.push({ ...day, weekLabel: week.label });
+      }));
+      if (!days.length) return '';
+      const todayDeck = days.find(d => d.date === today);
+      return `
+        <div class="card teacher-decks">
+          <div class="section-title">📽️ Lesson Slides — present on the TV</div>
+          <p class="section-sub">Your exact Lesson Building decks. Click <strong>Present</strong> to open the full slideshow in a new tab, then use the on-screen arrows (or ← → keys) to move through it. (These are teacher decks — show them on the TV, not on camper iPads.)</p>
+          ${todayDeck ? `<a class="btn btn-primary present-today" href="${esc(todayDeck.lessonDeckUrl)}" target="_blank" rel="noreferrer">▶ Present today's slides${todayDeck.build ? ` — ${esc(todayDeck.build)}` : ''}</a>` : ''}
+          <div class="deck-list">
+            ${days.map(d => `
+              <div class="deck-row ${d.date === today ? 'is-today' : ''}">
+                <div class="deck-info">
+                  <strong>${esc(d.weekLabel)} · ${esc(fmt(d.date, { weekday: 'short', month: 'short', day: 'numeric' }))}${d.date === today ? ' · TODAY' : ''}</strong>
+                  <span class="deck-build">${esc(d.build || 'Lesson')}</span>
+                </div>
+                <a class="btn btn-ghost" href="${esc(d.lessonDeckUrl)}" target="_blank" rel="noreferrer">▶ Present</a>
+              </div>`).join('')}
+          </div>
+        </div>`;
+    }
+
     function renderLessonList() {
       return `
-        <div class="section-title">🎥 Live Lessons</div>
-        <p class="section-sub">Build a slide deck, then press <strong>Present</strong>. Campers tap “Join lesson” on their iPad and follow along — including question slides they answer live.</p>
+        ${renderTeacherDecks()}
+        <div class="section-title">🎥 Interactive Live Lessons (camper iPads)</div>
+        <p class="section-sub">Optional: build a quick slide deck with questions campers answer live on their iPads (Kahoot-style). For your main teaching, use the Lesson Slides above.</p>
         <div style="margin-bottom:16px"><button class="btn btn-primary" onclick="newLesson()">➕ New lesson</button></div>
         ${lessons.length ? lessons.map(l => {
           const qn = l.slides.filter(s => s.type === 'question').length;
