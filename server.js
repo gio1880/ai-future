@@ -4174,6 +4174,65 @@ app.post('/api/fll/live/answer', requireFllAuth, requireFllStudent, async (req, 
 	}
 });
 
+app.get('/api/fll/coach/live', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const live = await readFllLiveLesson();
+		return res.json({ success: true, live, tally: liveResponseTally(live) });
+	} catch (err) {
+		console.error('FLL coach live load error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading live lesson' });
+	}
+});
+
+app.post('/api/fll/coach/live/start', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const live = await readFllLiveLesson();
+		if (!live.slides.length) return res.status(400).json({ success: false, message: 'No slides are available to present' });
+		live.active = true;
+		live.kind = 'slides';
+		live.currentIndex = 0;
+		live.startedAt = new Date().toISOString();
+		live.responses = live.responses && typeof live.responses === 'object' ? live.responses : {};
+		await writeFllLiveLesson(live);
+		return res.json({ success: true, live, tally: liveResponseTally(live) });
+	} catch (err) {
+		console.error('FLL coach live start error:', err);
+		return res.status(500).json({ success: false, message: 'Server error starting live lesson' });
+	}
+});
+
+app.post('/api/fll/coach/live/slide', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const live = await readFllLiveLesson();
+		if (!live.slides.length) return res.status(400).json({ success: false, message: 'No slides are available' });
+		const index = Number(req.body.index);
+		if (!Number.isInteger(index) || index < 0 || index >= live.slides.length) {
+			return res.status(400).json({ success: false, message: 'Invalid slide index' });
+		}
+		live.active = true;
+		live.kind = 'slides';
+		live.currentIndex = index;
+		if (!live.startedAt) live.startedAt = new Date().toISOString();
+		await writeFllLiveLesson(live);
+		return res.json({ success: true, live, tally: liveResponseTally(live) });
+	} catch (err) {
+		console.error('FLL coach live slide error:', err);
+		return res.status(500).json({ success: false, message: 'Server error changing slide' });
+	}
+});
+
+app.post('/api/fll/coach/live/stop', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const live = await readFllLiveLesson();
+		live.active = false;
+		await writeFllLiveLesson(live);
+		return res.json({ success: true, live, tally: liveResponseTally(live) });
+	} catch (err) {
+		console.error('FLL coach live stop error:', err);
+		return res.status(500).json({ success: false, message: 'Server error stopping live lesson' });
+	}
+});
+
 app.get(['/fll-hub/coach', '/fll-hub/coach/'], requireFllAuth, (req, res) => {
 	if (req.fllUser.role !== 'coach') {
 		return res.redirect(302, '/fll-hub/student');

@@ -160,6 +160,59 @@
     .form-msg.error { color: #d93025; }
     .form-msg.success { color: #1e8e5a; }
 
+    .live-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 260px;
+      gap: 18px;
+      align-items: start;
+    }
+    .live-card {
+      background: white;
+      border: 1.5px solid #e8eaed;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .live-status {
+      display: inline-flex;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 6px 12px;
+      background: #f1f3f4;
+      color: #5f6368;
+      margin-bottom: 14px;
+    }
+    .live-status.on { background: #e6f4ea; color: #1e8e5a; }
+    .live-slide-title { font-size: 26px; font-weight: 900; line-height: 1.1; margin: 4px 0 14px; }
+    .live-slide-body { color: #3c4043; font-size: 16px; line-height: 1.7; white-space: pre-line; }
+    .live-controls { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+    .live-side-list { display: grid; gap: 8px; }
+    .live-side-item {
+      background: #f8f9fa;
+      border: 1.5px solid #e8eaed;
+      border-radius: 10px;
+      color: #3c4043;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 10px;
+      text-align: left;
+    }
+    .live-side-item.active { background: #e6f4ea; border-color: #1e8e5a; color: #166c44; }
+    .live-answers { display: grid; gap: 8px; margin-top: 14px; }
+    .live-answer-row {
+      background: #f8f9fa;
+      border: 1px solid #e8eaed;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
     /* credentials output */
     .creds-card {
       margin-top: 18px; background: #e6f4ea; border: 1.5px solid #b7dfca;
@@ -325,6 +378,7 @@
       .mini-form-row { flex-direction: column; }
       .creds-actions { flex-wrap: wrap; }
       .cal-year-grid { grid-template-columns: 1fr; }
+      .live-grid { grid-template-columns: 1fr; }
     }
 
     .toast {
@@ -364,6 +418,7 @@
       <button class="tab-btn" data-tab="newteam" onclick="showTab('newteam')">🆕 Create Team</button>
       <button class="tab-btn" data-tab="calendar" onclick="showTab('calendar')">📅 Calendar</button>
       <button class="tab-btn" data-tab="curriculum" onclick="showTab('curriculum')">📚 Curriculum</button>
+      <button class="tab-btn" data-tab="live" onclick="showTab('live')">Live Slides</button>
     </div>
 
     <div class="panel active" id="panel-teams"><div id="teamsGrid" class="team-grid">Loading…</div></div>
@@ -468,6 +523,16 @@
       </div>
       <div id="coachCalendar"></div>
     </div>
+    <div class="panel" id="panel-live">
+      <div class="live-grid">
+        <div class="live-card" id="livePreview">Loading live slides...</div>
+        <div class="live-card">
+          <h2 class="form-title">Slide List</h2>
+          <p class="form-sub">Students see the current slide when they join the live lesson.</p>
+          <div class="live-side-list" id="liveSlideList"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="toast" id="toast"></div>
@@ -489,6 +554,7 @@
     function showTab(id) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
       document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === `panel-${id}`));
+      if (id === 'live') loadLiveSlides();
     }
 
     async function api(url, options = {}) {
@@ -798,6 +864,83 @@
         });
         await loadRoster();
       } catch (err) { showToast(err.message); }
+    }
+
+    // ── Live slide controls ───────────────────────────────────────────────
+    let liveState = null;
+
+    async function loadLiveSlides() {
+      try {
+        const result = await api('/api/fll/coach/live');
+        liveState = result.live;
+        renderLiveSlides(result.tally);
+      } catch (err) {
+        document.getElementById('livePreview').innerHTML = `<div class="form-msg error">${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderLiveSlides(tally = { total: 0, counts: [] }) {
+      const preview = document.getElementById('livePreview');
+      const list = document.getElementById('liveSlideList');
+      const slides = (liveState && Array.isArray(liveState.slides)) ? liveState.slides : [];
+      const index = liveState ? liveState.currentIndex || 0 : 0;
+      const slide = slides[index] || {};
+      if (!slides.length) {
+        preview.innerHTML = '<div class="form-msg error">No live slides found.</div>';
+        list.innerHTML = '';
+        return;
+      }
+      const answerRows = slide.type === 'question' ? `
+        <div class="live-answers">
+          ${(slide.options || []).map((option, i) => `
+            <div class="live-answer-row">
+              <span>${String.fromCharCode(65 + i)}. ${escapeHtml(option)}</span>
+              <span>${(tally.counts || [])[i] || 0}</span>
+            </div>
+          `).join('')}
+        </div>
+      ` : '';
+      preview.innerHTML = `
+        <span class="live-status ${liveState.active ? 'on' : ''}">${liveState.active ? 'Live now' : 'Stopped'}</span>
+        <div class="form-sub">Slide ${index + 1} of ${slides.length}</div>
+        <div class="live-slide-title">${escapeHtml(slide.title || 'Untitled slide')}</div>
+        <div class="live-slide-body">${escapeHtml(slide.body || '')}</div>
+        ${answerRows}
+        <div class="live-controls">
+          <button class="mini-btn outline" onclick="moveLiveSlide(${Math.max(0, index - 1)})">Previous</button>
+          <button class="mini-btn" onclick="startLiveSlides()">Start from beginning</button>
+          <button class="mini-btn" onclick="moveLiveSlide(${Math.min(slides.length - 1, index + 1)})">Next</button>
+          <button class="mini-btn outline" onclick="stopLiveSlides()">Stop</button>
+        </div>
+      `;
+      list.innerHTML = slides.map((item, i) => `
+        <button class="live-side-item ${i === index ? 'active' : ''}" onclick="moveLiveSlide(${i})">
+          ${i + 1}. ${escapeHtml(item.title || 'Untitled slide')}
+        </button>
+      `).join('');
+    }
+
+    async function startLiveSlides() {
+      const result = await api('/api/fll/coach/live/start', { method: 'POST', body: '{}' });
+      liveState = result.live;
+      renderLiveSlides(result.tally);
+      showToast('Live slides started');
+    }
+
+    async function moveLiveSlide(index) {
+      const result = await api('/api/fll/coach/live/slide', {
+        method: 'POST',
+        body: JSON.stringify({ index })
+      });
+      liveState = result.live;
+      renderLiveSlides(result.tally);
+    }
+
+    async function stopLiveSlides() {
+      const result = await api('/api/fll/coach/live/stop', { method: 'POST', body: '{}' });
+      liveState = result.live;
+      renderLiveSlides(result.tally);
+      showToast('Live slides stopped');
     }
 
     // ── Coach calendar ────────────────────────────────────────────────────
