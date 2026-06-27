@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-27T00:04:48.147Z",
+  "updatedAt": "2026-06-27T00:20:20.801Z",
   "settings": {
     "summerWeeks": [
       {
@@ -1574,7 +1574,7 @@
       "campUserId": "camp-demo-summer-camper",
       "createdAt": "2026-06-26T23:13:12.327Z",
       "updatedAt": "2026-06-27T00:04:27.132Z",
-      "lastStudentPortalLoginAt": "2026-06-27T00:04:48.147Z"
+      "lastStudentPortalLoginAt": "2026-06-27T00:20:20.801Z"
     }
   ]
 }
