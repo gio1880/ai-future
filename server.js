@@ -748,6 +748,7 @@ app.post('/api/student/login', async (req, res) => {
 		if (!classCode && !password) {
 			return res.status(400).json({ success: false, message: 'Class code and username are required' });
 		}
+		if (classCode === 'DEMO') await ensureSummerDemoStudent();
 		const roster = await ensureStudentPortalUsernames();
 		let classItem = null;
 		let student = null;
