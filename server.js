@@ -5374,7 +5374,7 @@ app.get('/api/camp/coach/roster', requireCampAuth, requireCampCoach, async (req,
 		const users = await readCampUsers();
 		return res.json({
 			success: true,
-			users: users.map((user) => ({
+			users: users.filter((user) => user.demoAccount !== true).map((user) => ({
 				id: user.id,
 				name: user.name,
 				username: user.username,

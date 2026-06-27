@@ -1177,13 +1177,19 @@
       return labels[program] || 'Robotics';
     }
 
+    const summerClassOrder = ['Summer LEGO Robotics G2-3', 'Summer LEGO Robotics G4-5', 'Summer FTC Robotics G6+'];
+
+    function summerClassRank(name) {
+      const index = summerClassOrder.indexOf(name);
+      return index === -1 ? 99 : index;
+    }
+
     function classList() {
       return Array.from(new Set([
         ...summerClasses().map(item => item.name),
         ...roster.filter(u => u.role === 'student').map(u => u.className || 'Unassigned')
       ])).sort((a, b) => {
-        const order = ['Summer LEGO Robotics 1', 'Summer LEGO Robotics 2', 'Summer FTC Robotics'];
-        return (order.indexOf(a) === -1 ? 99 : order.indexOf(a)) - (order.indexOf(b) === -1 ? 99 : order.indexOf(b)) || a.localeCompare(b);
+        return summerClassRank(a) - summerClassRank(b) || a.localeCompare(b);
       });
     }
 
@@ -1592,7 +1598,7 @@
           schedule: item.schedule || ''
         }));
       if (seeded.length) return seeded;
-      return ['Summer LEGO Robotics 1', 'Summer LEGO Robotics 2', 'Summer FTC Robotics']
+      return summerClassOrder
         .map(name => ({ id: name.toLowerCase().replace(/[^a-z0-9]+/g, '-'), name, program: name.includes('FTC') ? 'ftc' : 'lego-robotics', schedule: 'Summer camp weekly enrollment' }));
     }
 
@@ -1611,8 +1617,7 @@
         students: item.students.sort((a, b) => a.name.localeCompare(b.name)),
         totalPoints: item.students.reduce((sum, s) => sum + Number(s.points?.total || 0), 0)
       })).sort((a, b) => {
-        const order = ['Summer LEGO Robotics 1', 'Summer LEGO Robotics 2', 'Summer FTC Robotics'];
-        return (order.indexOf(a.name) === -1 ? 99 : order.indexOf(a.name)) - (order.indexOf(b.name) === -1 ? 99 : order.indexOf(b.name)) || a.name.localeCompare(b.name);
+        return summerClassRank(a.name) - summerClassRank(b.name) || a.name.localeCompare(b.name);
       });
     }
 
