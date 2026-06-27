@@ -1056,6 +1056,34 @@
       .skill-add-grid { grid-template-columns: 60px 1fr; }
     }
 
+    /* ── Question manager (add / edit / delete Kahoot questions) ── */
+    .qm-modal { width: min(620px, 100%); }
+    .qm-list { display: grid; gap: 10px; }
+    .qm-row { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 14px; background: #fff; }
+    .qm-row .qm-q { flex: 1; min-width: 0; }
+    .qm-row .qm-q strong { display: block; font-size: 14.5px; line-height: 1.3; }
+    .qm-row .qm-correct { font-size: 12.5px; color: var(--grass); font-weight: 800; margin-top: 4px; }
+    .qm-row .qm-acts { display: flex; gap: 6px; flex-shrink: 0; }
+    .qm-row .qm-acts .btn { padding: 7px 11px; font-size: 12.5px; }
+    .qm-empty { color: var(--muted); font-weight: 700; padding: 18px 4px; text-align: center; }
+    .qm-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 4px 0 14px; }
+    .qm-toolbar .qm-count { font-weight: 800; font-size: 13.5px; color: var(--muted); }
+    .qm-form label { display: block; font-weight: 800; font-size: 13.5px; margin: 14px 0 6px; }
+    .qm-form textarea, .qm-opt input {
+      width: 100%; border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 12px;
+      font: inherit; font-size: 14.5px; background: #fff; color: var(--ink);
+    }
+    .qm-form textarea { min-height: 60px; resize: vertical; }
+    .qm-opt { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .qm-opt input { flex: 1; }
+    .qm-opt .qm-correct-pick { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 800; color: var(--muted); white-space: nowrap; cursor: pointer; }
+    .qm-opt .qm-correct-pick input { width: 18px; height: 18px; accent-color: var(--grass); }
+    .qm-opt .qm-del-opt { border: 0; background: #eef1f5; color: var(--ink); width: 32px; height: 32px; border-radius: 9px; cursor: pointer; font-size: 15px; flex-shrink: 0; }
+    .qm-opt .qm-del-opt:hover { background: var(--red-light); }
+    .qm-form-actions { display: flex; gap: 8px; margin-top: 18px; }
+    .qm-add-opt { margin-top: 4px; }
+    .qm-hint { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+
     /* ── Lesson Slides (present exact decks) ── */
     .teacher-decks { margin-bottom: 22px; border: 1.5px solid var(--sun-mid); }
     .teacher-decks .present-today {
@@ -1132,6 +1160,20 @@
         <button class="award-close" type="button" onclick="closeManageSkills()" aria-label="Close">✕</button>
       </div>
       <div id="skillsModalBody"></div>
+    </div>
+  </div>
+
+  <!-- Question manager modal (add / edit / delete Kahoot questions; saved to the lesson) -->
+  <div class="award-overlay" id="qmOverlay" onclick="if(event.target===this)closeQuestionManager()">
+    <div class="award-modal qm-modal">
+      <div class="award-head">
+        <div class="award-who" style="flex:1">
+          <h3 id="qmTitle" style="margin:0;font-size:19px;font-weight:900">Questions</h3>
+          <div class="award-total" id="qmSubtitle">💾 Saved for next time</div>
+        </div>
+        <button class="award-close" type="button" onclick="closeQuestionManager()" aria-label="Close">✕</button>
+      </div>
+      <div id="qmBody"></div>
     </div>
   </div>
 
@@ -2578,6 +2620,7 @@
                 </div>
                 <div class="deck-row-actions">
                   <button class="btn btn-primary" onclick="startDeckLive(${i})">▶ Present Live</button>
+                  <button class="btn btn-ghost" onclick="openQuestionManager('${esc(d.lessonDeckUrl)}')" title="Add, edit, or delete this lesson's questions">❓ Questions (${questionCountForDeck(d.lessonDeckUrl)})</button>
                   <a class="btn btn-ghost" href="${esc(d.lessonDeckUrl)}" target="_blank" rel="noreferrer" title="Open on the TV only (campers won't see it)">TV only ↗</a>
                 </div>
               </div>`).join('')}
@@ -2876,14 +2919,14 @@
         </div>`;
       }
       if (!deckBank.length) {
-        return `<div class="deck-q-empty">This lesson has no ready-made questions yet. <button class="btn btn-ghost" onclick="deckAddQuestion()">➕ Add a question</button></div>`;
+        return `<div class="deck-q-empty">This lesson has no ready-made questions yet. <button class="btn btn-primary" onclick="openQuestionManager(liveState.deckUrl)">➕ Add a question</button></div>`;
       }
       return `<div class="deck-q-push">
         <label for="deckQSelect" class="deck-q-label">Push a question to campers (Kahoot-style):</label>
         <div class="deck-q-push-row">
           <select id="deckQSelect">${deckBank.map((q, i) => `<option value="${esc(q.id)}">Q${i + 1}: ${esc((q.body || q.title || 'Question').slice(0, 80))}</option>`).join('')}</select>
           <button class="btn btn-primary" onclick="deckPushQuestion()">❓ Push question</button>
-          <button class="btn btn-ghost" onclick="deckAddQuestion()" title="Add a new question to this lesson">➕ Add</button>
+          <button class="btn btn-ghost" onclick="openQuestionManager(liveState.deckUrl)" title="Add, edit, or delete this lesson's questions">✏️ Manage questions</button>
         </div>
       </div>`;
     }
@@ -2985,30 +3028,163 @@
     }
     window.deckStop = deckStop;
 
-    async function deckAddQuestion() {
-      const lesson = lessons.find(l => l.deckUrl === liveState.deckUrl) || lessons.find(l => l.id === liveState.lessonId);
-      if (!lesson) { alert('This deck is not linked to a question bank, so questions can’t be added here yet.'); return; }
-      const body = prompt('Question to ask campers:');
-      if (!body) return;
-      const optsRaw = prompt('Answer choices separated by a | (pipe). Example: Beams | Glue | Guessing | Skipping');
-      if (!optsRaw) return;
-      const options = optsRaw.split('|').map(s => s.trim()).filter(Boolean).slice(0, 6);
+    /* ── Question Manager: add / edit / delete Kahoot questions (saved to the lesson) ── */
+    let qmDeckUrl = '';
+    let qmMode = 'list';            // 'list' | 'form'
+    let qmForm = null;             // { id, body, options:[], correctIndex }
+
+    function qmLessonFor(deckUrl) {
+      return lessons.find(l => l.deckUrl === deckUrl) || (liveState && liveState.lessonId && lessons.find(l => l.id === liveState.lessonId)) || null;
+    }
+    function qmQuestions(lesson) {
+      return (lesson && lesson.slides ? lesson.slides : []).filter(s => s.type === 'question');
+    }
+    function questionCountForDeck(deckUrl) {
+      const lesson = lessons.find(l => l.deckUrl === deckUrl);
+      return lesson ? qmQuestions(lesson).length : 0;
+    }
+    function refreshDeckBankFromLessons() {
+      if (!liveState || liveState.kind !== 'deck') return;
+      const lesson = qmLessonFor(liveState.deckUrl);
+      deckBank = lesson ? qmQuestions(lesson).filter(s => s.correctIndex >= 0).map(s => ({ id: s.id, title: s.title, body: s.body, options: s.options })) : [];
+      deckQBarSig = '';
+      updateDeckDynamic();
+    }
+
+    function openQuestionManager(deckUrl) {
+      const lesson = qmLessonFor(deckUrl);
+      if (!lesson) { alert('This deck isn’t linked to a question bank yet, so questions can’t be edited here.'); return; }
+      qmDeckUrl = lesson.deckUrl || deckUrl;
+      qmMode = 'list';
+      qmForm = null;
+      document.getElementById('qmTitle').textContent = '❓ Questions · ' + (lesson.title || 'Lesson');
+      document.getElementById('qmOverlay').classList.add('open');
+      renderQuestionManager();
+    }
+    window.openQuestionManager = openQuestionManager;
+
+    function closeQuestionManager() {
+      document.getElementById('qmOverlay').classList.remove('open');
+      qmForm = null; qmMode = 'list';
+    }
+    window.closeQuestionManager = closeQuestionManager;
+
+    function renderQuestionManager() {
+      const body = document.getElementById('qmBody');
+      const lesson = qmLessonFor(qmDeckUrl);
+      if (!lesson) { body.innerHTML = '<div class="qm-empty">Lesson not found.</div>'; return; }
+      if (qmMode === 'form') { body.innerHTML = renderQmForm(); return; }
+      const qs = qmQuestions(lesson);
+      body.innerHTML = `
+        <div class="qm-toolbar">
+          <span class="qm-count">${qs.length} question${qs.length === 1 ? '' : 's'} · reused every time you present</span>
+          <button class="btn btn-primary" onclick="qmShowForm()">➕ Add question</button>
+        </div>
+        ${qs.length ? `<div class="qm-list">${qs.map(q => `
+          <div class="qm-row">
+            <div class="qm-q">
+              <strong>${esc(q.body || q.title || 'Question')}</strong>
+              <div class="qm-correct">✓ ${esc((q.options || [])[q.correctIndex] || 'no correct answer set')}</div>
+            </div>
+            <div class="qm-acts">
+              <button class="btn btn-ghost" onclick="qmShowForm('${esc(q.id)}')">✏️ Edit</button>
+              <button class="btn btn-danger" onclick="qmDelete('${esc(q.id)}')">🗑</button>
+            </div>
+          </div>`).join('')}</div>`
+          : `<div class="qm-empty">No questions yet. Click <strong>Add question</strong> to make your first one.</div>`}
+      `;
+    }
+
+    function qmShowForm(id) {
+      const lesson = qmLessonFor(qmDeckUrl);
+      const existing = id ? qmQuestions(lesson).find(q => q.id === id) : null;
+      qmForm = existing
+        ? { id: existing.id, body: existing.body || existing.title || '', options: (existing.options || []).slice(), correctIndex: existing.correctIndex >= 0 ? existing.correctIndex : 0 }
+        : { id: '', body: '', options: ['', '', '', ''], correctIndex: 0 };
+      qmMode = 'form';
+      renderQuestionManager();
+    }
+    window.qmShowForm = qmShowForm;
+
+    function renderQmForm() {
+      const f = qmForm;
+      return `
+        <label for="qmBodyInput">Question</label>
+        <textarea id="qmBodyInput" placeholder="e.g. Why does a wide base help a tall tower?" oninput="qmForm.body=this.value">${esc(f.body)}</textarea>
+        <label>Answer choices <span style="font-weight:600;color:var(--muted)">(tap the circle to mark the correct one)</span></label>
+        ${f.options.map((opt, i) => `
+          <div class="qm-opt">
+            <label class="qm-correct-pick" title="Mark as correct">
+              <input type="radio" name="qmCorrect" ${i === f.correctIndex ? 'checked' : ''} onclick="qmForm.correctIndex=${i}">
+              ✓
+            </label>
+            <input type="text" value="${esc(opt)}" placeholder="Choice ${String.fromCharCode(65 + i)}" oninput="qmForm.options[${i}]=this.value">
+            ${f.options.length > 2 ? `<button type="button" class="qm-del-opt" title="Remove choice" onclick="qmRemoveOption(${i})">✕</button>` : ''}
+          </div>`).join('')}
+        ${f.options.length < 6 ? `<button type="button" class="btn btn-ghost qm-add-opt" onclick="qmAddOption()">＋ Add choice</button>` : ''}
+        <div class="qm-hint">Campers earn 5→1 points for the correct answer (faster = more). Need 2–6 choices.</div>
+        <div class="qm-form-actions">
+          <button class="btn btn-primary" onclick="qmSave()">💾 Save question</button>
+          <button class="btn btn-ghost" onclick="qmCancelForm()">Cancel</button>
+        </div>
+      `;
+    }
+
+    function qmAddOption() { if (qmForm.options.length < 6) { qmForm.options.push(''); renderQuestionManager(); } }
+    window.qmAddOption = qmAddOption;
+    function qmRemoveOption(i) {
+      if (qmForm.options.length <= 2) return;
+      qmForm.options.splice(i, 1);
+      if (qmForm.correctIndex >= qmForm.options.length) qmForm.correctIndex = qmForm.options.length - 1;
+      else if (qmForm.correctIndex > i) qmForm.correctIndex--;
+      renderQuestionManager();
+    }
+    window.qmRemoveOption = qmRemoveOption;
+    function qmCancelForm() { qmMode = 'list'; qmForm = null; renderQuestionManager(); }
+    window.qmCancelForm = qmCancelForm;
+
+    async function qmSaveLesson(lesson) {
+      const res = await api('/api/camp/coach/lessons', { method: 'POST', body: JSON.stringify(lesson) });
+      lessons = res.lessons || lessons;
+      refreshDeckBankFromLessons();
+      // keep the deck list question counts fresh when not presenting
+      if (!(liveState && liveState.active)) renderLiveLessonWrap();
+    }
+
+    async function qmSave() {
+      const lesson = qmLessonFor(qmDeckUrl);
+      if (!lesson) return;
+      const body = (qmForm.body || '').trim();
+      const options = qmForm.options.map(o => (o || '').trim()).filter(Boolean);
+      if (!body) { alert('Please type the question.'); return; }
       if (options.length < 2) { alert('Please give at least 2 answer choices.'); return; }
-      const ans = prompt(`Which choice is correct? Enter a number 1-${options.length}.`, '1');
-      const ci = parseInt(ans, 10) - 1;
-      if (isNaN(ci) || ci < 0 || ci >= options.length) { alert('That correct-answer number is not valid.'); return; }
-      const newSlide = { id: 'q-' + Date.now().toString(36), type: 'question', title: body.slice(0, 60), body, options, correctIndex: ci };
-      const updated = { ...lesson, slides: [...lesson.slides, newSlide] };
+      // correctIndex points into the *original* list; remap after trimming empties.
+      let correctIndex = qmForm.correctIndex;
+      const trimmedCorrectVal = (qmForm.options[qmForm.correctIndex] || '').trim();
+      correctIndex = Math.max(0, options.indexOf(trimmedCorrectVal));
+      const slide = { id: qmForm.id || ('q-' + Date.now().toString(36)), type: 'question', title: body.slice(0, 60), body, image: '', options, correctIndex };
+      const slides = lesson.slides.slice();
+      const idx = qmForm.id ? slides.findIndex(s => s.id === qmForm.id) : -1;
+      if (idx >= 0) slides[idx] = slide; else slides.push(slide);
       try {
-        const res = await api('/api/camp/coach/lessons', { method: 'POST', body: JSON.stringify(updated) });
-        lessons = res.lessons || lessons;
-        const fresh = lessons.find(l => l.id === lesson.id) || updated;
-        deckBank = (fresh.slides || []).filter(s => s.type === 'question' && s.correctIndex >= 0).map(s => ({ id: s.id, title: s.title, body: s.body, options: s.options }));
-        deckQBarSig = '';
-        updateDeckDynamic();
+        await qmSaveLesson({ ...lesson, slides });
+        qmMode = 'list'; qmForm = null;
+        renderQuestionManager();
       } catch (err) { alert(err.message); }
     }
-    window.deckAddQuestion = deckAddQuestion;
+    window.qmSave = qmSave;
+
+    async function qmDelete(id) {
+      const lesson = qmLessonFor(qmDeckUrl);
+      if (!lesson) return;
+      if (!confirm('Delete this question? This removes it from the lesson for next time too.')) return;
+      const slides = lesson.slides.filter(s => s.id !== id);
+      try {
+        await qmSaveLesson({ ...lesson, slides });
+        renderQuestionManager();
+      } catch (err) { alert(err.message); }
+    }
+    window.qmDelete = qmDelete;
 
     async function load() {
       try {
