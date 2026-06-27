@@ -1,83 +1,214 @@
 {
   "active": true,
   "kind": "slides",
-  "lessonId": "fll-bioglow-intro",
-  "lessonTitle": "Welcome to FLL BIOGLOW",
+  "lessonId": "fll-bioglow-season-lesson",
+  "lessonTitle": "BIOGLOW Season Lesson",
   "slides": [
     {
-      "id": "intro-title",
+      "id": "bioglow-title",
       "type": "content",
-      "title": "Welcome to FIRST LEGO League",
-      "body": "This season, our team will build robots, solve real problems, practice teamwork, and compete in the 2026-2027 BIOGLOW Challenge.",
+      "title": "BIOGLOW Season Lesson",
+      "body": "Today we are learning what the 2026-2027 FIRST LEGO League BIOGLOW season is about, what topics our team should start studying, and how we can make smart predictions about the Innovation Project prompt before the full challenge is released.",
       "image": "",
       "options": [],
       "correctIndex": -1
     },
     {
-      "id": "intro-first",
+      "id": "official-info",
       "type": "content",
-      "title": "What is FIRST?",
-      "body": "FIRST is a global robotics community that helps students build science, technology, engineering, and teamwork skills through hands-on challenges. The goal is not just to win. The goal is to learn how engineers think, work together, and improve the world around them.",
+      "title": "What We Know Officially",
+      "body": "BIOGLOW is the 2026-2027 FIRST LEGO League season. FIRST says teams will explore the vibrancy of the world's ecosystems, biodiversity, and the connection between nature, technology, and innovation. Full Challenge details release on August 4, 2026.",
       "image": "",
       "options": [],
       "correctIndex": -1
     },
     {
-      "id": "intro-fll",
+      "id": "what-is-ecosystem",
       "type": "content",
-      "title": "What is FLL?",
-      "body": "FIRST LEGO League is a robotics program where students use LEGO Education tools to design, build, program, research, test, present, and compete. Teams work like a small engineering group: everyone has a role, everyone contributes, and every idea can become part of the solution.",
+      "title": "Big Idea: Ecosystems",
+      "body": "An ecosystem is a community of living things and the nonliving parts of their environment. That includes plants, animals, fungi, bacteria, soil, water, air, light, temperature, and human activity. In BIOGLOW, we should think in systems: when one part changes, other parts can change too.",
       "image": "",
       "options": [],
       "correctIndex": -1
     },
     {
-      "id": "intro-core-values",
+      "id": "what-is-biodiversity",
       "type": "content",
-      "title": "FLL Core Values",
-      "body": "Core Values are how we work together.\n\nDiscovery: We explore new skills and ideas.\nInnovation: We use creativity and persistence to solve problems.\nImpact: We apply what we learn to improve our world.\nInclusion: We respect each other and embrace our differences.\nTeamwork: We are stronger when we work together.\nFun: We enjoy and celebrate what we do.",
+      "title": "Big Idea: Biodiversity",
+      "body": "Biodiversity means the variety of life in an area. It can mean many different species, genetic variety within a species, and different habitats working together. Healthy biodiversity can make ecosystems stronger, more balanced, and more able to recover after stress.",
       "image": "",
       "options": [],
       "correctIndex": -1
     },
     {
-      "id": "intro-four-parts",
+      "id": "why-bioglow-matters",
       "type": "content",
-      "title": "The Four Main Parts of FLL",
-      "body": "FLL teams are evaluated in four connected areas:\n\nRobot Game: score points with an autonomous robot on the mission field.\nRobot Design: explain how the robot, attachments, programs, and strategy improved.\nInnovation Project: research a real-world problem and create a useful solution.\nCore Values: show teamwork, inclusion, discovery, innovation, impact, and fun in everything we do.",
+      "title": "Why BIOGLOW Matters",
+      "body": "Ecosystems affect food, clean water, clean air, medicine, climate, recreation, and neighborhood health. Problems in ecosystems are not only animal problems or plant problems. They are human problems too. That is why this theme is a strong Innovation Project theme.",
       "image": "",
       "options": [],
       "correctIndex": -1
     },
     {
-      "id": "intro-bioglow",
+      "id": "focus-topic-local",
       "type": "content",
-      "title": "What is BIOGLOW About?",
-      "body": "BIOGLOW is the 2026-2027 FIRST LEGO League season. Teams will explore the vibrancy of the world's ecosystems and think about how living things, habitats, technology, creativity, and innovation connect. The challenge releases worldwide on August 4, 2026.",
+      "title": "Focus Topic 1: Local Ecosystems",
+      "body": "Start close to home. Study parks, street trees, school gardens, rivers, ponds, coastal areas, vacant lots, and neighborhood wildlife. A local problem is easier to observe, test, photograph, interview people about, and improve.",
       "image": "",
       "options": [],
       "correctIndex": -1
     },
     {
-      "id": "intro-mindset",
+      "id": "focus-topic-habitats",
       "type": "content",
-      "title": "Our Season Mindset",
-      "body": "We will ask good questions, test before we assume, keep track of our ideas, learn from failure, and help our teammates get better. A strong FLL team does not need one genius. It needs a group that listens, builds, shares, and improves together.",
+      "title": "Focus Topic 2: Habitats",
+      "body": "A habitat is the place where an organism gets what it needs to live. Good research questions: What species live here? What do they need? What is missing? What barriers, dangers, or changes make survival harder?",
       "image": "",
       "options": [],
       "correctIndex": -1
     },
     {
-      "id": "intro-check",
+      "id": "focus-topic-human-impact",
+      "type": "content",
+      "title": "Focus Topic 3: Human Impact",
+      "body": "Look for ways human choices affect ecosystems: trash, light pollution, noise, construction, invasive species, pesticides, water pollution, heat, flooding, and habitat loss. Strong projects usually connect a real problem to a real group of people who can use the solution.",
+      "image": "",
+      "options": [],
+      "correctIndex": -1
+    },
+    {
+      "id": "focus-topic-balance",
+      "type": "content",
+      "title": "Focus Topic 4: Balance",
+      "body": "Ecosystems depend on balance. Predators, pollinators, decomposers, plants, water, sunlight, and nutrients all interact. If one connection breaks, the system can shift. Our team should practice drawing food webs and cause-effect chains.",
+      "image": "",
+      "options": [],
+      "correctIndex": -1
+    },
+    {
+      "id": "focus-topic-tech",
+      "type": "content",
+      "title": "Focus Topic 5: Nature + Technology",
+      "body": "BIOGLOW is not only about nature. It is about nature, technology, and innovation. Useful technology topics include sensors, cameras, environmental data, mapping, robotics, AI, apps, citizen science, bio-inspired design, and tools that help people notice ecosystem changes.",
+      "image": "",
+      "options": [],
+      "correctIndex": -1
+    },
+    {
+      "id": "previous-season-submerged",
+      "type": "content",
+      "title": "Pattern: SUBMERGED",
+      "body": "In 2024-2025, SUBMERGED focused on the ocean. Teams explored ocean layers and used STEM and creativity to solve problems faced by ocean explorers. Pattern: FIRST chose a real-world field, asked students to learn from experts, then create useful solutions.",
+      "image": "",
+      "options": [],
+      "correctIndex": -1
+    },
+    {
+      "id": "previous-season-unearthed",
+      "type": "content",
+      "title": "Pattern: UNEARTHED",
+      "body": "In 2025-2026, UNEARTHED focused on archaeology. Teams learned about real challenges archaeologists face and connected science, technology, history, and communities. Pattern: the Innovation Project is usually not broad like 'make archaeology better.' It asks teams to find one specific problem and design one specific solution.",
+      "image": "",
+      "options": [],
+      "correctIndex": -1
+    },
+    {
+      "id": "pattern-from-two-years",
+      "type": "content",
+      "title": "What the Last Two Years Suggest",
+      "body": "SUBMERGED and UNEARTHED both pointed teams toward a theme, but the project work came from choosing a focused problem inside that theme. For BIOGLOW, we should expect the project to involve ecosystems or biodiversity, but our best preparation is learning enough to choose a real, narrow, testable problem.",
+      "image": "",
+      "options": [],
+      "correctIndex": -1
+    },
+    {
+      "id": "prediction-warning",
+      "type": "content",
+      "title": "Important: This Is a Prediction",
+      "body": "The official BIOGLOW Innovation Project prompt is not released yet. The next slides are our forecast based on official BIOGLOW wording and the pattern from recent FLL seasons. Once the challenge releases, we will update our project plan to match the real prompt.",
+      "image": "",
+      "options": [],
+      "correctIndex": -1
+    },
+    {
+      "id": "predicted-prompt",
+      "type": "content",
+      "title": "Predicted Innovation Prompt",
+      "body": "Our best prediction: Identify a problem that affects biodiversity, ecosystem health, or the balance between humans and nature. Research who is affected, learn from experts, design an innovative solution that helps protect, restore, monitor, or improve an ecosystem, then share and improve your solution.",
+      "image": "",
+      "options": [],
+      "correctIndex": -1
+    },
+    {
+      "id": "possible-project-areas",
+      "type": "content",
+      "title": "Possible Project Areas",
+      "body": "Possible areas to research:\n\nPollinator habitats\nStreet tree health\nUrban heat and plants\nWetlands and flooding\nWater quality\nInvasive species\nBird-safe buildings\nLight pollution\nComposting and soil health\nSchoolyard biodiversity\nPark trash and wildlife\nMonitoring local species",
+      "image": "",
+      "options": [],
+      "correctIndex": -1
+    },
+    {
+      "id": "what-makes-strong-project",
+      "type": "content",
+      "title": "What Makes a Strong BIOGLOW Project?",
+      "body": "A strong project has a specific user, specific place, specific problem, and specific test. Weak: 'Save animals.' Strong: 'Help our school reduce nighttime light near windows so migrating birds are safer.' Weak: 'Plant more trees.' Strong: 'Help homeowners choose native plants that support pollinators in small front yards.'",
+      "image": "",
+      "options": [],
+      "correctIndex": -1
+    },
+    {
+      "id": "research-questions",
+      "type": "content",
+      "title": "Research Questions to Start Now",
+      "body": "Ask:\n\nWhat ecosystem problem can we observe locally?\nWhich species, people, or places are affected?\nWhat already exists to solve it?\nWhy are current solutions not enough?\nWho can we interview?\nWhat small prototype could we test in two weeks?",
+      "image": "",
+      "options": [],
+      "correctIndex": -1
+    },
+    {
+      "id": "robot-game-connection",
+      "type": "content",
+      "title": "How This Connects to Robot Game",
+      "body": "We do not know the exact missions yet, but BIOGLOW missions will likely connect to ecosystems, habitats, biodiversity, or human-nature balance. Start preparing robot skills that always matter: accurate driving, line following, attachment alignment, lift mechanisms, pushing/pulling, collecting, delivering, and fast resets.",
+      "image": "",
+      "options": [],
+      "correctIndex": -1
+    },
+    {
+      "id": "team-action-plan",
+      "type": "content",
+      "title": "Team Action Plan",
+      "body": "Before kickoff, each team should build a BIOGLOW idea bank:\n\n1. List 10 local ecosystem problems.\n2. Pick 3 that are observable.\n3. Find one expert or community contact for each.\n4. Sketch one possible solution.\n5. Save photos, sources, and notes in the engineering notebook.",
+      "image": "",
+      "options": [],
+      "correctIndex": -1
+    },
+    {
+      "id": "bioglow-check",
       "type": "question",
       "title": "Quick Check",
-      "body": "Which answer lists the four main parts of FIRST LEGO League?",
+      "body": "Which topic is most likely connected to BIOGLOW?",
       "image": "",
       "options": [
-        "Robot Game, Robot Design, Innovation Project, Core Values",
-        "Building, Driving, Selling, Winning",
-        "Math, Reading, Art, Homework",
-        "Only Robot Game"
+        "Biodiversity and ecosystems",
+        "Space travel only",
+        "Video game design only",
+        "Restaurant advertising"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "id": "project-prediction-check",
+      "type": "question",
+      "title": "Prediction Check",
+      "body": "Which project idea is the strongest starting point?",
+      "image": "",
+      "options": [
+        "Help our school improve pollinator habitat by testing native plant choices",
+        "Save every animal in the world",
+        "Build a cool robot with no research",
+        "Make a poster about nature without a solution"
       ],
       "correctIndex": 0
     }

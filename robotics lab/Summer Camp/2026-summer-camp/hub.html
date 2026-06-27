@@ -634,6 +634,48 @@
       border: 1px solid var(--line);
     }
 
+    /* Photo picker: take a photo (camera) or choose a file */
+    .photo-input-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+    .photo-input-row .cam-take {
+      background: var(--sun-deep); color: #fff; border: 0; border-radius: 12px;
+      font-weight: 800; font-size: 15px; padding: 12px 18px; cursor: pointer; min-height: 48px;
+    }
+    .photo-input-row .cam-take:hover { background: #14365a; }
+    .photo-input-row .file-btn {
+      display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+      border: 1.5px solid var(--line); background: #fff; color: var(--ink);
+      border-radius: 12px; font-weight: 800; font-size: 15px; padding: 12px 18px; min-height: 48px;
+    }
+    .photo-input-row .file-btn:hover { border-color: var(--sun); }
+    .photo-input-row .file-btn input { display: none; }
+    .cam-preview { margin-top: 12px; display: grid; gap: 8px; justify-items: start; }
+    .cam-preview img { max-width: 240px; border-radius: var(--radius-sm); border: 1px solid var(--line); }
+    .cam-preview .cam-clear {
+      border: 0; background: var(--red-light); color: var(--red); border-radius: 10px;
+      font-weight: 800; font-size: 13px; padding: 8px 12px; cursor: pointer;
+    }
+
+    /* Camera overlay */
+    .cam-overlay {
+      position: fixed; inset: 0; z-index: 120; background: #000;
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .cam-overlay.show { display: flex; }
+    .cam-box { width: 100%; height: 100%; display: flex; flex-direction: column; }
+    .cam-box video { flex: 1; width: 100%; height: 100%; object-fit: contain; background: #000; min-height: 0; }
+    .cam-controls {
+      display: flex; align-items: center; justify-content: center; gap: 16px;
+      padding: 18px 16px calc(18px + env(safe-area-inset-bottom)); background: rgba(0,0,0,0.85);
+    }
+    .cam-btn {
+      border: 0; border-radius: 50px; font-weight: 900; cursor: pointer;
+      background: rgba(255,255,255,0.18); color: #fff; font-size: 15px; padding: 14px 22px; min-height: 52px;
+    }
+    .cam-btn.ghost { background: rgba(255,255,255,0.14); }
+    .cam-btn.ghost:hover { background: rgba(255,255,255,0.28); }
+    .cam-btn.shoot { background: var(--gold); color: var(--sun-deep); font-size: 17px; padding: 14px 30px; }
+    .cam-btn.shoot:hover { background: #ffd84d; }
+
     .points-card {
       background: white;
       border: 1.5px solid var(--line);
@@ -1040,6 +1082,21 @@
     <div class="lo-counter" id="liveOverlayCounter"></div>
   </div>
 
+  <!-- Camera capture (webcam on a laptop, camera on an iPad) -->
+  <div class="cam-overlay" id="camOverlay" role="dialog" aria-modal="true">
+    <div class="cam-box">
+      <video id="camVideo" autoplay playsinline muted></video>
+      <canvas id="camCanvas" hidden></canvas>
+      <div class="cam-controls">
+        <button class="cam-btn ghost" id="camCancelBtn" type="button">Cancel</button>
+        <button class="cam-btn shoot" id="camShootBtn" type="button" aria-label="Take photo">📸 Capture</button>
+        <button class="cam-btn ghost" id="camFlipBtn" type="button" title="Switch camera">🔄 Flip</button>
+      </div>
+    </div>
+  </div>
+  <!-- Fallback for devices without in-page camera access (e.g. iPad over plain http): native camera -->
+  <input type="file" id="camFallbackInput" accept="image/*" capture="environment" hidden>
+
   <script>
     const app = document.getElementById('app');
     const userLine = document.getElementById('userLine');
@@ -1412,9 +1469,8 @@
           </select>
           <label for="submitReflection">Reflection / activity notes</label>
           <textarea id="submitReflection" placeholder="What did you complete? What worked? What would you improve next time?"></textarea>
-          <label for="submitPhoto">Photo of final work</label>
-          <input id="submitPhoto" type="file" accept="image/*" />
-          <div class="photo-guidance">Ask a classmate or a coach to take a picture of you and your final work before submitting.</div>
+          <label>Photo of final work</label>
+          ${photoPickerHtml('submit', 'submitPhoto')}
           <button class="btn" style="margin-top:14px" onclick="submitActivity()">Submit activity</button>
           <div class="form-status" id="submitStatus"></div>
           <div class="submission-preview" id="submissionPreview"></div>
@@ -1544,9 +1600,8 @@
           <textarea id="projectReflection" placeholder="What was challenging? What did you improve? What would you do next?"></textarea>
           <label for="projectLink">Project link</label>
           <input id="projectLink" placeholder="Optional: https://..." />
-          <label for="projectPhoto">Photo of final project</label>
-          <input id="projectPhoto" type="file" accept="image/*" />
-          <div class="photo-guidance">Ask a classmate or a coach to take a picture of you and your final work before submitting.</div>
+          <label>Photo of final project</label>
+          ${photoPickerHtml('project', 'projectPhoto')}
           <button class="btn" style="margin-top:14px" onclick="submitProject()">Submit project</button>
           <div class="form-status" id="projectStatus"></div>
           <div class="submission-preview" id="projectPreview"></div>
@@ -1898,16 +1953,120 @@
       });
     }
 
+    /* ── Photo capture: take a picture on a laptop (webcam) or iPad (camera), or choose a file ── */
+    const pendingPhotos = { submit: '', project: '' };
+    let camStream = null;
+    let camDoneCb = null;
+    let camFacing = 'environment';
+
+    // Reusable photo picker block (Take a photo + Choose a file + live preview).
+    function photoPickerHtml(which, fileInputId) {
+      return `
+        <div class="photo-input-row">
+          <button type="button" class="cam-take" onclick="takePhotoFor('${which}')">📷 Take a photo</button>
+          <label class="file-btn">📁 Choose a photo
+            <input id="${fileInputId}" type="file" accept="image/*" onchange="choosePhotoFile('${which}', this)">
+          </label>
+        </div>
+        <div class="photo-guidance">Use this device's camera (works on an iPad or a laptop), or choose a picture you already have.</div>
+        <div class="cam-preview" id="${which}CameraPreview">${pendingPhotos[which] ? camPreviewInner(which) : ''}</div>`;
+    }
+    function camPreviewInner(which) {
+      return `<img src="${pendingPhotos[which]}" alt="Your photo"><button type="button" class="cam-clear" onclick="clearPhotoFor('${which}')">✕ Remove photo</button>`;
+    }
+    function renderPhotoPreview(which) {
+      const el = document.getElementById(which + 'CameraPreview');
+      if (el) el.innerHTML = pendingPhotos[which] ? camPreviewInner(which) : '';
+    }
+    function clearPhotoFor(which) {
+      pendingPhotos[which] = '';
+      const input = document.getElementById(which === 'submit' ? 'submitPhoto' : 'projectPhoto');
+      if (input) input.value = '';
+      renderPhotoPreview(which);
+    }
+    window.clearPhotoFor = clearPhotoFor;
+
+    async function choosePhotoFile(which, input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      try { pendingPhotos[which] = await imageToDataUrl(file); renderPhotoPreview(which); }
+      catch (err) { alert(err.message || 'Could not read that photo.'); }
+    }
+    window.choosePhotoFile = choosePhotoFile;
+
+    // Entry point: try the in-page camera; fall back to the native camera picker.
+    function takePhotoFor(which) {
+      camDoneCb = (dataUrl) => { if (dataUrl) { pendingPhotos[which] = dataUrl; renderPhotoPreview(which); } };
+      const secure = window.isSecureContext || ['localhost', '127.0.0.1'].includes(location.hostname);
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia && secure) {
+        openCamera().catch(() => useFallbackCamera());
+      } else {
+        useFallbackCamera();
+      }
+    }
+    window.takePhotoFor = takePhotoFor;
+
+    function useFallbackCamera() {
+      const inp = document.getElementById('camFallbackInput');
+      inp.value = '';
+      inp.onchange = async () => {
+        const file = inp.files && inp.files[0];
+        if (file && camDoneCb) { try { camDoneCb(await imageToDataUrl(file)); } catch (e) { alert(e.message); } }
+      };
+      inp.click();
+    }
+
+    async function openCamera() {
+      const overlay = document.getElementById('camOverlay');
+      const video = document.getElementById('camVideo');
+      camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: camFacing }, audio: false });
+      video.srcObject = camStream;
+      overlay.classList.add('show');
+    }
+    function stopCamera() {
+      if (camStream) { camStream.getTracks().forEach((t) => t.stop()); camStream = null; }
+      document.getElementById('camOverlay').classList.remove('show');
+      const video = document.getElementById('camVideo');
+      if (video) video.srcObject = null;
+    }
+    function captureCameraFrame() {
+      const video = document.getElementById('camVideo');
+      const canvas = document.getElementById('camCanvas');
+      const w = video.videoWidth || 640, h = video.videoHeight || 480;
+      const max = 1200;
+      const scale = Math.min(1, max / Math.max(w, h));
+      canvas.width = Math.max(1, Math.round(w * scale));
+      canvas.height = Math.max(1, Math.round(h * scale));
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+      const url = canvas.toDataURL('image/jpeg', 0.78);
+      stopCamera();
+      if (camDoneCb) camDoneCb(url);
+    }
+    async function flipCamera() {
+      camFacing = camFacing === 'environment' ? 'user' : 'environment';
+      if (camStream) camStream.getTracks().forEach((t) => t.stop());
+      try {
+        camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: camFacing }, audio: false });
+        document.getElementById('camVideo').srcObject = camStream;
+      } catch (e) { /* keep previous facing */ }
+    }
+    document.getElementById('camShootBtn').addEventListener('click', captureCameraFrame);
+    document.getElementById('camFlipBtn').addEventListener('click', flipCamera);
+    document.getElementById('camCancelBtn').addEventListener('click', stopCamera);
+
     async function submitActivity() {
       const status = document.getElementById('submitStatus');
       const preview = document.getElementById('submissionPreview');
       const dayId = document.getElementById('submitDay').value;
       const reflection = document.getElementById('submitReflection').value.trim();
-      const file = document.getElementById('submitPhoto').files[0];
       status.textContent = 'Saving...';
       preview.innerHTML = '';
       try {
-        const photoDataUrl = await imageToDataUrl(file);
+        let photoDataUrl = pendingPhotos.submit;
+        if (!photoDataUrl) {
+          const file = document.getElementById('submitPhoto').files[0];
+          if (file) photoDataUrl = await imageToDataUrl(file);
+        }
         const response = await fetch('/api/camp/submissions', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1918,6 +2077,7 @@
         const existingIndex = hubState.submissions.findIndex(s => s.dayId === dayId);
         if (existingIndex >= 0) hubState.submissions[existingIndex] = result.submission;
         else hubState.submissions.push(result.submission);
+        pendingPhotos.submit = '';
         preview.innerHTML = `${photoDataUrl ? `<img src="${photoDataUrl}" alt="Submitted activity photo" />` : ''}`;
         renderCampDashboard(hubState);
         const nextStatus = document.getElementById('submitStatus');
@@ -1958,7 +2118,6 @@
     async function submitProject() {
       const status = document.getElementById('projectStatus');
       const preview = document.getElementById('projectPreview');
-      const file = document.getElementById('projectPhoto').files[0];
       const payload = {
         title: document.getElementById('projectTitle').value.trim(),
         projectType: document.getElementById('projectType').value,
@@ -1969,7 +2128,11 @@
       status.textContent = 'Submitting project...';
       preview.innerHTML = '';
       try {
-        const photoDataUrl = await imageToDataUrl(file);
+        let photoDataUrl = pendingPhotos.project;
+        if (!photoDataUrl) {
+          const file = document.getElementById('projectPhoto').files[0];
+          if (file) photoDataUrl = await imageToDataUrl(file);
+        }
         const response = await fetch('/api/camp/projects', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1979,6 +2142,7 @@
         if (!response.ok || !result.success) throw new Error(result.message || 'Could not submit project');
         hubState.projectSubmissions = [result.project, ...(hubState.projectSubmissions || [])];
         hubState.points = result.points || hubState.points;
+        pendingPhotos.project = '';
         preview.innerHTML = `${photoDataUrl ? `<img src="${photoDataUrl}" alt="Submitted project photo" />` : ''}`;
         renderCampDashboard(hubState);
         const nextStatus = document.getElementById('projectStatus');
