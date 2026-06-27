@@ -2011,7 +2011,7 @@ function summerDemoStudentTemplate(now = new Date().toISOString()) {
 		notes: 'Demo account for staff testing. Not a real camper.',
 		active: true,
 		demoAccount: true,
-		enrollments: [{ classId: 'summer-lego-robotics-1', weeks: ['week-1', 'week-2', 'week-3', 'week-4'] }],
+		enrollments: [{ classId: 'summer-lego-robotics-1', weeks: ['week-1'] }],
 		portalUsername: 'demo',
 		summerGradeBand: 'Demo',
 		summerRosterSource,
@@ -2790,15 +2790,19 @@ async function getCampEnrollmentForUser(user, curriculum) {
 		});
 		if (masterStudent) {
 			matchedMasterRoster = true;
-			const weeks = [];
-			for (const enrollment of (Array.isArray(masterStudent.enrollments) ? masterStudent.enrollments : [])) {
-				const classItem = classesById.get(enrollment.classId);
-				if (classItem && classItem.term === 'summer') {
-					weeks.push(...(Array.isArray(enrollment.weeks) ? enrollment.weeks : []));
+			if (user.demoAccount === true || masterStudent.demoAccount === true) {
+				enrolledWeekIds = validWeekIds.has('week-1') ? ['week-1'] : [];
+			} else {
+				const weeks = [];
+				for (const enrollment of (Array.isArray(masterStudent.enrollments) ? masterStudent.enrollments : [])) {
+					const classItem = classesById.get(enrollment.classId);
+					if (classItem && classItem.term === 'summer') {
+						weeks.push(...(Array.isArray(enrollment.weeks) ? enrollment.weeks : []));
+					}
 				}
+				enrolledWeekIds = mapRosterWeeksToCurriculumWeekIds(weeks, roster.settings.summerWeeks, curriculumWeeks)
+					.filter((weekId) => validWeekIds.has(weekId));
 			}
-			enrolledWeekIds = mapRosterWeeksToCurriculumWeekIds(weeks, roster.settings.summerWeeks, curriculumWeeks)
-				.filter((weekId) => validWeekIds.has(weekId));
 			source = 'master-roster';
 		}
 	} catch (err) {
