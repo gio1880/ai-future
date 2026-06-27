@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-27T12:57:27.258Z",
+  "updatedAt": "2026-06-27T20:30:16.690Z",
   "settings": {
     "summerWeeks": [
       {
@@ -1573,7 +1573,7 @@
       "summerRosterSource": "summer-2026-screenshot-grade-roster",
       "campUserId": "camp-demo-summer-camper",
       "createdAt": "2026-06-26T23:13:12.327Z",
-      "updatedAt": "2026-06-27T12:57:27.123Z",
+      "updatedAt": "2026-06-27T20:30:16.680Z",
       "lastStudentPortalLoginAt": "2026-06-27T00:20:20.801Z"
     }
   ]

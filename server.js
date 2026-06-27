@@ -1193,9 +1193,12 @@ function hasLessonBuildingCurriculum(curriculum) {
 }
 
 function hasLessonBuildingLessons(lessons) {
-	return Array.isArray(lessons)
-		&& lessons.length === 16
-		&& lessons.every((lesson) => lesson && lesson.lessonSource === lessonBuildingSource);
+	if (!Array.isArray(lessons)) return false;
+	const lessonBuildingLessons = lessons.filter((lesson) => lesson && lesson.lessonSource === lessonBuildingSource);
+	const hasCoachSetupTest = lessons.some((lesson) => lesson && lesson.id === 'coach-setup-test-student-login-live-points');
+	return lessonBuildingLessons.length === 16
+		&& lessonBuildingLessons.every((lesson) => lesson.deckUrl && String(lesson.deckUrl).startsWith('/camp-hub/lessons/'))
+		&& hasCoachSetupTest;
 }
 
 async function migrateCampLessonBuildingData() {
@@ -1342,6 +1345,7 @@ function normalizeLesson(lesson) {
 		title: cleanMetaString(source.title || 'Untitled lesson', 160),
 		lessonSource: cleanMetaString(source.lessonSource || '', 120),
 		deckUrl: cleanMetaString(source.deckUrl || '', 1000),
+		coachOnly: source.coachOnly === true,
 		updatedAt: source.updatedAt || new Date().toISOString(),
 		slides
 	};
@@ -5878,6 +5882,28 @@ app.post('/api/camp/coach/points', requireCampAuth, requireCampCoach, async (req
 	} catch (err) {
 		console.error('Camp coach point event error:', err);
 		return res.status(500).json({ success: false, message: 'Server error saving points' });
+	}
+});
+
+app.post('/api/camp/coach/points/reset', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const className = cleanMetaString(req.body.className || '', 120);
+		if (!className) {
+			return res.status(400).json({ success: false, message: 'Class name is required to reset points' });
+		}
+		const events = await readCampPointEvents();
+		const remaining = events.filter((event) => String(event.className || 'Unassigned') !== className);
+		const removed = events.length - remaining.length;
+		await writeJsonFile(campPointEventsFile, remaining);
+		return res.json({
+			success: true,
+			removed,
+			pointEvents: remaining,
+			resetClassName: className
+		});
+	} catch (err) {
+		console.error('Camp coach points reset error:', err);
+		return res.status(500).json({ success: false, message: 'Server error resetting points' });
 	}
 });
 

@@ -935,6 +935,24 @@
     .lo-waiting .big { font-size: 52px; display: block; margin-bottom: 14px; }
     @media (max-width: 520px) { .lo-answers { grid-template-columns: 1fr; } }
 
+    /* Deck-follow mode: campers mirror the real lesson slides + Kahoot question overlay */
+    .lo-body.deck { padding: 0; }
+    .lo-deck-wrap { position: relative; flex: 1; width: 100%; height: 100%; min-height: 0; }
+    .lo-deck-frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #8fc4f4; }
+    .lo-q-layer {
+      position: absolute; inset: 0; z-index: 5; display: none;
+      background: rgba(7, 20, 38, 0.82); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+      align-items: center; justify-content: center; padding: clamp(16px, 4vw, 40px); overflow-y: auto;
+    }
+    .lo-q-layer.show { display: flex; }
+    .lo-q-card { max-width: 760px; width: 100%; background: #fff; border-radius: 22px; padding: clamp(22px, 4vw, 40px); box-shadow: 0 24px 60px rgba(7,20,38,0.4); }
+    .lo-q-card h1 { font-size: clamp(24px, 4.6vw, 40px); font-weight: 900; line-height: 1.12; margin: 4px 0 14px; }
+    .lo-q-card .lo-text { font-size: clamp(17px, 2.5vw, 23px); line-height: 1.5; color: var(--ink); }
+    .lo-q-card.result { text-align: center; }
+    .lo-q-card.result .big { font-size: 64px; display: block; margin-bottom: 8px; }
+    .lo-q-card.result.good { border: 4px solid var(--grass); }
+    .lo-q-card.result.bad { border: 4px solid #e8583a; }
+
     /* ── ClassDojo-style cartoon class board (camper view) ── */
     .monster-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
@@ -1982,6 +2000,8 @@
     let lvState = null;
     let lvJoined = false;
     let lvRenderKey = '';
+    let lvDeckUrl = '';        // current deck loaded in the follow iframe
+    let lvShownResultId = '';  // last quiz result already shown to this camper
     const liveBanner = document.getElementById('liveBanner');
     const liveOverlay = document.getElementById('liveOverlay');
     const liveOverlayBody = document.getElementById('liveOverlayBody');
@@ -1998,7 +2018,7 @@
       } catch (err) { return; }
       // Banner shows only when a lesson is live and the camper hasn't joined.
       if (lvState && lvState.active && !lvJoined) {
-        document.getElementById('liveBannerTitle').textContent = (lvState.lessonTitle || 'A lesson') + ' is live';
+        document.getElementById('liveBannerTitle').textContent = (lvState.deckTitle || lvState.lessonTitle || 'A lesson') + ' is live';
         liveBanner.classList.add('show');
       } else {
         liveBanner.classList.remove('show');
@@ -2009,6 +2029,8 @@
     function joinLive() {
       lvJoined = true;
       lvRenderKey = '';
+      // Don't replay a result that was scored before this camper opened the overlay.
+      if (lvState && lvState.lastResult) lvShownResultId = lvState.lastResult.questionId;
       liveOverlay.classList.add('show');
       liveBanner.classList.remove('show');
       document.body.style.overflow = 'hidden';
@@ -2023,6 +2045,10 @@
     }
 
     function renderLiveOverlay() {
+      // Deck mode: follow the real lesson slides + answer pushed Kahoot questions.
+      if (lvState && lvState.active && lvState.kind === 'deck') { renderDeckFollow(); return; }
+      liveOverlayBody.classList.remove('deck');
+      lvDeckUrl = '';
       document.getElementById('liveOverlayTitle').textContent = (lvState && lvState.lessonTitle) || 'Live lesson';
       const counter = document.getElementById('liveOverlayCounter');
       if (!lvState || !lvState.active) {
@@ -2073,15 +2099,113 @@
       }
     }
 
+    /* Deck-follow: mirror the coach's real lesson slides in an iframe + question overlay. */
+    function renderDeckFollow() {
+      liveOverlayBody.classList.add('deck');
+      document.getElementById('liveOverlayTitle').textContent = lvState.deckTitle || 'Live lesson';
+      const counter = document.getElementById('liveOverlayCounter');
+      counter.textContent = lvState.slideCount ? `Slide ${(lvState.slideIndex || 0) + 1} of ${lvState.slideCount}` : '';
+      let frame = document.getElementById('camperDeckFrame');
+      if (!frame || lvDeckUrl !== lvState.deckUrl) {
+        lvDeckUrl = lvState.deckUrl;
+        liveOverlayBody.innerHTML = `<div class="lo-deck-wrap">
+            <iframe id="camperDeckFrame" class="lo-deck-frame" src="${escLv(lvState.deckUrl)}" onload="onCamperDeckLoad()"></iframe>
+            <div class="lo-q-layer" id="loQLayer"></div>
+          </div>`;
+      }
+      syncCamperDeck();
+      renderQuestionLayer();
+    }
+
+    function camperDeckEl() {
+      const f = document.getElementById('camperDeckFrame');
+      let d; try { d = f && f.contentDocument; } catch (e) { return null; }
+      return d && d.querySelector('.deck');
+    }
+    function onCamperDeckLoad() {
+      const f = document.getElementById('camperDeckFrame');
+      let d; try { d = f && f.contentDocument; } catch (e) { return; }
+      if (!d) return;
+      // Hide teacher notes + the deck's own nav, and freeze user scrolling (coach drives it).
+      const style = d.createElement('style');
+      style.textContent = '.teacher-note{display:none!important}.slide-nav{display:none!important}.deck{overflow:hidden!important}';
+      (d.head || d.documentElement).appendChild(style);
+      syncCamperDeck();
+    }
+    window.onCamperDeckLoad = onCamperDeckLoad;
+
+    function syncCamperDeck() {
+      const deck = camperDeckEl();
+      if (!deck) return;
+      const w = deck.clientWidth || 1;
+      const target = (lvState.slideIndex || 0) * w;
+      if (Math.abs(deck.scrollLeft - target) > 2) deck.scrollTo({ left: target, behavior: 'auto' });
+    }
+
+    function renderQuestionLayer() {
+      const layer = document.getElementById('loQLayer');
+      if (!layer) return;
+      const aq = lvState.activeQuestion;
+      if (aq) {
+        const answered = lvState.myAnswer != null;
+        const key = 'q:' + aq.id + '|' + (answered ? lvState.myAnswer : 'na');
+        if (layer.dataset.key === key) return;
+        layer.dataset.key = key;
+        layer.classList.add('show');
+        layer.innerHTML = `<div class="lo-q-card">
+          <div class="lo-kicker">❓ Tap your answer — faster earns more points!</div>
+          <h1>${escLv(aq.title)}</h1>
+          ${aq.body ? `<div class="lo-text" style="margin-bottom:8px">${escLv(aq.body)}</div>` : ''}
+          <div class="lo-answers">
+            ${(aq.options || []).map((opt, j) => `
+              <button class="lo-answer a${j} ${answered && lvState.myAnswer === j ? 'chosen' : ''} ${answered && lvState.myAnswer !== j ? 'dim' : ''}" onclick="answerLive(${j})">
+                <span class="lo-key">${String.fromCharCode(65 + j)}</span><span>${escLv(opt)}</span>
+              </button>`).join('')}
+          </div>
+          ${answered ? `<div class="lo-answered-msg">✓ Locked in! Waiting for your coach to reveal the answer…</div>` : ''}
+        </div>`;
+        return;
+      }
+      // No active question. Show the camper's result briefly if one is newly available.
+      const res = lvState.lastResult;
+      if (res && lvShownResultId !== res.questionId) {
+        lvShownResultId = res.questionId;
+        layer.dataset.key = 'result:' + res.questionId;
+        layer.classList.add('show');
+        layer.innerHTML = `<div class="lo-q-card result ${res.correct ? 'good' : 'bad'}">
+          <span class="big">${res.correct ? '✅' : '❌'}</span>
+          <h1>${res.correct ? `Correct! +${res.points} point${res.points === 1 ? '' : 's'}` : 'Not this time'}</h1>
+          <p class="lo-text">${res.correct ? 'Nice and fast! Your points were added to your class total.' : 'Keep going — you’ll get the next one!'}</p>
+        </div>`;
+        setTimeout(() => {
+          const l = document.getElementById('loQLayer');
+          if (l && l.dataset.key === 'result:' + res.questionId) { l.classList.remove('show'); l.innerHTML = ''; l.dataset.key = ''; }
+        }, 4500);
+        return;
+      }
+      // Otherwise make sure no stale question card is left up.
+      if (layer.dataset.key && layer.dataset.key.indexOf('q:') === 0) {
+        layer.classList.remove('show'); layer.innerHTML = ''; layer.dataset.key = '';
+      }
+    }
+    window.renderQuestionLayer = renderQuestionLayer;
+
     async function answerLive(choice) {
-      if (!lvState || !lvState.slide) return;
+      if (!lvState) return;
+      const deck = lvState.kind === 'deck';
+      const qid = deck ? (lvState.activeQuestion && lvState.activeQuestion.id) : (lvState.slide && lvState.slide.id);
+      if (!qid) return;
       try {
+        const body = deck ? { questionId: qid, choice } : { slideId: qid, choice };
         const r = await fetch('/api/camp/live/answer', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ slideId: lvState.slide.id, choice })
+          body: JSON.stringify(body)
         }).then(x => x.json());
-        if (r && r.success) { lvState.myAnswer = choice; lvRenderKey = ''; renderLiveOverlay(); }
-        else if (r && r.message) { /* question may have moved on */ pollLive(); }
+        if (r && r.success) {
+          lvState.myAnswer = (r.myAnswer != null ? r.myAnswer : choice);
+          if (deck) { const l = document.getElementById('loQLayer'); if (l) l.dataset.key = ''; renderQuestionLayer(); }
+          else { lvRenderKey = ''; renderLiveOverlay(); }
+        } else if (r && r.message) { /* question may have moved on */ pollLive(); }
       } catch (err) { /* ignore, next poll recovers */ }
     }
 

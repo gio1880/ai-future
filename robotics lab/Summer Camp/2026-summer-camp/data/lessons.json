@@ -1,5 +1,79 @@
 [
   {
+    "id": "coach-setup-test-student-login-live-points",
+    "title": "Coach Setup Test: Student Login + Live Questions",
+    "updatedAt": "2026-06-27T00:00:00.000Z",
+    "lessonSource": "coach-only-setup-test-2026",
+    "deckUrl": "",
+    "coachOnly": true,
+    "slides": [
+      {
+        "id": "setup-test-intro",
+        "type": "content",
+        "title": "Coach-Only Setup Test",
+        "body": "Use this before camp starts to test student login, live lesson join, Kahoot-style questions, and point awards. This is not part of the student curriculum schedule.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "setup-test-login",
+        "type": "content",
+        "title": "1. Test Student Login",
+        "body": "On a student device, open /student-login. Use class code DEMO and username demo. After login, open Summer Camp from the Student Hub.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "setup-test-join",
+        "type": "question",
+        "title": "Login Check",
+        "body": "After the coach starts a live lesson, what should the student tap on their Summer Camp page?",
+        "image": "",
+        "options": [
+          "Join live lesson",
+          "Reset password",
+          "Delete lesson",
+          "Open coach dashboard"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "setup-test-points",
+        "type": "question",
+        "title": "Points Check",
+        "body": "What should happen when a student answers a live question correctly?",
+        "image": "",
+        "options": [
+          "They earn live question points",
+          "Their account is removed",
+          "The lesson closes for everyone",
+          "Nothing changes"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "setup-test-coach-check",
+        "type": "content",
+        "title": "3. Confirm Results",
+        "body": "Close each question from the coach presenter, then check that the student sees feedback and the coach points/progress view reflects the awarded points.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "setup-test-reset",
+        "type": "content",
+        "title": "Optional Cleanup",
+        "body": "After testing, use the class point reset button if you want to clear the demo class point events before real camp use.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ]
+  },
+  {
     "id": "w1-mon-intro-lego-technic",
     "title": "Week 1 - Monday: Intro to LEGO Technic",
     "updatedAt": "2026-06-25T00:00:00.000Z",

@@ -1070,6 +1070,22 @@
     .deck-row .deck-info strong { display: block; font-size: 14px; }
     .deck-row .deck-build { font-size: 12.5px; color: var(--muted); font-weight: 700; }
     .deck-row .btn { text-decoration: none; white-space: nowrap; }
+    .deck-row-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+
+    /* Live HTML-deck presenter */
+    .deck-presenter { display: flex; flex-direction: column; }
+    .deck-frame { width: 100%; height: min(64vh, 620px); border: 0; background: #8fc4f4; display: block; }
+    .deck-presenter:fullscreen .deck-frame { flex: 1; height: auto; }
+    .deck-presenter:-webkit-full-screen .deck-frame { flex: 1; height: auto; }
+    .deck-q-bar { border-top: 1.5px solid var(--line); padding: 14px 16px; background: var(--bg); }
+    .deck-q-label { font-weight: 800; display: block; margin-bottom: 8px; }
+    .deck-q-push-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .deck-q-push-row select { flex: 1; min-width: 200px; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: var(--radius-sm); font: inherit; background: #fff; }
+    .deck-q-empty { color: var(--muted); font-weight: 700; }
+    .deck-q-live .deck-q-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+    .deck-q-live .deck-q-head strong { font-size: 16px; }
+    .deck-q-live .deck-q-body { font-size: 14px; color: var(--ink); margin-bottom: 12px; }
+    .deck-presenter:fullscreen .deck-q-bar, .deck-presenter:-webkit-full-screen .deck-q-bar { max-height: 38vh; overflow: auto; }
   </style>
 </head>
 <body>
@@ -1698,6 +1714,7 @@
               <p class="section-sub">Tap a camper to give points for a skill. 🔊 Sound plays on every point.</p>
             </div>
             <button class="btn btn-ghost" type="button" onclick="openManageSkills()">⚙️ Manage skills</button>
+            <button class="btn btn-ghost" type="button" onclick="resetClassPoints(decodeURIComponent('${encodeURIComponent(classItem?.name || 'Unassigned')}'))">Reset class points</button>
           </div>
           <div class="student-figure-grid">
             ${students.map(student => `
@@ -1825,6 +1842,25 @@
         progressData = refreshed || progressData;
         const feed = document.querySelector('#dojoClassBoard .dojo-feed');
         if (feed) { document.getElementById('dojoClassBoard').innerHTML = renderClassDojoBoard(selectedClassName); }
+        const sideTools = document.getElementById('sidebarTools');
+        if (sideTools) sideTools.innerHTML = renderSidebarTools();
+      } catch (err) {
+        alert(err.message);
+      }
+    };
+
+    window.resetClassPoints = async function resetClassPoints(className) {
+      const target = className || selectedClassName || 'this class';
+      if (!confirm(`Reset ClassDojo points for ${target}? This clears positive/needs-work point events, but keeps assignment submissions and project/print bonus points.`)) return;
+      try {
+        await api('/api/camp/coach/points/reset', {
+          method: 'POST',
+          body: JSON.stringify({ className: target })
+        });
+        const refreshed = await api('/api/camp/coach/progress');
+        progressData = refreshed || progressData;
+        const wrap = document.getElementById('progressToolsWrap');
+        if (wrap) wrap.innerHTML = renderProgressTab();
         const sideTools = document.getElementById('sidebarTools');
         if (sideTools) sideTools.innerHTML = renderSidebarTools();
       } catch (err) {
@@ -2357,6 +2393,12 @@
 
     /* ── Live Lesson: authoring + presenting ── */
     let lastTally = { total: 0, counts: [] };
+    // Live HTML-deck presentation (the real Lesson Building slideshows, mirrored to iPads)
+    let teacherDeckList = [];
+    let deckBank = [];          // ready-made questions for the live deck
+    let deckSlideIndex = 0;     // coach's current slide (source of truth for the iframe)
+    let deckSlideCount = 0;
+    let deckQBarSig = '';       // avoids rebuilding the push-question <select> on every poll
 
     async function loadLessons() {
       try {
@@ -2382,6 +2424,18 @@
       const wrap = document.getElementById('liveLessonWrap');
       if (!wrap) return;
       if (lessonDraft) { wrap.innerHTML = renderLessonEditor(); return; }
+      if (liveState && liveState.active && liveState.kind === 'deck') {
+        // Deck mode: the <iframe> must never be re-rendered (that would reload it and
+        // drop fullscreen / lose the teacher's place), so build it once, then only
+        // refresh the slide counter + question/tally bar in place.
+        const existing = document.getElementById('deckPresenterEl');
+        if (existing) { updateDeckDynamic(); }
+        else {
+          wrap.innerHTML = renderDeckPresenter();
+          deckQBarSig = liveState.activeQuestion ? 'active:' + liveState.activeQuestion.id : 'push:' + deckBank.length;
+        }
+        return;
+      }
       if (liveState && liveState.active) {
         // Update the presenter IN PLACE if it already exists, so the fullscreen
         // element (#presenterEl) is never removed from the DOM (which would drop
@@ -2469,7 +2523,8 @@
       `;
     }
 
-    // The exact Lesson Building decks (rich HTML slideshows) — coaches present these on the TV.
+    // The exact Lesson Building decks (rich HTML slideshows). "Present Live" mirrors
+    // the slides to camper iPads and lets the coach push Kahoot questions.
     function renderTeacherDecks() {
       const today = todayKey();
       const days = [];
@@ -2477,20 +2532,28 @@
         if (day.lessonDeckUrl) days.push({ ...day, weekLabel: week.label });
       }));
       if (!days.length) return '';
-      const todayDeck = days.find(d => d.date === today);
+      // Catalog so onclick handlers can pass an index (avoids quoting issues in titles).
+      teacherDeckList = days.map(d => ({
+        lessonDeckUrl: d.lessonDeckUrl,
+        title: `${d.weekLabel || ''} · ${d.build || 'Lesson'}`.replace(/^ · /, '')
+      }));
+      const todayIdx = days.findIndex(d => d.date === today);
       return `
         <div class="card teacher-decks">
-          <div class="section-title">📽️ Lesson Slides — present on the TV</div>
-          <p class="section-sub">Your exact Lesson Building decks. Click <strong>Present</strong> to open the full slideshow in a new tab, then use the on-screen arrows (or ← → keys) to move through it. (These are teacher decks — show them on the TV, not on camper iPads.)</p>
-          ${todayDeck ? `<a class="btn btn-primary present-today" href="${esc(todayDeck.lessonDeckUrl)}" target="_blank" rel="noreferrer">▶ Present today's slides${todayDeck.build ? ` — ${esc(todayDeck.build)}` : ''}</a>` : ''}
+          <div class="section-title">📽️ Lesson Slides — present live to campers</div>
+          <p class="section-sub">Your exact Lesson Building decks. Click <strong>Present Live</strong> to show the slideshow on the TV <em>and</em> mirror it to every camper's iPad — move with the arrows and push a question whenever you want. (Teacher notes stay hidden on the campers' screens.)</p>
+          ${todayIdx >= 0 ? `<button class="btn btn-primary present-today" onclick="startDeckLive(${todayIdx})">▶ Present today's slides live${days[todayIdx].build ? ` — ${esc(days[todayIdx].build)}` : ''}</button>` : ''}
           <div class="deck-list">
-            ${days.map(d => `
+            ${days.map((d, i) => `
               <div class="deck-row ${d.date === today ? 'is-today' : ''}">
                 <div class="deck-info">
                   <strong>${esc(d.weekLabel)} · ${esc(fmt(d.date, { weekday: 'short', month: 'short', day: 'numeric' }))}${d.date === today ? ' · TODAY' : ''}</strong>
                   <span class="deck-build">${esc(d.build || 'Lesson')}</span>
                 </div>
-                <a class="btn btn-ghost" href="${esc(d.lessonDeckUrl)}" target="_blank" rel="noreferrer">▶ Present</a>
+                <div class="deck-row-actions">
+                  <button class="btn btn-primary" onclick="startDeckLive(${i})">▶ Present Live</button>
+                  <a class="btn btn-ghost" href="${esc(d.lessonDeckUrl)}" target="_blank" rel="noreferrer" title="Open on the TV only (campers won't see it)">TV only ↗</a>
+                </div>
               </div>`).join('')}
           </div>
         </div>`;
@@ -2740,6 +2803,205 @@
         <p class="section-sub presenter-heading"><span class="live-dot"></span>Live now — campers can join from their iPad. Use Prev/Next (or the numbers) to move everyone's screen.</p>
         <div class="presenter" id="presenterEl">${renderPresenterInner()}</div>`;
     }
+
+    /* ── Live HTML-deck presenter (real Lesson Building slides, mirrored to iPads) ── */
+    async function startDeckLive(i) {
+      const d = teacherDeckList[i];
+      if (!d) return;
+      try {
+        const res = await api('/api/camp/coach/live/start-deck', { method: 'POST', body: JSON.stringify({ deckUrl: d.lessonDeckUrl, deckTitle: d.title }) });
+        liveState = res.live;
+        deckBank = res.questions || [];
+        lastTally = res.tally || { total: 0, counts: [] };
+        deckSlideIndex = 0; deckSlideCount = 0; deckQBarSig = '';
+        lessonDraft = null;
+        // Make sure the Live Lesson view is showing.
+        if (activeView !== 'livelesson') showView('livelesson');
+        renderLiveLessonWrap();
+        refreshNavBadges();
+        startLivePolling();
+      } catch (err) { alert(err.message); }
+    }
+    window.startDeckLive = startDeckLive;
+
+    function renderDeckPresenter() {
+      return `
+        <div class="section-title presenter-heading">🎥 Presenting Live: ${esc(liveState.deckTitle || 'Lesson')}</div>
+        <p class="section-sub presenter-heading"><span class="live-dot"></span>Campers are following these slides on their iPads. Move with Prev/Next (swiping the deck also syncs them). Push a question whenever you like.</p>
+        <div class="presenter deck-presenter" id="deckPresenterEl">
+          <div class="presenter-bar">
+            <div>
+              <div class="title">${esc(liveState.deckTitle || 'Lesson')}</div>
+              <div class="counter" id="deckCounter">Slide ${deckSlideIndex + 1}${deckSlideCount ? ' of ' + deckSlideCount : ''}</div>
+            </div>
+            <div class="presenter-controls">
+              <button class="fs-btn" onclick="toggleFullscreen('deckPresenterEl')" title="Full screen (for the TV)">⛶ Full screen</button>
+              <button class="btn btn-ghost" onclick="deckPrev()">◀ Prev</button>
+              <button class="btn btn-ghost" onclick="deckNext()">Next ▶</button>
+              <button class="btn btn-danger" onclick="deckStop()">■ End</button>
+            </div>
+          </div>
+          <iframe id="deckFrame" class="deck-frame" src="${esc(liveState.deckUrl)}" onload="onDeckFrameLoad()"></iframe>
+          <div class="deck-q-bar" id="deckQBar">${renderDeckQBar()}</div>
+        </div>`;
+    }
+
+    function renderDeckQBar() {
+      const aq = liveState.activeQuestion;
+      if (aq) {
+        const total = lastTally.total || 0;
+        const rows = (aq.options || []).map((opt, j) => {
+          const c = (lastTally.counts && lastTally.counts[j]) || 0;
+          const pct = total ? Math.round((c / total) * 100) : 0;
+          const correct = j === aq.correctIndex;
+          return `<div class="tally-row ${correct ? 'correct' : ''}">
+            <div class="tally-label"><span>${correct ? '✓ ' : ''}${esc(opt)}</span><span>${c} (${pct}%)</span></div>
+            <div class="tally-bar"><div class="tally-fill" style="width:${pct}%"></div></div>
+          </div>`;
+        }).join('');
+        return `<div class="deck-q-live">
+          <div class="deck-q-head"><strong>❓ ${esc(aq.title)}</strong>
+            <button class="btn btn-primary" onclick="deckCloseQuestion()">✓ Reveal &amp; score</button></div>
+          ${aq.body ? `<div class="deck-q-body">${esc(aq.body)}</div>` : ''}
+          <div class="tally">${rows}
+            <div class="meta" style="font-size:12px;color:var(--muted)">${total} camper${total === 1 ? '' : 's'} answered · correct = 5→1 pts (faster earns more), added to their class points. The ✓ row is correct (campers don't see it yet).</div>
+          </div>
+        </div>`;
+      }
+      if (!deckBank.length) {
+        return `<div class="deck-q-empty">This lesson has no ready-made questions yet. <button class="btn btn-ghost" onclick="deckAddQuestion()">➕ Add a question</button></div>`;
+      }
+      return `<div class="deck-q-push">
+        <label for="deckQSelect" class="deck-q-label">Push a question to campers (Kahoot-style):</label>
+        <div class="deck-q-push-row">
+          <select id="deckQSelect">${deckBank.map((q, i) => `<option value="${esc(q.id)}">Q${i + 1}: ${esc((q.body || q.title || 'Question').slice(0, 80))}</option>`).join('')}</select>
+          <button class="btn btn-primary" onclick="deckPushQuestion()">❓ Push question</button>
+          <button class="btn btn-ghost" onclick="deckAddQuestion()" title="Add a new question to this lesson">➕ Add</button>
+        </div>
+      </div>`;
+    }
+
+    function updateDeckCounter() {
+      const c = document.getElementById('deckCounter');
+      if (c) c.textContent = 'Slide ' + (deckSlideIndex + 1) + (deckSlideCount ? ' of ' + deckSlideCount : '');
+    }
+    function updateDeckDynamic() {
+      updateDeckCounter();
+      const qb = document.getElementById('deckQBar');
+      if (!qb) return;
+      const aq = liveState.activeQuestion;
+      if (aq) { qb.innerHTML = renderDeckQBar(); deckQBarSig = 'active:' + aq.id; }
+      else {
+        const sig = 'push:' + deckBank.length;
+        if (sig !== deckQBarSig) { qb.innerHTML = renderDeckQBar(); deckQBarSig = sig; }
+      }
+    }
+
+    function deckFrameDoc() {
+      const f = document.getElementById('deckFrame');
+      try { return f && f.contentDocument; } catch (e) { return null; }
+    }
+    function deckEl() { const d = deckFrameDoc(); return d && d.querySelector('.deck'); }
+
+    function onDeckFrameLoad() {
+      const d = deckFrameDoc();
+      if (!d) return;
+      const deck = d.querySelector('.deck');
+      if (!deck) return;
+      deckSlideCount = d.querySelectorAll('.slide').length || 0;
+      // restore the coach's place (e.g. after a re-render), then report to the server
+      const w = deck.clientWidth || 1;
+      deck.scrollTo({ left: deckSlideIndex * w, behavior: 'auto' });
+      updateDeckCounter();
+      postDeckSlide(deckSlideIndex, deckSlideCount);
+      // teacher swiping/scrolling the deck itself also syncs the campers
+      let t = null;
+      deck.addEventListener('scroll', () => {
+        if (t) clearTimeout(t);
+        t = setTimeout(() => {
+          const cw = deck.clientWidth || 1;
+          const max = deckSlideCount ? deckSlideCount - 1 : 9999;
+          const idx = Math.max(0, Math.min(max, Math.round(deck.scrollLeft / cw)));
+          if (idx !== deckSlideIndex) { deckSlideIndex = idx; updateDeckCounter(); postDeckSlide(idx, deckSlideCount); }
+        }, 160);
+      });
+    }
+    window.onDeckFrameLoad = onDeckFrameLoad;
+
+    function deckGoto(i) {
+      const deck = deckEl();
+      const max = deckSlideCount ? deckSlideCount - 1 : i;
+      i = Math.max(0, Math.min(i, max));
+      deckSlideIndex = i;
+      if (deck) { const w = deck.clientWidth || 1; deck.scrollTo({ left: i * w, behavior: 'smooth' }); }
+      updateDeckCounter();
+      postDeckSlide(i, deckSlideCount);
+    }
+    function deckNext() { deckGoto(deckSlideIndex + 1); }
+    function deckPrev() { deckGoto(deckSlideIndex - 1); }
+    window.deckNext = deckNext; window.deckPrev = deckPrev;
+
+    async function postDeckSlide(index, slideCount) {
+      try { await api('/api/camp/coach/live/slide', { method: 'POST', body: JSON.stringify({ index, slideCount }) }); } catch (e) { /* keep going */ }
+    }
+
+    async function deckPushQuestion() {
+      const sel = document.getElementById('deckQSelect');
+      if (!sel) return;
+      try {
+        const res = await api('/api/camp/coach/live/push-question', { method: 'POST', body: JSON.stringify({ questionId: sel.value }) });
+        liveState = res.live; lastTally = res.tally || { total: 0, counts: [] };
+        updateDeckDynamic();
+      } catch (err) { alert(err.message); }
+    }
+    window.deckPushQuestion = deckPushQuestion;
+
+    async function deckCloseQuestion() {
+      try {
+        const res = await api('/api/camp/coach/live/close-question', { method: 'POST' });
+        liveState = res.live; lastTally = res.tally || { total: 0, counts: [] };
+        if (res.awarded && res.awarded.length && typeof playPointSound === 'function') playPointSound(true);
+        updateDeckDynamic();
+      } catch (err) { alert(err.message); }
+    }
+    window.deckCloseQuestion = deckCloseQuestion;
+
+    async function deckStop() {
+      if (!confirm('End the live presentation for everyone?')) return;
+      try {
+        await api('/api/camp/coach/live/stop', { method: 'POST' });
+        liveState = { active: false };
+        stopLivePolling();
+        renderLiveLessonWrap();
+        refreshNavBadges();
+      } catch (err) { alert(err.message); }
+    }
+    window.deckStop = deckStop;
+
+    async function deckAddQuestion() {
+      const lesson = lessons.find(l => l.deckUrl === liveState.deckUrl) || lessons.find(l => l.id === liveState.lessonId);
+      if (!lesson) { alert('This deck is not linked to a question bank, so questions can’t be added here yet.'); return; }
+      const body = prompt('Question to ask campers:');
+      if (!body) return;
+      const optsRaw = prompt('Answer choices separated by a | (pipe). Example: Beams | Glue | Guessing | Skipping');
+      if (!optsRaw) return;
+      const options = optsRaw.split('|').map(s => s.trim()).filter(Boolean).slice(0, 6);
+      if (options.length < 2) { alert('Please give at least 2 answer choices.'); return; }
+      const ans = prompt(`Which choice is correct? Enter a number 1-${options.length}.`, '1');
+      const ci = parseInt(ans, 10) - 1;
+      if (isNaN(ci) || ci < 0 || ci >= options.length) { alert('That correct-answer number is not valid.'); return; }
+      const newSlide = { id: 'q-' + Date.now().toString(36), type: 'question', title: body.slice(0, 60), body, options, correctIndex: ci };
+      const updated = { ...lesson, slides: [...lesson.slides, newSlide] };
+      try {
+        const res = await api('/api/camp/coach/lessons', { method: 'POST', body: JSON.stringify(updated) });
+        lessons = res.lessons || lessons;
+        const fresh = lessons.find(l => l.id === lesson.id) || updated;
+        deckBank = (fresh.slides || []).filter(s => s.type === 'question' && s.correctIndex >= 0).map(s => ({ id: s.id, title: s.title, body: s.body, options: s.options }));
+        deckQBarSig = '';
+        updateDeckDynamic();
+      } catch (err) { alert(err.message); }
+    }
+    window.deckAddQuestion = deckAddQuestion;
 
     async function load() {
       try {
