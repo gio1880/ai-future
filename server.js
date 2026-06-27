@@ -1356,7 +1356,27 @@ async function writeCampLessons(lessons) {
 }
 
 function defaultCampLiveLesson() {
-	return { active: false, lessonId: '', lessonTitle: '', slides: [], currentIndex: 0, startedAt: '', responses: {} };
+	return {
+		active: false, kind: 'slides', lessonId: '', lessonTitle: '', slides: [], currentIndex: 0, startedAt: '', responses: {},
+		deckUrl: '', deckTitle: '', slideIndex: 0, slideCount: 0,
+		activeQuestion: null, scoredQuestionIds: [], lastClosed: null
+	};
+}
+
+function normalizeLiveQuestion(q) {
+	if (!q || typeof q !== 'object') return null;
+	const options = Array.isArray(q.options) ? q.options.map((opt) => cleanMetaString(opt, 160)).filter(Boolean).slice(0, 6) : [];
+	if (options.length < 2) return null;
+	let correctIndex = Number.isInteger(q.correctIndex) ? q.correctIndex : -1;
+	if (correctIndex < 0 || correctIndex >= options.length) correctIndex = -1;
+	return {
+		id: cleanMetaString(q.id || `liveq-${crypto.randomBytes(4).toString('hex')}`, 120),
+		title: cleanMetaString(q.title || 'Question', 160),
+		body: cleanMetaString(q.body || '', 2000),
+		options,
+		correctIndex,
+		startedAt: cleanMetaString(q.startedAt || '', 80)
+	};
 }
 
 function normalizeCampLiveLesson(state) {
@@ -1364,14 +1384,31 @@ function normalizeCampLiveLesson(state) {
 	const source = state && typeof state === 'object' ? state : {};
 	const slides = Array.isArray(source.slides) ? source.slides.map(normalizeLessonSlide) : [];
 	const responses = source.responses && typeof source.responses === 'object' ? source.responses : {};
+	const kind = source.kind === 'deck' ? 'deck' : 'slides';
+	const slideCount = Number.isInteger(source.slideCount) ? Math.max(0, source.slideCount) : 0;
+	let slideIndex = Number.isInteger(source.slideIndex) ? Math.max(0, source.slideIndex) : 0;
+	if (slideCount > 0) slideIndex = Math.min(slideIndex, slideCount - 1);
+	const lastClosed = source.lastClosed && typeof source.lastClosed === 'object' ? {
+		questionId: cleanMetaString(source.lastClosed.questionId || '', 120),
+		correctIndex: Number.isInteger(source.lastClosed.correctIndex) ? source.lastClosed.correctIndex : -1,
+		results: source.lastClosed.results && typeof source.lastClosed.results === 'object' ? source.lastClosed.results : {}
+	} : null;
 	return {
 		active: source.active === true,
+		kind,
 		lessonId: cleanMetaString(source.lessonId || '', 120),
 		lessonTitle: cleanMetaString(source.lessonTitle || '', 160),
 		slides,
 		currentIndex: Number.isInteger(source.currentIndex) ? Math.max(0, Math.min(source.currentIndex, Math.max(0, slides.length - 1))) : 0,
 		startedAt: cleanMetaString(source.startedAt || '', 80),
-		responses
+		responses,
+		deckUrl: cleanMetaString(source.deckUrl || '', 1000),
+		deckTitle: cleanMetaString(source.deckTitle || '', 200),
+		slideIndex,
+		slideCount,
+		activeQuestion: normalizeLiveQuestion(source.activeQuestion),
+		scoredQuestionIds: Array.isArray(source.scoredQuestionIds) ? source.scoredQuestionIds.map((id) => cleanMetaString(id, 120)).filter(Boolean) : [],
+		lastClosed
 	};
 }
 
@@ -1404,15 +1441,54 @@ function publicLessonSlide(slide) {
 	};
 }
 
+// Build the camper's "you just answered" result from the last-closed question.
+function studentLastResult(live, studentId) {
+	if (!live || !live.lastClosed || !live.lastClosed.results) return null;
+	const mine = live.lastClosed.results[studentId];
+	if (!mine) return null;
+	return {
+		questionId: live.lastClosed.questionId,
+		correctIndex: live.lastClosed.correctIndex,
+		correct: mine.correct === true,
+		points: Number.isFinite(mine.points) ? mine.points : 0,
+		choice: Number.isInteger(mine.choice) ? mine.choice : null
+	};
+}
+
 function publicLiveStateForStudent(live, studentId) {
-	if (!live || !live.active || !live.slides.length) {
-		return { active: false };
+	if (!live || !live.active) return { active: false };
+
+	// Deck mode: campers follow the teacher's HTML deck + answer pushed questions.
+	if (live.kind === 'deck') {
+		const aq = live.activeQuestion;
+		let question = null;
+		let myAnswer = null;
+		if (aq) {
+			const qResponses = (live.responses && live.responses[aq.id]) || {};
+			const mine = qResponses[studentId];
+			myAnswer = mine && Number.isInteger(mine.choice) ? mine.choice : null;
+			question = { id: aq.id, title: aq.title, body: aq.body, options: aq.options, startedAt: aq.startedAt };
+		}
+		return {
+			active: true,
+			kind: 'deck',
+			deckUrl: live.deckUrl,
+			deckTitle: live.deckTitle,
+			slideIndex: live.slideIndex,
+			slideCount: live.slideCount,
+			activeQuestion: question,
+			myAnswer,
+			lastResult: studentLastResult(live, studentId)
+		};
 	}
+
+	if (!live.slides.length) return { active: false };
 	const slide = live.slides[live.currentIndex] || live.slides[0];
 	const slideResponses = (live.responses && live.responses[slide.id]) || {};
 	const mine = slideResponses[studentId];
 	return {
 		active: true,
+		kind: 'slides',
 		lessonTitle: live.lessonTitle,
 		slideIndex: live.currentIndex,
 		slideCount: live.slides.length,
@@ -1422,9 +1498,18 @@ function publicLiveStateForStudent(live, studentId) {
 	};
 }
 
-// Coach-facing tally for the current slide's responses.
+// Coach-facing tally for the current open question (deck) or current slide (text).
 function liveResponseTally(live) {
-	if (!live || !live.slides.length) return { total: 0, counts: [] };
+	if (!live) return { total: 0, counts: [] };
+	if (live.kind === 'deck') {
+		const aq = live.activeQuestion;
+		if (!aq) return { total: 0, counts: [] };
+		const qResponses = (live.responses && live.responses[aq.id]) || {};
+		const entries = Object.values(qResponses);
+		const counts = (aq.options || []).map((_, i) => entries.filter((e) => e && e.choice === i).length);
+		return { total: entries.length, counts };
+	}
+	if (!live.slides.length) return { total: 0, counts: [] };
 	const slide = live.slides[live.currentIndex] || live.slides[0];
 	const slideResponses = (live.responses && live.responses[slide.id]) || {};
 	const entries = Object.values(slideResponses);
@@ -4692,8 +4777,12 @@ app.get('/camp-hub/lessons', requireCampAuth, (req, res) => {
 	return res.redirect(302, '/camp-hub/lessons/index.html');
 });
 
+// Coaches browse the deck index; campers' iframes load individual deck files when
+// a deck is being presented live (teacher notes are hidden client-side in the camper view).
 app.use('/camp-hub/lessons', requireCampAuth, (req, res, next) => {
-	if (req.campUser.role !== 'coach') {
+	if (req.campUser.role === 'coach') return next();
+	// Campers may only load actual deck HTML/assets, not the coach-facing index listing.
+	if (req.path === '/' || req.path === '' || /index\.html?$/i.test(req.path)) {
 		return res.status(403).send('Coach access required');
 	}
 	return next();
@@ -5327,11 +5416,169 @@ app.post('/api/camp/coach/live/stop', requireCampAuth, requireCampCoach, async (
 	try {
 		const live = await readCampLiveLesson();
 		live.active = false;
+		live.activeQuestion = null;
 		await writeCampLiveLesson(live);
 		return res.json({ success: true, live: { active: false } });
 	} catch (err) {
 		console.error('Camp live stop error:', err);
 		return res.status(500).json({ success: false, message: 'Server error stopping lesson' });
+	}
+});
+
+// ── Live lessons: present the real HTML lesson decks, synced to camper iPads ──
+const LIVE_QUIZ_POINT_LIMIT_MS = 20000; // answer within this window for full speed bonus
+
+// Kahoot-style speed scaling: fast = 5 … slow = 1 (correct answers only).
+function liveQuizPoints(elapsedMs) {
+	const clamped = Math.min(Math.max(Number(elapsedMs) || 0, 0), LIVE_QUIZ_POINT_LIMIT_MS);
+	return Math.max(1, Math.min(5, Math.round(5 - 4 * (clamped / LIVE_QUIZ_POINT_LIMIT_MS))));
+}
+
+// Score the currently-open question and write persistent point events for correct campers.
+// Idempotent: guarded by scoredQuestionIds so re-closing never double-awards.
+async function scoreLiveQuestion(live) {
+	const aq = live.activeQuestion;
+	if (!aq) return { results: {}, awarded: [] };
+	if (live.scoredQuestionIds.includes(aq.id)) {
+		const prior = live.lastClosed && live.lastClosed.questionId === aq.id ? live.lastClosed.results : {};
+		return { results: prior, awarded: [] };
+	}
+	const qResponses = (live.responses && live.responses[aq.id]) || {};
+	const startMs = aq.startedAt ? new Date(aq.startedAt).getTime() : Date.now();
+	const results = {};
+	const correctResponders = [];
+	for (const [studentId, r] of Object.entries(qResponses)) {
+		const correct = aq.correctIndex >= 0 && r && r.choice === aq.correctIndex;
+		let points = 0;
+		if (correct) {
+			const atMs = r.at ? new Date(r.at).getTime() : startMs;
+			points = liveQuizPoints(atMs - startMs);
+			correctResponders.push({ studentId, points });
+		}
+		results[studentId] = { correct: !!correct, points, choice: Number.isInteger(r && r.choice) ? r.choice : null };
+	}
+	const awarded = [];
+	if (correctResponders.length) {
+		const users = await readCampUsers();
+		const events = await readCampPointEvents();
+		for (const cr of correctResponders) {
+			const student = users.find((u) => u.id === cr.studentId && u.role === 'student');
+			if (!student) continue;
+			const event = {
+				id: `point-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
+				studentId: student.id,
+				studentName: student.name,
+				className: student.className || 'Unassigned',
+				category: 'Live Quiz',
+				icon: '⚡',
+				type: 'positive',
+				points: cr.points,
+				note: `Correct: ${aq.title}`,
+				createdBy: 'live-lesson',
+				createdByName: 'Live Quiz',
+				createdAt: new Date().toISOString()
+			};
+			events.push(event);
+			awarded.push(event);
+		}
+		await writeJsonFile(campPointEventsFile, events);
+	}
+	live.scoredQuestionIds.push(aq.id);
+	live.lastClosed = { questionId: aq.id, correctIndex: aq.correctIndex, results };
+	return { results, awarded };
+}
+
+// Start a live HTML-deck presentation. Links the lesson's question bank by deckUrl.
+app.post('/api/camp/coach/live/start-deck', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const deckUrl = cleanMetaString(req.body.deckUrl || '', 1000);
+		if (!deckUrl || !deckUrl.startsWith('/camp-hub/lessons/')) {
+			return res.status(400).json({ success: false, message: 'A lesson deck URL is required' });
+		}
+		const slideCount = Number.isInteger(Number(req.body.slideCount)) ? Math.max(0, Number(req.body.slideCount)) : 0;
+		const lessons = await readCampLessons();
+		const lesson = lessons.find((l) => l.deckUrl === deckUrl);
+		const deckTitle = cleanMetaString(req.body.deckTitle || '', 200) || (lesson ? lesson.title : '');
+		const live = normalizeCampLiveLesson({
+			active: true,
+			kind: 'deck',
+			deckUrl,
+			deckTitle,
+			lessonId: lesson ? lesson.id : '',
+			lessonTitle: lesson ? lesson.title : deckTitle,
+			slideIndex: 0,
+			slideCount,
+			startedAt: new Date().toISOString(),
+			responses: {},
+			activeQuestion: null,
+			scoredQuestionIds: [],
+			lastClosed: null
+		});
+		await writeCampLiveLesson(live);
+		const questions = lesson ? lesson.slides.filter((s) => s.type === 'question' && s.correctIndex >= 0)
+			.map((s) => ({ id: s.id, title: s.title, body: s.body, options: s.options })) : [];
+		return res.json({ success: true, live, tally: liveResponseTally(live), questions });
+	} catch (err) {
+		console.error('Camp live start-deck error:', err);
+		return res.status(500).json({ success: false, message: 'Server error starting presentation' });
+	}
+});
+
+// Move the live deck to a slide index (campers follow).
+app.post('/api/camp/coach/live/slide', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const live = await readCampLiveLesson();
+		if (!live.active || live.kind !== 'deck') return res.status(400).json({ success: false, message: 'No deck is live' });
+		const index = Number(req.body.index);
+		if (!Number.isInteger(index) || index < 0) return res.status(400).json({ success: false, message: 'Invalid slide index' });
+		if (Number.isInteger(Number(req.body.slideCount))) live.slideCount = Math.max(live.slideCount, Math.max(0, Number(req.body.slideCount)));
+		live.slideIndex = index;
+		await writeCampLiveLesson(live);
+		return res.json({ success: true, live });
+	} catch (err) {
+		console.error('Camp live slide error:', err);
+		return res.status(500).json({ success: false, message: 'Server error changing slide' });
+	}
+});
+
+// Push a multiple-choice question (Kahoot style) to the campers.
+app.post('/api/camp/coach/live/push-question', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const live = await readCampLiveLesson();
+		if (!live.active || live.kind !== 'deck') return res.status(400).json({ success: false, message: 'No deck is live' });
+		const questionId = cleanMetaString(req.body.questionId || '', 120);
+		const lessons = await readCampLessons();
+		const lesson = lessons.find((l) => l.deckUrl === live.deckUrl) || lessons.find((l) => l.id === live.lessonId);
+		const bankQ = lesson ? lesson.slides.find((s) => s.type === 'question' && s.id === questionId) : null;
+		if (!bankQ) return res.status(404).json({ success: false, message: 'Question not found in this lesson' });
+		const instanceId = `${bankQ.id}::${Date.now().toString(36)}`;
+		const aq = normalizeLiveQuestion({ ...bankQ, id: instanceId, startedAt: new Date().toISOString() });
+		if (!aq || aq.correctIndex < 0) return res.status(400).json({ success: false, message: 'This question has no correct answer set' });
+		live.activeQuestion = aq;
+		if (!live.responses) live.responses = {};
+		live.responses[aq.id] = {};
+		await writeCampLiveLesson(live);
+		return res.json({ success: true, live, tally: liveResponseTally(live) });
+	} catch (err) {
+		console.error('Camp live push-question error:', err);
+		return res.status(500).json({ success: false, message: 'Server error pushing question' });
+	}
+});
+
+// Close the open question: score it (write point events) and reveal the answer.
+app.post('/api/camp/coach/live/close-question', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const live = await readCampLiveLesson();
+		if (!live.active || live.kind !== 'deck') return res.status(400).json({ success: false, message: 'No deck is live' });
+		if (!live.activeQuestion) return res.json({ success: true, live, tally: { total: 0, counts: [] }, awarded: [] });
+		const correctIndex = live.activeQuestion.correctIndex;
+		const { awarded } = await scoreLiveQuestion(live);
+		live.activeQuestion = null;
+		await writeCampLiveLesson(live);
+		return res.json({ success: true, live, tally: { total: 0, counts: [] }, awarded, correctIndex });
+	} catch (err) {
+		console.error('Camp live close-question error:', err);
+		return res.status(500).json({ success: false, message: 'Server error closing question' });
 	}
 });
 
@@ -5349,6 +5596,28 @@ app.get('/api/camp/live', requireCampAuth, async (req, res) => {
 app.post('/api/camp/live/answer', requireCampAuth, async (req, res) => {
 	try {
 		const live = await readCampLiveLesson();
+
+		// Deck mode: answer the currently-pushed Kahoot question (first answer locks).
+		if (live.active && live.kind === 'deck') {
+			const aq = live.activeQuestion;
+			const questionId = cleanMetaString(req.body.questionId || '', 120);
+			if (!aq || aq.id !== questionId) {
+				return res.status(400).json({ success: false, message: 'That question is not open' });
+			}
+			const choice = Number(req.body.choice);
+			if (!Number.isInteger(choice) || choice < 0 || choice >= aq.options.length) {
+				return res.status(400).json({ success: false, message: 'Invalid choice' });
+			}
+			if (!live.responses[aq.id]) live.responses[aq.id] = {};
+			const existing = live.responses[aq.id][req.campUser.id];
+			if (existing && Number.isInteger(existing.choice)) {
+				return res.json({ success: true, myAnswer: existing.choice, locked: true });
+			}
+			live.responses[aq.id][req.campUser.id] = { choice, name: req.campUser.name, at: new Date().toISOString() };
+			await writeCampLiveLesson(live);
+			return res.json({ success: true, myAnswer: choice });
+		}
+
 		if (!live.active || !live.slides.length) return res.status(400).json({ success: false, message: 'No lesson is live' });
 		const slideId = cleanMetaString(req.body.slideId || '', 120);
 		const current = live.slides[live.currentIndex];

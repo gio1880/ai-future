@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-26T23:13:42.140Z",
+  "updatedAt": "2026-06-27T00:04:48.147Z",
   "settings": {
     "summerWeeks": [
       {
@@ -1564,10 +1564,7 @@
         {
           "classId": "summer-lego-robotics-1",
           "weeks": [
-            "week-1",
-            "week-2",
-            "week-3",
-            "week-4"
+            "week-1"
           ]
         }
       ],
@@ -1576,8 +1573,8 @@
       "summerRosterSource": "summer-2026-screenshot-grade-roster",
       "campUserId": "camp-demo-summer-camper",
       "createdAt": "2026-06-26T23:13:12.327Z",
-      "updatedAt": "2026-06-26T23:13:12.327Z",
-      "lastStudentPortalLoginAt": "2026-06-26T23:13:42.140Z"
+      "updatedAt": "2026-06-27T00:04:27.132Z",
+      "lastStudentPortalLoginAt": "2026-06-27T00:04:48.147Z"
     }
   ]
 }
