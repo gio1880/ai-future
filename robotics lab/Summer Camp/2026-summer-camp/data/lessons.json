@@ -1,79 +1,5 @@
 [
   {
-    "id": "coach-setup-test-student-login-live-points",
-    "title": "Coach Setup Test: Student Login + Live Questions",
-    "updatedAt": "2026-06-27T00:00:00.000Z",
-    "lessonSource": "coach-only-setup-test-2026",
-    "deckUrl": "",
-    "coachOnly": true,
-    "slides": [
-      {
-        "id": "setup-test-intro",
-        "type": "content",
-        "title": "Coach-Only Setup Test",
-        "body": "Use this before camp starts to test student login, live lesson join, Kahoot-style questions, and point awards. This is not part of the student curriculum schedule.",
-        "image": "",
-        "options": [],
-        "correctIndex": -1
-      },
-      {
-        "id": "setup-test-login",
-        "type": "content",
-        "title": "1. Test Student Login",
-        "body": "On a student device, open /student-login. Use class code DEMO and username demo. After login, open Summer Camp from the Student Hub.",
-        "image": "",
-        "options": [],
-        "correctIndex": -1
-      },
-      {
-        "id": "setup-test-join",
-        "type": "question",
-        "title": "Login Check",
-        "body": "After the coach starts a live lesson, what should the student tap on their Summer Camp page?",
-        "image": "",
-        "options": [
-          "Join live lesson",
-          "Reset password",
-          "Delete lesson",
-          "Open coach dashboard"
-        ],
-        "correctIndex": 0
-      },
-      {
-        "id": "setup-test-points",
-        "type": "question",
-        "title": "Points Check",
-        "body": "What should happen when a student answers a live question correctly?",
-        "image": "",
-        "options": [
-          "They earn live question points",
-          "Their account is removed",
-          "The lesson closes for everyone",
-          "Nothing changes"
-        ],
-        "correctIndex": 0
-      },
-      {
-        "id": "setup-test-coach-check",
-        "type": "content",
-        "title": "3. Confirm Results",
-        "body": "Close each question from the coach presenter, then check that the student sees feedback and the coach points/progress view reflects the awarded points.",
-        "image": "",
-        "options": [],
-        "correctIndex": -1
-      },
-      {
-        "id": "setup-test-reset",
-        "type": "content",
-        "title": "Optional Cleanup",
-        "body": "After testing, use the class point reset button if you want to clear the demo class point events before real camp use.",
-        "image": "",
-        "options": [],
-        "correctIndex": -1
-      }
-    ]
-  },
-  {
     "id": "w1-mon-intro-lego-technic",
     "title": "Week 1 - Monday: Intro to LEGO Technic",
     "updatedAt": "2026-06-25T00:00:00.000Z",
@@ -106,20 +32,6 @@
         "correctIndex": -1
       },
       {
-        "id": "l1-check",
-        "type": "question",
-        "title": "Quick Check",
-        "body": "Which idea matters most for today's Tallest Tower challenge?",
-        "image": "",
-        "options": [
-          "beams",
-          "Decoration only",
-          "Random guessing",
-          "Skipping tests"
-        ],
-        "correctIndex": 0
-      },
-      {
         "id": "l1-brief",
         "type": "content",
         "title": "Build Brief",
@@ -136,20 +48,6 @@
         "image": "",
         "options": [],
         "correctIndex": -1
-      },
-      {
-        "id": "l1-predict",
-        "type": "question",
-        "title": "Predict",
-        "body": "What should engineers change between trials?",
-        "image": "",
-        "options": [
-          "One thing at a time",
-          "Everything at once",
-          "Nothing at all",
-          "Only the team name"
-        ],
-        "correctIndex": 0
       },
       {
         "id": "l1-improve",
@@ -177,6 +75,48 @@
         "image": "",
         "options": [],
         "correctIndex": -1
+      },
+      {
+        "id": "w1-mon-intro-lego-technic-q1",
+        "type": "question",
+        "title": "Wide base",
+        "body": "Why does a wide base help a tall tower stay up?",
+        "image": "",
+        "options": [
+          "It spreads out the weight so the tower is harder to tip over",
+          "It automatically makes the tower taller",
+          "It uses fewer pieces",
+          "It makes the colors match"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w1-mon-intro-lego-technic-q2",
+        "type": "question",
+        "title": "Rigid",
+        "body": "What does it mean for a tower to be \"rigid\"?",
+        "image": "",
+        "options": [
+          "It does not bend, wiggle, or twist",
+          "It is very tall",
+          "It is brightly colored",
+          "It can float"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w1-mon-intro-lego-technic-q3",
+        "type": "question",
+        "title": "Measuring",
+        "body": "In the Tallest Tower challenge, how is the height measured?",
+        "image": "",
+        "options": [
+          "From the table to the highest connected LEGO piece",
+          "From your hand to the ceiling",
+          "By counting the pieces",
+          "By weighing the tower"
+        ],
+        "correctIndex": 0
       }
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4",
@@ -215,20 +155,6 @@
         "correctIndex": -1
       },
       {
-        "id": "l2-check",
-        "type": "question",
-        "title": "Quick Check",
-        "body": "Which idea matters most for today's Strongest Bridge challenge?",
-        "image": "",
-        "options": [
-          "triangles",
-          "Decoration only",
-          "Random guessing",
-          "Skipping tests"
-        ],
-        "correctIndex": 0
-      },
-      {
         "id": "l2-brief",
         "type": "content",
         "title": "Build Brief",
@@ -245,20 +171,6 @@
         "image": "",
         "options": [],
         "correctIndex": -1
-      },
-      {
-        "id": "l2-predict",
-        "type": "question",
-        "title": "Predict",
-        "body": "What should engineers change between trials?",
-        "image": "",
-        "options": [
-          "One thing at a time",
-          "Everything at once",
-          "Nothing at all",
-          "Only the team name"
-        ],
-        "correctIndex": 0
       },
       {
         "id": "l2-improve",
@@ -286,6 +198,48 @@
         "image": "",
         "options": [],
         "correctIndex": -1
+      },
+      {
+        "id": "w1-tue-bridge-engineering-q1",
+        "type": "question",
+        "title": "Strong shape",
+        "body": "Which shape makes a bridge more rigid?",
+        "image": "",
+        "options": [
+          "A triangle",
+          "A rectangle",
+          "A circle",
+          "A square"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w1-tue-bridge-engineering-q2",
+        "type": "question",
+        "title": "Tension",
+        "body": "What does \"tension\" mean in a bridge?",
+        "image": "",
+        "options": [
+          "A part is being pulled or stretched",
+          "A part is being pushed or squeezed",
+          "A part is spinning",
+          "A part is floating"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w1-tue-bridge-engineering-q3",
+        "type": "question",
+        "title": "Bridge rule",
+        "body": "The bridge challenge says you must use at least how many triangles?",
+        "image": "",
+        "options": [
+          "At least two triangles",
+          "Zero triangles",
+          "Exactly one triangle",
+          "Ten triangles"
+        ],
+        "correctIndex": 0
       }
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4",
@@ -324,20 +278,6 @@
         "correctIndex": -1
       },
       {
-        "id": "l3-check",
-        "type": "question",
-        "title": "Quick Check",
-        "body": "Which idea matters most for today's Balloon-Powered Car challenge?",
-        "image": "",
-        "options": [
-          "wheels and axles",
-          "Decoration only",
-          "Random guessing",
-          "Skipping tests"
-        ],
-        "correctIndex": 0
-      },
-      {
         "id": "l3-brief",
         "type": "content",
         "title": "Build Brief",
@@ -354,20 +294,6 @@
         "image": "",
         "options": [],
         "correctIndex": -1
-      },
-      {
-        "id": "l3-predict",
-        "type": "question",
-        "title": "Predict",
-        "body": "What should engineers change between trials?",
-        "image": "",
-        "options": [
-          "One thing at a time",
-          "Everything at once",
-          "Nothing at all",
-          "Only the team name"
-        ],
-        "correctIndex": 0
       },
       {
         "id": "l3-improve",
@@ -395,6 +321,48 @@
         "image": "",
         "options": [],
         "correctIndex": -1
+      },
+      {
+        "id": "w1-wed-balloon-powered-car-q1",
+        "type": "question",
+        "title": "Why it moves",
+        "body": "Why does the balloon car move forward?",
+        "image": "",
+        "options": [
+          "Air rushes backward, so the car is pushed forward (action and reaction)",
+          "The balloon pulls the car along",
+          "Gravity pushes it forward",
+          "The wheels are magnetic"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w1-wed-balloon-powered-car-q2",
+        "type": "question",
+        "title": "Axles",
+        "body": "What are axles best for?",
+        "image": "",
+        "options": [
+          "Making wheels and gears rotate",
+          "Holding beams perfectly still",
+          "Decorating the car",
+          "Stretching like a rubber band"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w1-wed-balloon-powered-car-q3",
+        "type": "question",
+        "title": "Slows it down",
+        "body": "What is most likely to slow your car down?",
+        "image": "",
+        "options": [
+          "Friction from wheels rubbing on beams",
+          "Smooth, aligned axles",
+          "A bigger balloon",
+          "A straight path"
+        ],
+        "correctIndex": 0
       }
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4",
@@ -433,20 +401,6 @@
         "correctIndex": -1
       },
       {
-        "id": "l4-check",
-        "type": "question",
-        "title": "Quick Check",
-        "body": "Which idea matters most for today's Catapult challenge?",
-        "image": "",
-        "options": [
-          "levers",
-          "Decoration only",
-          "Random guessing",
-          "Skipping tests"
-        ],
-        "correctIndex": 0
-      },
-      {
         "id": "l4-brief",
         "type": "content",
         "title": "Build Brief",
@@ -463,20 +417,6 @@
         "image": "",
         "options": [],
         "correctIndex": -1
-      },
-      {
-        "id": "l4-predict",
-        "type": "question",
-        "title": "Predict",
-        "body": "What should engineers change between trials?",
-        "image": "",
-        "options": [
-          "One thing at a time",
-          "Everything at once",
-          "Nothing at all",
-          "Only the team name"
-        ],
-        "correctIndex": 0
       },
       {
         "id": "l4-improve",
@@ -504,6 +444,48 @@
         "image": "",
         "options": [],
         "correctIndex": -1
+      },
+      {
+        "id": "w1-thu-catapult-engineering-q1",
+        "type": "question",
+        "title": "Stored energy",
+        "body": "Before launch, where is the energy stored?",
+        "image": "",
+        "options": [
+          "In the stretched rubber band as elastic potential energy",
+          "In the wheels",
+          "In the floor",
+          "In the projectile's color"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w1-thu-catapult-engineering-q2",
+        "type": "question",
+        "title": "Fulcrum",
+        "body": "What is the fulcrum of a catapult?",
+        "image": "",
+        "options": [
+          "The pivot point the arm turns around",
+          "The projectile being launched",
+          "The force you apply",
+          "The width of the base"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w1-thu-catapult-engineering-q3",
+        "type": "question",
+        "title": "Stable first",
+        "body": "Why build a wide, strong base for your catapult?",
+        "image": "",
+        "options": [
+          "So it stays stable and doesn't tip when the arm swings",
+          "So it launches farther automatically",
+          "So it uses more pieces",
+          "So it looks nicer"
+        ],
+        "correctIndex": 0
       }
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4",
@@ -542,20 +524,6 @@
         "correctIndex": -1
       },
       {
-        "id": "l5-check",
-        "type": "question",
-        "title": "Quick Check",
-        "body": "Which idea matters most for today's Rubber Band Car challenge?",
-        "image": "",
-        "options": [
-          "elastic energy",
-          "Decoration only",
-          "Random guessing",
-          "Skipping tests"
-        ],
-        "correctIndex": 0
-      },
-      {
         "id": "l5-brief",
         "type": "content",
         "title": "Build Brief",
@@ -572,20 +540,6 @@
         "image": "",
         "options": [],
         "correctIndex": -1
-      },
-      {
-        "id": "l5-predict",
-        "type": "question",
-        "title": "Predict",
-        "body": "What should engineers change between trials?",
-        "image": "",
-        "options": [
-          "One thing at a time",
-          "Everything at once",
-          "Nothing at all",
-          "Only the team name"
-        ],
-        "correctIndex": 0
       },
       {
         "id": "l5-improve",
@@ -613,6 +567,48 @@
         "image": "",
         "options": [],
         "correctIndex": -1
+      },
+      {
+        "id": "w2-mon-rubber-band-car-q1",
+        "type": "question",
+        "title": "Energy source",
+        "body": "How does the rubber band car get its energy to move?",
+        "image": "",
+        "options": [
+          "Twisting the rubber band stores elastic energy that turns the axle",
+          "A battery powers it",
+          "A balloon pushes it",
+          "Only gravity moves it"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w2-mon-rubber-band-car-q2",
+        "type": "question",
+        "title": "Fair test",
+        "body": "What is the rule for keeping a test fair?",
+        "image": "",
+        "options": [
+          "Change only one thing at a time",
+          "Change everything at once",
+          "Use a different floor each time",
+          "Let some teams push the car"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w2-mon-rubber-band-car-q3",
+        "type": "question",
+        "title": "More twists?",
+        "body": "Do more rubber band twists always make the car go farther?",
+        "image": "",
+        "options": [
+          "Not always — too many twists can slip or hurt the run",
+          "Yes, more twists is always farther",
+          "Twists make no difference",
+          "Twists only change the color"
+        ],
+        "correctIndex": 0
       }
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4",
@@ -651,20 +647,6 @@
         "correctIndex": -1
       },
       {
-        "id": "l6-check",
-        "type": "question",
-        "title": "Quick Check",
-        "body": "Which idea matters most for today's Elevator / Lift challenge?",
-        "image": "",
-        "options": [
-          "pulleys",
-          "Decoration only",
-          "Random guessing",
-          "Skipping tests"
-        ],
-        "correctIndex": 0
-      },
-      {
         "id": "l6-brief",
         "type": "content",
         "title": "Build Brief",
@@ -681,20 +663,6 @@
         "image": "",
         "options": [],
         "correctIndex": -1
-      },
-      {
-        "id": "l6-predict",
-        "type": "question",
-        "title": "Predict",
-        "body": "What should engineers change between trials?",
-        "image": "",
-        "options": [
-          "One thing at a time",
-          "Everything at once",
-          "Nothing at all",
-          "Only the team name"
-        ],
-        "correctIndex": 0
       },
       {
         "id": "l6-improve",
@@ -722,6 +690,48 @@
         "image": "",
         "options": [],
         "correctIndex": -1
+      },
+      {
+        "id": "w2-tue-elevator-lift-q1",
+        "type": "question",
+        "title": "Guides",
+        "body": "What do rails or guides do on a lift?",
+        "image": "",
+        "options": [
+          "Keep the platform rising straight without tipping",
+          "Make the lift heavier",
+          "Add color to the lift",
+          "Store energy"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w2-tue-elevator-lift-q2",
+        "type": "question",
+        "title": "Balance",
+        "body": "Why keep the load centered on the platform?",
+        "image": "",
+        "options": [
+          "So the lift stays balanced and doesn't tilt",
+          "To make it rise faster",
+          "To use more string",
+          "To look nice"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w2-tue-elevator-lift-q3",
+        "type": "question",
+        "title": "No tipping",
+        "body": "What helps the tall lift tower avoid tipping over?",
+        "image": "",
+        "options": [
+          "A wide, braced base",
+          "A narrow base",
+          "Loose beams",
+          "A heavier top"
+        ],
+        "correctIndex": 0
       }
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4",
@@ -760,20 +770,6 @@
         "correctIndex": -1
       },
       {
-        "id": "l7-check",
-        "type": "question",
-        "title": "Quick Check",
-        "body": "Which idea matters most for today's Ferris Wheel challenge?",
-        "image": "",
-        "options": [
-          "rotation",
-          "Decoration only",
-          "Random guessing",
-          "Skipping tests"
-        ],
-        "correctIndex": 0
-      },
-      {
         "id": "l7-brief",
         "type": "content",
         "title": "Build Brief",
@@ -790,20 +786,6 @@
         "image": "",
         "options": [],
         "correctIndex": -1
-      },
-      {
-        "id": "l7-predict",
-        "type": "question",
-        "title": "Predict",
-        "body": "What should engineers change between trials?",
-        "image": "",
-        "options": [
-          "One thing at a time",
-          "Everything at once",
-          "Nothing at all",
-          "Only the team name"
-        ],
-        "correctIndex": 0
       },
       {
         "id": "l7-improve",
@@ -831,6 +813,48 @@
         "image": "",
         "options": [],
         "correctIndex": -1
+      },
+      {
+        "id": "w2-wed-ferris-wheel-q1",
+        "type": "question",
+        "title": "Smooth spin",
+        "body": "What helps a Ferris wheel spin smoothly?",
+        "image": "",
+        "options": [
+          "Supporting the axle on both sides",
+          "Supporting only one side",
+          "Adding weight to one side",
+          "Gluing the wheel still"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w2-wed-ferris-wheel-q2",
+        "type": "question",
+        "title": "Even pods",
+        "body": "Why space the passenger pods evenly around the wheel?",
+        "image": "",
+        "options": [
+          "To keep it balanced so one side doesn't pull harder",
+          "To make the wheel taller",
+          "To use more pods",
+          "Just for decoration"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w2-wed-ferris-wheel-q3",
+        "type": "question",
+        "title": "Wobble",
+        "body": "What is most likely to make the wheel wobble?",
+        "image": "",
+        "options": [
+          "Uneven weight or a bending axle",
+          "Even pod spacing",
+          "A strong stand",
+          "Low friction"
+        ],
+        "correctIndex": 0
       }
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4",
@@ -869,20 +893,6 @@
         "correctIndex": -1
       },
       {
-        "id": "l8-check",
-        "type": "question",
-        "title": "Quick Check",
-        "body": "Which idea matters most for today's Marble Run challenge?",
-        "image": "",
-        "options": [
-          "gravity",
-          "Decoration only",
-          "Random guessing",
-          "Skipping tests"
-        ],
-        "correctIndex": 0
-      },
-      {
         "id": "l8-brief",
         "type": "content",
         "title": "Build Brief",
@@ -899,20 +909,6 @@
         "image": "",
         "options": [],
         "correctIndex": -1
-      },
-      {
-        "id": "l8-predict",
-        "type": "question",
-        "title": "Predict",
-        "body": "What should engineers change between trials?",
-        "image": "",
-        "options": [
-          "One thing at a time",
-          "Everything at once",
-          "Nothing at all",
-          "Only the team name"
-        ],
-        "correctIndex": 0
       },
       {
         "id": "l8-improve",
@@ -940,6 +936,48 @@
         "image": "",
         "options": [],
         "correctIndex": -1
+      },
+      {
+        "id": "w2-thu-marble-run-q1",
+        "type": "question",
+        "title": "What moves it",
+        "body": "What makes the marble move down the run?",
+        "image": "",
+        "options": [
+          "Gravity pulling it down the slope",
+          "A motor",
+          "A balloon",
+          "Pushing it after release"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w2-thu-marble-run-q2",
+        "type": "question",
+        "title": "Steeper slope",
+        "body": "What does a steeper slope do to the marble?",
+        "image": "",
+        "options": [
+          "Makes it speed up",
+          "Makes it slow down",
+          "Makes it stop",
+          "Makes it go backward"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w2-thu-marble-run-q3",
+        "type": "question",
+        "title": "Stay on track",
+        "body": "What keeps the marble on the path at turns?",
+        "image": "",
+        "options": [
+          "Guardrails or barriers along the turns",
+          "Making the turns steeper",
+          "Removing the supports",
+          "A faster start"
+        ],
+        "correctIndex": 0
       }
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4",
@@ -978,20 +1016,6 @@
         "correctIndex": -1
       },
       {
-        "id": "l9-check",
-        "type": "question",
-        "title": "Quick Check",
-        "body": "Which idea matters most for today's Boat / Raft challenge?",
-        "image": "",
-        "options": [
-          "buoyancy",
-          "Decoration only",
-          "Random guessing",
-          "Skipping tests"
-        ],
-        "correctIndex": 0
-      },
-      {
         "id": "l9-brief",
         "type": "content",
         "title": "Build Brief",
@@ -1008,20 +1032,6 @@
         "image": "",
         "options": [],
         "correctIndex": -1
-      },
-      {
-        "id": "l9-predict",
-        "type": "question",
-        "title": "Predict",
-        "body": "What should engineers change between trials?",
-        "image": "",
-        "options": [
-          "One thing at a time",
-          "Everything at once",
-          "Nothing at all",
-          "Only the team name"
-        ],
-        "correctIndex": 0
       },
       {
         "id": "l9-improve",
@@ -1049,6 +1059,48 @@
         "image": "",
         "options": [],
         "correctIndex": -1
+      },
+      {
+        "id": "w3-mon-boat-raft-q1",
+        "type": "question",
+        "title": "Floating",
+        "body": "What helps a raft float and get upward support from the water?",
+        "image": "",
+        "options": [
+          "Buoyancy — the raft pushes water away",
+          "Friction",
+          "Gravity",
+          "Tension"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w3-mon-boat-raft-q2",
+        "type": "question",
+        "title": "Heavy parts",
+        "body": "Where should the heavy parts sit on a raft?",
+        "image": "",
+        "options": [
+          "Low and near the center",
+          "High up on top",
+          "On one edge",
+          "Hanging off the side"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w3-mon-boat-raft-q3",
+        "type": "question",
+        "title": "Less tipping",
+        "body": "What makes a raft harder to tip over?",
+        "image": "",
+        "options": [
+          "A wider base",
+          "A narrow base",
+          "A top-heavy load",
+          "Loose cargo"
+        ],
+        "correctIndex": 0
       }
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4",
@@ -1087,20 +1139,6 @@
         "correctIndex": -1
       },
       {
-        "id": "l10-check",
-        "type": "question",
-        "title": "Quick Check",
-        "body": "Which idea matters most for today's Gripper challenge?",
-        "image": "",
-        "options": [
-          "pivots",
-          "Decoration only",
-          "Random guessing",
-          "Skipping tests"
-        ],
-        "correctIndex": 0
-      },
-      {
         "id": "l10-brief",
         "type": "content",
         "title": "Build Brief",
@@ -1117,20 +1155,6 @@
         "image": "",
         "options": [],
         "correctIndex": -1
-      },
-      {
-        "id": "l10-predict",
-        "type": "question",
-        "title": "Predict",
-        "body": "What should engineers change between trials?",
-        "image": "",
-        "options": [
-          "One thing at a time",
-          "Everything at once",
-          "Nothing at all",
-          "Only the team name"
-        ],
-        "correctIndex": 0
       },
       {
         "id": "l10-improve",
@@ -1158,6 +1182,48 @@
         "image": "",
         "options": [],
         "correctIndex": -1
+      },
+      {
+        "id": "w3-tue-gripper-q1",
+        "type": "question",
+        "title": "Jaw motion",
+        "body": "What lets each gripper jaw open and close?",
+        "image": "",
+        "options": [
+          "A pivot point it rotates around",
+          "A battery",
+          "A spinning wheel",
+          "A balloon"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w3-tue-gripper-q2",
+        "type": "question",
+        "title": "Holding on",
+        "body": "What helps the gripper hold an object without dropping it?",
+        "image": "",
+        "options": [
+          "Friction from grip surfaces like rubber or tires",
+          "Smooth, slippery jaws",
+          "Opening the jaws wider",
+          "Spinning the object"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w3-tue-gripper-q3",
+        "type": "question",
+        "title": "Even close",
+        "body": "So the jaws close evenly on the object, they should be...",
+        "image": "",
+        "options": [
+          "Mirrored — left and right built the same",
+          "Different lengths",
+          "Only one side moving",
+          "Glued shut"
+        ],
+        "correctIndex": 0
       }
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4",
@@ -1196,20 +1262,6 @@
         "correctIndex": -1
       },
       {
-        "id": "l11-check",
-        "type": "question",
-        "title": "Quick Check",
-        "body": "Which idea matters most for today's Arm with Gripper challenge?",
-        "image": "",
-        "options": [
-          "reach",
-          "Decoration only",
-          "Random guessing",
-          "Skipping tests"
-        ],
-        "correctIndex": 0
-      },
-      {
         "id": "l11-brief",
         "type": "content",
         "title": "Build Brief",
@@ -1226,20 +1278,6 @@
         "image": "",
         "options": [],
         "correctIndex": -1
-      },
-      {
-        "id": "l11-predict",
-        "type": "question",
-        "title": "Predict",
-        "body": "What should engineers change between trials?",
-        "image": "",
-        "options": [
-          "One thing at a time",
-          "Everything at once",
-          "Nothing at all",
-          "Only the team name"
-        ],
-        "correctIndex": 0
       },
       {
         "id": "l11-improve",
@@ -1267,6 +1305,48 @@
         "image": "",
         "options": [],
         "correctIndex": -1
+      },
+      {
+        "id": "w3-wed-arm-with-gripper-q1",
+        "type": "question",
+        "title": "Longer reach",
+        "body": "What happens when the arm reaches farther out?",
+        "image": "",
+        "options": [
+          "It can reach more but is harder to support and may tip",
+          "It gets lighter",
+          "It becomes more stable",
+          "Nothing changes"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w3-wed-arm-with-gripper-q2",
+        "type": "question",
+        "title": "Stay stable",
+        "body": "What keeps the arm from tipping when it reaches out?",
+        "image": "",
+        "options": [
+          "A wide, heavy base",
+          "A narrow base",
+          "A longer arm",
+          "A heavier payload"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w3-wed-arm-with-gripper-q3",
+        "type": "question",
+        "title": "Payload",
+        "body": "The object the arm carries at its end is called the...",
+        "image": "",
+        "options": [
+          "Payload",
+          "Fulcrum",
+          "Chassis",
+          "Axle"
+        ],
+        "correctIndex": 0
       }
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4",
@@ -1305,20 +1385,6 @@
         "correctIndex": -1
       },
       {
-        "id": "l12-check",
-        "type": "question",
-        "title": "Quick Check",
-        "body": "Which idea matters most for today's Simple Car challenge?",
-        "image": "",
-        "options": [
-          "chassis",
-          "Decoration only",
-          "Random guessing",
-          "Skipping tests"
-        ],
-        "correctIndex": 0
-      },
-      {
         "id": "l12-brief",
         "type": "content",
         "title": "Build Brief",
@@ -1335,20 +1401,6 @@
         "image": "",
         "options": [],
         "correctIndex": -1
-      },
-      {
-        "id": "l12-predict",
-        "type": "question",
-        "title": "Predict",
-        "body": "What should engineers change between trials?",
-        "image": "",
-        "options": [
-          "One thing at a time",
-          "Everything at once",
-          "Nothing at all",
-          "Only the team name"
-        ],
-        "correctIndex": 0
       },
       {
         "id": "l12-improve",
@@ -1376,6 +1428,48 @@
         "image": "",
         "options": [],
         "correctIndex": -1
+      },
+      {
+        "id": "w3-thu-simple-car-q1",
+        "type": "question",
+        "title": "Chassis",
+        "body": "What is the chassis of a car?",
+        "image": "",
+        "options": [
+          "The frame that holds everything together",
+          "The wheels",
+          "The axle only",
+          "The bumper"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w3-thu-simple-car-q2",
+        "type": "question",
+        "title": "Roll straight",
+        "body": "What helps a car roll straight?",
+        "image": "",
+        "options": [
+          "Parallel, aligned axles",
+          "Crooked axles",
+          "Wheels that rub the frame",
+          "A twisted frame"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w3-thu-simple-car-q3",
+        "type": "question",
+        "title": "Square frame",
+        "body": "What does a square, braced frame prevent?",
+        "image": "",
+        "options": [
+          "The chassis from twisting",
+          "The wheels from spinning",
+          "The car from rolling",
+          "The colors from changing"
+        ],
+        "correctIndex": 0
       }
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4",
@@ -1414,20 +1508,6 @@
         "correctIndex": -1
       },
       {
-        "id": "l13-check",
-        "type": "question",
-        "title": "Quick Check",
-        "body": "Which idea matters most for today's Car with Distance Sensor challenge?",
-        "image": "",
-        "options": [
-          "distance sensor",
-          "Decoration only",
-          "Random guessing",
-          "Skipping tests"
-        ],
-        "correctIndex": 0
-      },
-      {
         "id": "l13-brief",
         "type": "content",
         "title": "Build Brief",
@@ -1444,20 +1524,6 @@
         "image": "",
         "options": [],
         "correctIndex": -1
-      },
-      {
-        "id": "l13-predict",
-        "type": "question",
-        "title": "Predict",
-        "body": "What should engineers change between trials?",
-        "image": "",
-        "options": [
-          "One thing at a time",
-          "Everything at once",
-          "Nothing at all",
-          "Only the team name"
-        ],
-        "correctIndex": 0
       },
       {
         "id": "l13-improve",
@@ -1485,6 +1551,48 @@
         "image": "",
         "options": [],
         "correctIndex": -1
+      },
+      {
+        "id": "w4-mon-distance-sensor-car-q1",
+        "type": "question",
+        "title": "Threshold",
+        "body": "In \"input, threshold, response,\" what does the threshold do?",
+        "image": "",
+        "options": [
+          "Checks if the distance is smaller than a chosen number",
+          "Measures the color of the floor",
+          "Powers the motor",
+          "Turns the wheels"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w4-mon-distance-sensor-car-q2",
+        "type": "question",
+        "title": "Mounting",
+        "body": "How should the distance sensor be mounted?",
+        "image": "",
+        "options": [
+          "Facing forward with a clear view, not blocked",
+          "Facing down at the floor",
+          "Covered by a bumper",
+          "Pointing up at the ceiling"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w4-mon-distance-sensor-car-q3",
+        "type": "question",
+        "title": "Input",
+        "body": "The sensor measuring how far away an object is — that part is the...",
+        "image": "",
+        "options": [
+          "Input",
+          "Response",
+          "Threshold",
+          "Payload"
+        ],
+        "correctIndex": 0
       }
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4",
@@ -1523,20 +1631,6 @@
         "correctIndex": -1
       },
       {
-        "id": "l14-check",
-        "type": "question",
-        "title": "Quick Check",
-        "body": "Which idea matters most for today's Car with Color Sensor challenge?",
-        "image": "",
-        "options": [
-          "color detection",
-          "Decoration only",
-          "Random guessing",
-          "Skipping tests"
-        ],
-        "correctIndex": 0
-      },
-      {
         "id": "l14-brief",
         "type": "content",
         "title": "Build Brief",
@@ -1553,20 +1647,6 @@
         "image": "",
         "options": [],
         "correctIndex": -1
-      },
-      {
-        "id": "l14-predict",
-        "type": "question",
-        "title": "Predict",
-        "body": "What should engineers change between trials?",
-        "image": "",
-        "options": [
-          "One thing at a time",
-          "Everything at once",
-          "Nothing at all",
-          "Only the team name"
-        ],
-        "correctIndex": 0
       },
       {
         "id": "l14-improve",
@@ -1594,6 +1674,48 @@
         "image": "",
         "options": [],
         "correctIndex": -1
+      },
+      {
+        "id": "w4-tue-color-sensor-car-q1",
+        "type": "question",
+        "title": "Sensor height",
+        "body": "A color sensor reads best when it is...",
+        "image": "",
+        "options": [
+          "Close to the floor with a small gap (not dragging)",
+          "High above the floor",
+          "Pointing forward",
+          "Upside down"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w4-tue-color-sensor-car-q2",
+        "type": "question",
+        "title": "Calibration",
+        "body": "What can change a color reading?",
+        "image": "",
+        "options": [
+          "Lighting and the surface or marker color",
+          "The size of the wheels",
+          "The color of the battery",
+          "The width of the chassis"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w4-tue-color-sensor-car-q3",
+        "type": "question",
+        "title": "The challenge",
+        "body": "In the challenge, the rover should...",
+        "image": "",
+        "options": [
+          "React differently to different color markers",
+          "Ignore the markers",
+          "Only ever go straight",
+          "Stop on every single color"
+        ],
+        "correctIndex": 0
       }
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4",
@@ -1632,20 +1754,6 @@
         "correctIndex": -1
       },
       {
-        "id": "l15-check",
-        "type": "question",
-        "title": "Quick Check",
-        "body": "Which idea matters most for today's Self-Parking Steering Car challenge?",
-        "image": "",
-        "options": [
-          "steering pivots",
-          "Decoration only",
-          "Random guessing",
-          "Skipping tests"
-        ],
-        "correctIndex": 0
-      },
-      {
         "id": "l15-brief",
         "type": "content",
         "title": "Build Brief",
@@ -1662,20 +1770,6 @@
         "image": "",
         "options": [],
         "correctIndex": -1
-      },
-      {
-        "id": "l15-predict",
-        "type": "question",
-        "title": "Predict",
-        "body": "What should engineers change between trials?",
-        "image": "",
-        "options": [
-          "One thing at a time",
-          "Everything at once",
-          "Nothing at all",
-          "Only the team name"
-        ],
-        "correctIndex": 0
       },
       {
         "id": "l15-improve",
@@ -1703,6 +1797,48 @@
         "image": "",
         "options": [],
         "correctIndex": -1
+      },
+      {
+        "id": "w4-wed-self-parking-steering-car-q1",
+        "type": "question",
+        "title": "Linkage",
+        "body": "What does a steering linkage do?",
+        "image": "",
+        "options": [
+          "Makes both front wheels turn together",
+          "Powers the wheels",
+          "Reads color markers",
+          "Stores energy"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w4-wed-self-parking-steering-car-q2",
+        "type": "question",
+        "title": "Turning radius",
+        "body": "A sharper steering angle gives you a...",
+        "image": "",
+        "options": [
+          "Tighter turn, but it can be harder to control",
+          "Wider, gentler turn",
+          "Perfectly straight path",
+          "Faster top speed"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w4-wed-self-parking-steering-car-q3",
+        "type": "question",
+        "title": "Recover",
+        "body": "After making a turn, the front wheels should...",
+        "image": "",
+        "options": [
+          "Return near center (nearly straight)",
+          "Stay fully turned",
+          "Fall off",
+          "Lock up"
+        ],
+        "correctIndex": 0
       }
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4",
@@ -1741,20 +1877,6 @@
         "correctIndex": -1
       },
       {
-        "id": "l16-check",
-        "type": "question",
-        "title": "Quick Check",
-        "body": "Which idea matters most for today's Steering Race challenge?",
-        "image": "",
-        "options": [
-          "control",
-          "Decoration only",
-          "Random guessing",
-          "Skipping tests"
-        ],
-        "correctIndex": 0
-      },
-      {
         "id": "l16-brief",
         "type": "content",
         "title": "Build Brief",
@@ -1771,20 +1893,6 @@
         "image": "",
         "options": [],
         "correctIndex": -1
-      },
-      {
-        "id": "l16-predict",
-        "type": "question",
-        "title": "Predict",
-        "body": "What should engineers change between trials?",
-        "image": "",
-        "options": [
-          "One thing at a time",
-          "Everything at once",
-          "Nothing at all",
-          "Only the team name"
-        ],
-        "correctIndex": 0
       },
       {
         "id": "l16-improve",
@@ -1812,6 +1920,48 @@
         "image": "",
         "options": [],
         "correctIndex": -1
+      },
+      {
+        "id": "w4-thu-steering-race-q1",
+        "type": "question",
+        "title": "Wins races",
+        "body": "What makes a winning race design over many runs?",
+        "image": "",
+        "options": [
+          "Reliability — it survives repeated runs without falling apart",
+          "The brightest color",
+          "The most pieces",
+          "The tallest build"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w4-thu-steering-race-q2",
+        "type": "question",
+        "title": "Stay low",
+        "body": "Why keep a race car low to the ground?",
+        "image": "",
+        "options": [
+          "It is less likely to tip during turns",
+          "It automatically goes faster",
+          "It looks cooler",
+          "It uses fewer wheels"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w4-thu-steering-race-q3",
+        "type": "question",
+        "title": "Tradeoff",
+        "body": "The main race tradeoff is between...",
+        "image": "",
+        "options": [
+          "Speed and control/accuracy",
+          "Color and size",
+          "Weight and price",
+          "Height and width"
+        ],
+        "correctIndex": 0
       }
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4",

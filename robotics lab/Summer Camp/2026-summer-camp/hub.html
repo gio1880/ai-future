@@ -883,6 +883,7 @@
       font-weight: 900; font-size: 16px; padding: 12px 26px; cursor: pointer; min-height: 48px;
     }
     .live-banner .lb-join:hover { background: #ffd84d; }
+    .warmup-banner { background: linear-gradient(135deg, #1f8a4c, #0f6b39); }
 
     /* ── Live lesson: full-screen camper view ── */
     .live-overlay {
@@ -1016,6 +1017,13 @@
     <span class="lb-dot"></span>
     <span class="lb-text" id="liveBannerTitle">A lesson is live</span>
     <button class="lb-join" id="liveJoinBtn" type="button">🎥 Join lesson</button>
+  </div>
+
+  <!-- Warm-up "answer now" banner -->
+  <div class="live-banner warmup-banner" id="warmupBanner">
+    <span class="lb-dot"></span>
+    <span class="lb-text" id="warmupBannerTitle">Your coach wants you to answer the warm-up</span>
+    <button class="lb-join" id="warmupAnswerBtn" type="button">✍️ Answer now</button>
   </div>
 
   <!-- Live lesson full-screen view -->
@@ -2002,9 +2010,11 @@
     let lvRenderKey = '';
     let lvDeckUrl = '';        // current deck loaded in the follow iframe
     let lvShownResultId = '';  // last quiz result already shown to this camper
+    let wuState = null;        // warm-up "answer now" broadcast state
     const liveBanner = document.getElementById('liveBanner');
     const liveOverlay = document.getElementById('liveOverlay');
     const liveOverlayBody = document.getElementById('liveOverlayBody');
+    const warmupBanner = document.getElementById('warmupBanner');
 
     function escLv(v) {
       return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -2024,6 +2034,25 @@
         liveBanner.classList.remove('show');
       }
       if (lvJoined) renderLiveOverlay();
+    }
+
+    // Has my coach asked me to answer the warm-up right now?
+    async function pollWarmup() {
+      try {
+        const r = await fetch('/api/camp/warmup').then(x => x.json());
+        wuState = r && r.success ? r.state : { active: false };
+      } catch (err) { return; }
+      // Show only when published, the camper hasn't submitted it yet, and no live
+      // slideshow is taking over the screen (avoid two banners stacking).
+      const answered = wuState && wuState.active ? !!beginResponseFor(wuState.dayId) : false;
+      const slidesLive = lvState && lvState.active;
+      if (wuState && wuState.active && !answered && !slidesLive) {
+        document.getElementById('warmupBannerTitle').textContent =
+          '📣 Answer the warm-up' + (wuState.dayLabel ? `: ${wuState.dayLabel}` : '');
+        warmupBanner.classList.add('show');
+      } else {
+        warmupBanner.classList.remove('show');
+      }
     }
 
     function joinLive() {
@@ -2224,10 +2253,16 @@
     window.answerLive = answerLive;
     window.leaveLive = leaveLive;
 
+    document.getElementById('warmupAnswerBtn').addEventListener('click', () => {
+      warmupBanner.classList.remove('show');
+      if (wuState && wuState.dayId) openBeginLesson(wuState.dayId);
+    });
+
     setInterval(tickStudentTimer, 1000);
-    setInterval(pollLive, 3000);
+    setInterval(() => { pollLive(); pollWarmup(); }, 3000);
     loadHub();
     pollLive();
+    pollWarmup();
   </script>
 </body>
 </html>

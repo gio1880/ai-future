@@ -768,6 +768,7 @@
     .warmup-answer p { margin: 0; color: var(--muted); line-height: 1.45; }
     .live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--red); margin-right: 5px; animation: pulse 1.2s infinite; }
     @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .warmup-live-flag { margin: 10px 0 4px; font-weight: 800; font-size: 13.5px; color: var(--sun-deep); display: flex; align-items: center; gap: 4px; }
 
     .slide-editor {
       background: var(--bg); border: 1.5px solid var(--line); border-left: 4px solid var(--sun);
@@ -2478,6 +2479,24 @@
       }
     }
 
+    async function publishWarmup() {
+      const dayId = warmupSelectedDayId || defaultWarmupDayId();
+      if (!dayId) return;
+      try {
+        await api('/api/camp/coach/warmup/publish', { method: 'POST', body: JSON.stringify({ dayId }) });
+        await loadWarmupResponses(dayId);
+      } catch (err) { alert(err.message); }
+    }
+    window.publishWarmup = publishWarmup;
+
+    async function stopWarmup() {
+      try {
+        await api('/api/camp/coach/warmup/stop', { method: 'POST' });
+        await loadWarmupResponses(warmupSelectedDayId);
+      } catch (err) { alert(err.message); }
+    }
+    window.stopWarmup = stopWarmup;
+
     function renderWarmupResponsesPanel() {
       const days = campDaysForWarmup();
       if (!warmupSelectedDayId) warmupSelectedDayId = defaultWarmupDayId();
@@ -2485,10 +2504,11 @@
       const data = warmupResponses && warmupResponses.day?.id === warmupSelectedDayId ? warmupResponses : null;
       const answered = data?.answeredCount || 0;
       const total = data?.totalStudents || 0;
+      const published = !!(data && data.published);
       return `
         <div class="warmup-panel" id="warmupResponsesPanel">
           <div class="section-title" style="font-size:18px">Begin Lesson Warm-ups</div>
-          <p class="section-sub">Review student answers while the class settles and before you start presenting.</p>
+          <p class="section-sub">Press <strong>Present to students</strong> to send every camper a notification to answer this day's warm-up. Their answers show up here as they come in.</p>
           <div class="form-grid" style="grid-template-columns:minmax(220px,1fr) auto">
             <div>
               <label for="warmupDaySelect">Assignment day</label>
@@ -2496,8 +2516,14 @@
                 ${days.map(day => `<option value="${esc(day.id)}" ${day.id === warmupSelectedDayId ? 'selected' : ''}>${esc(fmt(day.date, { month: 'short', day: 'numeric' }))} - ${esc((day.assignment || day.activity || day.build || 'Assignment').slice(0, 70))}</option>`).join('')}
               </select>
             </div>
-            <div style="align-self:end"><button class="btn btn-ghost" onclick="loadWarmupResponses(warmupSelectedDayId)">Refresh</button></div>
+            <div class="warmup-actions" style="align-self:end;display:flex;gap:8px">
+              ${published
+                ? `<button class="btn btn-danger" onclick="stopWarmup()">■ Stop warm-up</button>`
+                : `<button class="btn btn-primary" onclick="publishWarmup()">📣 Present to students</button>`}
+              <button class="btn btn-ghost" onclick="loadWarmupResponses(warmupSelectedDayId)">Refresh</button>
+            </div>
           </div>
+          ${published ? `<div class="warmup-live-flag"><span class="live-dot"></span>Live now — campers were notified to answer this warm-up.</div>` : ''}
           ${selectedDay ? `<div class="warmup-summary">
             <span class="status-pill done">${answered} answered</span>
             <span class="status-pill todo">${Math.max(0, total - answered)} waiting</span>
@@ -2560,27 +2586,8 @@
     }
 
     function renderLessonList() {
-      return `
-        ${renderTeacherDecks()}
-        <div class="section-title">🎥 Interactive Live Lessons (camper iPads)</div>
-        <p class="section-sub">Optional: build a quick slide deck with questions campers answer live on their iPads (Kahoot-style). For your main teaching, use the Lesson Slides above.</p>
-        <div style="margin-bottom:16px"><button class="btn btn-primary" onclick="newLesson()">➕ New lesson</button></div>
-        ${lessons.length ? lessons.map(l => {
-          const qn = l.slides.filter(s => s.type === 'question').length;
-          return `
-            <div class="lesson-card">
-              <div>
-                <h4>${esc(l.title)}</h4>
-                <div class="meta">${l.slides.length} slide${l.slides.length === 1 ? '' : 's'}${qn ? ` · ${qn} question${qn === 1 ? '' : 's'}` : ''}</div>
-              </div>
-              <div class="lesson-actions">
-                <button class="btn btn-primary" onclick="presentLesson('${esc(l.id)}')">▶ Present</button>
-                <button class="btn btn-ghost" onclick="editLesson('${esc(l.id)}')">Edit</button>
-                <button class="btn btn-danger" onclick="deleteLesson('${esc(l.id)}')">Delete</button>
-              </div>
-            </div>`;
-        }).join('') : `<div class="empty-curriculum">No lessons yet. Click “New lesson” to build your first one.</div>`}
-      `;
+      // One live tool: the real lesson decks (slides + Kahoot questions in a single flow).
+      return renderTeacherDecks();
     }
 
     /* Editor */

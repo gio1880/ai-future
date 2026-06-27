@@ -72,6 +72,7 @@ const campClassroomFile = path.join(campHubDataDir, 'classroom-state.json');
 const campLessonsFile = path.join(campHubDataDir, 'lessons.json');
 const campLiveLessonFile = path.join(campHubDataDir, 'live-lesson.json');
 const campBeginLessonResponsesFile = path.join(campHubDataDir, 'begin-lesson-responses.json');
+const campWarmupBroadcastFile = path.join(campHubDataDir, 'warmup-broadcast.json');
 const campSessionCookie = 'camp_session';
 const campDataFileNames = [
 	'camp-users.json',
@@ -86,7 +87,8 @@ const campDataFileNames = [
 	'classroom-state.json',
 	'lessons.json',
 	'live-lesson.json',
-	'begin-lesson-responses.json'
+	'begin-lesson-responses.json',
+	'warmup-broadcast.json'
 ];
 const campSessions = new Map();
 const coachUsersFile = path.join(platformDataDir, 'coach-users.json');
@@ -1048,6 +1050,7 @@ async function buildDataHealthReport() {
 		'resources.json': 'managed-lesson-building-resource',
 		'classroom-state.json': 'runtime-classroom',
 		'live-lesson.json': 'runtime-live-state',
+		'warmup-broadcast.json': 'runtime-live-state',
 		'begin-lesson-responses.json': 'runtime-student-work',
 		'submissions.json': 'runtime-student-work',
 		'print-requests.json': 'runtime-student-work',
@@ -1423,6 +1426,29 @@ async function readCampLiveLesson() {
 
 async function writeCampLiveLesson(state) {
 	await writeJsonFile(campLiveLessonFile, normalizeCampLiveLesson(state));
+}
+
+// ── Warm-up broadcast: coach "publishes" today's warm-up so campers get a prompt ──
+function defaultCampWarmupBroadcast() {
+	return { active: false, dayId: '', dayLabel: '', startedAt: '' };
+}
+
+function normalizeCampWarmupBroadcast(state) {
+	const source = state && typeof state === 'object' ? state : {};
+	return {
+		active: source.active === true,
+		dayId: cleanMetaString(source.dayId || '', 120),
+		dayLabel: cleanMetaString(source.dayLabel || '', 200),
+		startedAt: cleanMetaString(source.startedAt || '', 80)
+	};
+}
+
+async function readCampWarmupBroadcast() {
+	return normalizeCampWarmupBroadcast(await readJsonFile(campWarmupBroadcastFile, defaultCampWarmupBroadcast()));
+}
+
+async function writeCampWarmupBroadcast(state) {
+	await writeJsonFile(campWarmupBroadcastFile, normalizeCampWarmupBroadcast(state));
 }
 
 async function readFllLiveLesson() {
@@ -5193,10 +5219,11 @@ app.patch('/api/camp/coach/days/:dayId', requireCampAuth, requireCampCoach, asyn
 app.get('/api/camp/coach/begin-lesson-responses', requireCampAuth, requireCampCoach, async (req, res) => {
 	try {
 		const dayId = cleanMetaString(req.query.dayId || '', 120);
-		const [curriculum, responses, users] = await Promise.all([
+		const [curriculum, responses, users, warmup] = await Promise.all([
 			readJsonFile(campCurriculumFile, []),
 			readCampBeginLessonResponses(),
-			readCampUsers()
+			readCampUsers(),
+			readCampWarmupBroadcast()
 		]);
 		const match = dayId ? findCampDay(curriculum, dayId) : null;
 		if (dayId && !match) {
@@ -5227,11 +5254,60 @@ app.get('/api/camp/coach/begin-lesson-responses', requireCampAuth, requireCampCo
 			answeredCount: dayResponses.length,
 			unanswered,
 			responses: dayResponses,
-			byQuestion
+			byQuestion,
+			published: !!(warmup.active && dayId && warmup.dayId === dayId),
+			publishedDayId: warmup.active ? warmup.dayId : ''
 		});
 	} catch (err) {
 		console.error('Camp begin lesson coach responses error:', err);
 		return res.status(500).json({ success: false, message: 'Server error loading warm-up responses' });
+	}
+});
+
+// Coach "publishes" a day's warm-up so campers get a live prompt to answer it.
+app.post('/api/camp/coach/warmup/publish', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const dayId = cleanMetaString(req.body.dayId || '', 120);
+		if (!dayId) return res.status(400).json({ success: false, message: 'Pick a day to publish' });
+		const curriculum = await readJsonFile(campCurriculumFile, []);
+		const match = findCampDay(curriculum, dayId);
+		if (!match || !match.day) return res.status(404).json({ success: false, message: 'Camp day not found' });
+		const day = match.day;
+		const dayLabel = cleanMetaString(day.build || day.assignment || day.activity || 'today’s warm-up', 200);
+		const broadcast = { active: true, dayId, dayLabel, startedAt: new Date().toISOString() };
+		await writeCampWarmupBroadcast(broadcast);
+		return res.json({ success: true, warmup: broadcast });
+	} catch (err) {
+		console.error('Camp warmup publish error:', err);
+		return res.status(500).json({ success: false, message: 'Server error publishing warm-up' });
+	}
+});
+
+app.post('/api/camp/coach/warmup/stop', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		await writeCampWarmupBroadcast(defaultCampWarmupBroadcast());
+		return res.json({ success: true, warmup: { active: false } });
+	} catch (err) {
+		console.error('Camp warmup stop error:', err);
+		return res.status(500).json({ success: false, message: 'Server error stopping warm-up' });
+	}
+});
+
+// Camper poll: is my coach asking me to answer today's warm-up right now?
+app.get('/api/camp/warmup', requireCampAuth, async (req, res) => {
+	try {
+		const broadcast = await readCampWarmupBroadcast();
+		if (!broadcast.active || !broadcast.dayId) return res.json({ success: true, state: { active: false } });
+		// Only prompt the camper if the published day is actually available to them.
+		const { day } = await findAvailableCampDayForUser(req.campUser, broadcast.dayId);
+		if (!day) return res.json({ success: true, state: { active: false } });
+		return res.json({
+			success: true,
+			state: { active: true, dayId: broadcast.dayId, dayLabel: broadcast.dayLabel, day: publicBeginLessonDay(day) }
+		});
+	} catch (err) {
+		console.error('Camp warmup state error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading warm-up state' });
 	}
 });
 
