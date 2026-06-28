@@ -1096,6 +1096,7 @@
       padding: 12px 14px; border: 1.5px solid var(--line); border-radius: var(--radius-sm); background: #fff;
     }
     .deck-row.is-today { border-color: var(--sun); background: var(--sun-light); }
+    .deck-row.welcome-row { border-color: var(--grass); background: var(--grass-light); }
     .deck-row .deck-info strong { display: block; font-size: 14px; }
     .deck-row .deck-build { font-size: 12.5px; color: var(--muted); font-weight: 700; }
     .deck-row .btn { text-decoration: none; white-space: nowrap; }
@@ -2618,7 +2619,7 @@
     // The exact Lesson Building decks (rich HTML slideshows). "Present Live" mirrors
     // the slides to camper iPads and lets the coach push Kahoot questions.
     // The orientation/welcome deck — rules + how the Camp Hub works. Always first.
-    const WELCOME_DECK = { lessonDeckUrl: '/camp-hub/lessons/Welcome/welcome_intro.html', title: 'Welcome / Orientation' };
+    const WELCOME_DECK = { lessonDeckUrl: '/camp-hub/lessons/Lesson%200/lesson0_intro_slides.html', title: 'Welcome / Orientation' };
 
     function renderTeacherDecks() {
       const today = todayKey();
@@ -2646,6 +2647,7 @@
               </div>
               <div class="deck-row-actions">
                 <button class="btn btn-primary" onclick="startDeckLive(0)">▶ Present Live</button>
+                <button class="btn btn-ghost" onclick="openQuestionManager('${esc(WELCOME_DECK.lessonDeckUrl)}')" title="Add, edit, or delete this lesson's questions">❓ Questions (${questionCountForDeck(WELCOME_DECK.lessonDeckUrl)})</button>
                 <a class="btn btn-ghost" href="${esc(WELCOME_DECK.lessonDeckUrl)}" target="_blank" rel="noreferrer" title="Open on the TV only (campers won't see it)">TV only ↗</a>
               </div>
             </div>

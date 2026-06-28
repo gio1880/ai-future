@@ -1,9 +1,17 @@
 {
   "active": false,
-  "lessonId": "",
-  "lessonTitle": "",
+  "kind": "deck",
+  "lessonId": "lesson-0-summer-camp-intro",
+  "lessonTitle": "Lesson 0: Summer Camp Intro + Hub Walkthrough",
   "slides": [],
   "currentIndex": 0,
-  "startedAt": "",
-  "responses": {}
+  "startedAt": "2026-06-28T03:21:39.752Z",
+  "responses": {},
+  "deckUrl": "/camp-hub/lessons/Lesson%200/lesson0_intro_slides.html",
+  "deckTitle": "Welcome / Orientation",
+  "slideIndex": 0,
+  "slideCount": 10,
+  "activeQuestion": null,
+  "scoredQuestionIds": [],
+  "lastClosed": null
 }
