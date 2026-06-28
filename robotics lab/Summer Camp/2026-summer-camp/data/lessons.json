@@ -23,6 +23,62 @@
         "correctIndex": -1
       },
       {
+        "id": "l0-safety-check",
+        "type": "question",
+        "title": "Rule Check: Be Safe",
+        "body": "Which choice shows safe camp behavior?",
+        "image": "",
+        "options": [
+          "Walk, use tools correctly, and ask a coach if unsure",
+          "Run across the room with LEGO pieces",
+          "Put small parts near your mouth",
+          "Use tools before a coach explains them"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l0-kindness-check",
+        "type": "question",
+        "title": "Rule Check: Be Kind",
+        "body": "What should you do when a teammate has an idea?",
+        "image": "",
+        "options": [
+          "Listen, take turns, and build on the idea respectfully",
+          "Ignore them and grab the pieces",
+          "Tell them their idea is bad",
+          "Hide the important parts"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l0-builder-check",
+        "type": "question",
+        "title": "Rule Check: Be a Builder",
+        "body": "What should builders do when their first design does not work?",
+        "image": "",
+        "options": [
+          "Test, change one thing, and try again",
+          "Quit immediately",
+          "Blame the kit",
+          "Change everything at once without testing"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l0-help-check",
+        "type": "question",
+        "title": "When You Need Help",
+        "body": "If you are confused, stuck, or unsure about a tool, what should you do?",
+        "image": "",
+        "options": [
+          "Ask a coach or teammate for help",
+          "Guess with the tool anyway",
+          "Leave your group without saying anything",
+          "Delete someone else's work"
+        ],
+        "correctIndex": 0
+      },
+      {
         "id": "l0-hub",
         "type": "content",
         "title": "How the Summer Hub Works",
