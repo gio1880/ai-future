@@ -1,5 +1,6 @@
 {
   "noiseLevel": "partner",
+  "printQueueOpen": false,
   "timer": {
     "label": "Work time",
     "durationMinutes": 20,

@@ -1189,7 +1189,7 @@
     let projectQueue = [];
     let rosterView = 'class';
     let selectedClassName = '';
-    let classroomState = { noiseLevel: 'partner', timer: { label: 'Work time', durationMinutes: 20, pausedRemainingSeconds: 1200, running: false }, groups: [] };
+    let classroomState = { noiseLevel: 'partner', printQueueOpen: false, timer: { label: 'Work time', durationMinutes: 20, pausedRemainingSeconds: 1200, running: false }, groups: [] };
     let lessons = [];
     let liveState = null;
     let livePollTimer = null;
@@ -1506,6 +1506,15 @@
                 </button>`).join('')}
             </div>
           </div>
+          <div class="cl-card">
+            <div class="cl-card-title">3D print requests</div>
+            <p class="section-sub" style="margin:-6px 0 12px">Choose when campers are allowed to send new 3D print requests.</p>
+            <div class="seg">
+              <button class="seg-btn ${classroomState.printQueueOpen ? 'active' : ''}" onclick="setPrintQueueOpen(true)">Open</button>
+              <button class="seg-btn ${!classroomState.printQueueOpen ? 'active' : ''}" onclick="setPrintQueueOpen(false)">Closed</button>
+            </div>
+            <p class="section-sub" style="margin-top:12px">${classroomState.printQueueOpen ? 'Students can currently submit print requests.' : 'Students cannot submit new print requests right now.'}</p>
+          </div>
         </div>
 
         <div class="cl-card" style="margin-top:16px">
@@ -1546,6 +1555,21 @@
       api('/api/camp/coach/classroom', { method: 'PATCH', body: JSON.stringify({ noiseLevel: level, timer: classroomState.timer || {} }) })
         .then(r => { classroomState = r.classroom; })
         .catch(err => alert(err.message));
+    }
+
+    async function setPrintQueueOpen(open) {
+      try {
+        classroomState.printQueueOpen = open === true;
+        const result = await api('/api/camp/coach/classroom', {
+          method: 'PATCH',
+          body: JSON.stringify({ printQueueOpen: classroomState.printQueueOpen })
+        });
+        classroomState = result.classroom;
+        const wrap = document.getElementById('classroomToolsWrap');
+        if (wrap) wrap.innerHTML = renderClassroomControls();
+      } catch (err) {
+        alert(err.message);
+      }
     }
 
     function tickCoachTimer() {
@@ -2593,25 +2617,38 @@
 
     // The exact Lesson Building decks (rich HTML slideshows). "Present Live" mirrors
     // the slides to camper iPads and lets the coach push Kahoot questions.
+    // The orientation/welcome deck — rules + how the Camp Hub works. Always first.
+    const WELCOME_DECK = { lessonDeckUrl: '/camp-hub/lessons/Welcome/welcome_intro.html', title: 'Welcome / Orientation' };
+
     function renderTeacherDecks() {
       const today = todayKey();
       const days = [];
       (hubData.curriculum || []).forEach(week => (week.days || []).forEach(day => {
         if (day.lessonDeckUrl) days.push({ ...day, weekLabel: week.label });
       }));
-      if (!days.length) return '';
       // Catalog so onclick handlers can pass an index (avoids quoting issues in titles).
-      teacherDeckList = days.map(d => ({
+      // Index 0 is always the Welcome/Orientation deck; curriculum days follow.
+      teacherDeckList = [WELCOME_DECK].concat(days.map(d => ({
         lessonDeckUrl: d.lessonDeckUrl,
         title: `${d.weekLabel || ''} · ${d.build || 'Lesson'}`.replace(/^ · /, '')
-      }));
+      })));
       const todayIdx = days.findIndex(d => d.date === today);
       return `
         <div class="card teacher-decks">
           <div class="section-title">📽️ Lesson Slides — present live to campers</div>
           <p class="section-sub">Your exact Lesson Building decks. Click <strong>Present Live</strong> to show the slideshow on the TV <em>and</em> mirror it to every camper's iPad — move with the arrows and push a question whenever you want. (Teacher notes stay hidden on the campers' screens.)</p>
-          ${todayIdx >= 0 ? `<button class="btn btn-primary present-today" onclick="startDeckLive(${todayIdx})">▶ Present today's slides live${days[todayIdx].build ? ` — ${esc(days[todayIdx].build)}` : ''}</button>` : ''}
+          ${todayIdx >= 0 ? `<button class="btn btn-primary present-today" onclick="startDeckLive(${todayIdx + 1})">▶ Present today's slides live${days[todayIdx].build ? ` — ${esc(days[todayIdx].build)}` : ''}</button>` : ''}
           <div class="deck-list">
+            <div class="deck-row welcome-row">
+              <div class="deck-info">
+                <strong>👋 Welcome / Orientation</strong>
+                <span class="deck-build">Camp rules &amp; how the hub works — present on Day 1</span>
+              </div>
+              <div class="deck-row-actions">
+                <button class="btn btn-primary" onclick="startDeckLive(0)">▶ Present Live</button>
+                <a class="btn btn-ghost" href="${esc(WELCOME_DECK.lessonDeckUrl)}" target="_blank" rel="noreferrer" title="Open on the TV only (campers won't see it)">TV only ↗</a>
+              </div>
+            </div>
             ${days.map((d, i) => `
               <div class="deck-row ${d.date === today ? 'is-today' : ''}">
                 <div class="deck-info">
@@ -2619,7 +2656,7 @@
                   <span class="deck-build">${esc(d.build || 'Lesson')}</span>
                 </div>
                 <div class="deck-row-actions">
-                  <button class="btn btn-primary" onclick="startDeckLive(${i})">▶ Present Live</button>
+                  <button class="btn btn-primary" onclick="startDeckLive(${i + 1})">▶ Present Live</button>
                   <button class="btn btn-ghost" onclick="openQuestionManager('${esc(d.lessonDeckUrl)}')" title="Add, edit, or delete this lesson's questions">❓ Questions (${questionCountForDeck(d.lessonDeckUrl)})</button>
                   <a class="btn btn-ghost" href="${esc(d.lessonDeckUrl)}" target="_blank" rel="noreferrer" title="Open on the TV only (campers won't see it)">TV only ↗</a>
                 </div>

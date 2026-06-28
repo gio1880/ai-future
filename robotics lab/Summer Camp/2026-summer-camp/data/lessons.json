@@ -1,5 +1,78 @@
 [
   {
+    "id": "lesson-0-summer-camp-intro",
+    "title": "Lesson 0: Summer Camp Intro + Hub Walkthrough",
+    "updatedAt": "2026-06-27T00:00:00.000Z",
+    "slides": [
+      {
+        "id": "l0-welcome",
+        "type": "content",
+        "title": "Welcome to AI Future Summer Camp",
+        "body": "Today we will learn the camp rules, how the Summer Camp Hub works, how to join live lessons, how to submit work, and how points are earned.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l0-rules",
+        "type": "content",
+        "title": "The 3 Big Rules",
+        "body": "Be Safe. Be Kind. Be a Builder. These rules guide how we use tools, work with teammates, and improve our designs.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l0-hub",
+        "type": "content",
+        "title": "How the Summer Hub Works",
+        "body": "Students log in, see the current week, join live lessons, answer questions, submit reflections and photos, check points, and use resources.",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      },
+      {
+        "id": "l0-login-check",
+        "type": "question",
+        "title": "Hub Check",
+        "body": "What should you use to get into the Student Hub?",
+        "image": "",
+        "options": [
+          "Your class code and username",
+          "A coach dashboard password",
+          "Someone else's account",
+          "No login at all"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l0-live-check",
+        "type": "question",
+        "title": "Live Lesson Check",
+        "body": "What happens when your coach starts a live question?",
+        "image": "",
+        "options": [
+          "You tap an answer on your iPad",
+          "You close the hub",
+          "You edit the coach lesson",
+          "You reset the class points"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "l0-deck",
+        "type": "content",
+        "title": "Teacher Deck",
+        "body": "Full intro deck: /camp-hub/lessons/Lesson%200/lesson0_intro_slides.html",
+        "image": "",
+        "options": [],
+        "correctIndex": -1
+      }
+    ],
+    "lessonSource": "lesson-building-2026-intro",
+    "deckUrl": "/camp-hub/lessons/Lesson%200/lesson0_intro_slides.html"
+  },
+  {
     "id": "w1-mon-intro-lego-technic",
     "title": "Week 1 - Monday: Intro to LEGO Technic",
     "updatedAt": "2026-06-25T00:00:00.000Z",

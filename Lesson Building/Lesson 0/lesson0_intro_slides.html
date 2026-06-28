@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 0 - Summer Camp Intro</title>
+  <style>
+    :root { --bg:#bfe0ff; --ink:#17324d; --accent:#073e77; --yellow:#fece00; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: var(--ink); overflow: hidden; }
+    .topbar { height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 18px; background: #eef7ff; border-bottom: 4px solid var(--accent); }
+    .badge { background: var(--yellow); border: 3px solid var(--accent); border-radius: 999px; padding: 6px 12px; font-weight: 700; }
+    h1 { font-size: 22px; margin: 0; color: #102e4a; }
+    a { color: var(--accent); font-weight: 700; }
+    iframe { width: 100vw; height: calc(100vh - 58px); border: 0; background: white; display: block; }
+    .fallback { display: none; padding: 28px; font-size: 20px; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <span class="badge">Lesson 0</span>
+    <h1>Summer Camp Intro: Rules and Hub Walkthrough</h1>
+    <a href="../Intro%20Slides.pdf" target="_blank" rel="noreferrer">Open PDF</a>
+  </div>
+  <iframe src="../Intro%20Slides.pdf#view=FitH" title="Intro Slides PDF"></iframe>
+  <div class="fallback">
+    If the PDF preview does not load, <a href="../Intro%20Slides.pdf">open the intro slides PDF</a>.
+  </div>
+</body>
+</html>

@@ -1539,7 +1539,15 @@
       `;
     }
 
-    function renderPrintRequestForm() {
+    function renderPrintRequestForm(classroom) {
+      if (!classroom || classroom.printQueueOpen !== true) {
+        return `
+          <div class="submit-card">
+            <div class="section-title">3D Print Requests</div>
+            <p class="section-sub">The 3D print queue is closed right now. Your coach will open it when it is time to send print ideas.</p>
+          </div>
+        `;
+      }
       return `
         <div class="submit-card">
           <div class="section-title">Request a 3D Print</div>
@@ -1904,7 +1912,7 @@
             ${!isCoach ? renderBeginLessonSection(curriculum) : ''}
             ${!isCoach ? `<div class="anchor-section" id="submit-activity">${renderSubmitBox(curriculum, submissions)}</div>` : ''}
             ${!isCoach ? renderProjectSubmissionForm() : ''}
-            ${!isCoach ? renderPrintRequestForm() : ''}
+            ${!isCoach ? renderPrintRequestForm(classroom) : ''}
 
             <div class="anchor-section" id="resources" style="margin-top:36px">
               <div class="section-title">Resources</div>

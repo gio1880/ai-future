@@ -41,11 +41,11 @@
   {
     "id": "rubric-robot-design-reflection",
     "category": "Rubrics",
-    "label": "Robot Design Reflection Rubric",
-    "description": "Use last year's judging areas to reflect on robot strategy, testing, and design decisions.",
+    "label": "Robot Design Rubric Practice",
+    "description": "Use the official UNEARTHED rubric packet to practice explaining robot strategy, testing, and design decisions until BIOGLOW rubrics release.",
     "type": "Rubric",
-    "source": "AI Future",
-    "url": "/robotics%20lab/FLL%20Teams/2026-2027-bioglow/resources/judging/",
+    "source": "FIRST",
+    "url": "https://firstinspires.blob.core.windows.net/fll/challenge/2025-26/fll-challenge-unearthed-rubrics-color.pdf",
     "roles": [
       "student",
       "coach"
@@ -54,11 +54,11 @@
   {
     "id": "rubric-project-reflection",
     "category": "Rubrics",
-    "label": "Innovation Project Reflection Rubric",
-    "description": "Reflect on problem research, solution creativity, testing, and presentation clarity.",
+    "label": "Innovation Project Rubric Practice",
+    "description": "Use the official UNEARTHED rubric packet to reflect on problem research, solution creativity, testing, iteration, and presentation clarity.",
     "type": "Rubric",
-    "source": "AI Future",
-    "url": "/robotics%20lab/FLL%20Teams/2026-2027-bioglow/resources/innovation-project/",
+    "source": "FIRST",
+    "url": "https://firstinspires.blob.core.windows.net/fll/challenge/2025-26/fll-challenge-unearthed-rubrics-color.pdf",
     "roles": [
       "student",
       "coach"
@@ -71,7 +71,7 @@
     "description": "Start here to understand why biodiversity matters and how ecosystems stay balanced.",
     "type": "Reading",
     "source": "Coach-curated",
-    "url": "https://www.nationalgeographic.org/encyclopedia/biodiversity/",
+    "url": "https://education.nationalgeographic.org/resource/biodiversity/",
     "roles": [
       "student",
       "coach"
@@ -84,7 +84,7 @@
     "description": "Explore how engineers learn from living systems to design better solutions.",
     "type": "Reading",
     "source": "Coach-curated",
-    "url": "https://biomimicry.org/what-is-biomimicry/",
+    "url": "https://biomimicry.org/inspiration/what-is-biomimicry/",
     "roles": [
       "student",
       "coach"
@@ -96,8 +96,8 @@
     "label": "Jane Goodall",
     "description": "A scientist students can study for observation, habitat, and conservation thinking.",
     "type": "Biography",
-    "source": "Coach-curated",
-    "url": "https://janegoodall.org/our-story/about-jane/",
+    "source": "National Geographic Education",
+    "url": "https://education.nationalgeographic.org/resource/jane-goodall/",
     "roles": [
       "student",
       "coach"
@@ -110,7 +110,7 @@
     "description": "Brainstorm Queens and NYC ecosystem problems: parks, street trees, pollinators, water, waste, heat, and wildlife.",
     "type": "Prompt",
     "source": "AI Future",
-    "url": "#vision-board",
+    "url": "/robotics%20lab/FLL%20Teams/2026-2027-bioglow/resources/innovation-project/local-habitat-ideas.md",
     "roles": [
       "student",
       "coach"

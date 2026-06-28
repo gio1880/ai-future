@@ -1198,10 +1198,15 @@ function hasLessonBuildingCurriculum(curriculum) {
 function hasLessonBuildingLessons(lessons) {
 	if (!Array.isArray(lessons)) return false;
 	const lessonBuildingLessons = lessons.filter((lesson) => lesson && lesson.lessonSource === lessonBuildingSource);
-	const hasCoachSetupTest = lessons.some((lesson) => lesson && lesson.id === 'coach-setup-test-student-login-live-points');
+	const hasIntroLesson = lessons.some((lesson) =>
+		lesson
+		&& lesson.id === 'lesson-0-summer-camp-intro'
+		&& lesson.lessonSource === 'lesson-building-2026-intro'
+		&& lesson.deckUrl === '/camp-hub/lessons/Lesson%200/lesson0_intro_slides.html'
+	);
 	return lessonBuildingLessons.length === 16
 		&& lessonBuildingLessons.every((lesson) => lesson.deckUrl && String(lesson.deckUrl).startsWith('/camp-hub/lessons/'))
-		&& hasCoachSetupTest;
+		&& hasIntroLesson;
 }
 
 async function migrateCampLessonBuildingData() {
@@ -1581,6 +1586,7 @@ function normalizeCampSkill(skill) {
 function defaultCampClassroomState() {
 	return {
 		noiseLevel: 'partner',
+		printQueueOpen: false,
 		timer: {
 			label: 'Work time',
 			durationMinutes: 20,
@@ -1599,6 +1605,7 @@ function normalizeCampClassroomState(state) {
 	const timerSource = source.timer && typeof source.timer === 'object' ? source.timer : {};
 	return {
 		noiseLevel: ['silent', 'whisper', 'partner', 'team', 'present'].includes(source.noiseLevel) ? source.noiseLevel : fallback.noiseLevel,
+		printQueueOpen: source.printQueueOpen === true,
 		timer: {
 			label: cleanMetaString(timerSource.label || fallback.timer.label, 80),
 			durationMinutes: Number.isFinite(timerSource.durationMinutes) ? timerSource.durationMinutes : fallback.timer.durationMinutes,
@@ -5092,6 +5099,10 @@ app.post('/api/camp/print-requests', requireCampAuth, async (req, res) => {
 	try {
 		if (!req.campUser || req.campUser.role !== 'student') {
 			return res.status(403).json({ success: false, message: 'Camper access required' });
+		}
+		const classroom = await readCampClassroomState();
+		if (classroom.printQueueOpen !== true) {
+			return res.status(403).json({ success: false, message: '3D print requests are closed right now. Ask your coach when the queue will open.' });
 		}
 		const title = cleanMetaString(req.body.title || '', 120);
 		const purpose = cleanMetaString(req.body.purpose || '', 800);
