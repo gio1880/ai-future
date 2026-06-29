@@ -2291,8 +2291,20 @@ async function syncSummer2026CampUsers(roster) {
 	const targetNames = new Set(summer2026RosterStudents().map((entry) => normalizedPersonName(entry.name)));
 	const rosterByName = new Map((roster.students || []).map((student) => [normalizedPersonName(student.name), student]));
 
+	// Camp accounts that belong to an active, summer-enrolled master-roster student must
+	// never be auto-deactivated — otherwise a coach-added camper gets bounced to the login
+	// page when they try to enter the hub.
+	const protectedCampIds = new Set();
+	const protectedCampNames = new Set();
+	for (const student of (roster.students || [])) {
+		if (student.active === false || !summerEnrolled(student, roster)) continue;
+		if (student.campUserId) protectedCampIds.add(student.campUserId);
+		protectedCampNames.add(normalizedPersonName(student.name));
+	}
+
 	for (const user of campUsers) {
 		if (user.demoAccount === true) continue;
+		if (protectedCampIds.has(user.id) || protectedCampNames.has(normalizedPersonName(user.name))) continue;
 		if (user.role === 'student' && !targetNames.has(normalizedPersonName(user.name)) && user.summerRosterSource !== summerRosterSource) {
 			user.active = false;
 			user.updatedAt = now;
@@ -2618,6 +2630,9 @@ async function requireStudentAuth(req, res, next) {
 // Find or provision the camp account linked to a roster student (by stored id, then name).
 async function resolveCampAccountForStudent(student, roster) {
 	const campUsers = await readCampUsers();
+	const summerClass = (Array.isArray(student.enrollments) ? student.enrollments : [])
+		.map((e) => (roster.classes || []).find((c) => c.id === e.classId))
+		.find((c) => c && c.term === 'summer');
 	let account = null;
 	if (student.campUserId) account = campUsers.find((u) => u.id === student.campUserId && u.role === 'student');
 	if (!account) {
@@ -2625,6 +2640,15 @@ async function resolveCampAccountForStudent(student, roster) {
 		account = campUsers.find((u) => u.role === 'student' && normalizedPersonName(u.name) === wanted);
 	}
 	if (account) {
+		// A student who is active in the master roster must have an ACTIVE, roster-managed
+		// camp account. Reactivate + tag so the summer-roster sync never deactivates it again
+		// (the bug: provisioned accounts lacked summerRosterSource and got auto-deactivated,
+		// which then bounced the camper back to the login page).
+		let changed = false;
+		if (account.active === false) { account.active = true; changed = true; }
+		if (account.summerRosterSource !== summerRosterSource) { account.summerRosterSource = summerRosterSource; changed = true; }
+		if (summerClass && !account.className) { account.className = summerClass.name; changed = true; }
+		if (changed) { account.updatedAt = new Date().toISOString(); await writeCampUsers(campUsers); }
 		if (student.campUserId !== account.id) {
 			const fresh = await readMasterRoster();
 			const target = fresh.students.find((s) => s.id === student.id);
@@ -2632,12 +2656,9 @@ async function resolveCampAccountForStudent(student, roster) {
 		}
 		return account;
 	}
-	// Provision a new camp account
+	// Provision a new camp account (tagged as roster-managed so it is never auto-deactivated).
 	const existingUsernames = new Set(campUsers.map((u) => String(u.username || '').toLowerCase()));
 	const username = uniqueUsername(student.name, existingUsernames);
-	const summerClass = (Array.isArray(student.enrollments) ? student.enrollments : [])
-		.map((e) => (roster.classes || []).find((c) => c.id === e.classId))
-		.find((c) => c && c.term === 'summer');
 	account = {
 		id: `camp-student-${slugify(student.name)}-${crypto.randomBytes(3).toString('hex')}`,
 		name: student.name,
@@ -2645,7 +2666,8 @@ async function resolveCampAccountForStudent(student, roster) {
 		password_hash: hashScryptPassword(generateStudentPassword()),
 		role: 'student',
 		active: true,
-		className: summerClass ? summerClass.name : 'Summer Camp'
+		className: summerClass ? summerClass.name : 'Summer Camp',
+		summerRosterSource
 	};
 	campUsers.push(account);
 	await writeCampUsers(campUsers);
