@@ -6113,6 +6113,52 @@ app.post('/api/camp/coach/points', requireCampAuth, requireCampCoach, async (req
 	}
 });
 
+// Bulk award: give the same skill/points to several selected campers at once.
+app.post('/api/camp/coach/points/bulk', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const studentIds = Array.isArray(req.body.studentIds)
+			? Array.from(new Set(req.body.studentIds.map((id) => cleanMetaString(id, 120)).filter(Boolean)))
+			: [];
+		if (!studentIds.length) return res.status(400).json({ success: false, message: 'Select at least one camper' });
+		const category = cleanMetaString(req.body.category || '', 80) || 'Teamwork';
+		const icon = cleanMetaString(req.body.icon || '', 8);
+		const note = cleanMetaString(req.body.note || '', 500);
+		const type = req.body.type === 'needs-work' ? 'needs-work' : 'positive';
+		const rawPoints = Number(req.body.points);
+		const magnitude = Number.isFinite(rawPoints) ? Math.max(1, Math.min(20, Math.abs(Math.round(rawPoints)))) : 1;
+		const points = type === 'needs-work' ? -magnitude : magnitude;
+
+		const users = await readCampUsers();
+		const events = await readCampPointEvents();
+		const now = new Date().toISOString();
+		const awarded = [];
+		for (const sid of studentIds) {
+			const student = users.find((candidate) => candidate.id === sid && candidate.role === 'student' && candidate.active !== false);
+			if (!student) continue;
+			events.push({
+				id: `point-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`,
+				studentId: student.id,
+				studentName: student.name,
+				className: student.className || 'Unassigned',
+				category, icon, type, points, note,
+				createdBy: req.campUser.id,
+				createdByName: req.campUser.name,
+				createdAt: now
+			});
+			awarded.push(student.id);
+		}
+		if (!awarded.length) return res.status(404).json({ success: false, message: 'None of the selected campers were found' });
+		await writeJsonFile(campPointEventsFile, events);
+		const [submissions, printRequests, projectSubmissions] = await Promise.all([readCampSubmissions(), readCampPrintRequests(), readCampProjectSubmissions()]);
+		const pointsByStudent = {};
+		for (const sid of awarded) pointsByStudent[sid] = campPointsFor(sid, submissions, printRequests, events, projectSubmissions);
+		return res.status(201).json({ success: true, count: awarded.length, awarded, pointsByStudent, pointEvents: events });
+	} catch (err) {
+		console.error('Camp coach bulk point event error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving points' });
+	}
+});
+
 app.post('/api/camp/coach/points/reset', requireCampAuth, requireCampCoach, async (req, res) => {
 	try {
 		const className = cleanMetaString(req.body.className || '', 120);

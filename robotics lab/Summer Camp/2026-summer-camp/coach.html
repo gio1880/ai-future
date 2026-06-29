@@ -551,7 +551,24 @@
       background: #fbfcfd;
       padding: 14px;
       text-align: center;
+      position: relative;
     }
+    /* Multi-select bulk-award UI */
+    .dojo-class-board.select-mode .student-figure-card { cursor: pointer; }
+    .student-figure-card.selected { border-color: var(--sun-deep); background: var(--sun-light); box-shadow: 0 0 0 2px var(--sun-deep) inset; }
+    .student-figure-card .dojo-check {
+      position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; border-radius: 50%;
+      background: #fff; border: 2px solid var(--line); color: transparent; font-size: 13px; font-weight: 900;
+      display: grid; place-items: center; line-height: 1;
+    }
+    .student-figure-card.selected .dojo-check { background: var(--sun-deep); border-color: var(--sun-deep); color: #fff; }
+    .dojo-select-bar {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      padding: 10px 12px; margin: 4px 0 12px; border: 1.5px solid var(--sun-mid);
+      background: var(--sun-light); border-radius: var(--radius-sm);
+    }
+    .dojo-select-bar .dojo-sel-count { font-weight: 900; color: var(--sun-deep); margin-left: auto; }
+    .dojo-select-bar .btn-primary { min-width: 0; }
 
     .student-avatar {
       width: 66px;
@@ -1871,19 +1888,28 @@
         .slice()
         .sort((a,b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')))
         .slice(0, 12);
+      const selMode = dojoSelectMode;
       return `
-        <div class="dojo-class-board">
+        <div class="dojo-class-board ${selMode ? 'select-mode' : ''}">
           <div class="dojo-board-head">
             <div>
               <div class="section-title" style="font-size:17px">${esc(classItem?.name || 'Class board')}</div>
-              <p class="section-sub">Tap a camper to give points for a skill. 🔊 Sound plays on every point.</p>
+              <p class="section-sub">${selMode ? 'Tap campers to select them, then award one skill to all of them.' : 'Tap a camper to give points for a skill. 🔊 Sound plays on every point.'}</p>
             </div>
+            <button class="btn ${selMode ? 'btn-primary' : 'btn-ghost'}" type="button" onclick="toggleDojoSelectMode()">${selMode ? '✓ Done selecting' : '☑️ Select multiple'}</button>
             <button class="btn btn-ghost" type="button" onclick="openManageSkills()">⚙️ Manage skills</button>
             <button class="btn btn-ghost" type="button" onclick="resetClassPoints(decodeURIComponent('${encodeURIComponent(classItem?.name || 'Unassigned')}'))">Reset class points</button>
           </div>
+          ${selMode ? `<div class="dojo-select-bar">
+            <button class="btn btn-ghost" type="button" onclick="dojoSelectAll(decodeURIComponent('${encodeURIComponent(classItem?.name || 'Unassigned')}'))">Select all</button>
+            <button class="btn btn-ghost" type="button" onclick="dojoClearSelection()">Clear</button>
+            <span class="dojo-sel-count" id="dojoSelCount">${dojoSelected.size} selected</span>
+            <button class="btn btn-primary" type="button" onclick="openBulkAward()" ${dojoSelected.size ? '' : 'disabled'}>⭐ Award skill to selected</button>
+          </div>` : ''}
           <div class="student-figure-grid">
             ${students.map(student => `
-              <button class="student-figure-card tappable" type="button" onclick="openAward('${esc(student.id)}')">
+              <button class="student-figure-card tappable ${selMode && dojoSelected.has(student.id) ? 'selected' : ''}" type="button" data-sid="${esc(student.id)}" onclick="${selMode ? `toggleDojoSelect('${esc(student.id)}')` : `openAward('${esc(student.id)}')`}">
+                ${selMode ? '<span class="dojo-check">✓</span>' : ''}
                 <div class="student-avatar monster">${monsterAvatar(student.id)}</div>
                 <h4>${esc(student.name)}</h4>
                 <div class="student-points" id="board-pts-${esc(student.id)}">${esc(student.points?.total || 0)}</div>
@@ -1934,10 +1960,53 @@
 
     /* ── Award modal (tap a camper → tap a skill) ── */
     let awardStudentId = null;
+    let dojoSelectMode = false;
+    let dojoSelected = new Set();
+    let bulkAwardOpen = false;
 
     function studentById(id) {
       return (progressData.students || []).find(s => s.id === id);
     }
+
+    /* ── Multi-select bulk award ── */
+    function dojoStudentsInClass(className) {
+      const cls = classSummaries().find(item => item.name === className);
+      return (cls?.students || []);
+    }
+    function refreshDojoBoard() {
+      const board = document.getElementById('dojoClassBoard');
+      if (board) board.innerHTML = renderClassDojoBoard(selectedClassName);
+    }
+    window.toggleDojoSelectMode = function toggleDojoSelectMode() {
+      dojoSelectMode = !dojoSelectMode;
+      if (!dojoSelectMode) dojoSelected.clear();
+      refreshDojoBoard();
+    };
+    window.toggleDojoSelect = function toggleDojoSelect(id) {
+      if (dojoSelected.has(id)) dojoSelected.delete(id); else dojoSelected.add(id);
+      const card = document.querySelector(`.student-figure-card[data-sid="${id}"]`);
+      if (card) card.classList.toggle('selected', dojoSelected.has(id));
+      const count = document.getElementById('dojoSelCount');
+      if (count) count.textContent = `${dojoSelected.size} selected`;
+      const awardBtn = document.querySelector('.dojo-select-bar .btn-primary');
+      if (awardBtn) awardBtn.disabled = dojoSelected.size === 0;
+    };
+    window.dojoSelectAll = function dojoSelectAll(className) {
+      dojoStudentsInClass(className).forEach(s => dojoSelected.add(s.id));
+      refreshDojoBoard();
+    };
+    window.dojoClearSelection = function dojoClearSelection() {
+      dojoSelected.clear();
+      refreshDojoBoard();
+    };
+    window.openBulkAward = function openBulkAward() {
+      if (!dojoSelected.size) return;
+      bulkAwardOpen = true;
+      awardStudentId = null;
+      try { pointAudioCtx = pointAudioCtx || new (window.AudioContext || window.webkitAudioContext)(); if (pointAudioCtx.state === 'suspended') pointAudioCtx.resume(); } catch (e) {}
+      renderAwardModal();
+      document.getElementById('awardOverlay').classList.add('open');
+    };
 
     window.openAward = function openAward(studentId) {
       awardStudentId = studentId;
@@ -1949,11 +2018,10 @@
     window.closeAward = function closeAward() {
       document.getElementById('awardOverlay').classList.remove('open');
       awardStudentId = null;
+      bulkAwardOpen = false;
     };
 
     function renderAwardModal() {
-      const student = studentById(awardStudentId);
-      if (!student) return;
       const skills = campSkills();
       const positive = skills.filter(s => s.type !== 'negative');
       const negative = skills.filter(s => s.type === 'negative');
@@ -1963,25 +2031,71 @@
           <span class="skill-name">${esc(s.name)}</span>
           <span class="skill-pts">${s.type === 'negative' ? '−' : '+'}${esc(s.points)}</span>
         </button>`;
+      let head;
+      if (bulkAwardOpen) {
+        const ids = Array.from(dojoSelected);
+        const names = ids.map(id => studentById(id)).filter(Boolean).map(s => s.name);
+        head = `
+          <div class="award-head">
+            <div class="award-avatar monster" style="display:grid;place-items:center;background:var(--sun-deep);color:#fff;font-size:20px">👥</div>
+            <div class="award-who">
+              <h3>${ids.length} camper${ids.length === 1 ? '' : 's'} selected</h3>
+              <div class="award-total" style="font-weight:700;color:var(--muted)">${esc(names.slice(0, 6).join(', '))}${names.length > 6 ? ` +${names.length - 6} more` : ''}</div>
+            </div>
+            <button class="award-close" type="button" onclick="closeAward()" aria-label="Close">✕</button>
+          </div>`;
+      } else {
+        const student = studentById(awardStudentId);
+        if (!student) return;
+        head = `
+          <div class="award-head">
+            <div class="award-avatar monster">${monsterAvatar(student.id)}</div>
+            <div class="award-who">
+              <h3>${esc(student.name)}</h3>
+              <div class="award-total" id="awardTotal">${esc(student.points?.total || 0)} points</div>
+            </div>
+            <button class="award-close" type="button" onclick="closeAward()" aria-label="Close">✕</button>
+          </div>`;
+      }
       document.getElementById('awardModalBody').innerHTML = `
-        <div class="award-head">
-          <div class="award-avatar monster">${monsterAvatar(student.id)}</div>
-          <div class="award-who">
-            <h3>${esc(student.name)}</h3>
-            <div class="award-total" id="awardTotal">${esc(student.points?.total || 0)} points</div>
-          </div>
-          <button class="award-close" type="button" onclick="closeAward()" aria-label="Close">✕</button>
-        </div>
+        ${head}
         ${positive.length ? `<div class="skill-section-label pos">➕ Great job!</div><div class="skill-grid">${positive.map(skillBtn).join('')}</div>` : ''}
         ${negative.length ? `<div class="skill-section-label neg">➖ Let's fix it</div><div class="skill-grid">${negative.map(skillBtn).join('')}</div>` : ''}
-        <p class="section-sub" style="margin-top:14px;text-align:center">Keep tapping to give more — close when you're done.</p>
+        <p class="section-sub" style="margin-top:14px;text-align:center">${bulkAwardOpen ? 'Tap a skill to give it to everyone selected.' : 'Keep tapping to give more — close when you\'re done.'}</p>
       `;
+    }
+
+    async function bulkAwardSkill(skill) {
+      const ids = Array.from(dojoSelected);
+      if (!ids.length) return;
+      const positive = skill.type !== 'negative';
+      playPointSound(positive);
+      flashAward(skill, positive);
+      try {
+        const res = await api('/api/camp/coach/points/bulk', {
+          method: 'POST',
+          body: JSON.stringify({ studentIds: ids, category: skill.name, icon: skill.icon, points: skill.points, type: positive ? 'positive' : 'needs-work' })
+        });
+        const map = res.pointsByStudent || {};
+        ids.forEach(id => {
+          const s = studentById(id);
+          if (s && map[id] && typeof map[id].total === 'number') s.points = map[id];
+          const bp = document.getElementById('board-pts-' + id);
+          if (bp && map[id]) bp.textContent = map[id].total;
+        });
+        const refreshed = await api('/api/camp/coach/progress');
+        progressData = refreshed || progressData;
+        const sideTools = document.getElementById('sidebarTools');
+        if (sideTools) sideTools.innerHTML = renderSidebarTools();
+      } catch (err) { alert(err.message); }
     }
 
     window.awardSkill = async function awardSkill(skillId) {
       const skill = campSkills().find(s => s.id === skillId);
+      if (!skill) return;
+      if (bulkAwardOpen) { return bulkAwardSkill(skill); }
       const student = studentById(awardStudentId);
-      if (!skill || !student) return;
+      if (!student) return;
       const positive = skill.type !== 'negative';
       playPointSound(positive);
       // Optimistic UI: bump the totals immediately, flash the button.
