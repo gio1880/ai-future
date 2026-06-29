@@ -5172,6 +5172,58 @@ app.post('/api/camp/submissions', requireCampAuth, async (req, res) => {
 	}
 });
 
+// Coach submits a photo/note on behalf of one or more campers (e.g. a photo of their build).
+app.post('/api/camp/coach/submissions', requireCampAuth, requireCampCoach, async (req, res) => {
+	try {
+		const studentIds = Array.isArray(req.body.studentIds)
+			? Array.from(new Set(req.body.studentIds.map((id) => cleanMetaString(id, 120)).filter(Boolean)))
+			: [];
+		const dayId = cleanMetaString(req.body.dayId || '', 120);
+		const reflection = cleanMetaString(req.body.reflection || '', 1800);
+		const photoDataUrl = typeof req.body.photoDataUrl === 'string' ? req.body.photoDataUrl : '';
+		if (!studentIds.length) return res.status(400).json({ success: false, message: 'Select at least one camper' });
+		if (!dayId) return res.status(400).json({ success: false, message: 'Pick an assignment day' });
+		if (!reflection && !photoDataUrl) return res.status(400).json({ success: false, message: 'Add a photo or a note before submitting' });
+		if (photoDataUrl && (!photoDataUrl.startsWith('data:image/') || photoDataUrl.length > 8 * 1024 * 1024)) {
+			return res.status(400).json({ success: false, message: 'Photo must be an image under 8 MB after compression' });
+		}
+		const curriculum = await readJsonFile(campCurriculumFile, []);
+		const match = findCampDay(curriculum, dayId);
+		if (!match || !match.day) return res.status(404).json({ success: false, message: 'Camp day not found' });
+
+		const users = await readCampUsers();
+		const submissions = await readCampSubmissions();
+		const now = new Date().toISOString();
+		const saved = [];
+		for (const sid of studentIds) {
+			const student = users.find((u) => u.id === sid && u.role === 'student' && u.active !== false);
+			if (!student) continue;
+			const existing = submissions.find((item) => item.dayId === dayId && item.studentId === sid);
+			const payload = {
+				id: existing?.id || `camp-sub-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`,
+				dayId,
+				studentId: sid,
+				studentName: student.name,
+				className: student.className || 'Unassigned',
+				reflection,
+				photoDataUrl,
+				updatedAt: now,
+				submittedAt: existing?.submittedAt || now,
+				submittedByCoach: req.campUser.name
+			};
+			if (existing) Object.assign(existing, payload);
+			else submissions.push(payload);
+			saved.push({ studentId: sid, name: student.name });
+		}
+		if (!saved.length) return res.status(404).json({ success: false, message: 'None of the selected campers were found' });
+		await writeJsonFile(campSubmissionsFile, submissions);
+		return res.json({ success: true, count: saved.length, students: saved });
+	} catch (err) {
+		console.error('Camp coach submission error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving submissions' });
+	}
+});
+
 app.post('/api/camp/print-requests', requireCampAuth, async (req, res) => {
 	try {
 		if (!req.campUser || req.campUser.role !== 'student') {
@@ -5396,6 +5448,18 @@ app.get('/api/camp/warmup', requireCampAuth, async (req, res) => {
 	} catch (err) {
 		console.error('Camp warmup state error:', err);
 		return res.status(500).json({ success: false, message: 'Server error loading warm-up state' });
+	}
+});
+
+// Lightweight live classroom timer (+ noise level) any signed-in camp user can poll —
+// powers the always-visible timer banner on the camper hub.
+app.get('/api/camp/classroom-timer', requireCampAuth, async (req, res) => {
+	try {
+		const state = await readCampClassroomState();
+		return res.json({ success: true, timer: state.timer || {}, noiseLevel: state.noiseLevel || 'partner' });
+	} catch (err) {
+		console.error('Camp classroom timer error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading timer' });
 	}
 });
 

@@ -58,6 +58,22 @@
       border-bottom: 1px solid var(--line);
     }
 
+    /* Always-visible classroom timer banner */
+    .timer-banner {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 95;
+      display: none; align-items: center; justify-content: center; gap: 12px;
+      height: 46px; padding: 0 16px;
+      background: linear-gradient(135deg, var(--sun-deep), #14365a); color: #fff;
+      box-shadow: 0 4px 16px rgba(7,20,38,0.22); font-weight: 800;
+    }
+    .timer-banner.show { display: flex; }
+    .timer-banner.ending { background: linear-gradient(135deg, #b42318, #e8583a); }
+    .timer-banner .tb-ico { font-size: 18px; }
+    .timer-banner .tb-label { font-size: 14px; opacity: 0.92; max-width: 50vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .timer-banner .tb-time { font-size: 22px; font-weight: 900; font-variant-numeric: tabular-nums; letter-spacing: 0.5px; }
+    body.has-timer-banner { padding-top: 46px; }
+    body.has-timer-banner .topbar { top: 46px; }
+
     .topbar-inner {
       max-width: 1100px;
       margin: 0 auto;
@@ -1047,6 +1063,13 @@
     </div>
   </header>
 
+  <!-- Always-visible classroom timer banner (shows when a coach starts the timer) -->
+  <div class="timer-banner" id="timerBanner" aria-live="polite">
+    <span class="tb-ico">⏱️</span>
+    <span class="tb-label" id="timerBannerLabel">Work time</span>
+    <span class="tb-time" id="timerBannerTime">00:00</span>
+  </div>
+
   <main class="page" id="app">
     <div class="loading-state">
       <span class="loading-spinner">☀️</span>
@@ -1689,6 +1712,42 @@
         ? Math.max(0, remaining - Math.floor((Date.now() - new Date(startedAt).getTime()) / 1000))
         : Math.max(0, remaining);
       el.textContent = formatSeconds(seconds);
+    }
+
+    /* ── Always-visible classroom timer banner ── */
+    let campTimer = null;
+    const timerBanner = document.getElementById('timerBanner');
+
+    async function pollTimer() {
+      try {
+        const r = await fetch('/api/camp/classroom-timer').then(x => x.json());
+        if (r && r.success) campTimer = r.timer || {};
+      } catch (err) { return; }
+      // keep the in-page Classroom card readout in sync too
+      const card = document.getElementById('studentTimerReadout');
+      if (card && campTimer) {
+        card.dataset.running = campTimer.running ? 'true' : 'false';
+        card.dataset.remaining = String(campTimer.pausedRemainingSeconds || 0);
+        card.dataset.startedAt = campTimer.startedAt || '';
+      }
+      tickTimerBanner();
+    }
+
+    function tickTimerBanner() {
+      if (!campTimer || !campTimer.running) { hideTimerBanner(); return; }
+      const seconds = timerSeconds(campTimer);
+      timerBanner.classList.add('show');
+      timerBanner.classList.toggle('ending', seconds <= 10);
+      document.body.classList.add('has-timer-banner');
+      const labelEl = document.getElementById('timerBannerLabel');
+      const timeEl = document.getElementById('timerBannerTime');
+      if (labelEl) labelEl.textContent = seconds <= 0 ? `${campTimer.label || 'Timer'} — Time's up!` : (campTimer.label || 'Work time');
+      if (timeEl) timeEl.textContent = formatSeconds(seconds);
+    }
+
+    function hideTimerBanner() {
+      timerBanner.classList.remove('show', 'ending');
+      document.body.classList.remove('has-timer-banner');
     }
 
     function weekStatus(week) {
@@ -2430,11 +2489,12 @@
       if (wuState && wuState.dayId) openBeginLesson(wuState.dayId);
     });
 
-    setInterval(tickStudentTimer, 1000);
-    setInterval(() => { pollLive(); pollWarmup(); }, 3000);
+    setInterval(() => { tickStudentTimer(); tickTimerBanner(); }, 1000);
+    setInterval(() => { pollLive(); pollWarmup(); pollTimer(); }, 3000);
     loadHub();
     pollLive();
     pollWarmup();
+    pollTimer();
   </script>
 </body>
 </html>
