@@ -750,26 +750,17 @@ app.post('/api/student/login', async (req, res) => {
 		if (!classCode && !password) {
 			return res.status(400).json({ success: false, message: 'Class code and username are required' });
 		}
-		if (classCode === 'DEMO') await ensureSummerDemoStudent();
-		const roster = await ensureStudentPortalUsernames();
+		let roster = null;
 		let classItem = null;
 		let student = null;
 		if (classCode) {
-			classItem = classCode === 'DEMO'
-				? { id: 'demo-summer-camp', term: 'summer', name: 'Demo Summer Camp', classCode: 'DEMO', active: true }
-				: (roster.classes || []).find((item) =>
-					item.active !== false && normalizeClassCode(item.classCode || '') === classCode
-				);
-			student = roster.students.find((s) =>
-				String(s.portalUsername || '').toLowerCase() === username
-				&& s.active !== false
-				&& classItem
-				&& (classCode === 'DEMO' ? s.demoAccount === true : studentIsInClass(s, classItem.id))
-			);
-			if (!classItem || !student) {
+			const found = await findRosterStudentByClassCode(classCode, username);
+			if (!found) {
 				return res.status(401).json({ success: false, message: 'Check your class code and username, then try again.' });
 			}
+			({ roster, student, classItem } = found);
 		} else {
+			roster = await ensureStudentPortalUsernames();
 			student = roster.students.find((s) => String(s.portalUsername || '').toLowerCase() === username && s.active !== false);
 			if (!student || !student.portalPassword_hash || !verifyScryptPassword(password, student.portalPassword_hash)) {
 				return res.status(401).json({ success: false, message: 'Invalid username or password' });
@@ -2539,6 +2530,30 @@ function studentIsInClass(student, classId) {
 		.some((enrollment) => enrollment.classId === classId);
 }
 
+// Shared roster auth: find a student by class code + portal username (no password).
+// Used by the Student Hub and by the Camp/FLL hub logins so one set of info works everywhere.
+// Returns { roster, student, classItem } (so the caller can update + persist) or null.
+async function findRosterStudentByClassCode(rawClassCode, rawUsername) {
+	const classCode = normalizeClassCode(rawClassCode || '');
+	const username = cleanMetaString(rawUsername || '', 80).toLowerCase();
+	if (!classCode || !username) return null;
+	if (classCode === 'DEMO') await ensureSummerDemoStudent();
+	const roster = await ensureStudentPortalUsernames();
+	const classItem = classCode === 'DEMO'
+		? { id: 'demo-summer-camp', term: 'summer', name: 'Demo Summer Camp', classCode: 'DEMO', active: true }
+		: (roster.classes || []).find((item) =>
+			item.active !== false && normalizeClassCode(item.classCode || '') === classCode
+		);
+	if (!classItem) return null;
+	const student = roster.students.find((s) =>
+		String(s.portalUsername || '').toLowerCase() === username
+		&& s.active !== false
+		&& (classCode === 'DEMO' ? s.demoAccount === true : studentIsInClass(s, classItem.id))
+	);
+	if (!student) return null;
+	return { roster, student, classItem };
+}
+
 function setStudentSessionCookie(res, token) {
 	const maxAge = 7 * 24 * 60 * 60;
 	const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
@@ -4084,6 +4099,29 @@ app.get(['/fll-hub/student', '/fll-hub/student/'], requireFllAuth, (req, res) =>
 
 app.post('/api/fll/login', async (req, res) => {
 	try {
+		// Class-code login: students use the same class code + username as the Student Hub.
+		const classCode = normalizeClassCode(req.body.classCode || '');
+		if (classCode) {
+			const found = await findRosterStudentByClassCode(classCode, req.body.username || '');
+			if (!found || !studentPortalHubIds(found.student, found.roster).includes('fll-hub')) {
+				return res.status(401).json({ success: false, message: 'Check your class code and username, then try again.' });
+			}
+			const student = found.student;
+			student.lastStudentPortalLoginAt = new Date().toISOString();
+			await writeMasterRoster(found.roster);
+			const fllUsers = await readFllUsers();
+			let fllUser = student.fllUserId ? fllUsers.find((u) => u.id === student.fllUserId) : null;
+			if (!fllUser) {
+				const wanted = normalizedPersonName(student.name);
+				fllUser = fllUsers.find((u) => u.role === 'student' && normalizedPersonName(u.name) === wanted);
+			}
+			if (!fllUser || fllUser.active === false) {
+				return res.status(404).json({ success: false, message: 'Your FLL account is not set up yet — ask your coach.' });
+			}
+			createFllSessionForUser(res, fllUser);
+			return res.json({ success: true, user: publicFllUser(fllUser), redirectTo: '/fll-hub/student' });
+		}
+
 		const username = cleanMetaString(req.body.username || '', 80).toLowerCase();
 		const password = typeof req.body.password === 'string' ? req.body.password : '';
 		const [users, coachUsers] = await Promise.all([readFllUsers(), readCoachUsers()]);
@@ -4902,6 +4940,23 @@ app.get(['/camp-hub/coach', '/camp-hub/coach/'], requireCampAuth, (req, res) => 
 
 app.post('/api/camp/login', async (req, res) => {
 	try {
+		// Class-code login: campers use the same class code + username as the Student Hub.
+		const classCode = normalizeClassCode(req.body.classCode || '');
+		if (classCode) {
+			const found = await findRosterStudentByClassCode(classCode, req.body.username || '');
+			if (!found || !summerEnrolled(found.student, found.roster)) {
+				return res.status(401).json({ success: false, message: 'Check your class code and username, then try again.' });
+			}
+			found.student.lastStudentPortalLoginAt = new Date().toISOString();
+			await writeMasterRoster(found.roster);
+			const account = await resolveCampAccountForStudent(found.student, found.roster);
+			if (!account) {
+				return res.status(404).json({ success: false, message: 'Your camp account is not set up yet — ask your coach.' });
+			}
+			createCampSessionForUser(res, account);
+			return res.json({ success: true, user: publicCampUser(account), redirectTo: '/camp-hub' });
+		}
+
 		const username = cleanMetaString(req.body.username || '', 80).toLowerCase();
 		const password = typeof req.body.password === 'string' ? req.body.password : '';
 		const [users, coachUsers] = await Promise.all([readCampUsers(), readCoachUsers()]);

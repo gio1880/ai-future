@@ -215,6 +215,13 @@
       line-height: 1.55;
     }
 
+    .linklike {
+      width: auto; display: inline; margin: 0; padding: 0;
+      background: none; color: var(--sky); font: inherit; font-weight: 800;
+      text-decoration: underline; cursor: pointer;
+    }
+    .linklike:hover { background: none; color: var(--sun-deep); }
+
     @media (max-width: 820px) {
       body { padding: 0; place-items: stretch; }
       .shell { min-height: 100vh; grid-template-columns: 1fr; border-radius: 0; }
@@ -242,28 +249,54 @@
     </section>
 
     <section class="panel" aria-label="Camp login">
-      <h2>Sign in</h2>
-      <p class="sub">Campers see the daily schedule and resources. Coaches manage announcements, the schedule, and camper accounts.</p>
-      <form id="loginForm">
+      <h2 id="panelTitle">Camper sign in</h2>
+      <p class="sub" id="panelSub">Use the same class code and username you use for your Student Hub.</p>
+
+      <!-- Camper: class code + username (same as Student Hub) -->
+      <form id="studentForm">
+        <div class="field">
+          <label for="classCode">Class code</label>
+          <input id="classCode" name="classCode" autocomplete="off" autocapitalize="characters" spellcheck="false" required />
+        </div>
+        <div class="field">
+          <label for="studentUsername">Username</label>
+          <input id="studentUsername" name="studentUsername" autocomplete="username" autocapitalize="none" required />
+        </div>
+        <button id="studentSubmit" type="submit">Enter Camp Hub</button>
+        <div id="studentError" class="error" role="alert"></div>
+      </form>
+
+      <!-- Coach: username + password -->
+      <form id="coachForm" style="display:none">
         <div class="field">
           <label for="username">Username</label>
-          <input id="username" name="username" autocomplete="username" required />
+          <input id="username" name="username" autocomplete="username" />
         </div>
         <div class="field">
           <label for="password">Password</label>
-          <input id="password" name="password" type="password" autocomplete="current-password" required />
+          <input id="password" name="password" type="password" autocomplete="current-password" />
         </div>
         <button id="submitButton" type="submit">Enter Camp Hub</button>
         <div id="error" class="error" role="alert"></div>
       </form>
-      <p class="help">Forgot your login? Ask your coach — they can reset camper passwords from the coach dashboard.</p>
+
+      <p class="help">
+        <span id="toCoach"><button type="button" class="linklike" id="toCoachBtn">Coach sign in →</button></span>
+        <span id="toStudent" style="display:none"><button type="button" class="linklike" id="toStudentBtn">← Camper sign in</button></span>
+        <br />Ask your coach for the class code if you don't have it.
+      </p>
     </section>
   </main>
 
   <script>
-    const form = document.getElementById('loginForm');
+    const studentForm = document.getElementById('studentForm');
+    const coachForm = document.getElementById('coachForm');
+    const studentError = document.getElementById('studentError');
     const errorBox = document.getElementById('error');
+    const studentSubmit = document.getElementById('studentSubmit');
     const submitButton = document.getElementById('submitButton');
+    const panelTitle = document.getElementById('panelTitle');
+    const panelSub = document.getElementById('panelSub');
 
     async function checkSession() {
       try {
@@ -277,26 +310,58 @@
       }
     }
 
-    form.addEventListener('submit', async (event) => {
+    function showCoach() {
+      studentForm.style.display = 'none';
+      coachForm.style.display = '';
+      document.getElementById('toCoach').style.display = 'none';
+      document.getElementById('toStudent').style.display = '';
+      panelTitle.textContent = 'Coach sign in';
+      panelSub.textContent = 'Coaches manage announcements, the schedule, lessons, and camper accounts.';
+    }
+    function showStudent() {
+      coachForm.style.display = 'none';
+      studentForm.style.display = '';
+      document.getElementById('toStudent').style.display = 'none';
+      document.getElementById('toCoach').style.display = '';
+      panelTitle.textContent = 'Camper sign in';
+      panelSub.textContent = 'Use the same class code and username you use for your Student Hub.';
+    }
+    document.getElementById('toCoachBtn').addEventListener('click', showCoach);
+    document.getElementById('toStudentBtn').addEventListener('click', showStudent);
+
+    studentForm.addEventListener('submit', async (event) => {
       event.preventDefault();
-      errorBox.style.display = 'none';
-      submitButton.disabled = true;
-
-      const payload = {
-        username: form.username.value.trim(),
-        password: form.password.value
-      };
-
+      studentError.style.display = 'none';
+      studentSubmit.disabled = true;
       try {
         const response = await fetch('/api/camp/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+          body: JSON.stringify({ classCode: studentForm.classCode.value.trim(), username: studentForm.studentUsername.value.trim() })
         });
         const result = await response.json();
-        if (!response.ok || !result.success) {
-          throw new Error(result.message || 'Unable to sign in.');
-        }
+        if (!response.ok || !result.success) throw new Error(result.message || 'Unable to sign in.');
+        window.location.href = result.redirectTo || '/camp-hub';
+      } catch (err) {
+        studentError.textContent = err.message;
+        studentError.style.display = 'block';
+      } finally {
+        studentSubmit.disabled = false;
+      }
+    });
+
+    coachForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      errorBox.style.display = 'none';
+      submitButton.disabled = true;
+      try {
+        const response = await fetch('/api/camp/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: coachForm.username.value.trim(), password: coachForm.password.value })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Unable to sign in.');
         window.location.href = result.redirectTo || '/camp-hub';
       } catch (err) {
         errorBox.textContent = err.message;
