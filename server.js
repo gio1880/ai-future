@@ -649,7 +649,7 @@ app.post('/api/master-roster/students', requireCoachPortalAuth, async (req, res)
 		}
 		roster.students.push(student);
 		const portalLogin = assignStudentPortalLogin(student, roster);
-		await syncMasterStudentHubAccess(student);
+		await syncMasterStudentHubAccess(student, roster);
 		await writeMasterRoster(roster);
 		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
 		return res.status(201).json({ success: true, data: publicMasterRoster(roster, teams), student, portalLogin });
@@ -671,7 +671,7 @@ app.patch('/api/master-roster/students/:id', requireCoachPortalAuth, async (req,
 			return res.status(400).json({ success: false, message: 'Student name is required' });
 		}
 		roster.students[index] = student;
-		await syncMasterStudentHubAccess(student);
+		await syncMasterStudentHubAccess(student, roster);
 		await writeMasterRoster(roster);
 		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
 		return res.json({ success: true, data: publicMasterRoster(roster, teams), student });
@@ -2696,7 +2696,7 @@ function appendRosterNote(notes, addition) {
 	return cleanMetaString(current ? `${current}\n${addition}` : addition, 600);
 }
 
-async function syncMasterStudentHubAccess(student) {
+async function syncMasterStudentHubAccess(student, roster = null) {
 	if (!student || !student.name) return student;
 	const access = new Set(inferMasterHubAccess(student));
 	const now = new Date().toISOString();
@@ -2793,7 +2793,58 @@ async function syncMasterStudentHubAccess(student) {
 		writeJsonFile(fllTeamMembersFile, members)
 	]);
 
+	// Summer Camp account — keep the camp hub in sync with roster adds/edits the same
+	// way Code Lab and FLL are. Needs the roster to know summer enrollment + class name.
+	if (roster) await syncCampAccountForRosterStudent(student, roster);
+
 	return student;
+}
+
+// Create / update / (de)activate the camper's camp account from their master-roster
+// record so the Summer Hub immediately reflects roster changes (name, class, active).
+async function syncCampAccountForRosterStudent(student, roster) {
+	if (!student || !student.name) return;
+	const campUsers = await readCampUsers();
+	const summerClass = (Array.isArray(student.enrollments) ? student.enrollments : [])
+		.map((e) => (roster.classes || []).find((c) => c.id === e.classId))
+		.find((c) => c && c.term === 'summer');
+	const wantsCamp = !!summerClass && student.active !== false;
+	let account = findStudentAccount(campUsers, student, 'campUserId');
+	let changed = false;
+
+	if (wantsCamp) {
+		if (!account) {
+			const existingUsernames = new Set(campUsers.map((u) => String(u.username || '').toLowerCase()));
+			account = {
+				id: `camp-student-${slugify(student.name)}-${crypto.randomBytes(3).toString('hex')}`,
+				name: student.name,
+				username: uniqueUsername(student.name, existingUsernames),
+				password_hash: hashScryptPassword(generateStudentPassword()),
+				role: 'student',
+				active: true,
+				className: summerClass.name,
+				summerRosterSource,
+				createdAt: new Date().toISOString()
+			};
+			campUsers.push(account);
+			changed = true;
+		} else {
+			if (account.name !== student.name) { account.name = student.name; changed = true; }
+			if (account.active === false) { account.active = true; changed = true; }
+			if (account.className !== summerClass.name) { account.className = summerClass.name; changed = true; }
+			if (account.summerRosterSource !== summerRosterSource) { account.summerRosterSource = summerRosterSource; changed = true; }
+		}
+		if (student.campUserId !== account.id) { student.campUserId = account.id; changed = true; }
+	} else if (account) {
+		// No longer summer-enrolled (or the roster record was deactivated) → deactivate.
+		if (account.active !== false) { account.active = false; changed = true; }
+		if (student.campUserId !== account.id) { student.campUserId = account.id; changed = true; }
+	}
+
+	if (changed) {
+		if (account) account.updatedAt = new Date().toISOString();
+		await writeCampUsers(campUsers);
+	}
 }
 
 // Fully remove the Code Lab and FLL Hub accounts that were provisioned for a
@@ -2819,6 +2870,12 @@ async function removeMasterStudentLinkedAccounts(student) {
 			writeJsonFile(fllUsersFile, fllUsers.filter((account) => account.id !== fllAccount.id)),
 			writeJsonFile(fllTeamMembersFile, (Array.isArray(members) ? members : []).filter((member) => member.studentId !== fllAccount.id))
 		]);
+	}
+
+	const campUsers = await readCampUsers();
+	const campAccount = findStudentAccount(campUsers, student, 'campUserId');
+	if (campAccount) {
+		await writeCampUsers(campUsers.filter((account) => account.id !== campAccount.id));
 	}
 }
 

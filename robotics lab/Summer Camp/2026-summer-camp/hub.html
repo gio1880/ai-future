@@ -1716,7 +1716,38 @@
 
     /* ── Always-visible classroom timer banner ── */
     let campTimer = null;
+    let timerAlarmFor = '';
+    let campAudioCtx = null;
     const timerBanner = document.getElementById('timerBanner');
+
+    // Prime audio on the first tap so the timer alarm is allowed to sound later.
+    document.addEventListener('pointerdown', () => {
+      try { campAudioCtx = campAudioCtx || new (window.AudioContext || window.webkitAudioContext)(); if (campAudioCtx.state === 'suspended') campAudioCtx.resume(); } catch (e) {}
+    }, { once: false });
+
+    function playTimerAlarm() {
+      try {
+        campAudioCtx = campAudioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        if (campAudioCtx.state === 'suspended') campAudioCtx.resume();
+        const ctx = campAudioCtx;
+        const now = ctx.currentTime;
+        const master = ctx.createGain();
+        master.gain.value = 1;
+        master.connect(ctx.destination);
+        const beep = (t, freq, dur) => {
+          const g = ctx.createGain();
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.exponentialRampToValueAtTime(0.5, t + 0.01);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+          g.connect(master);
+          const o = ctx.createOscillator();
+          o.type = 'triangle'; o.frequency.value = freq;
+          o.connect(g); o.start(t); o.stop(t + dur + 0.02);
+        };
+        [0, 0.22, 0.44].forEach((d) => beep(now + d, 988, 0.16));
+        beep(now + 0.7, 1318.5, 0.42);
+      } catch (err) { /* audio not available */ }
+    }
 
     async function pollTimer() {
       try {
@@ -1734,7 +1765,11 @@
     }
 
     function tickTimerBanner() {
-      if (!campTimer || !campTimer.running) { hideTimerBanner(); return; }
+      if (!campTimer || !campTimer.running) {
+        if (!campTimer || !campTimer.startedAt) timerAlarmFor = '';
+        hideTimerBanner();
+        return;
+      }
       const seconds = timerSeconds(campTimer);
       timerBanner.classList.add('show');
       timerBanner.classList.toggle('ending', seconds <= 10);
@@ -1743,6 +1778,11 @@
       const timeEl = document.getElementById('timerBannerTime');
       if (labelEl) labelEl.textContent = seconds <= 0 ? `${campTimer.label || 'Timer'} — Time's up!` : (campTimer.label || 'Work time');
       if (timeEl) timeEl.textContent = formatSeconds(seconds);
+      // ring once when this timer run hits zero
+      if (seconds <= 0 && timerAlarmFor !== (campTimer.startedAt || 'run')) {
+        timerAlarmFor = campTimer.startedAt || 'run';
+        playTimerAlarm();
+      }
     }
 
     function hideTimerBanner() {
