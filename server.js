@@ -2152,10 +2152,25 @@ function normalizeMasterRoster(data) {
 async function initializeMasterRoster() {
 	try {
 		await fs.access(masterRosterFile);
+		return; // already present on the data dir (persistent disk) — never overwrite live data
 	} catch (err) {
 		if (err.code !== 'ENOENT') throw err;
-		await writeJsonFile(masterRosterFile, buildDefaultMasterRoster());
 	}
+	// Fresh data dir (e.g. a new Render disk): seed from the committed repo copy so the
+	// real roster shows up, instead of an empty default. Only runs when the file is missing,
+	// so it never clobbers students added on the live site.
+	const repoCopy = path.join(__dirname, 'data', 'master-roster.json');
+	if (repoCopy !== masterRosterFile) {
+		try {
+			const raw = await fs.readFile(repoCopy, 'utf8');
+			const seeded = JSON.parse(raw);
+			if (seeded && Array.isArray(seeded.students)) {
+				await writeJsonFile(masterRosterFile, normalizeMasterRoster(seeded));
+				return;
+			}
+		} catch (seedErr) { /* fall back to the built-in default below */ }
+	}
+	await writeJsonFile(masterRosterFile, buildDefaultMasterRoster());
 }
 
 async function readMasterRoster() {
