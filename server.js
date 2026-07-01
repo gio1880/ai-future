@@ -2263,6 +2263,9 @@ async function migrateSummer2026RosterData() {
 
 	for (const student of students) {
 		if (student.demoAccount === true) continue;
+		// Keep coach-added campers (linked to a camp account) enrolled — don't strip their
+		// summer class on a deploy/migration; only the hard-coded seed list is reset here.
+		if (student.campUserId) continue;
 		const key = normalizedPersonName(student.name);
 		if (targetNames.has(key)) continue;
 		const enrollments = Array.isArray(student.enrollments) ? student.enrollments : [];
@@ -2690,6 +2693,52 @@ async function resolveCampAccountForStudent(student, roster) {
 	const target = fresh.students.find((s) => s.id === student.id);
 	if (target) { target.campUserId = account.id; await writeMasterRoster(fresh); }
 	return account;
+}
+
+// Reverse sync: when a coach adds/edits a camper on the Summer Hub, make sure they
+// exist in the master roster (summer-enrolled + linked) so the roster stays complete.
+async function syncMasterStudentFromCampCamper(campUser) {
+	if (!campUser || campUser.role !== 'student' || !campUser.name) return;
+	const roster = await readMasterRoster();
+	const summerClasses = (roster.classes || []).filter((c) => c.term === 'summer');
+	const summerClass = summerClasses.find((c) => c.active !== false && c.name === (campUser.className || ''))
+		|| summerClasses.find((c) => c.active !== false)
+		|| summerClasses[0]
+		|| null;
+
+	let student = roster.students.find((s) => s.campUserId && s.campUserId === campUser.id)
+		|| roster.students.find((s) => normalizedPersonName(s.name) === normalizedPersonName(campUser.name));
+	let changed = false;
+
+	if (!student) {
+		student = {
+			id: `student-${slugify(campUser.name)}-${crypto.randomBytes(3).toString('hex')}`,
+			name: campUser.name,
+			parentName: '', email: '', phone: '', notes: '',
+			active: campUser.active !== false,
+			hubAccess: [], codeLabUserId: '', fllUserId: '', campUserId: campUser.id, fllTeamId: '',
+			enrollments: summerClass ? [{ classId: summerClass.id, weeks: [] }] : [],
+			portalUsername: '', portalPassword_hash: '',
+			createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
+		};
+		roster.students.push(student);
+		changed = true;
+	} else {
+		if (student.campUserId !== campUser.id) { student.campUserId = campUser.id; changed = true; }
+		if (student.name !== campUser.name) { student.name = campUser.name; changed = true; }
+		if ((campUser.active !== false) !== (student.active !== false)) { student.active = campUser.active !== false; changed = true; }
+		if (summerClass && !(Array.isArray(student.enrollments) ? student.enrollments : []).some((e) => e.classId === summerClass.id)) {
+			const nonSummer = (Array.isArray(student.enrollments) ? student.enrollments : []).filter((e) => !summerClasses.some((c) => c.id === e.classId));
+			student.enrollments = [...nonSummer, { classId: summerClass.id, weeks: [] }];
+			changed = true;
+		}
+	}
+	// Give them a portal username so the shared class-code login works for them too.
+	if (!student.portalUsername) { assignStudentPortalLogin(student, roster); changed = true; }
+	if (changed) {
+		student.updatedAt = new Date().toISOString();
+		await writeMasterRoster(roster);
+	}
 }
 
 function findStudentAccount(accounts, student, idField) {
@@ -6277,9 +6326,14 @@ app.post('/api/camp/coach/students', requireCampAuth, requireCampCoach, async (r
 			password_hash: hashScryptPassword(finalPassword),
 			role: 'student',
 			className,
-			active: true
+			active: true,
+			// Tag as roster-managed so the summer-roster sync never auto-deactivates this
+			// coach-added camper on the next deploy/restart.
+			summerRosterSource
 		});
 		await writeJsonFile(campUsersFile, users);
+		// Reflect the new camper on the master roster too.
+		await syncMasterStudentFromCampCamper(users[users.length - 1]);
 		return res.status(201).json({ success: true, student: { id, name, username: finalUsername, password: finalPassword, className } });
 	} catch (err) {
 		console.error('Camp coach add camper error:', err);
@@ -6309,6 +6363,8 @@ app.patch('/api/camp/coach/students/:id', requireCampAuth, requireCampCoach, asy
 			user.className = cleanMetaString(req.body.className, 80) || 'Unassigned';
 		}
 		await writeJsonFile(campUsersFile, users);
+		// Keep the master roster in sync with camper edits (name, class, active).
+		await syncMasterStudentFromCampCamper(user);
 		const response = { success: true, user: { id: user.id, name: user.name, username: user.username, active: user.active !== false, className: user.className || 'Unassigned' } };
 		if (newPassword) response.password = newPassword;
 		return res.json(response);
