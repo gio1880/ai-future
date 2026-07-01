@@ -2323,7 +2323,16 @@ async function syncSummer2026CampUsers(roster) {
 	for (const user of campUsers) {
 		if (user.demoAccount === true) continue;
 		if (protectedCampIds.has(user.id) || protectedCampNames.has(normalizedPersonName(user.name))) continue;
-		if (user.role === 'student' && !targetNames.has(normalizedPersonName(user.name)) && user.summerRosterSource !== summerRosterSource) {
+		// Only clean up accounts left over from a PREVIOUS seed batch — i.e. ones that
+		// carry an old (stale) summerRosterSource tag. Never disable coach-added campers,
+		// which are untagged or carry the current tag. (This is what used to wrongly
+		// disable Campers-tab students on every deploy.)
+		const isStaleSeed = user.role === 'student'
+			&& typeof user.summerRosterSource === 'string'
+			&& user.summerRosterSource !== ''
+			&& user.summerRosterSource !== summerRosterSource
+			&& !targetNames.has(normalizedPersonName(user.name));
+		if (isStaleSeed) {
 			user.active = false;
 			user.updatedAt = now;
 		}
