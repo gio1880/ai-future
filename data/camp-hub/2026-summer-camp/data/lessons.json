@@ -744,9 +744,9 @@
     "deckUrl": "/camp-hub/lessons/Lesson%205/lesson5_rubber_band_car.html"
   },
   {
-    "id": "w2-tue-elevator-lift",
-    "title": "Week 2 - Tuesday: Elevator / Lift",
-    "updatedAt": "2026-06-25T00:00:00.000Z",
+    "id": "w2-tue-windmill-spike",
+    "title": "Windmill: Your First SPIKE Prime Program",
+    "updatedAt": "2026-07-06T20:49:17.946Z",
     "slides": [
       {
         "id": "l6-intro",
@@ -821,44 +821,44 @@
         "correctIndex": -1
       },
       {
-        "id": "w2-tue-elevator-lift-q1",
+        "id": "w2-tue-windmill-q1",
         "type": "question",
-        "title": "Guides",
-        "body": "What do rails or guides do on a lift?",
+        "title": "Motor block",
+        "body": "Which block makes the windmill motor actually turn on?",
         "image": "",
         "options": [
-          "Keep the platform rising straight without tipping",
-          "Make the lift heavier",
-          "Add color to the lift",
-          "Store energy"
+          "Start motor",
+          "Wait 3 seconds",
+          "Stop motor",
+          "Set the base wider"
         ],
         "correctIndex": 0
       },
       {
-        "id": "w2-tue-elevator-lift-q2",
+        "id": "w2-tue-windmill-q2",
         "type": "question",
-        "title": "Balance",
-        "body": "Why keep the load centered on the platform?",
+        "title": "Motor speed",
+        "body": "You change the motor speed from 50% to 100%. What happens to the windmill?",
         "image": "",
         "options": [
-          "So the lift stays balanced and doesn't tilt",
-          "To make it rise faster",
-          "To use more string",
-          "To look nice"
+          "It spins faster",
+          "It stops",
+          "The blades fall off",
+          "Nothing changes"
         ],
         "correctIndex": 0
       },
       {
-        "id": "w2-tue-elevator-lift-q3",
+        "id": "w2-tue-windmill-q3",
         "type": "question",
-        "title": "No tipping",
-        "body": "What helps the tall lift tower avoid tipping over?",
+        "title": "Direction",
+        "body": "How do you make the motor spin the other way (reverse the direction)?",
         "image": "",
         "options": [
-          "A wide, braced base",
-          "A narrow base",
-          "Loose beams",
-          "A heavier top"
+          "Use a negative speed",
+          "Add more blades",
+          "Unplug the Hub",
+          "Make the stand taller"
         ],
         "correctIndex": 0
       }

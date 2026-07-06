@@ -97,17 +97,17 @@
       {
         "id": "day-2026-07-07",
         "date": "2026-07-07",
-        "activity": "Project: build an elevator or lift that raises a small cargo load smoothly and safely.",
-        "assignment": "Build a lift. Record the height reached, the load carried, and the design change that made lifting smoother.",
-        "build": "Elevator / Lift",
+        "activity": "Project: build a windmill, then write your first SPIKE Prime program to spin ONE motor — start, set speed, change direction, and stop.",
+        "assignment": "Build a windmill on one motor and program it to spin (set speed, start, wait, stop). Then change the speed and the direction and record what each change did.",
+        "build": "Windmill · First SPIKE Program",
         "lessonDeckUrl": "/camp-hub/lessons/Lesson%206/lesson6_elevator_lift.html",
         "worksheetLabel": "",
         "worksheetUrl": "",
         "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%206/lesson6_elevator_lift.html. Concepts: pulleys, winches, guides, balanced loads. Use a small cargo box and measure lift height.",
         "beginLessonQuestions": [
-          "What do you already know about Elevator / Lift?",
-          "What is one thing your team should test carefully today?",
-          "What will make this build successful?"
+          "What do you think a MOTOR will let your build do that a rubber band or gravity could not?",
+          "A program is a list of steps the robot follows in order. What is one everyday thing you do in a certain order (like a recipe)?",
+          "If you could program a motor to do anything on your windmill, what would you make it do first?"
         ]
       },
       {
