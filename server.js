@@ -6466,8 +6466,53 @@ app.use(express.static(path.join(__dirname), {
 	}
 }));
 
+// Idempotent content patches so a code deploy can update the LIVE (disk) curriculum +
+// lessons — which a plain file push does not touch. Each patch only transforms FROM a
+// known original value, so it runs once and never clobbers a coach's later edits.
+async function applyCampContentPatches() {
+	try {
+		// Week 2 Tuesday: Elevator/Lift → Windmill + first SPIKE Prime program (single motor).
+		const curriculum = await readJsonFile(campCurriculumFile, []);
+		const weeks = Array.isArray(curriculum) ? curriculum : (curriculum.weeks || []);
+		let curChanged = false;
+		for (const week of weeks) {
+			for (const day of (week.days || [])) {
+				if (day.id === 'day-2026-07-07' && day.build === 'Elevator / Lift') {
+					day.build = 'Windmill · First SPIKE Program';
+					day.activity = 'Project: build a windmill, then write your first SPIKE Prime program to spin ONE motor — start, set speed, change direction, and stop.';
+					day.assignment = 'Build a windmill on one motor and program it to spin (set speed, start, wait, stop). Then change the speed and the direction and record what each change did.';
+					day.beginLessonQuestions = [
+						'What do you think a MOTOR will let your build do that a rubber band or gravity could not?',
+						'A program is a list of steps the robot follows in order. What is one everyday thing you do in a certain order (like a recipe)?',
+						'If you could program a motor to do anything on your windmill, what would you make it do first?'
+					];
+					curChanged = true;
+				}
+			}
+		}
+		if (curChanged) await writeJsonFile(campCurriculumFile, curriculum);
+
+		const lessons = await readCampLessons();
+		const lesson = lessons.find((l) => l.id === 'w2-tue-elevator-lift');
+		if (lesson) {
+			lesson.id = 'w2-tue-windmill-spike';
+			lesson.title = 'Windmill: Your First SPIKE Prime Program';
+			const content = (lesson.slides || []).filter((s) => s.type !== 'question');
+			lesson.slides = content.concat([
+				{ id: 'w2-tue-windmill-q1', type: 'question', title: 'Motor block', body: 'Which block makes the windmill motor actually turn on?', image: '', options: ['Start motor', 'Wait 3 seconds', 'Stop motor', 'Set the base wider'], correctIndex: 0 },
+				{ id: 'w2-tue-windmill-q2', type: 'question', title: 'Motor speed', body: 'You change the motor speed from 50% to 100%. What happens to the windmill?', image: '', options: ['It spins faster', 'It stops', 'The blades fall off', 'Nothing changes'], correctIndex: 0 },
+				{ id: 'w2-tue-windmill-q3', type: 'question', title: 'Direction', body: 'How do you make the motor spin the other way (reverse the direction)?', image: '', options: ['Use a negative speed', 'Add more blades', 'Unplug the Hub', 'Make the stand taller'], correctIndex: 0 }
+			]);
+			await writeCampLessons(lessons);
+		}
+	} catch (err) {
+		console.error('Camp content patch error:', err);
+	}
+}
+
 initializeFllDataDir()
 	.then(() => initializeCampDataDir())
+	.then(() => applyCampContentPatches())
 	.then(() => initializeCoachDataDir())
 	.then(() => initializeMasterRoster())
 	.then(() => migrateSummer2026RosterData())
