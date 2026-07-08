@@ -60,6 +60,7 @@ const campHubDir = path.join(__dirname, 'robotics lab', 'Summer Camp', '2026-sum
 const campSeedDataDir = path.join(campHubDir, 'data');
 const lessonBuildingDir = path.join(__dirname, 'Lesson Building');
 const lessonBuildingSource = 'lesson-building-2026-weeks-1-4';
+const prizesDir = path.join(__dirname, 'prizes');
 const campHubDataDir = process.env.CAMP_DATA_DIR || path.join(platformDataDir, 'camp-hub', '2026-summer-camp', 'data');
 const campUsersFile = path.join(campHubDataDir, 'camp-users.json');
 const campCurriculumFile = path.join(campHubDataDir, 'curriculum.json');
@@ -5075,6 +5076,16 @@ app.use('/camp-hub/lessons', requireCampAuth, (req, res, next) => {
 	return next();
 }, express.static(lessonBuildingDir, {
 	index: ['index.html'],
+	etag: true,
+	lastModified: true
+}));
+
+// Prize / points store worksheet — coaches only (campers never see it).
+app.use('/camp-hub/prizes', requireCampAuth, (req, res, next) => {
+	if (req.campUser.role !== 'coach') return res.status(403).send('Coach access required');
+	return next();
+}, express.static(prizesDir, {
+	index: ['points-worksheet.html'],
 	etag: true,
 	lastModified: true
 }));

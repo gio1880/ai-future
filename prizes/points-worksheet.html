@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Camp Points Store | AI Future</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* AI Future brand palette (matches the hub + login pages) */
+      --navy: #0b2a4a;
+      --ink: #10233f;
+      --blue: #1767b4;
+      --gold: #fece00;
+      --orange: #f97316;
+      --muted: #5f6c80;
+      --line: #dce5ef;
+      --paper: #f7f8fa;
+      --card: #ffffff;
+      --grass: #1f8a4c;
+      --radius: 16px;
+      --shadow: 0 14px 40px rgba(7, 20, 38, 0.10);
+      --body: 'Inter', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--body);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 14%, rgba(254,206,0,0.14), transparent 32%),
+        radial-gradient(circle at 88% 22%, rgba(23,103,180,0.12), transparent 32%),
+        linear-gradient(135deg, #fdf9e8 0%, #eef5fd 55%, #f7fbff 100%);
+      padding: 34px 16px 72px;
+    }
+
+    .sheet {
+      width: min(880px, 100%);
+      margin: 0 auto;
+    }
+
+    .sheet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      background: var(--navy);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand .mark {
+      width: 46px; height: 46px; border-radius: 12px;
+      display: grid; place-items: center;
+      background: var(--gold); color: var(--navy);
+      font-weight: 900; font-size: 1.1rem; letter-spacing: .5px;
+    }
+
+    .brand .name {
+      font-weight: 900; letter-spacing: .5px; text-transform: uppercase; font-size: 1.15rem; line-height: 1;
+    }
+    .brand .name span { display: block; color: var(--gold); font-size: .62em; letter-spacing: 3px; margin-top: 3px; font-weight: 800; }
+
+    .sheet-title { text-align: right; }
+    .sheet-title h1 { font-size: 1.5rem; font-weight: 900; color: #fff; }
+    .sheet-title p { color: rgba(255,255,255,0.82); font-size: .85rem; margin-top: 3px; }
+
+    .student-line {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr .7fr;
+      gap: 12px;
+      margin: 22px 0;
+    }
+
+    .student-line .blank {
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: .74rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      font-weight: 800;
+      min-height: 48px;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .intro {
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      line-height: 1.65;
+      font-size: .95rem;
+      box-shadow: var(--shadow);
+    }
+    .intro strong { color: var(--blue); }
+
+    h2 {
+      font-weight: 900;
+      font-size: 1.1rem;
+      margin: 28px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--navy);
+    }
+    h2::before {
+      content: "";
+      width: 26px; height: 5px; border-radius: 3px;
+      background: linear-gradient(90deg, var(--blue), var(--gold));
+    }
+
+    .panel {
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    th, td { border-bottom: 1px solid var(--line); padding: 11px 14px; text-align: left; vertical-align: middle; }
+    tr:last-child td { border-bottom: 0; }
+    th {
+      font-size: .68rem; text-transform: uppercase; letter-spacing: .8px;
+      color: var(--navy); background: #eef4fb; font-weight: 800;
+    }
+
+    .pts {
+      font-weight: 900;
+      color: var(--blue);
+      white-space: nowrap;
+      text-align: right;
+    }
+    .pts .u { font-size: .62rem; color: var(--muted); font-weight: 700; letter-spacing: .5px; }
+
+    tr.legendary td { background: rgba(254,206,0,0.14); font-weight: 800; }
+    tr.legendary .pts { color: var(--orange); font-size: 1.08rem; }
+
+    .prod-cell { display: flex; align-items: center; gap: 12px; }
+    .thumb {
+      width: 54px; height: 54px; object-fit: contain; flex: 0 0 auto;
+      border-radius: 10px; background: #eef4fb; border: 1px solid var(--line);
+      padding: 3px;
+    }
+    .tag-leg {
+      display: inline-block; margin-left: 6px; font-size: .58rem; font-weight: 900;
+      letter-spacing: .8px; text-transform: uppercase; color: var(--navy);
+      background: var(--gold); border-radius: 999px; padding: 2px 8px; vertical-align: middle;
+    }
+    .usd { color: var(--muted); font-size: .82rem; white-space: nowrap; text-align: right; font-weight: 700; }
+
+    .note { color: var(--muted); font-size: .8rem; line-height: 1.55; margin-top: 8px; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+
+    .clicker-math {
+      border: 1.5px dashed var(--blue);
+      background: rgba(23,103,180,0.06);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-top: 12px;
+      font-size: .9rem;
+      line-height: 1.65;
+    }
+    .clicker-math .formula { font-weight: 900; color: var(--blue); font-size: .98rem; }
+
+    .shape-demos { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-end; margin: 14px 2px 4px; }
+    .shape-demo { text-align: center; }
+    .shape-demo .lbl { font-size: .62rem; color: var(--muted); margin-top: 6px; text-transform: uppercase; letter-spacing: .8px; font-weight: 800; }
+    .mini-tiles { display: grid; gap: 4px; justify-content: center; }
+    .mini-tiles.demo-row { grid-template-columns: repeat(6, 22px); }
+    .mini-tiles.demo-g2 { grid-template-columns: repeat(2, 22px); }
+    .mini-tiles.demo-g3 { grid-template-columns: repeat(3, 22px); }
+    .mini-tile {
+      width: 22px; height: 26px; border: 1.5px solid var(--blue); border-radius: 5px;
+      display: grid; place-items: center; font-size: .58rem; font-weight: 900;
+      color: var(--blue); background: rgba(23,103,180,0.08);
+    }
+
+    .tally-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin-top: 10px; }
+    .tally-cell {
+      border: 1.5px solid var(--line); background: var(--card); border-radius: 8px;
+      aspect-ratio: 1; display: grid; place-items: center; font-size: .68rem; font-weight: 800;
+      color: rgba(16,35,63,0.30);
+    }
+
+    .goal-box {
+      border: 1.5px solid var(--gold);
+      background: rgba(254,206,0,0.08);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin-top: 12px;
+      line-height: 2.3;
+      font-size: .95rem;
+    }
+    .goal-box .write { display: inline-block; min-width: 180px; border-bottom: 1.5px solid var(--navy); }
+    .goal-box .write.short { min-width: 80px; }
+
+    .sheet-foot {
+      margin-top: 30px; border-top: 1px solid var(--line); padding-top: 14px;
+      display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+      color: var(--muted); font-size: .78rem;
+    }
+
+    .print-btn {
+      position: fixed; right: 20px; bottom: 20px;
+      font-weight: 800; font-size: .82rem; letter-spacing: .4px;
+      background: var(--navy); color: #fff; border: 0; border-radius: 12px;
+      padding: 14px 22px; cursor: pointer; box-shadow: 5px 5px 0 var(--gold);
+      transition: .15s ease;
+    }
+    .print-btn:hover { transform: translate(3px, 3px); box-shadow: 2px 2px 0 var(--gold); }
+
+    @media (max-width: 640px) {
+      .two-col { grid-template-columns: 1fr; }
+      .student-line { grid-template-columns: 1fr; }
+      .sheet-head, .sheet-title { text-align: left; }
+      .sheet-title { text-align: left; }
+      .tally-grid { grid-template-columns: repeat(5, 1fr); }
+    }
+
+    @media print {
+      body { padding: 0; background: #fff; }
+      .sheet { width: 100%; }
+      .print-btn { display: none; }
+      .sheet-head { box-shadow: none; }
+      .panel, .intro { box-shadow: none; }
+      .thumb { background: #f3f3f3; }
+      h2, .brand, .sheet-title h1 { break-after: avoid; }
+      .panel, .goal-box, .clicker-math, table { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sheet">
+
+    <div class="sheet-head">
+      <div class="brand">
+        <div class="mark">AI</div>
+        <div class="name">AI Future<span>Camp Store</span></div>
+      </div>
+      <div class="sheet-title">
+        <h1>Camp Points Store</h1>
+        <p>Earn points at camp · Trade them for 3D prints</p>
+      </div>
+    </div>
+
+    <div class="student-line">
+      <div class="blank">Name</div>
+      <div class="blank">Class / Group</div>
+      <div class="blank">Date</div>
+    </div>
+
+    <div class="intro">
+      Every point you earn at camp is worth real stuff at the store! Points add up over the summer — most campers
+      finish with somewhere around <strong>20&ndash;40 points</strong>. Small prints cost just a few points, and the
+      <strong>Grand Flexi Dragon</strong> is the legendary top prize at <strong>40 points</strong> — only the most
+      consistent point‑earners will hold one. Do great work, save up, and cash in for dragons, spirals, spring cats,
+      or a custom clicker with your own letters and symbols.
+    </div>
+
+    <h2>How to Earn Points</h2>
+    <div class="panel">
+      <table>
+        <thead>
+          <tr><th>What You Did</th><th style="text-align:right">Points</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Great focus, teamwork, or cleaning up</td><td class="pts">+1</td></tr>
+          <tr><td>Answering a live lesson question correctly</td><td class="pts">+1 to +5</td></tr>
+          <tr><td>Helping a teammate figure something out</td><td class="pts">+2</td></tr>
+          <tr><td>Winning a class challenge or quiz game</td><td class="pts">+3</td></tr>
+          <tr><td>Finishing your build and submitting it</td><td class="pts">+5</td></tr>
+          <tr><td>Perfect day — all tasks done, kind &amp; safe</td><td class="pts">+5</td></tr>
+          <tr><td>Coach's choice bonus</td><td class="pts">+___</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Your coach tracks the official total on the Camp Hub. Points can't go negative and can't be traded between campers.</p>
+
+    <h2>What You Can Buy</h2>
+    <div class="two-col">
+      <div>
+        <div class="panel">
+          <table>
+            <thead>
+              <tr><th>Print</th><th style="text-align:right">Points</th><th style="text-align:right">Cash</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="prod-cell"><img class="thumb" src="PRODUCTS/small%20dragon.png" alt="Mini flexi dragon" />Mini Flexi Dragon</span></td><td class="pts">8</td><td class="usd">$6</td></tr>
+              <tr><td><span class="prod-cell"><img class="thumb" src="PRODUCTS/small%20dragon_blue.png" alt="Blue mini dragon" />Blue Mini Dragon</span></td><td class="pts">8</td><td class="usd">$6</td></tr>
+              <tr><td><span class="prod-cell"><img class="thumb" src="PRODUCTS/spring%20cat.png" alt="Spring cat" />Spring Cat</span></td><td class="pts">12</td><td class="usd">$10</td></tr>
+              <tr><td><span class="prod-cell"><img class="thumb" src="PRODUCTS/spiral.png" alt="Spiral sculpture" />Spiral Sculpture</span></td><td class="pts">14</td><td class="usd">$12</td></tr>
+              <tr><td><span class="prod-cell"><img class="thumb" src="PRODUCTS/small%20charmander.png" alt="Flexi fire lizard" />Flexi Fire Lizard</span></td><td class="pts">16</td><td class="usd">$14</td></tr>
+              <tr><td><span class="prod-cell"><img class="thumb" src="PRODUCTS/spiral_galaxy.png" alt="Galaxy spiral" />Galaxy Spiral</span></td><td class="pts">18</td><td class="usd">$14</td></tr>
+              <tr><td><span class="prod-cell"><img class="thumb" src="PRODUCTS/medium%20dragon_limegreen.png" alt="Lime flexi dragon" />Lime Flexi Dragon</span></td><td class="pts">24</td><td class="usd">$16</td></tr>
+              <tr><td><span class="prod-cell"><img class="thumb" src="PRODUCTS/yellow%20dragon%20.png" alt="Golden flexi dragon" />Golden Flexi Dragon</span></td><td class="pts">30</td><td class="usd">$18</td></tr>
+              <tr class="legendary"><td><span class="prod-cell"><img class="thumb" src="PRODUCTS/large%20dragon.png" alt="Grand flexi dragon" />Grand Flexi Dragon<span class="tag-leg">★ Legendary</span></span></td><td class="pts">40</td><td class="usd">$28</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <table>
+            <thead>
+              <tr><th>Custom Clicker</th><th style="text-align:right">Points</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Straight row — 2 buttons (shortest)</td><td class="pts">8</td></tr>
+              <tr><td>2×2 grid — 4 buttons</td><td class="pts">12</td></tr>
+              <tr><td>3×3 grid — 9 buttons</td><td class="pts">22</td></tr>
+              <tr><td>Straight row — 12 buttons (longest)</td><td class="pts">28</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="shape-demos">
+          <div class="shape-demo">
+            <div class="mini-tiles demo-row">
+              <span class="mini-tile">A</span><span class="mini-tile">I</span><span class="mini-tile">F</span><span class="mini-tile">U</span><span class="mini-tile">T</span><span class="mini-tile">R</span>
+            </div>
+            <div class="lbl">Straight Row</div>
+          </div>
+          <div class="shape-demo">
+            <div class="mini-tiles demo-g2">
+              <span class="mini-tile">G</span><span class="mini-tile">I</span><span class="mini-tile">O</span><span class="mini-tile">★</span>
+            </div>
+            <div class="lbl">2×2 Grid</div>
+          </div>
+          <div class="shape-demo">
+            <div class="mini-tiles demo-g3">
+              <span class="mini-tile">R</span><span class="mini-tile">O</span><span class="mini-tile">B</span><span class="mini-tile">O</span><span class="mini-tile">T</span><span class="mini-tile">S</span><span class="mini-tile">♥</span><span class="mini-tile">★</span><span class="mini-tile">⚡</span>
+            </div>
+            <div class="lbl">3×3 Grid</div>
+          </div>
+        </div>
+        <div class="clicker-math">
+          A clicker is a keychain where <strong>every letter or symbol is its own clicky button</strong>.
+          Pick the shape (straight row of 2–12, 2×2 grid, or 3×3 grid) and the letters.
+          <br /><span class="formula">Points = 4 + (2 × number of buttons)</span>
+          <br />Example: your 5‑letter name in a row = 4 + 10 = <strong>14 points</strong>.
+        </div>
+      </div>
+    </div>
+
+    <h2>My Points Tracker</h2>
+    <p class="note" style="margin-top:0">Each box = <strong>1 point</strong>. Color in a box every time your coach gives you a point.
+    A completely filled sheet = <strong>40 points</strong> — exactly enough for the legendary Grand Flexi Dragon!</p>
+    <div class="tally-grid">
+      <div class="tally-cell">1</div><div class="tally-cell">2</div><div class="tally-cell">3</div><div class="tally-cell">4</div><div class="tally-cell">5</div><div class="tally-cell">6</div><div class="tally-cell">7</div><div class="tally-cell">8</div><div class="tally-cell">9</div><div class="tally-cell">10</div>
+      <div class="tally-cell">11</div><div class="tally-cell">12</div><div class="tally-cell">13</div><div class="tally-cell">14</div><div class="tally-cell">15</div><div class="tally-cell">16</div><div class="tally-cell">17</div><div class="tally-cell">18</div><div class="tally-cell">19</div><div class="tally-cell">20</div>
+      <div class="tally-cell">21</div><div class="tally-cell">22</div><div class="tally-cell">23</div><div class="tally-cell">24</div><div class="tally-cell">25</div><div class="tally-cell">26</div><div class="tally-cell">27</div><div class="tally-cell">28</div><div class="tally-cell">29</div><div class="tally-cell">30</div>
+      <div class="tally-cell">31</div><div class="tally-cell">32</div><div class="tally-cell">33</div><div class="tally-cell">34</div><div class="tally-cell">35</div><div class="tally-cell">36</div><div class="tally-cell">37</div><div class="tally-cell">38</div><div class="tally-cell">39</div><div class="tally-cell">40</div>
+    </div>
+
+    <h2>My Goal</h2>
+    <div class="goal-box">
+      I am saving for: <span class="write">&nbsp;</span> which costs <span class="write short">&nbsp;</span> points.
+      <br />I have <span class="write short">&nbsp;</span> points now, so I still need <span class="write short">&nbsp;</span> points.
+      <br />If a clicker: my letters/symbols are <span class="write">&nbsp;</span> in a
+      <span class="write short">&nbsp;</span> layout (row / 2×2 / 3×3).
+    </div>
+
+    <div class="sheet-foot">
+      <span>GLITCH PRINTS · a fundraiser by Premium Rice Cookers, FTC Robotics · Flushing, Queens NYC</span>
+      <span>Track your points on the AI Future Camp Hub</span>
+    </div>
+
+  </div>
+
+  <button class="print-btn" type="button" onclick="window.print()">⎙ Print Worksheet</button>
+</body>
+</html>

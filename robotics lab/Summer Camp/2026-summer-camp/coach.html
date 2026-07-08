@@ -1942,6 +1942,7 @@
             </div>
             <button class="btn ${selMode ? 'btn-primary' : 'btn-ghost'}" type="button" onclick="toggleDojoSelectMode()">${selMode ? '✓ Done selecting' : '☑️ Select multiple'}</button>
             <button class="btn btn-ghost" type="button" onclick="openManageSkills()">⚙️ Manage skills</button>
+            <a class="btn btn-ghost" href="/camp-hub/prizes/points-worksheet.html" target="_blank" rel="noreferrer" title="Open the printable points/prize store worksheet">🎁 Prize store</a>
             <button class="btn btn-ghost" type="button" onclick="resetClassPoints(decodeURIComponent('${encodeURIComponent(classItem?.name || 'Unassigned')}'))">Reset class points</button>
           </div>
           ${selMode ? `<div class="dojo-select-bar">
