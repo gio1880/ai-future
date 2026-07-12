@@ -170,50 +170,48 @@
       {
         "id": "day-2026-07-14",
         "date": "2026-07-14",
-        "activity": "Project: build a gripper that opens, closes, picks up objects, and releases them with control.",
-        "assignment": "Build a gripper. Record which object was easiest or hardest to grab and why.",
-        "build": "Gripper",
-        "lessonDeckUrl": "/camp-hub/lessons/Lesson%2010/lesson10_gripper.html",
-        "worksheetLabel": "",
-        "worksheetUrl": "",
         "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2010/lesson10_gripper.html. Concepts: pivots, linkages, friction, grip force. Test several object shapes and sizes.",
+        "build": "Boat / Raft",
+        "activity": "Project: build a boat or raft that floats level and carries a small cargo load without tipping or sinking.",
+        "assignment": "Build a floating raft. Test it empty, then add a small load — record whether it floated level for 10 seconds, tipped, or sank, and what change made it more stable.",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%209/lesson9_boat_raft.html",
         "beginLessonQuestions": [
-          "What do you already know about Gripper?",
-          "What is one thing your team should test carefully today?",
-          "What will make this build successful?"
+          "Why do you think a huge metal ship can float, but a tiny rock sinks?",
+          "If your raft starts tipping to one side, what could you change to fix it?",
+          "Where should the HEAVY parts go on a raft — high up or low down? Why?"
         ]
       },
       {
         "id": "day-2026-07-15",
         "date": "2026-07-15",
-        "activity": "Project: combine an arm and gripper so the mechanism can reach, lift, move, and release a small object.",
-        "assignment": "Build an arm with a gripper. Record how far it reached and what kept the base stable.",
-        "build": "Arm with Gripper",
-        "lessonDeckUrl": "/camp-hub/lessons/Lesson%2011/lesson11_arm_with_gripper.html",
-        "worksheetLabel": "",
-        "worksheetUrl": "",
         "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2011/lesson11_arm_with_gripper.html. Concepts: leverage, reach, payload, stable bases. Reuse or improve the gripper from Lesson 10.",
-        "beginLessonQuestions": [
-          "What do you already know about Arm with Gripper?",
-          "What is one thing your team should test carefully today?",
-          "What will make this build successful?"
-        ]
-      },
-      {
-        "id": "day-2026-07-16",
-        "date": "2026-07-16",
+        "build": "Simple Car",
         "activity": "Project: build a sturdy simple car chassis that rolls straight and can become the base for sensor and steering challenges.",
         "assignment": "Build a simple car. Record how straight it rolled and what you adjusted to reduce wobble or drag.",
-        "build": "Simple Car",
         "lessonDeckUrl": "/camp-hub/lessons/Lesson%2012/lesson12_simple_car.html",
-        "worksheetLabel": "",
-        "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2012/lesson12_simple_car.html. Concepts: chassis, axle alignment, wheelbase, friction. Keep good builds for Week 4 sensor upgrades.",
         "beginLessonQuestions": [
           "What do you already know about Simple Car?",
           "What is one thing your team should test carefully today?",
           "What will make this build successful?"
-        ]
+        ],
+        "worksheetUrl": "",
+        "worksheetLabel": ""
+      },
+      {
+        "id": "day-2026-07-16",
+        "date": "2026-07-16",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2012/lesson12_simple_car.html. Concepts: chassis, axle alignment, wheelbase, friction. Keep good builds for Week 4 sensor upgrades.",
+        "build": "Car with Distance Sensor",
+        "activity": "Project: add a SPIKE Prime distance sensor to a car and program it to stop before hitting an obstacle.",
+        "assignment": "Build and code a distance-sensor car. Record the stop distance that worked best and why.",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%2013/lesson13_distance_sensor_car.html",
+        "beginLessonQuestions": [
+          "What do you already know about Car with Distance Sensor?",
+          "What is one thing your team should test carefully today?",
+          "What will make this build successful?"
+        ],
+        "worksheetUrl": "",
+        "worksheetLabel": ""
       }
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4"
@@ -227,65 +225,63 @@
       {
         "id": "day-2026-07-20",
         "date": "2026-07-20",
-        "activity": "Project: add a SPIKE Prime distance sensor to a car and program it to stop before hitting an obstacle.",
-        "assignment": "Build and code a distance-sensor car. Record the stop distance that worked best and why.",
-        "build": "Car with Distance Sensor",
-        "lessonDeckUrl": "/camp-hub/lessons/Lesson%2013/lesson13_distance_sensor_car.html",
-        "worksheetLabel": "",
-        "worksheetUrl": "",
         "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2013/lesson13_distance_sensor_car.html. Concepts: sensor input, thresholds, obstacle detection. Mount the distance sensor forward and tune the stop distance.",
-        "beginLessonQuestions": [
-          "What do you already know about Car with Distance Sensor?",
-          "What is one thing your team should test carefully today?",
-          "What will make this build successful?"
-        ]
-      },
-      {
-        "id": "day-2026-07-21",
-        "date": "2026-07-21",
+        "build": "Car with Color Sensor",
         "activity": "Project: add a color sensor to a car and program it to react to floor colors or line markers.",
         "assignment": "Build and code a color-sensor car. Record how sensor height, speed, and lighting affected detection.",
-        "build": "Car with Color Sensor",
         "lessonDeckUrl": "/camp-hub/lessons/Lesson%2014/lesson14_color_sensor_car.html",
-        "worksheetLabel": "",
-        "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2014/lesson14_color_sensor_car.html. Concepts: color detection, sensor mounting, line/color reading. Use colored tape and start with stop-on-red.",
         "beginLessonQuestions": [
           "What do you already know about Car with Color Sensor?",
           "What is one thing your team should test carefully today?",
           "What will make this build successful?"
-        ]
+        ],
+        "worksheetUrl": "",
+        "worksheetLabel": ""
       },
       {
-        "id": "day-2026-07-22",
-        "date": "2026-07-22",
+        "id": "day-2026-07-21",
+        "date": "2026-07-21",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2014/lesson14_color_sensor_car.html. Concepts: color detection, sensor mounting, line/color reading. Use colored tape and start with stop-on-red.",
+        "build": "Self-Parking Steering Car",
         "activity": "Project: build steering control and tune a driving sequence so the car parks inside a marked box.",
         "assignment": "Build and tune a self-parking steering car. Record the sequence change that improved parking accuracy.",
-        "build": "Self-Parking Steering Car",
         "lessonDeckUrl": "/camp-hub/lessons/Lesson%2015/lesson15_self_parking_steering_car.html",
-        "worksheetLabel": "",
-        "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2015/lesson15_self_parking_steering_car.html. Concepts: steering linkage, turning radius, sequence tuning. Mark a parking box with tape and adjust one number at a time.",
         "beginLessonQuestions": [
           "What do you already know about Self-Parking Steering Car?",
           "What is one thing your team should test carefully today?",
           "What will make this build successful?"
-        ]
+        ],
+        "worksheetUrl": "",
+        "worksheetLabel": ""
       },
       {
-        "id": "day-2026-07-23",
-        "date": "2026-07-23",
+        "id": "day-2026-07-22",
+        "date": "2026-07-22",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2015/lesson15_self_parking_steering_car.html. Concepts: steering linkage, turning radius, sequence tuning. Mark a parking box with tape and adjust one number at a time.",
+        "build": "Steering Race",
         "activity": "Project: tune a steering car for a course where control, reliability, and clean driving matter as much as speed.",
         "assignment": "Run the steering race course. Record your best clean run and the tuning choice that improved control.",
-        "build": "Steering Race",
         "lessonDeckUrl": "/camp-hub/lessons/Lesson%2016/lesson16_steering_race.html",
-        "worksheetLabel": "",
-        "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2016/lesson16_steering_race.html. Concepts: speed versus accuracy, steering return, course navigation. Clean controlled runs beat crashes.",
         "beginLessonQuestions": [
           "What do you already know about Steering Race?",
           "What is one thing your team should test carefully today?",
           "What will make this build successful?"
+        ],
+        "worksheetUrl": "",
+        "worksheetLabel": ""
+      },
+      {
+        "id": "day-2026-07-23",
+        "date": "2026-07-23",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%2016/lesson16_steering_race.html. Concepts: speed versus accuracy, steering return, course navigation. Clean controlled runs beat crashes.",
+        "build": "Ferris Wheel",
+        "activity": "Project: build a Ferris wheel that rotates smoothly and stays balanced — then motorize it with SPIKE Prime and program its spin.",
+        "assignment": "Build a Ferris wheel with at least 4 evenly spaced pods. Bonus: power it with a motor and program a slow, smooth spin. Record what you changed to fix wobble.",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%207/lesson7_ferris_wheel.html",
+        "beginLessonQuestions": [
+          "What do you think keeps a real Ferris wheel from wobbling or tipping while it spins?",
+          "Why does a wheel need its pods spaced out EVENLY around the circle?",
+          "Now that you can program motors: should a Ferris wheel spin fast or slow? Why?"
         ]
       }
     ],

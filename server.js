@@ -6563,6 +6563,91 @@ async function applyCampContentPatches() {
 					'Some bionic arms respond to signals from a person’s muscles. How do you think our arm could "listen" to its wearer with the parts we have?',
 					'Engineers design prosthetics WITH the person who will wear them. Why do you think that matters?'
 				]
+			},
+			// Week 3-4 shift: Boat then Simple Car, then the sensor lessons move forward.
+			'day-2026-07-14': {
+				from: ['Gripper'],
+				build: 'Boat / Raft',
+				activity: 'Project: build a boat or raft that floats level and carries a small cargo load without tipping or sinking.',
+				assignment: 'Build a floating raft. Test it empty, then add a small load — record whether it floated level for 10 seconds, tipped, or sank, and what change made it more stable.',
+				lessonDeckUrl: '/camp-hub/lessons/Lesson%209/lesson9_boat_raft.html',
+				beginLessonQuestions: [
+					'Why do you think a huge metal ship can float, but a tiny rock sinks?',
+					'If your raft starts tipping to one side, what could you change to fix it?',
+					'Where should the HEAVY parts go on a raft — high up or low down? Why?'
+				]
+			},
+			'day-2026-07-15': {
+				from: ['Arm with Gripper'],
+				build: 'Simple Car',
+				activity: 'Project: build a sturdy simple car chassis that rolls straight and can become the base for sensor and steering challenges.',
+				assignment: 'Build a simple car. Record how straight it rolled and what you adjusted to reduce wobble or drag.',
+				lessonDeckUrl: '/camp-hub/lessons/Lesson%2012/lesson12_simple_car.html',
+				beginLessonQuestions: [
+					'What do you already know about Simple Car?',
+					'What is one thing your team should test carefully today?',
+					'What will make this build successful?'
+				]
+			},
+			'day-2026-07-16': {
+				from: ['Simple Car'],
+				build: 'Car with Distance Sensor',
+				activity: 'Project: add a SPIKE Prime distance sensor to a car and program it to stop before hitting an obstacle.',
+				assignment: 'Build and code a distance-sensor car. Record the stop distance that worked best and why.',
+				lessonDeckUrl: '/camp-hub/lessons/Lesson%2013/lesson13_distance_sensor_car.html',
+				beginLessonQuestions: [
+					'What do you already know about Car with Distance Sensor?',
+					'What is one thing your team should test carefully today?',
+					'What will make this build successful?'
+				]
+			},
+			'day-2026-07-20': {
+				from: ['Car with Distance Sensor'],
+				build: 'Car with Color Sensor',
+				activity: 'Project: add a color sensor to a car and program it to react to floor colors or line markers.',
+				assignment: 'Build and code a color-sensor car. Record how sensor height, speed, and lighting affected detection.',
+				lessonDeckUrl: '/camp-hub/lessons/Lesson%2014/lesson14_color_sensor_car.html',
+				beginLessonQuestions: [
+					'What do you already know about Car with Color Sensor?',
+					'What is one thing your team should test carefully today?',
+					'What will make this build successful?'
+				]
+			},
+			'day-2026-07-21': {
+				from: ['Car with Color Sensor'],
+				build: 'Self-Parking Steering Car',
+				activity: 'Project: build steering control and tune a driving sequence so the car parks inside a marked box.',
+				assignment: 'Build and tune a self-parking steering car. Record the sequence change that improved parking accuracy.',
+				lessonDeckUrl: '/camp-hub/lessons/Lesson%2015/lesson15_self_parking_steering_car.html',
+				beginLessonQuestions: [
+					'What do you already know about Self-Parking Steering Car?',
+					'What is one thing your team should test carefully today?',
+					'What will make this build successful?'
+				]
+			},
+			'day-2026-07-22': {
+				from: ['Self-Parking Steering Car'],
+				build: 'Steering Race',
+				activity: 'Project: tune a steering car for a course where control, reliability, and clean driving matter as much as speed.',
+				assignment: 'Run the steering race course. Record your best clean run and the tuning choice that improved control.',
+				lessonDeckUrl: '/camp-hub/lessons/Lesson%2016/lesson16_steering_race.html',
+				beginLessonQuestions: [
+					'What do you already know about Steering Race?',
+					'What is one thing your team should test carefully today?',
+					'What will make this build successful?'
+				]
+			},
+			'day-2026-07-23': {
+				from: ['Steering Race'],
+				build: 'Ferris Wheel',
+				activity: 'Project: build a Ferris wheel that rotates smoothly and stays balanced — then motorize it with SPIKE Prime and program its spin.',
+				assignment: 'Build a Ferris wheel with at least 4 evenly spaced pods. Bonus: power it with a motor and program a slow, smooth spin. Record what you changed to fix wobble.',
+				lessonDeckUrl: '/camp-hub/lessons/Lesson%207/lesson7_ferris_wheel.html',
+				beginLessonQuestions: [
+					'What do you think keeps a real Ferris wheel from wobbling or tipping while it spins?',
+					'Why does a wheel need its pods spaced out EVENLY around the circle?',
+					'Now that you can program motors: should a Ferris wheel spin fast or slow? Why?'
+				]
 			}
 		};
 		for (const week of weeks) {
