@@ -6501,9 +6501,84 @@ async function applyCampContentPatches() {
 				}
 			}
 		}
+		// Week 2 reorder to the taught order + Week 3 Monday prosthetics lesson.
+		// Keyed on the previous build names so each transform applies at most once.
+		const reorder = {
+			'day-2026-07-06': {
+				from: ['Rubber Band Car'],
+				build: 'Windmill · First SPIKE Program',
+				activity: 'Project: build a windmill, then write your first SPIKE Prime program to spin ONE motor — start, set speed, change direction, and stop.',
+				assignment: 'Build a windmill on one motor and program it to spin (set speed, start, wait, stop). Then change the speed and the direction and record what each change did.',
+				lessonDeckUrl: '/camp-hub/lessons/Lesson%206/lesson6_elevator_lift.html',
+				beginLessonQuestions: [
+					'What do you think a MOTOR will let your build do that a rubber band or gravity could not?',
+					'A program is a list of steps the robot follows in order. What is one everyday thing you do in a certain order (like a recipe)?',
+					'If you could program a motor to do anything on your windmill, what would you make it do first?'
+				]
+			},
+			'day-2026-07-07': {
+				from: ['Windmill · First SPIKE Program', 'Elevator / Lift'],
+				build: 'Marble Run',
+				activity: 'Project: design a marble run that uses gravity, slope, barriers, and supports to create the longest reliable ride.',
+				assignment: 'Build a marble run. Record total ride time and the place where the marble failed most, then fix that spot and retest.',
+				lessonDeckUrl: '/camp-hub/lessons/Lesson%208/lesson8_marble_run.html',
+				beginLessonQuestions: [
+					'What makes a marble speed up or slow down on a track?',
+					'Where do you predict your marble will fly off the track first — a turn, a drop, or a straight part? Why?',
+					'What is one way to slow a marble down WITHOUT stopping it?'
+				]
+			},
+			'day-2026-07-08': {
+				from: ['Ferris Wheel'],
+				build: 'Claw / Gripper',
+				activity: 'Project: build a claw with moving jaws that can pick up, hold, move, and release an object without crushing it.',
+				assignment: 'Build a claw/gripper. Record what object it held best, what slipped, and one change that improved your grip.',
+				lessonDeckUrl: '/camp-hub/lessons/Lesson%2010/lesson10_gripper.html',
+				beginLessonQuestions: [
+					'Think about your own hand grabbing a cup. What has to happen for it NOT to drop?',
+					'What part of a claw do you think matters most: the jaws, the pivot, or the grip surface? Why?',
+					'What object in this room would be hardest for a robot claw to pick up?'
+				]
+			},
+			'day-2026-07-09': {
+				from: ['Marble Run'],
+				build: 'Claw with Button · Events',
+				activity: 'Project: connect your claw to SPIKE Prime and use EVENT blocks — when a button is pressed, the claw closes or opens.',
+				assignment: 'Program your claw with two event stacks: one button closes it, the other opens it. Record how many rotations gave the cleanest grip and complete a buttons-only pickup.',
+				lessonDeckUrl: '/camp-hub/lessons/Lesson%2010/lesson10_claw_button_events.html',
+				beginLessonQuestions: [
+					'A doorbell is an EVENT: when pressed, it rings. What other everyday things work as "when X happens, do Y"?',
+					'Why is pressing a button to close a claw better than the claw just closing on its own?',
+					'If your claw had two buttons, what would you make each one do?'
+				]
+			},
+			'day-2026-07-13': {
+				from: ['Boat / Raft'],
+				build: 'Helping Someone: Prosthetic Arm',
+				activity: 'Project: build a robotic prosthetic arm (arm holder + pusher) and program it with a button, a motor, and a color sensor so it responds to the person wearing it.',
+				assignment: 'Build the prosthetic arm and program it two ways: button-press events and color commands (green = go, red = stop). Record which control was easier for the wearer and one cool prosthetics fact you learned.',
+				lessonDeckUrl: '/camp-hub/lessons/helping%20someone%20lesson/lesson_helping_someone.html',
+				beginLessonQuestions: [
+					'A prosthetic is a human-made body part, like a robotic arm or leg. What would a robotic hand need to do to really help someone?',
+					'Some bionic arms respond to signals from a person’s muscles. How do you think our arm could "listen" to its wearer with the parts we have?',
+					'Engineers design prosthetics WITH the person who will wear them. Why do you think that matters?'
+				]
+			}
+		};
+		for (const week of weeks) {
+			for (const day of (week.days || [])) {
+				const patch = reorder[day.id];
+				if (patch && patch.from.includes(day.build)) {
+					const { from, ...fields } = patch;
+					Object.assign(day, fields);
+					curChanged = true;
+				}
+			}
+		}
 		if (curChanged) await writeJsonFile(campCurriculumFile, curriculum);
 
 		const lessons = await readCampLessons();
+		let lessonsChanged = false;
 		const lesson = lessons.find((l) => l.id === 'w2-tue-elevator-lift');
 		if (lesson) {
 			lesson.id = 'w2-tue-windmill-spike';
@@ -6514,8 +6589,40 @@ async function applyCampContentPatches() {
 				{ id: 'w2-tue-windmill-q2', type: 'question', title: 'Motor speed', body: 'You change the motor speed from 50% to 100%. What happens to the windmill?', image: '', options: ['It spins faster', 'It stops', 'The blades fall off', 'Nothing changes'], correctIndex: 0 },
 				{ id: 'w2-tue-windmill-q3', type: 'question', title: 'Direction', body: 'How do you make the motor spin the other way (reverse the direction)?', image: '', options: ['Use a negative speed', 'Add more blades', 'Unplug the Hub', 'Make the stand taller'], correctIndex: 0 }
 			]);
-			await writeCampLessons(lessons);
+			lessonsChanged = true;
 		}
+		// Question banks for the two new decks (added once; keyed by id/deckUrl).
+		const newLessonBanks = [
+			{
+				id: 'w2-thu-claw-button-events',
+				title: 'Claw with a Button: Events in SPIKE',
+				lessonSource: lessonBuildingSource,
+				deckUrl: '/camp-hub/lessons/Lesson%2010/lesson10_claw_button_events.html',
+				slides: [
+					{ id: 'w2-thu-events-q1', type: 'question', title: 'Events', body: 'When does the code under "when left button pressed" run?', image: '', options: ['Every time the left button is pressed', 'Only once when the program starts', 'All the time, nonstop', 'Never'], correctIndex: 0 },
+					{ id: 'w2-thu-events-q2', type: 'question', title: 'Open the claw', body: 'The claw closes with "run for 1 rotation". How do you make it OPEN again?', image: '', options: ['Run the motor for -1 rotations (negative = other way)', 'Press the button harder', 'Add more blades', 'Unplug the motor'], correctIndex: 0 },
+					{ id: 'w2-thu-events-q3', type: 'question', title: 'Two stacks', body: 'Why does the claw program need TWO event stacks?', image: '', options: ['One event closes the claw, a different event opens it', 'Two stacks make the motor stronger', 'The Hub requires exactly two', 'It looks nicer'], correctIndex: 0 }
+				]
+			},
+			{
+				id: 'w3-mon-helping-someone',
+				title: 'Helping Someone: Prosthetic Arm',
+				lessonSource: lessonBuildingSource,
+				deckUrl: '/camp-hub/lessons/helping%20someone%20lesson/lesson_helping_someone.html',
+				slides: [
+					{ id: 'w3-mon-prosthetic-q1', type: 'question', title: 'Prosthetics', body: 'What is a prosthetic?', image: '', options: ['A human-made body part that helps someone grab, hold, or walk', 'A type of LEGO motor', 'A computer game', 'A kind of battery'], correctIndex: 0 },
+					{ id: 'w3-mon-prosthetic-q2', type: 'question', title: 'Inputs', body: 'The button and the color sensor are both...', image: '', options: ['Inputs that tell the Hub when to act', 'Motors that make things move', 'Decorations', 'Speakers'], correctIndex: 0 },
+					{ id: 'w3-mon-prosthetic-q3', type: 'question', title: 'Cool fact', body: 'Which of these prosthetics facts is TRUE?', image: '', options: ['A 3,000-year-old wooden prosthetic toe was found on an Egyptian mummy', 'Prosthetics were invented in 2020', 'Robotic arms cannot be controlled by muscles', 'Kids cannot wear prosthetics'], correctIndex: 0 }
+				]
+			}
+		];
+		for (const bank of newLessonBanks) {
+			if (!lessons.some((l) => l.id === bank.id || l.deckUrl === bank.deckUrl)) {
+				lessons.push({ ...bank, updatedAt: new Date().toISOString() });
+				lessonsChanged = true;
+			}
+		}
+		if (lessonsChanged) await writeCampLessons(lessons);
 	} catch (err) {
 		console.error('Camp content patch error:', err);
 	}

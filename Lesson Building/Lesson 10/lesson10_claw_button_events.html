@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson: Claw with a Button — Events in SPIKE</title>
+  <style>
+    :root{--bg:#bfe0ff;--card:#eef7ff;--ink:#17324d;--accent:#073e77;--yellow:#fece00;--shadow:rgba(7,62,119,.18)}*{box-sizing:border-box}html,body{height:100%;overflow:hidden}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#8fc4f4;color:var(--ink)}.deck{width:100vw;height:100vh;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:auto;-ms-overflow-style:none;scrollbar-width:none}.deck::-webkit-scrollbar{display:none}.slide{width:100vw;min-width:100vw;height:100vh;min-height:100vh;flex:0 0 100vw;padding:44px 64px;background:var(--bg);display:flex;flex-direction:column;justify-content:center;gap:24px;overflow:hidden;scroll-snap-align:start;page-break-after:always}h1{margin:0;font-size:58px;line-height:1.05;color:#102e4a}h2{margin:0;font-size:46px;color:#102e4a}h3{margin:0 0 12px;font-size:30px;color:var(--accent)}p,li{font-size:26px;line-height:1.3}.subtitle{font-size:32px;max-width:980px;line-height:1.25}.big-card,.card{background:var(--card);border:4px solid var(--accent);border-radius:22px;padding:28px;box-shadow:0 10px 0 var(--shadow)}.card{border-width:3px;border-radius:18px;box-shadow:0 8px 0 var(--shadow)}.badge{display:inline-block;width:max-content;background:var(--yellow);border:3px solid var(--accent);border-radius:999px;padding:10px 18px;font-size:24px;font-weight:bold;color:#122b45}.goal{font-size:40px;line-height:1.3;font-weight:bold}.goal strong{color:var(--accent)}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:28px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.center{text-align:center}.teacher-note{background:#fff9d6;border:3px dashed var(--accent);border-radius:16px;padding:20px;font-size:25px}.rule{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px;font-size:28px}.icon{min-width:44px;height:44px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--yellow);border:3px solid var(--accent);font-weight:bold}.question{font-size:30px;padding:16px 20px;border-left:10px solid var(--yellow);background:white;border-radius:12px;margin-bottom:14px}.slide-nav{position:fixed;right:18px;bottom:18px;z-index:20;display:flex;align-items:center;gap:10px}.slide-nav button{width:46px;height:46px;border-radius:50%;border:3px solid var(--accent);background:#fff;color:var(--accent);font-size:26px;font-weight:bold;cursor:pointer;box-shadow:0 5px 0 var(--shadow)}.slide-nav a{height:46px;min-width:76px;border-radius:999px;border:3px solid var(--accent);background:#fff;color:var(--accent);font-size:18px;font-weight:bold;cursor:pointer;box-shadow:0 5px 0 var(--shadow);display:inline-flex;align-items:center;justify-content:center;text-decoration:none;padding:0 14px}.slide-nav button:disabled{opacity:.45;cursor:default}.slide-counter{background:rgba(255,255,255,.92);border:3px solid var(--accent);border-radius:999px;padding:9px 14px;font-size:18px;font-weight:bold;color:#102e4a}@media (max-width:900px),(max-height:840px){.slide{padding:20px 22px;gap:12px}p,ul,ol{margin-top:0;margin-bottom:0}h1{font-size:32px}h2{font-size:29px}h3{font-size:20px;margin-bottom:6px}p,li,.rule{font-size:16px;line-height:1.18}.subtitle{font-size:18px}.goal{font-size:22px}.big-card,.card{padding:14px;border-width:3px;border-radius:14px;box-shadow:0 5px 0 var(--shadow)}.grid-2{grid-template-columns:repeat(2,1fr);gap:12px}.grid-3{grid-template-columns:repeat(3,1fr);gap:12px}.teacher-note{font-size:16px;padding:12px}.badge{font-size:16px;padding:6px 10px}.icon{min-width:28px;height:28px}.question{font-size:17px;padding:9px 10px;margin-bottom:8px}.slide-nav{right:10px;bottom:10px}.slide-nav button{width:38px;height:38px;font-size:22px}.slide-nav a{height:38px;min-width:62px;font-size:15px;padding:0 10px}.slide-counter{font-size:15px;padding:7px 10px}}@media print{html,body{height:auto;overflow:visible}.deck{display:block;width:100%;height:auto;overflow:visible}.slide{width:100%;min-width:0;height:auto;min-height:100vh;overflow:visible}.slide-nav{display:none}}
+  </style>
+  <style>
+    .block{display:inline-flex;align-items:center;gap:9px;background:#18bcd4;color:#052a30;border:3px solid #0a6d7c;border-radius:12px;padding:11px 15px;font-size:23px;font-weight:bold;box-shadow:0 5px 0 var(--shadow);line-height:1.1}
+    .block.hat{background:#f6a821;border-color:#a4680f;color:#3a2400;border-radius:22px 22px 12px 12px}
+    .block .port{background:#fff;border:2px solid #0a6d7c;border-radius:8px;padding:1px 9px}
+    .block .num{background:#fff;border:2px solid #0a6d7c;border-radius:999px;padding:1px 10px}
+    .program{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+    .program .indent{margin-left:26px}
+    .claw-art{display:block;width:190px;height:150px;margin:0 auto}
+    @media (max-width:900px),(max-height:840px){.block{font-size:14px;padding:6px 9px;border-width:2px;gap:6px}.program{gap:6px}.program .indent{margin-left:14px}.claw-art{width:110px;height:88px}}
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide center">
+      <span class="badge">Week 2 • Thursday</span>
+      <h1>Claw with a Button 🕹️</h1>
+      <p class="subtitle">Yesterday you built a claw. Today we give it a brain: press a button → the claw moves. That's called an <strong>event</strong> — the most important idea in robot coding.</p>
+      <svg class="claw-art" viewBox="0 0 200 160" role="img" aria-label="Claw gripper">
+        <rect x="86" y="10" width="28" height="52" rx="8" fill="#073e77"/>
+        <circle cx="100" cy="70" r="16" fill="#18bcd4" stroke="#073e77" stroke-width="5"/>
+        <path d="M88 80 Q56 104 62 140" fill="none" stroke="#073e77" stroke-width="14" stroke-linecap="round"/>
+        <path d="M112 80 Q144 104 138 140" fill="none" stroke="#073e77" stroke-width="14" stroke-linecap="round"/>
+        <path d="M62 140 q6 10 18 8" fill="none" stroke="#fece00" stroke-width="10" stroke-linecap="round"/>
+        <path d="M138 140 q-6 10 -18 8" fill="none" stroke="#fece00" stroke-width="10" stroke-linecap="round"/>
+      </svg>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Quick Review</span>
+      <h1>What We Know So Far</h1>
+      <div class="grid-3">
+        <div class="card center"><h3>Motors</h3><p>Start, stop, set speed, and flip direction with a negative speed.</p></div>
+        <div class="card center"><h3>Programs</h3><p>Steps the Hub runs in order, top to bottom.</p></div>
+        <div class="card center"><h3>The Claw</h3><p>A motor opens and closes the jaws around an object.</p></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Today's Goal</span>
+      <h1>Lesson Goal</h1>
+      <div class="big-card"><p class="goal">Today I will use <strong>events</strong> — "when the button is pressed, do something" — so a <strong>button controls my claw</strong>: press to close, press to open.</p></div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">New Idea</span>
+      <h2>What Is an Event?</h2>
+      <p class="subtitle">An <strong>event</strong> is something that happens — a button press, a tap, a sensor seeing something. Event blocks say: <strong>WHEN this happens → DO that.</strong></p>
+      <div class="grid-3">
+        <div class="card center"><h3>Doorbell</h3><p>WHEN pressed → DO ring.</p></div>
+        <div class="card center"><h3>Game controller</h3><p>WHEN you press A → DO jump.</p></div>
+        <div class="card center"><h3>Your claw</h3><p>WHEN button pressed → DO close the claw.</p></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Event blocks</span>
+      <h2>"When" Blocks Are Hats 🎩</h2>
+      <p class="subtitle">Event blocks sit on TOP of a stack — the steps under them only run when the event happens.</p>
+      <div class="grid-2">
+        <div class="card"><div class="program">
+          <span class="block hat">▶ when program starts</span>
+          <span class="block indent">the classic — runs once at the start</span>
+        </div></div>
+        <div class="card"><div class="program">
+          <span class="block hat">🕹️ when <span class="port">left</span> button pressed</span>
+          <span class="block indent">runs EVERY time you press it</span>
+        </div></div>
+      </div>
+      <div class="teacher-note"><strong>Key idea:</strong> a program can have MORE than one stack — each event block starts its own stack, waiting for its moment.</div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Program Brief</span>
+      <h2>Button Controls the Claw</h2>
+      <div class="grid-2">
+        <div class="card"><h3>Close</h3><div class="program">
+          <span class="block hat">🕹️ when <span class="port">left</span> button pressed</span>
+          <span class="block indent"><span class="port">A</span> run for <span class="num">1</span> rotations</span>
+        </div></div>
+        <div class="card"><h3>Open</h3><div class="program">
+          <span class="block hat">🕹️ when <span class="port">right</span> button pressed</span>
+          <span class="block indent"><span class="port">A</span> run for <span class="num">−1</span> rotations</span>
+        </div></div>
+      </div>
+      <div class="teacher-note"><strong>Tune it:</strong> if the claw closes too far or not enough, change the rotations (try 0.5). The negative number runs the motor the OTHER way — that's what opens it.</div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Quick Check</span>
+      <h2>Question</h2>
+      <div class="big-card questions">
+        <div class="question">When does the code under "when left button pressed" run?</div>
+        <div class="question">A) Every time the left button is pressed &nbsp;&nbsp; B) Only once &nbsp;&nbsp; C) All the time</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Build Check</span>
+      <h2>Before You Test</h2>
+      <div class="grid-3">
+        <div class="card center"><h3>Claw moves freely</h3><p>Jaws open and close without jamming or rubbing.</p></div>
+        <div class="card center"><h3>Motor secure</h3><p>The motor doesn't twist off when the claw grips.</p></div>
+        <div class="card center"><h3>Two stacks</h3><p>One event stack to close, one to open.</p></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Challenge</span>
+      <h2>Challenge: Pick It Up With Buttons Only</h2>
+      <div class="grid-2">
+        <div class="card">
+          <div class="rule"><span class="icon">1</span><span>Press a button to close the claw on the object.</span></div>
+          <div class="rule"><span class="icon">2</span><span>Lift or move it to the target zone.</span></div>
+          <div class="rule"><span class="icon">3</span><span>Press the other button to release it.</span></div>
+        </div>
+        <div class="card">
+          <div class="rule"><span class="icon">4</span><span>No touching the object with your hands!</span></div>
+          <div class="rule"><span class="icon">5</span><span>3 tries — count your clean pickups.</span></div>
+          <div class="rule"><span class="icon">6</span><span>Bonus: make the Hub beep or light up on each press.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Predict &amp; Test</span>
+      <h2>Question</h2>
+      <div class="big-card questions">
+        <div class="question">What happens if you change "run for 1 rotation" to "run for 0.5 rotations" on the close button?</div>
+        <div class="question">Predict first — then test it and watch the claw!</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Reflection</span>
+      <h2>After Testing: Reflection</h2>
+      <div class="big-card questions">
+        <div class="question">1. What event did your program wait for?</div>
+        <div class="question">2. Why do we need TWO event stacks for the claw?</div>
+        <div class="question">3. How many rotations worked best for a clean grip?</div>
+        <div class="question">4. What other event would be cool to use? (tilt? shake? sensor?)</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="badge">Teacher Slide</span>
+      <h2>Quick Lesson Flow</h2>
+      <div class="grid-2">
+        <div class="card"><h3>Before Building</h3><ul><li>Review motor blocks from the windmill.</li><li>Introduce events with real-life examples.</li><li>Show hat blocks: when button pressed.</li><li>Demo close/open with two stacks.</li></ul></div>
+        <div class="card"><h3>During / After Building</h3><ul><li>Wire the claw motor; write both event stacks.</li><li>Tune rotations for a clean grip.</li><li>Run the buttons-only pickup challenge.</li><li>Reflect: events = WHEN → DO.</li></ul></div>
+      </div>
+    </section>
+  </main>
+  <div class="slide-nav" aria-label="Slide controls">
+    <a class="home-link" href="../index.html" aria-label="Back to home page">Home</a><button type="button" data-prev aria-label="Previous slide">&lsaquo;</button><span class="slide-counter" aria-live="polite">1 / 1</span><button type="button" data-next aria-label="Next slide">&rsaquo;</button></div>
+  <script>(()=>{const deck=document.querySelector('.deck');const slides=Array.from(document.querySelectorAll('.slide'));const prev=document.querySelector('[data-prev]');const next=document.querySelector('[data-next]');const counter=document.querySelector('.slide-counter');let index=0;let scrollTimer;deck.tabIndex=0;const update=()=>{index=Math.max(0,Math.min(slides.length-1,Math.round(deck.scrollLeft/deck.clientWidth)));counter.textContent=`${index+1} / ${slides.length}`;prev.disabled=index===0;next.disabled=index===slides.length-1};const goTo=(target)=>{index=Math.max(0,Math.min(slides.length-1,target));deck.scrollTo({left:index*deck.clientWidth,behavior:'auto'});update()};prev.addEventListener('click',()=>goTo(index-1));next.addEventListener('click',()=>goTo(index+1));deck.addEventListener('scroll',()=>{window.clearTimeout(scrollTimer);scrollTimer=window.setTimeout(update,80)});window.addEventListener('resize',()=>goTo(index));document.addEventListener('keydown',(event)=>{if(event.defaultPrevented||event.altKey||event.ctrlKey||event.metaKey)return;if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;const key=String(event.key||'').toLowerCase();const code=String(event.code||'').toLowerCase();let target=null;update();if(['arrowright','right','pagedown'].includes(key)||['arrowright','right','pagedown'].includes(code))target=index+1;if(['arrowleft','left','pageup'].includes(key)||['arrowleft','left','pageup'].includes(code))target=index-1;if(key==='home'||code==='home')target=0;if(key==='end'||code==='end')target=slides.length-1;if(target===null)return;event.preventDefault();event.stopPropagation();if(event.stopImmediatePropagation)event.stopImmediatePropagation();goTo(target)},true);deck.focus({preventScroll:true});update()})();</script>
+</body>
+</html>

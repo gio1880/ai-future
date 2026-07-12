@@ -81,29 +81,13 @@
       {
         "id": "day-2026-07-06",
         "date": "2026-07-06",
-        "activity": "Project: build a rubber-band-powered car and test how stored elastic energy turns into distance and speed.",
-        "assignment": "Build a rubber band car. Record your best distance and what happened when you changed winds, wheels, or weight.",
-        "build": "Rubber Band Car",
-        "lessonDeckUrl": "/camp-hub/lessons/Lesson%205/lesson5_rubber_band_car.html",
-        "worksheetLabel": "",
-        "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%205/lesson5_rubber_band_car.html. Concepts: stored elastic energy, axle drive, traction, speed versus distance. Keep winding rules consistent.",
-        "beginLessonQuestions": [
-          "What do you already know about Rubber Band Car?",
-          "What is one thing your team should test carefully today?",
-          "What will make this build successful?"
-        ]
-      },
-      {
-        "id": "day-2026-07-07",
-        "date": "2026-07-07",
         "activity": "Project: build a windmill, then write your first SPIKE Prime program to spin ONE motor — start, set speed, change direction, and stop.",
         "assignment": "Build a windmill on one motor and program it to spin (set speed, start, wait, stop). Then change the speed and the direction and record what each change did.",
         "build": "Windmill · First SPIKE Program",
         "lessonDeckUrl": "/camp-hub/lessons/Lesson%206/lesson6_elevator_lift.html",
         "worksheetLabel": "",
         "worksheetUrl": "",
-        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%206/lesson6_elevator_lift.html. Concepts: pulleys, winches, guides, balanced loads. Use a small cargo box and measure lift height.",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%205/lesson5_rubber_band_car.html. Concepts: stored elastic energy, axle drive, traction, speed versus distance. Keep winding rules consistent.",
         "beginLessonQuestions": [
           "What do you think a MOTOR will let your build do that a rubber band or gravity could not?",
           "A program is a list of steps the robot follows in order. What is one everyday thing you do in a certain order (like a recipe)?",
@@ -111,35 +95,51 @@
         ]
       },
       {
+        "id": "day-2026-07-07",
+        "date": "2026-07-07",
+        "activity": "Project: design a marble run that uses gravity, slope, barriers, and supports to create the longest reliable ride.",
+        "assignment": "Build a marble run. Record total ride time and the place where the marble failed most, then fix that spot and retest.",
+        "build": "Marble Run",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%208/lesson8_marble_run.html",
+        "worksheetLabel": "",
+        "worksheetUrl": "",
+        "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%206/lesson6_elevator_lift.html. Concepts: pulleys, winches, guides, balanced loads. Use a small cargo box and measure lift height.",
+        "beginLessonQuestions": [
+          "What makes a marble speed up or slow down on a track?",
+          "Where do you predict your marble will fly off the track first — a turn, a drop, or a straight part? Why?",
+          "What is one way to slow a marble down WITHOUT stopping it?"
+        ]
+      },
+      {
         "id": "day-2026-07-08",
         "date": "2026-07-08",
-        "activity": "Project: build a Ferris wheel that rotates smoothly, stays balanced, and carries small passenger cars.",
-        "assignment": "Build a Ferris wheel. Record how you balanced the wheel and what helped it spin smoothly.",
-        "build": "Ferris Wheel",
-        "lessonDeckUrl": "/camp-hub/lessons/Lesson%207/lesson7_ferris_wheel.html",
+        "activity": "Project: build a claw with moving jaws that can pick up, hold, move, and release an object without crushing it.",
+        "assignment": "Build a claw/gripper. Record what object it held best, what slipped, and one change that improved your grip.",
+        "build": "Claw / Gripper",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%2010/lesson10_gripper.html",
         "worksheetLabel": "",
         "worksheetUrl": "",
         "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%207/lesson7_ferris_wheel.html. Concepts: center axle, balance, rotation, crank motion. Encourage symmetric weight around the wheel.",
         "beginLessonQuestions": [
-          "What do you already know about Ferris Wheel?",
-          "What is one thing your team should test carefully today?",
-          "What will make this build successful?"
+          "Think about your own hand grabbing a cup. What has to happen for it NOT to drop?",
+          "What part of a claw do you think matters most: the jaws, the pivot, or the grip surface? Why?",
+          "What object in this room would be hardest for a robot claw to pick up?"
         ]
       },
       {
         "id": "day-2026-07-09",
         "date": "2026-07-09",
-        "activity": "Project: design a marble run that uses gravity, slope, barriers, and supports to create the longest reliable ride.",
-        "assignment": "Build a marble run. Record total ride time and the place where the marble was most likely to fail.",
-        "build": "Marble Run",
-        "lessonDeckUrl": "/camp-hub/lessons/Lesson%208/lesson8_marble_run.html",
+        "activity": "Project: connect your claw to SPIKE Prime and use EVENT blocks — when a button is pressed, the claw closes or opens.",
+        "assignment": "Program your claw with two event stacks: one button closes it, the other opens it. Record how many rotations gave the cleanest grip and complete a buttons-only pickup.",
+        "build": "Claw with Button · Events",
+        "lessonDeckUrl": "/camp-hub/lessons/Lesson%2010/lesson10_claw_button_events.html",
         "worksheetLabel": "",
         "worksheetUrl": "",
         "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%208/lesson8_marble_run.html. Concepts: gravity, slope, speed control, barriers. Time only completed runs.",
         "beginLessonQuestions": [
-          "What do you already know about Marble Run?",
-          "What is one thing your team should test carefully today?",
-          "What will make this build successful?"
+          "A doorbell is an EVENT: when pressed, it rings. What other everyday things work as \"when X happens, do Y\"?",
+          "Why is pressing a button to close a claw better than the claw just closing on its own?",
+          "If your claw had two buttons, what would you make each one do?"
         ]
       }
     ],
@@ -154,17 +154,17 @@
       {
         "id": "day-2026-07-13",
         "date": "2026-07-13",
-        "activity": "Project: build a boat or raft that floats, stays balanced, and carries as much cargo as possible.",
-        "assignment": "Build a boat or raft. Record how much cargo it carried and what helped it stay balanced.",
-        "build": "Boat / Raft",
-        "lessonDeckUrl": "/camp-hub/lessons/Lesson%209/lesson9_boat_raft.html",
+        "activity": "Project: build a robotic prosthetic arm (arm holder + pusher) and program it with a button, a motor, and a color sensor so it responds to the person wearing it.",
+        "assignment": "Build the prosthetic arm and program it two ways: button-press events and color commands (green = go, red = stop). Record which control was easier for the wearer and one cool prosthetics fact you learned.",
+        "build": "Helping Someone: Prosthetic Arm",
+        "lessonDeckUrl": "/camp-hub/lessons/helping%20someone%20lesson/lesson_helping_someone.html",
         "worksheetLabel": "",
         "worksheetUrl": "",
         "coachNotes": "Open Lesson Deck: /camp-hub/lessons/Lesson%209/lesson9_boat_raft.html. Concepts: buoyancy, center of mass, load capacity. Test in a bin and add cargo gradually.",
         "beginLessonQuestions": [
-          "What do you already know about Boat / Raft?",
-          "What is one thing your team should test carefully today?",
-          "What will make this build successful?"
+          "A prosthetic is a human-made body part, like a robotic arm or leg. What would a robotic hand need to do to really help someone?",
+          "Some bionic arms respond to signals from a person’s muscles. How do you think our arm could \"listen\" to its wearer with the parts we have?",
+          "Engineers design prosthetics WITH the person who will wear them. Why do you think that matters?"
         ]
       },
       {

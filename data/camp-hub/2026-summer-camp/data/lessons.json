@@ -2095,5 +2095,107 @@
     ],
     "lessonSource": "lesson-building-2026-weeks-1-4",
     "deckUrl": "/camp-hub/lessons/Lesson%2016/lesson16_steering_race.html"
+  },
+  {
+    "id": "w2-thu-claw-button-events",
+    "title": "Claw with a Button: Events in SPIKE",
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/Lesson%2010/lesson10_claw_button_events.html",
+    "slides": [
+      {
+        "id": "w2-thu-events-q1",
+        "type": "question",
+        "title": "Events",
+        "body": "When does the code under \"when left button pressed\" run?",
+        "image": "",
+        "options": [
+          "Every time the left button is pressed",
+          "Only once when the program starts",
+          "All the time, nonstop",
+          "Never"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w2-thu-events-q2",
+        "type": "question",
+        "title": "Open the claw",
+        "body": "The claw closes with \"run for 1 rotation\". How do you make it OPEN again?",
+        "image": "",
+        "options": [
+          "Run the motor for -1 rotations (negative = other way)",
+          "Press the button harder",
+          "Add more blades",
+          "Unplug the motor"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w2-thu-events-q3",
+        "type": "question",
+        "title": "Two stacks",
+        "body": "Why does the claw program need TWO event stacks?",
+        "image": "",
+        "options": [
+          "One event closes the claw, a different event opens it",
+          "Two stacks make the motor stronger",
+          "The Hub requires exactly two",
+          "It looks nicer"
+        ],
+        "correctIndex": 0
+      }
+    ],
+    "updatedAt": "2026-07-12T00:05:23.521Z"
+  },
+  {
+    "id": "w3-mon-helping-someone",
+    "title": "Helping Someone: Prosthetic Arm",
+    "lessonSource": "lesson-building-2026-weeks-1-4",
+    "deckUrl": "/camp-hub/lessons/helping%20someone%20lesson/lesson_helping_someone.html",
+    "slides": [
+      {
+        "id": "w3-mon-prosthetic-q1",
+        "type": "question",
+        "title": "Prosthetics",
+        "body": "What is a prosthetic?",
+        "image": "",
+        "options": [
+          "A human-made body part that helps someone grab, hold, or walk",
+          "A type of LEGO motor",
+          "A computer game",
+          "A kind of battery"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w3-mon-prosthetic-q2",
+        "type": "question",
+        "title": "Inputs",
+        "body": "The button and the color sensor are both...",
+        "image": "",
+        "options": [
+          "Inputs that tell the Hub when to act",
+          "Motors that make things move",
+          "Decorations",
+          "Speakers"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "w3-mon-prosthetic-q3",
+        "type": "question",
+        "title": "Cool fact",
+        "body": "Which of these prosthetics facts is TRUE?",
+        "image": "",
+        "options": [
+          "A 3,000-year-old wooden prosthetic toe was found on an Egyptian mummy",
+          "Prosthetics were invented in 2020",
+          "Robotic arms cannot be controlled by muscles",
+          "Kids cannot wear prosthetics"
+        ],
+        "correctIndex": 0
+      }
+    ],
+    "updatedAt": "2026-07-12T00:05:23.521Z"
   }
 ]
