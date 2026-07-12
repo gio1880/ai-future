@@ -19,7 +19,9 @@
     .pdf-link{display:inline-flex;align-items:center;gap:10px;background:#fff;border:3px solid var(--accent);border-radius:14px;padding:12px 18px;font-size:24px;font-weight:bold;color:var(--accent);text-decoration:none;box-shadow:0 5px 0 var(--shadow)}
     .arm-art{display:block;width:220px;height:150px;margin:0 auto}
     .qr-img{display:block;width:150px;height:150px;margin:6px auto 0;background:#fff;border:4px solid var(--accent);border-radius:14px;padding:8px;box-shadow:0 6px 0 var(--shadow);image-rendering:pixelated}
-    @media (max-width:900px),(max-height:840px){.block{font-size:14px;padding:6px 9px;border-width:2px;gap:6px}.program{gap:6px}.program .indent{margin-left:14px}.fact-num{font-size:26px;margin-bottom:4px}.pdf-link{font-size:15px;padding:8px 12px;border-width:2px}.arm-art{width:130px;height:88px}.qr-img{width:88px;height:88px;border-width:3px;padding:5px}}
+    .fact-art{display:block;width:100%;height:118px;margin:0 auto 10px}
+    .hero-art{display:block;width:300px;height:170px;margin:0 auto}
+    @media (max-width:900px),(max-height:840px){.block{font-size:14px;padding:6px 9px;border-width:2px;gap:6px}.program{gap:6px}.program .indent{margin-left:14px}.fact-num{font-size:26px;margin-bottom:4px}.pdf-link{font-size:15px;padding:8px 12px;border-width:2px}.arm-art{width:130px;height:88px}.qr-img{width:88px;height:88px;border-width:3px;padding:5px}.fact-art{height:62px;margin-bottom:5px}.hero-art{width:180px;height:100px}}
   </style>
 </head>
 <body>
@@ -42,6 +44,24 @@
       <span class="badge">Big Question</span>
       <h2>What Is a Prosthetic?</h2>
       <p class="subtitle">A <strong>prosthetic</strong> is a human-made body part — like an arm, hand, or leg — for someone who was born without one or lost one. A good prosthetic gives a person back the power to <strong>grab, hold, walk, and do</strong>.</p>
+      <svg class="hero-art" viewBox="0 0 340 190" role="img" aria-label="Person giving a high five with a robotic prosthetic arm">
+        <!-- person -->
+        <circle cx="88" cy="46" r="22" fill="#fece00" stroke="#073e77" stroke-width="5"/>
+        <path d="M88 68 L88 140" stroke="#073e77" stroke-width="14" stroke-linecap="round"/>
+        <path d="M88 140 L66 182 M88 140 L110 182" stroke="#073e77" stroke-width="12" stroke-linecap="round"/>
+        <path d="M88 84 L52 116" stroke="#073e77" stroke-width="11" stroke-linecap="round"/>
+        <!-- prosthetic arm: socket + segments + hand -->
+        <path d="M88 84 L128 96" stroke="#073e77" stroke-width="11" stroke-linecap="round"/>
+        <rect x="124" y="84" width="26" height="24" rx="7" fill="#eef7ff" stroke="#073e77" stroke-width="5"/>
+        <rect x="150" y="86" width="52" height="20" rx="9" fill="#18bcd4" stroke="#073e77" stroke-width="5"/>
+        <circle cx="212" cy="96" r="11" fill="#fece00" stroke="#073e77" stroke-width="5"/>
+        <path d="M220 88 Q240 74 252 78 M221 100 Q242 108 252 104" fill="none" stroke="#073e77" stroke-width="9" stroke-linecap="round"/>
+        <!-- friend's hand high-five -->
+        <path d="M290 40 L290 96 M278 44 L278 92 M302 44 L302 92 M266 56 L266 92 M314 56 L314 92" stroke="#073e77" stroke-width="9" stroke-linecap="round"/>
+        <rect x="262" y="88" width="58" height="34" rx="12" fill="#fece00" stroke="#073e77" stroke-width="5"/>
+        <!-- spark -->
+        <path d="M246 52 l6 -12 m8 20 l12 -6 m-10 -16 l4 -4" stroke="#f97316" stroke-width="6" stroke-linecap="round"/>
+      </svg>
       <div class="teacher-note"><strong>Ask students:</strong> What would a robotic hand need to do to actually be useful? (grip, release, not crush things, respond to the person...)</div>
     </section>
 
@@ -49,9 +69,36 @@
       <span class="badge">Cool Facts</span>
       <h2>Prosthetics Are Ancient — and Amazing</h2>
       <div class="grid-3">
-        <div class="card center"><div class="fact-num">🦶</div><h3>3,000 years old</h3><p>Archaeologists found a wooden prosthetic toe on an Egyptian mummy — one of the oldest prosthetics ever!</p></div>
-        <div class="card center"><div class="fact-num">🏃</div><h3>Blade runners</h3><p>Paralympic sprinters run on curved carbon-fiber blades that store and release energy like a spring.</p></div>
-        <div class="card center"><div class="fact-num">💪</div><h3>Mind control</h3><p>Some bionic arms read tiny electrical signals from a person's muscles — think "close hand" and it closes!</p></div>
+        <div class="card center">
+          <svg class="fact-art" viewBox="0 0 200 120" role="img" aria-label="Egyptian pyramid with a wooden prosthetic toe">
+            <circle cx="166" cy="26" r="14" fill="#fece00" stroke="#073e77" stroke-width="4"/>
+            <path d="M14 96 L74 30 L134 96 Z" fill="#eef7ff" stroke="#073e77" stroke-width="5"/>
+            <path d="M52 96 L74 72 L96 96" fill="none" stroke="#073e77" stroke-width="4"/>
+            <path d="M126 108 q6 -22 30 -22 q22 0 26 12 q3 10 -8 10 Z" fill="#c98a3b" stroke="#073e77" stroke-width="5"/>
+            <path d="M172 92 q10 -2 10 6 l-8 4" fill="#a4680f" stroke="#073e77" stroke-width="4"/>
+          </svg>
+          <h3>3,000 years old</h3><p>Archaeologists found a wooden prosthetic toe on an Egyptian mummy — one of the oldest prosthetics ever!</p>
+        </div>
+        <div class="card center">
+          <svg class="fact-art" viewBox="0 0 200 120" role="img" aria-label="Sprinter running on a curved carbon-fiber blade">
+            <circle cx="96" cy="22" r="13" fill="#fece00" stroke="#073e77" stroke-width="4"/>
+            <path d="M96 35 L92 72" stroke="#073e77" stroke-width="10" stroke-linecap="round"/>
+            <path d="M94 46 L120 58 M94 50 L68 64" stroke="#073e77" stroke-width="8" stroke-linecap="round"/>
+            <path d="M92 72 L116 92 L134 88" stroke="#073e77" stroke-width="9" stroke-linecap="round" fill="none"/>
+            <path d="M92 72 Q74 96 60 96 Q46 96 48 108 L64 110" fill="none" stroke="#18bcd4" stroke-width="9" stroke-linecap="round"/>
+            <path d="M20 40 h22 M14 56 h18 M22 72 h16" stroke="#8fc4f4" stroke-width="6" stroke-linecap="round"/>
+          </svg>
+          <h3>Blade runners</h3><p>Paralympic sprinters run on curved carbon-fiber blades that store and release energy like a spring.</p>
+        </div>
+        <div class="card center">
+          <svg class="fact-art" viewBox="0 0 200 120" role="img" aria-label="Muscle signals controlling a bionic hand">
+            <path d="M18 34 q20 -18 42 0 q14 12 8 30 l-12 26 h-24 l-14 -32 q-6 -14 0 -24" fill="#fece00" stroke="#073e77" stroke-width="5"/>
+            <path d="M78 56 l14 0 l6 -12 l8 24 l6 -12 h14" fill="none" stroke="#f97316" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="128" y="40" width="34" height="34" rx="8" fill="#18bcd4" stroke="#073e77" stroke-width="5"/>
+            <path d="M136 40 v-14 M147 40 v-18 M158 40 v-14 M162 52 h16 M162 64 h12" stroke="#073e77" stroke-width="7" stroke-linecap="round"/>
+          </svg>
+          <h3>Mind control</h3><p>Some bionic arms read tiny electrical signals from a person's muscles — think "close hand" and it closes!</p>
+        </div>
       </div>
     </section>
 
@@ -59,8 +106,27 @@
       <span class="badge">More Cool Facts</span>
       <h2>Kids Are Part of This Story</h2>
       <div class="grid-2">
-        <div class="card center"><div class="fact-num">🖨️</div><h3>3D-printed hands</h3><p>Volunteers around the world 3D-print low-cost prosthetic hands for kids — some cost less than a video game, instead of thousands of dollars.</p></div>
-        <div class="card center"><div class="fact-num">🦸</div><h3>Hero arms</h3><p>Some kids' prosthetic arms are designed like superhero gear — with custom covers, lights, and colors they pick themselves.</p></div>
+        <div class="card center">
+          <svg class="fact-art" viewBox="0 0 200 120" role="img" aria-label="3D printer printing a prosthetic hand">
+            <path d="M30 16 h140 v18 h-140 Z M30 16 v88 M170 16 v88 M30 104 h140" fill="none" stroke="#073e77" stroke-width="7" stroke-linecap="round"/>
+            <rect x="82" y="34" width="36" height="16" rx="4" fill="#18bcd4" stroke="#073e77" stroke-width="4"/>
+            <path d="M100 50 v14" stroke="#f97316" stroke-width="4" stroke-dasharray="4 5"/>
+            <path d="M84 96 q-2 -18 8 -22 l2 -12 M100 96 l0 -34 M116 96 q2 -18 -8 -22 l-2 -12" fill="none" stroke="#fece00" stroke-width="8" stroke-linecap="round"/>
+            <rect x="76" y="90" width="48" height="12" rx="5" fill="#eef7ff" stroke="#073e77" stroke-width="4"/>
+          </svg>
+          <h3>3D-printed hands</h3><p>Volunteers around the world 3D-print low-cost prosthetic hands for kids — some cost less than a video game, instead of thousands of dollars.</p>
+        </div>
+        <div class="card center">
+          <svg class="fact-art" viewBox="0 0 200 120" role="img" aria-label="Superhero-style prosthetic arm with a star">
+            <rect x="26" y="44" width="66" height="30" rx="12" fill="#18bcd4" stroke="#073e77" stroke-width="5"/>
+            <rect x="92" y="48" width="34" height="22" rx="8" fill="#eef7ff" stroke="#073e77" stroke-width="5"/>
+            <circle cx="140" cy="59" r="12" fill="#fece00" stroke="#073e77" stroke-width="5"/>
+            <path d="M150 50 Q170 38 180 42 M150 68 Q170 78 180 74" fill="none" stroke="#073e77" stroke-width="8" stroke-linecap="round"/>
+            <path d="M59 50 l3.4 7 7.6 1 -5.5 5.4 1.3 7.6 -6.8 -3.6 -6.8 3.6 1.3 -7.6 -5.5 -5.4 7.6 -1 Z" fill="#fece00" stroke="#073e77" stroke-width="3"/>
+            <path d="M30 28 l6 -10 m14 12 l4 -12 m18 10 l2 -10" stroke="#f97316" stroke-width="5" stroke-linecap="round"/>
+          </svg>
+          <h3>Hero arms</h3><p>Some kids' prosthetic arms are designed like superhero gear — with custom covers, lights, and colors they pick themselves.</p>
+        </div>
       </div>
       <div class="teacher-note"><strong>Share:</strong> engineers who design prosthetics work WITH the person — the best design is the one that fits that person's life.</div>
     </section>
@@ -86,9 +152,38 @@
       <span class="badge">New Sensor</span>
       <h2>Meet the Color Sensor 🎨</h2>
       <div class="grid-3">
-        <div class="card center"><h3>It sees color</h3><p>Point it at something and it can tell red from green from blue.</p></div>
-        <div class="card center"><h3>It's an input</h3><p>Like the button, it gives the Hub information to react to.</p></div>
-        <div class="card center"><h3>Why it matters</h3><p>Real bionic hands use sensors too — to know how hard to grip!</p></div>
+        <div class="card center">
+          <svg class="fact-art" viewBox="0 0 200 120" role="img" aria-label="Color sensor looking at colored cards">
+            <rect x="20" y="34" width="44" height="52" rx="10" fill="#eef7ff" stroke="#073e77" stroke-width="5"/>
+            <circle cx="42" cy="60" r="12" fill="#18bcd4" stroke="#073e77" stroke-width="4"/>
+            <path d="M66 52 L96 40 M66 60 L96 60 M66 68 L96 80" stroke="#8fc4f4" stroke-width="5" stroke-linecap="round"/>
+            <rect x="102" y="26" width="30" height="24" rx="6" fill="#d21f1f" stroke="#073e77" stroke-width="4"/>
+            <rect x="112" y="50" width="30" height="24" rx="6" fill="#2e9b20" stroke="#073e77" stroke-width="4"/>
+            <rect x="102" y="74" width="30" height="24" rx="6" fill="#1767b4" stroke="#073e77" stroke-width="4"/>
+          </svg>
+          <h3>It sees color</h3><p>Point it at something and it can tell red from green from blue.</p>
+        </div>
+        <div class="card center">
+          <svg class="fact-art" viewBox="0 0 200 120" role="img" aria-label="Button and sensor sending information into the Hub">
+            <circle cx="36" cy="42" r="14" fill="#fece00" stroke="#073e77" stroke-width="5"/>
+            <rect x="24" y="72" width="26" height="22" rx="6" fill="#eef7ff" stroke="#073e77" stroke-width="4"/>
+            <path d="M56 44 h34 M56 82 h34" stroke="#f97316" stroke-width="6" stroke-linecap="round"/>
+            <path d="M84 38 l10 6 -10 6 M84 76 l10 6 -10 6" fill="none" stroke="#f97316" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="100" y="30" width="66" height="62" rx="12" fill="#eef7ff" stroke="#073e77" stroke-width="6"/>
+            <rect x="118" y="48" width="30" height="26" rx="5" fill="#18bcd4" stroke="#073e77" stroke-width="4"/>
+          </svg>
+          <h3>It's an input</h3><p>Like the button, it gives the Hub information to react to.</p>
+        </div>
+        <div class="card center">
+          <svg class="fact-art" viewBox="0 0 200 120" role="img" aria-label="Bionic hand gently gripping an egg">
+            <path d="M52 24 Q98 8 132 34" fill="none" stroke="#18bcd4" stroke-width="11" stroke-linecap="round"/>
+            <path d="M52 96 Q98 112 132 86" fill="none" stroke="#18bcd4" stroke-width="11" stroke-linecap="round"/>
+            <ellipse cx="98" cy="60" rx="22" ry="27" fill="#fff" stroke="#073e77" stroke-width="5"/>
+            <path d="M132 34 q14 8 14 26 q0 18 -14 26" fill="none" stroke="#073e77" stroke-width="8" stroke-linecap="round"/>
+            <path d="M40 22 l-8 -8 M40 98 l-8 8" stroke="#f97316" stroke-width="6" stroke-linecap="round"/>
+          </svg>
+          <h3>Why it matters</h3><p>Real bionic hands use sensors too — to know how hard to grip!</p>
+        </div>
       </div>
     </section>
 
