@@ -124,5 +124,12 @@
     "displayName": "Demo Student",
     "role": "Team member",
     "initials": "DS"
+  },
+  {
+    "teamId": "team-demo",
+    "studentId": "fll-demo-student",
+    "displayName": "Demo Student",
+    "role": "Demo account",
+    "initials": "DS"
   }
 ]

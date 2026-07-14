@@ -1200,5 +1200,196 @@
         "placeholder": "When ___ told us ___, we changed ___ because..."
       }
     ]
+  },
+  {
+    "id": "task-what-is-bioluminescence-demo",
+    "assignmentId": "assignment-topic-learning",
+    "teamId": "team-demo",
+    "assignedTo": "fll-demo-student",
+    "title": "What is Bioluminescence?",
+    "description": "The season is called BIOGLOW — so let's learn about how nature actually glows! **Bioluminescence** is when living things produce their own light through a chemical reaction inside their bodies.\n\n**How it works:**\nA molecule called **luciferin** reacts with oxygen, helped by an enzyme called **luciferase**. The reaction releases energy as light — a cold light, with almost no heat. (A light bulb wastes most of its energy as heat; a firefly wastes almost none!)\n\n**Who glows?**\n- **Fireflies** — flash patterns to find mates\n- **Anglerfish** — dangle a glowing lure to attract prey in the deep sea\n- **Dinoflagellates (glowing plankton)** — light up waves and footprints on beaches when disturbed\n- **Glowing fungi** — like the ghost fungus, glow to attract insects that spread their spores\n- **Vampire squid & jellyfish** — flash or squirt glowing mucus to confuse predators\n\n**Why glow?** The big four reasons: finding mates, attracting prey, scaring or confusing predators, and communication.",
+    "category": "Pre-Season",
+    "type": "lesson",
+    "workContext": "home",
+    "status": "todo",
+    "dueDate": "2026-06-24",
+    "questions": [
+      {
+        "id": "q1",
+        "type": "textarea",
+        "label": "In your own words, what is bioluminescence and how does the chemical reaction work?",
+        "placeholder": "Use the words luciferin and luciferase if you can..."
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "label": "Pick one glowing creature and explain WHY it glows. What does the light do for it?",
+        "placeholder": "Firefly, anglerfish, plankton, fungus, squid... what's the survival advantage?"
+      },
+      {
+        "id": "q3",
+        "type": "text",
+        "label": "Fireflies make light with almost no heat. Why might engineers be interested in copying that?",
+        "placeholder": "Think about light bulbs, energy waste, efficiency..."
+      }
+    ],
+    "createdBy": "coach-default",
+    "createdAt": "2026-07-14T17:40:19.306Z",
+    "updatedAt": "2026-07-14T17:40:19.306Z"
+  },
+  {
+    "id": "task-watch-teaser-demo",
+    "assignmentId": "assignment-kickoff-prep",
+    "teamId": "team-demo",
+    "assignedTo": "fll-demo-student",
+    "title": "Watch the BIOGLOW Teaser Video",
+    "description": "The FIRST LEGO League challenge for this season is called BIOGLOW — and it's all about ecosystems, biodiversity, and nature-inspired technology. Watch the official teaser video below, then answer the reflection questions to complete this assignment.",
+    "category": "Innovation Project",
+    "type": "video",
+    "videoId": "6oPqt5IQbPI",
+    "workContext": "home",
+    "status": "todo",
+    "dueDate": "2026-07-01",
+    "questions": [
+      {
+        "id": "q1",
+        "type": "textarea",
+        "label": "What was the most interesting thing you saw or heard in the video?",
+        "placeholder": "Describe what caught your attention and why it stood out to you..."
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "label": "What ecosystem problem do you think BIOGLOW wants teams to help solve?",
+        "placeholder": "Think about the themes shown — pollution, habitat loss, biodiversity? What's the big challenge?"
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
+        "label": "What is one question you still have about the BIOGLOW season?",
+        "placeholder": "What do you want to learn more about? What are you curious or excited about?"
+      }
+    ],
+    "createdBy": "coach-default",
+    "createdAt": "2026-07-14T17:40:19.306Z",
+    "updatedAt": "2026-07-14T17:40:19.306Z"
+  },
+  {
+    "id": "task-hub-check-demo",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-demo",
+    "assignedTo": "fll-demo-student",
+    "title": "Hub Check: Find a Reliable Gyro",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "category": "Robot Design",
+    "type": "submission",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-07-10",
+    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
+    "allowPhoto": true,
+    "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
+    "questions": [
+      {
+        "id": "hub-chart",
+        "type": "table",
+        "label": "Fill out your hub comparison chart (test at least 2 hubs):",
+        "columns": [
+          "Hub name / number",
+          "Drift after 60s (degrees)",
+          "Reading after 90° turn",
+          "Verdict (Good / OK / Bad)"
+        ],
+        "minRows": 2,
+        "maxRows": 6
+      },
+      {
+        "id": "q1",
+        "type": "text",
+        "label": "Which hub did your team pick as your competition hub, and why?",
+        "placeholder": "e.g. Hub #3 — zero drift after 60 seconds and read exactly 90 on the turn test"
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "label": "What do you think causes gyro drift, and why does it matter for the robot game?",
+        "placeholder": "Think about what happens during a 2.5 minute match if your robot's sense of direction is slowly getting more wrong..."
+      }
+    ],
+    "createdBy": "coach-default",
+    "createdAt": "2026-07-14T17:40:19.306Z",
+    "updatedAt": "2026-07-14T17:40:19.306Z"
+  },
+  {
+    "id": "task-map-coding-practice-demo",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-demo",
+    "assignedTo": "fll-demo-student",
+    "title": "BIOGLOW Map Coding Practice",
+    "description": "Time to practice driving on the BIOGLOW field! Open the **BIOGLOW Coding Guide** (find it in Resources, or go to /fll-hub/coding-guide) and work through the practice missions — driving straight to the bridge, gyro turns to the orchard, finding the black paths with your color sensor, and the full Launch → Bridge → Home run.\n\nEach mission has copy-paste Pybricks code to start from and a challenge to beat. Record your results below as you go.",
+    "category": "Robot Game",
+    "type": "submission",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-14",
+    "questions": [
+      {
+        "id": "practice-chart",
+        "type": "table",
+        "label": "Log each practice mission you complete from the coding guide:",
+        "columns": [
+          "Practice mission",
+          "Attempts before success",
+          "What you changed to make it work"
+        ],
+        "minRows": 3,
+        "maxRows": 8
+      },
+      {
+        "id": "q1",
+        "type": "textarea",
+        "label": "Which practice mission was hardest, and what did you learn from it?",
+        "placeholder": "e.g. The line-square was hardest — we learned our two color sensors read different values..."
+      }
+    ],
+    "createdBy": "coach-default",
+    "createdAt": "2026-07-14T17:40:19.306Z",
+    "updatedAt": "2026-07-14T17:40:19.306Z"
+  },
+  {
+    "id": "task-map-coding-practice-a",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "BIOGLOW Map Coding Practice",
+    "description": "Time to practice driving on the BIOGLOW field! Open the **BIOGLOW Coding Guide** (find it in Resources, or go to /fll-hub/coding-guide) and work through the practice missions — driving straight to the bridge, gyro turns to the orchard, finding the black paths with your color sensor, and the full Launch → Bridge → Home run.\n\nEach mission has copy-paste Pybricks code to start from and a challenge to beat. Record your results below as you go.",
+    "category": "Robot Game",
+    "type": "submission",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-14",
+    "questions": [
+      {
+        "id": "practice-chart",
+        "type": "table",
+        "label": "Log each practice mission you complete from the coding guide:",
+        "columns": [
+          "Practice mission",
+          "Attempts before success",
+          "What you changed to make it work"
+        ],
+        "minRows": 3,
+        "maxRows": 8
+      },
+      {
+        "id": "q1",
+        "type": "textarea",
+        "label": "Which practice mission was hardest, and what did you learn from it?",
+        "placeholder": "e.g. The line-square was hardest — we learned our two color sensors read different values..."
+      }
+    ],
+    "createdBy": "coach-default",
+    "createdAt": "2026-07-14T17:40:19.306Z",
+    "updatedAt": "2026-07-14T17:40:19.306Z"
   }
 ]

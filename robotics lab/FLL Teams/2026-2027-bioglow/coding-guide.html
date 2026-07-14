@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIOGLOW Coding Guide | AI Future FLL</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/ai%20future%20logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #1d9e6e;
+      --green-dark: #136d4b;
+      --green-light: #e6f7f0;
+      --glow: #f0c130;
+      --glow-light: #fdf6d8;
+      --blue: #2870c9;
+      --blue-light: #e8f1fd;
+      --coral: #e8583a;
+      --coral-light: #fdeee9;
+      --ink: #1a2a22;
+      --muted: #5e6e65;
+      --line: #daeadf;
+      --bg: #f4faf6;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: hidden; }
+    html { scroll-behavior: smooth; }
+    body { font-family: Inter, system-ui, sans-serif; color: var(--ink); background: var(--bg); }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(255,255,255,0.94); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar-inner {
+      max-width: 1000px; margin: 0 auto; padding: 12px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; }
+    .brand img { width: 32px; height: 32px; object-fit: contain; }
+    .back-link {
+      border: 1.5px solid var(--line); border-radius: 50px; padding: 8px 16px;
+      font-size: 13px; font-weight: 800; color: var(--green-dark); background: white;
+    }
+    .back-link:hover { border-color: var(--green); }
+
+    .page { max-width: 1000px; margin: 0 auto; padding: 28px 20px 80px; }
+
+    .hero {
+      background: linear-gradient(140deg, rgba(19,50,35,0.92), rgba(29,158,110,0.8));
+      color: white; border-radius: var(--radius); padding: 34px 30px; margin-bottom: 24px;
+    }
+    .hero h1 { font-size: clamp(28px, 5vw, 44px); font-weight: 900; letter-spacing: -0.02em; }
+    .hero h1 em { font-style: normal; color: var(--glow); }
+    .hero p { margin-top: 10px; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.88); max-width: 640px; }
+
+    .map-card {
+      background: white; border: 1.5px solid var(--line); border-radius: var(--radius);
+      padding: 16px; margin-bottom: 28px;
+    }
+    .map-card img { border-radius: 10px; display: block; width: 100%; }
+    .map-legend { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 12px; font-size: 12px; font-weight: 700; color: var(--muted); }
+    .map-legend span::before { content: '●'; margin-right: 5px; }
+    .lg-launch::before { color: #888; }
+    .lg-river::before { color: var(--blue); }
+    .lg-path::before { color: #222; }
+    .lg-forest::before { color: var(--coral); }
+    .lg-farm::before { color: var(--glow); }
+
+    .toc {
+      background: white; border: 1.5px solid var(--line); border-radius: var(--radius);
+      padding: 18px 20px; margin-bottom: 28px;
+    }
+    .toc-title { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 10px; }
+    .toc ol { margin-left: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 6px 24px; }
+    .toc li { font-size: 14px; font-weight: 700; padding: 3px 0; }
+    .toc a:hover { color: var(--green-dark); }
+
+    .mission {
+      background: white; border: 1.5px solid var(--line); border-radius: var(--radius);
+      margin-bottom: 26px; overflow: hidden; scroll-margin-top: 80px;
+    }
+    .mission-head {
+      padding: 20px 24px 16px; border-bottom: 1.5px solid var(--line);
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .mission-num {
+      background: var(--green); color: white; border-radius: 12px;
+      width: 44px; height: 44px; display: grid; place-items: center;
+      font-size: 19px; font-weight: 900; flex-shrink: 0;
+    }
+    .mission-title { font-size: 19px; font-weight: 900; letter-spacing: -0.01em; }
+    .mission-goal { font-size: 13px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+    .mission-body { padding: 20px 24px; }
+    .mission-body p { font-size: 14px; line-height: 1.65; margin-bottom: 12px; }
+    .mission-body strong { color: var(--green-dark); }
+    .mission-body ul, .mission-body ol { margin: 0 0 12px 22px; font-size: 14px; line-height: 1.65; }
+    .mission-body li { margin-bottom: 4px; }
+
+    .skill-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-left: auto; }
+    .skill-chip {
+      font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+      background: var(--green-light); color: var(--green-dark); border-radius: 50px; padding: 4px 10px; white-space: nowrap;
+    }
+
+    .code-wrap { margin: 14px 0; border-radius: 12px; overflow: hidden; border: 1px solid #2a2a3a; }
+    .code-head {
+      background: #16161f; color: #9aa0a6; display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 14px; font-size: 12px; font-weight: 700;
+    }
+    .copy-btn {
+      background: #2b2b3d; color: #cdd6f4; border: none; border-radius: 6px;
+      padding: 5px 12px; font-size: 11px; font-weight: 800; cursor: pointer; font-family: inherit;
+    }
+    .copy-btn:hover { background: #3b3b52; }
+    pre {
+      background: #1e1e2e; color: #cdd6f4; padding: 16px 18px; overflow-x: auto;
+      font-size: 13px; line-height: 1.6; margin: 0;
+      font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+    }
+    .c-comment { color: #7f849c; }
+    .c-kw { color: #cba6f7; }
+    .c-str { color: #a6e3a1; }
+    .c-num { color: #fab387; }
+
+    .challenge {
+      background: var(--glow-light); border: 1.5px solid #eeda9a; border-radius: 12px;
+      padding: 14px 16px; margin-top: 14px;
+    }
+    .challenge-title { font-size: 13px; font-weight: 900; color: #8a6a00; margin-bottom: 6px; }
+    .challenge p, .challenge li { font-size: 13px; line-height: 1.6; color: #6b5500; }
+    .challenge ul { margin: 4px 0 0 20px; }
+
+    .tip {
+      background: var(--blue-light); border-left: 4px solid var(--blue); border-radius: 0 10px 10px 0;
+      padding: 12px 14px; margin: 12px 0; font-size: 13px; line-height: 1.6; color: #1d4f8c;
+    }
+
+    .footer-note {
+      text-align: center; color: var(--muted); font-size: 13px; margin-top: 30px; line-height: 1.7;
+    }
+    .footer-note a { color: var(--green-dark); font-weight: 800; }
+
+    @media (max-width: 640px) {
+      .mission-head { flex-wrap: wrap; }
+      .skill-chips { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><img src="/ai%20future%20logo.png" alt="AI Future"> BIOGLOW Coding Guide</div>
+      <a class="back-link" href="/fll-hub/simulator">🕹️ Robot Simulator</a>
+      <a class="back-link" href="/fll-hub/student">← Back to my dashboard</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="hero">
+      <h1>Learn to drive the <em>BIOGLOW</em> field 🤖</h1>
+      <p>Six practice missions that take you from your first straight drive to a full launch-and-return run — all using real spots on the BIOGLOW map. Every mission has starter Pybricks code you can copy into VS Code, and a challenge to beat before you move on.</p>
+    </div>
+
+    <div class="map-card">
+      <img src="/robotics%20lab/FLL%20Teams/2026-2027-bioglow/bioglow%20map.png" alt="BIOGLOW competition field map">
+      <div class="map-legend">
+        <span class="lg-launch">Launch zones — white half-circles, bottom-left &amp; bottom-right</span>
+        <span class="lg-river">Rivers &amp; bridges — center of the field</span>
+        <span class="lg-path">Black paths — three thick line segments</span>
+        <span class="lg-forest">Dying forest — reddish patch, top-left</span>
+        <span class="lg-farm">Farm &amp; orchard — center of the map</span>
+      </div>
+    </div>
+
+    <div class="toc">
+      <div class="toc-title">Practice Missions</div>
+      <ol>
+        <li><a href="#m1">Set up your drive base</a></li>
+        <li><a href="#m2">Launch &amp; drive straight to the bridge</a></li>
+        <li><a href="#m3">Gyro turns — reach the orchard</a></li>
+        <li><a href="#m4">Find the black path with your color sensor</a></li>
+        <li><a href="#m5">Square up on a line</a></li>
+        <li><a href="#m6">The full run: Launch → Bridge → Home</a></li>
+      </ol>
+    </div>
+
+    <!-- Mission 1 -->
+    <section class="mission" id="m1">
+      <div class="mission-head">
+        <div class="mission-num">1</div>
+        <div>
+          <div class="mission-title">Set up your drive base</div>
+          <div class="mission-goal">Every program starts here. Get this block right once, and every other mission gets easier.</div>
+        </div>
+        <div class="skill-chips"><span class="skill-chip">Setup</span><span class="skill-chip">DriveBase</span></div>
+      </div>
+      <div class="mission-body">
+        <p>Pybricks needs to know three things about your robot: which ports the drive motors use, how big your wheels are, and how far apart they sit. Measure your robot and fix the numbers below — <strong>wrong numbers here make every distance and turn wrong everywhere</strong>.</p>
+        <ul>
+          <li><strong>wheel_diameter</strong> — measure across the wheel in millimeters (small SPIKE wheels ≈ 56 mm)</li>
+          <li><strong>axle_track</strong> — distance between the centers of the left and right wheels, in mm</li>
+        </ul>
+        <div class="code-wrap">
+          <div class="code-head"><span>drive_base_setup.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><span class="c-kw">from</span> pybricks.hubs <span class="c-kw">import</span> PrimeHub
+<span class="c-kw">from</span> pybricks.pupdevices <span class="c-kw">import</span> Motor
+<span class="c-kw">from</span> pybricks.parameters <span class="c-kw">import</span> Port, Direction
+<span class="c-kw">from</span> pybricks.robotics <span class="c-kw">import</span> DriveBase
+
+hub = PrimeHub()
+
+<span class="c-comment"># Left motor spins backward so both wheels push the robot forward.</span>
+left = Motor(Port.A, Direction.COUNTERCLOCKWISE)
+right = Motor(Port.B)
+
+<span class="c-comment"># MEASURE YOUR ROBOT and fix these two numbers!</span>
+robot = DriveBase(left, right, wheel_diameter=<span class="c-num">56</span>, axle_track=<span class="c-num">114</span>)
+
+<span class="c-comment"># Use the gyro for straighter driving and sharper turns.</span>
+robot.use_gyro(<span class="c-kw">True</span>)</pre>
+        </div>
+        <div class="challenge">
+          <div class="challenge-title">✅ Check before moving on</div>
+          <p>Run <code>robot.straight(500)</code> and measure with a ruler. If your robot drives more or less than 500&nbsp;mm, your wheel_diameter is wrong. Fix it until the real distance matches.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission 2 -->
+    <section class="mission" id="m2">
+      <div class="mission-head">
+        <div class="mission-num">2</div>
+        <div>
+          <div class="mission-title">Launch &amp; drive straight to the bridge</div>
+          <div class="mission-goal">From the bottom-left launch zone, drive north to the river bridge in the middle of the field.</div>
+        </div>
+        <div class="skill-chips"><span class="skill-chip">straight()</span><span class="skill-chip">Launching</span></div>
+      </div>
+      <div class="mission-body">
+        <p>Look at the map: the <strong>white launch zone</strong> is the bottom-left corner, and the <strong>red bridges</strong> cross the river near the center. A good launch is repeatable: same spot, same angle, every time. Use the lines on the launch zone border as your alignment guide.</p>
+        <div class="code-wrap">
+          <div class="code-head"><span>mission_bridge_run.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><span class="c-comment"># (Paste your drive base setup from Mission 1 above this line)</span>
+
+<span class="c-comment"># Drive from the launch zone toward the bridge.</span>
+<span class="c-comment"># Measure the real distance on your mat with a tape measure!</span>
+robot.settings(straight_speed=<span class="c-num">300</span>)   <span class="c-comment"># mm per second — start slow</span>
+robot.straight(<span class="c-num">700</span>)                  <span class="c-comment"># drive 700 mm forward</span>
+
+hub.speaker.beep()                   <span class="c-comment"># celebrate at the bridge!</span>
+
+robot.straight(-<span class="c-num">700</span>)                 <span class="c-comment"># reverse back home</span></pre>
+        </div>
+        <div class="tip">💡 <strong>Why slow?</strong> At 300 mm/s your robot is more accurate. Once the mission works 5 times in a row, raise the speed and see if it still works — that's how competition teams tune speed vs. reliability.</div>
+        <div class="challenge">
+          <div class="challenge-title">🏆 Challenge: The Bridge Inspector</div>
+          <ul>
+            <li>Stop with your robot's front wheels exactly on the bridge — within 2 cm — 4 out of 5 tries</li>
+            <li>Then return fully inside the launch zone without touching it with your hands</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission 3 -->
+    <section class="mission" id="m3">
+      <div class="mission-head">
+        <div class="mission-num">3</div>
+        <div>
+          <div class="mission-title">Gyro turns — reach the orchard</div>
+          <div class="mission-goal">The orchard (the neat grid of trees at the farm) isn't straight ahead — you'll need to drive, turn, and drive again.</div>
+        </div>
+        <div class="skill-chips"><span class="skill-chip">turn()</span><span class="skill-chip">Gyro</span></div>
+      </div>
+      <div class="mission-body">
+        <p>Real missions are never a straight line. To reach the <strong>orchard in the center of the map</strong>, you drive out of the launch zone, turn toward the farm, and approach. With <code>use_gyro(True)</code>, the robot uses its gyro sensor to make turns accurate.</p>
+        <div class="code-wrap">
+          <div class="code-head"><span>mission_orchard.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><span class="c-comment"># (Drive base setup from Mission 1 goes above)</span>
+
+robot.straight(<span class="c-num">400</span>)     <span class="c-comment"># leave the launch zone</span>
+robot.turn(<span class="c-num">45</span>)          <span class="c-comment"># turn right 45 degrees toward the farm</span>
+robot.straight(<span class="c-num">450</span>)     <span class="c-comment"># drive toward the orchard</span>
+robot.turn(-<span class="c-num">45</span>)         <span class="c-comment"># negative = turn left, straighten out</span>
+robot.straight(<span class="c-num">200</span>)     <span class="c-comment"># final approach</span>
+
+<span class="c-comment"># Now drive the whole path in reverse to get home:</span>
+robot.straight(-<span class="c-num">200</span>)
+robot.turn(<span class="c-num">45</span>)
+robot.straight(-<span class="c-num">450</span>)
+robot.turn(-<span class="c-num">45</span>)
+robot.straight(-<span class="c-num">400</span>)</pre>
+        </div>
+        <div class="tip">💡 <strong>Gyro check:</strong> if your turns are consistently a few degrees off, run the Hub Check assignment's drift test again — you may have a drifting gyro, or you may be launching the robot before the gyro finishes calibrating (keep the robot still for a second after starting the program).</div>
+        <div class="challenge">
+          <div class="challenge-title">🏆 Challenge: Orchard Express</div>
+          <ul>
+            <li>Reach the orchard and come ALL the way back into the launch zone, hands-free</li>
+            <li>Level 2: do it with only ONE turn each way (plan a smarter path!)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission 4 -->
+    <section class="mission" id="m4">
+      <div class="mission-head">
+        <div class="mission-num">4</div>
+        <div>
+          <div class="mission-title">Find the black path with your color sensor</div>
+          <div class="mission-goal">The map has three thick black paths. Instead of guessing distances, drive until your sensor SEES the line — that's how pro teams stay accurate.</div>
+        </div>
+        <div class="skill-chips"><span class="skill-chip">ColorSensor</span><span class="skill-chip">reflection()</span></div>
+      </div>
+      <div class="mission-body">
+        <p>Dead-reckoning (driving fixed distances) drifts over long runs. The <strong>black paths on the mat are landmarks</strong>: drive until the color sensor reads dark, and you know exactly where you are — no matter how sloppy the launch was.</p>
+        <p>Mount a color sensor facing straight down, about 1 LEGO brick above the mat.</p>
+        <div class="code-wrap">
+          <div class="code-head"><span>mission_find_path.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><span class="c-kw">from</span> pybricks.pupdevices <span class="c-kw">import</span> ColorSensor
+<span class="c-kw">from</span> pybricks.parameters <span class="c-kw">import</span> Port
+
+<span class="c-comment"># (Drive base setup from Mission 1 goes above)</span>
+eye = ColorSensor(Port.C)
+
+<span class="c-comment"># First: find YOUR numbers. Put the sensor over the green mat,</span>
+<span class="c-comment"># then over the black path, and read the values:</span>
+<span class="c-kw">print</span>(<span class="c-str">"Reflection right now:"</span>, eye.reflection())
+
+<span class="c-comment"># Usually: black path &lt; 20, green field &gt; 40. Pick a threshold between them.</span>
+BLACK = <span class="c-num">25</span>
+
+robot.drive(<span class="c-num">150</span>, <span class="c-num">0</span>)                 <span class="c-comment"># start rolling forward slowly</span>
+<span class="c-kw">while</span> eye.reflection() &gt; BLACK:     <span class="c-comment"># keep going until we see the path</span>
+    <span class="c-kw">pass</span>
+robot.stop()                        <span class="c-comment"># found it — stop right on the line!</span>
+
+hub.speaker.beep()</pre>
+        </div>
+        <div class="challenge">
+          <div class="challenge-title">🏆 Challenge: Path Hunter</div>
+          <ul>
+            <li>Launch from three DIFFERENT spots in the launch zone — your robot should stop on the black path every single time</li>
+            <li>Level 2: after finding the path, turn and drive along it for 300 mm</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission 5 -->
+    <section class="mission" id="m5">
+      <div class="mission-head">
+        <div class="mission-num">5</div>
+        <div>
+          <div class="mission-title">Square up on a line</div>
+          <div class="mission-goal">Use TWO color sensors to make your robot perfectly perpendicular to a black path — fixing any crooked driving instantly.</div>
+        </div>
+        <div class="skill-chips"><span class="skill-chip">2 sensors</span><span class="skill-chip">Precision</span></div>
+      </div>
+      <div class="mission-body">
+        <p>If your robot approaches a line slightly crooked, one sensor crosses the line before the other. <strong>Line squaring</strong> stops each side of the robot when its own sensor sees the line — so the robot straightens itself out. Teams use this before precision missions.</p>
+        <div class="code-wrap">
+          <div class="code-head"><span>mission_line_square.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><span class="c-comment"># Needs two color sensors: left on Port C, right on Port D,</span>
+<span class="c-comment"># both facing down at the front of the robot.</span>
+left_eye = ColorSensor(Port.C)
+right_eye = ColorSensor(Port.D)
+BLACK = <span class="c-num">25</span>
+
+<span class="c-comment"># Creep forward with each motor until ITS sensor finds the line.</span>
+left.run(<span class="c-num">100</span>)
+right.run(<span class="c-num">100</span>)
+
+left_done = <span class="c-kw">False</span>
+right_done = <span class="c-kw">False</span>
+<span class="c-kw">while</span> <span class="c-kw">not</span> (left_done <span class="c-kw">and</span> right_done):
+    <span class="c-kw">if</span> left_eye.reflection() &lt; BLACK <span class="c-kw">and</span> <span class="c-kw">not</span> left_done:
+        left.hold()
+        left_done = <span class="c-kw">True</span>
+    <span class="c-kw">if</span> right_eye.reflection() &lt; BLACK <span class="c-kw">and</span> <span class="c-kw">not</span> right_done:
+        right.hold()
+        right_done = <span class="c-kw">True</span>
+
+hub.speaker.beep()   <span class="c-comment"># perfectly square on the line!</span></pre>
+        </div>
+        <div class="tip">💡 After squaring, the gyro heading may not match reality anymore. Call <code>hub.imu.reset_heading(0)</code> right after squaring so future gyro turns start from a known angle.</div>
+        <div class="challenge">
+          <div class="challenge-title">🏆 Challenge: Crooked Launch, Straight Finish</div>
+          <ul>
+            <li>Launch your robot 10–15° crooked ON PURPOSE. After line-squaring, it should end up perfectly perpendicular to the path — every time</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission 6 -->
+    <section class="mission" id="m6">
+      <div class="mission-head">
+        <div class="mission-num">6</div>
+        <div>
+          <div class="mission-title">The full run: Launch → Bridge → Home</div>
+          <div class="mission-goal">Put it all together in one program with functions — the way real competition code is organized.</div>
+        </div>
+        <div class="skill-chips"><span class="skill-chip">Functions</span><span class="skill-chip">Full mission</span></div>
+      </div>
+      <div class="mission-body">
+        <p>Competition programs are built from <strong>small named functions</strong> — one per mission or maneuver. That way you can test each piece alone, reorder your run, and recover fast when something changes. Here's a full run combining everything you practiced:</p>
+        <div class="code-wrap">
+          <div class="code-head"><span>full_run.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><span class="c-comment"># (Drive base + sensor setup from Missions 1 and 4 go above)</span>
+
+<span class="c-kw">def</span> leave_launch_zone():
+    robot.straight(<span class="c-num">300</span>)
+
+<span class="c-kw">def</span> find_the_path():
+    robot.drive(<span class="c-num">150</span>, <span class="c-num">0</span>)
+    <span class="c-kw">while</span> eye.reflection() &gt; BLACK:
+        <span class="c-kw">pass</span>
+    robot.stop()
+    hub.imu.reset_heading(<span class="c-num">0</span>)      <span class="c-comment"># we know exactly where we are now</span>
+
+<span class="c-kw">def</span> visit_the_bridge():
+    robot.turn(<span class="c-num">30</span>)
+    robot.straight(<span class="c-num">350</span>)
+    hub.speaker.beep()            <span class="c-comment"># mission complete sound</span>
+
+<span class="c-kw">def</span> go_home():
+    robot.straight(-<span class="c-num">350</span>)
+    robot.turn(-<span class="c-num">30</span>)
+    robot.straight(-<span class="c-num">550</span>)          <span class="c-comment"># all the way back into the launch zone</span>
+
+<span class="c-comment"># The run — read it like a checklist:</span>
+leave_launch_zone()
+find_the_path()
+visit_the_bridge()
+go_home()</pre>
+        </div>
+        <div class="challenge">
+          <div class="challenge-title">🏆 Final Challenge: Competition Ready</div>
+          <ul>
+            <li>Your full run works <strong>4 out of 5 consecutive tries</strong> (that's the Robot Ready Check standard!)</li>
+            <li>Time it — under 30 seconds earns bragging rights</li>
+            <li>Swap two functions in the run order. If your code still works, you built it right</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer-note">
+      Done with all six? Log your practice in the <strong>BIOGLOW Map Coding Practice</strong> assignment on your dashboard.<br>
+      Starter code files also live in the <a href="https://drive.google.com/drive/folders/1B6XECwAZmHYZJ98tYbxKaUwV0gmVvS7Z" target="_blank" rel="noreferrer">team Drive folder</a> (Starter Code — Blocks and Python).
+    </p>
+  </main>
+
+  <script>
+    function copyCode(btn) {
+      const code = btn.closest('.code-wrap').querySelector('pre').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = orig; }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

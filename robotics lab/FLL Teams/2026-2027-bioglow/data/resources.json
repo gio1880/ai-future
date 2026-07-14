@@ -241,5 +241,31 @@
       "student",
       "coach"
     ]
+  },
+  {
+    "id": "coding-guide",
+    "category": "Robot Design",
+    "label": "BIOGLOW Coding Guide",
+    "description": "Practice missions on the BIOGLOW map: drive straight, gyro turns, line detection, and a full mission run — with copy-paste Pybricks code.",
+    "type": "Website",
+    "source": "AI Future",
+    "url": "/fll-hub/coding-guide",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "robot-simulator",
+    "category": "Robot Design",
+    "label": "BIOGLOW Robot Simulator",
+    "description": "Drive a virtual robot around the real BIOGLOW field — run Pybricks-style code or steer with arrow keys, and hit all 5 practice targets.",
+    "type": "Website",
+    "source": "AI Future",
+    "url": "/fll-hub/simulator",
+    "roles": [
+      "student",
+      "coach"
+    ]
   }
 ]

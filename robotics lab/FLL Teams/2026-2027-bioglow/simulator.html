@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIOGLOW Robot Simulator | AI Future FLL</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/ai%20future%20logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #1d9e6e;
+      --green-dark: #136d4b;
+      --green-light: #e6f7f0;
+      --glow: #f0c130;
+      --blue: #2870c9;
+      --coral: #e8583a;
+      --ink: #1a2a22;
+      --muted: #5e6e65;
+      --line: #daeadf;
+      --bg: #f4faf6;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: hidden; }
+    body { font-family: Inter, system-ui, sans-serif; color: var(--ink); background: var(--bg); }
+    a { color: inherit; text-decoration: none; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(255,255,255,0.94); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar-inner {
+      max-width: 1280px; margin: 0 auto; padding: 12px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; }
+    .brand img { width: 32px; height: 32px; object-fit: contain; }
+    .top-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .back-link {
+      border: 1.5px solid var(--line); border-radius: 50px; padding: 8px 16px;
+      font-size: 13px; font-weight: 800; color: var(--green-dark); background: white;
+    }
+    .back-link:hover { border-color: var(--green); }
+
+    .page { max-width: 1280px; margin: 0 auto; padding: 22px 20px 60px; }
+
+    .sim-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 420px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .field-card {
+      background: white; border: 1.5px solid var(--line); border-radius: var(--radius);
+      padding: 14px; min-width: 0;
+    }
+    .field-wrap { position: relative; }
+    canvas { display: block; width: 100%; border-radius: 10px; }
+
+    .hud {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; align-items: center;
+    }
+    .hud-stat {
+      background: var(--bg); border: 1px solid var(--line); border-radius: 8px;
+      padding: 6px 12px; font-size: 12px; font-weight: 800; color: var(--muted);
+    }
+    .hud-stat b { color: var(--ink); font-variant-numeric: tabular-nums; }
+    .hud-spacer { flex: 1; }
+    .hud-hint { font-size: 11px; color: var(--muted); font-weight: 600; }
+
+    .panel {
+      background: white; border: 1.5px solid var(--line); border-radius: var(--radius);
+      padding: 16px; min-width: 0;
+    }
+    .panel + .panel { margin-top: 14px; }
+    .panel-title { font-size: 14px; font-weight: 900; margin-bottom: 4px; }
+    .panel-sub { font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+
+    .mode-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+    .mode-tab {
+      flex: 1; background: var(--bg); border: 1.5px solid var(--line); border-radius: 8px;
+      padding: 8px; font-size: 12px; font-weight: 800; color: var(--muted); cursor: pointer;
+      font-family: inherit; text-align: center;
+    }
+    .mode-tab.active { background: var(--green); border-color: var(--green); color: white; }
+
+    #codeArea {
+      width: 100%; height: 240px; resize: vertical;
+      background: #1e1e2e; color: #cdd6f4; border: none; border-radius: 10px;
+      padding: 12px 14px; font-size: 13px; line-height: 1.6;
+      font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+    }
+    #codeArea:focus { outline: 2px solid var(--green); }
+
+    .btn-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .btn {
+      border: none; border-radius: 50px; padding: 10px 20px;
+      font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit;
+      background: var(--green); color: white; transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn.outline { background: white; color: var(--green-dark); border: 1.5px solid var(--green); }
+    .btn.danger { background: white; color: var(--coral); border: 1.5px solid var(--coral); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .code-msg { margin-top: 8px; font-size: 12px; font-weight: 700; min-height: 18px; }
+    .code-msg.error { color: var(--coral); }
+    .code-msg.success { color: var(--green-dark); }
+    .code-msg.running { color: var(--blue); }
+
+    .cmd-list { font-size: 12px; line-height: 1.9; color: var(--muted); }
+    .cmd-list code {
+      background: var(--bg); border: 1px solid var(--line); border-radius: 5px;
+      padding: 1px 7px; font-size: 11.5px; font-weight: 700; color: var(--green-dark);
+    }
+
+    .key-grid { display: grid; grid-template-columns: repeat(3, 44px); gap: 5px; justify-content: center; margin: 8px 0; }
+    .key {
+      background: var(--bg); border: 1.5px solid var(--line); border-radius: 8px;
+      height: 40px; display: grid; place-items: center; font-size: 15px; font-weight: 900; color: var(--muted);
+      user-select: none; cursor: pointer;
+    }
+    .key.pressed { background: var(--green); border-color: var(--green); color: white; }
+    .key.blank { visibility: hidden; }
+
+    .missions-strip { display: flex; flex-wrap: wrap; gap: 6px; }
+    .mission-chip {
+      background: var(--bg); border: 1.5px solid var(--line); border-radius: 50px;
+      padding: 6px 13px; font-size: 12px; font-weight: 800; color: var(--muted); cursor: pointer; font-family: inherit;
+    }
+    .mission-chip:hover { border-color: var(--green); color: var(--green-dark); }
+    .mission-chip.done { background: var(--green-light); border-color: var(--green); color: var(--green-dark); }
+
+    .level-grid { display: grid; gap: 8px; }
+    .level-card {
+      width: 100%; text-align: left; background: var(--bg); border: 1.5px solid var(--line);
+      border-radius: 10px; padding: 10px 12px; cursor: pointer; font-family: inherit;
+    }
+    .level-card:hover { border-color: var(--green); }
+    .level-card.active { background: var(--green-light); border-color: var(--green); }
+    .level-card.done { border-color: var(--green); }
+    .level-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; font-weight: 900; color: var(--ink); }
+    .level-title span:last-child { color: var(--green-dark); font-size: 11px; white-space: nowrap; }
+    .level-desc { margin-top: 4px; font-size: 11px; line-height: 1.4; color: var(--muted); font-weight: 650; }
+    .level-route { margin-top: 7px; display: flex; flex-wrap: wrap; gap: 5px; }
+    .route-pill {
+      background: white; border: 1px solid var(--line); border-radius: 50px; padding: 3px 7px;
+      font-size: 10px; font-weight: 850; color: var(--green-dark);
+    }
+
+    .file-tabs { display: flex; gap: 6px; margin: 10px 0 8px; flex-wrap: wrap; }
+    .file-tab {
+      background: var(--bg); border: 1.5px solid var(--line); border-radius: 8px;
+      padding: 7px 10px; font-size: 12px; font-weight: 850; color: var(--muted); cursor: pointer; font-family: inherit;
+    }
+    .file-tab.active { background: #1e1e2e; color: #cdd6f4; border-color: #1e1e2e; }
+    .file-note {
+      margin-top: 8px; background: var(--green-light); color: var(--green-dark); border-radius: 8px;
+      padding: 8px 10px; font-size: 11px; font-weight: 700; line-height: 1.45;
+    }
+
+    .cfg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .cfg-label {
+      display: block; font-size: 10px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--muted); margin-bottom: 4px;
+    }
+    .cfg-input {
+      width: 100%; border: 1.5px solid var(--line); border-radius: 8px;
+      padding: 8px 10px; font-size: 13px; font-weight: 700; font-family: inherit;
+    }
+    .cfg-input:focus { outline: none; border-color: var(--green); }
+    .cfg-readout {
+      margin-top: 10px; font-size: 12px; font-weight: 700; color: var(--green-dark);
+      background: var(--green-light); border-radius: 8px; padding: 8px 12px; line-height: 1.5;
+    }
+
+    @media (max-width: 980px) {
+      .sim-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><img src="/ai%20future%20logo.png" alt="AI Future"> BIOGLOW Robot Simulator</div>
+      <div class="top-links">
+        <a class="back-link" href="/fll-hub/coding-guide">📖 Coding Guide</a>
+        <a class="back-link" href="/fll-hub/student">← My dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="sim-layout">
+      <div>
+        <div class="field-card">
+          <div class="field-wrap">
+            <canvas id="field" width="1800" height="872"></canvas>
+          </div>
+          <div class="hud">
+            <span class="hud-stat">X <b id="hudX">0</b> mm</span>
+            <span class="hud-stat">Y <b id="hudY">0</b> mm</span>
+            <span class="hud-stat">Heading <b id="hudH">0</b>°</span>
+            <span class="hud-stat">Odometer <b id="hudOdo">0</b> mm</span>
+            <span class="hud-stat">Wheel rotations <b id="hudRot">0.0</b></span>
+            <span class="hud-stat">⏱ <b id="hudTime">0.0</b> s</span>
+            <span class="hud-spacer"></span>
+            <span class="hud-hint">Table 93″×45″ (2362×1143 mm) · Mat 92.75″×44.75″</span>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:14px">
+          <div class="panel-title">Level path</div>
+          <div class="panel-sub" id="levelObjective">Complete the checkpoints in order. The blue route shows the mission path your code should follow.</div>
+          <div class="missions-strip" id="missionStrip"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="mode-tabs">
+            <button class="mode-tab active" id="tabCode" onclick="setMode('code')">🐍 Code mode</button>
+            <button class="mode-tab" id="tabDrive" onclick="setMode('drive')">🕹️ Drive mode</button>
+          </div>
+
+          <div id="codePanel">
+            <div class="panel-sub">Write MicroPython/Pybricks code like you use on the SPIKE Prime. Press Compile &amp; Run to validate the file and drive the robot.</div>
+            <div class="file-tabs" id="fileTabs"></div>
+            <textarea id="codeArea" spellcheck="false"></textarea>
+            <div class="btn-row">
+              <button class="btn" id="runBtn" onclick="runCode()">Compile &amp; Run</button>
+              <button class="btn danger" id="stopBtn" onclick="stopRun()" disabled>■ Stop</button>
+              <button class="btn outline" onclick="resetRobot()">↺ Reset robot</button>
+              <button class="btn outline" onclick="loadStarterForLevel()">Starter code</button>
+            </div>
+            <div class="code-msg" id="codeMsg"></div>
+            <div class="file-note">Simulator files: <strong>main.py</strong> is editable. <strong>robot_setup.py</strong> is a reference file with your drive base setup. Attachment motors like RAM/LAM are shown as comments only because this simulator focuses on driving paths.</div>
+          </div>
+
+          <div id="drivePanel" style="display:none">
+            <div class="panel-sub">Use the <strong>arrow keys</strong> (or WASD) on your keyboard — or tap the buttons. R resets.</div>
+            <div class="key-grid">
+              <div class="key blank"></div><div class="key" data-key="up">▲</div><div class="key blank"></div>
+              <div class="key" data-key="left">◀</div><div class="key" data-key="down">▼</div><div class="key" data-key="right">▶</div>
+            </div>
+            <div class="btn-row" style="justify-content:center">
+              <button class="btn outline" onclick="resetRobot()">↺ Reset robot</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Levels</div>
+          <div class="panel-sub">Each level generates a route. Students code the robot to hit every checkpoint in order.</div>
+          <div class="level-grid" id="levelGrid"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">📖 Pybricks commands that run here</div>
+          <div class="cmd-list">
+            <code>robot.straight(500)</code> — drive forward 500 mm (negative = reverse)<br>
+            <code>rotations(2)</code> — drive 2 wheel rotations (standard wheel: 2 × 17.6 cm)<br>
+            <code>robot.turn(90)</code> — turn right 90° (negative = left)<br>
+            <code>robot.drive(200, 30)</code> — arc: 200 mm/s while turning 30°/s, until <code>robot.stop()</code><br>
+            <code>wait(1000)</code> — pause for 1000 ms<br>
+            <code>hub.speaker.beep()</code> — play a beep &amp; flash the robot<br>
+            <code>robot.settings(straight_speed=720)</code> — set straight speed in mm/s<br>
+            <code>if hub.imu.ready():</code> — accepted; indented robot commands inside will run
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">⚙️ Robot setup</div>
+          <div class="panel-sub">Standard SPIKE Prime values are pre-loaded. Match these to YOUR robot and the code you write here will behave the same in real life.</div>
+          <div class="cfg-grid">
+            <div>
+              <label class="cfg-label" for="cfgWheel">Wheel diameter (mm)</label>
+              <input class="cfg-input" id="cfgWheel" type="number" min="20" max="120" step="0.1">
+            </div>
+            <div>
+              <label class="cfg-label" for="cfgAxle">Axle track (mm)</label>
+              <input class="cfg-input" id="cfgAxle" type="number" min="50" max="250" step="1">
+            </div>
+            <div>
+              <label class="cfg-label" for="cfgW">Robot width (mm)</label>
+              <input class="cfg-input" id="cfgW" type="number" min="80" max="400" step="1">
+            </div>
+            <div>
+              <label class="cfg-label" for="cfgL">Robot length (mm)</label>
+              <input class="cfg-input" id="cfgL" type="number" min="80" max="400" step="1">
+            </div>
+          </div>
+          <div class="cfg-readout" id="cfgReadout"></div>
+          <div class="btn-row">
+            <button class="btn outline" onclick="applyConfig()">Apply</button>
+            <button class="btn outline" onclick="resetConfig()">↺ Standard SPIKE values</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">💡 Try these challenges</div>
+          <div class="cmd-list">
+            1. Complete Level 1 using only <strong>robot.straight()</strong><br>
+            2. Complete Level 2 with one forward drive, one turn, and one final drive<br>
+            3. Complete any generated route without using drive mode<br>
+            4. Beat the clock: finish every level under 60 sim-seconds
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // ── Field model (official FLL dimensions) ──────────────────────────────
+    // Mission table inside walls: 93" x 45"       = 2362.2 x 1143.0 mm
+    // Challenge mat:              92.75" x 44.75" = 2355.85 x 1136.65 mm (sits inside the walls)
+    const FIELD_W = 2362.2, FIELD_H = 1143.0;   // table wall-to-wall — the robot's world
+    const MAT_W = 2355.85, MAT_H = 1136.65;     // printed mat, centered in the table
+    const MAT_X = (FIELD_W - MAT_W) / 2;
+    const MAT_Y = (FIELD_H - MAT_H) / 2;
+
+    const canvas = document.getElementById('field');
+    const ctx = canvas.getContext('2d');
+    const SCALE = canvas.width / FIELD_W; // px per mm
+
+    const fieldImg = new Image();
+    fieldImg.src = '/robotics%20lab/FLL%20Teams/2026-2027-bioglow/bioglow%20map.png';
+
+    // ── Robot configuration (standard SPIKE Prime, editable in Robot Setup) ─
+    // Standard small SPIKE wheel: 56 mm diameter → one rotation = ~175.93 mm (17.6 cm)
+    const STANDARD = { wheelDiameter: 56, axleTrack: 114, robotW: 160, robotL: 180 };
+    let cfg = { ...STANDARD };
+    try {
+      const saved = JSON.parse(localStorage.getItem('bioglow-sim-config') || 'null');
+      if (saved) cfg = { ...STANDARD, ...saved };
+    } catch (e) { /* use defaults */ }
+
+    function wheelCirc() { return Math.PI * cfg.wheelDiameter; } // mm per wheel rotation
+
+    const START = { x: 260, y: FIELD_H - 200, heading: 0 }; // bottom-left launch zone, facing "north"
+
+    // Landmarks (mm, measured off the map proportions)
+    const TARGETS = [
+      { id: 'bridge',  label: '🌉 Bridge',        x: 1390, y: 560,  r: 90 },
+      { id: 'orchard', label: '🌳 Orchard',       x: 1290, y: 330,  r: 110 },
+      { id: 'forest',  label: '🍂 Dying Forest',  x: 480,  y: 250,  r: 120 },
+      { id: 'field',   label: '⚽ Soccer Field',   x: 1930, y: 430,  r: 100 },
+      { id: 'launch2', label: '🏁 Right Launch',  x: 2130, y: 900,  r: 130 },
+    ];
+    const targetById = Object.fromEntries(TARGETS.map(t => [t.id, t]));
+    const LEVELS = [
+      { id: 'level-1', title: 'Level 1: Bridge Out-and-Back', desc: 'A launch path to the bridge, then reverse home.', route: ['bridge'], starter: [{ cmd: 'turn', v: 71 }, { cmd: 'straight', v: 1193 }, { cmd: 'beep' }, { cmd: 'straight', v: -1193 }], hint: 'Turn toward the bridge, drive the measured distance, then reverse home.' },
+      { id: 'level-2', title: 'Level 2: Orchard Turn', desc: 'Drive from launch to the orchard checkpoint.', route: ['orchard'], starter: [{ cmd: 'turn', v: 59 }, { cmd: 'straight', v: 1199 }], hint: 'Use one turn from launch, then one long straight drive.' },
+      { id: 'level-3', title: 'Level 3: Forest Rescue', desc: 'Reach the dying forest from launch.', route: ['forest'], starter: [{ cmd: 'turn', v: 18 }, { cmd: 'straight', v: 727 }], hint: 'A small right turn aims at the forest. Tune the final distance.' },
+      { id: 'level-4', title: 'Level 4: Field Sweep', desc: 'Visit the bridge, then the soccer field, in one program.', route: ['bridge', 'field'], starter: [{ cmd: 'turn', v: 71 }, { cmd: 'straight', v: 1193 }, { cmd: 'beep' }, { cmd: 'turn', v: 5 }, { cmd: 'straight', v: 555 }], hint: 'The second checkpoint only counts after the first one is reached.' },
+      { id: 'level-5', title: 'Level 5: Generated Mission Run', desc: 'A multi-stop route across the Bio Glow field.', route: ['bridge', 'orchard', 'field', 'launch2'], starter: [{ cmd: 'turn', v: 71 }, { cmd: 'straight', v: 1193 }, { cmd: 'beep' }, { cmd: 'turn', v: -95 }, { cmd: 'straight', v: 251 }, { cmd: 'turn', v: 122 }, { cmd: 'straight', v: 648 }, { cmd: 'turn', v: 58 }, { cmd: 'straight', v: 511 }], hint: 'Break the path into straight/turn pairs and test one checkpoint at a time.' },
+    ];
+    let currentLevelIndex = 0;
+    let currentCheckpoint = 0;
+    const completedLevels = new Set(JSON.parse(localStorage.getItem('bioglow-sim-levels') || '[]'));
+    let progressLoaded = false;
+    const done = new Set();
+
+    // Robot state (x, y in mm; heading degrees, 0 = up/north, positive = clockwise)
+    let robot = { ...START };
+    let trail = [];
+    let odometer = 0;
+    let simTime = 0;
+    let straightSpeed = 300; // mm/s
+    const TURN_SPEED = 180;  // deg/s
+    let beepFlash = 0;
+    let activeFile = 'main.py';
+    const files = {
+      'main.py': '',
+      'robot_setup.py': `from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor
+from pybricks.robotics import DriveBase
+from pybricks.parameters import Port, Direction
+
+hub = PrimeHub()
+left_motor = Motor(Port.B, Direction.CLOCKWISE)
+right_motor = Motor(Port.C, Direction.COUNTERCLOCKWISE)
+
+wheel_diameter = 56
+axle_track = 122
+robot = DriveBase(left_motor, right_motor, wheel_diameter, axle_track)
+
+robot.settings(straight_speed=720, straight_acceleration=400, turn_rate=600, turn_acceleration=400)
+hub.imu.reset_heading(0)`
+    };
+
+    function starterCodeForLevel(level) {
+      const body = [];
+      body.push('from pybricks.hubs import PrimeHub');
+      body.push('from pybricks.pupdevices import Motor');
+      body.push('from pybricks.robotics import DriveBase');
+      body.push('from pybricks.parameters import Port, Direction');
+      body.push('');
+      body.push('hub = PrimeHub()');
+      body.push('left_motor = Motor(Port.B, Direction.CLOCKWISE)');
+      body.push('right_motor = Motor(Port.C, Direction.COUNTERCLOCKWISE)');
+      body.push('');
+      body.push('wheel_diameter = 56');
+      body.push('axle_track = 122');
+      body.push('robot = DriveBase(left_motor, right_motor, wheel_diameter, axle_track)');
+      body.push('robot.settings(straight_speed=720, straight_acceleration=400, turn_rate=600, turn_acceleration=400)');
+      body.push('hub.imu.reset_heading(0)');
+      body.push('');
+      body.push(`# ${level.title}`);
+      body.push(`# Goal: ${level.route.map(id => targetById[id].label.replace(/[^\w\s-]/g, '').trim()).join(' -> ')}`);
+      body.push(`# Hint: ${level.hint}`);
+      body.push('if hub.imu.ready():');
+      for (const step of level.starter) {
+        if (step.cmd === 'beep') body.push('    hub.speaker.beep()');
+        if (step.cmd === 'turn') body.push(`    robot.turn(${step.v})`);
+        if (step.cmd === 'straight') body.push(`    robot.straight(${step.v})`);
+      }
+      return body.join('\n');
+    }
+
+    // ── Rendering ──────────────────────────────────────────────────────────
+    function mmToPx(x, y) { return [x * SCALE, y * SCALE]; }
+    function currentLevel() { return LEVELS[currentLevelIndex]; }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // table surface (border walls) with the mat centered inside
+      ctx.fillStyle = '#3a3a3a';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      const [mx, my] = mmToPx(MAT_X, MAT_Y);
+      const matW = MAT_W * SCALE, matH = MAT_H * SCALE;
+      if (fieldImg.complete && fieldImg.naturalWidth) {
+        ctx.drawImage(fieldImg, mx, my, matW, matH);
+      } else {
+        ctx.fillStyle = '#dcefe2';
+        ctx.fillRect(mx, my, matW, matH);
+      }
+
+      // targets
+      for (const t of TARGETS) {
+        const [tx, ty] = mmToPx(t.x, t.y);
+        ctx.beginPath();
+        ctx.arc(tx, ty, t.r * SCALE, 0, Math.PI * 2);
+        ctx.fillStyle = done.has(t.id) ? 'rgba(29,158,110,0.35)' : 'rgba(240,193,48,0.30)';
+        ctx.fill();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = done.has(t.id) ? '#1d9e6e' : '#c79a10';
+        ctx.setLineDash(done.has(t.id) ? [] : [8, 6]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.font = '900 22px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#1a2a22';
+        ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+        ctx.lineWidth = 5;
+        const label = (done.has(t.id) ? '✓ ' : '') + t.label;
+        ctx.strokeText(label, tx, ty - t.r * SCALE - 10);
+        ctx.fillText(label, tx, ty - t.r * SCALE - 10);
+      }
+
+      // generated level route
+      const route = currentLevel().route.map(id => targetById[id]).filter(Boolean);
+      if (route.length) {
+        ctx.beginPath();
+        const [sx, sy] = mmToPx(START.x, START.y);
+        ctx.moveTo(sx, sy);
+        for (const t of route) {
+          const [tx, ty] = mmToPx(t.x, t.y);
+          ctx.lineTo(tx, ty);
+        }
+        ctx.strokeStyle = 'rgba(40,112,201,0.72)';
+        ctx.lineWidth = 6;
+        ctx.setLineDash([14, 10]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        route.forEach((t, index) => {
+          const [tx, ty] = mmToPx(t.x, t.y);
+          ctx.beginPath();
+          ctx.arc(tx, ty, 18, 0, Math.PI * 2);
+          ctx.fillStyle = index < currentCheckpoint ? '#1d9e6e' : '#2870c9';
+          ctx.fill();
+          ctx.font = '900 18px Inter, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = 'white';
+          ctx.fillText(String(index + 1), tx, ty);
+          ctx.textBaseline = 'alphabetic';
+        });
+      }
+
+      // trail
+      if (trail.length > 1) {
+        ctx.beginPath();
+        const [sx, sy] = mmToPx(trail[0].x, trail[0].y);
+        ctx.moveTo(sx, sy);
+        for (const p of trail) {
+          const [px, py] = mmToPx(p.x, p.y);
+          ctx.lineTo(px, py);
+        }
+        ctx.strokeStyle = 'rgba(40,112,201,0.85)';
+        ctx.lineWidth = 4;
+        ctx.lineJoin = 'round';
+        ctx.stroke();
+      }
+
+      // robot
+      const [rx, ry] = mmToPx(robot.x, robot.y);
+      const rad = robot.heading * Math.PI / 180;
+      ctx.save();
+      ctx.translate(rx, ry);
+      ctx.rotate(rad);
+      const w = cfg.robotW * SCALE, l = cfg.robotL * SCALE;
+      // body
+      ctx.fillStyle = beepFlash > 0 ? '#f0c130' : '#2b2b3d';
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 3;
+      roundRect(-w/2, -l/2, w, l, 8);
+      ctx.fill(); ctx.stroke();
+      // wheels
+      ctx.fillStyle = '#111';
+      ctx.fillRect(-w/2 - 5, -l*0.28, 6, l*0.32);
+      ctx.fillRect(w/2 - 1,  -l*0.28, 6, l*0.32);
+      // direction arrow
+      ctx.beginPath();
+      ctx.moveTo(0, -l/2 + 6);
+      ctx.lineTo(-w*0.22, -l*0.12);
+      ctx.lineTo(w*0.22, -l*0.12);
+      ctx.closePath();
+      ctx.fillStyle = '#1d9e6e';
+      ctx.fill();
+      ctx.restore();
+
+      // HUD
+      document.getElementById('hudX').textContent = Math.round(robot.x);
+      document.getElementById('hudY').textContent = Math.round(robot.y);
+      document.getElementById('hudH').textContent = Math.round(((robot.heading % 360) + 360) % 360);
+      document.getElementById('hudOdo').textContent = Math.round(odometer);
+      document.getElementById('hudRot').textContent = (odometer / wheelCirc()).toFixed(1);
+      document.getElementById('hudTime').textContent = simTime.toFixed(1);
+    }
+
+    function roundRect(x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    // ── Motion ─────────────────────────────────────────────────────────────
+    function clampToField() {
+      // keep the robot body inside the table walls (use half the diagonal-ish extent)
+      const m = Math.max(cfg.robotW, cfg.robotL) / 2;
+      robot.x = Math.max(m, Math.min(FIELD_W - m, robot.x));
+      robot.y = Math.max(m, Math.min(FIELD_H - m, robot.y));
+    }
+
+    function moveForward(mm) {
+      const rad = robot.heading * Math.PI / 180;
+      robot.x += Math.sin(rad) * mm;
+      robot.y -= Math.cos(rad) * mm;
+      clampToField();
+      odometer += Math.abs(mm);
+      trail.push({ x: robot.x, y: robot.y });
+      if (trail.length > 4000) trail.shift();
+      checkTargets();
+    }
+
+    function checkTargets() {
+      const route = currentLevel().route;
+      const nextId = route[currentCheckpoint];
+      if (!nextId) return;
+      const t = targetById[nextId];
+      const d = Math.hypot(robot.x - t.x, robot.y - t.y);
+      if (d < t.r) {
+        done.add(t.id);
+        currentCheckpoint++;
+        renderMissionStrip();
+        beepFlash = 12;
+        if (currentCheckpoint >= route.length) {
+          completedLevels.add(currentLevel().id);
+          localStorage.setItem('bioglow-sim-levels', JSON.stringify([...completedLevels]));
+          setMsg(`Level complete: ${currentLevel().title}`, 'success');
+          saveLevelProgress(currentLevel());
+        }
+        renderLevels();
+      }
+    }
+
+    function resetRobot() {
+      stopRun();
+      robot = { ...START };
+      trail = [{ x: robot.x, y: robot.y }];
+      odometer = 0;
+      simTime = 0;
+      done.clear();
+      currentCheckpoint = 0;
+      renderMissionStrip();
+      renderLevels();
+      setMsg('', '');
+      draw();
+    }
+
+    // ── Code mode: parse + execute ─────────────────────────────────────────
+    let program = [];       // queue of {cmd, args}
+    let running = false;
+    let current = null;     // active command state
+
+    const COMMANDS = {
+      straight:  { args: 1 },
+      rotations: { args: 1 },   // drive N wheel rotations (uses your wheel diameter)
+      turn:      { args: 1 },
+      drive:     { args: 2 },
+      stop:      { args: 0 },
+      wait:      { args: 1 },
+      beep:      { args: 0 },
+      speed:     { args: 1 },
+    };
+
+    function parseCode(text) {
+      const lines = text.split('\n');
+      const prog = [];
+      let ignoredAttachments = 0;
+      for (let i = 0; i < lines.length; i++) {
+        let line = lines[i].trim();
+        if (!line || line.startsWith('#')) continue;
+        if (/^(from|import)\b/.test(line)) continue;
+        if (/^(if|while)\s+.*:\s*$/.test(line)) continue;
+        if (/^(else|elif|for|def)\b.*:\s*$/.test(line)) continue;
+        if (/^(pass|return)\b/.test(line)) continue;
+        if (/^[a-z_][\w_]*\s*=/.test(line)) continue;
+        if (/^(hub\.imu\.reset_heading|robot\.use_gyro|print)\s*\(/.test(line)) continue;
+        if (/\.(run_time|run_angle|run_target|hold|run)\s*\(/.test(line)) { ignoredAttachments++; continue; }
+
+        const settings = line.match(/^robot\.settings\s*\((.*)\)\s*(#.*)?$/i);
+        if (settings) {
+          const speedMatch = settings[1].match(/straight_speed\s*=\s*(-?\d+(?:\.\d+)?)/);
+          if (speedMatch) prog.push({ cmd: 'speed', args: [Number(speedMatch[1])], line: i + 1 });
+          continue;
+        }
+
+        // strip common Pybricks object prefixes so real student code runs here.
+        line = line
+          .replace(/^robot\./, '')
+          .replace(/^hub\.speaker\./, '')
+          .replace(/^wait\s*\(/, 'wait(');
+        const m = line.match(/^([a-z_]+)\s*\(\s*([^)]*)\s*\)\s*(#.*)?$/i);
+        if (!m) throw new Error(`Line ${i + 1}: couldn't compile "${lines[i].trim()}"`);
+        let cmd = m[1].toLowerCase();
+        if (cmd === 'beep') cmd = 'beep';
+        const spec = COMMANDS[cmd];
+        if (!spec) throw new Error(`Line ${i + 1}: unsupported simulator command "${cmd}" — use robot.straight(), robot.turn(), robot.drive(), robot.stop(), wait(), or hub.speaker.beep()`);
+        const args = m[2].trim() === '' ? [] : m[2].split(',').map(s => Number(s.trim()));
+        if (args.length !== spec.args || args.some(Number.isNaN)) {
+          throw new Error(`Line ${i + 1}: ${cmd}() needs ${spec.args} number${spec.args === 1 ? '' : 's'}`);
+        }
+        prog.push({ cmd, args, line: i + 1 });
+      }
+      if (!prog.length) throw new Error('No commands found — write at least one command, like straight(500)');
+      if (ignoredAttachments) {
+        setMsg(`Compiled with ${ignoredAttachments} attachment motor line${ignoredAttachments === 1 ? '' : 's'} ignored in the simulator.`, 'running');
+      }
+      return prog;
+    }
+
+    function runCode() {
+      if (activeFile !== 'main.py') selectFile('main.py');
+      try {
+        files['main.py'] = document.getElementById('codeArea').value;
+        program = parseCode(document.getElementById('codeArea').value);
+      } catch (err) {
+        setMsg(err.message, 'error');
+        return;
+      }
+      robot = { ...START };
+      trail = [{ x: robot.x, y: robot.y }];
+      odometer = 0;
+      simTime = 0;
+      done.clear();
+      currentCheckpoint = 0;
+      renderMissionStrip();
+      renderLevels();
+      running = true;
+      current = null;
+      document.getElementById('runBtn').disabled = true;
+      document.getElementById('stopBtn').disabled = false;
+      setMsg(`Compiled main.py — running ${program.length} drive step${program.length === 1 ? '' : 's'}…`, 'running');
+    }
+
+    function stopRun() {
+      running = false;
+      program = [];
+      current = null;
+      document.getElementById('runBtn').disabled = false;
+      document.getElementById('stopBtn').disabled = true;
+    }
+
+    function stepProgram(dt) {
+      if (!current) {
+        const next = program.shift();
+        if (!next) {
+          stopRun();
+          const levelDone = currentCheckpoint >= currentLevel().route.length;
+          setMsg(levelDone ? `Program finished - ${currentLevel().title} complete` : `Program finished - ${currentCheckpoint}/${currentLevel().route.length} checkpoints reached`, levelDone ? 'success' : 'error');
+          return;
+          setMsg(`✓ Program finished — ${done.size}/${TARGETS.length} targets reached`, 'success');
+          return;
+        }
+        current = { ...next, progress: 0 };
+        // rotations(n) is just straight() measured in wheel rotations
+        if (current.cmd === 'rotations') {
+          current = { cmd: 'straight', args: [current.args[0] * wheelCirc()], line: current.line, progress: 0 };
+        }
+        if (current.cmd === 'beep') { beepFlash = 14; playBeep(); current = null; return; }
+        if (current.cmd === 'speed') { straightSpeed = Math.max(50, Math.min(1000, current.args[0])); current = null; return; }
+        if (current.cmd === 'stop') { current = null; return; }
+      }
+      const c = current;
+      if (c.cmd === 'straight') {
+        const target = c.args[0];
+        const step = Math.sign(target) * straightSpeed * dt;
+        const remaining = target - c.progress;
+        const move = Math.abs(step) >= Math.abs(remaining) ? remaining : step;
+        moveForward(move);
+        c.progress += move;
+        if (Math.abs(c.progress - target) < 0.01) current = null;
+      } else if (c.cmd === 'turn') {
+        const target = c.args[0];
+        const step = Math.sign(target) * TURN_SPEED * dt;
+        const remaining = target - c.progress;
+        const rot = Math.abs(step) >= Math.abs(remaining) ? remaining : step;
+        robot.heading += rot;
+        c.progress += rot;
+        if (Math.abs(c.progress - target) < 0.01) current = null;
+      } else if (c.cmd === 'drive') {
+        // arc until a stop() — runs max 5s as a safety net
+        moveForward(c.args[0] * dt);
+        robot.heading += c.args[1] * dt;
+        c.progress += dt;
+        if (program[0] && program[0].cmd === 'stop') { if (c.progress >= 0) {} }
+        if (c.progress >= 5) current = null; // safety timeout
+        else if (program.length && program[0].cmd === 'stop') {
+          // let stop() interrupt after 1 simulated second of arcing
+          if (c.progress >= 1) { current = null; }
+        }
+      } else if (c.cmd === 'wait') {
+        c.progress += dt * 1000;
+        if (c.progress >= c.args[0]) current = null;
+      }
+    }
+
+    // ── Drive mode: keyboard ───────────────────────────────────────────────
+    let mode = 'code';
+    const keys = { up: false, down: false, left: false, right: false };
+    const KEYMAP = {
+      ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
+      w: 'up', s: 'down', a: 'left', d: 'right',
+      W: 'up', S: 'down', A: 'left', D: 'right'
+    };
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'r' || e.key === 'R') { resetRobot(); return; }
+      const k = KEYMAP[e.key];
+      if (k && mode === 'drive') { keys[k] = true; e.preventDefault(); markKey(k, true); }
+    });
+    document.addEventListener('keyup', (e) => {
+      const k = KEYMAP[e.key];
+      if (k) { keys[k] = false; markKey(k, false); }
+    });
+    // touch buttons
+    document.querySelectorAll('.key[data-key]').forEach(el => {
+      const k = el.dataset.key;
+      const on = (e) => { e.preventDefault(); keys[k] = true; markKey(k, true); };
+      const off = () => { keys[k] = false; markKey(k, false); };
+      el.addEventListener('mousedown', on); el.addEventListener('mouseup', off); el.addEventListener('mouseleave', off);
+      el.addEventListener('touchstart', on); el.addEventListener('touchend', off);
+    });
+    function markKey(k, pressed) {
+      const el = document.querySelector(`.key[data-key="${k}"]`);
+      if (el) el.classList.toggle('pressed', pressed);
+    }
+
+    function setMode(m) {
+      mode = m;
+      document.getElementById('tabCode').classList.toggle('active', m === 'code');
+      document.getElementById('tabDrive').classList.toggle('active', m === 'drive');
+      document.getElementById('codePanel').style.display = m === 'code' ? '' : 'none';
+      document.getElementById('drivePanel').style.display = m === 'drive' ? '' : 'none';
+      if (m === 'drive') stopRun();
+    }
+
+    // ── Sound ──────────────────────────────────────────────────────────────
+    let audioCtx = null;
+    function playBeep() {
+      try {
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+        osc.connect(gain).connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.25);
+      } catch (e) { /* sound optional */ }
+    }
+
+    // ── Robot setup panel ──────────────────────────────────────────────────
+    function fillConfigInputs() {
+      document.getElementById('cfgWheel').value = cfg.wheelDiameter;
+      document.getElementById('cfgAxle').value = cfg.axleTrack;
+      document.getElementById('cfgW').value = cfg.robotW;
+      document.getElementById('cfgL').value = cfg.robotL;
+      updateConfigReadout();
+    }
+
+    function updateConfigReadout() {
+      const circ = wheelCirc();
+      document.getElementById('cfgReadout').innerHTML =
+        `One wheel rotation = <b>${(circ / 10).toFixed(1)} cm</b> (${circ.toFixed(1)} mm)` +
+        (Math.abs(cfg.wheelDiameter - 56) < 0.01 ? ' — standard SPIKE small wheel ✓' : '');
+    }
+
+    function applyConfig() {
+      const num = (id, min, max, fallback) => {
+        const v = Number(document.getElementById(id).value);
+        return Number.isFinite(v) ? Math.max(min, Math.min(max, v)) : fallback;
+      };
+      cfg.wheelDiameter = num('cfgWheel', 20, 120, STANDARD.wheelDiameter);
+      cfg.axleTrack = num('cfgAxle', 50, 250, STANDARD.axleTrack);
+      cfg.robotW = num('cfgW', 80, 400, STANDARD.robotW);
+      cfg.robotL = num('cfgL', 80, 400, STANDARD.robotL);
+      localStorage.setItem('bioglow-sim-config', JSON.stringify(cfg));
+      fillConfigInputs();
+      clampToField();
+      draw();
+    }
+
+    function resetConfig() {
+      cfg = { ...STANDARD };
+      localStorage.setItem('bioglow-sim-config', JSON.stringify(cfg));
+      fillConfigInputs();
+      clampToField();
+      draw();
+    }
+
+    // ── UI helpers ─────────────────────────────────────────────────────────
+    function setMsg(text, cls) {
+      const el = document.getElementById('codeMsg');
+      el.textContent = text;
+      el.className = `code-msg ${cls || ''}`;
+    }
+
+    function renderMissionStrip() {
+      const route = currentLevel().route.map(id => targetById[id]);
+      document.getElementById('levelObjective').textContent = `${currentLevel().title}: ${currentLevel().desc}`;
+      document.getElementById('missionStrip').innerHTML = route.map((t, index) => `
+        <button class="mission-chip ${done.has(t.id) ? 'done' : ''}">${done.has(t.id) ? '✓ ' : `${index + 1}. `}${t.label}</button>
+      `).join('');
+    }
+
+    function renderLevels() {
+      document.getElementById('levelGrid').innerHTML = LEVELS.map((level, index) => `
+        <button class="level-card ${index === currentLevelIndex ? 'active' : ''} ${completedLevels.has(level.id) ? 'done' : ''}" onclick="selectLevel(${index})">
+          <div class="level-title"><span>${level.title}</span><span>${completedLevels.has(level.id) ? 'Complete' : index === currentLevelIndex ? 'Active' : 'Open'}</span></div>
+          <div class="level-desc">${level.desc}</div>
+          <div class="level-route">${level.route.map((id, i) => `<span class="route-pill">${i + 1}. ${targetById[id].label}</span>`).join('')}</div>
+        </button>
+      `).join('');
+    }
+
+    function selectLevel(index) {
+      currentLevelIndex = index;
+      loadStarterForLevel();
+      resetRobot();
+    }
+
+    function renderFileTabs() {
+      document.getElementById('fileTabs').innerHTML = Object.keys(files).map(name => `
+        <button class="file-tab ${name === activeFile ? 'active' : ''}" onclick="selectFile('${name}')">${name}</button>
+      `).join('');
+    }
+
+    function selectFile(name) {
+      if (activeFile === 'main.py') files['main.py'] = document.getElementById('codeArea').value;
+      activeFile = name;
+      const area = document.getElementById('codeArea');
+      area.value = files[name];
+      area.readOnly = name !== 'main.py';
+      renderFileTabs();
+    }
+
+    function loadStarterForLevel() {
+      files['main.py'] = starterCodeForLevel(currentLevel());
+      if (activeFile === 'main.py') document.getElementById('codeArea').value = files['main.py'];
+      renderFileTabs();
+    }
+
+    async function loadSimulatorProgress() {
+      try {
+        const res = await fetch('/api/fll/simulator/progress', { credentials: 'same-origin' });
+        if (!res.ok) throw new Error(`Progress load failed (${res.status})`);
+        const data = await res.json();
+        const saved = Array.isArray(data.progress?.completedLevels) ? data.progress.completedLevels : [];
+        for (const levelId of saved) completedLevels.add(levelId);
+        localStorage.setItem('bioglow-sim-levels', JSON.stringify([...completedLevels]));
+        progressLoaded = true;
+        renderLevels();
+      } catch (err) {
+        progressLoaded = false;
+        renderLevels();
+      }
+    }
+
+    async function saveLevelProgress(level) {
+      try {
+        files['main.py'] = document.getElementById('codeArea').value;
+        const res = await fetch('/api/fll/simulator/progress', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            levelId: level.id,
+            route: level.route,
+            checkpoints: currentCheckpoint,
+            simTime,
+            odometer,
+            code: files['main.py']
+          })
+        });
+        if (!res.ok) throw new Error(`Progress save failed (${res.status})`);
+        const data = await res.json();
+        const saved = Array.isArray(data.progress?.completedLevels) ? data.progress.completedLevels : [];
+        for (const levelId of saved) completedLevels.add(levelId);
+        localStorage.setItem('bioglow-sim-levels', JSON.stringify([...completedLevels]));
+        renderLevels();
+      } catch (err) {
+        setMsg(`Level complete locally - sign into the FLL hub to save progress online.`, 'success');
+      }
+    }
+
+    // ── Main loop ──────────────────────────────────────────────────────────
+    // Physics runs on a timer with wall-clock dt (keeps working even when the
+    // browser throttles background tabs); drawing happens every tick.
+    let lastTs = performance.now();
+    function tick() {
+      const now = performance.now();
+      let dt = Math.min(0.1, (now - lastTs) / 1000);
+      lastTs = now;
+
+      if (running) {
+        // sub-step so big throttled dt jumps stay accurate
+        let remaining = dt;
+        while (remaining > 0 && running) {
+          const step = Math.min(0.02, remaining);
+          stepProgram(step);
+          simTime += step;
+          remaining -= step;
+        }
+      } else if (mode === 'drive') {
+        const driveSpeed = 420, turnSpeed = 160;
+        let moved = false;
+        if (keys.up)    { moveForward(driveSpeed * dt); moved = true; }
+        if (keys.down)  { moveForward(-driveSpeed * dt); moved = true; }
+        if (keys.left)  { robot.heading -= turnSpeed * dt; moved = true; }
+        if (keys.right) { robot.heading += turnSpeed * dt; moved = true; }
+        if (moved) simTime += dt;
+      }
+
+      if (beepFlash > 0) beepFlash--;
+      draw();
+    }
+
+    fieldImg.onload = draw;
+    fillConfigInputs();
+    loadStarterForLevel();
+    renderFileTabs();
+    resetRobot();
+    loadSimulatorProgress();
+    setInterval(tick, 16);
+  </script>
+</body>
+</html>

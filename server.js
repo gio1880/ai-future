@@ -36,6 +36,7 @@ const fllTeamSchedulesFile = path.join(fllHubDataDir, 'team-schedules.json');
 const fllSeasonSectionsFile = path.join(fllHubDataDir, 'season-sections.json');
 const fllMissionAnalysisFile = path.join(fllHubDataDir, 'mission-analysis.json');
 const fllLiveLessonFile = path.join(fllHubDataDir, 'live-lesson.json');
+const fllSimulatorProgressFile = path.join(fllHubDataDir, 'simulator-progress.json');
 const codeLabStudentsFile = path.join(__dirname, 'code-lab', 'data', 'students.json');
 const fllSessionCookie = 'fll_session';
 const fllDataFileNames = [
@@ -53,7 +54,8 @@ const fllDataFileNames = [
 	'timeline.json',
 	'announcements.json',
 	'resources.json',
-	'live-lesson.json'
+	'live-lesson.json',
+	'simulator-progress.json'
 ];
 const fllSessions = new Map();
 const campHubDir = path.join(__dirname, 'robotics lab', 'Summer Camp', '2026-summer-camp');
@@ -1033,7 +1035,8 @@ async function buildDataHealthReport() {
 		'team-members.json': 'runtime-roster',
 		'teams.json': 'runtime-teams',
 		'work-logs.json': 'runtime-submissions',
-		'live-lesson.json': 'runtime-live-state'
+		'live-lesson.json': 'runtime-live-state',
+		'simulator-progress.json': 'runtime-student-work'
 	};
 	const campClassifications = {
 		'camp-users.json': 'managed-summer-roster',
@@ -1454,6 +1457,15 @@ async function readFllLiveLesson() {
 
 async function writeFllLiveLesson(state) {
 	await writeJsonFile(fllLiveLessonFile, normalizeCampLiveLesson(state));
+}
+
+async function readFllSimulatorProgress() {
+	const progress = await readJsonFile(fllSimulatorProgressFile, []);
+	return Array.isArray(progress) ? progress : [];
+}
+
+async function writeFllSimulatorProgress(progress) {
+	await writeJsonFile(fllSimulatorProgressFile, Array.isArray(progress) ? progress : []);
 }
 
 // Student-facing slide: never leak the correct answer.
@@ -2127,6 +2139,8 @@ function summerDemoStudentTemplate(now = new Date().toISOString()) {
 		active: true,
 		demoAccount: true,
 		enrollments: [{ classId: 'summer-lego-robotics-1', weeks: ['week-1'] }],
+		fllUserId: 'fll-demo-student',
+		fllTeamId: 'team-demo',
 		portalUsername: 'demo',
 		summerGradeBand: 'Demo',
 		summerRosterSource,
@@ -2421,6 +2435,35 @@ function inferMasterFllTeamId(student) {
 	const enrollment = (Array.isArray(student.enrollments) ? student.enrollments : [])
 		.find((item) => String(item.classId || '').startsWith('fll-team-'));
 	return enrollment ? String(enrollment.classId).replace(/^fll-/, '') : '';
+}
+
+function masterStudentIsFllEnrolled(student, roster = null) {
+	if (!student || student.active === false || student.demoAccount === true) return false;
+	const classById = new Map((roster && Array.isArray(roster.classes) ? roster.classes : [])
+		.map((classItem) => [classItem.id, classItem]));
+	return (Array.isArray(student.enrollments) ? student.enrollments : []).some((item) => {
+		const classId = String(item.classId || '');
+		if (!classId) return false;
+		if (classId.startsWith('fll-')) return true;
+		return classById.get(classId)?.program === 'fll';
+	});
+}
+
+function publicFllMasterStudent(student, fllUsers = [], roster = null) {
+	const fllUser = student.fllUserId
+		? fllUsers.find((user) => user.id === student.fllUserId)
+		: fllUsers.find((user) => user.role === 'student' && normalizedPersonName(user.name) === normalizedPersonName(student.name));
+	return {
+		id: student.id,
+		name: student.name,
+		portalUsername: student.portalUsername || '',
+		fllUserId: fllUser?.id || student.fllUserId || '',
+		fllUsername: fllUser?.username || '',
+		teamId: fllUser?.teamId || inferMasterFllTeamId(student) || null,
+		active: student.active !== false,
+		enrollments: (Array.isArray(student.enrollments) ? student.enrollments : [])
+			.filter((item) => String(item.classId || '').startsWith('fll-') || (roster?.classes || []).find((classItem) => classItem.id === item.classId)?.program === 'fll')
+	};
 }
 
 function publicMasterRoster(roster, fllTeams = []) {
@@ -4468,14 +4511,100 @@ app.get(['/fll-hub/coach', '/fll-hub/coach/'], requireFllAuth, (req, res) => {
 	res.sendFile(path.join(fllHubDir, 'coach-dashboard.html'));
 });
 
+app.get(['/fll-hub/coding-guide', '/fll-hub/coding-guide/'], requireFllAuth, (req, res) => {
+	res.sendFile(path.join(fllHubDir, 'coding-guide.html'));
+});
+
+app.get(['/fll-hub/simulator', '/fll-hub/simulator/'], requireFllAuth, (req, res) => {
+	res.sendFile(path.join(fllHubDir, 'simulator.html'));
+});
+
+app.get('/api/fll/simulator/progress', requireFllAuth, async (req, res) => {
+	try {
+		const progress = await readFllSimulatorProgress();
+		const record = progress.find((item) => item && item.studentId === req.fllUser.id) || null;
+		return res.json({
+			success: true,
+			user: publicFllUser(req.fllUser),
+			progress: record || {
+				studentId: req.fllUser.id,
+				teamId: req.fllUser.teamId || null,
+				completedLevels: [],
+				levelRuns: {}
+			}
+		});
+	} catch (err) {
+		console.error('FLL simulator progress load error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading simulator progress' });
+	}
+});
+
+app.post('/api/fll/simulator/progress', requireFllAuth, requireFllStudent, async (req, res) => {
+	try {
+		const levelId = cleanMetaString(req.body.levelId || '', 40);
+		if (!/^level-\d+$/.test(levelId)) {
+			return res.status(400).json({ success: false, message: 'Invalid simulator level' });
+		}
+		const simTime = Number(req.body.simTime);
+		const odometer = Number(req.body.odometer);
+		const checkpoints = Number(req.body.checkpoints);
+		const route = Array.isArray(req.body.route)
+			? req.body.route.map((item) => cleanMetaString(item || '', 40)).filter(Boolean).slice(0, 12)
+			: [];
+		const code = cleanMetaString(req.body.code || '', 12000);
+		const now = new Date().toISOString();
+		const progress = await readFllSimulatorProgress();
+		let record = progress.find((item) => item && item.studentId === req.fllUser.id);
+		if (!record) {
+			record = {
+				studentId: req.fllUser.id,
+				studentName: req.fllUser.name,
+				teamId: req.fllUser.teamId || null,
+				completedLevels: [],
+				levelRuns: {},
+				createdAt: now
+			};
+			progress.push(record);
+		}
+		record.studentName = req.fllUser.name;
+		record.teamId = req.fllUser.teamId || null;
+		record.completedLevels = Array.isArray(record.completedLevels) ? record.completedLevels : [];
+		if (!record.completedLevels.includes(levelId)) record.completedLevels.push(levelId);
+		record.levelRuns = record.levelRuns && typeof record.levelRuns === 'object' ? record.levelRuns : {};
+		const existingRun = record.levelRuns[levelId] || {};
+		const run = {
+			levelId,
+			route,
+			checkpoints: Number.isFinite(checkpoints) ? Math.max(0, Math.round(checkpoints)) : route.length,
+			simTime: Number.isFinite(simTime) ? Math.max(0, Math.round(simTime * 10) / 10) : null,
+			odometer: Number.isFinite(odometer) ? Math.max(0, Math.round(odometer)) : null,
+			code,
+			completedAt: now
+		};
+		if (existingRun.bestSimTime == null || (run.simTime != null && run.simTime < existingRun.bestSimTime)) {
+			run.bestSimTime = run.simTime;
+		} else {
+			run.bestSimTime = existingRun.bestSimTime;
+		}
+		record.levelRuns[levelId] = run;
+		record.updatedAt = now;
+		await writeFllSimulatorProgress(progress);
+		return res.json({ success: true, progress: record });
+	} catch (err) {
+		console.error('FLL simulator progress save error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving simulator progress' });
+	}
+});
+
 app.get('/api/fll/coach/roster', requireFllAuth, requireFllCoach, async (req, res) => {
 	try {
-		const [teams, members, users, tasks, season] = await Promise.all([
+		const [teams, members, users, tasks, season, masterRoster] = await Promise.all([
 			readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
 			readJsonFile(fllTeamMembersFile, []),
 			readFllUsers(),
 			readJsonFile(fllTasksFile, []),
-			readJsonFile(path.join(fllHubDataDir, 'season.json'), {})
+			readJsonFile(path.join(fllHubDataDir, 'season.json'), {}),
+			readMasterRoster()
 		]);
 		const students = users
 			.filter((user) => user.role === 'student' && user.demoAccount !== true)
@@ -4486,6 +4615,10 @@ app.get('/api/fll/coach/roster', requireFllAuth, requireFllCoach, async (req, re
 				teamId: user.teamId || null,
 				active: user.active !== false
 			}));
+		const enrolledMasterStudents = normalizeMasterRoster(masterRoster).students
+			.filter((student) => masterStudentIsFllEnrolled(student, masterRoster))
+			.map((student) => publicFllMasterStudent(student, users, masterRoster))
+			.sort((a, b) => a.name.localeCompare(b.name));
 		return res.json({
 			success: true,
 			data: {
@@ -4493,6 +4626,7 @@ app.get('/api/fll/coach/roster', requireFllAuth, requireFllCoach, async (req, re
 				teams: Array.isArray(teams) ? teams : [],
 				members: Array.isArray(members) ? members : [],
 				students,
+				enrolledMasterStudents,
 				tasks: Array.isArray(tasks) ? tasks : [],
 				season
 			}
@@ -4533,8 +4667,43 @@ app.post('/api/fll/coach/teams', requireFllAuth, requireFllCoach, async (req, re
 			createdAt: new Date().toISOString()
 		};
 		teams.push(team);
-		await writeJsonFile(teamsFile, teams);
-		return res.status(201).json({ success: true, team });
+		const roster = await readMasterRoster();
+		const normalizedRoster = normalizeMasterRoster(roster);
+		const classId = `fll-${id}`;
+		if (!normalizedRoster.classes.some((classItem) => classItem.id === classId)) {
+			normalizedRoster.classes.push({
+				id: classId,
+				term: 'fall',
+				program: 'fll',
+				name: `FLL - ${name}`,
+				day: 'To be scheduled',
+				schedule: team.meetingDays,
+				active: true,
+				createdAt: new Date().toISOString()
+			});
+			normalizedRoster.updatedAt = new Date().toISOString();
+		}
+		await Promise.all([
+			writeJsonFile(teamsFile, teams),
+			writeMasterRoster(normalizedRoster)
+		]);
+		const masterStudentIds = Array.isArray(req.body.masterStudentIds)
+			? req.body.masterStudentIds.map((item) => cleanMetaString(item || '', 160)).filter(Boolean).slice(0, 40)
+			: [];
+		const addedStudents = [];
+		if (masterStudentIds.length) {
+			const rosterForSync = normalizeMasterRoster(await readMasterRoster());
+			for (const masterStudentId of masterStudentIds) {
+				const student = rosterForSync.students.find((candidate) => candidate.id === masterStudentId);
+				if (!student || !masterStudentIsFllEnrolled(student, rosterForSync)) continue;
+				setMasterStudentFllTeamEnrollment(student, id, rosterForSync);
+				await syncMasterStudentHubAccess(student, rosterForSync);
+				addedStudents.push(student.id);
+			}
+			rosterForSync.updatedAt = new Date().toISOString();
+			await writeMasterRoster(rosterForSync);
+		}
+		return res.status(201).json({ success: true, team, addedStudents });
 	} catch (err) {
 		console.error('FLL coach create team error:', err);
 		return res.status(500).json({ success: false, message: 'Server error creating team' });
@@ -4651,23 +4820,72 @@ async function createFllStudent({ name, username, password, teamId, role }, user
 	return { id, name, username: finalUsername, password: finalPassword, teamId: teamId || null };
 }
 
+function setMasterStudentFllTeamEnrollment(student, teamId, roster) {
+	const classId = teamId ? `fll-${teamId}` : '';
+	const classes = Array.isArray(roster?.classes) ? roster.classes : [];
+	const hasClass = classId && classes.some((classItem) => classItem.id === classId);
+	const enrollments = (Array.isArray(student.enrollments) ? student.enrollments : [])
+		.filter((item) => !String(item.classId || '').startsWith('fll-team-'));
+	if (hasClass) enrollments.push({ classId, weeks: [] });
+	student.enrollments = enrollments;
+	student.fllTeamId = hasClass ? teamId : '';
+	if (!Array.isArray(student.hubAccess)) student.hubAccess = inferMasterHubAccess(student);
+	if (!student.hubAccess.includes('fll-hub')) student.hubAccess.push('fll-hub');
+	student.updatedAt = new Date().toISOString();
+}
+
 app.post('/api/fll/coach/students', requireFllAuth, requireFllCoach, async (req, res) => {
 	try {
+		const masterStudentId = cleanMetaString(req.body.masterStudentId || '', 160);
 		const name = cleanMetaString(req.body.name || '', 80);
-		if (!name) {
+		if (!name && !masterStudentId) {
 			return res.status(400).json({ success: false, message: 'Student name is required' });
 		}
 		const username = cleanMetaString(req.body.username || '', 80).toLowerCase() || null;
 		const password = typeof req.body.password === 'string' && req.body.password.length >= 6 ? req.body.password : null;
 		const teamId = cleanMetaString(req.body.teamId || '', 80) || null;
 
-		const [users, members, teams] = await Promise.all([
+		const [users, members, teams, masterRoster] = await Promise.all([
 			readFllUsers(),
 			readJsonFile(fllTeamMembersFile, []),
-			readJsonFile(path.join(fllHubDataDir, 'teams.json'), [])
+			readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
+			readMasterRoster()
 		]);
 		if (teamId && !teams.some((team) => team.id === teamId)) {
 			return res.status(400).json({ success: false, message: 'Unknown team' });
+		}
+		if (masterStudentId) {
+			const roster = normalizeMasterRoster(masterRoster);
+			const student = roster.students.find((candidate) => candidate.id === masterStudentId);
+			if (!student || !masterStudentIsFllEnrolled(student, roster)) {
+				return res.status(400).json({ success: false, message: 'Choose an enrolled FLL student from the master roster' });
+			}
+			const targetTeamId = teamId || inferMasterFllTeamId(student) || null;
+			if (targetTeamId && !teams.some((team) => team.id === targetTeamId)) {
+				return res.status(400).json({ success: false, message: 'The student is enrolled for an unknown FLL team' });
+			}
+			if (targetTeamId) setMasterStudentFllTeamEnrollment(student, targetTeamId, roster);
+			else if (!Array.isArray(student.hubAccess) || !student.hubAccess.includes('fll-hub')) {
+				student.hubAccess = Array.from(new Set([...(Array.isArray(student.hubAccess) ? student.hubAccess : inferMasterHubAccess(student)), 'fll-hub']));
+			}
+			await syncMasterStudentHubAccess(student, roster);
+			roster.updatedAt = new Date().toISOString();
+			await writeMasterRoster(roster);
+			const nextUsers = await readFllUsers();
+			const fllAccount = student.fllUserId
+				? nextUsers.find((user) => user.id === student.fllUserId)
+				: nextUsers.find((user) => user.role === 'student' && normalizedPersonName(user.name) === normalizedPersonName(student.name));
+			return res.status(201).json({
+				success: true,
+				student: {
+					id: fllAccount?.id || student.fllUserId,
+					name: student.name,
+					username: fllAccount?.username || '',
+					password: 'Already set',
+					teamId: fllAccount?.teamId || targetTeamId || null,
+					fromMasterRoster: true
+				}
+			});
 		}
 		const existingUsernames = new Set(users.map((user) => user.username.toLowerCase()));
 		if (username && existingUsernames.has(username)) {
@@ -4781,6 +4999,16 @@ app.patch('/api/fll/coach/students/:id', requireFllAuth, requireFllCoach, async 
 			writeJsonFile(fllUsersFile, users),
 			writeJsonFile(fllTeamMembersFile, members)
 		]);
+		if (req.body.teamId !== undefined) {
+			const roster = normalizeMasterRoster(await readMasterRoster());
+			const masterStudent = roster.students.find((student) => student.fllUserId === user.id)
+				|| roster.students.find((student) => normalizedPersonName(student.name) === normalizedPersonName(user.name) && masterStudentIsFllEnrolled(student, roster));
+			if (masterStudent && masterStudentIsFllEnrolled(masterStudent, roster)) {
+				setMasterStudentFllTeamEnrollment(masterStudent, user.teamId || '', roster);
+				roster.updatedAt = new Date().toISOString();
+				await writeMasterRoster(roster);
+			}
+		}
 		return res.json({
 			success: true,
 			student: { id: user.id, name: user.name, username: user.username, teamId: user.teamId, active: user.active !== false },
@@ -6457,6 +6685,9 @@ app.use((req, res, next) => {
 			}
 			return res.sendFile(path.join(fllHubDir, 'student-dashboard.html'));
 		});
+	}
+	if (requestPath === `${fllStaticRoot}/simulator.html`) {
+		return requireFllAuth(req, res, () => res.redirect(302, '/fll-hub/simulator'));
 	}
 	if (requestPath === `${fllStaticRoot}/login.html`) {
 		return res.redirect(302, '/fll-hub/login');

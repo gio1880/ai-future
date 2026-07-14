@@ -196,5 +196,15 @@
     "role": "student",
     "teamId": "team-history-guardians",
     "active": true
+  },
+  {
+    "id": "fll-demo-student",
+    "name": "Demo Student",
+    "username": "fllhubdemo",
+    "password_hash": "6738260ad955a638cb596c35ad3e2e1a:ca54457af31eb3a23c20174519b1f700189106a7c60bf41b90f641ea345b97304993607482c919cc3623f6296712b6cdc98deec4bc943cfb293f60decccd2caa",
+    "role": "student",
+    "teamId": "team-demo",
+    "demoAccount": true,
+    "active": true
   }
 ]

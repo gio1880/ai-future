@@ -12,5 +12,12 @@
     "displayName": "Team One",
     "role": "Presentation + Team Share-out",
     "initials": "T1"
+  },
+  {
+    "teamId": "team-demo",
+    "studentId": "fll-demo-student",
+    "displayName": "Demo Student",
+    "role": "Demo account",
+    "initials": "DS"
   }
 ]

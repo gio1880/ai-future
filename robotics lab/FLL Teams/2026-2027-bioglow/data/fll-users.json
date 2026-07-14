@@ -52,5 +52,15 @@
     "role": "coach",
     "teamId": null,
     "active": true
+  },
+  {
+    "id": "fll-demo-student",
+    "name": "Demo Student",
+    "username": "fllhubdemo",
+    "password_hash": "95b03d9cb7a6e1baf628afab417b1d86:01a34869b28f1e60561ff161e9f118bade67dd02accd149d5539e8b28e3154539f0b1d143e09cbcf6b15b698594eb1fef17b6257a8796c9805d22d0036e3491f",
+    "role": "student",
+    "teamId": "team-demo",
+    "demoAccount": true,
+    "active": true
   }
 ]

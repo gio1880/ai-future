@@ -427,10 +427,15 @@
     <div class="panel" id="panel-add">
       <div class="form-card">
         <h2 class="form-title">Add a student</h2>
-        <p class="form-sub">Creates a login and (optionally) places them on a team. Leave username/password blank to auto-generate.</p>
+        <p class="form-sub">Choose from master roster students who are enrolled for FLL. Their FLL login and team membership will sync from the master roster.</p>
         <div class="field">
-          <label for="addName">Student name *</label>
-          <input id="addName" type="text" placeholder="e.g. Maya Rodriguez">
+          <label for="addMasterStudent">Enrolled master roster student</label>
+          <select id="addMasterStudent" onchange="syncAddStudentFields()"><option value="">Loading enrolled FLL students...</option></select>
+          <div class="field-hint">Only active master roster students with an FLL enrollment appear here.</div>
+        </div>
+        <div class="field">
+          <label for="addName">Student name</label>
+          <input id="addName" type="text" placeholder="Used only for a manual FLL-only login">
         </div>
         <div class="field">
           <label for="addTeam">Team</label>
@@ -444,7 +449,7 @@
           <label for="addPassword">Password (optional)</label>
           <input id="addPassword" type="text" placeholder="Auto-generated if blank (min 6 characters)">
         </div>
-        <button class="submit-btn" id="addBtn" onclick="addStudent()">Create student login</button>
+        <button class="submit-btn" id="addBtn" onclick="addStudent()">Add to FLL Hub</button>
         <div class="form-msg" id="addMsg"></div>
         <div id="addCreds"></div>
       </div>
@@ -487,6 +492,11 @@
         </div>
         <div class="field">
           <label><input id="teamReturning" type="checkbox" style="width:auto;margin-right:8px;">Returning team (was enrolled last season)</label>
+        </div>
+        <div class="field">
+          <label for="teamMasterStudents">Add enrolled master roster students</label>
+          <select id="teamMasterStudents" multiple size="8"></select>
+          <div class="field-hint">Only students already enrolled for FLL in the master roster appear here.</div>
         </div>
         <button class="submit-btn" id="teamBtn" onclick="createTeam()">Create team</button>
         <div class="form-msg" id="teamMsg"></div>
@@ -575,6 +585,7 @@
         renderTeams();
         renderStudents();
         fillTeamSelects();
+        fillMasterStudentSelect();
         fillCalendarFilters();
         renderCoachCalendar();
       } catch (err) {
@@ -685,6 +696,54 @@
       });
     }
 
+    function fillMasterStudentSelect() {
+      const select = document.getElementById('addMasterStudent');
+      if (!select) return;
+      const current = select.value;
+      const linkedIds = new Set((roster.students || []).map(s => s.id));
+      const options = (roster.enrolledMasterStudents || [])
+        .filter(s => !s.fllUserId || !linkedIds.has(s.fllUserId) || s.active)
+        .map(s => {
+          const team = s.teamId ? ` · ${teamLabel(s.teamId)}` : '';
+          const username = s.fllUsername ? ` · ${s.fllUsername}` : '';
+          return `<option value="${escapeHtml(s.id)}" data-team="${escapeHtml(s.teamId || '')}" data-name="${escapeHtml(s.name)}">${escapeHtml(s.name)}${team}${username}</option>`;
+        });
+      select.innerHTML = '<option value="">— Choose enrolled FLL student —</option>' + options.join('');
+      select.value = [...select.options].some(option => option.value === current) ? current : '';
+      const teamStudentSelect = document.getElementById('teamMasterStudents');
+      if (teamStudentSelect) {
+        const selected = new Set([...teamStudentSelect.selectedOptions].map(option => option.value));
+        teamStudentSelect.innerHTML = options.join('');
+        [...teamStudentSelect.options].forEach(option => { option.selected = selected.has(option.value); });
+      }
+      syncAddStudentFields();
+    }
+
+    function syncAddStudentFields() {
+      const select = document.getElementById('addMasterStudent');
+      const selected = select?.selectedOptions?.[0];
+      const masterId = select?.value || '';
+      const nameInput = document.getElementById('addName');
+      const teamSelect = document.getElementById('addTeam');
+      const usernameInput = document.getElementById('addUsername');
+      const passwordInput = document.getElementById('addPassword');
+      if (masterId && selected) {
+        nameInput.value = selected.dataset.name || '';
+        nameInput.disabled = true;
+        usernameInput.value = '';
+        passwordInput.value = '';
+        usernameInput.disabled = true;
+        passwordInput.disabled = true;
+        if (selected.dataset.team && [...teamSelect.options].some(option => option.value === selected.dataset.team)) {
+          teamSelect.value = selected.dataset.team;
+        }
+      } else {
+        nameInput.disabled = false;
+        usernameInput.disabled = false;
+        passwordInput.disabled = false;
+      }
+    }
+
     function credsTable(students) {
       return `
         <div class="creds-card">
@@ -726,13 +785,15 @@
       const msg = document.getElementById('addMsg');
       const btn = document.getElementById('addBtn');
       msg.textContent = ''; msg.className = 'form-msg';
+      const masterStudentId = document.getElementById('addMasterStudent').value;
       const name = document.getElementById('addName').value.trim();
-      if (!name) { msg.textContent = 'Enter the student name.'; msg.className = 'form-msg error'; return; }
+      if (!name && !masterStudentId) { msg.textContent = 'Choose an enrolled master roster student or enter a student name.'; msg.className = 'form-msg error'; return; }
       btn.disabled = true;
       try {
         const result = await api('/api/fll/coach/students', {
           method: 'POST',
           body: JSON.stringify({
+            masterStudentId: masterStudentId || undefined,
             name,
             username: document.getElementById('addUsername').value.trim() || undefined,
             password: document.getElementById('addPassword').value || undefined,
@@ -740,9 +801,11 @@
           })
         });
         document.getElementById('addCreds').innerHTML = credsTable([result.student]);
+        document.getElementById('addMasterStudent').value = '';
         document.getElementById('addName').value = '';
         document.getElementById('addUsername').value = '';
         document.getElementById('addPassword').value = '';
+        syncAddStudentFields();
         msg.textContent = '';
         await loadRoster();
       } catch (err) {
@@ -791,7 +854,8 @@
             name,
             meetingDays: document.getElementById('teamDays').value.trim() || undefined,
             room: document.getElementById('teamRoom').value.trim() || undefined,
-            returning: document.getElementById('teamReturning').checked
+            returning: document.getElementById('teamReturning').checked,
+            masterStudentIds: [...document.getElementById('teamMasterStudents').selectedOptions].map(option => option.value)
           })
         });
         msg.textContent = `✓ Team "${name}" created!`; msg.className = 'form-msg success';
@@ -799,6 +863,7 @@
         document.getElementById('teamDays').value = '';
         document.getElementById('teamRoom').value = '';
         document.getElementById('teamReturning').checked = false;
+        [...document.getElementById('teamMasterStudents').options].forEach(option => { option.selected = false; });
         await loadRoster();
       } catch (err) {
         msg.textContent = err.message; msg.className = 'form-msg error';
