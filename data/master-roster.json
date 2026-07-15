@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-15T13:47:14.709Z",
+  "updatedAt": "2026-07-15T17:05:49.703Z",
   "settings": {
     "summerWeeks": [
       {
@@ -1573,7 +1573,7 @@
       "summerRosterSource": "summer-2026-screenshot-grade-roster",
       "campUserId": "camp-demo-summer-camper",
       "createdAt": "2026-06-26T23:13:12.327Z",
-      "updatedAt": "2026-07-15T13:47:14.698Z",
+      "updatedAt": "2026-07-15T17:05:49.686Z",
       "lastStudentPortalLoginAt": "2026-07-14T18:29:12.617Z",
       "fllUserId": "fll-demo-student",
       "fllTeamId": "team-demo"

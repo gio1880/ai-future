@@ -2366,6 +2366,108 @@
       margin-bottom: 20px;
     }
 
+    /* ── Coding simulator spotlight (first thing students see) ── */
+    .sim-spotlight {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      background: linear-gradient(120deg, #0f2f22 0%, #16324a 55%, #1a2a5e 100%);
+      color: white;
+      padding: 24px 26px;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      box-shadow: 0 10px 30px rgba(20,50,80,0.28);
+    }
+    .sim-spotlight::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 88% 20%, rgba(240,193,48,0.28), transparent 42%),
+        radial-gradient(circle at 12% 90%, rgba(45,179,122,0.28), transparent 45%);
+      pointer-events: none;
+    }
+    .sim-spot-icon {
+      font-size: 46px;
+      line-height: 1;
+      flex-shrink: 0;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35));
+    }
+    .sim-spot-body { flex: 1; min-width: 220px; position: relative; z-index: 1; }
+    .sim-spot-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: #f0c130;
+      margin-bottom: 6px;
+    }
+    .sim-spot-title {
+      font-size: clamp(20px, 3.4vw, 26px);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    .sim-spot-desc {
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.86);
+      margin-top: 6px;
+      max-width: 560px;
+    }
+    .sim-spot-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .sim-spot-btn {
+      border: none;
+      border-radius: 50px;
+      padding: 11px 22px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      text-decoration: none;
+      transition: transform 0.12s, opacity 0.15s;
+    }
+    .sim-spot-btn:hover { transform: translateY(-1px); }
+    .sim-spot-btn.primary { background: #f0c130; color: #2a2000; }
+    .sim-spot-btn.ghost { background: rgba(255,255,255,0.14); color: white; border: 1.5px solid rgba(255,255,255,0.3); }
+    .sim-spot-progress {
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+      text-align: center;
+      background: rgba(255,255,255,0.12);
+      border: 1.5px solid rgba(255,255,255,0.22);
+      border-radius: 16px;
+      padding: 14px 18px;
+      min-width: 118px;
+    }
+    .sim-spot-progress .big { font-size: 30px; font-weight: 900; line-height: 1; }
+    .sim-spot-progress .small { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.72); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .sim-spot-done-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(45,179,122,0.28);
+      border: 1.5px solid rgba(45,179,122,0.6);
+      color: #b6f0d5;
+      font-size: 12px; font-weight: 800;
+      border-radius: 50px; padding: 5px 13px; margin-top: 12px;
+    }
+    @media (max-width: 600px) {
+      .sim-spotlight { padding: 20px; }
+      .sim-spot-progress { min-width: 0; flex: 1; }
+    }
+
     .welcome-top {
       background: linear-gradient(135deg, #136d4b 0%, #1e8e5a 55%, #2db37a 100%);
       padding: 28px 28px 22px;
@@ -4303,6 +4405,36 @@
       return answers;
     }
 
+    // ── Robot simulator spotlight — a planning TOOL, always available ────
+    function renderSimSpotlight(data) {
+      // simulator practice progress (saved by the simulator page)
+      let levelsDone = 0;
+      try {
+        const saved = JSON.parse(localStorage.getItem('bioglow-sim-levels') || 'null');
+        if (saved && Array.isArray(saved.completed)) levelsDone = saved.completed.filter(id => id !== 'sandbox').length;
+      } catch (e) {}
+      const TOTAL_LEVELS = 6;
+
+      return `
+        <div class="sim-spotlight">
+          <div class="sim-spot-icon">🗺️</div>
+          <div class="sim-spot-body">
+            <span class="sim-spot-tag">🛠 Your planning tool · available anywhere</span>
+            <div class="sim-spot-title">Plan your robot's routes — no physical field needed</div>
+            <div class="sim-spot-desc">Not in the lab? No problem. The simulator is a true-to-size BIOGLOW table where you can sketch mission routes, test your real Pybricks code, and measure distances — then bring your program to the lab and run it on the actual robot. Use the Sandbox for free route planning, or sharpen your skills on the practice levels.</div>
+            <div class="sim-spot-actions">
+              <a class="sim-spot-btn primary" href="/fll-hub/simulator">🕹️ Open the simulator</a>
+              <a class="sim-spot-btn ghost" href="/fll-hub/coding-guide">📖 Coding guide</a>
+            </div>
+          </div>
+          <div class="sim-spot-progress">
+            <div class="big">${levelsDone}<span style="font-size:16px;opacity:0.7">/${TOTAL_LEVELS}</span></div>
+            <div class="small">Practice levels</div>
+          </div>
+        </div>
+      `;
+    }
+
     // ── Landing: team info + countdown + pre-season tasks + 4 cards ──────
     function renderLanding(data) {
       const { user, team, teamMembers, currentPhase, tasks, bioglowCountdown, nextClass, sections, sectionProgress } = data;
@@ -4457,6 +4589,7 @@
       }).join('');
 
       return `
+        ${renderSimSpotlight(data)}
         ${renderWelcomeBanner(user, currentPhase, tasks, bioglowCountdown)}
         ${infoRow}
         ${preSeasonSection}
