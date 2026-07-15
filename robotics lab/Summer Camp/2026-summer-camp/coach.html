@@ -539,6 +539,10 @@
       min-width: 150px;
     }
 
+    .dojo-class-board > .dojo-board-tools {
+      margin-bottom: 12px;
+    }
+
     .student-figure-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -1295,6 +1299,11 @@
     let projectQueue = [];
     let rosterView = 'class';
     let selectedClassName = '';
+    const DOJO_POINT_SORT_KEY = 'summerHubDojoPointSort';
+    let dojoPointSort = 'name';
+    try {
+      dojoPointSort = localStorage.getItem(DOJO_POINT_SORT_KEY) || 'name';
+    } catch (err) {}
     let classroomState = { noiseLevel: 'partner', printQueueOpen: false, timer: { label: 'Work time', durationMinutes: 20, pausedRemainingSeconds: 1200, running: false }, groups: [] };
     let lessons = [];
     let liveState = null;
@@ -1863,6 +1872,20 @@
       });
     }
 
+    function studentPointTotal(student) {
+      return Number(student?.points?.total || 0);
+    }
+
+    function sortDojoStudents(students) {
+      return [...students].sort((a, b) => {
+        const pointsA = studentPointTotal(a);
+        const pointsB = studentPointTotal(b);
+        if (dojoPointSort === 'points-asc' && pointsA !== pointsB) return pointsA - pointsB;
+        if (dojoPointSort === 'points-desc' && pointsA !== pointsB) return pointsB - pointsA;
+        return String(a.name || '').localeCompare(String(b.name || ''));
+      });
+    }
+
     function renderClassTiles() {
       const classes = classSummaries();
       if (!classes.length) return '<p class="section-sub">No active campers yet. Add campers from the Campers tab to build a class board.</p>';
@@ -1926,7 +1949,7 @@
     function renderClassDojoBoard(className) {
       const classes = classSummaries();
       const classItem = classes.find(item => item.name === className) || classes[0];
-      const students = classItem?.students || [];
+      const students = sortDojoStudents(classItem?.students || []);
       const recent = (progressData.pointEvents || [])
         .filter(e => !classItem || (e.className || 'Unassigned') === classItem.name)
         .slice()
@@ -1944,6 +1967,13 @@
             <button class="btn btn-ghost" type="button" onclick="openManageSkills()">⚙️ Manage skills</button>
             <a class="btn btn-ghost" href="/camp-hub/prizes/points-worksheet.html" target="_blank" rel="noreferrer" title="Open the printable points/prize store worksheet">🎁 Prize store</a>
             <button class="btn btn-ghost" type="button" onclick="resetClassPoints(decodeURIComponent('${encodeURIComponent(classItem?.name || 'Unassigned')}'))">Reset class points</button>
+          </div>
+          <div class="dojo-board-tools">
+            <select id="dojoPointSort" aria-label="Sort campers by points" onchange="setDojoPointSort(this.value)">
+              <option value="name" ${dojoPointSort === 'name' ? 'selected' : ''}>Name A-Z</option>
+              <option value="points-asc" ${dojoPointSort === 'points-asc' ? 'selected' : ''}>Points: low to high</option>
+              <option value="points-desc" ${dojoPointSort === 'points-desc' ? 'selected' : ''}>Points: high to low</option>
+            </select>
           </div>
           ${selMode ? `<div class="dojo-select-bar">
             <button class="btn btn-ghost" type="button" onclick="dojoSelectAll(decodeURIComponent('${encodeURIComponent(classItem?.name || 'Unassigned')}'))">Select all</button>
@@ -2034,6 +2064,13 @@
       const board = document.getElementById('dojoClassBoard');
       if (board) board.innerHTML = renderClassDojoBoard(selectedClassName);
     }
+    window.setDojoPointSort = function setDojoPointSort(value) {
+      dojoPointSort = ['name', 'points-asc', 'points-desc'].includes(value) ? value : 'name';
+      try {
+        localStorage.setItem(DOJO_POINT_SORT_KEY, dojoPointSort);
+      } catch (err) {}
+      refreshDojoBoard();
+    };
     window.toggleDojoSelectMode = function toggleDojoSelectMode() {
       dojoSelectMode = !dojoSelectMode;
       if (!dojoSelectMode) dojoSelected.clear();
