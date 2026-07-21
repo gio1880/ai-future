@@ -6445,7 +6445,7 @@ app.post('/api/camp/coach/points', requireCampAuth, requireCampCoach, async (req
 		const note = cleanMetaString(req.body.note || '', 500);
 		const type = req.body.type === 'needs-work' ? 'needs-work' : 'positive';
 		const rawPoints = Number(req.body.points);
-		const magnitude = Number.isFinite(rawPoints) ? Math.max(1, Math.min(20, Math.abs(Math.round(rawPoints)))) : 1;
+		const magnitude = Number.isFinite(rawPoints) ? Math.max(1, Math.min(100, Math.abs(Math.round(rawPoints)))) : 1;
 		const points = type === 'needs-work' ? -magnitude : magnitude;
 		const users = await readCampUsers();
 		const student = users.find((candidate) => candidate.id === studentId && candidate.role === 'student');
@@ -6494,7 +6494,7 @@ app.post('/api/camp/coach/points/bulk', requireCampAuth, requireCampCoach, async
 		const note = cleanMetaString(req.body.note || '', 500);
 		const type = req.body.type === 'needs-work' ? 'needs-work' : 'positive';
 		const rawPoints = Number(req.body.points);
-		const magnitude = Number.isFinite(rawPoints) ? Math.max(1, Math.min(20, Math.abs(Math.round(rawPoints)))) : 1;
+		const magnitude = Number.isFinite(rawPoints) ? Math.max(1, Math.min(100, Math.abs(Math.round(rawPoints)))) : 1;
 		const points = type === 'needs-work' ? -magnitude : magnitude;
 
 		const users = await readCampUsers();

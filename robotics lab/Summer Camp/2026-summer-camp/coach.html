@@ -1049,6 +1049,14 @@
     .skill-section-label { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; margin: 16px 0 10px; }
     .skill-section-label.pos { color: var(--grass); }
     .skill-section-label.neg { color: var(--red); }
+    .custom-pts { display: grid; grid-template-columns: 84px 1fr auto auto; gap: 8px; align-items: center; }
+    .custom-pts input { border: 2px solid var(--line); border-radius: 12px; padding: 11px 12px; font: inherit; font-size: 15px; background: #fff; color: var(--ink); min-width: 0; }
+    .custom-pts input:focus { outline: none; border-color: var(--sun-deep); }
+    .custom-pts .cpts-btn { border: 0; border-radius: 12px; padding: 11px 14px; font: inherit; font-weight: 900; font-size: 14px; color: #fff; cursor: pointer; white-space: nowrap; }
+    .custom-pts .cpts-btn.give { background: var(--grass); }
+    .custom-pts .cpts-btn.take { background: var(--red); }
+    .custom-pts .cpts-btn:active { transform: scale(0.94); }
+    @media (max-width: 520px) { .custom-pts { grid-template-columns: 72px 1fr; } .custom-pts .cpts-btn { width: 100%; } }
     .skill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
     .skill-btn {
       display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center;
@@ -2155,30 +2163,56 @@
         ${head}
         ${positive.length ? `<div class="skill-section-label pos">➕ Great job!</div><div class="skill-grid">${positive.map(skillBtn).join('')}</div>` : ''}
         ${negative.length ? `<div class="skill-section-label neg">➖ Let's fix it</div><div class="skill-grid">${negative.map(skillBtn).join('')}</div>` : ''}
-        <p class="section-sub" style="margin-top:14px;text-align:center">${bulkAwardOpen ? 'Tap a skill to give it to everyone selected.' : 'Keep tapping to give more — close when you\'re done.'}</p>
+        <div class="skill-section-label">✏️ Custom amount</div>
+        <div class="custom-pts">
+          <input id="customPtsInput" type="number" inputmode="numeric" min="1" max="100" placeholder="10" aria-label="Points amount" />
+          <input id="customPtsReason" type="text" placeholder="Reason (optional)" aria-label="Reason" />
+          <button type="button" class="cpts-btn give" onclick="awardCustom('give')">＋ Give</button>
+          <button type="button" class="cpts-btn take" onclick="awardCustom('take')">－ Take</button>
+        </div>
+        <p class="section-sub" style="margin-top:14px;text-align:center">${bulkAwardOpen ? 'Tap a skill or set a custom amount for everyone selected.' : 'Keep tapping to give more — close when you\'re done.'}</p>
       `;
     }
 
-    async function bulkAwardSkill(skill) {
-      const ids = Array.from(dojoSelected);
-      if (!ids.length) return;
-      const positive = skill.type !== 'negative';
+    // Shared award pipeline: works for a single camper OR the bulk-selected set.
+    async function applyPointAward({ category, icon, points, positive }) {
+      const award = { icon, points, name: category };
       playPointSound(positive);
-      flashAward(skill, positive);
+      flashAward(award, positive);
       try {
-        const res = await api('/api/camp/coach/points/bulk', {
-          method: 'POST',
-          body: JSON.stringify({ studentIds: ids, category: skill.name, icon: skill.icon, points: skill.points, type: positive ? 'positive' : 'needs-work' })
-        });
-        const map = res.pointsByStudent || {};
-        ids.forEach(id => {
-          const s = studentById(id);
-          if (s && map[id] && typeof map[id].total === 'number') s.points = map[id];
-          const bp = document.getElementById('board-pts-' + id);
-          if (bp && map[id]) bp.textContent = map[id].total;
-        });
+        if (bulkAwardOpen) {
+          const ids = Array.from(dojoSelected);
+          if (!ids.length) return;
+          const res = await api('/api/camp/coach/points/bulk', {
+            method: 'POST',
+            body: JSON.stringify({ studentIds: ids, category, icon, points, type: positive ? 'positive' : 'needs-work' })
+          });
+          const map = res.pointsByStudent || {};
+          ids.forEach(id => {
+            const s = studentById(id);
+            if (s && map[id] && typeof map[id].total === 'number') s.points = map[id];
+            const bp = document.getElementById('board-pts-' + id);
+            if (bp && map[id]) bp.textContent = map[id].total;
+          });
+        } else {
+          const student = studentById(awardStudentId);
+          if (!student) return;
+          const delta = positive ? points : -points;
+          const res = await api('/api/camp/coach/points', {
+            method: 'POST',
+            body: JSON.stringify({ studentId: student.id, category, icon, points, type: positive ? 'positive' : 'needs-work' })
+          });
+          if (res.points && typeof res.points.total === 'number') student.points = res.points;
+          else if (student.points) student.points.total = (Number(student.points.total) || 0) + delta;
+          const at = document.getElementById('awardTotal');
+          if (at) at.textContent = `${student.points?.total || 0} points`;
+          const bp = document.getElementById('board-pts-' + student.id);
+          if (bp) bp.textContent = student.points?.total || 0;
+        }
         const refreshed = await api('/api/camp/coach/progress');
         progressData = refreshed || progressData;
+        const feed = document.querySelector('#dojoClassBoard .dojo-feed');
+        if (feed && !bulkAwardOpen) document.getElementById('dojoClassBoard').innerHTML = renderClassDojoBoard(selectedClassName);
         const sideTools = document.getElementById('sidebarTools');
         if (sideTools) sideTools.innerHTML = renderSidebarTools();
       } catch (err) { alert(err.message); }
@@ -2187,39 +2221,21 @@
     window.awardSkill = async function awardSkill(skillId) {
       const skill = campSkills().find(s => s.id === skillId);
       if (!skill) return;
-      if (bulkAwardOpen) { return bulkAwardSkill(skill); }
-      const student = studentById(awardStudentId);
-      if (!student) return;
-      const positive = skill.type !== 'negative';
-      playPointSound(positive);
-      // Optimistic UI: bump the totals immediately, flash the button.
-      const delta = positive ? skill.points : -skill.points;
-      flashAward(skill, positive);
-      try {
-        const res = await api('/api/camp/coach/points', {
-          method: 'POST',
-          body: JSON.stringify({ studentId: student.id, category: skill.name, icon: skill.icon, points: skill.points, type: positive ? 'positive' : 'needs-work' })
-        });
-        // update local cache so the modal + board reflect the new total
-        if (res.points && typeof res.points.total === 'number') {
-          student.points = res.points;
-        } else if (student.points) {
-          student.points.total = (Number(student.points.total) || 0) + delta;
-        }
-        const at = document.getElementById('awardTotal');
-        if (at) at.textContent = `${student.points?.total || 0} points`;
-        const bp = document.getElementById('board-pts-' + student.id);
-        if (bp) bp.textContent = student.points?.total || 0;
-        // refresh feed/tiles quietly
-        const refreshed = await api('/api/camp/coach/progress');
-        progressData = refreshed || progressData;
-        const feed = document.querySelector('#dojoClassBoard .dojo-feed');
-        if (feed) { document.getElementById('dojoClassBoard').innerHTML = renderClassDojoBoard(selectedClassName); }
-        const sideTools = document.getElementById('sidebarTools');
-        if (sideTools) sideTools.innerHTML = renderSidebarTools();
-      } catch (err) {
-        alert(err.message);
-      }
+      return applyPointAward({ category: skill.name, icon: skill.icon, points: skill.points, positive: skill.type !== 'negative' });
+    };
+
+    // Custom amount: coach types any number of points to give or take away.
+    window.awardCustom = async function awardCustom(sign) {
+      const input = document.getElementById('customPtsInput');
+      const reasonEl = document.getElementById('customPtsReason');
+      const n = Math.round(Number(input && input.value));
+      if (!Number.isFinite(n) || n < 1) { if (input) { input.focus(); input.style.borderColor = 'var(--red)'; } return; }
+      const points = Math.min(100, Math.abs(n));
+      const positive = sign !== 'take';
+      const reason = ((reasonEl && reasonEl.value) || '').trim();
+      await applyPointAward({ category: reason || (positive ? 'Bonus points' : 'Points removed'), icon: positive ? '✨' : '➖', points, positive });
+      if (input) { input.value = ''; input.style.borderColor = ''; }
+      if (reasonEl) reasonEl.value = '';
     };
 
     window.resetClassPoints = async function resetClassPoints(className) {
