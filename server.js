@@ -3296,10 +3296,16 @@ function buildFllCurriculumOverview(tasks, assignments, sections) {
 	const byId = new Map(grouped.map((section) => [section.id, section]));
 	const existingTaskIds = new Set((Array.isArray(tasks) ? tasks : []).map((task) => task.id));
 	const plannedTasks = getPlannedFllCurriculumTasks().filter((task) => !existingTaskIds.has(task.id));
+	// Assignments are stored per-student, so collapse duplicates to one row per
+	// unique title + due date (the whole team gets the same assignment).
+	const seenCurriculum = new Set();
 	for (const task of [...(Array.isArray(tasks) ? tasks : []), ...plannedTasks]) {
 		const sectionId = sectionAliases[task.category] || 'innovation';
 		const section = byId.get(sectionId);
 		if (!section) continue;
+		const dedupeKey = `${sectionId}|${task.title || ''}|${String(task.dueDate || '').slice(0, 10)}`;
+		if (seenCurriculum.has(dedupeKey)) continue;
+		seenCurriculum.add(dedupeKey);
 		const parentAssignment = assignmentLookup.get(task.assignmentId);
 		section.assignments.push({
 			id: task.id,
@@ -3533,8 +3539,8 @@ function buildFllCodingFoundationsTask(user) {
 			'Use complete thoughts. If you are unsure, write what you would test on the robot and what evidence would prove your idea.',
 			'Topics include Python/Pybricks logic, loops, conditionals, gyro turns, encoder distance, speed, acceleration, and the basic idea of PID control.'
 		].join('\n\n'),
-		category: 'Robot Game',
-		section: 'robot-game',
+		category: 'Robot Design',
+		section: 'robot-design',
 		type: 'lesson',
 		workContext: 'home',
 		status: 'todo',

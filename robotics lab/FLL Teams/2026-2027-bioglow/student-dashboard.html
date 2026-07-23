@@ -1950,6 +1950,63 @@
       font-weight: 800;
     }
 
+    /* ── Coming-soon category cards ── */
+    .cat-card-soon {
+      position: relative;
+      opacity: 0.82;
+    }
+    .cat-card-soon .cat-card-icon { filter: grayscale(0.3); }
+    .cat-soon-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #fff3e0;
+      color: #e37400;
+      border: 1.5px solid #ffe0b2;
+      border-radius: 50px;
+      padding: 3px 11px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .coming-soon-card {
+      background: white;
+      border: 1.5px solid #e8eaed;
+      border-radius: 20px;
+      padding: 48px 28px;
+      text-align: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      margin-top: 16px;
+    }
+    .coming-soon-emoji { font-size: 56px; margin-bottom: 10px; }
+    .coming-soon-title { font-size: 24px; font-weight: 900; color: #202124; margin-bottom: 10px; }
+    .coming-soon-text {
+      font-size: 15px;
+      color: #5f6368;
+      line-height: 1.65;
+      max-width: 520px;
+      margin: 0 auto 22px;
+    }
+    .coming-soon-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .cs-btn {
+      border: 1.5px solid #dadce0;
+      background: white;
+      border-radius: 50px;
+      padding: 11px 20px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #202124;
+      cursor: pointer;
+      font-family: inherit;
+      text-decoration: none;
+      transition: border-color 0.15s, transform 0.12s;
+    }
+    .cs-btn:hover { border-color: #1e8e5a; color: #1e8e5a; transform: translateY(-1px); }
+
     @media (max-width: 600px) {
       .cat-grid { grid-template-columns: 1fr; }
       .landing-info-row, .landing-info-row.three-col { grid-template-columns: 1fr; }
@@ -2967,31 +3024,31 @@
       <div class="ws-body">
         <div class="ws-steps">
           <div class="ws-step">
-            <div class="ws-step-icon">🎯</div>
+            <div class="ws-step-icon">🕹️</div>
             <div class="ws-step-text">
-              <strong>Your next step — always at the top</strong>
-              <p>Every time you log in, you'll see exactly what to do next — no guessing.</p>
+              <strong>Practice coding in the Robot Simulator</strong>
+              <p>Right at the top: plan routes and test real Pybricks code on the BIOGLOW field — from anywhere, no physical robot needed.</p>
             </div>
           </div>
           <div class="ws-step">
-            <div class="ws-step-icon">🎬</div>
+            <div class="ws-step-icon">💡</div>
             <div class="ws-step-text">
-              <strong>Start with the teaser video</strong>
-              <p>Watch the official BIOGLOW teaser, then answer 3 quick questions to complete your first task.</p>
+              <strong>Work through your assignments</strong>
+              <p>Open <b>Innovation Project</b> and <b>Robot Design</b> to see your assignments, watch videos, and upload photos of your work.</p>
             </div>
           </div>
           <div class="ws-step">
-            <div class="ws-step-icon">🤖</div>
+            <div class="ws-step-icon">📅</div>
             <div class="ws-step-text">
-              <strong>Track your team's progress</strong>
-              <p>See tasks, FLL areas, milestones, and log your work after every session.</p>
+              <strong>Stay on track</strong>
+              <p>Your team, countdowns, and a season calendar show what's due and when your first competition is.</p>
             </div>
           </div>
           <div class="ws-step">
             <div class="ws-step-icon">📚</div>
             <div class="ws-step-text">
               <strong>All your resources in one place</strong>
-              <p>Official links, rubrics, research articles, and season materials — right here.</p>
+              <p>Official links, rubrics, the coding guide, and season materials — right here when you need them.</p>
             </div>
           </div>
         </div>
@@ -3686,6 +3743,7 @@
         colorLight: '#fff8e1',
         colorBorder: '#fde293',
         desc: 'Show teamwork, inclusion, discovery, and fun in everything your team does.',
+        comingSoon: true,
       },
       {
         id: 'robot-game',
@@ -3695,6 +3753,7 @@
         colorLight: '#e6f4ea',
         colorBorder: '#b7dfc8',
         desc: 'Study the missions, run your robot, and improve your score every session.',
+        comingSoon: true,
       },
     ];
 
@@ -4572,6 +4631,20 @@
         }).length;
         const section = (sections || []).find(s => s.id === cat.id) || {};
 
+        if (cat.comingSoon) {
+          return `
+            <button class="cat-card cat-card-soon" onclick="openCategory('${cat.id}')" style="--cat-color:${cat.color};--cat-light:${cat.colorLight};--cat-border:${cat.colorBorder};">
+              <div class="cat-soon-badge">Coming soon</div>
+              <div class="cat-card-icon">${cat.icon}</div>
+              <div class="cat-card-label">${escapeHtml(cat.label)}</div>
+              <div class="cat-card-desc">${escapeHtml(cat.desc)}</div>
+              <div class="cat-card-footer">
+                <div class="cat-progress-label"><span>🚧 Assignments coming soon</span></div>
+              </div>
+            </button>
+          `;
+        }
+
         return `
           <button class="cat-card" onclick="openCategory('${cat.id}')" style="--cat-color:${cat.color};--cat-light:${cat.colorLight};--cat-border:${cat.colorBorder};">
             <div class="cat-card-icon">${cat.icon}</div>
@@ -4685,6 +4758,30 @@
       const { tasks, assignments, workLogs, resources } = data;
       const cat = CATEGORIES.find(c => c.id === categoryId);
       if (!cat) return renderLanding(data);
+
+      // Categories not yet open show a friendly "coming soon" screen.
+      if (cat.comingSoon) {
+        return `
+          <div class="detail-header" style="--cat-color:${cat.color};--cat-light:${cat.colorLight};--cat-border:${cat.colorBorder};">
+            <button class="back-btn" onclick="openCategory(null)">← Back</button>
+            <div class="detail-header-icon">${cat.icon}</div>
+            <div>
+              <div class="detail-header-label">${escapeHtml(cat.label)}</div>
+              <div class="detail-header-desc">${escapeHtml(cat.desc)}</div>
+            </div>
+          </div>
+          <div class="coming-soon-card">
+            <div class="coming-soon-emoji">🚧</div>
+            <div class="coming-soon-title">Coming soon!</div>
+            <div class="coming-soon-text">Your coach is still building out the <b>${escapeHtml(cat.label)}</b> assignments. Check back soon — for now, dive into <b>Robot Design</b>, the <b>Innovation Project</b>, or fire up the <b>Robot Simulator</b>!</div>
+            <div class="coming-soon-actions">
+              <button class="cs-btn" onclick="openCategory('robot-design')">🤖 Robot Design</button>
+              <button class="cs-btn" onclick="openCategory('innovation')">💡 Innovation Project</button>
+              <a class="cs-btn" href="/fll-hub/simulator">🕹️ Simulator</a>
+            </div>
+          </div>
+        `;
+      }
 
       // filter tasks to this category (loose match on category/section fields)
       const catTasks = tasks.filter(t => {

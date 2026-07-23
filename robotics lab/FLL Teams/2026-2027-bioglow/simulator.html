@@ -70,6 +70,7 @@
       gap: 16px;
       align-items: start;
     }
+    .sim-layout > div { min-width: 0; }
 
     .field-card {
       background: white; border: 1.5px solid var(--line); border-radius: var(--radius);
@@ -195,7 +196,7 @@
     .win-btn.outline { background: white; color: var(--green-dark); border: 1.5px solid var(--green); }
 
     @media (max-width: 1080px) {
-      .sim-layout { grid-template-columns: 1fr; }
+      .sim-layout { grid-template-columns: minmax(0, 1fr); }
       .cfg-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>

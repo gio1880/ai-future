@@ -1060,11 +1060,17 @@
       const visibleTeamIds = new Set(visibleTeams.map(t => t.id));
 
       // assignment due dates
+      // Assignments are stored per-student, so collapse duplicates:
+      // one chip per unique title + due date + team (not one per student).
+      const seenAssignments = new Set();
       (roster.tasks || []).forEach(task => {
         if (!task.dueDate || !visibleTeamIds.has(task.teamId)) return;
+        const dedupeKey = `${task.title}|${String(task.dueDate).slice(0,10)}|${task.teamId}`;
+        if (seenAssignments.has(dedupeKey)) return;
+        seenAssignments.add(dedupeKey);
         push(task.dueDate, {
           label: task.title,
-          type: task.status === 'done' ? 'done' : 'due',
+          type: 'due',
           team: teamLabel(task.teamId)
         });
       });
