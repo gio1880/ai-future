@@ -11,145 +11,136 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --green: #1d9e6e;
-      --green-dark: #136d4b;
-      --green-light: #e6f7f0;
-      --glow: #f0c130;
-      --glow-light: #fdf6d8;
-      --blue: #2870c9;
-      --blue-light: #e8f1fd;
-      --coral: #e8583a;
-      --coral-light: #fdeee9;
-      --ink: #1a2a22;
-      --muted: #5e6e65;
-      --line: #daeadf;
-      --bg: #f4faf6;
-      --radius: 16px;
+      --green: #1d9e6e; --green-dark: #136d4b; --green-light: #e6f7f0;
+      --glow: #f0c130; --glow-light: #fdf6d8; --blue: #2870c9; --blue-light: #e8f1fd;
+      --coral: #e8583a; --coral-light: #fdeee9; --ink: #1a2a22; --muted: #5e6e65;
+      --line: #daeadf; --bg: #f4faf6; --radius: 16px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { overflow-x: hidden; }
     html { scroll-behavior: smooth; }
     body { font-family: Inter, system-ui, sans-serif; color: var(--ink); background: var(--bg); }
     a { color: inherit; text-decoration: none; }
-    img { max-width: 100%; }
 
-    .topbar {
-      position: sticky; top: 0; z-index: 20;
-      background: rgba(255,255,255,0.94); backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--line);
-    }
-    .topbar-inner {
-      max-width: 1000px; margin: 0 auto; padding: 12px 20px;
-      display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
-    }
+    .topbar { position: sticky; top: 0; z-index: 30; background: rgba(255,255,255,0.94); backdrop-filter: blur(16px); border-bottom: 1px solid var(--line); }
+    .topbar-inner { max-width: 1000px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
     .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; }
     .brand img { width: 32px; height: 32px; object-fit: contain; }
     .top-links { display: flex; gap: 8px; flex-wrap: wrap; }
-    .back-link {
-      border: 1.5px solid var(--line); border-radius: 50px; padding: 8px 16px;
-      font-size: 13px; font-weight: 800; color: var(--green-dark); background: white;
-    }
+    .back-link { border: 1.5px solid var(--line); border-radius: 50px; padding: 8px 16px; font-size: 13px; font-weight: 800; color: var(--green-dark); background: white; }
     .back-link:hover { border-color: var(--green); }
 
-    .page { max-width: 1000px; margin: 0 auto; padding: 28px 20px 80px; }
+    /* progress bar (sticky under topbar) */
+    .progress-bar { position: sticky; top: 57px; z-index: 25; background: white; border-bottom: 1px solid var(--line); }
+    .progress-inner { max-width: 1000px; margin: 0 auto; padding: 10px 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .pg-track { flex: 1; min-width: 140px; height: 10px; border-radius: 50px; background: var(--green-light); overflow: hidden; }
+    .pg-fill { height: 100%; border-radius: 50px; background: linear-gradient(90deg, var(--green), #2db37a); transition: width 0.4s ease; width: 0; }
+    .pg-label { font-size: 13px; font-weight: 800; color: var(--green-dark); white-space: nowrap; }
+    .pg-file-btn { border: none; background: var(--ink); color: white; border-radius: 50px; padding: 8px 16px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; white-space: nowrap; }
+    .pg-file-btn:hover { background: #2b3b32; }
 
-    .hero {
-      background: linear-gradient(140deg, rgba(19,50,35,0.92), rgba(29,158,110,0.8));
-      color: white; border-radius: var(--radius); padding: 34px 30px; margin-bottom: 24px;
-    }
-    .hero h1 { font-size: clamp(26px, 5vw, 40px); font-weight: 900; letter-spacing: -0.02em; }
+    .page { max-width: 1000px; margin: 0 auto; padding: 24px 20px 90px; }
+
+    .hero { background: linear-gradient(140deg, rgba(19,50,35,0.92), rgba(29,158,110,0.8)); color: white; border-radius: var(--radius); padding: 30px 28px; margin-bottom: 22px; }
+    .hero h1 { font-size: clamp(24px, 5vw, 38px); font-weight: 900; letter-spacing: -0.02em; }
     .hero h1 em { font-style: normal; color: var(--glow); }
     .hero p { margin-top: 10px; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.88); max-width: 660px; }
     .hero code { background: rgba(255,255,255,0.16); border-radius: 6px; padding: 1px 8px; font-family: 'Cascadia Code', Consolas, monospace; font-size: 0.92em; }
 
-    .callout {
-      background: var(--blue-light); border-left: 4px solid var(--blue); border-radius: 0 10px 10px 0;
-      padding: 14px 16px; margin: 0 0 24px; font-size: 14px; line-height: 1.6; color: #1d4f8c;
-    }
+    .callout { background: var(--blue-light); border-left: 4px solid var(--blue); border-radius: 0 10px 10px 0; padding: 14px 16px; margin: 0 0 24px; font-size: 14px; line-height: 1.6; color: #1d4f8c; }
     .callout b { color: #14407a; }
 
-    .toc {
-      background: white; border: 1.5px solid var(--line); border-radius: var(--radius);
-      padding: 18px 20px; margin-bottom: 28px;
-    }
-    .toc-title { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 10px; }
-    .toc ol { margin-left: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 6px 24px; }
-    .toc li { font-size: 14px; font-weight: 700; padding: 3px 0; }
-    .toc a:hover { color: var(--green-dark); }
-
-    .step {
-      background: white; border: 1.5px solid var(--line); border-radius: var(--radius);
-      margin-bottom: 26px; overflow: hidden; scroll-margin-top: 80px;
-    }
-    .step-head {
-      padding: 20px 24px 16px; border-bottom: 1.5px solid var(--line);
-      display: flex; align-items: flex-start; gap: 14px;
-    }
-    .step-num {
-      background: var(--green); color: white; border-radius: 12px;
-      width: 44px; height: 44px; display: grid; place-items: center;
-      font-size: 18px; font-weight: 900; flex-shrink: 0;
-    }
-    .step-title { font-size: 19px; font-weight: 900; letter-spacing: -0.01em; }
+    .step { background: white; border: 1.5px solid var(--line); border-radius: var(--radius); margin-bottom: 22px; overflow: hidden; scroll-margin-top: 118px; transition: border-color 0.2s; }
+    .step.done { border-color: var(--green); }
+    .step-head { padding: 18px 22px 14px; border-bottom: 1.5px solid var(--line); display: flex; align-items: flex-start; gap: 14px; }
+    .step-num { background: var(--green); color: white; border-radius: 12px; width: 42px; height: 42px; display: grid; place-items: center; font-size: 17px; font-weight: 900; flex-shrink: 0; transition: background 0.2s; }
+    .step.done .step-num { background: var(--green-dark); }
+    .step-num .check { display: none; }
+    .step.done .step-num .n { display: none; }
+    .step.done .step-num .check { display: block; }
+    .step-title { font-size: 18px; font-weight: 900; letter-spacing: -0.01em; }
     .step-goal { font-size: 13px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
-    .step-body { padding: 20px 24px; }
+    .step-badge { margin-left: auto; font-size: 11px; font-weight: 800; border-radius: 50px; padding: 4px 11px; white-space: nowrap; flex-shrink: 0; }
+    .step-badge.todo { background: var(--glow-light); color: #8a6a00; border: 1.5px solid #eeda9a; }
+    .step-badge.ok { background: var(--green-light); color: var(--green-dark); border: 1.5px solid #b6e3cd; }
+    .step-badge.ref { background: #eef1f0; color: var(--muted); border: 1.5px solid var(--line); }
+
+    .step-body { padding: 18px 22px; }
     .step-body p { font-size: 14px; line-height: 1.7; margin-bottom: 12px; }
     .step-body p:last-child { margin-bottom: 0; }
     .step-body strong { color: var(--green-dark); }
-    .step-body ul { margin: 0 0 14px 22px; font-size: 14px; line-height: 1.7; }
+    .step-body ul { margin: 0 0 12px 22px; font-size: 14px; line-height: 1.7; }
     .step-body li { margin-bottom: 5px; }
     .step-body em { font-style: normal; background: var(--glow-light); border-radius: 4px; padding: 0 5px; }
-
     .icode { background: #eef3ef; border: 1px solid var(--line); border-radius: 5px; padding: 1px 7px; font-family: 'Cascadia Code', Consolas, monospace; font-size: 12.5px; font-weight: 700; color: var(--green-dark); }
 
-    .code-wrap { margin: 14px 0; border-radius: 12px; overflow: hidden; border: 1px solid #2a2a3a; }
-    .code-head {
-      background: #16161f; color: #9aa0a6; display: flex; align-items: center; justify-content: space-between;
-      padding: 8px 14px; font-size: 12px; font-weight: 700;
-    }
-    .code-head .fname { color: #a6e3a1; }
-    .copy-btn {
-      background: #2b2b3d; color: #cdd6f4; border: none; border-radius: 6px;
-      padding: 5px 12px; font-size: 11px; font-weight: 800; cursor: pointer; font-family: inherit;
-    }
-    .copy-btn:hover { background: #3b3b52; }
-    pre {
-      background: #1e1e2e; color: #cdd6f4; padding: 16px 18px; overflow-x: auto;
-      font-size: 13px; line-height: 1.65; margin: 0;
+    /* editor */
+    .editor-label { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 6px 0 8px; display: flex; align-items: center; gap: 8px; }
+    .editor-label .fname { color: var(--green-dark); }
+    .code-editor {
+      width: 100%; min-height: 120px; resize: vertical;
+      background: #1e1e2e; color: #cdd6f4; border: 2px solid #2a2a3a; border-radius: 12px;
+      padding: 14px 16px; font-size: 13px; line-height: 1.65;
       font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace; tab-size: 4;
+      white-space: pre; overflow-wrap: normal; overflow-x: auto;
     }
-    .c-comment { color: #7f849c; }
-    .c-kw { color: #cba6f7; }
-    .c-str { color: #a6e3a1; }
-    .c-num { color: #fab387; }
-    .c-fn { color: #89b4fa; }
-    .c-cls { color: #f9e2af; }
+    .code-editor:focus { outline: none; border-color: var(--green); }
+    .code-editor.ok { border-color: var(--green); }
+    .code-editor.err { border-color: var(--coral); }
+
+    .ed-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
+    .ed-btn { border: none; border-radius: 50px; padding: 9px 18px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; }
+    .ed-btn.check { background: var(--green); color: white; }
+    .ed-btn.check:hover { background: #26b57f; }
+    .ed-btn.reveal { background: white; color: var(--blue); border: 1.5px solid var(--blue-light); }
+    .ed-btn.reveal:hover { border-color: var(--blue); }
+    .ed-btn.reset-ed { background: white; color: var(--muted); border: 1.5px solid var(--line); }
+    .ed-btn.reset-ed:hover { border-color: var(--muted); }
+    .ed-feedback { font-size: 13px; font-weight: 700; min-height: 20px; line-height: 1.5; }
+    .ed-feedback.ok { color: var(--green-dark); }
+    .ed-feedback.err { color: var(--coral); }
+
+    /* read-only reference code (docstring, run file, calibration) */
+    .code-wrap { margin: 12px 0; border-radius: 12px; overflow: hidden; border: 1px solid #2a2a3a; }
+    .code-head { background: #16161f; color: #9aa0a6; display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; font-size: 12px; font-weight: 700; }
+    .code-head .fname { color: #a6e3a1; }
+    .copy-btn { background: #2b2b3d; color: #cdd6f4; border: none; border-radius: 6px; padding: 5px 12px; font-size: 11px; font-weight: 800; cursor: pointer; font-family: inherit; }
+    .copy-btn:hover { background: #3b3b52; }
+    pre { background: #1e1e2e; color: #cdd6f4; padding: 15px 16px; overflow-x: auto; font-size: 13px; line-height: 1.65; margin: 0; font-family: 'Cascadia Code','Fira Code',Consolas,monospace; tab-size: 4; }
+    .c-comment { color: #7f849c; } .c-kw { color: #cba6f7; } .c-str { color: #a6e3a1; } .c-num { color: #fab387; } .c-fn { color: #89b4fa; } .c-cls { color: #f9e2af; }
 
     /* line-by-line breakdown */
-    .lines {
-      margin: 14px 0 4px;
-      border: 1.5px solid var(--line); border-radius: 12px; overflow: hidden;
-    }
+    .lines { margin: 12px 0 4px; border: 1.5px solid var(--line); border-radius: 12px; overflow: hidden; }
     .lines-title { background: var(--green-light); color: var(--green-dark); font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 14px; }
-    .line-row { display: grid; grid-template-columns: minmax(140px, 0.9fr) 1.6fr; gap: 0; border-top: 1px solid var(--line); }
+    .line-row { display: grid; grid-template-columns: minmax(130px, 0.9fr) 1.6fr; border-top: 1px solid var(--line); }
     .line-row:first-of-type { border-top: none; }
-    .line-code { background: #f7faf8; padding: 10px 12px; font-family: 'Cascadia Code', Consolas, monospace; font-size: 12px; font-weight: 700; color: var(--ink); overflow-x: auto; border-right: 1px solid var(--line); }
-    .line-why { padding: 10px 14px; font-size: 13px; line-height: 1.55; color: var(--muted); }
+    .line-code { background: #f7faf8; padding: 9px 12px; font-family: 'Cascadia Code',Consolas,monospace; font-size: 12px; font-weight: 700; color: var(--ink); overflow-x: auto; border-right: 1px solid var(--line); }
+    .line-why { padding: 9px 14px; font-size: 13px; line-height: 1.55; color: var(--muted); }
     .line-why b { color: var(--ink); }
 
-    .tip {
-      background: var(--glow-light); border: 1.5px solid #eeda9a; border-radius: 12px;
-      padding: 13px 16px; margin: 12px 0; font-size: 13px; line-height: 1.6; color: #6b5500;
-    }
+    .tip { background: var(--glow-light); border: 1.5px solid #eeda9a; border-radius: 12px; padding: 12px 15px; margin: 12px 0; font-size: 13px; line-height: 1.6; color: #6b5500; }
     .tip b { color: #8a6a00; }
 
-    .footer-note { text-align: center; color: var(--muted); font-size: 13px; margin-top: 30px; line-height: 1.7; }
+    /* file overlay */
+    .file-overlay { position: fixed; inset: 0; background: rgba(15,25,20,0.55); z-index: 60; display: none; align-items: center; justify-content: center; padding: 18px; }
+    .file-overlay.show { display: flex; }
+    .file-card { background: #1e1e2e; border-radius: 18px; width: min(720px, 100%); max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,0.4); }
+    .file-card-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid #2a2a3a; }
+    .file-card-head .ft { color: #a6e3a1; font-weight: 800; font-family: 'Cascadia Code',Consolas,monospace; font-size: 14px; }
+    .file-card-head .fa { display: flex; gap: 8px; }
+    .file-close { background: #2b2b3d; color: #cdd6f4; border: none; border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 800; cursor: pointer; font-family: inherit; }
+    .file-body { overflow: auto; padding: 4px 0; }
+    .file-empty { color: #7f849c; padding: 40px 20px; text-align: center; font-family: 'Cascadia Code',Consolas,monospace; font-size: 13px; }
+
+    .footer-note { text-align: center; color: var(--muted); font-size: 13px; margin-top: 26px; line-height: 1.7; }
     .footer-note a { color: var(--green-dark); font-weight: 800; }
 
     @media (max-width: 640px) {
       .step-head { flex-wrap: wrap; }
+      .step-badge { margin-left: 0; }
       .line-row { grid-template-columns: 1fr; }
       .line-code { border-right: none; border-bottom: 1px solid var(--line); }
+      .progress-bar { top: 96px; }
     }
   </style>
 </head>
@@ -165,493 +156,362 @@
     </div>
   </header>
 
+  <div class="progress-bar">
+    <div class="progress-inner">
+      <span class="pg-label" id="pgLabel">Coded 0 / 9</span>
+      <div class="pg-track"><div class="pg-fill" id="pgFill"></div></div>
+      <button class="pg-file-btn" onclick="openFile()">📄 Your file so far</button>
+    </div>
+  </div>
+
   <main class="page">
     <div class="hero">
       <h1>Build your own <em>robot_base.py</em> 🐍</h1>
-      <p>Every great FLL team has ONE file that sets up the robot the same way every time — the "single source of truth." In this tutorial you'll type it out yourself, one section at a time, and learn <b>exactly what every line does</b>. By the end you'll have a real, reusable <code>robot_base.py</code> and understand the code well enough to fix and tune it.</p>
+      <p>You won't just read this code — you'll <b>write it yourself</b>. Each step gives you a code box with blanks to fill in. Type the missing parts, press <b>Check</b>, and watch your real <code>robot_base.py</code> build itself piece by piece. By the end you'll have a working file AND understand every line.</p>
     </div>
 
     <div class="callout">
-      <b>Before you start:</b> open <b>code.pybricks.com</b> (or the SPIKE app with Pybricks). Create a NEW file and name it <code style="background:#dbe7f7;padding:1px 6px;border-radius:5px">robot_base.py</code>. You'll add to this same file in every step. Copy each block in order — by the end, all the blocks together ARE the finished file.
+      <b>How this works:</b> fill in the <span class="icode">____</span> blanks in each code box using what the step teaches you. Press <b>✓ Check my code</b> — if it's right, that piece gets added to your file (tap <b>📄 Your file so far</b> anytime to see it). Stuck? Use <b>💡 Show answer</b>. Your progress saves automatically.
     </div>
 
-    <div class="toc">
-      <div class="toc-title">What you'll build</div>
-      <ol>
-        <li><a href="#s1">The file header (docstring)</a></li>
-        <li><a href="#s2">Imports — borrowing Pybricks tools</a></li>
-        <li><a href="#s3">Robot constants — wheel &amp; axle</a></li>
-        <li><a href="#s4">Hardware — hub, motors, DriveBase</a></li>
-        <li><a href="#s5">Motion settings — speed &amp; acceleration</a></li>
-        <li><a href="#s6">Turn on the gyro</a></li>
-        <li><a href="#s7">PID tuning (optional advanced block)</a></li>
-        <li><a href="#s8">reset() — start every run clean</a></li>
-        <li><a href="#s9">straight() and turn()</a></li>
-        <li><a href="#s10">turn_to() — turn to an exact heading</a></li>
-        <li><a href="#s11">arc() — drive curves</a></li>
-        <li><a href="#s12">Use it in a run file</a></li>
-        <li><a href="#s13">Calibrate your robot</a></li>
-      </ol>
-    </div>
+    <div id="stepsRoot"></div>
 
-    <!-- STEP 1 -->
-    <section class="step" id="s1">
-      <div class="step-head">
-        <div class="step-num">1</div>
-        <div>
-          <div class="step-title">The file header (docstring)</div>
-          <div class="step-goal">A note-to-humans at the top that says what this file is and how to use it.</div>
-        </div>
-      </div>
-      <div class="step-body">
-        <p>A <strong>docstring</strong> is text between triple quotes <span class="icode">"""</span>. Python ignores it when running — it's a message for the people reading your code (including future-you). Great teams always explain what a file is for.</p>
-        <div class="code-wrap">
-          <div class="code-head"><span class="fname">robot_base.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
-          <pre><span class="c-str">"""
-robot_base.py — Single source of truth for robot setup and motion.
-Based on official Pybricks v2.20.0 robotics documentation.
-
-HOW TO USE IN A RUN FILE:
-    from robot_base import robot, hub, RAM, LAM, straight, turn, arc, reset
-    reset()
-    straight(500)
-    turn(90)
-"""</span></pre>
-        </div>
-        <p>"Single source of truth" means: <em>the robot is set up in ONE place</em>. Every run file borrows from here, so you never accidentally use two different wheel sizes in two different programs.</p>
-      </div>
-    </section>
-
-    <!-- STEP 2 -->
-    <section class="step" id="s2">
-      <div class="step-head">
-        <div class="step-num">2</div>
-        <div>
-          <div class="step-title">Imports — borrowing Pybricks tools</div>
-          <div class="step-goal">Bring in the classes and helpers we need. Nothing works without these.</div>
-        </div>
-      </div>
-      <div class="step-body">
-        <p>Pybricks comes with pre-made tools. <span class="icode">import</span> is how you borrow them. You only get what you name — so import everything you plan to use.</p>
-        <div class="code-wrap">
-          <div class="code-head"><span class="fname">robot_base.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
-          <pre><span class="c-kw">from</span> pybricks.hubs <span class="c-kw">import</span> PrimeHub
-<span class="c-kw">from</span> pybricks.pupdevices <span class="c-kw">import</span> Motor
-<span class="c-kw">from</span> pybricks.robotics <span class="c-kw">import</span> DriveBase
-<span class="c-kw">from</span> pybricks.parameters <span class="c-kw">import</span> Port, Direction, Stop
-<span class="c-kw">from</span> pybricks.tools <span class="c-kw">import</span> wait</pre>
-        </div>
-        <div class="lines">
-          <div class="lines-title">Line by line</div>
-          <div class="line-row"><div class="line-code">from pybricks.hubs import PrimeHub</div><div class="line-why"><b>PrimeHub</b> = the brain (your SPIKE hub). Gives you the gyro, buttons, screen, and speaker.</div></div>
-          <div class="line-row"><div class="line-code">from pybricks.pupdevices import Motor</div><div class="line-why"><b>Motor</b> = one motor. You'll make several (two for driving, two for attachments).</div></div>
-          <div class="line-row"><div class="line-code">from pybricks.robotics import DriveBase</div><div class="line-why"><b>DriveBase</b> = combines your two drive motors into one "robot" that can drive straight and turn in real millimetres and degrees.</div></div>
-          <div class="line-row"><div class="line-code">from pybricks.parameters import Port, Direction, Stop</div><div class="line-why"><b>Port</b> = which socket (A–F) a motor is plugged into. <b>Direction</b> = which way a motor counts as "forward". <b>Stop</b> = what to do when a move ends (HOLD / COAST / BRAKE).</div></div>
-          <div class="line-row"><div class="line-code">from pybricks.tools import wait</div><div class="line-why"><b>wait</b> = pause the program for a number of milliseconds. Handy between moves.</div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- STEP 3 -->
-    <section class="step" id="s3">
-      <div class="step-head">
-        <div class="step-num">3</div>
-        <div>
-          <div class="step-title">Robot constants — wheel &amp; axle</div>
-          <div class="step-goal">Two measurements that make distances and turns accurate.</div>
-        </div>
-      </div>
-      <div class="step-body">
-        <p>The DriveBase turns your commands (like "drive 500 mm") into wheel spins. To do that math it needs two numbers about YOUR robot. We store them in ALL-CAPS names — a Python habit that means "this is a constant, don't change it while the program runs."</p>
-        <div class="code-wrap">
-          <div class="code-head"><span class="fname">robot_base.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
-          <pre><span class="c-comment"># ─────────────────────────────────────────────
-# ROBOT PHYSICAL CONSTANTS
-#
-# HOW TO CALIBRATE (from official docs):
-#   wheel_diameter: Run straight(1000) and measure actual distance.
-#     - Traveled too short → decrease WHEEL_DIAMETER_MM
-#     - Traveled too far   → increase WHEEL_DIAMETER_MM
-#
-#   axle_track: FIRST fix wheel_diameter above. Then run turn(360).
-#     - Turned too little  → increase AXLE_TRACK_MM
-#     - Turned too far     → decrease AXLE_TRACK_MM
-# ─────────────────────────────────────────────</span>
-WHEEL_DIAMETER_MM = <span class="c-num">56</span>      <span class="c-comment"># mm — measure or check the tyre sidewall</span>
-AXLE_TRACK_MM     = <span class="c-num">122</span>     <span class="c-comment"># mm — distance between the two wheels' ground contact points</span></pre>
-        </div>
-        <div class="lines">
-          <div class="lines-title">Line by line</div>
-          <div class="line-row"><div class="line-code">WHEEL_DIAMETER_MM = 56</div><div class="line-why"><b>How wide your wheel is</b>, across the middle, in mm. A bigger number means the robot thinks each spin covers more ground. The standard small SPIKE wheel is 56 mm.</div></div>
-          <div class="line-row"><div class="line-code">AXLE_TRACK_MM = 122</div><div class="line-why"><b>The distance between where your two wheels touch the floor.</b> This controls turning: the robot pivots around the point between the wheels, so it must know how far apart they are.</div></div>
-        </div>
-        <div class="tip">💡 <b>Don't guess these forever.</b> Step 13 shows you how to <em>calibrate</em> — run a test, measure the result, and adjust these two numbers until the robot is dead accurate.</div>
-      </div>
-    </section>
-
-    <!-- STEP 4 -->
-    <section class="step" id="s4">
-      <div class="step-head">
-        <div class="step-num">4</div>
-        <div>
-          <div class="step-title">Hardware — hub, motors, DriveBase</div>
-          <div class="step-goal">Tell the code what's plugged in where, then build the "robot."</div>
-        </div>
-      </div>
-      <div class="step-body">
-        <p>Now we create real objects for each piece of hardware. This is where <em>your ports</em> matter — the letters here must match the cables on your actual robot.</p>
-        <div class="code-wrap">
-          <div class="code-head"><span class="fname">robot_base.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
-          <pre><span class="c-comment"># ─────────────────────────────────────────────
-# HARDWARE INIT
-# ─────────────────────────────────────────────</span>
-hub = <span class="c-cls">PrimeHub</span>()
-
-left_motor  = <span class="c-cls">Motor</span>(Port.A, Direction.COUNTERCLOCKWISE)
-right_motor = <span class="c-cls">Motor</span>(Port.E, Direction.CLOCKWISE)
-RAM = <span class="c-cls">Motor</span>(Port.F)   <span class="c-comment"># Right Attachment Motor</span>
-LAM = <span class="c-cls">Motor</span>(Port.B)   <span class="c-comment"># Left Attachment Motor</span>
-
-robot = <span class="c-cls">DriveBase</span>(left_motor, right_motor, WHEEL_DIAMETER_MM, AXLE_TRACK_MM)</pre>
-        </div>
-        <div class="lines">
-          <div class="lines-title">Line by line</div>
-          <div class="line-row"><div class="line-code">hub = PrimeHub()</div><div class="line-why">Wakes up the hub so we can use its gyro, screen, and speaker. Stored in the variable <b>hub</b>.</div></div>
-          <div class="line-row"><div class="line-code">left_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)</div><div class="line-why">The left drive motor is in <b>Port A</b>. Because the two motors face opposite directions on the robot, one must be flipped so both push the robot <b>forward</b> — that's what <b>Direction</b> does.</div></div>
-          <div class="line-row"><div class="line-code">right_motor = Motor(Port.E, Direction.CLOCKWISE)</div><div class="line-why">The right drive motor is in <b>Port E</b>, spinning the normal way. If your robot backs up when you say forward, swap these two Directions.</div></div>
-          <div class="line-row"><div class="line-code">RAM = Motor(Port.F)</div><div class="line-why">An <b>attachment motor</b> (for arms, lifts, grabbers) in Port F. No Direction needed unless you want to flip it. "RAM" = Right Attachment Motor.</div></div>
-          <div class="line-row"><div class="line-code">LAM = Motor(Port.B)</div><div class="line-why">A second attachment motor in Port B. "LAM" = Left Attachment Motor.</div></div>
-          <div class="line-row"><div class="line-code">robot = DriveBase(left, right, WHEEL, AXLE)</div><div class="line-why">The star of the show. It ties the two drive motors together with your wheel &amp; axle numbers, giving you one <b>robot</b> that drives in mm and turns in degrees.</div></div>
-        </div>
-        <div class="tip">💡 <b>Match the ports!</b> If your left motor is really in Port B, change <span class="icode">Port.A</span> to <span class="icode">Port.B</span> here. The simulator's Robot Setup panel and this file must both describe the same real robot.</div>
-      </div>
-    </section>
-
-    <!-- STEP 5 -->
-    <section class="step" id="s5">
-      <div class="step-head">
-        <div class="step-num">5</div>
-        <div>
-          <div class="step-title">Motion settings — speed &amp; acceleration</div>
-          <div class="step-goal">Decide how fast the robot drives and turns, and how gently it speeds up.</div>
-        </div>
-      </div>
-      <div class="step-body">
-        <p><span class="icode">robot.settings(...)</span> sets the default speeds for every move. Slower is more accurate; faster is quicker but can slip. Acceleration is how <em>gently</em> it ramps up to speed — high acceleration can make wheels spin out.</p>
-        <div class="code-wrap">
-          <div class="code-head"><span class="fname">robot_base.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
-          <pre><span class="c-comment"># ─────────────────────────────────────────────
-# MOTION SETTINGS
-# straight_acceleration can be one value OR a tuple (accel, decel)
-# e.g. straight_acceleration=(400, 600) to ramp up slowly but brake fast
-# ─────────────────────────────────────────────</span>
-robot.<span class="c-fn">settings</span>(
-    straight_speed=<span class="c-num">600</span>,         <span class="c-comment"># mm/s — how fast it drives</span>
-    straight_acceleration=<span class="c-num">400</span>,  <span class="c-comment"># mm/s² — how quickly it reaches that speed</span>
-    turn_rate=<span class="c-num">400</span>,              <span class="c-comment"># deg/s — how fast it turns</span>
-    turn_acceleration=<span class="c-num">300</span>,       <span class="c-comment"># deg/s² — how quickly it reaches turn speed</span>
-)</pre>
-        </div>
-        <div class="lines">
-          <div class="lines-title">Line by line</div>
-          <div class="line-row"><div class="line-code">straight_speed=600</div><div class="line-why"><b>600 millimetres per second</b> when driving straight. Lower it (e.g. 300) for precise missions; raise it for long open runs.</div></div>
-          <div class="line-row"><div class="line-code">straight_acceleration=400</div><div class="line-why">How fast it builds up to 600 mm/s. Too high and the wheels can slip at the start. A <b>tuple</b> like (400, 600) lets it accelerate slowly but brake quickly.</div></div>
-          <div class="line-row"><div class="line-code">turn_rate=400</div><div class="line-why"><b>400 degrees per second</b> when turning in place. Lower it for very accurate turns.</div></div>
-          <div class="line-row"><div class="line-code">turn_acceleration=300</div><div class="line-why">How smoothly it reaches turn speed. Smoother turns are more repeatable.</div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- STEP 6 -->
-    <section class="step" id="s6">
-      <div class="step-head">
-        <div class="step-num">6</div>
-        <div>
-          <div class="step-title">Turn on the gyro</div>
-          <div class="step-goal">Use the hub's gyro sensor for straighter driving and sharper turns.</div>
-        </div>
-      </div>
-      <div class="step-body">
-        <p>Without the gyro, the robot guesses its heading from how much each wheel spun — which drifts over time. The <strong>gyro sensor</strong> actually measures rotation, so turns and straight lines stay true. One line turns it on:</p>
-        <div class="code-wrap">
-          <div class="code-head"><span class="fname">robot_base.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
-          <pre><span class="c-comment"># ─────────────────────────────────────────────
-# GYRO
-# Docs: "Choose True to use the gyro sensor for turning and
-# driving straight." Without this, heading uses encoders only.
-#
-# If the hub is NOT mounted flat, set top_side and front_side in
-# PrimeHub() so the correct rotation axis is used.
-# ─────────────────────────────────────────────</span>
-robot.<span class="c-fn">use_gyro</span>(<span class="c-kw">True</span>)</pre>
-        </div>
-        <div class="tip">💡 <b>Keep the robot still for a second</b> after your program starts. The gyro calibrates at the start — if you grab the robot while it's calibrating, your turns will be off.</div>
-      </div>
-    </section>
-
-    <!-- STEP 7 -->
-    <section class="step" id="s7">
-      <div class="step-head">
-        <div class="step-num">7</div>
-        <div>
-          <div class="step-title">PID tuning (advanced — leave it commented for now)</div>
-          <div class="step-goal">The dials that control how precisely the robot drives. Start with them OFF.</div>
-        </div>
-      </div>
-      <div class="step-body">
-        <p><strong>PID</strong> is how the robot corrects itself while moving. It stands for <b>P</b>roportional, <b>I</b>ntegral, <b>D</b>erivative — three "dials" that decide how hard the robot fights to stay on target. Pybricks has good defaults, so we write this block but leave it <em>commented out</em> (the <span class="icode">#</span> means Python skips it). You'll only uncomment and tune it if the robot misbehaves.</p>
-        <div class="code-wrap">
-          <div class="code-head"><span class="fname">robot_base.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
-          <pre><span class="c-comment"># ─────────────────────────────────────────────
-# PID TUNING (optional — uncomment to override the defaults)
-#
-# DISTANCE CONTROL — accuracy of straight moves
-#   kp: increase if the robot consistently stops short
-#   ki: increase if it never quite reaches the target
-#   kd: increase if it oscillates/overshoots at the end
-#
-# HEADING CONTROL — how straight the robot drives
-#   kp: increase if it drifts (too high = weaving)
-#   ki: removes a constant left/right bias (keep small)
-#   kd: prevents overcorrection (increase if it swings side to side)
-# ─────────────────────────────────────────────</span>
-<span class="c-comment"># robot.distance_control.pid(
-#     kp=2000,
-#     ki=100,
-#     kd=200,
-# )
-
-# robot.heading_control.pid(
-#     kp=1400,
-#     ki=60,
-#     kd=500,
-# )</span></pre>
-        </div>
-        <div class="lines">
-          <div class="lines-title">What each dial does (in plain words)</div>
-          <div class="line-row"><div class="line-code">kp — Proportional</div><div class="line-why">"How hard do I push based on how far off I am right now?" The main steering strength. Too low = sloppy; too high = jittery/weaving.</div></div>
-          <div class="line-row"><div class="line-code">ki — Integral</div><div class="line-why">"How hard do I push because I've been a little off for a while?" Fixes a small constant drift or coming-up-short. Keep it small.</div></div>
-          <div class="line-row"><div class="line-code">kd — Derivative</div><div class="line-why">"How hard do I ease off because I'm approaching the target fast?" The brakes that stop overshoot and side-to-side swinging.</div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- STEP 8 -->
-    <section class="step" id="s8">
-      <div class="step-head">
-        <div class="step-num">8</div>
-        <div>
-          <div class="step-title">reset() — start every run clean</div>
-          <div class="step-goal">Your first helper function. Zeroes distance, angle, and gyro heading.</div>
-        </div>
-      </div>
-      <div class="step-body">
-        <p>A <strong>function</strong> is a named block of code you can run whenever you want. <span class="icode">def</span> means "define a function." We wrap <span class="icode">robot.reset()</span> in our own <span class="icode">reset()</span> so run files can just call <span class="icode">reset()</span> at the top of every mission.</p>
-        <div class="code-wrap">
-          <div class="code-head"><span class="fname">robot_base.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
-          <pre><span class="c-comment"># ─────────────────────────────────────────────
-# HELPER FUNCTIONS
-# ─────────────────────────────────────────────</span>
-
-<span class="c-kw">def</span> <span class="c-fn">reset</span>():
-    <span class="c-str">"""
-    Call at the very start of every run.
-
-    Docs: robot.reset() resets estimated distance and angle,
-    calls stop(), and — when use_gyro(True) is set — also resets
-    the gyro heading to 0. One call does all three.
-    """</span>
-    robot.<span class="c-fn">reset</span>()   <span class="c-comment"># stop + reset distance/angle + reset gyro heading to 0</span></pre>
-        </div>
-        <div class="tip">💡 <b>Always call <span class="icode">reset()</span> first.</b> It's like setting a stopwatch to zero before a race — so every run starts measuring from the same place.</div>
-      </div>
-    </section>
-
-    <!-- STEP 9 -->
-    <section class="step" id="s9">
-      <div class="step-head">
-        <div class="step-num">9</div>
-        <div>
-          <div class="step-title">straight() and turn()</div>
-          <div class="step-goal">The two moves you'll use most — wrapped so you can add options later.</div>
-        </div>
-      </div>
-      <div class="step-body">
-        <p>These wrap the built-in <span class="icode">robot.straight()</span> and <span class="icode">robot.turn()</span>. Wrapping them in our own functions means if we ever want to change how ALL straights behave, we change it in one place. Notice the <span class="icode">then=</span> option — it decides what the robot does <em>after</em> the move.</p>
-        <div class="code-wrap">
-          <div class="code-head"><span class="fname">robot_base.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
-          <pre><span class="c-kw">def</span> <span class="c-fn">straight</span>(distance_mm, then=Stop.HOLD):
-    <span class="c-str">"""
-    Drive straight. Positive = forward, negative = backward.
-    then=Stop.HOLD holds position after stopping (default).
-    then=Stop.COAST lets the motors spin free — use on the last move.
-    """</span>
-    robot.<span class="c-fn">straight</span>(distance_mm, then=then)
-
-
-<span class="c-kw">def</span> <span class="c-fn">turn</span>(angle_deg, then=Stop.HOLD):
-    <span class="c-str">"""
-    Turn in place. Positive = right (clockwise), negative = left.
-    then=Stop.COAST on your last turn so wheels don't fight you.
-    """</span>
-    robot.<span class="c-fn">turn</span>(angle_deg, then=then)</pre>
-        </div>
-        <div class="lines">
-          <div class="lines-title">Key ideas</div>
-          <div class="line-row"><div class="line-code">distance_mm / angle_deg</div><div class="line-why">The <b>parameter</b> — the number you pass in when you call it, e.g. <span class="icode">straight(500)</span> or <span class="icode">turn(90)</span>.</div></div>
-          <div class="line-row"><div class="line-code">then=Stop.HOLD</div><div class="line-why">A <b>default value</b>. If you don't say otherwise, the robot <b>holds</b> its position after the move (motors resist being pushed).</div></div>
-          <div class="line-row"><div class="line-code">Stop.COAST</div><div class="line-why">Use on the <b>last</b> move so the wheels go loose — handy right before you pick the robot up, so it doesn't fight you.</div></div>
-          <div class="line-row"><div class="line-code">negative numbers</div><div class="line-why"><span class="icode">straight(-300)</span> reverses. <span class="icode">turn(-90)</span> turns left. Positive turns go right (clockwise).</div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- STEP 10 -->
-    <section class="step" id="s10">
-      <div class="step-head">
-        <div class="step-num">10</div>
-        <div>
-          <div class="step-title">turn_to() — turn to an exact heading</div>
-          <div class="step-goal">A smarter turn: face a specific compass direction using the gyro.</div>
-        </div>
-      </div>
-      <div class="step-body">
-        <p>Normal <span class="icode">turn(90)</span> turns 90° <em>from wherever you're facing now</em>. But sometimes you want to face an <strong>exact heading</strong> no matter where you started — like "point at 179°." This function reads the gyro, figures out how far to turn, and forces the turn in the direction you choose.</p>
-        <div class="code-wrap">
-          <div class="code-head"><span class="fname">robot_base.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
-          <pre><span class="c-kw">def</span> <span class="c-fn">turn_to</span>(target_heading, direction=-<span class="c-num">1</span>, then=Stop.HOLD):
-    <span class="c-str">"""
-    Turn to a specific absolute heading using the gyro.
-        target_heading : the heading you want to reach (degrees)
-        direction      : -1 = turn LEFT (default), +1 = turn RIGHT
-    Examples:
-        turn_to(179)      # turn LEFT to reach heading 179
-        turn_to(90, 1)    # turn RIGHT to reach heading 90
-        turn_to(0)        # turn LEFT back to the start
-    """</span>
-    current = hub.imu.<span class="c-fn">heading</span>()
-    delta = target_heading - current
-
-    <span class="c-kw">if</span> direction == -<span class="c-num">1</span>:
-        <span class="c-comment"># Force LEFT (counterclockwise = negative)</span>
-        <span class="c-kw">if</span> delta &gt; <span class="c-num">0</span>:
-            delta -= <span class="c-num">360</span>
-    <span class="c-kw">else</span>:
-        <span class="c-comment"># Force RIGHT (clockwise = positive)</span>
-        <span class="c-kw">if</span> delta &lt; <span class="c-num">0</span>:
-            delta += <span class="c-num">360</span>
-
-    robot.<span class="c-fn">turn</span>(delta, then=then)</pre>
-        </div>
-        <div class="lines">
-          <div class="lines-title">How the tricky part works</div>
-          <div class="line-row"><div class="line-code">current = hub.imu.heading()</div><div class="line-why">Ask the gyro: "which way am I facing right now?" (in degrees).</div></div>
-          <div class="line-row"><div class="line-code">delta = target_heading - current</div><div class="line-why">How far I need to turn = where I want to be − where I am.</div></div>
-          <div class="line-row"><div class="line-code">if direction == -1 and delta &gt; 0: delta -= 360</div><div class="line-why">You asked to go <b>LEFT</b>, but the shortest turn was to the right. Subtracting 360° flips it into the equivalent left turn instead.</div></div>
-          <div class="line-row"><div class="line-code">else: if delta &lt; 0: delta += 360</div><div class="line-why">Same idea for a forced <b>RIGHT</b> turn: if the number came out negative (left), add 360° to make it a right turn.</div></div>
-          <div class="line-row"><div class="line-code">robot.turn(delta)</div><div class="line-why">Finally, do the turn we calculated.</div></div>
-        </div>
-        <div class="tip">💡 <b>Why force a direction?</b> Sometimes turning the "long way" avoids hitting a wall or a mission model. <span class="icode">direction</span> lets you choose.</div>
-      </div>
-    </section>
-
-    <!-- STEP 11 -->
-    <section class="step" id="s11">
-      <div class="step-head">
-        <div class="step-num">11</div>
-        <div>
-          <div class="step-title">arc() — drive curves</div>
-          <div class="step-goal">Drive a smooth curved path instead of straight-then-turn.</div>
-        </div>
-      </div>
-      <div class="step-body">
-        <p>An <strong>arc</strong> is part of a circle. Curving can be faster and smoother than "straight, stop, turn, straight." You give it a <em>radius</em> (how tight the curve is) and either an angle or a distance.</p>
-        <div class="code-wrap">
-          <div class="code-head"><span class="fname">robot_base.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
-          <pre><span class="c-kw">def</span> <span class="c-fn">arc</span>(radius_mm, angle_deg=<span class="c-kw">None</span>, distance_mm=<span class="c-kw">None</span>, then=Stop.HOLD):
-    <span class="c-str">"""
-    Drive a curved arc.
-      radius &gt; 0 → curves RIGHT.  radius &lt; 0 → curves LEFT.
-      Give EITHER angle_deg OR distance_mm (not both).
-    Examples:
-      arc(200, angle_deg=90)     # curve right, quarter circle, radius 200
-      arc(-150, angle_deg=-45)   # curve left, in reverse
-      arc(300, distance_mm=400)  # curve right, 400mm along the arc
-    """</span>
-    robot.<span class="c-fn">arc</span>(radius_mm, angle=angle_deg, distance=distance_mm, then=then)</pre>
-        </div>
-        <div class="lines">
-          <div class="lines-title">Key ideas</div>
-          <div class="line-row"><div class="line-code">radius_mm</div><div class="line-why">How wide the curve is. Small radius = tight curve; big radius = gentle curve. <b>Positive curves right, negative curves left.</b></div></div>
-          <div class="line-row"><div class="line-code">angle_deg=None / distance_mm=None</div><div class="line-why"><b>None</b> means "not set." You fill in ONE of them: how far around the circle (degrees) OR how far to travel (mm).</div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- STEP 12 -->
-    <section class="step" id="s12">
-      <div class="step-head">
-        <div class="step-num">12</div>
-        <div>
-          <div class="step-title">Use it in a run file</div>
-          <div class="step-goal">Your setup file is done! Now write a mission that borrows from it.</div>
-        </div>
-      </div>
-      <div class="step-body">
-        <p>🎉 <span class="icode">robot_base.py</span> is finished — that's your single source of truth. For each mission, make a <strong>new</strong> file (e.g. <span class="icode">run1.py</span>) that imports from it. Notice how short and readable a run becomes:</p>
-        <div class="code-wrap">
-          <div class="code-head"><span class="fname">run1.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
-          <pre><span class="c-kw">from</span> robot_base <span class="c-kw">import</span> robot, hub, RAM, LAM, straight, turn, arc, reset
-
-reset()              <span class="c-comment"># always start clean</span>
-straight(<span class="c-num">500</span>)        <span class="c-comment"># forward 500 mm</span>
-turn(<span class="c-num">90</span>)             <span class="c-comment"># turn right 90°</span>
-straight(<span class="c-num">300</span>)        <span class="c-comment"># forward 300 mm</span>
-RAM.<span class="c-fn">run_time</span>(<span class="c-num">500</span>, <span class="c-num">1000</span>)   <span class="c-comment"># spin the right attachment motor</span></pre>
-        </div>
-        <p>Because all the setup lives in <span class="icode">robot_base.py</span>, every run file stays tiny and easy to read — and if you re-tune the robot, <em>every</em> run improves at once.</p>
-        <div class="tip">🕹️ <b>Test it first in the Simulator!</b> The <a href="/fll-hub/simulator" style="color:var(--green-dark);font-weight:800">BIOGLOW Robot Simulator</a> understands this exact code — <span class="icode">DriveBase</span>, <span class="icode">robot.settings()</span>, <span class="icode">straight</span>, <span class="icode">turn</span>, attachment motors, and all. Paste your run there to see the path before you touch a real robot.</div>
-      </div>
-    </section>
-
-    <!-- STEP 13 -->
-    <section class="step" id="s13">
-      <div class="step-head">
-        <div class="step-num">13</div>
-        <div>
-          <div class="step-title">Calibrate your robot</div>
-          <div class="step-goal">Make distances and turns dead accurate — the final, most important step.</div>
-        </div>
-      </div>
-      <div class="step-body">
-        <p>Your robot won't be perfectly accurate until you calibrate the two numbers from Step 3. Do these in order — <strong>wheel diameter first, then axle track</strong> — because turning depends on driving being correct.</p>
-        <ul>
-          <li><strong>Step A — Wheel diameter.</strong> Run <span class="icode">straight(1000)</span> and measure how far it actually went. Traveled too <em>short</em> → decrease <span class="icode">WHEEL_DIAMETER_MM</span>. Too <em>far</em> → increase it. (Math shortcut: <span class="icode">new = old × (1000 / actual)</span>.)</li>
-          <li><strong>Step B — Axle track.</strong> Once distance is right, run <span class="icode">turn(360)</span>. The robot should end facing the same way. Turned too <em>little</em> → increase <span class="icode">AXLE_TRACK_MM</span>. Too <em>far</em> → decrease it.</li>
-          <li><strong>Step C — Heading drift.</strong> If it drifts while driving straight, raise <span class="icode">heading_control kp</span> a little. If it starts weaving, raise <span class="icode">kd</span>.</li>
-          <li><strong>Step D — Overshoot.</strong> If it overshoots or wobbles at the end of a move, lower <span class="icode">distance_control kp</span> and raise <span class="icode">kd</span>.</li>
-          <li><strong>Step E — Gyro quirk.</strong> Every gyro is slightly different. If a 90° turn lands at 87°, tell it <span class="icode">turn(93)</span> to compensate.</li>
-          <li><strong>Step F — Last move.</strong> Use <span class="icode">then=Stop.COAST</span> on your final straight/turn so the robot doesn't fight you when you pick it up.</li>
-        </ul>
-        <div class="tip">💡 Calibrate the <b>simulator's Robot Setup panel</b> to the same wheel/axle numbers and your simulated runs will match real life closely.</div>
-      </div>
-    </section>
-
-    <p class="footer-note">
-      Done? You built a real <b>robot_base.py</b> and know what every line does. 🎉<br>
-      Practice using it in the <a href="/fll-hub/simulator">Robot Simulator</a>, or review the moves in the <a href="/fll-hub/coding-guide">Coding Guide</a>.
+    <p class="footer-note" id="footerNote">
+      Finish all the steps to complete your <b>robot_base.py</b> 🎉
     </p>
   </main>
 
+  <!-- file overlay -->
+  <div class="file-overlay" id="fileOverlay" onclick="if(event.target===this)closeFile()">
+    <div class="file-card">
+      <div class="file-card-head">
+        <span class="ft">robot_base.py</span>
+        <div class="fa">
+          <button class="file-close" id="fileCopyBtn" onclick="copyFullFile()">📋 Copy file</button>
+          <button class="file-close" onclick="closeFile()">✕ Close</button>
+        </div>
+      </div>
+      <div class="file-body"><pre id="fileContent"></pre></div>
+    </div>
+  </div>
+
   <script>
+    // ══════════════════ STEP / FILE DEFINITIONS ══════════════════
+    // Each step may contribute a chunk to robot_base.py.
+    //   interactive:true  → student fills in an editor; `code` is the answer.
+    //   interactive:false → auto-included in the file when reached (docstring, PID, headers).
+    //   code:null         → reference only, not part of the file.
+    const STEPS = [
+      {
+        id: 's1', num: 1, title: 'The file header (docstring)', goal: 'A note-to-humans that says what this file is.',
+        interactive: false,
+        body: `<p>A <strong>docstring</strong> is text between triple quotes <span class="icode">"""</span>. Python ignores it — it's a message for the humans reading your code. We give you this one for free; it's the top of your file.</p>`,
+        code: `"""\nrobot_base.py — Single source of truth for robot setup and motion.\n\nHOW TO USE IN A RUN FILE:\n    from robot_base import robot, hub, RAM, LAM, straight, turn, arc, reset\n    reset()\n    straight(500)\n    turn(90)\n"""`,
+        codeHtml: `<span class="c-str">"""\nrobot_base.py — Single source of truth for robot setup and motion.\n\nHOW TO USE IN A RUN FILE:\n    from robot_base import robot, hub, RAM, LAM, straight, turn, arc, reset\n    reset()\n    straight(500)\n    turn(90)\n"""</span>`
+      },
+      {
+        id: 's2', num: 2, title: 'Imports — borrow Pybricks tools', goal: 'Fill in the names of the tools we borrow.',
+        interactive: true,
+        body: `<p><span class="icode">import</span> borrows pre-made tools. Fill in the blanks with the right tool for each line: the <b>brain</b>, a <b>motor</b>, and the <b>drive base</b>.</p>
+          <div class="lines"><div class="lines-title">Hints</div>
+          <div class="line-row"><div class="line-code">pybricks.hubs</div><div class="line-why">The brain of your robot → <b>PrimeHub</b></div></div>
+          <div class="line-row"><div class="line-code">pybricks.pupdevices</div><div class="line-why">One motor → <b>Motor</b></div></div>
+          <div class="line-row"><div class="line-code">pybricks.robotics</div><div class="line-why">Two motors combined into a driving robot → <b>DriveBase</b></div></div></div>`,
+        starter: `from pybricks.hubs import ____\nfrom pybricks.pupdevices import ____\nfrom pybricks.robotics import ____\nfrom pybricks.parameters import Port, Direction, Stop\nfrom pybricks.tools import wait`,
+        code: `from pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.robotics import DriveBase\nfrom pybricks.parameters import Port, Direction, Stop\nfrom pybricks.tools import wait`
+      },
+      {
+        id: 's3', num: 3, title: 'Robot constants — wheel & axle', goal: 'Type the two measurements the robot needs.',
+        interactive: true,
+        body: `<p>The DriveBase turns "drive 500 mm" into wheel spins. It needs two numbers about YOUR robot. Fill them in: the standard small SPIKE wheel is <b>56</b> mm across, and this robot's wheels are <b>122</b> mm apart.</p>
+          <div class="tip">💡 ALL-CAPS names are a Python habit meaning "this is a constant." You'll calibrate these exact numbers in Step 13.</div>`,
+        starter: `# Robot physical constants — calibrate these later (Step 13)\nWHEEL_DIAMETER_MM = ____\nAXLE_TRACK_MM = ____`,
+        code: `# Robot physical constants — calibrate these later (Step 13)\nWHEEL_DIAMETER_MM = 56\nAXLE_TRACK_MM = 122`
+      },
+      {
+        id: 's4', num: 4, title: 'Hardware — hub, motors, DriveBase', goal: 'Wire up the brain, motors, and build the robot.',
+        interactive: true,
+        body: `<p>Now create real objects for each piece of hardware. Fill in: the hub <b>class</b>, each motor's <b>Direction</b>, the attachment motor <b>Ports</b>, and the two constants that go into the DriveBase.</p>
+          <div class="lines"><div class="lines-title">Fill these in</div>
+          <div class="line-row"><div class="line-code">hub = ____()</div><div class="line-why"><b>PrimeHub</b> — wakes up the brain.</div></div>
+          <div class="line-row"><div class="line-code">Direction.____</div><div class="line-why">One motor is flipped so both push forward: <b>COUNTERCLOCKWISE</b> (left) and <b>CLOCKWISE</b> (right).</div></div>
+          <div class="line-row"><div class="line-code">Port.____</div><div class="line-why">Attachment motors: <b>F</b> for RAM, <b>B</b> for LAM.</div></div>
+          <div class="line-row"><div class="line-code">DriveBase(..., ____, ____)</div><div class="line-why">Pass your two constants: <b>WHEEL_DIAMETER_MM</b>, <b>AXLE_TRACK_MM</b>.</div></div></div>
+          <div class="tip">💡 The Port letters must match YOUR real robot's cables. If your left motor is in a different port, change it here.</div>`,
+        starter: `hub = ____()\n\nleft_motor = Motor(Port.A, Direction.____)\nright_motor = Motor(Port.E, Direction.____)\nRAM = Motor(Port.____)   # Right Attachment Motor\nLAM = Motor(Port.____)   # Left Attachment Motor\n\nrobot = DriveBase(left_motor, right_motor, ____, ____)`,
+        code: `hub = PrimeHub()\n\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.E, Direction.CLOCKWISE)\nRAM = Motor(Port.F)   # Right Attachment Motor\nLAM = Motor(Port.B)   # Left Attachment Motor\n\nrobot = DriveBase(left_motor, right_motor, WHEEL_DIAMETER_MM, AXLE_TRACK_MM)`
+      },
+      {
+        id: 's5', num: 5, title: 'Motion settings — speed & acceleration', goal: 'Set how fast the robot drives and turns.',
+        interactive: true,
+        body: `<p>Fill in the speeds. Slower is more accurate; faster is quicker. Use <b>600</b> mm/s straight, <b>400</b> for straight acceleration, <b>400</b> deg/s turn rate, and <b>300</b> turn acceleration.</p>`,
+        starter: `robot.settings(\n    straight_speed=____,         # mm/s\n    straight_acceleration=____,  # mm/s^2\n    turn_rate=____,              # deg/s\n    turn_acceleration=____,      # deg/s^2\n)`,
+        code: `robot.settings(\n    straight_speed=600,          # mm/s\n    straight_acceleration=400,   # mm/s^2\n    turn_rate=400,               # deg/s\n    turn_acceleration=300,       # deg/s^2\n)`
+      },
+      {
+        id: 's6', num: 6, title: 'Turn on the gyro', goal: 'One line for straighter driving and sharper turns.',
+        interactive: true,
+        body: `<p>The gyro sensor measures real rotation, so turns and straight lines stay true. Turn it on by passing <b>True</b>.</p>
+          <div class="tip">💡 Keep the robot still for a second after the program starts — the gyro calibrates at the start.</div>`,
+        starter: `robot.use_gyro(____)`,
+        code: `robot.use_gyro(True)`
+      },
+      {
+        id: 's7', num: 7, title: 'PID tuning (optional block)', goal: 'We add this commented-out. You only tune it if needed.',
+        interactive: false,
+        body: `<p><strong>PID</strong> is how the robot corrects itself while moving — <b>P</b>roportional, <b>I</b>ntegral, <b>D</b>erivative. Pybricks has good defaults, so we add this block <em>commented out</em> (the <span class="icode">#</span> means Python skips it). You'd only uncomment it if the robot misbehaves.</p>
+          <div class="lines"><div class="lines-title">What each dial does</div>
+          <div class="line-row"><div class="line-code">kp</div><div class="line-why">How hard to push based on how far off you are <b>right now</b>. Too high = jittery.</div></div>
+          <div class="line-row"><div class="line-code">ki</div><div class="line-why">Fixes a small, <b>constant</b> drift over time. Keep it small.</div></div>
+          <div class="line-row"><div class="line-code">kd</div><div class="line-why">Eases off as you <b>approach</b> the target — stops overshoot/wobble.</div></div></div>`,
+        code: `# PID tuning (optional — uncomment to override the defaults)\n# robot.distance_control.pid(kp=2000, ki=100, kd=200)\n# robot.heading_control.pid(kp=1400, ki=60, kd=500)`,
+        codeHtml: `<span class="c-comment"># PID tuning (optional — uncomment to override the defaults)\n# robot.distance_control.pid(kp=2000, ki=100, kd=200)\n# robot.heading_control.pid(kp=1400, ki=60, kd=500)</span>`
+      },
+      {
+        id: 'shelp', num: null, title: null, interactive: false, hidden: true,
+        code: `# ── Helper functions ──`
+      },
+      {
+        id: 's8', num: 8, title: 'reset() — start every run clean', goal: 'Your first function. Fill in the one line inside it.',
+        interactive: true,
+        body: `<p><span class="icode">def</span> means "define a function." Inside <span class="icode">reset()</span> call the robot's own reset. Fill in the method name — it's the same word: <b>reset</b>.</p>
+          <div class="tip">💡 <span class="icode">robot.reset()</span> stops the motors AND zeroes distance, angle, and gyro heading — all in one call.</div>`,
+        starter: `def reset():\n    robot.____()   # stop + reset distance/angle + reset gyro heading`,
+        code: `def reset():\n    robot.reset()   # stop + reset distance/angle + reset gyro heading`
+      },
+      {
+        id: 's9', num: 9, title: 'straight() and turn()', goal: 'Pass the right value into each move.',
+        interactive: true,
+        body: `<p>These wrap the built-in moves. Fill in what gets passed to the robot: the <b>distance_mm</b> for straight, and the <b>angle_deg</b> for turn.</p>
+          <div class="lines"><div class="lines-title">Remember</div>
+          <div class="line-row"><div class="line-code">then=Stop.HOLD</div><div class="line-why">Default: hold position after the move.</div></div>
+          <div class="line-row"><div class="line-code">negative numbers</div><div class="line-why"><span class="icode">straight(-300)</span> reverses; <span class="icode">turn(-90)</span> turns left.</div></div></div>`,
+        starter: `def straight(distance_mm, then=Stop.HOLD):\n    robot.straight(____, then=then)\n\n\ndef turn(angle_deg, then=Stop.HOLD):\n    robot.turn(____, then=then)`,
+        code: `def straight(distance_mm, then=Stop.HOLD):\n    robot.straight(distance_mm, then=then)\n\n\ndef turn(angle_deg, then=Stop.HOLD):\n    robot.turn(angle_deg, then=then)`
+      },
+      {
+        id: 's10', num: 10, title: 'turn_to() — turn to an exact heading', goal: 'Fill in the gyro math that forces a turn direction.',
+        interactive: true,
+        body: `<p>This faces an <strong>exact heading</strong> using the gyro, no matter where you started. Fill in the three blanks: subtract your <b>current</b> heading, and wrap by <b>360</b> to force the chosen direction.</p>
+          <div class="lines"><div class="lines-title">The tricky part</div>
+          <div class="line-row"><div class="line-code">delta = target - current</div><div class="line-why">How far to turn = where you want − where you are.</div></div>
+          <div class="line-row"><div class="line-code">delta -= 360</div><div class="line-why">You asked to go LEFT but the short way was right → subtract 360 to make it a left turn.</div></div>
+          <div class="line-row"><div class="line-code">delta += 360</div><div class="line-why">Forcing RIGHT but the number came out negative → add 360.</div></div></div>`,
+        starter: `def turn_to(target_heading, direction=-1, then=Stop.HOLD):\n    current = hub.imu.heading()\n    delta = target_heading - ____\n    if direction == -1:\n        if delta > 0:\n            delta -= ____\n    else:\n        if delta < 0:\n            delta += ____\n    robot.turn(delta, then=then)`,
+        code: `def turn_to(target_heading, direction=-1, then=Stop.HOLD):\n    current = hub.imu.heading()\n    delta = target_heading - current\n    if direction == -1:\n        if delta > 0:\n            delta -= 360\n    else:\n        if delta < 0:\n            delta += 360\n    robot.turn(delta, then=then)`
+      },
+      {
+        id: 's11', num: 11, title: 'arc() — drive curves', goal: 'Fill in the value that sets how tight the curve is.',
+        interactive: true,
+        body: `<p>An <strong>arc</strong> is part of a circle. Fill in the first value passed to <span class="icode">robot.arc</span> — the <b>radius_mm</b> (positive curves right, negative curves left).</p>`,
+        starter: `def arc(radius_mm, angle_deg=None, distance_mm=None, then=Stop.HOLD):\n    robot.arc(____, angle=angle_deg, distance=distance_mm, then=then)`,
+        code: `def arc(radius_mm, angle_deg=None, distance_mm=None, then=Stop.HOLD):\n    robot.arc(radius_mm, angle=angle_deg, distance=distance_mm, then=then)`
+      },
+      {
+        id: 's12', num: 12, title: 'Use it in a run file', goal: 'Your file is done! Here is how a mission uses it.',
+        interactive: false, code: null,
+        body: `<p>🎉 <b>robot_base.py is finished</b> — tap <b>📄 Your file so far</b> to see the whole thing and copy it. For each mission you make a <strong>new</strong> file that imports from it. Look how short a run becomes:</p>
+          <div class="code-wrap"><div class="code-head"><span class="fname">run1.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><span class="c-kw">from</span> robot_base <span class="c-kw">import</span> robot, hub, RAM, LAM, straight, turn, arc, reset\n\nreset()              <span class="c-comment"># always start clean</span>\nstraight(<span class="c-num">500</span>)        <span class="c-comment"># forward 500 mm</span>\nturn(<span class="c-num">90</span>)             <span class="c-comment"># turn right 90°</span>\nstraight(<span class="c-num">300</span>)        <span class="c-comment"># forward 300 mm</span>\nRAM.<span class="c-fn">run_time</span>(<span class="c-num">500</span>, <span class="c-num">1000</span>)   <span class="c-comment"># spin the right attachment motor</span></pre></div>
+          <div class="tip">🕹️ <b>Test it in the Simulator!</b> The <a href="/fll-hub/simulator" style="color:var(--green-dark);font-weight:800">BIOGLOW Simulator</a> runs this exact code — paste your run to see the path before you touch a real robot.</div>`
+      },
+      {
+        id: 's13', num: 13, title: 'Calibrate your robot', goal: 'Make distances and turns dead accurate.',
+        interactive: false, code: null,
+        body: `<p>Your robot won't be perfectly accurate until you calibrate the two numbers from Step 3. Do these <strong>in order</strong>:</p>
+          <ul>
+          <li><strong>Wheel diameter first.</strong> Run <span class="icode">straight(1000)</span>, measure the real distance. Too short → decrease <span class="icode">WHEEL_DIAMETER_MM</span>; too far → increase it. (Shortcut: <span class="icode">new = old × (1000 / actual)</span>.)</li>
+          <li><strong>Then axle track.</strong> Run <span class="icode">turn(360)</span> — it should end facing the same way. Turned too little → increase <span class="icode">AXLE_TRACK_MM</span>; too far → decrease it.</li>
+          <li><strong>Drift?</strong> Raise <span class="icode">heading_control kp</span> a little. Weaving? Raise <span class="icode">kd</span>.</li>
+          <li><strong>Overshoot at the end?</strong> Lower <span class="icode">distance_control kp</span>, raise <span class="icode">kd</span>.</li>
+          <li><strong>Gyro quirk:</strong> if a 90° turn lands at 87°, use <span class="icode">turn(93)</span> to compensate.</li>
+          <li><strong>Last move:</strong> use <span class="icode">then=Stop.COAST</span> so the robot doesn't fight you when you pick it up.</li>
+          </ul>
+          <div class="tip">💡 Set the <b>Simulator's Robot Setup</b> to the same wheel/axle numbers and your sim runs will match real life.</div>`
+      }
+    ];
+
+    const INTERACTIVE = STEPS.filter(s => s.interactive);
+    const TOTAL = INTERACTIVE.length;
+    const STORE_KEY = 'robotbase-tutorial-v2';
+
+    let progress = { done: [], code: {} };
+    try { const s = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); if (s) progress = { done: [], code: {}, ...s }; } catch (e) {}
+    function save() { localStorage.setItem(STORE_KEY, JSON.stringify(progress)); }
+
+    // normalize code for forgiving comparison: strip # comments, collapse whitespace, drop blank lines
+    function norm(s) {
+      return s.split('\n')
+        .map(l => l.replace(/#.*$/, '').replace(/\s+/g, ' ').trim())
+        .filter(Boolean)
+        .join('\n');
+    }
+    function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    // ── render ──
+    function renderSteps() {
+      const root = document.getElementById('stepsRoot');
+      root.innerHTML = STEPS.filter(s => !s.hidden).map(step => {
+        const isDone = progress.done.includes(step.id);
+        let badge = '';
+        if (step.interactive) badge = isDone ? '<span class="step-badge ok">✓ Added to file</span>' : '<span class="step-badge todo">✍️ Code it</span>';
+        else if (step.code) badge = '<span class="step-badge ref">Given for you</span>';
+        else badge = '<span class="step-badge ref">Reference</span>';
+
+        let editor = '';
+        if (step.interactive) {
+          const val = progress.code[step.id] != null ? progress.code[step.id] : step.starter;
+          editor = `
+            <div class="editor-label">✍️ Fill in the blanks — <span class="fname">robot_base.py</span></div>
+            <textarea class="code-editor ${isDone ? 'ok' : ''}" id="ed-${step.id}" spellcheck="false" oninput="onEdit('${step.id}')">${esc(val)}</textarea>
+            <div class="ed-actions">
+              <button class="ed-btn check" onclick="checkStep('${step.id}')">✓ Check my code</button>
+              <button class="ed-btn reveal" onclick="revealStep('${step.id}')">💡 Show answer</button>
+              <button class="ed-btn reset-ed" onclick="resetStep('${step.id}')">↺ Reset box</button>
+            </div>
+            <div class="ed-feedback ${isDone ? 'ok' : ''}" id="fb-${step.id}">${isDone ? '✓ Nice — this piece is in your file.' : ''}</div>`;
+        } else if (step.codeHtml) {
+          editor = `<div class="code-wrap"><div class="code-head"><span class="fname">robot_base.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div><pre>${step.codeHtml}</pre></div>`;
+        }
+
+        return `
+          <section class="step ${isDone ? 'done' : ''}" id="${step.id}">
+            <div class="step-head">
+              <div class="step-num"><span class="n">${step.num}</span><span class="check">✓</span></div>
+              <div>
+                <div class="step-title">${step.title}</div>
+                ${step.goal ? `<div class="step-goal">${step.goal}</div>` : ''}
+              </div>
+              ${badge}
+            </div>
+            <div class="step-body">
+              ${step.body}
+              ${editor}
+            </div>
+          </section>`;
+      }).join('');
+      updateProgress();
+    }
+
+    function onEdit(id) {
+      const ta = document.getElementById('ed-' + id);
+      progress.code[id] = ta.value;
+      save();
+    }
+
+    function checkStep(id) {
+      const step = STEPS.find(s => s.id === id);
+      const ta = document.getElementById('ed-' + id);
+      const fb = document.getElementById('fb-' + id);
+      const raw = ta.value;
+      progress.code[id] = raw;
+
+      if (norm(raw) === norm(step.code)) {
+        markDone(id, ta, fb);
+      } else {
+        ta.classList.remove('ok'); ta.classList.add('err');
+        if (raw.includes('____')) {
+          fb.textContent = '✍️ Almost! You still have blanks (____) to fill in.';
+        } else {
+          fb.textContent = '❌ Not quite — check spelling and capital letters (Python is picky!). Compare with the hints, or tap 💡 Show answer.';
+        }
+        fb.className = 'ed-feedback err';
+      }
+      save();
+    }
+
+    function revealStep(id) {
+      const step = STEPS.find(s => s.id === id);
+      const ta = document.getElementById('ed-' + id);
+      const fb = document.getElementById('fb-' + id);
+      ta.value = step.code;
+      progress.code[id] = step.code;
+      markDone(id, ta, fb, true);
+      save();
+    }
+
+    function resetStep(id) {
+      const step = STEPS.find(s => s.id === id);
+      const ta = document.getElementById('ed-' + id);
+      const fb = document.getElementById('fb-' + id);
+      ta.value = step.starter;
+      ta.classList.remove('ok', 'err');
+      fb.textContent = ''; fb.className = 'ed-feedback';
+      progress.code[id] = step.starter;
+      progress.done = progress.done.filter(x => x !== id);
+      document.getElementById(id).classList.remove('done');
+      save();
+      updateProgress();
+    }
+
+    function markDone(id, ta, fb, revealed) {
+      ta.classList.remove('err'); ta.classList.add('ok');
+      fb.textContent = revealed ? '💡 Answer shown — added to your file. Try to understand each part!' : '✅ Correct! Added to your robot_base.py.';
+      fb.className = 'ed-feedback ok';
+      document.getElementById(id).classList.add('done');
+      if (!progress.done.includes(id)) progress.done.push(id);
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const done = INTERACTIVE.filter(s => progress.done.includes(s.id)).length;
+      document.getElementById('pgLabel').textContent = `Coded ${done} / ${TOTAL}`;
+      document.getElementById('pgFill').style.width = Math.round(done / TOTAL * 100) + '%';
+      const foot = document.getElementById('footerNote');
+      if (done === TOTAL) foot.innerHTML = '🎉 <b>You built the whole robot_base.py!</b> Tap 📄 Your file so far to copy it into code.pybricks.com, then test it in the <a href="/fll-hub/simulator">Simulator</a>.';
+    }
+
+    // ── assembled file (top-down prefix of satisfied parts) ──
+    function assembledFile() {
+      const parts = [];
+      for (const step of STEPS) {
+        if (step.code == null) continue;            // reference-only steps contribute nothing
+        const satisfied = !step.interactive || progress.done.includes(step.id);
+        if (satisfied) parts.push(step.code);
+        else break;                                  // stop at the first piece not coded yet
+      }
+      return parts.join('\n\n');
+    }
+
+    function openFile() {
+      const content = assembledFile();
+      const el = document.getElementById('fileContent');
+      if (!content.trim()) {
+        el.innerHTML = '<span class="file-empty">Your file is empty — go code Step 2 to start filling it in! ✍️</span>';
+      } else {
+        el.textContent = content;
+      }
+      document.getElementById('fileOverlay').classList.add('show');
+    }
+    function closeFile() { document.getElementById('fileOverlay').classList.remove('show'); }
+    function copyFullFile() {
+      const content = assembledFile();
+      if (!content.trim()) return;
+      navigator.clipboard.writeText(content).then(() => {
+        const b = document.getElementById('fileCopyBtn'); const o = b.textContent;
+        b.textContent = '✓ Copied!'; setTimeout(() => b.textContent = o, 2000);
+      });
+    }
+
     function copyCode(btn) {
       const code = btn.closest('.code-wrap').querySelector('pre').textContent;
       navigator.clipboard.writeText(code).then(() => {
-        const orig = btn.textContent;
-        btn.textContent = '✓ Copied!';
-        setTimeout(() => { btn.textContent = orig; }, 2000);
+        const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000);
       });
     }
+
+    // Tab key inserts 4 spaces in the editors
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab' && e.target.classList.contains('code-editor')) {
+        e.preventDefault();
+        const el = e.target, s = el.selectionStart;
+        el.value = el.value.slice(0, s) + '    ' + el.value.slice(el.selectionEnd);
+        el.selectionStart = el.selectionEnd = s + 4;
+        progress.code[el.id.replace('ed-', '')] = el.value; save();
+      }
+    });
+
+    renderSteps();
   </script>
 </body>
 </html>
