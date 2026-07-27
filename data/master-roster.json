@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-23T18:01:32.871Z",
+  "updatedAt": "2026-07-27T18:27:45.397Z",
   "settings": {
     "summerWeeks": [
       {
@@ -130,7 +130,8 @@
       "day": "To be scheduled",
       "schedule": "Returning team roster setup, BIOGLOW kickoff prep, robot inventory, and documentation routines.",
       "active": true,
-      "createdAt": "2026-06-17T15:19:43.288Z"
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "classCode": "HG"
     },
     {
       "id": "fll-team-firefox",
@@ -140,7 +141,8 @@
       "day": "To be scheduled",
       "schedule": "Returning team roster setup, BIOGLOW kickoff prep, robot reliability, and presentation confidence.",
       "active": true,
-      "createdAt": "2026-06-17T15:19:43.288Z"
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "classCode": "FF"
     },
     {
       "id": "fll-team-tidal-engineers",
@@ -150,7 +152,8 @@
       "day": "To be scheduled",
       "schedule": "Returning team roster setup, BIOGLOW kickoff prep, engineering documentation, and mission strategy.",
       "active": true,
-      "createdAt": "2026-06-17T15:19:43.288Z"
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "classCode": "TE"
     },
     {
       "id": "fll-team-wcdc-fighters",
@@ -160,7 +163,8 @@
       "day": "To be scheduled",
       "schedule": "Returning team roster setup, BIOGLOW kickoff prep, robot fundamentals, and team routines.",
       "active": true,
-      "createdAt": "2026-06-17T15:19:43.288Z"
+      "createdAt": "2026-06-17T15:19:43.288Z",
+      "classCode": "WCDC"
     },
     {
       "id": "summer-lego-robotics-1",
@@ -792,8 +796,14 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z",
-      "portalUsername": "clairezhai"
+      "updatedAt": "2026-07-27T18:27:10.010Z",
+      "portalUsername": "clairezhai",
+      "fllUserId": "student-claire-zhai-33c762",
+      "fllTeamId": "team-history-guardians",
+      "hubAccess": [
+        "fll-hub"
+      ],
+      "lastStudentPortalLoginAt": "2026-07-27T18:27:45.397Z"
     },
     {
       "id": "master-fll-hub-luketisserant",
@@ -810,8 +820,13 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z",
-      "portalUsername": "luketisserant"
+      "updatedAt": "2026-07-27T18:27:10.010Z",
+      "portalUsername": "luketisserant",
+      "fllUserId": "student-luke-tisserant-33a686",
+      "fllTeamId": "team-history-guardians",
+      "hubAccess": [
+        "fll-hub"
+      ]
     },
     {
       "id": "master-fll-hub-masonyuan",
@@ -828,8 +843,13 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z",
-      "portalUsername": "masonyuan"
+      "updatedAt": "2026-07-27T18:27:10.010Z",
+      "portalUsername": "masonyuan",
+      "fllUserId": "student-mason-yuan-1f9680",
+      "fllTeamId": "team-history-guardians",
+      "hubAccess": [
+        "fll-hub"
+      ]
     },
     {
       "id": "master-fll-hub-isabellafeng",
@@ -846,8 +866,13 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z",
-      "portalUsername": "isabellafeng"
+      "updatedAt": "2026-07-27T18:27:10.010Z",
+      "portalUsername": "isabellafeng",
+      "fllUserId": "student-isabella-feng-dde604",
+      "fllTeamId": "team-history-guardians",
+      "hubAccess": [
+        "fll-hub"
+      ]
     },
     {
       "id": "master-fll-hub-domenicopetrini",
@@ -864,8 +889,13 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z",
-      "portalUsername": "domenicopetrini"
+      "updatedAt": "2026-07-27T18:27:10.010Z",
+      "portalUsername": "domenicopetrini",
+      "fllUserId": "student-domenico-petrini-6ef9cb",
+      "fllTeamId": "team-tidal-engineers",
+      "hubAccess": [
+        "fll-hub"
+      ]
     },
     {
       "id": "master-fll-hub-elisfishman",
@@ -882,8 +912,13 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z",
-      "portalUsername": "elisfishman"
+      "updatedAt": "2026-07-27T18:27:10.010Z",
+      "portalUsername": "elisfishman",
+      "fllUserId": "student-elis-fishman-e7aa78",
+      "fllTeamId": "team-tidal-engineers",
+      "hubAccess": [
+        "fll-hub"
+      ]
     },
     {
       "id": "master-fll-hub-isaiahirwin",
@@ -900,8 +935,13 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z",
-      "portalUsername": "isaiahirwin"
+      "updatedAt": "2026-07-27T18:27:10.010Z",
+      "portalUsername": "isaiahirwin",
+      "fllUserId": "student-isaiah-irwin-2f1d7b",
+      "fllTeamId": "team-tidal-engineers",
+      "hubAccess": [
+        "fll-hub"
+      ]
     },
     {
       "id": "master-fll-hub-finnfitzner",
@@ -918,8 +958,13 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z",
-      "portalUsername": "finnfitzner"
+      "updatedAt": "2026-07-27T18:27:10.010Z",
+      "portalUsername": "finnfitzner",
+      "fllUserId": "student-finn-fitzner-3e1a78",
+      "fllTeamId": "team-tidal-engineers",
+      "hubAccess": [
+        "fll-hub"
+      ]
     },
     {
       "id": "master-fll-hub-lawrenceliu",
@@ -936,8 +981,13 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z",
-      "portalUsername": "lawrenceliu"
+      "updatedAt": "2026-07-27T18:27:10.010Z",
+      "portalUsername": "lawrenceliu",
+      "fllUserId": "student-lawrence-liu-cb31cb",
+      "fllTeamId": "team-firefox",
+      "hubAccess": [
+        "fll-hub"
+      ]
     },
     {
       "id": "master-fll-hub-vincentliu",
@@ -954,8 +1004,13 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z",
-      "portalUsername": "vincentliu"
+      "updatedAt": "2026-07-27T18:27:10.010Z",
+      "portalUsername": "vincentliu",
+      "fllUserId": "student-vincent-liu-36515a",
+      "fllTeamId": "team-firefox",
+      "hubAccess": [
+        "fll-hub"
+      ]
     },
     {
       "id": "master-fll-hub-thalesliu",
@@ -972,8 +1027,13 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z",
-      "portalUsername": "thalesliu"
+      "updatedAt": "2026-07-27T18:27:10.010Z",
+      "portalUsername": "thalesliu",
+      "fllUserId": "student-thales-liu-be7a7e",
+      "fllTeamId": "team-firefox",
+      "hubAccess": [
+        "fll-hub"
+      ]
     },
     {
       "id": "master-fll-hub-adamzeng",
@@ -990,8 +1050,13 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z",
-      "portalUsername": "adamzeng"
+      "updatedAt": "2026-07-27T18:27:10.010Z",
+      "portalUsername": "adamzeng",
+      "fllUserId": "student-adam-zeng-5bdd20",
+      "fllTeamId": "team-firefox",
+      "hubAccess": [
+        "fll-hub"
+      ]
     },
     {
       "id": "master-fll-hub-estella",
@@ -1008,8 +1073,13 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z",
-      "portalUsername": "estella"
+      "updatedAt": "2026-07-27T18:27:10.010Z",
+      "portalUsername": "estella",
+      "fllUserId": "student-estella-6e878f",
+      "fllTeamId": "team-firefox",
+      "hubAccess": [
+        "fll-hub"
+      ]
     },
     {
       "id": "master-fll-hub-sanjitharnal",
@@ -1026,8 +1096,13 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z",
-      "portalUsername": "sanjitharnal"
+      "updatedAt": "2026-07-27T18:27:10.010Z",
+      "portalUsername": "sanjitharnal",
+      "fllUserId": "student-sanjit-harnal-b05b32",
+      "fllTeamId": "team-wcdc-fighters",
+      "hubAccess": [
+        "fll-hub"
+      ]
     },
     {
       "id": "master-fll-hub-masonp",
@@ -1044,8 +1119,13 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z",
-      "portalUsername": "masonp"
+      "updatedAt": "2026-07-27T18:27:10.010Z",
+      "portalUsername": "masonp",
+      "fllUserId": "student-mason-p-ed2ab1",
+      "fllTeamId": "team-wcdc-fighters",
+      "hubAccess": [
+        "fll-hub"
+      ]
     },
     {
       "id": "master-fll-hub-winstonlee",
@@ -1062,8 +1142,13 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z",
-      "portalUsername": "winstonlee"
+      "updatedAt": "2026-07-27T18:27:10.010Z",
+      "portalUsername": "winstonlee",
+      "fllUserId": "student-winston-lee-96b448",
+      "fllTeamId": "team-wcdc-fighters",
+      "hubAccess": [
+        "fll-hub"
+      ]
     },
     {
       "id": "master-fll-hub-ethandeng",
@@ -1080,8 +1165,14 @@
         }
       ],
       "createdAt": "2026-06-17T15:19:43.288Z",
-      "updatedAt": "2026-06-17T15:19:43.288Z",
-      "portalUsername": "ethandeng"
+      "updatedAt": "2026-07-27T18:27:10.010Z",
+      "portalUsername": "ethandeng",
+      "fllUserId": "student-ethan-deng-56ffe3",
+      "fllTeamId": "team-wcdc-fighters",
+      "hubAccess": [
+        "fll-hub"
+      ],
+      "lastStudentPortalLoginAt": "2026-07-27T18:27:32.043Z"
     },
     {
       "id": "master-demo-student",
@@ -1573,7 +1664,7 @@
       "summerRosterSource": "summer-2026-screenshot-grade-roster",
       "campUserId": "camp-demo-summer-camper",
       "createdAt": "2026-06-26T23:13:12.327Z",
-      "updatedAt": "2026-07-23T18:01:32.858Z",
+      "updatedAt": "2026-07-27T18:27:22.209Z",
       "lastStudentPortalLoginAt": "2026-07-14T18:29:12.617Z",
       "fllUserId": "fll-demo-student",
       "fllTeamId": "team-demo"
