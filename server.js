@@ -4525,6 +4525,10 @@ app.get(['/fll-hub/simulator', '/fll-hub/simulator/'], requireFllAuth, (req, res
 	res.sendFile(path.join(fllHubDir, 'simulator.html'));
 });
 
+app.get(['/fll-hub/robot-base-tutorial', '/fll-hub/robot-base-tutorial/'], requireFllAuth, (req, res) => {
+	res.sendFile(path.join(fllHubDir, 'robot-base-tutorial.html'));
+});
+
 app.get('/api/fll/simulator/progress', requireFllAuth, async (req, res) => {
 	try {
 		const progress = await readFllSimulatorProgress();

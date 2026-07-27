@@ -267,5 +267,18 @@
       "student",
       "coach"
     ]
+  },
+  {
+    "id": "robot-base-tutorial",
+    "category": "Robot Design",
+    "label": "Build robot_base.py (Tutorial)",
+    "description": "Step-by-step: create your own robot setup file in MicroPython/Pybricks and learn the purpose of every line — imports, DriveBase, gyro, PID, and helper functions.",
+    "type": "Website",
+    "source": "AI Future",
+    "url": "/fll-hub/robot-base-tutorial",
+    "roles": [
+      "student",
+      "coach"
+    ]
   }
 ]
