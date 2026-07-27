@@ -611,6 +611,8 @@
             </div>
             <div class="team-meta">${escapeHtml(team.meetingDays || 'No schedule yet')} · ${escapeHtml(team.room || '')}</div>
 
+            <div class="team-meta"><strong>Class code:</strong> ${escapeHtml(team.classCode || 'Generating...')}</div>
+
             <div class="team-section-label">Members (${members.length})</div>
             ${members.length ? `
               <div class="member-chiprow">
@@ -848,7 +850,7 @@
       if (!name) { msg.textContent = 'Enter the team name.'; msg.className = 'form-msg error'; return; }
       btn.disabled = true;
       try {
-        await api('/api/fll/coach/teams', {
+        const result = await api('/api/fll/coach/teams', {
           method: 'POST',
           body: JSON.stringify({
             name,
@@ -858,7 +860,8 @@
             masterStudentIds: [...document.getElementById('teamMasterStudents').selectedOptions].map(option => option.value)
           })
         });
-        msg.textContent = `✓ Team "${name}" created!`; msg.className = 'form-msg success';
+        msg.textContent = `✓ Team "${name}" created! Class code: ${result.classCode}`;
+        msg.className = 'form-msg success';
         document.getElementById('teamName').value = '';
         document.getElementById('teamDays').value = '';
         document.getElementById('teamRoom').value = '';

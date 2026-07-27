@@ -2203,6 +2203,73 @@ async function writeMasterRoster(roster) {
 	});
 }
 
+function generateFllTeamClassCode(team, classes, currentClassId) {
+	const words = String(team.nickname || team.name || team.id || 'FLL').toUpperCase().match(/[A-Z0-9]+/g) || ['FLL'];
+	let base = words.length > 1 ? words.map((word) => word[0]).join('') : words[0].slice(0, 6);
+	const trailingNumber = String(team.id || '').match(/(\d+)$/)?.[1] || '';
+	if (trailingNumber && !base.endsWith(trailingNumber)) base += trailingNumber;
+	base = normalizeClassCode(base).slice(0, 10) || 'FLL';
+	const used = new Set(classes.filter((item) => item.id !== currentClassId)
+		.map((item) => normalizeClassCode(item.classCode || '')).filter(Boolean));
+	if (!used.has(base)) return base;
+	let suffix = 2;
+	while (used.has(`${base.slice(0, 8)}${suffix}`)) suffix += 1;
+	return `${base.slice(0, 8)}${suffix}`;
+}
+
+function ensureFllTeamClasses(teams, roster) {
+	const normalizedRoster = normalizeMasterRoster(roster);
+	let changed = false;
+	for (const team of (Array.isArray(teams) ? teams : [])) {
+		const classId = `fll-${team.id}`;
+		let classItem = normalizedRoster.classes.find((item) => item.id === classId);
+		if (!classItem) {
+			classItem = {
+				id: classId,
+				term: 'fall',
+				program: 'fll',
+				name: `FLL - ${team.nickname || team.name || team.id}`,
+				day: team.meetingDays || 'To be scheduled',
+				schedule: team.meetingDays || 'To be scheduled',
+				active: true,
+				createdAt: team.createdAt || new Date().toISOString()
+			};
+			normalizedRoster.classes.push(classItem);
+			changed = true;
+		}
+		const requestedCode = normalizeClassCode(classItem.classCode || team.classCode || '');
+		const codeIsUnique = requestedCode && !normalizedRoster.classes.some((item) =>
+			item.id !== classId && normalizeClassCode(item.classCode || '') === requestedCode
+		);
+		const classCode = codeIsUnique
+			? requestedCode
+			: generateFllTeamClassCode(team, normalizedRoster.classes, classId);
+		if (classItem.classCode !== classCode) {
+			classItem.classCode = classCode;
+			changed = true;
+		}
+		if (team.classCode !== classCode) {
+			team.classCode = classCode;
+			changed = true;
+		}
+	}
+	if (changed) normalizedRoster.updatedAt = new Date().toISOString();
+	return { roster: normalizedRoster, teams, changed };
+}
+
+async function syncFllTeamClasses() {
+	const teamsFile = path.join(fllHubDataDir, 'teams.json');
+	const [teams, roster] = await Promise.all([readJsonFile(teamsFile, []), readMasterRoster()]);
+	const result = ensureFllTeamClasses(teams, roster);
+	if (result.changed) {
+		await Promise.all([
+			writeJsonFile(teamsFile, result.teams),
+			writeMasterRoster(result.roster)
+		]);
+	}
+	return result;
+}
+
 function hasSummer2026Roster(roster) {
 	const normalized = normalizeMasterRoster(roster);
 	const requiredClasses = new Set(summer2026RosterClasses().map((item) => item.id));
@@ -2478,7 +2545,8 @@ function publicMasterRoster(roster, fllTeams = []) {
 			id: team.id,
 			name: team.name || '',
 			nickname: team.nickname || team.name || team.id,
-			meetingDays: team.meetingDays || ''
+			meetingDays: team.meetingDays || '',
+			classCode: normalizeClassCode(team.classCode || '')
 		})),
 		students: normalized.students.map((student) => ({
 			id: student.id,
@@ -4682,24 +4750,10 @@ app.post('/api/fll/coach/teams', requireFllAuth, requireFllCoach, async (req, re
 		};
 		teams.push(team);
 		const roster = await readMasterRoster();
-		const normalizedRoster = normalizeMasterRoster(roster);
-		const classId = `fll-${id}`;
-		if (!normalizedRoster.classes.some((classItem) => classItem.id === classId)) {
-			normalizedRoster.classes.push({
-				id: classId,
-				term: 'fall',
-				program: 'fll',
-				name: `FLL - ${name}`,
-				day: 'To be scheduled',
-				schedule: team.meetingDays,
-				active: true,
-				createdAt: new Date().toISOString()
-			});
-			normalizedRoster.updatedAt = new Date().toISOString();
-		}
+		const synced = ensureFllTeamClasses(teams, roster);
 		await Promise.all([
-			writeJsonFile(teamsFile, teams),
-			writeMasterRoster(normalizedRoster)
+			writeJsonFile(teamsFile, synced.teams),
+			writeMasterRoster(synced.roster)
 		]);
 		const masterStudentIds = Array.isArray(req.body.masterStudentIds)
 			? req.body.masterStudentIds.map((item) => cleanMetaString(item || '', 160)).filter(Boolean).slice(0, 40)
@@ -4717,7 +4771,7 @@ app.post('/api/fll/coach/teams', requireFllAuth, requireFllCoach, async (req, re
 			rosterForSync.updatedAt = new Date().toISOString();
 			await writeMasterRoster(rosterForSync);
 		}
-		return res.status(201).json({ success: true, team, addedStudents });
+		return res.status(201).json({ success: true, team, classCode: team.classCode, addedStudents });
 	} catch (err) {
 		console.error('FLL coach create team error:', err);
 		return res.status(500).json({ success: false, message: 'Server error creating team' });
@@ -6963,6 +7017,7 @@ initializeFllDataDir()
 	.then(() => applyCampContentPatches())
 	.then(() => initializeCoachDataDir())
 	.then(() => initializeMasterRoster())
+	.then(() => syncFllTeamClasses())
 	.then(() => migrateSummer2026RosterData())
 	.then(() => ensureSummerDemoStudent())
 	.then(() => ensureStudentPortalUsernames())
