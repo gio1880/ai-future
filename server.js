@@ -39,6 +39,10 @@ const fllLiveLessonFile = path.join(fllHubDataDir, 'live-lesson.json');
 const fllSimulatorProgressFile = path.join(fllHubDataDir, 'simulator-progress.json');
 const codeLabStudentsFile = path.join(__dirname, 'code-lab', 'data', 'students.json');
 const fllSessionCookie = 'fll_session';
+// Where a student lands right after logging into the FLL hub.
+// Set to the coding tutorial so coding is the first thing they see; the tutorial
+// and every coding page has a "← My dashboard" link back to /fll-hub/student.
+const FLL_STUDENT_LANDING = '/fll-hub/robot-base-tutorial';
 const fllDataFileNames = [
 	'fll-users.json',
 	'assignments.json',
@@ -2585,7 +2589,7 @@ async function writeCodeLabStudents(students) {
 // ── Student central portal: one login → reach Code Lab / FLL / Summer Camp ──
 const STUDENT_HUB_DEFS = {
 	'code-lab': { id: 'code-lab', title: 'Code Lab', icon: '🧩', url: '/codelab/app', desc: 'Coding lessons, challenges, and your dashboard.' },
-	'fll-hub': { id: 'fll-hub', title: 'FLL Hub', icon: '🤖', url: '/fll-hub/student', desc: 'Your FIRST LEGO League team dashboard.' },
+	'fll-hub': { id: 'fll-hub', title: 'FLL Hub', icon: '🤖', url: FLL_STUDENT_LANDING, desc: 'Robot coding, simulator, assignments, and your team dashboard.' },
 	'summer-camp': { id: 'summer-camp', title: 'Summer Camp', icon: '☀️', url: '/camp-hub', desc: 'Daily activities, live lessons, and points.' }
 };
 
@@ -4321,7 +4325,7 @@ app.post('/api/fll/login', async (req, res) => {
 				return res.status(404).json({ success: false, message: 'Your FLL account is not set up yet — ask your coach.' });
 			}
 			createFllSessionForUser(res, fllUser);
-			return res.json({ success: true, user: publicFllUser(fllUser), redirectTo: '/fll-hub/student' });
+			return res.json({ success: true, user: publicFllUser(fllUser), redirectTo: FLL_STUDENT_LANDING });
 		}
 
 		const username = cleanMetaString(req.body.username || '', 80).toLowerCase();
@@ -4356,7 +4360,7 @@ app.post('/api/fll/login', async (req, res) => {
 		return res.json({
 			success: true,
 			user: publicFllUser(user),
-			redirectTo: user.role === 'student' ? '/fll-hub/student' : '/fll-hub'
+			redirectTo: user.role === 'student' ? FLL_STUDENT_LANDING : '/fll-hub'
 		});
 	} catch (err) {
 		console.error('FLL login error:', err);
