@@ -4902,6 +4902,40 @@ function setMasterStudentFllTeamEnrollment(student, teamId, roster) {
 	student.updatedAt = new Date().toISOString();
 }
 
+// Wire freshly-created FLL students into the master roster so class-code login
+// works for them automatically (portal username + enrollment in the team class
+// + link to their FLL account). `normalizedRoster` must already contain the
+// team classes (call ensureFllTeamClasses first). Returns the same roster.
+function linkFllStudentsToMasterRoster(created, normalizedRoster) {
+	const now = new Date().toISOString();
+	for (const c of (Array.isArray(created) ? created : [])) {
+		if (!c.teamId || !c.username) continue;
+		const uname = String(c.username).toLowerCase();
+		let student = normalizedRoster.students.find((s) =>
+			(c.id && s.fllUserId === c.id) || String(s.portalUsername || '').toLowerCase() === uname);
+		if (!student) {
+			student = {
+				id: `master-fll-${uname}`,
+				name: c.name || uname,
+				active: true,
+				portalUsername: uname,
+				enrollments: [],
+				hubAccess: [],
+				createdAt: now,
+				updatedAt: now
+			};
+			normalizedRoster.students.push(student);
+		}
+		student.name = c.name || student.name;
+		student.active = true;
+		student.portalUsername = uname;
+		student.fllUserId = c.id || student.fllUserId;
+		setMasterStudentFllTeamEnrollment(student, c.teamId, normalizedRoster);
+	}
+	normalizedRoster.updatedAt = now;
+	return normalizedRoster;
+}
+
 app.post('/api/fll/coach/students', requireFllAuth, requireFllCoach, async (req, res) => {
 	try {
 		const masterStudentId = cleanMetaString(req.body.masterStudentId || '', 160);
@@ -4963,11 +4997,19 @@ app.post('/api/fll/coach/students', requireFllAuth, requireFllCoach, async (req,
 			{ name, username, password, teamId, role: req.body.role },
 			users, members, existingUsernames
 		);
+		// Wire into the master roster so this student can class-code login.
+		const ensured = ensureFllTeamClasses(teams, masterRoster);
+		const linkedRoster = linkFllStudentsToMasterRoster([credentials], ensured.roster);
 		await Promise.all([
 			writeJsonFile(fllUsersFile, users),
-			writeJsonFile(fllTeamMembersFile, members)
+			writeJsonFile(fllTeamMembersFile, members),
+			writeJsonFile(path.join(fllHubDataDir, 'teams.json'), ensured.teams),
+			writeMasterRoster(linkedRoster)
 		]);
-		return res.status(201).json({ success: true, student: credentials });
+		const teamClass = credentials.teamId
+			? linkedRoster.classes.find((c) => c.id === `fll-${credentials.teamId}`)
+			: null;
+		return res.status(201).json({ success: true, student: credentials, classCode: teamClass?.classCode || null });
 	} catch (err) {
 		console.error('FLL coach add student error:', err);
 		return res.status(500).json({ success: false, message: 'Server error adding student' });
@@ -4989,10 +5031,11 @@ app.post('/api/fll/coach/students/bulk', requireFllAuth, requireFllCoach, async 
 		if (names.length > 60) {
 			return res.status(400).json({ success: false, message: 'Bulk add is limited to 60 students at a time' });
 		}
-		const [users, members, teams] = await Promise.all([
+		const [users, members, teams, masterRoster] = await Promise.all([
 			readFllUsers(),
 			readJsonFile(fllTeamMembersFile, []),
-			readJsonFile(path.join(fllHubDataDir, 'teams.json'), [])
+			readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
+			readMasterRoster()
 		]);
 		if (teamId && !teams.some((team) => team.id === teamId)) {
 			return res.status(400).json({ success: false, message: 'Unknown team' });
@@ -5002,11 +5045,17 @@ app.post('/api/fll/coach/students/bulk', requireFllAuth, requireFllCoach, async 
 		for (const name of names) {
 			created.push(await createFllStudent({ name, teamId }, users, members, existingUsernames));
 		}
+		// Wire every new student into the master roster so they can class-code login.
+		const ensured = ensureFllTeamClasses(teams, masterRoster);
+		const linkedRoster = linkFllStudentsToMasterRoster(created, ensured.roster);
 		await Promise.all([
 			writeJsonFile(fllUsersFile, users),
-			writeJsonFile(fllTeamMembersFile, members)
+			writeJsonFile(fllTeamMembersFile, members),
+			writeJsonFile(path.join(fllHubDataDir, 'teams.json'), ensured.teams),
+			writeMasterRoster(linkedRoster)
 		]);
-		return res.status(201).json({ success: true, students: created });
+		const teamClass = teamId ? linkedRoster.classes.find((c) => c.id === `fll-${teamId}`) : null;
+		return res.status(201).json({ success: true, students: created, classCode: teamClass?.classCode || null });
 	} catch (err) {
 		console.error('FLL coach bulk add error:', err);
 		return res.status(500).json({ success: false, message: 'Server error bulk adding students' });

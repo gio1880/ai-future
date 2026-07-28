@@ -28,7 +28,8 @@
     "createdAt": "2026-06-11T12:57:18.249Z",
     "region": "hudson-valley",
     "regionName": "Hudson Valley Region",
-    "firstCompetition": "2027-01-09"
+    "firstCompetition": "2027-01-09",
+    "classCode": "HG"
   },
   {
     "id": "team-firefox",
@@ -59,7 +60,8 @@
     "createdAt": "2026-06-11T12:57:18.249Z",
     "region": "nyc",
     "regionName": "NYC Region (NYC FIRST)",
-    "firstCompetition": "2027-01-16"
+    "firstCompetition": "2027-01-16",
+    "classCode": "FF"
   },
   {
     "id": "team-tidal-engineers",
@@ -90,7 +92,8 @@
     "createdAt": "2026-06-11T12:57:18.249Z",
     "region": "nj",
     "regionName": "NJ Region (FIRST Mid-Atlantic North)",
-    "firstCompetition": "2026-11-21"
+    "firstCompetition": "2026-11-21",
+    "classCode": "TE"
   },
   {
     "id": "team-wcdc-fighters",
@@ -121,7 +124,8 @@
     "createdAt": "2026-06-11T18:52:09.675Z",
     "region": "hudson-valley",
     "regionName": "Hudson Valley Region",
-    "firstCompetition": "2027-01-09"
+    "firstCompetition": "2027-01-09",
+    "classCode": "WCDC"
   },
   {
     "id": "team-demo",
@@ -143,6 +147,7 @@
     "coachNotes": [
       "Demo team — safe to click around, nothing here affects real teams."
     ],
-    "createdAt": "2026-07-14T17:40:19.306Z"
+    "createdAt": "2026-07-14T17:40:19.306Z",
+    "classCode": "DT"
   }
 ]

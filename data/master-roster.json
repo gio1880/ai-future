@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-27T18:27:45.397Z",
+  "updatedAt": "2026-07-28T17:47:28.645Z",
   "settings": {
     "summerWeeks": [
       {
@@ -204,6 +204,17 @@
       "updatedAt": "2026-06-25T22:57:26.692Z",
       "classCode": "G6PLUS",
       "summerRosterSource": "summer-2026-screenshot-grade-roster"
+    },
+    {
+      "id": "fll-team-demo",
+      "term": "fall",
+      "program": "fll",
+      "name": "FLL - Demo Team",
+      "day": "Anytime — this is a demo",
+      "schedule": "Anytime — this is a demo",
+      "active": true,
+      "createdAt": "2026-07-14T17:40:19.306Z",
+      "classCode": "DT"
     }
   ],
   "students": [
@@ -803,7 +814,7 @@
       "hubAccess": [
         "fll-hub"
       ],
-      "lastStudentPortalLoginAt": "2026-07-27T18:27:45.397Z"
+      "lastStudentPortalLoginAt": "2026-07-28T17:47:28.645Z"
     },
     {
       "id": "master-fll-hub-luketisserant",
@@ -1664,7 +1675,7 @@
       "summerRosterSource": "summer-2026-screenshot-grade-roster",
       "campUserId": "camp-demo-summer-camper",
       "createdAt": "2026-06-26T23:13:12.327Z",
-      "updatedAt": "2026-07-27T18:27:22.209Z",
+      "updatedAt": "2026-07-28T17:47:28.380Z",
       "lastStudentPortalLoginAt": "2026-07-14T18:29:12.617Z",
       "fllUserId": "fll-demo-student",
       "fllTeamId": "team-demo"
