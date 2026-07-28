@@ -22,125 +22,122 @@
     body { font-family: Inter, system-ui, sans-serif; color: var(--ink); background: var(--bg); }
     a { color: inherit; text-decoration: none; }
 
-    .topbar { position: sticky; top: 0; z-index: 30; background: rgba(255,255,255,0.94); backdrop-filter: blur(16px); border-bottom: 1px solid var(--line); }
-    .topbar-inner { max-width: 1000px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .topbar { position: sticky; top: 0; z-index: 40; background: rgba(255,255,255,0.94); backdrop-filter: blur(16px); border-bottom: 1px solid var(--line); }
+    .topbar-inner { max-width: 1240px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
     .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; }
     .brand img { width: 32px; height: 32px; object-fit: contain; }
     .top-links { display: flex; gap: 8px; flex-wrap: wrap; }
     .back-link { border: 1.5px solid var(--line); border-radius: 50px; padding: 8px 16px; font-size: 13px; font-weight: 800; color: var(--green-dark); background: white; }
     .back-link:hover { border-color: var(--green); }
 
-    /* progress bar (sticky under topbar) */
-    .progress-bar { position: sticky; top: 57px; z-index: 25; background: white; border-bottom: 1px solid var(--line); }
-    .progress-inner { max-width: 1000px; margin: 0 auto; padding: 10px 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-    .pg-track { flex: 1; min-width: 140px; height: 10px; border-radius: 50px; background: var(--green-light); overflow: hidden; }
-    .pg-fill { height: 100%; border-radius: 50px; background: linear-gradient(90deg, var(--green), #2db37a); transition: width 0.4s ease; width: 0; }
-    .pg-label { font-size: 13px; font-weight: 800; color: var(--green-dark); white-space: nowrap; }
-    .pg-file-btn { border: none; background: var(--ink); color: white; border-radius: 50px; padding: 8px 16px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; white-space: nowrap; }
-    .pg-file-btn:hover { background: #2b3b32; }
+    .page { max-width: 1240px; margin: 0 auto; padding: 22px 20px 90px; }
 
-    .page { max-width: 1000px; margin: 0 auto; padding: 24px 20px 90px; }
-
-    .hero { background: linear-gradient(140deg, rgba(19,50,35,0.92), rgba(29,158,110,0.8)); color: white; border-radius: var(--radius); padding: 30px 28px; margin-bottom: 22px; }
-    .hero h1 { font-size: clamp(24px, 5vw, 38px); font-weight: 900; letter-spacing: -0.02em; }
+    .hero { background: linear-gradient(140deg, rgba(19,50,35,0.92), rgba(29,158,110,0.8)); color: white; border-radius: var(--radius); padding: 26px 26px; margin-bottom: 20px; }
+    .hero h1 { font-size: clamp(23px, 4.5vw, 36px); font-weight: 900; letter-spacing: -0.02em; }
     .hero h1 em { font-style: normal; color: var(--glow); }
-    .hero p { margin-top: 10px; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.88); max-width: 660px; }
+    .hero p { margin-top: 9px; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.88); max-width: 720px; }
     .hero code { background: rgba(255,255,255,0.16); border-radius: 6px; padding: 1px 8px; font-family: 'Cascadia Code', Consolas, monospace; font-size: 0.92em; }
 
-    .callout { background: var(--blue-light); border-left: 4px solid var(--blue); border-radius: 0 10px 10px 0; padding: 14px 16px; margin: 0 0 24px; font-size: 14px; line-height: 1.6; color: #1d4f8c; }
+    .callout { background: var(--blue-light); border-left: 4px solid var(--blue); border-radius: 0 10px 10px 0; padding: 13px 16px; margin: 0 0 20px; font-size: 14px; line-height: 1.6; color: #1d4f8c; }
     .callout b { color: #14407a; }
 
-    .step { background: white; border: 1.5px solid var(--line); border-radius: var(--radius); margin-bottom: 22px; overflow: hidden; scroll-margin-top: 118px; transition: border-color 0.2s; }
-    .step.done { border-color: var(--green); }
-    .step-head { padding: 18px 22px 14px; border-bottom: 1.5px solid var(--line); display: flex; align-items: flex-start; gap: 14px; }
-    .step-num { background: var(--green); color: white; border-radius: 12px; width: 42px; height: 42px; display: grid; place-items: center; font-size: 17px; font-weight: 900; flex-shrink: 0; transition: background 0.2s; }
+    /* IDE + guide layout */
+    .ide-layout { display: grid; grid-template-columns: minmax(0, 1fr) 440px; gap: 20px; align-items: start; }
+    .ide-pane { position: sticky; top: 72px; }
+
+    .ide { background: #16161f; border: 1.5px solid #2a2a3a; border-radius: var(--radius); overflow: hidden; box-shadow: 0 8px 28px rgba(20,30,25,0.14); }
+    .ide-tabbar { display: flex; align-items: center; background: #101018; border-bottom: 1px solid #2a2a3a; padding: 0 6px; }
+    .ide-tab { padding: 10px 16px; font-size: 12px; font-weight: 800; color: #a6e3a1; font-family: 'Cascadia Code', Consolas, monospace; }
+    .ide-editor {
+      width: 100%; height: min(58vh, 560px); min-height: 300px; resize: vertical;
+      background: #1e1e2e; color: #cdd6f4; border: none; padding: 14px 16px;
+      font-size: 13px; line-height: 1.6; font-family: 'Cascadia Code','Fira Code',Consolas,monospace;
+      tab-size: 4; white-space: pre; overflow-wrap: normal; overflow: auto; display: block;
+    }
+    .ide-editor:focus { outline: none; }
+    .ide-toolbar { display: flex; gap: 8px; padding: 10px 12px; background: #101018; border-top: 1px solid #2a2a3a; flex-wrap: wrap; align-items: center; }
+    .ide-btn { border: none; border-radius: 8px; padding: 9px 15px; font-size: 12.5px; font-weight: 800; cursor: pointer; font-family: inherit; }
+    .ide-btn.copy { background: var(--green); color: white; }
+    .ide-btn.copy:hover { background: #26b57f; }
+    .ide-btn.ghost { background: #2b2b3d; color: #cdd6f4; }
+    .ide-btn.ghost:hover { background: #3b3b52; }
+    .ide-status { margin-left: auto; font-size: 11.5px; font-weight: 700; color: #7f849c; }
+
+    .ide-progress { padding: 10px 14px; background: #101018; border-top: 1px solid #2a2a3a; }
+    .ide-pg-row { display: flex; align-items: center; gap: 10px; }
+    .ide-pg-label { font-size: 12px; font-weight: 800; color: #a6e3a1; white-space: nowrap; }
+    .ide-pg-track { flex: 1; height: 8px; border-radius: 50px; background: #2a2a3a; overflow: hidden; }
+    .ide-pg-fill { height: 100%; border-radius: 50px; background: linear-gradient(90deg, var(--green), #2db37a); transition: width .4s ease; width: 0; }
+
+    /* guide steps */
+    .guide-intro { font-size: 12px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 4px 2px 12px; }
+    .step { background: white; border: 1.5px solid var(--line); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; scroll-margin-top: 80px; transition: border-color .2s, box-shadow .2s; }
+    .step.current { border-color: var(--green); box-shadow: 0 6px 22px rgba(29,158,110,0.14); }
+    .step.done { border-color: #bfe6d3; }
+    .step.reference { border-style: dashed; }
+    .step-head { padding: 15px 18px 12px; display: flex; align-items: flex-start; gap: 13px; }
+    .step-num { background: var(--green); color: white; border-radius: 11px; width: 40px; height: 40px; display: grid; place-items: center; font-size: 16px; font-weight: 900; flex-shrink: 0; }
     .step.done .step-num { background: var(--green-dark); }
-    .step-num .check { display: none; }
-    .step.done .step-num .n { display: none; }
-    .step.done .step-num .check { display: block; }
-    .step-title { font-size: 18px; font-weight: 900; letter-spacing: -0.01em; }
-    .step-goal { font-size: 13px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
-    .step-badge { margin-left: auto; font-size: 11px; font-weight: 800; border-radius: 50px; padding: 4px 11px; white-space: nowrap; flex-shrink: 0; }
-    .step-badge.todo { background: var(--glow-light); color: #8a6a00; border: 1.5px solid #eeda9a; }
+    .step.reference .step-num { background: var(--muted); }
+    .step-num .check { display: none; } .step.done .step-num .n { display: none; } .step.done .step-num .check { display: block; }
+    .step-title { font-size: 17px; font-weight: 900; letter-spacing: -0.01em; }
+    .step-goal { font-size: 12.5px; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+    .step-badge { margin-left: auto; font-size: 10.5px; font-weight: 800; border-radius: 50px; padding: 4px 10px; white-space: nowrap; flex-shrink: 0; }
+    .step-badge.now { background: var(--glow-light); color: #8a6a00; border: 1.5px solid #eeda9a; }
     .step-badge.ok { background: var(--green-light); color: var(--green-dark); border: 1.5px solid #b6e3cd; }
     .step-badge.ref { background: #eef1f0; color: var(--muted); border: 1.5px solid var(--line); }
+    .step-badge.locked { background: #f3f4f4; color: #9aa39d; border: 1.5px solid var(--line); }
 
-    .step-body { padding: 18px 22px; }
-    .step-body p { font-size: 14px; line-height: 1.7; margin-bottom: 12px; }
+    .step-body { padding: 0 18px 16px; }
+    .step-body p { font-size: 13.5px; line-height: 1.65; margin-bottom: 10px; }
     .step-body p:last-child { margin-bottom: 0; }
     .step-body strong { color: var(--green-dark); }
-    .step-body ul { margin: 0 0 12px 22px; font-size: 14px; line-height: 1.7; }
-    .step-body li { margin-bottom: 5px; }
-    .step-body em { font-style: normal; background: var(--glow-light); border-radius: 4px; padding: 0 5px; }
-    .icode { background: #eef3ef; border: 1px solid var(--line); border-radius: 5px; padding: 1px 7px; font-family: 'Cascadia Code', Consolas, monospace; font-size: 12.5px; font-weight: 700; color: var(--green-dark); }
+    .step-body ul { margin: 0 0 10px 20px; font-size: 13.5px; line-height: 1.65; }
+    .step-body li { margin-bottom: 4px; }
+    .icode { background: #eef3ef; border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; font-family: 'Cascadia Code', Consolas, monospace; font-size: 12px; font-weight: 700; color: var(--green-dark); }
 
-    /* editor */
-    .editor-label { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 6px 0 8px; display: flex; align-items: center; gap: 8px; }
-    .editor-label .fname { color: var(--green-dark); }
-    .code-editor {
-      width: 100%; min-height: 120px; resize: vertical;
-      background: #1e1e2e; color: #cdd6f4; border: 2px solid #2a2a3a; border-radius: 12px;
-      padding: 14px 16px; font-size: 13px; line-height: 1.65;
-      font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace; tab-size: 4;
-      white-space: pre; overflow-wrap: normal; overflow-x: auto;
-    }
-    .code-editor:focus { outline: none; border-color: var(--green); }
-    .code-editor.ok { border-color: var(--green); }
-    .code-editor.err { border-color: var(--coral); }
-
-    .ed-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
-    .ed-btn { border: none; border-radius: 50px; padding: 9px 18px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; }
-    .ed-btn.check { background: var(--green); color: white; }
-    .ed-btn.check:hover { background: #26b57f; }
-    .ed-btn.reveal { background: white; color: var(--blue); border: 1.5px solid var(--blue-light); }
-    .ed-btn.reveal:hover { border-color: var(--blue); }
-    .ed-btn.reset-ed { background: white; color: var(--muted); border: 1.5px solid var(--line); }
-    .ed-btn.reset-ed:hover { border-color: var(--muted); }
-    .ed-feedback { font-size: 13px; font-weight: 700; min-height: 20px; line-height: 1.5; }
-    .ed-feedback.ok { color: var(--green-dark); }
-    .ed-feedback.err { color: var(--coral); }
-
-    /* read-only reference code (docstring, run file, calibration) */
-    .code-wrap { margin: 12px 0; border-radius: 12px; overflow: hidden; border: 1px solid #2a2a3a; }
-    .code-head { background: #16161f; color: #9aa0a6; display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; font-size: 12px; font-weight: 700; }
+    .code-wrap { margin: 10px 0; border-radius: 11px; overflow: hidden; border: 1px solid #2a2a3a; }
+    .code-head { background: #16161f; color: #9aa0a6; display: flex; align-items: center; justify-content: space-between; padding: 7px 12px; font-size: 11.5px; font-weight: 700; }
     .code-head .fname { color: #a6e3a1; }
-    .copy-btn { background: #2b2b3d; color: #cdd6f4; border: none; border-radius: 6px; padding: 5px 12px; font-size: 11px; font-weight: 800; cursor: pointer; font-family: inherit; }
-    .copy-btn:hover { background: #3b3b52; }
-    pre { background: #1e1e2e; color: #cdd6f4; padding: 15px 16px; overflow-x: auto; font-size: 13px; line-height: 1.65; margin: 0; font-family: 'Cascadia Code','Fira Code',Consolas,monospace; tab-size: 4; }
+    pre { background: #1e1e2e; color: #cdd6f4; padding: 13px 15px; overflow-x: auto; font-size: 12.5px; line-height: 1.6; margin: 0; font-family: 'Cascadia Code','Fira Code',Consolas,monospace; tab-size: 4; }
     .c-comment { color: #7f849c; } .c-kw { color: #cba6f7; } .c-str { color: #a6e3a1; } .c-num { color: #fab387; } .c-fn { color: #89b4fa; } .c-cls { color: #f9e2af; }
 
-    /* line-by-line breakdown */
-    .lines { margin: 12px 0 4px; border: 1.5px solid var(--line); border-radius: 12px; overflow: hidden; }
-    .lines-title { background: var(--green-light); color: var(--green-dark); font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 14px; }
-    .line-row { display: grid; grid-template-columns: minmax(130px, 0.9fr) 1.6fr; border-top: 1px solid var(--line); }
+    .step-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
+    .sa-btn { border: none; border-radius: 50px; padding: 9px 16px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; }
+    .sa-btn.add { background: var(--blue); color: white; }
+    .sa-btn.add:hover { opacity: .9; }
+    .sa-btn.check { background: var(--green); color: white; }
+    .sa-btn.check:hover { background: #26b57f; }
+    .sa-btn.copy { background: white; color: var(--muted); border: 1.5px solid var(--line); }
+    .sa-btn.copy:hover { border-color: var(--green); color: var(--green-dark); }
+    .sa-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .sa-feedback { font-size: 12.5px; font-weight: 700; min-height: 18px; line-height: 1.4; width: 100%; }
+    .sa-feedback.ok { color: var(--green-dark); }
+    .sa-feedback.err { color: var(--coral); }
+
+    .lines { margin: 10px 0 4px; border: 1.5px solid var(--line); border-radius: 11px; overflow: hidden; }
+    .lines-title { background: var(--green-light); color: var(--green-dark); font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; padding: 7px 13px; }
+    .line-row { display: grid; grid-template-columns: minmax(120px, 0.9fr) 1.6fr; border-top: 1px solid var(--line); }
     .line-row:first-of-type { border-top: none; }
-    .line-code { background: #f7faf8; padding: 9px 12px; font-family: 'Cascadia Code',Consolas,monospace; font-size: 12px; font-weight: 700; color: var(--ink); overflow-x: auto; border-right: 1px solid var(--line); }
-    .line-why { padding: 9px 14px; font-size: 13px; line-height: 1.55; color: var(--muted); }
+    .line-code { background: #f7faf8; padding: 8px 11px; font-family: 'Cascadia Code',Consolas,monospace; font-size: 11.5px; font-weight: 700; color: var(--ink); overflow-x: auto; border-right: 1px solid var(--line); }
+    .line-why { padding: 8px 13px; font-size: 12.5px; line-height: 1.5; color: var(--muted); }
     .line-why b { color: var(--ink); }
 
-    .tip { background: var(--glow-light); border: 1.5px solid #eeda9a; border-radius: 12px; padding: 12px 15px; margin: 12px 0; font-size: 13px; line-height: 1.6; color: #6b5500; }
+    .tip { background: var(--glow-light); border: 1.5px solid #eeda9a; border-radius: 11px; padding: 11px 14px; margin: 10px 0; font-size: 12.5px; line-height: 1.55; color: #6b5500; }
     .tip b { color: #8a6a00; }
 
-    /* file overlay */
-    .file-overlay { position: fixed; inset: 0; background: rgba(15,25,20,0.55); z-index: 60; display: none; align-items: center; justify-content: center; padding: 18px; }
-    .file-overlay.show { display: flex; }
-    .file-card { background: #1e1e2e; border-radius: 18px; width: min(720px, 100%); max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,0.4); }
-    .file-card-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid #2a2a3a; }
-    .file-card-head .ft { color: #a6e3a1; font-weight: 800; font-family: 'Cascadia Code',Consolas,monospace; font-size: 14px; }
-    .file-card-head .fa { display: flex; gap: 8px; }
-    .file-close { background: #2b2b3d; color: #cdd6f4; border: none; border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 800; cursor: pointer; font-family: inherit; }
-    .file-body { overflow: auto; padding: 4px 0; }
-    .file-empty { color: #7f849c; padding: 40px 20px; text-align: center; font-family: 'Cascadia Code',Consolas,monospace; font-size: 13px; }
+    .toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); background: var(--ink); color: white; border-radius: 50px; padding: 11px 22px; font-size: 13px; font-weight: 800; opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 80; }
+    .toast.show { opacity: 1; }
 
-    .footer-note { text-align: center; color: var(--muted); font-size: 13px; margin-top: 26px; line-height: 1.7; }
+    .footer-note { text-align: center; color: var(--muted); font-size: 13px; margin-top: 24px; line-height: 1.7; }
     .footer-note a { color: var(--green-dark); font-weight: 800; }
 
-    @media (max-width: 640px) {
-      .step-head { flex-wrap: wrap; }
-      .step-badge { margin-left: 0; }
+    @media (max-width: 980px) {
+      .ide-layout { grid-template-columns: 1fr; }
+      .ide-pane { position: static; order: -1; margin-bottom: 8px; }
+      .ide-editor { height: 300px; }
       .line-row { grid-template-columns: 1fr; }
       .line-code { border-right: none; border-bottom: 1px solid var(--line); }
-      .progress-bar { top: 96px; }
     }
   </style>
 </head>
@@ -156,362 +153,319 @@
     </div>
   </header>
 
-  <div class="progress-bar">
-    <div class="progress-inner">
-      <span class="pg-label" id="pgLabel">Coded 0 / 9</span>
-      <div class="pg-track"><div class="pg-fill" id="pgFill"></div></div>
-      <button class="pg-file-btn" onclick="openFile()">📄 Your file so far</button>
-    </div>
-  </div>
-
   <main class="page">
     <div class="hero">
-      <h1>Build your own <em>robot_base.py</em> 🐍</h1>
-      <p>You won't just read this code — you'll <b>write it yourself</b>. Each step gives you a code box with blanks to fill in. Type the missing parts, press <b>Check</b>, and watch your real <code>robot_base.py</code> build itself piece by piece. By the end you'll have a working file AND understand every line.</p>
+      <h1>Build your own <em>robot_base.py</em> — one file, step by step 🐍</h1>
+      <p>This is your code editor. You'll build the <b>whole</b> <code>robot_base.py</code> in it, top to bottom. The guide walks you through each part: read what it does, type it in (or tap <b>Add to my file</b>), then <b>Check</b> to move on. When you're done, one complete file is sitting in your editor, ready to copy into code.pybricks.com.</p>
     </div>
 
     <div class="callout">
-      <b>How this works:</b> fill in the <span class="icode">____</span> blanks in each code box using what the step teaches you. Press <b>✓ Check my code</b> — if it's right, that piece gets added to your file (tap <b>📄 Your file so far</b> anytime to see it). Stuck? Use <b>💡 Show answer</b>. Your progress saves automatically.
+      <b>How to use it:</b> the editor on the <span class="ide-side-word">side</span> is your file — keep it as you go. For each step, type the code into it (best for learning!) or tap <b>⬇ Add to my file</b>, then press <b>✓ Check</b>. Your progress and your file save automatically.
     </div>
 
-    <div id="stepsRoot"></div>
+    <div class="ide-layout">
+      <!-- GUIDE -->
+      <div class="guide">
+        <div class="guide-intro">📋 The build — follow along, top to bottom</div>
+        <div id="stepsRoot"></div>
+        <p class="footer-note" id="footerNote">Finish every step and your full <b>robot_base.py</b> is done. 🎉</p>
+      </div>
 
-    <p class="footer-note" id="footerNote">
-      Finish all the steps to complete your <b>robot_base.py</b> 🎉
-    </p>
+      <!-- IDE -->
+      <aside class="ide-pane">
+        <div class="ide">
+          <div class="ide-tabbar"><span class="ide-tab">🐍 robot_base.py</span></div>
+          <textarea class="ide-editor" id="ide" spellcheck="false" placeholder="# Your robot_base.py builds here.
+# Start with Step 1 in the guide →"></textarea>
+          <div class="ide-toolbar">
+            <button class="ide-btn copy" onclick="copyFile()">📋 Copy file</button>
+            <button class="ide-btn ghost" onclick="clearFile()">↺ Clear</button>
+            <span class="ide-status" id="ideStatus">0 lines</span>
+          </div>
+          <div class="ide-progress">
+            <div class="ide-pg-row">
+              <span class="ide-pg-label" id="pgLabel">Built 0 / 11</span>
+              <div class="ide-pg-track"><div class="ide-pg-fill" id="pgFill"></div></div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
   </main>
 
-  <!-- file overlay -->
-  <div class="file-overlay" id="fileOverlay" onclick="if(event.target===this)closeFile()">
-    <div class="file-card">
-      <div class="file-card-head">
-        <span class="ft">robot_base.py</span>
-        <div class="fa">
-          <button class="file-close" id="fileCopyBtn" onclick="copyFullFile()">📋 Copy file</button>
-          <button class="file-close" onclick="closeFile()">✕ Close</button>
-        </div>
-      </div>
-      <div class="file-body"><pre id="fileContent"></pre></div>
-    </div>
-  </div>
+  <div class="toast" id="toast"></div>
 
   <script>
-    // ══════════════════ STEP / FILE DEFINITIONS ══════════════════
-    // Each step may contribute a chunk to robot_base.py.
-    //   interactive:true  → student fills in an editor; `code` is the answer.
-    //   interactive:false → auto-included in the file when reached (docstring, PID, headers).
-    //   code:null         → reference only, not part of the file.
+    // Each build STEP contributes a chunk to the ONE robot_base.py file.
+    // tokens[] = key substrings that must appear in the file to pass the step.
+    // reference:true steps are guidance only (not part of the file, no check).
     const STEPS = [
       {
-        id: 's1', num: 1, title: 'The file header (docstring)', goal: 'A note-to-humans that says what this file is.',
-        interactive: false,
-        body: `<p>A <strong>docstring</strong> is text between triple quotes <span class="icode">"""</span>. Python ignores it — it's a message for the humans reading your code. We give you this one for free; it's the top of your file.</p>`,
+        id: 's1', num: 1, title: 'File header (docstring)', goal: 'A note-to-humans at the very top.',
+        body: `<p>Start your file with a <strong>docstring</strong> — text between triple quotes <span class="icode">"""</span>. Python ignores it; it's a message for whoever reads your code. Type this at the top of your editor:</p>`,
         code: `"""\nrobot_base.py — Single source of truth for robot setup and motion.\n\nHOW TO USE IN A RUN FILE:\n    from robot_base import robot, hub, RAM, LAM, straight, turn, arc, reset\n    reset()\n    straight(500)\n    turn(90)\n"""`,
-        codeHtml: `<span class="c-str">"""\nrobot_base.py — Single source of truth for robot setup and motion.\n\nHOW TO USE IN A RUN FILE:\n    from robot_base import robot, hub, RAM, LAM, straight, turn, arc, reset\n    reset()\n    straight(500)\n    turn(90)\n"""</span>`
+        codeHtml: `<span class="c-str">"""\nrobot_base.py — Single source of truth for robot setup and motion.\n\nHOW TO USE IN A RUN FILE:\n    from robot_base import robot, hub, RAM, LAM, straight, turn, arc, reset\n    reset()\n    straight(500)\n    turn(90)\n"""</span>`,
+        tokens: ['robot_base.py', '"""']
       },
       {
-        id: 's2', num: 2, title: 'Imports — borrow Pybricks tools', goal: 'Fill in the names of the tools we borrow.',
-        interactive: true,
-        body: `<p><span class="icode">import</span> borrows pre-made tools. Fill in the blanks with the right tool for each line: the <b>brain</b>, a <b>motor</b>, and the <b>drive base</b>.</p>
-          <div class="lines"><div class="lines-title">Hints</div>
-          <div class="line-row"><div class="line-code">pybricks.hubs</div><div class="line-why">The brain of your robot → <b>PrimeHub</b></div></div>
-          <div class="line-row"><div class="line-code">pybricks.pupdevices</div><div class="line-why">One motor → <b>Motor</b></div></div>
-          <div class="line-row"><div class="line-code">pybricks.robotics</div><div class="line-why">Two motors combined into a driving robot → <b>DriveBase</b></div></div></div>`,
-        starter: `from pybricks.hubs import ____\nfrom pybricks.pupdevices import ____\nfrom pybricks.robotics import ____\nfrom pybricks.parameters import Port, Direction, Stop\nfrom pybricks.tools import wait`,
-        code: `from pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.robotics import DriveBase\nfrom pybricks.parameters import Port, Direction, Stop\nfrom pybricks.tools import wait`
+        id: 's2', num: 2, title: 'Imports — borrow Pybricks tools', goal: 'Bring in the classes and helpers you need.',
+        body: `<p>Add the <span class="icode">import</span> lines <b>below the docstring</b>. These borrow the brain (<b>PrimeHub</b>), a <b>Motor</b>, the <b>DriveBase</b>, plus some parameters.</p>
+          <div class="lines"><div class="lines-title">Line by line</div>
+          <div class="line-row"><div class="line-code">import PrimeHub</div><div class="line-why">The robot's <b>brain</b> — gyro, buttons, screen, speaker.</div></div>
+          <div class="line-row"><div class="line-code">import Motor</div><div class="line-why">One motor (you'll make several).</div></div>
+          <div class="line-row"><div class="line-code">import DriveBase</div><div class="line-why">Two motors combined into a driving robot.</div></div>
+          <div class="line-row"><div class="line-code">Port, Direction, Stop</div><div class="line-why">Which socket, which way is forward, what to do when a move ends.</div></div></div>`,
+        code: `from pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.robotics import DriveBase\nfrom pybricks.parameters import Port, Direction, Stop\nfrom pybricks.tools import wait`,
+        codeHtml: `<span class="c-kw">from</span> pybricks.hubs <span class="c-kw">import</span> PrimeHub\n<span class="c-kw">from</span> pybricks.pupdevices <span class="c-kw">import</span> Motor\n<span class="c-kw">from</span> pybricks.robotics <span class="c-kw">import</span> DriveBase\n<span class="c-kw">from</span> pybricks.parameters <span class="c-kw">import</span> Port, Direction, Stop\n<span class="c-kw">from</span> pybricks.tools <span class="c-kw">import</span> wait`,
+        tokens: ['import PrimeHub', 'import Motor', 'import DriveBase', 'import Port']
       },
       {
-        id: 's3', num: 3, title: 'Robot constants — wheel & axle', goal: 'Type the two measurements the robot needs.',
-        interactive: true,
-        body: `<p>The DriveBase turns "drive 500 mm" into wheel spins. It needs two numbers about YOUR robot. Fill them in: the standard small SPIKE wheel is <b>56</b> mm across, and this robot's wheels are <b>122</b> mm apart.</p>
-          <div class="tip">💡 ALL-CAPS names are a Python habit meaning "this is a constant." You'll calibrate these exact numbers in Step 13.</div>`,
-        starter: `# Robot physical constants — calibrate these later (Step 13)\nWHEEL_DIAMETER_MM = ____\nAXLE_TRACK_MM = ____`,
-        code: `# Robot physical constants — calibrate these later (Step 13)\nWHEEL_DIAMETER_MM = 56\nAXLE_TRACK_MM = 122`
+        id: 's3', num: 3, title: 'Robot constants — wheel & axle', goal: 'Two measurements that make moves accurate.',
+        body: `<p>Add the two numbers your DriveBase needs. ALL-CAPS names mean "constant." The standard small SPIKE wheel is <b>56</b> mm across; this robot's wheels are <b>122</b> mm apart.</p>
+          <div class="tip">💡 You'll fine-tune these exact numbers in the last step (calibration).</div>`,
+        code: `# Robot physical constants — calibrate these later\nWHEEL_DIAMETER_MM = 56\nAXLE_TRACK_MM = 122`,
+        codeHtml: `<span class="c-comment"># Robot physical constants — calibrate these later</span>\nWHEEL_DIAMETER_MM = <span class="c-num">56</span>\nAXLE_TRACK_MM = <span class="c-num">122</span>`,
+        tokens: ['WHEEL_DIAMETER_MM = 56', 'AXLE_TRACK_MM = 122']
       },
       {
-        id: 's4', num: 4, title: 'Hardware — hub, motors, DriveBase', goal: 'Wire up the brain, motors, and build the robot.',
-        interactive: true,
-        body: `<p>Now create real objects for each piece of hardware. Fill in: the hub <b>class</b>, each motor's <b>Direction</b>, the attachment motor <b>Ports</b>, and the two constants that go into the DriveBase.</p>
-          <div class="lines"><div class="lines-title">Fill these in</div>
-          <div class="line-row"><div class="line-code">hub = ____()</div><div class="line-why"><b>PrimeHub</b> — wakes up the brain.</div></div>
-          <div class="line-row"><div class="line-code">Direction.____</div><div class="line-why">One motor is flipped so both push forward: <b>COUNTERCLOCKWISE</b> (left) and <b>CLOCKWISE</b> (right).</div></div>
-          <div class="line-row"><div class="line-code">Port.____</div><div class="line-why">Attachment motors: <b>F</b> for RAM, <b>B</b> for LAM.</div></div>
-          <div class="line-row"><div class="line-code">DriveBase(..., ____, ____)</div><div class="line-why">Pass your two constants: <b>WHEEL_DIAMETER_MM</b>, <b>AXLE_TRACK_MM</b>.</div></div></div>
-          <div class="tip">💡 The Port letters must match YOUR real robot's cables. If your left motor is in a different port, change it here.</div>`,
-        starter: `hub = ____()\n\nleft_motor = Motor(Port.A, Direction.____)\nright_motor = Motor(Port.E, Direction.____)\nRAM = Motor(Port.____)   # Right Attachment Motor\nLAM = Motor(Port.____)   # Left Attachment Motor\n\nrobot = DriveBase(left_motor, right_motor, ____, ____)`,
-        code: `hub = PrimeHub()\n\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.E, Direction.CLOCKWISE)\nRAM = Motor(Port.F)   # Right Attachment Motor\nLAM = Motor(Port.B)   # Left Attachment Motor\n\nrobot = DriveBase(left_motor, right_motor, WHEEL_DIAMETER_MM, AXLE_TRACK_MM)`
+        id: 's4', num: 4, title: 'Hardware — hub, motors, DriveBase', goal: 'Create the real objects and build the robot.',
+        body: `<p>Now create each piece of hardware and combine the drive motors into <span class="icode">robot</span>. The Port letters must match <b>your</b> robot's cables.</p>
+          <div class="lines"><div class="lines-title">What each line does</div>
+          <div class="line-row"><div class="line-code">hub = PrimeHub()</div><div class="line-why">Wakes up the brain.</div></div>
+          <div class="line-row"><div class="line-code">Motor(Port.A, Direction.…)</div><div class="line-why">Drive motors. One is flipped so both push forward.</div></div>
+          <div class="line-row"><div class="line-code">RAM / LAM</div><div class="line-why">Attachment motors (arms, lifts) on ports F and B.</div></div>
+          <div class="line-row"><div class="line-code">DriveBase(...)</div><div class="line-why">Ties the drive motors to your wheel &amp; axle numbers → one <b>robot</b>.</div></div></div>`,
+        code: `hub = PrimeHub()\n\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.E, Direction.CLOCKWISE)\nRAM = Motor(Port.F)   # Right Attachment Motor\nLAM = Motor(Port.B)   # Left Attachment Motor\n\nrobot = DriveBase(left_motor, right_motor, WHEEL_DIAMETER_MM, AXLE_TRACK_MM)`,
+        codeHtml: `hub = <span class="c-cls">PrimeHub</span>()\n\nleft_motor = <span class="c-cls">Motor</span>(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = <span class="c-cls">Motor</span>(Port.E, Direction.CLOCKWISE)\nRAM = <span class="c-cls">Motor</span>(Port.F)   <span class="c-comment"># Right Attachment Motor</span>\nLAM = <span class="c-cls">Motor</span>(Port.B)   <span class="c-comment"># Left Attachment Motor</span>\n\nrobot = <span class="c-cls">DriveBase</span>(left_motor, right_motor, WHEEL_DIAMETER_MM, AXLE_TRACK_MM)`,
+        tokens: ['hub = PrimeHub()', 'Motor(Port.', 'DriveBase(']
       },
       {
-        id: 's5', num: 5, title: 'Motion settings — speed & acceleration', goal: 'Set how fast the robot drives and turns.',
-        interactive: true,
-        body: `<p>Fill in the speeds. Slower is more accurate; faster is quicker. Use <b>600</b> mm/s straight, <b>400</b> for straight acceleration, <b>400</b> deg/s turn rate, and <b>300</b> turn acceleration.</p>`,
-        starter: `robot.settings(\n    straight_speed=____,         # mm/s\n    straight_acceleration=____,  # mm/s^2\n    turn_rate=____,              # deg/s\n    turn_acceleration=____,      # deg/s^2\n)`,
-        code: `robot.settings(\n    straight_speed=600,          # mm/s\n    straight_acceleration=400,   # mm/s^2\n    turn_rate=400,               # deg/s\n    turn_acceleration=300,       # deg/s^2\n)`
+        id: 's5', num: 5, title: 'Motion settings — speed & acceleration', goal: 'How fast the robot drives and turns.',
+        body: `<p>Set the default speeds. Slower = more accurate. Add:</p>`,
+        code: `robot.settings(\n    straight_speed=600,          # mm/s\n    straight_acceleration=400,   # mm/s^2\n    turn_rate=400,               # deg/s\n    turn_acceleration=300,       # deg/s^2\n)`,
+        codeHtml: `robot.<span class="c-fn">settings</span>(\n    straight_speed=<span class="c-num">600</span>,          <span class="c-comment"># mm/s</span>\n    straight_acceleration=<span class="c-num">400</span>,   <span class="c-comment"># mm/s^2</span>\n    turn_rate=<span class="c-num">400</span>,               <span class="c-comment"># deg/s</span>\n    turn_acceleration=<span class="c-num">300</span>,       <span class="c-comment"># deg/s^2</span>\n)`,
+        tokens: ['robot.settings(', 'straight_speed=', 'turn_rate=']
       },
       {
-        id: 's6', num: 6, title: 'Turn on the gyro', goal: 'One line for straighter driving and sharper turns.',
-        interactive: true,
-        body: `<p>The gyro sensor measures real rotation, so turns and straight lines stay true. Turn it on by passing <b>True</b>.</p>
-          <div class="tip">💡 Keep the robot still for a second after the program starts — the gyro calibrates at the start.</div>`,
-        starter: `robot.use_gyro(____)`,
-        code: `robot.use_gyro(True)`
+        id: 's6', num: 6, title: 'Turn on the gyro', goal: 'Straighter driving and sharper turns.',
+        body: `<p>The gyro sensor measures real rotation. Turn it on with one line:</p>
+          <div class="tip">💡 Keep the robot still for a second after the program starts — the gyro calibrates then.</div>`,
+        code: `robot.use_gyro(True)`,
+        codeHtml: `robot.<span class="c-fn">use_gyro</span>(<span class="c-kw">True</span>)`,
+        tokens: ['use_gyro(True)']
       },
       {
-        id: 's7', num: 7, title: 'PID tuning (optional block)', goal: 'We add this commented-out. You only tune it if needed.',
-        interactive: false,
-        body: `<p><strong>PID</strong> is how the robot corrects itself while moving — <b>P</b>roportional, <b>I</b>ntegral, <b>D</b>erivative. Pybricks has good defaults, so we add this block <em>commented out</em> (the <span class="icode">#</span> means Python skips it). You'd only uncomment it if the robot misbehaves.</p>
-          <div class="lines"><div class="lines-title">What each dial does</div>
-          <div class="line-row"><div class="line-code">kp</div><div class="line-why">How hard to push based on how far off you are <b>right now</b>. Too high = jittery.</div></div>
-          <div class="line-row"><div class="line-code">ki</div><div class="line-why">Fixes a small, <b>constant</b> drift over time. Keep it small.</div></div>
-          <div class="line-row"><div class="line-code">kd</div><div class="line-why">Eases off as you <b>approach</b> the target — stops overshoot/wobble.</div></div></div>`,
+        id: 's7', num: 7, title: 'PID tuning (commented out)', goal: 'Add it now, uncomment only if needed.',
+        body: `<p><strong>PID</strong> is how the robot corrects itself while moving. Pybricks has good defaults, so add this <em>commented</em> block (the <span class="icode">#</span> makes Python skip it) — you'd only turn it on later if the robot misbehaves.</p>`,
         code: `# PID tuning (optional — uncomment to override the defaults)\n# robot.distance_control.pid(kp=2000, ki=100, kd=200)\n# robot.heading_control.pid(kp=1400, ki=60, kd=500)`,
-        codeHtml: `<span class="c-comment"># PID tuning (optional — uncomment to override the defaults)\n# robot.distance_control.pid(kp=2000, ki=100, kd=200)\n# robot.heading_control.pid(kp=1400, ki=60, kd=500)</span>`
+        codeHtml: `<span class="c-comment"># PID tuning (optional — uncomment to override the defaults)\n# robot.distance_control.pid(kp=2000, ki=100, kd=200)\n# robot.heading_control.pid(kp=1400, ki=60, kd=500)</span>`,
+        tokens: ['distance_control.pid(', 'heading_control.pid(']
       },
       {
-        id: 'shelp', num: null, title: null, interactive: false, hidden: true,
-        code: `# ── Helper functions ──`
+        id: 's8', num: 8, title: 'reset() — start every run clean', goal: 'Your first function.',
+        body: `<p><span class="icode">def</span> defines a function. Add a helpers header and <span class="icode">reset()</span>, which stops the motors AND zeroes distance, angle, and gyro heading in one call:</p>`,
+        code: `# ── Helper functions ──\n\ndef reset():\n    robot.reset()   # stop + reset distance/angle + reset gyro heading`,
+        codeHtml: `<span class="c-comment"># ── Helper functions ──</span>\n\n<span class="c-kw">def</span> <span class="c-fn">reset</span>():\n    robot.<span class="c-fn">reset</span>()   <span class="c-comment"># stop + reset distance/angle + reset gyro heading</span>`,
+        tokens: ['def reset(', 'robot.reset()']
       },
       {
-        id: 's8', num: 8, title: 'reset() — start every run clean', goal: 'Your first function. Fill in the one line inside it.',
-        interactive: true,
-        body: `<p><span class="icode">def</span> means "define a function." Inside <span class="icode">reset()</span> call the robot's own reset. Fill in the method name — it's the same word: <b>reset</b>.</p>
-          <div class="tip">💡 <span class="icode">robot.reset()</span> stops the motors AND zeroes distance, angle, and gyro heading — all in one call.</div>`,
-        starter: `def reset():\n    robot.____()   # stop + reset distance/angle + reset gyro heading`,
-        code: `def reset():\n    robot.reset()   # stop + reset distance/angle + reset gyro heading`
+        id: 's9', num: 9, title: 'straight() and turn()', goal: 'The two moves you use most.',
+        body: `<p>Add wrappers for the two main moves. <span class="icode">then=Stop.HOLD</span> holds position after the move; negative numbers reverse / turn left.</p>`,
+        code: `def straight(distance_mm, then=Stop.HOLD):\n    robot.straight(distance_mm, then=then)\n\n\ndef turn(angle_deg, then=Stop.HOLD):\n    robot.turn(angle_deg, then=then)`,
+        codeHtml: `<span class="c-kw">def</span> <span class="c-fn">straight</span>(distance_mm, then=Stop.HOLD):\n    robot.<span class="c-fn">straight</span>(distance_mm, then=then)\n\n\n<span class="c-kw">def</span> <span class="c-fn">turn</span>(angle_deg, then=Stop.HOLD):\n    robot.<span class="c-fn">turn</span>(angle_deg, then=then)`,
+        tokens: ['def straight(', 'def turn(']
       },
       {
-        id: 's9', num: 9, title: 'straight() and turn()', goal: 'Pass the right value into each move.',
-        interactive: true,
-        body: `<p>These wrap the built-in moves. Fill in what gets passed to the robot: the <b>distance_mm</b> for straight, and the <b>angle_deg</b> for turn.</p>
-          <div class="lines"><div class="lines-title">Remember</div>
-          <div class="line-row"><div class="line-code">then=Stop.HOLD</div><div class="line-why">Default: hold position after the move.</div></div>
-          <div class="line-row"><div class="line-code">negative numbers</div><div class="line-why"><span class="icode">straight(-300)</span> reverses; <span class="icode">turn(-90)</span> turns left.</div></div></div>`,
-        starter: `def straight(distance_mm, then=Stop.HOLD):\n    robot.straight(____, then=then)\n\n\ndef turn(angle_deg, then=Stop.HOLD):\n    robot.turn(____, then=then)`,
-        code: `def straight(distance_mm, then=Stop.HOLD):\n    robot.straight(distance_mm, then=then)\n\n\ndef turn(angle_deg, then=Stop.HOLD):\n    robot.turn(angle_deg, then=then)`
-      },
-      {
-        id: 's10', num: 10, title: 'turn_to() — turn to an exact heading', goal: 'Fill in the gyro math that forces a turn direction.',
-        interactive: true,
-        body: `<p>This faces an <strong>exact heading</strong> using the gyro, no matter where you started. Fill in the three blanks: subtract your <b>current</b> heading, and wrap by <b>360</b> to force the chosen direction.</p>
+        id: 's10', num: 10, title: 'turn_to() — turn to an exact heading', goal: 'Face a specific direction using the gyro.',
+        body: `<p>This faces an <strong>exact heading</strong> no matter where you started. It reads the gyro, works out the difference, and forces the turn in the chosen direction (wrapping by 360°).</p>
           <div class="lines"><div class="lines-title">The tricky part</div>
           <div class="line-row"><div class="line-code">delta = target - current</div><div class="line-why">How far to turn = where you want − where you are.</div></div>
-          <div class="line-row"><div class="line-code">delta -= 360</div><div class="line-why">You asked to go LEFT but the short way was right → subtract 360 to make it a left turn.</div></div>
-          <div class="line-row"><div class="line-code">delta += 360</div><div class="line-why">Forcing RIGHT but the number came out negative → add 360.</div></div></div>`,
-        starter: `def turn_to(target_heading, direction=-1, then=Stop.HOLD):\n    current = hub.imu.heading()\n    delta = target_heading - ____\n    if direction == -1:\n        if delta > 0:\n            delta -= ____\n    else:\n        if delta < 0:\n            delta += ____\n    robot.turn(delta, then=then)`,
-        code: `def turn_to(target_heading, direction=-1, then=Stop.HOLD):\n    current = hub.imu.heading()\n    delta = target_heading - current\n    if direction == -1:\n        if delta > 0:\n            delta -= 360\n    else:\n        if delta < 0:\n            delta += 360\n    robot.turn(delta, then=then)`
+          <div class="line-row"><div class="line-code">delta -= 360 / += 360</div><div class="line-why">Flips the turn so it goes the direction you asked for (left or right).</div></div></div>`,
+        code: `def turn_to(target_heading, direction=-1, then=Stop.HOLD):\n    current = hub.imu.heading()\n    delta = target_heading - current\n    if direction == -1:\n        if delta > 0:\n            delta -= 360\n    else:\n        if delta < 0:\n            delta += 360\n    robot.turn(delta, then=then)`,
+        codeHtml: `<span class="c-kw">def</span> <span class="c-fn">turn_to</span>(target_heading, direction=-<span class="c-num">1</span>, then=Stop.HOLD):\n    current = hub.imu.<span class="c-fn">heading</span>()\n    delta = target_heading - current\n    <span class="c-kw">if</span> direction == -<span class="c-num">1</span>:\n        <span class="c-kw">if</span> delta &gt; <span class="c-num">0</span>:\n            delta -= <span class="c-num">360</span>\n    <span class="c-kw">else</span>:\n        <span class="c-kw">if</span> delta &lt; <span class="c-num">0</span>:\n            delta += <span class="c-num">360</span>\n    robot.<span class="c-fn">turn</span>(delta, then=then)`,
+        tokens: ['def turn_to(', 'hub.imu.heading()']
       },
       {
-        id: 's11', num: 11, title: 'arc() — drive curves', goal: 'Fill in the value that sets how tight the curve is.',
-        interactive: true,
-        body: `<p>An <strong>arc</strong> is part of a circle. Fill in the first value passed to <span class="icode">robot.arc</span> — the <b>radius_mm</b> (positive curves right, negative curves left).</p>`,
-        starter: `def arc(radius_mm, angle_deg=None, distance_mm=None, then=Stop.HOLD):\n    robot.arc(____, angle=angle_deg, distance=distance_mm, then=then)`,
-        code: `def arc(radius_mm, angle_deg=None, distance_mm=None, then=Stop.HOLD):\n    robot.arc(radius_mm, angle=angle_deg, distance=distance_mm, then=then)`
+        id: 's11', num: 11, title: 'arc() — drive curves', goal: 'The last function. Your file is almost done!',
+        body: `<p>An <strong>arc</strong> is part of a circle (positive radius curves right, negative curves left). Add the final helper:</p>`,
+        code: `def arc(radius_mm, angle_deg=None, distance_mm=None, then=Stop.HOLD):\n    robot.arc(radius_mm, angle=angle_deg, distance=distance_mm, then=then)`,
+        codeHtml: `<span class="c-kw">def</span> <span class="c-fn">arc</span>(radius_mm, angle_deg=<span class="c-kw">None</span>, distance_mm=<span class="c-kw">None</span>, then=Stop.HOLD):\n    robot.<span class="c-fn">arc</span>(radius_mm, angle=angle_deg, distance=distance_mm, then=then)`,
+        tokens: ['def arc(', 'robot.arc(']
       },
       {
-        id: 's12', num: 12, title: 'Use it in a run file', goal: 'Your file is done! Here is how a mission uses it.',
-        interactive: false, code: null,
-        body: `<p>🎉 <b>robot_base.py is finished</b> — tap <b>📄 Your file so far</b> to see the whole thing and copy it. For each mission you make a <strong>new</strong> file that imports from it. Look how short a run becomes:</p>
-          <div class="code-wrap"><div class="code-head"><span class="fname">run1.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
-          <pre><span class="c-kw">from</span> robot_base <span class="c-kw">import</span> robot, hub, RAM, LAM, straight, turn, arc, reset\n\nreset()              <span class="c-comment"># always start clean</span>\nstraight(<span class="c-num">500</span>)        <span class="c-comment"># forward 500 mm</span>\nturn(<span class="c-num">90</span>)             <span class="c-comment"># turn right 90°</span>\nstraight(<span class="c-num">300</span>)        <span class="c-comment"># forward 300 mm</span>\nRAM.<span class="c-fn">run_time</span>(<span class="c-num">500</span>, <span class="c-num">1000</span>)   <span class="c-comment"># spin the right attachment motor</span></pre></div>
-          <div class="tip">🕹️ <b>Test it in the Simulator!</b> The <a href="/fll-hub/simulator" style="color:var(--green-dark);font-weight:800">BIOGLOW Simulator</a> runs this exact code — paste your run to see the path before you touch a real robot.</div>`
+        id: 'r1', num: '✓', title: 'Use it in a run file', goal: 'Your robot_base.py is complete!', reference: true,
+        body: `<p>🎉 <b>Your file is done</b> — tap <b>📋 Copy file</b> in the editor to grab the whole thing. For each mission, make a <strong>new</strong> file that imports from it:</p>
+          <div class="code-wrap"><div class="code-head"><span class="fname">run1.py</span></div>
+          <pre><span class="c-kw">from</span> robot_base <span class="c-kw">import</span> robot, hub, RAM, LAM, straight, turn, arc, reset\n\nreset()\nstraight(<span class="c-num">500</span>)\nturn(<span class="c-num">90</span>)\nstraight(<span class="c-num">300</span>)\nRAM.<span class="c-fn">run_time</span>(<span class="c-num">500</span>, <span class="c-num">1000</span>)</pre></div>
+          <div class="tip">🕹️ Test your run in the <a href="/fll-hub/simulator" style="color:var(--green-dark);font-weight:800">Simulator</a> — it runs this exact code.</div>`
       },
       {
-        id: 's13', num: 13, title: 'Calibrate your robot', goal: 'Make distances and turns dead accurate.',
-        interactive: false, code: null,
-        body: `<p>Your robot won't be perfectly accurate until you calibrate the two numbers from Step 3. Do these <strong>in order</strong>:</p>
-          <ul>
-          <li><strong>Wheel diameter first.</strong> Run <span class="icode">straight(1000)</span>, measure the real distance. Too short → decrease <span class="icode">WHEEL_DIAMETER_MM</span>; too far → increase it. (Shortcut: <span class="icode">new = old × (1000 / actual)</span>.)</li>
-          <li><strong>Then axle track.</strong> Run <span class="icode">turn(360)</span> — it should end facing the same way. Turned too little → increase <span class="icode">AXLE_TRACK_MM</span>; too far → decrease it.</li>
-          <li><strong>Drift?</strong> Raise <span class="icode">heading_control kp</span> a little. Weaving? Raise <span class="icode">kd</span>.</li>
-          <li><strong>Overshoot at the end?</strong> Lower <span class="icode">distance_control kp</span>, raise <span class="icode">kd</span>.</li>
-          <li><strong>Gyro quirk:</strong> if a 90° turn lands at 87°, use <span class="icode">turn(93)</span> to compensate.</li>
+        id: 'r2', num: '⚙️', title: 'Calibrate your robot', goal: 'Make it dead accurate.', reference: true,
+        body: `<ul>
+          <li><strong>Wheel diameter first:</strong> run <span class="icode">straight(1000)</span>, measure the real distance. Too short → lower <span class="icode">WHEEL_DIAMETER_MM</span>; too far → raise it.</li>
+          <li><strong>Then axle track:</strong> run <span class="icode">turn(360)</span> — it should end facing the same way. Off → adjust <span class="icode">AXLE_TRACK_MM</span>.</li>
+          <li><strong>Gyro quirk:</strong> if a 90° turn lands at 87°, use <span class="icode">turn(93)</span>.</li>
           <li><strong>Last move:</strong> use <span class="icode">then=Stop.COAST</span> so the robot doesn't fight you when you pick it up.</li>
-          </ul>
-          <div class="tip">💡 Set the <b>Simulator's Robot Setup</b> to the same wheel/axle numbers and your sim runs will match real life.</div>`
+          </ul>`
       }
     ];
 
-    const INTERACTIVE = STEPS.filter(s => s.interactive);
-    const TOTAL = INTERACTIVE.length;
-    const STORE_KEY = 'robotbase-tutorial-v2';
+    const BUILD = STEPS.filter(s => !s.reference);
+    const TOTAL = BUILD.length;
+    const KEY = 'robotbase-ide-v1';
 
-    let progress = { done: [], code: {} };
-    try { const s = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); if (s) progress = { done: [], code: {}, ...s }; } catch (e) {}
-    function save() { localStorage.setItem(STORE_KEY, JSON.stringify(progress)); }
+    let state = { file: '', done: [] };
+    try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s) state = { file: '', done: [], ...s }; } catch (e) {}
+    function save() { localStorage.setItem(KEY, JSON.stringify(state)); }
 
-    // normalize code for forgiving comparison: strip # comments, collapse whitespace, drop blank lines
-    function norm(s) {
-      return s.split('\n')
-        .map(l => l.replace(/#.*$/, '').replace(/\s+/g, ' ').trim())
-        .filter(Boolean)
-        .join('\n');
+    const ide = document.getElementById('ide');
+    ide.value = state.file || '';
+
+    function strip(s) { return s.replace(/\s+/g, ''); }
+    function fileHas(token) { return strip(ide.value).includes(strip(token)); }
+    // furthest step index whose tokens (and all before it) are satisfied
+    function computeDone() {
+      const done = [];
+      for (const step of BUILD) {
+        if (step.tokens.every(fileHas)) done.push(step.id); else break;
+      }
+      return done;
     }
+    function currentStepId() {
+      const done = state.done;
+      const next = BUILD.find(s => !done.includes(s.id));
+      return next ? next.id : null;
+    }
+
     function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1800); }
 
-    // ── render ──
-    function renderSteps() {
-      const root = document.getElementById('stepsRoot');
-      root.innerHTML = STEPS.filter(s => !s.hidden).map(step => {
-        const isDone = progress.done.includes(step.id);
-        let badge = '';
-        if (step.interactive) badge = isDone ? '<span class="step-badge ok">✓ Added to file</span>' : '<span class="step-badge todo">✍️ Code it</span>';
-        else if (step.code) badge = '<span class="step-badge ref">Given for you</span>';
-        else badge = '<span class="step-badge ref">Reference</span>';
-
-        let editor = '';
-        if (step.interactive) {
-          const val = progress.code[step.id] != null ? progress.code[step.id] : step.starter;
-          editor = `
-            <div class="editor-label">✍️ Fill in the blanks — <span class="fname">robot_base.py</span></div>
-            <textarea class="code-editor ${isDone ? 'ok' : ''}" id="ed-${step.id}" spellcheck="false" oninput="onEdit('${step.id}')">${esc(val)}</textarea>
-            <div class="ed-actions">
-              <button class="ed-btn check" onclick="checkStep('${step.id}')">✓ Check my code</button>
-              <button class="ed-btn reveal" onclick="revealStep('${step.id}')">💡 Show answer</button>
-              <button class="ed-btn reset-ed" onclick="resetStep('${step.id}')">↺ Reset box</button>
-            </div>
-            <div class="ed-feedback ${isDone ? 'ok' : ''}" id="fb-${step.id}">${isDone ? '✓ Nice — this piece is in your file.' : ''}</div>`;
-        } else if (step.codeHtml) {
-          editor = `<div class="code-wrap"><div class="code-head"><span class="fname">robot_base.py</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div><pre>${step.codeHtml}</pre></div>`;
+    function render() {
+      const curId = currentStepId();
+      document.getElementById('stepsRoot').innerHTML = STEPS.map(step => {
+        if (step.reference) {
+          return `<section class="step reference" id="${step.id}">
+            <div class="step-head"><div class="step-num"><span class="n">${step.num}</span></div>
+              <div><div class="step-title">${step.title}</div><div class="step-goal">${step.goal}</div></div>
+              <span class="step-badge ref">Reference</span></div>
+            <div class="step-body">${step.body}</div></section>`;
         }
-
-        return `
-          <section class="step ${isDone ? 'done' : ''}" id="${step.id}">
-            <div class="step-head">
-              <div class="step-num"><span class="n">${step.num}</span><span class="check">✓</span></div>
-              <div>
-                <div class="step-title">${step.title}</div>
-                ${step.goal ? `<div class="step-goal">${step.goal}</div>` : ''}
-              </div>
-              ${badge}
+        const isDone = state.done.includes(step.id);
+        const isCurrent = step.id === curId;
+        const locked = !isDone && !isCurrent;
+        let badge = isDone ? '<span class="step-badge ok">✓ In your file</span>'
+          : isCurrent ? '<span class="step-badge now">✍️ Do this now</span>'
+          : '<span class="step-badge locked">🔒 Next up</span>';
+        return `<section class="step ${isDone ? 'done' : ''} ${isCurrent ? 'current' : ''}" id="${step.id}">
+          <div class="step-head">
+            <div class="step-num"><span class="n">${step.num}</span><span class="check">✓</span></div>
+            <div><div class="step-title">${step.title}</div><div class="step-goal">${step.goal}</div></div>
+            ${badge}
+          </div>
+          <div class="step-body">
+            ${step.body}
+            <div class="code-wrap"><div class="code-head"><span class="fname">add to robot_base.py</span></div><pre>${step.codeHtml}</pre></div>
+            <div class="step-actions">
+              <button class="sa-btn add" onclick="addToFile('${step.id}')">⬇ Add to my file</button>
+              <button class="sa-btn check" onclick="checkStep('${step.id}')">✓ Check</button>
+              <button class="sa-btn copy" onclick="copyChunk('${step.id}')">📋 Copy</button>
+              <div class="sa-feedback ${isDone ? 'ok' : ''}" id="fb-${step.id}">${isDone ? '✓ Done — this part is in your file.' : ''}</div>
             </div>
-            <div class="step-body">
-              ${step.body}
-              ${editor}
-            </div>
-          </section>`;
+          </div>
+        </section>`;
       }).join('');
       updateProgress();
     }
 
-    function onEdit(id) {
-      const ta = document.getElementById('ed-' + id);
-      progress.code[id] = ta.value;
-      save();
+    function addToFile(id) {
+      const step = STEPS.find(s => s.id === id);
+      let v = ide.value.replace(/\s+$/, '');
+      ide.value = v ? v + '\n\n' + step.code + '\n' : step.code + '\n';
+      state.file = ide.value; save();
+      updateStatus();
+      toast('Added to your file ✓');
+      checkStep(id, true);
     }
 
-    function checkStep(id) {
+    function checkStep(id, quiet) {
       const step = STEPS.find(s => s.id === id);
-      const ta = document.getElementById('ed-' + id);
       const fb = document.getElementById('fb-' + id);
-      const raw = ta.value;
-      progress.code[id] = raw;
-
-      if (norm(raw) === norm(step.code)) {
-        markDone(id, ta, fb);
-      } else {
-        ta.classList.remove('ok'); ta.classList.add('err');
-        if (raw.includes('____')) {
-          fb.textContent = '✍️ Almost! You still have blanks (____) to fill in.';
-        } else {
-          fb.textContent = '❌ Not quite — check spelling and capital letters (Python is picky!). Compare with the hints, or tap 💡 Show answer.';
-        }
-        fb.className = 'ed-feedback err';
+      // find first BUILD step (up to and including this one) that's missing
+      const idx = BUILD.findIndex(s => s.id === id);
+      let missing = null;
+      for (let i = 0; i <= idx; i++) {
+        if (!BUILD[i].tokens.every(fileHas)) { missing = BUILD[i]; break; }
       }
-      save();
+      if (missing) {
+        if (fb) {
+          fb.className = 'sa-feedback err';
+          fb.textContent = missing.id === id
+            ? '❌ Not there yet — type it in (or tap ⬇ Add to my file), then Check again.'
+            : `❌ The "${missing.title}" part (step ${missing.num}) is missing above this one — add that first.`;
+        }
+        recomputeAndRender(id);
+        return;
+      }
+      // success: mark all up to idx done
+      state.done = BUILD.slice(0, idx + 1).map(s => s.id);
+      state.file = ide.value; save();
+      if (fb && !quiet) { fb.className = 'sa-feedback ok'; fb.textContent = '✅ Correct! This part is in your file.'; }
+      render();
+      const next = currentStepId();
+      if (!quiet && next) { const el = document.getElementById(next); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
     }
 
-    function revealStep(id) {
+    function recomputeAndRender(keepFocusId) {
+      state.done = computeDone(); state.file = ide.value; save(); updateProgress();
+      // update badges live without losing the feedback we just set
+      document.querySelectorAll('.step').forEach(sec => {
+        const st = BUILD.find(b => b.id === sec.id); if (!st) return;
+        const done = state.done.includes(st.id);
+        sec.classList.toggle('done', done);
+      });
+    }
+
+    function copyChunk(id) {
       const step = STEPS.find(s => s.id === id);
-      const ta = document.getElementById('ed-' + id);
-      const fb = document.getElementById('fb-' + id);
-      ta.value = step.code;
-      progress.code[id] = step.code;
-      markDone(id, ta, fb, true);
-      save();
+      navigator.clipboard.writeText(step.code).then(() => toast('Copied ✓'));
+    }
+    function copyFile() {
+      if (!ide.value.trim()) { toast('Your file is empty!'); return; }
+      navigator.clipboard.writeText(ide.value).then(() => toast('Whole file copied ✓'));
+    }
+    function clearFile() {
+      if (!confirm('Clear the editor and start over? This erases your file.')) return;
+      ide.value = ''; state.file = ''; state.done = []; save(); render(); updateStatus();
     }
 
-    function resetStep(id) {
-      const step = STEPS.find(s => s.id === id);
-      const ta = document.getElementById('ed-' + id);
-      const fb = document.getElementById('fb-' + id);
-      ta.value = step.starter;
-      ta.classList.remove('ok', 'err');
-      fb.textContent = ''; fb.className = 'ed-feedback';
-      progress.code[id] = step.starter;
-      progress.done = progress.done.filter(x => x !== id);
-      document.getElementById(id).classList.remove('done');
-      save();
-      updateProgress();
+    function updateStatus() {
+      const lines = ide.value ? ide.value.split('\n').length : 0;
+      document.getElementById('ideStatus').textContent = lines + ' line' + (lines === 1 ? '' : 's');
     }
-
-    function markDone(id, ta, fb, revealed) {
-      ta.classList.remove('err'); ta.classList.add('ok');
-      fb.textContent = revealed ? '💡 Answer shown — added to your file. Try to understand each part!' : '✅ Correct! Added to your robot_base.py.';
-      fb.className = 'ed-feedback ok';
-      document.getElementById(id).classList.add('done');
-      if (!progress.done.includes(id)) progress.done.push(id);
-      updateProgress();
-    }
-
     function updateProgress() {
-      const done = INTERACTIVE.filter(s => progress.done.includes(s.id)).length;
-      document.getElementById('pgLabel').textContent = `Coded ${done} / ${TOTAL}`;
+      const done = state.done.length;
+      document.getElementById('pgLabel').textContent = `Built ${done} / ${TOTAL}`;
       document.getElementById('pgFill').style.width = Math.round(done / TOTAL * 100) + '%';
       const foot = document.getElementById('footerNote');
-      if (done === TOTAL) foot.innerHTML = '🎉 <b>You built the whole robot_base.py!</b> Tap 📄 Your file so far to copy it into code.pybricks.com, then test it in the <a href="/fll-hub/simulator">Simulator</a>.';
+      if (done === TOTAL) foot.innerHTML = '🎉 <b>Your robot_base.py is complete!</b> Tap <b>📋 Copy file</b> and paste it into code.pybricks.com, then test it in the <a href="/fll-hub/simulator">Simulator</a>.';
     }
 
-    // ── assembled file (top-down prefix of satisfied parts) ──
-    function assembledFile() {
-      const parts = [];
-      for (const step of STEPS) {
-        if (step.code == null) continue;            // reference-only steps contribute nothing
-        const satisfied = !step.interactive || progress.done.includes(step.id);
-        if (satisfied) parts.push(step.code);
-        else break;                                  // stop at the first piece not coded yet
-      }
-      return parts.join('\n\n');
-    }
-
-    function openFile() {
-      const content = assembledFile();
-      const el = document.getElementById('fileContent');
-      if (!content.trim()) {
-        el.innerHTML = '<span class="file-empty">Your file is empty — go code Step 2 to start filling it in! ✍️</span>';
-      } else {
-        el.textContent = content;
-      }
-      document.getElementById('fileOverlay').classList.add('show');
-    }
-    function closeFile() { document.getElementById('fileOverlay').classList.remove('show'); }
-    function copyFullFile() {
-      const content = assembledFile();
-      if (!content.trim()) return;
-      navigator.clipboard.writeText(content).then(() => {
-        const b = document.getElementById('fileCopyBtn'); const o = b.textContent;
-        b.textContent = '✓ Copied!'; setTimeout(() => b.textContent = o, 2000);
-      });
-    }
-
-    function copyCode(btn) {
-      const code = btn.closest('.code-wrap').querySelector('pre').textContent;
-      navigator.clipboard.writeText(code).then(() => {
-        const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000);
-      });
-    }
-
-    // Tab key inserts 4 spaces in the editors
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Tab' && e.target.classList.contains('code-editor')) {
-        e.preventDefault();
-        const el = e.target, s = el.selectionStart;
-        el.value = el.value.slice(0, s) + '    ' + el.value.slice(el.selectionEnd);
-        el.selectionStart = el.selectionEnd = s + 4;
-        progress.code[el.id.replace('ed-', '')] = el.value; save();
-      }
+    // live: typing updates progress + saves
+    let t = null;
+    ide.addEventListener('input', () => {
+      state.file = ide.value;
+      clearTimeout(t);
+      t = setTimeout(() => { state.done = computeDone(); save(); render(); updateStatus(); }, 400);
+      updateStatus();
+    });
+    // Tab inserts 4 spaces
+    ide.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') { e.preventDefault(); const s = ide.selectionStart; ide.value = ide.value.slice(0, s) + '    ' + ide.value.slice(ide.selectionEnd); ide.selectionStart = ide.selectionEnd = s + 4; state.file = ide.value; save(); }
     });
 
-    renderSteps();
+    state.done = computeDone();
+    render();
+    updateStatus();
   </script>
 </body>
 </html>
