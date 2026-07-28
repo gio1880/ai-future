@@ -1235,6 +1235,20 @@
       font-size: 12px;
       color: #80868b;
     }
+    .ta-file-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 620px;
+      margin-bottom: 12px;
+      padding: 11px 42px 11px 13px;
+      border: 1.5px solid #d2e3fc;
+      border-radius: 10px;
+      background: #f8fbff;
+      position: relative;
+      font-size: 13px;
+    }
+    .ta-file-row span { color: #5f6368; margin-left: auto; }
     .ta-photo-gallery {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -3777,6 +3791,7 @@
       const payload = {
         answers: { ...(existing.answers || {}), ...answers },
         photos: photos !== undefined ? photos : existingPhotos,
+        files: Array.isArray(existing.files) ? existing.files : [],
         savedAt: new Date().toISOString(),
         submittedAt: existing.submittedAt || null
       };
@@ -3791,6 +3806,10 @@
     function getTaskPhotos(saved) {
       if (!saved) return [];
       return saved.photos || (saved.photoDataUrl ? [saved.photoDataUrl] : []);
+    }
+
+    function getTaskFiles(saved) {
+      return saved && Array.isArray(saved.files) ? saved.files : [];
     }
 
     // shared: downscale an image file to max 900px JPEG data URL
@@ -3856,6 +3875,7 @@
       const saved = getTaskSubmission(userId, taskId);
       const answers = (saved && saved.answers) || {};
       const taskPhotos = getTaskPhotos(saved);
+      const taskFiles = getTaskFiles(saved);
       const submitted = !!(saved && saved.submittedAt);
 
       const typeLabel = { video: '🎬 Video Lesson', lesson: '📖 Lesson', submission: '📤 Submission', journal: '📓 Journal', tracker: '🔧 Tracker' }[task.type] || '📋 Assignment';
@@ -3948,6 +3968,26 @@
         </div>
       ` : '';
 
+      const fileHtml = task.allowFile ? `
+        <div class="ta-photo-section">
+          <div class="ta-photo-label">📁 ${escapeHtml(task.filePrompt || 'Attach your project file')}</div>
+          ${taskFiles.length ? taskFiles.map((file, index) => `
+            <div class="ta-file-row">
+              <strong>${escapeHtml(file.name)}</strong>
+              <span>${Math.max(1, Math.round(Number(file.size || 0) / 1024))} KB</span>
+              ${!submitted ? `<button class="ta-photo-remove" onclick="removeTaskFile('${escapeHtml(userId)}','${escapeHtml(taskId)}',${index})">✕</button>` : ''}
+            </div>
+          `).join('') : ''}
+          ${!submitted ? `
+            <label class="ta-photo-upload-btn" for="ta-file-input">
+              📎 ${taskFiles.length ? 'Replace project file' : 'Choose project file'}
+              <input type="file" id="ta-file-input" accept="${escapeHtml(task.acceptedFileTypes || '')}" style="display:none" onchange="handleTaskFile(this,'${escapeHtml(userId)}','${escapeHtml(taskId)}')">
+            </label>
+            <div class="ta-photo-hint">Accepted: ${escapeHtml(task.acceptedFileTypes || 'project files')} · maximum 4 MB</div>
+          ` : ''}
+        </div>
+      ` : '';
+
       // ── submit / done state ──
       const submitArea = submitted ? `
         <div class="ta-done-banner">
@@ -4001,6 +4041,7 @@
           ` : ''}
 
           ${photoHtml}
+          ${fileHtml}
           ${submitArea}
         </div>
       `;
@@ -4419,6 +4460,46 @@
       wireListeners();
     }
 
+    function handleTaskFile(input, userId, taskId) {
+      const file = input.files[0];
+      if (!file) return;
+      if (file.size > 4 * 1024 * 1024) {
+        alert('That file is larger than 4 MB. In BrickLink Studio, remove unused parts or save a smaller copy and try again.');
+        input.value = '';
+        return;
+      }
+      const extension = `.${String(file.name).split('.').pop().toLowerCase()}`;
+      if (!['.io', '.ldr', '.mpd'].includes(extension)) {
+        alert('Choose a BrickLink Studio .io file, or an .ldr/.mpd LEGO model file.');
+        input.value = '';
+        return;
+      }
+      const answers = collectAnswers(taskId);
+      const reader = new FileReader();
+      reader.onload = event => {
+        const existing = saveTaskSubmission(userId, taskId, answers, undefined);
+        existing.files = [{ name: file.name, type: file.type || 'application/octet-stream', size: file.size, data: event.target.result }];
+        try {
+          localStorage.setItem(taskStorageKey(userId, taskId), JSON.stringify(existing));
+        } catch (error) {
+          alert('This project file is too large for browser storage. Save a smaller BrickLink Studio copy and try again.');
+          return;
+        }
+        app.innerHTML = renderTaskDetail(latestData, taskId);
+        wireListeners();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeTaskFile(userId, taskId, index) {
+      const answers = collectAnswers(taskId);
+      const existing = saveTaskSubmission(userId, taskId, answers, undefined);
+      existing.files = getTaskFiles(existing).filter((_, fileIndex) => fileIndex !== index);
+      localStorage.setItem(taskStorageKey(userId, taskId), JSON.stringify(existing));
+      app.innerHTML = renderTaskDetail(latestData, taskId);
+      wireListeners();
+    }
+
     // ── Save draft ────────────────────────────────────────────────────────
     function saveTaskDraft(userId, taskId) {
       const answers = collectAnswers(taskId);
@@ -4428,7 +4509,7 @@
     }
 
     // ── Submit assignment ─────────────────────────────────────────────────
-    function submitTaskAnswers(userId, taskId) {
+    async function submitTaskAnswers(userId, taskId) {
       const task = latestData.tasks.find(t => t.id === taskId);
       if (!task) return;
       const answers = collectAnswers(taskId);
@@ -4443,7 +4524,29 @@
         if (msg) { msg.textContent = `Please answer all ${missing.length} remaining question${missing.length > 1 ? 's' : ''} before submitting.`; msg.className = 'ta-submit-hint error'; }
         return;
       }
-      saveTaskSubmission(userId, taskId, answers, undefined);
+      if (task.allowFile && !getTaskFiles(getTaskSubmission(userId, taskId)).length) {
+        const msg = document.getElementById('ta-submit-msg');
+        if (msg) {
+          msg.textContent = 'Attach the BrickLink Studio project file before submitting.';
+          msg.className = 'ta-submit-hint error';
+        }
+        return;
+      }
+      const savedSubmission = saveTaskSubmission(userId, taskId, answers, undefined);
+      const msg = document.getElementById('ta-submit-msg');
+      if (msg) { msg.textContent = 'Submitting...'; msg.className = 'ta-submit-hint'; }
+      try {
+        const response = await fetch(`/api/fll/tasks/${encodeURIComponent(taskId)}/submission`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ answers, photos: getTaskPhotos(savedSubmission), files: getTaskFiles(savedSubmission) })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Submission failed');
+      } catch (error) {
+        if (msg) { msg.textContent = error.message || 'Could not submit this assignment. Please try again.'; msg.className = 'ta-submit-hint error'; }
+        return;
+      }
       markTaskSubmitted(userId, taskId);
       updateTaskStatus(taskId, 'done');
       app.innerHTML = renderTaskDetail(latestData, taskId);

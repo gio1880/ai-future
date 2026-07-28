@@ -31,24 +31,25 @@ const fllAssignmentsFile = path.join(fllHubDataDir, 'assignments.json');
 const fllTasksFile = path.join(fllHubDataDir, 'tasks.json');
 const fllMilestonesFile = path.join(fllHubDataDir, 'milestones.json');
 const fllWorkLogsFile = path.join(fllHubDataDir, 'work-logs.json');
+const fllTaskSubmissionsFile = path.join(fllHubDataDir, 'task-submissions.json');
 const fllTeamMembersFile = path.join(fllHubDataDir, 'team-members.json');
 const fllTeamSchedulesFile = path.join(fllHubDataDir, 'team-schedules.json');
 const fllSeasonSectionsFile = path.join(fllHubDataDir, 'season-sections.json');
 const fllMissionAnalysisFile = path.join(fllHubDataDir, 'mission-analysis.json');
 const fllLiveLessonFile = path.join(fllHubDataDir, 'live-lesson.json');
 const fllSimulatorProgressFile = path.join(fllHubDataDir, 'simulator-progress.json');
+const fllCoachRankingsFile = path.join(fllHubDataDir, 'coach-rankings.json');
 const codeLabStudentsFile = path.join(__dirname, 'code-lab', 'data', 'students.json');
 const fllSessionCookie = 'fll_session';
-// Where a student lands right after logging into the FLL hub.
-// Set to the coding tutorial so coding is the first thing they see; the tutorial
-// and every coding page has a "← My dashboard" link back to /fll-hub/student.
-const FLL_STUDENT_LANDING = '/fll-hub/robot-base-tutorial';
+// Students start on their main dashboard after every FLL login.
+const FLL_STUDENT_LANDING = '/fll-hub/student';
 const fllDataFileNames = [
 	'fll-users.json',
 	'assignments.json',
 	'tasks.json',
 	'milestones.json',
 	'work-logs.json',
+	'task-submissions.json',
 	'team-members.json',
 	'team-schedules.json',
 	'season-sections.json',
@@ -59,7 +60,8 @@ const fllDataFileNames = [
 	'announcements.json',
 	'resources.json',
 	'live-lesson.json',
-	'simulator-progress.json'
+	'simulator-progress.json',
+	'coach-rankings.json'
 ];
 const fllSessions = new Map();
 const campHubDir = path.join(__dirname, 'robotics lab', 'Summer Camp', '2026-summer-camp');
@@ -1039,8 +1041,10 @@ async function buildDataHealthReport() {
 		'team-members.json': 'runtime-roster',
 		'teams.json': 'runtime-teams',
 		'work-logs.json': 'runtime-submissions',
+		'task-submissions.json': 'runtime-submissions',
 		'live-lesson.json': 'runtime-live-state',
-		'simulator-progress.json': 'runtime-student-work'
+		'simulator-progress.json': 'runtime-student-work',
+		'coach-rankings.json': 'runtime-coach-assessment'
 	};
 	const campClassifications = {
 		'camp-users.json': 'managed-summer-roster',
@@ -3701,6 +3705,279 @@ function buildFllCodingFoundationsTask(user) {
 	};
 }
 
+function buildFllSponsorsTask(user) {
+	const studentId = user?.id || 'student';
+	return {
+		id: `task-sponsors-${studentId}`,
+		assignmentId: 'assignment-sponsors',
+		teamId: user?.teamId || '',
+		assignedTo: studentId,
+		title: 'Sponsors: Build Community Support for Your Team',
+		description: [
+			'Sponsors are community partners who can help an FLL team with funding, materials, meeting space, expert advice, printing, food, transportation, or outreach. Finding sponsors is also a Core Values activity: your team practices teamwork, communication, inclusion, impact, and gracious professionalism.',
+			'Work with your team to create a sponsor plan. Identify at least five local businesses, organizations, or community members whose goals connect with education, STEM, young people, or the environment.',
+			'For each possible sponsor, record the organization name, the best contact person or department, why the partnership makes sense, what support you will respectfully request, and what your team can offer in return.',
+			'Create a short sponsor message or letter. Introduce your team, explain the BIOGLOW season, describe your goals, make one clear request, and thank the reader. Never contact a sponsor on your own—have your coach review and approve the message first.',
+			'Finish by choosing your team’s top three prospects and assigning a follow-up owner for each one. Log your work below and upload or link your sponsor list when your coach asks for it.'
+		].join('\n\n'),
+		category: 'Core Values',
+		section: 'core-values',
+		type: 'submission',
+		workContext: 'class',
+		status: 'todo',
+		dueDate: '2026-09-18',
+		allowPhoto: true,
+		photoPrompt: 'Upload a photo or screenshot of your sponsor prospect list or draft sponsor message.',
+		questions: [
+			{ id: 'sponsor-prospects', type: 'textarea', label: 'List at least five possible sponsors and explain why each is a good match.', placeholder: 'Organization — why it fits — what support we could request' },
+			{ id: 'sponsor-request', type: 'textarea', label: 'What specific support will your team ask for?', placeholder: 'Be clear and realistic about the request.' },
+			{ id: 'sponsor-value', type: 'textarea', label: 'What can your team offer or share in return?', placeholder: 'Examples: recognition, a demonstration, photos, or a thank-you letter.' },
+			{ id: 'sponsor-message', type: 'textarea', label: 'Draft your sponsor message for coach review.', placeholder: 'Introduce the team, explain FLL and BIOGLOW, make one clear request, and say thank you.' }
+		],
+		createdBy: 'coach-default',
+		createdAt: '2026-07-28T00:00:00.000Z',
+		updatedAt: '2026-07-28T00:00:00.000Z'
+	};
+}
+
+function buildFllRobotDesignTasks(user) {
+	const studentId = user?.id || 'student';
+	const teamId = user?.teamId || '';
+	const shared = {
+		teamId,
+		assignedTo: studentId,
+		category: 'Robot Design',
+		section: 'robot-design',
+		status: 'todo',
+		createdBy: 'coach-default',
+		createdAt: '2026-07-28T00:00:00.000Z',
+		updatedAt: '2026-07-28T00:00:00.000Z'
+	};
+	return [
+		{
+			...shared,
+			id: `task-initial-motor-placement-${studentId}`,
+			assignmentId: 'assignment-initial-motor-placement',
+			title: 'Initial Motor Placement and Drive Base Layout',
+			description: [
+				'Document your team’s first motor and hub layout before the design changes. Clear early documentation makes it easier to explain your engineering decisions and compare later versions.',
+				'Take pictures from the top, front, and both sides. Make sure the drive motors, attachment motors, hub, wheels, ports, wires, and major frame pieces are visible.',
+				'Explain why your team chose each motor location. Consider balance, wheel alignment, wire routing, access to the hub and battery, attachment space, strength, and ease of maintenance.',
+				'Your first layout does not need to be perfect. The goal is to preserve evidence of your starting point so your team can show how and why the robot improved.'
+			].join('\n\n'),
+			type: 'submission',
+			workContext: 'lab',
+			dueDate: '2026-09-04',
+			allowPhoto: true,
+			photoPrompt: 'Add clear top, front, left-side, and right-side photos of the initial motor and hub placement.',
+			questions: [
+				{ id: 'motor-layout', type: 'textarea', label: 'Where are your drive motors, attachment motors, and hub placed?', placeholder: 'Name the ports and describe each location.' },
+				{ id: 'motor-reasons', type: 'textarea', label: 'Why did your team choose this layout?', placeholder: 'Discuss balance, alignment, access, strength, wiring, and attachment space.' },
+				{ id: 'motor-risks', type: 'textarea', label: 'What possible problem or tradeoff do you notice in this first design?', placeholder: 'What will your team test first?' }
+			]
+		},
+		{
+			...shared,
+			id: `task-attachment-iteration-tracker-${studentId}`,
+			assignmentId: 'assignment-attachment-iterations',
+			title: 'Initial Attachments and Design Iteration Tracker',
+			description: [
+				'Create a record for every important robot attachment. Start with a photo and description of each initial attachment, including its purpose and the mission action it is meant to complete.',
+				'Whenever your team makes a meaningful change, add another iteration photo and describe exactly what changed, why you changed it, and what happened during testing.',
+				'Highlight changes that improved reliability, speed, simplicity, strength, alignment, or attachment-change time. You may add as many attachments and iteration photos as your team needs throughout the season.',
+				'This tracker becomes evidence for Robot Design judging: it shows that your team tested ideas, learned from results, and improved the robot intentionally.'
+			].join('\n\n'),
+			type: 'tracker',
+			workContext: 'lab',
+			dueDate: '2027-03-26',
+			questions: []
+		},
+		{
+			...shared,
+			id: `task-final-bricklink-studio-${studentId}`,
+			assignmentId: 'assignment-final-bricklink-studio',
+			title: 'Final Robot: BrickLink Studio Model and Color Plan',
+			description: [
+				'Build a final digital model of your competition robot in BrickLink Studio. The model should show the robot’s finished structure, motor and hub placement, wheels, major attachments or attachment connection points, and the colors your team plans to use.',
+				'Use the appropriate LEGO colors instead of leaving the model in placeholder colors. The digital model should be clear enough for another team member to understand what the finished robot is intended to look like.',
+				'Save and submit the original BrickLink Studio .io file. Also add screenshots from at least the front, side, and top so the design can be reviewed quickly.'
+			].join('\n\n'),
+			type: 'submission',
+			workContext: 'home',
+			dueDate: '2026-10-16',
+			allowPhoto: true,
+			photoPrompt: 'Add front, side, and top screenshots of the completed BrickLink Studio robot model.',
+			allowFile: true,
+			filePrompt: 'Attach the original BrickLink Studio .io file.',
+			acceptedFileTypes: '.io,.ldr,.mpd',
+			questions: [
+				{ id: 'studio-colors', type: 'textarea', label: 'Describe your final color plan and why your team selected these colors.', placeholder: 'List the main colors and how they support team identity or make parts easier to identify.' },
+				{ id: 'studio-final-features', type: 'textarea', label: 'Which final robot features are most important to highlight?', placeholder: 'Describe motor placement, structure, attachment system, access, or other key decisions.' },
+				{ id: 'studio-differences', type: 'textarea', label: 'Does the Studio model differ from the physical robot in any way?', placeholder: 'Explain any missing pieces, substitutions, or planned changes.' }
+			]
+		}
+	];
+}
+
+function buildFllInnovationTasks(user) {
+	const studentId = user?.id || 'student';
+	const shared = {
+		teamId: user?.teamId || '',
+		assignedTo: studentId,
+		category: 'Innovation Project',
+		section: 'innovation',
+		type: 'submission',
+		workContext: 'class',
+		status: 'todo',
+		createdBy: 'coach-default',
+		createdAt: '2026-07-28T00:00:00.000Z',
+		updatedAt: '2026-07-28T00:00:00.000Z'
+	};
+	return [
+		{
+			...shared,
+			id: `task-innovation-understand-prompt-${studentId}`,
+			assignmentId: 'assignment-innovation-understand-prompt',
+			title: '1. Understand the Innovation Project Prompt and Brainstorm Topics',
+			dueDate: '2026-08-07',
+			description: 'Read the official BIOGLOW Innovation Project prompt carefully. Rewrite it in your own words, identify what the prompt requires, and brainstorm many possible research topics before judging any idea. Look for specific problems involving ecosystems, biodiversity, people, technology, or your local community. Quantity matters at this stage—capture every reasonable idea.',
+			allowPhoto: true,
+			photoPrompt: 'Optional: upload photos of the official prompt, whiteboard, sticky notes, or team brainstorm.',
+			questions: [
+				{ id: 'prompt-own-words', type: 'textarea', label: 'Explain the official prompt in your own words. What is the team being asked to do?', placeholder: 'Describe the challenge, important requirements, and anything that is still unclear.' },
+				{ id: 'prompt-key-words', type: 'textarea', label: 'List important words, rules, limits, and questions from the prompt.', placeholder: 'What must the project include? What should your team investigate further?' },
+				{ id: 'topic-brainstorm', type: 'table', label: 'Brainstorm as many potential research topics as possible.', columns: ['Potential topic', 'Who or what is affected?', 'Why it interests us'], minRows: 8, maxRows: 25 }
+			]
+		},
+		{
+			...shared,
+			id: `task-innovation-top-five-${studentId}`,
+			assignmentId: 'assignment-innovation-top-five',
+			title: '2. Narrow the Brainstorm to the Team’s Best Five Topics',
+			dueDate: '2026-08-14',
+			description: 'Review the full brainstorm as a team. Combine duplicate ideas and compare each topic for importance, connection to the official prompt, research potential, local relevance, and the team’s interest. Select five topics that the team is genuinely willing to investigate—do not choose the final problem yet.',
+			questions: [
+				{ id: 'top-five', type: 'table', label: 'Record the five topics your team selected.', columns: ['Top-five topic', 'Why it fits the prompt', 'Why the team likes it', 'What we need to learn'], minRows: 5, maxRows: 5 },
+				{ id: 'narrowing-method', type: 'textarea', label: 'How did your team narrow the larger list to these five?', placeholder: 'Explain the criteria, discussion, or preliminary scoring you used.' }
+			]
+		},
+		{
+			...shared,
+			id: `task-innovation-confirm-problems-${studentId}`,
+			assignmentId: 'assignment-innovation-confirm-problems',
+			title: '3. Confirm That Each of the Five Problems Actually Exists',
+			dueDate: '2026-08-21',
+			description: 'A strong Innovation Project solves a real, specific problem—not an assumption. For each of the five topics, locate credible evidence that the problem exists. Use trustworthy sources such as government agencies, universities, scientific organizations, established nonprofits, interviews, or published research. Record facts, dates, locations, and links.',
+			questions: [
+				{ id: 'problem-evidence', type: 'table', label: 'Confirm each problem with evidence.', columns: ['Topic/problem', 'Fact or evidence', 'Credible source and link', 'Who is affected'], minRows: 5, maxRows: 15 },
+				{ id: 'evidence-gaps', type: 'textarea', label: 'Which topic has the strongest evidence? Which still has unanswered questions?', placeholder: 'Compare the quality and amount of evidence for all five.' }
+			]
+		},
+		{
+			...shared,
+			id: `task-innovation-two-solutions-each-${studentId}`,
+			assignmentId: 'assignment-innovation-two-solutions-each',
+			title: '4. Research at Least Two Existing Solutions for Each Top-Five Topic',
+			dueDate: '2026-08-28',
+			description: 'For every top-five topic, find at least two solutions that people or organizations already use or have proposed. That means researching at least ten solutions total. Identify who created each solution, how it works, who uses it, evidence of its results, and its weaknesses or limitations.',
+			questions: [
+				{ id: 'solution-scan', type: 'table', label: 'Document at least two existing solutions for every topic.', columns: ['Topic', 'Existing solution', 'How it works', 'Source/link', 'Limitation or gap'], minRows: 10, maxRows: 20 },
+				{ id: 'solution-patterns', type: 'textarea', label: 'What patterns, strengths, or repeated limitations did your team notice?', placeholder: 'What appears to work? What important need is still not being met?' }
+			]
+		},
+		{
+			...shared,
+			id: `task-innovation-team-vote-${studentId}`,
+			assignmentId: 'assignment-innovation-team-vote',
+			title: '5. Team Evaluation and Vote: Select One Problem',
+			dueDate: '2026-09-04',
+			description: 'Use evidence—not just personal preference—to choose the team’s final problem. Discuss all five topics, score them with the same criteria, allow every team member to contribute, and hold a fair vote. Record the result and explain why the winning problem is the strongest choice for your team.',
+			allowPhoto: true,
+			photoPrompt: 'Optional: upload a photo of the scoring board, ballots, or team decision chart.',
+			questions: [
+				{ id: 'topic-scores', type: 'table', label: 'Evaluate all five topics before voting.', columns: ['Topic', 'Importance (1–5)', 'Evidence (1–5)', 'Solution opportunity (1–5)', 'Team interest (1–5)', 'Votes'], minRows: 5, maxRows: 5 },
+				{ id: 'winning-problem', type: 'textarea', label: 'Which problem won, and what exact version of the problem will the team pursue?', placeholder: 'State the problem specifically: who is affected, where it happens, and what consequence it creates.' },
+				{ id: 'fair-decision', type: 'textarea', label: 'How did your team make the discussion and vote fair and inclusive?', placeholder: 'Explain how everyone participated and how disagreements were handled.' }
+			]
+		},
+		{
+			...shared,
+			id: `task-innovation-proof-and-experts-${studentId}`,
+			assignmentId: 'assignment-innovation-proof-and-experts',
+			title: '6. Build the Final Problem Evidence File and Expert Outreach List',
+			dueDate: '2026-09-11',
+			description: 'Now verify the chosen problem more deeply. Collect several current, credible facts that prove its scale, causes, consequences, location, and affected groups. Then identify institutions and experts who understand the problem or the people affected. Do not contact anyone until the coach approves the list and outreach message.',
+			questions: [
+				{ id: 'final-facts', type: 'table', label: 'Create a fact file that proves the selected problem is real and important.', columns: ['Confirmed fact', 'What it proves', 'Source organization', 'Link/date'], minRows: 5, maxRows: 15 },
+				{ id: 'expert-list', type: 'table', label: 'Build a list of institutions and experts to contact.', columns: ['Institution/expert', 'Relevant expertise', 'Contact method', 'What we want to ask'], minRows: 5, maxRows: 15 },
+				{ id: 'outreach-priority', type: 'textarea', label: 'Which three contacts should the team approach first, and why?', placeholder: 'Rank the best contacts and explain what each could help the team learn.' }
+			]
+		},
+		{
+			...shared,
+			id: `task-innovation-existing-solutions-deep-dive-${studentId}`,
+			assignmentId: 'assignment-innovation-existing-solutions-deep-dive',
+			title: '7. Deep Research on Existing Solutions to the Chosen Problem',
+			dueDate: '2026-09-18',
+			description: 'Study the strongest existing solutions for the final problem in greater depth. Learn how they work, what evidence supports them, what they cost or require, where they are used, and why they do not completely solve the problem. Respect prior work—the goal is to learn from it and find a meaningful opportunity to improve.',
+			questions: [
+				{ id: 'deep-solutions', type: 'table', label: 'Compare existing solutions to the selected problem.', columns: ['Solution/creator', 'How it works', 'Evidence/results', 'Strengths', 'Limitations/gaps'], minRows: 3, maxRows: 10 },
+				{ id: 'unmet-need', type: 'textarea', label: 'What unmet need or opportunity remains after reviewing these solutions?', placeholder: 'Identify a specific gap your team might address.' }
+			]
+		},
+		{
+			...shared,
+			id: `task-innovation-original-solutions-${studentId}`,
+			assignmentId: 'assignment-innovation-original-solutions',
+			title: '8. Brainstorm Original Solutions and Improvements',
+			dueDate: '2026-09-25',
+			description: 'Use everything the team learned to brainstorm many possible solutions. Ideas may be completely new or meaningful improvements to existing solutions, but the team must explain what is original, who benefits, and how the idea addresses the evidence-backed problem. Do not settle on the first idea—generate alternatives before evaluating them.',
+			allowPhoto: true,
+			photoPrompt: 'Upload sketches, diagrams, prototypes, sticky notes, or whiteboard photos from the solution brainstorm.',
+			questions: [
+				{ id: 'solution-brainstorm', type: 'table', label: 'Generate many possible solutions or improvements.', columns: ['Solution idea', 'New idea or improvement?', 'How it helps', 'What makes it different', 'Question/risk'], minRows: 8, maxRows: 20 },
+				{ id: 'promising-three', type: 'textarea', label: 'Which three ideas appear most promising, and why?', placeholder: 'Compare impact, originality, feasibility, and connection to the research.' },
+				{ id: 'next-test', type: 'textarea', label: 'What should the team prototype or test next?', placeholder: 'Describe the first simple experiment, model, interview, or prototype.' }
+			]
+		}
+	];
+}
+
+function requiredFllTasksForUser(user) {
+	return [buildFllSponsorsTask(user), ...buildFllRobotDesignTasks(user), ...buildFllInnovationTasks(user)];
+}
+
+async function ensureFllSponsorsAssignments() {
+	const [tasks, members] = await Promise.all([
+		readJsonFile(fllTasksFile, []),
+		readJsonFile(fllTeamMembersFile, [])
+	]);
+	if (!Array.isArray(tasks) || !Array.isArray(members)) return;
+	let changed = false;
+	for (const member of members) {
+		if (!member.studentId || !member.teamId) continue;
+		for (const task of requiredFllTasksForUser({ id: member.studentId, teamId: member.teamId })) {
+			if (tasks.some((candidate) => candidate.id === task.id)) continue;
+			tasks.push(task);
+			changed = true;
+		}
+	}
+	if (changed) await writeJsonFile(fllTasksFile, tasks);
+}
+
+async function ensureFllSponsorsTaskForUser(user) {
+	if (!user?.id || !user?.teamId || user.role !== 'student') return;
+	const tasks = await readJsonFile(fllTasksFile, []);
+	if (!Array.isArray(tasks)) return;
+	let changed = false;
+	for (const task of requiredFllTasksForUser(user)) {
+		if (tasks.some((candidate) => candidate.id === task.id)) continue;
+		tasks.push(task);
+		changed = true;
+	}
+	if (changed) await writeJsonFile(fllTasksFile, tasks);
+}
+
 function isGeneratedFllCodingTaskId(taskId, user) {
 	return taskId === `task-coding-foundations-${user?.id || ''}`;
 }
@@ -3741,6 +4018,7 @@ function sectionProgressFromMilestones(sections, milestones) {
 }
 
 async function getFllStudentDashboardFor(user) {
+	await ensureFllSponsorsTaskForUser(user);
 	const [season, teams, timeline, assignments, tasks, milestones, workLogs, members, schedules, resources, sections, missionAnalysis] = await Promise.all([
 		readJsonFile(path.join(fllHubDataDir, 'season.json'), {}),
 		readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
@@ -4719,6 +4997,49 @@ app.get('/api/fll/coach/roster', requireFllAuth, requireFllCoach, async (req, re
 	}
 });
 
+const fllRankingCategories = ['building', 'programming', 'speaking', 'research', 'hardWork', 'design3d', 'bricklink', 'printerOperation'];
+
+function normalizeFllCoachRankings(data) {
+	const source = data && typeof data === 'object' && !Array.isArray(data) ? data : {};
+	const students = {};
+	for (const [studentId, raw] of Object.entries(source.students || {})) {
+		if (!raw || typeof raw !== 'object') continue;
+		const entry = { notes: cleanMetaString(raw.notes || '', 500) };
+		for (const category of fllRankingCategories) {
+			entry[category] = Math.max(1, Math.min(5, Number.parseInt(raw[category], 10) || 1));
+		}
+		students[cleanMetaString(studentId, 160)] = entry;
+	}
+	return { version: 1, updatedAt: source.updatedAt || '', students };
+}
+
+app.get('/api/fll/coach/rankings', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const rankings = normalizeFllCoachRankings(await readJsonFile(fllCoachRankingsFile, {}));
+		return res.json({ success: true, rankings });
+	} catch (err) {
+		console.error('FLL coach rankings load error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading rankings' });
+	}
+});
+
+app.put('/api/fll/coach/rankings', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const users = await readFllUsers();
+		const validStudentIds = new Set(users.filter((user) => user.role === 'student').map((user) => user.id));
+		const rankings = normalizeFllCoachRankings(req.body || {});
+		for (const studentId of Object.keys(rankings.students)) {
+			if (!validStudentIds.has(studentId)) delete rankings.students[studentId];
+		}
+		rankings.updatedAt = new Date().toISOString();
+		await writeJsonFile(fllCoachRankingsFile, rankings);
+		return res.json({ success: true, rankings });
+	} catch (err) {
+		console.error('FLL coach rankings save error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving rankings' });
+	}
+});
+
 app.post('/api/fll/coach/teams', requireFllAuth, requireFllCoach, async (req, res) => {
 	try {
 		const name = cleanMetaString(req.body.name || '', 80);
@@ -5277,6 +5598,62 @@ app.delete('/api/fll/coach/assignments', requireFllAuth, requireFllCoach, async 
 	} catch (err) {
 		console.error('FLL coach delete assignment error:', err);
 		return res.status(500).json({ success: false, message: 'Server error deleting assignment' });
+	}
+});
+
+app.get('/api/fll/coach/task-submissions', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const submissions = await readJsonFile(fllTaskSubmissionsFile, []);
+		return res.json({ success: true, submissions: Array.isArray(submissions) ? submissions : [] });
+	} catch (err) {
+		console.error('FLL coach task submissions load error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading task submissions' });
+	}
+});
+
+app.post('/api/fll/tasks/:id/submission', requireFllAuth, requireFllStudent, async (req, res) => {
+	try {
+		const [tasks, stored] = await Promise.all([
+			readJsonFile(fllTasksFile, []),
+			readJsonFile(fllTaskSubmissionsFile, [])
+		]);
+		const task = (Array.isArray(tasks) ? tasks : []).find((candidate) => candidate.id === req.params.id);
+		if (!task || task.teamId !== req.fllUser.teamId || task.assignedTo !== req.fllUser.id) {
+			return res.status(403).json({ success: false, message: 'You can only submit your own assigned tasks' });
+		}
+		const answers = {};
+		for (const [questionId, answer] of Object.entries(req.body.answers || {})) {
+			answers[cleanMetaString(questionId, 120)] = cleanMetaString(answer || '', 8000);
+		}
+		const photos = (Array.isArray(req.body.photos) ? req.body.photos : [])
+			.filter((photo) => typeof photo === 'string' && /^data:image\//.test(photo))
+			.slice(0, 20);
+		const files = (Array.isArray(req.body.files) ? req.body.files : []).slice(0, 1).map((file) => ({
+			name: cleanMetaString(file?.name || '', 180),
+			type: cleanMetaString(file?.type || 'application/octet-stream', 100),
+			size: Math.max(0, Math.min(4 * 1024 * 1024, Number(file?.size) || 0)),
+			data: typeof file?.data === 'string' && /^data:/.test(file.data) ? file.data : ''
+		})).filter((file) => file.name && file.data);
+		const submissions = Array.isArray(stored) ? stored : [];
+		const payload = {
+			id: `submission-${req.fllUser.id}-${task.id}`,
+			taskId: task.id,
+			studentId: req.fllUser.id,
+			studentName: req.fllUser.name,
+			teamId: req.fllUser.teamId,
+			answers,
+			photos,
+			files,
+			submittedAt: new Date().toISOString()
+		};
+		const existingIndex = submissions.findIndex((item) => item.taskId === task.id && item.studentId === req.fllUser.id);
+		if (existingIndex >= 0) submissions[existingIndex] = payload;
+		else submissions.push(payload);
+		await writeJsonFile(fllTaskSubmissionsFile, submissions);
+		return res.status(existingIndex >= 0 ? 200 : 201).json({ success: true, submission: payload });
+	} catch (err) {
+		console.error('FLL task submission error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving assignment submission' });
 	}
 });
 
@@ -7067,6 +7444,7 @@ initializeFllDataDir()
 	.then(() => initializeCoachDataDir())
 	.then(() => initializeMasterRoster())
 	.then(() => syncFllTeamClasses())
+	.then(() => ensureFllSponsorsAssignments())
 	.then(() => migrateSummer2026RosterData())
 	.then(() => ensureSummerDemoStudent())
 	.then(() => ensureStudentPortalUsernames())
