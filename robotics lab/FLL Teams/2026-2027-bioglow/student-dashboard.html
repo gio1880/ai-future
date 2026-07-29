@@ -1201,6 +1201,84 @@
     .ta-answer-error { border-color: #d93025 !important; box-shadow: 0 0 0 3px rgba(217,48,37,0.12) !important; }
 
     /* photo */
+    /* ── per-question optional picture + link ── */
+    .ta-q-attach {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: #f8f9fa;
+      border: 1px dashed #dadce0;
+      border-radius: 10px;
+    }
+    .ta-q-attach-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #80868b;
+      margin-bottom: 8px;
+    }
+    .ta-q-attach-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .ta-q-link {
+      flex: 1;
+      min-width: 200px;
+      border: 1.5px solid #dadce0;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #202124;
+    }
+    .ta-q-link:focus { outline: none; border-color: #1a73e8; }
+    .ta-q-link-view {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1a73e8;
+      word-break: break-all;
+    }
+    .ta-q-photo-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: white;
+      border: 1.5px solid #dadce0;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #5f6368;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .ta-q-photo-btn:hover { border-color: #1a73e8; color: #1a73e8; }
+    .ta-q-photo-wrap {
+      position: relative;
+      display: inline-block;
+    }
+    .ta-q-photo {
+      max-height: 120px;
+      max-width: 100%;
+      border-radius: 8px;
+      border: 1.5px solid #e8eaed;
+      display: block;
+    }
+    .ta-q-photo-remove {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
     .ta-photo-section {
       padding: 20px 28px;
       border-bottom: 1.5px solid #f1f3f4;
@@ -3932,12 +4010,35 @@
           const val = escapeHtml(answers[q.id] || '');
           inputEl = `<input class="ta-answer ta-answer-text" type="text" id="ta-q-${escapeHtml(q.id)}" data-qid="${escapeHtml(q.id)}" placeholder="${escapeHtml(q.placeholder || '')}" value="${val}" ${submitted ? 'readonly' : ''}>`;
         }
+        // ── optional per-question picture + link ──
+        let attachHtml = '';
+        if (q.allowAttach) {
+          const qid = escapeHtml(q.id);
+          const linkVal = answers[`${q.id}__link`] || '';
+          const photoVal = answers[`${q.id}__photo`] || '';
+          const linkPart = submitted
+            ? (linkVal ? `<a class="ta-q-link-view" href="${escapeHtml(linkVal)}" target="_blank" rel="noreferrer">🔗 ${escapeHtml(linkVal)}</a>` : '')
+            : `<input class="ta-q-link" type="url" data-qid="${qid}__link" placeholder="🔗 Add a link (optional) — a website, video, or doc" value="${escapeHtml(linkVal)}">`;
+          const photoPart = photoVal
+            ? `<div class="ta-q-photo-wrap"><img class="ta-q-photo" src="${photoVal}" alt="attachment for question ${i + 1}">${submitted ? '' : `<button class="ta-q-photo-remove" onclick="removeQuestionPhoto('${escapeHtml(userId)}','${escapeHtml(taskId)}','${qid}')">✕</button>`}</div>`
+            : (submitted ? '' : `<label class="ta-q-photo-btn">📷 Add a picture<input type="file" accept="image/*" style="display:none" onchange="handleQuestionPhoto(this,'${escapeHtml(userId)}','${escapeHtml(taskId)}','${qid}')"></label>`);
+          if (submitted && !linkVal && !photoVal) {
+            attachHtml = '';
+          } else {
+            attachHtml = `
+              <div class="ta-q-attach">
+                ${submitted ? '' : '<div class="ta-q-attach-title">📎 Optional — add a picture or a link to show your work</div>'}
+                <div class="ta-q-attach-row">${linkPart}${photoPart}</div>
+              </div>`;
+          }
+        }
         return `
           <div class="ta-question">
             <div class="ta-question-num">Q${i + 1}</div>
             <div class="ta-question-body">
               <label class="ta-question-label" for="ta-q-${escapeHtml(q.id)}">${escapeHtml(q.label)}</label>
               ${inputEl}
+              ${attachHtml}
             </div>
           </div>
         `;
@@ -4456,6 +4557,27 @@
       const photos = getTaskPhotos(getTaskSubmission(userId, taskId));
       photos.splice(index, 1);
       saveTaskSubmission(userId, taskId, answers, photos);
+      app.innerHTML = renderTaskDetail(latestData, taskId);
+      wireListeners();
+    }
+
+    // ── per-question optional picture (stored in answers[qid__photo]) ──
+    function handleQuestionPhoto(input, userId, taskId, qid) {
+      const file = input.files[0];
+      if (!file) return;
+      const answers = collectAnswers(taskId);   // keep typed answers + links
+      compressImageFile(file, dataUrl => {
+        answers[`${qid}__photo`] = dataUrl;
+        saveTaskSubmission(userId, taskId, answers, undefined);
+        app.innerHTML = renderTaskDetail(latestData, taskId);
+        wireListeners();
+      });
+    }
+
+    function removeQuestionPhoto(userId, taskId, qid) {
+      const answers = collectAnswers(taskId);
+      answers[`${qid}__photo`] = '';
+      saveTaskSubmission(userId, taskId, answers, undefined);
       app.innerHTML = renderTaskDetail(latestData, taskId);
       wireListeners();
     }

@@ -128,24 +128,27 @@
         "id": "q1",
         "type": "textarea",
         "label": "What was the most interesting thing you saw or heard in the video?",
-        "placeholder": "Describe what caught your attention and why it stood out to you..."
+        "placeholder": "Describe what caught your attention and why it stood out to you...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "What ecosystem problem do you think BIOGLOW wants teams to help solve?",
-        "placeholder": "Think about the themes shown — pollution, habitat loss, biodiversity? What's the big challenge?"
+        "placeholder": "Think about the themes shown — pollution, habitat loss, biodiversity? What's the big challenge?",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
         "label": "What is one question you still have about the BIOGLOW season?",
-        "placeholder": "What do you want to learn more about? What are you curious or excited about?"
+        "placeholder": "What do you want to learn more about? What are you curious or excited about?",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-09T00:00:00.000Z",
-    "updatedAt": "2026-06-09T00:00:00.000Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-ecosystem-questions",
@@ -164,30 +167,34 @@
         "id": "q1",
         "type": "textarea",
         "label": "In your own words, what is an ecosystem and why does it matter?",
-        "placeholder": "Explain it like you're describing it to a friend who has never heard the word before..."
+        "placeholder": "Explain it like you're describing it to a friend who has never heard the word before...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "Give one real-world example of how losing biodiversity could be a problem.",
-        "placeholder": "Think about food chains, pollinators, forests, oceans... what happens when one species disappears?"
+        "placeholder": "Think about food chains, pollinators, forests, oceans... what happens when one species disappears?",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
         "label": "Pick one animal or plant and describe one thing engineers could copy from it to solve a human problem.",
-        "placeholder": "Think about how the creature moves, builds, survives, or senses its environment..."
+        "placeholder": "Think about how the creature moves, builds, survives, or senses its environment...",
+        "allowAttach": true
       },
       {
         "id": "q4",
         "type": "text",
         "label": "What ecosystem or nature topic would you most want your team to research this season?",
-        "placeholder": "Oceans, rainforests, pollinators, soil, urban wildlife..."
+        "placeholder": "Oceans, rainforests, pollinators, soil, urban wildlife...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-08T00:00:00.000Z",
-    "updatedAt": "2026-06-08T00:00:00.000Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-kit-check-batteries",
@@ -568,12 +575,13 @@
         "id": "q1",
         "type": "textarea",
         "label": "If you could ask one of these experts a single question about ecosystems, what would it be?",
-        "placeholder": "Make it a question you genuinely can't answer with a quick web search..."
+        "placeholder": "Make it a question you genuinely can't answer with a quick web search...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-10T00:00:00.000Z",
-    "updatedAt": "2026-06-10T00:00:00.000Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-innovation-problem",
@@ -592,24 +600,27 @@
         "id": "q1",
         "type": "textarea",
         "label": "Write your team's problem statement. Cover WHO, WHAT, WHERE, and WHY.",
-        "placeholder": "Be specific! Who is affected, what exactly is happening, where, and why does it matter..."
+        "placeholder": "Be specific! Who is affected, what exactly is happening, where, and why does it matter...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "How do you KNOW this is a real problem? List at least 2 sources or pieces of evidence.",
-        "placeholder": "An article you read, an expert you found, something from your field trip research, a statistic..."
+        "placeholder": "An article you read, an expert you found, something from your field trip research, a statistic...",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "text",
         "label": "Who could you talk to who deals with this problem in real life?",
-        "placeholder": "Pull from your expert research — a scientist, ranger, engineer, organization..."
+        "placeholder": "Pull from your expert research — a scientist, ranger, engineer, organization...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-06-11T00:00:00.000Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-innovation-existing-solutions",
@@ -641,12 +652,13 @@
         "id": "q1",
         "type": "textarea",
         "label": "Based on your chart, what GAP do you see? What is nobody doing well yet?",
-        "placeholder": "This gap is where your team's innovation will live..."
+        "placeholder": "This gap is where your team's innovation will live...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-06-11T00:00:00.000Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-innovation-solution",
@@ -667,24 +679,27 @@
         "id": "q1",
         "type": "text",
         "label": "What is your solution called? Give it a memorable name!",
-        "placeholder": "e.g. GlowGuard, FireflyFriendly Lights, BioBeacon..."
+        "placeholder": "e.g. GlowGuard, FireflyFriendly Lights, BioBeacon...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "Describe your solution: what is it and how does it work, step by step?",
-        "placeholder": "Walk through it like you're explaining to a judge who has never seen it..."
+        "placeholder": "Walk through it like you're explaining to a judge who has never seen it...",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
         "label": "Why is your solution better than the existing ones you researched? What gap does it fill?",
-        "placeholder": "Connect back to your Step 2 chart..."
+        "placeholder": "Connect back to your Step 2 chart...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-06-11T00:00:00.000Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-innovation-feedback",
@@ -715,12 +730,13 @@
         "id": "q1",
         "type": "textarea",
         "label": "What did you CHANGE about your solution based on the feedback? Describe before vs after.",
-        "placeholder": "Before, our solution did X. After talking to ___, we changed it to Y because..."
+        "placeholder": "Before, our solution did X. After talking to ___, we changed it to Y because...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-06-11T00:00:00.000Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-innovation-script",
@@ -739,42 +755,48 @@
         "id": "q1",
         "type": "textarea",
         "label": "PART 1 — Write your Hook (about 30 seconds when spoken):",
-        "placeholder": "A surprising fact, a question to the judges, a mini skit... make them lean in!"
+        "placeholder": "A surprising fact, a question to the judges, a mini skit... make them lean in!",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "PART 2 — Write your Problem section (about 1 minute):",
-        "placeholder": "Who, what, where, why — include your strongest evidence..."
+        "placeholder": "Who, what, where, why — include your strongest evidence...",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
         "label": "PART 3 — Write your Existing Solutions & Gap section (about 1 minute):",
-        "placeholder": "What already exists, what it does well, and the gap your team found..."
+        "placeholder": "What already exists, what it does well, and the gap your team found...",
+        "allowAttach": true
       },
       {
         "id": "q4",
         "type": "textarea",
         "label": "PART 4 — Write your Solution section (about 1.5 minutes):",
-        "placeholder": "Name it, explain how it works step by step, and why it's better..."
+        "placeholder": "Name it, explain how it works step by step, and why it's better...",
+        "allowAttach": true
       },
       {
         "id": "q5",
         "type": "textarea",
         "label": "PART 5 — Write your Sharing & Impact section (about 1 minute):",
-        "placeholder": "Who you shared with, what feedback you got, what you changed, and what's next..."
+        "placeholder": "Who you shared with, what feedback you got, what you changed, and what's next...",
+        "allowAttach": true
       },
       {
         "id": "q6",
         "type": "text",
         "label": "Who says which part? List the speaker for each of the 5 parts.",
-        "placeholder": "e.g. Hook: Maya · Problem: Jaden · Solutions: Ava · Our solution: Liam · Impact: everyone"
+        "placeholder": "e.g. Hook: Maya · Problem: Jaden · Solutions: Ava · Our solution: Liam · Impact: everyone",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-06-11T00:00:00.000Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-innovation-slides",
@@ -795,24 +817,27 @@
         "id": "q1",
         "type": "text",
         "label": "Paste the link to your slide deck (Google Slides, PowerPoint, or Canva):",
-        "placeholder": "https://docs.google.com/presentation/..."
+        "placeholder": "https://docs.google.com/presentation/...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "List your slides: for each one, what's the headline and the ONE idea it shows?",
-        "placeholder": "Slide 1: Title — GlowGuard by History Guardians\nSlide 2: Hook — '90% of deep sea animals glow'\nSlide 3: ..."
+        "placeholder": "Slide 1: Title — GlowGuard by History Guardians\nSlide 2: Hook — '90% of deep sea animals glow'\nSlide 3: ...",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "text",
         "label": "Did you practice presenting WITH the slides? How long did your run-through take?",
-        "placeholder": "e.g. Yes — 4 minutes 40 seconds, just under the 5 minute limit!"
+        "placeholder": "e.g. Yes — 4 minutes 40 seconds, just under the 5 minute limit!",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-06-11T00:00:00.000Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-innovation-poster",
@@ -833,24 +858,27 @@
         "id": "q1",
         "type": "textarea",
         "label": "Describe your poster layout: what goes in each zone (top, left, middle, right)?",
-        "placeholder": "Top: GlowGuard in huge letters... Left: firefly decline graph... Middle: labeled diagram..."
+        "placeholder": "Top: GlowGuard in huge letters... Left: firefly decline graph... Middle: labeled diagram...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "text",
         "label": "The 10-foot test: stand 10 feet away. Can you read the title and tell what the project is about?",
-        "placeholder": "e.g. Yes! Title is readable and the diagram tells the story"
+        "placeholder": "e.g. Yes! Title is readable and the diagram tells the story",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
         "label": "How does your poster, slides, and script work TOGETHER to tell one story?",
-        "placeholder": "The poster shows..., the slides support our talk by..., the script ties it together with..."
+        "placeholder": "The poster shows..., the slides support our talk by..., the script ties it together with...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-06-11T00:00:00.000Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-innovation-field-trips",
@@ -881,12 +909,13 @@
         "id": "q1",
         "type": "text",
         "label": "Which place would you visit first, and what would you want to find out there?",
-        "placeholder": "e.g. The aquarium — I want to ask about their coral restoration program"
+        "placeholder": "e.g. The aquarium — I want to ask about their coral restoration program",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-10T00:00:00.000Z",
-    "updatedAt": "2026-06-10T00:00:00.000Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "assignmentId": "assignment-competition-ready",
@@ -895,7 +924,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-06-11T00:00:00.000Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-judging-deck-all-areas",
     "title": "Step 12 — Judging Deck: Slides for ALL FLL Areas 🖥️",
     "description": "At competition, your judging session covers THREE areas: **Innovation Project, Robot Design, and Core Values**. Your innovation slides (Step 6) are only one third of the story — now build the full judging deck.\n\n**Add a Robot Design section (3-4 slides):**\n- Your base bot — photo + why you placed the hub/motors/sensors where you did\n- Attachments — iteration photos from your Attachment Tracker (judges LOVE seeing v1 vs final!)\n- Code strategy — how your programs are organized, gyro use, sensor use\n- What went wrong and how you fixed it (engineering process!)\n\n**Add a Core Values section (2-3 slides):**\n- Your best shout-out stories from the Core Values Journal\n- How your team makes decisions and resolves disagreements\n- A moment your team showed Gracious Professionalism\n\n**Final deck order:** Title → Innovation Project → Robot Design → Core Values → Thank you/Questions slide.",
@@ -910,19 +939,22 @@
         "id": "q1",
         "type": "text",
         "label": "Paste the link to your updated full judging deck:",
-        "placeholder": "https://docs.google.com/presentation/..."
+        "placeholder": "https://docs.google.com/presentation/...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "List your Robot Design slides — what does each one show?",
-        "placeholder": "Slide 7: Base bot photo + design choices... Slide 8: Attachment v1 vs final..."
+        "placeholder": "Slide 7: Base bot photo + design choices... Slide 8: Attachment v1 vs final...",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
         "label": "Which Core Values stories did you choose from your journal, and why those?",
-        "placeholder": "We picked the story about... because it shows..."
+        "placeholder": "We picked the story about... because it shows...",
+        "allowAttach": true
       }
     ]
   },
@@ -933,7 +965,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-06-11T00:00:00.000Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-memorize-rehearse",
     "title": "Step 13 — Memorize Your Script & Full Rehearsal 🎤",
     "description": "Competition-ready means **no reading from paper**. Judges connect with teams who speak to them, not at a script. Time to memorize and rehearse until your presentation is smooth.\n\n**The memorization ladder:**\n1. Read your part out loud 5 times\n2. Cover the script — say it from memory, peek when stuck\n3. Say it with NO peeking, walking around the room\n4. Present to a family member without the script\n5. Full team run-through WITH slides and a timer\n\n**Rehearsal checklist (do at least 3 full team run-throughs):**\n- Under 5 minutes every time\n- Every member speaks their part from memory\n- Slides advance at the right moments\n- You can answer: 'What was the hardest part?' and 'What would you do next?' — judges always ask follow-ups!",
@@ -959,13 +991,15 @@
         "id": "q1",
         "type": "text",
         "label": "Can you say YOUR part completely from memory? Be honest!",
-        "placeholder": "Yes! / Almost — I still peek at the solution section..."
+        "placeholder": "Yes! / Almost — I still peek at the solution section...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "Practice judge follow-up: What was the hardest part of your project, and how did you push through it?",
-        "placeholder": "Answer like a judge just asked you this in the room..."
+        "placeholder": "Answer like a judge just asked you this in the room...",
+        "allowAttach": true
       }
     ]
   },
@@ -1022,7 +1056,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-06-11T00:00:00.000Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innovation-brainstorm",
     "title": "Step 1 — Brainstorm: Problems & Solution Ideas 🧠",
     "type": "submission",
@@ -1058,7 +1092,8 @@
         "id": "q1",
         "type": "textarea",
         "label": "Which 2 problems are your team favorites going into Step 2, and why?",
-        "placeholder": "We are most excited about ___ because... Our second pick is ___ because..."
+        "placeholder": "We are most excited about ___ because... Our second pick is ___ because...",
+        "allowAttach": true
       }
     ]
   },
@@ -1070,7 +1105,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-06-11T00:00:00.000Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innovation-iteration-plan",
     "title": "Step 4 — Choose Your Solution & Plan Your Iterations 🗺️",
     "type": "submission",
@@ -1109,7 +1144,8 @@
         "id": "q1",
         "type": "text",
         "label": "Which solution won, and what is its final score?",
-        "placeholder": "e.g. GlowGuard won with 18/20 — it fills the gap and the whole team is excited"
+        "placeholder": "e.g. GlowGuard won with 18/20 — it fills the gap and the whole team is excited",
+        "allowAttach": true
       }
     ]
   },
@@ -1121,7 +1157,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-06-11T00:00:00.000Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innovation-iteration-2",
     "title": "Step 6 — Iteration 2: Improve Your Design 🔄",
     "type": "submission",
@@ -1147,13 +1183,15 @@
         "id": "q1",
         "type": "textarea",
         "label": "Describe Iteration 2: what changed from v1, and why?",
-        "placeholder": "In v1 we did X, but we realized Y, so v2 does Z..."
+        "placeholder": "In v1 we did X, but we realized Y, so v2 does Z...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "text",
         "label": "Did v2 hit the goal you set for it in your Iteration Plan?",
-        "placeholder": "Yes — the goal was ___ and we got there / Partly — we still need to..."
+        "placeholder": "Yes — the goal was ___ and we got there / Partly — we still need to...",
+        "allowAttach": true
       }
     ]
   },
@@ -1165,7 +1203,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-06-11T00:00:00.000Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innovation-final-iteration",
     "title": "Step 8 — Final Iteration: Lock In Your Design ✅",
     "type": "submission",
@@ -1179,7 +1217,8 @@
         "id": "q1",
         "type": "textarea",
         "label": "Describe your FINAL design. What is it, how does it work, who uses it?",
-        "placeholder": "The complete, judge-ready explanation of your solution..."
+        "placeholder": "The complete, judge-ready explanation of your solution...",
+        "allowAttach": true
       },
       {
         "id": "story-chart",
@@ -1197,7 +1236,8 @@
         "id": "q2",
         "type": "textarea",
         "label": "Which feedback from Step 7 shaped your final design the most?",
-        "placeholder": "When ___ told us ___, we changed ___ because..."
+        "placeholder": "When ___ told us ___, we changed ___ because...",
+        "allowAttach": true
       }
     ]
   },
@@ -1209,7 +1249,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-16T00:00:00.000Z",
-    "updatedAt": "2026-07-16T00:00:00.000Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innovation-topic-research",
     "title": "Topic Research: Become the Expert",
     "type": "submission",
@@ -1233,13 +1273,15 @@
         "id": "q1",
         "type": "textarea",
         "label": "What was the most surprising thing you learned? Could it work as a presentation hook?",
-        "placeholder": "Judges remember surprising facts — write down the one that made you say WOW..."
+        "placeholder": "Judges remember surprising facts — write down the one that made you say WOW...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "text",
         "label": "What do you still NOT know that you need to find out next?",
-        "placeholder": "e.g. How much does the current solution cost? Who is already working on this?"
+        "placeholder": "e.g. How much does the current solution cost? Who is already working on this?",
+        "allowAttach": true
       }
     ]
   },
@@ -1251,7 +1293,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-16T00:00:00.000Z",
-    "updatedAt": "2026-07-16T00:00:00.000Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innovation-define-problem-solution",
     "title": "Define It: Your Problem & Your Solution",
     "type": "submission",
@@ -1263,19 +1305,22 @@
         "id": "q1",
         "type": "textarea",
         "label": "PROBLEM DEFINITION — write your team’s official problem statement (2-3 sentences):",
-        "placeholder": "Who is affected, where, what exactly goes wrong, and one fact that proves it is real..."
+        "placeholder": "Who is affected, where, what exactly goes wrong, and one fact that proves it is real...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "SOLUTION DEFINITION — write your team’s official solution statement (2-3 sentences):",
-        "placeholder": "Its name, what it is, and how it fixes the problem..."
+        "placeholder": "Its name, what it is, and how it fixes the problem...",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "text",
         "label": "The 5th-grader test: read both definitions to someone outside the team. Did they understand?",
-        "placeholder": "e.g. Yes! My little brother got it — he asked a great question about..."
+        "placeholder": "e.g. Yes! My little brother got it — he asked a great question about...",
+        "allowAttach": true
       }
     ]
   },
@@ -1287,7 +1332,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-16T00:00:00.000Z",
-    "updatedAt": "2026-07-16T00:00:00.000Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innovation-first-prototype",
     "title": "First Prototype: Build It & Photograph It",
     "type": "submission",
@@ -1301,19 +1346,22 @@
         "id": "q1",
         "type": "text",
         "label": "What materials did you build your first prototype with?",
-        "placeholder": "e.g. cardboard, bottle caps, LEGO Technic beams, and a lot of tape"
+        "placeholder": "e.g. cardboard, bottle caps, LEGO Technic beams, and a lot of tape",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "Walk us through your prototype: what does each part represent, and how would the real version work?",
-        "placeholder": "The cardboard tube is the... the bottle cap represents the sensor that..."
+        "placeholder": "The cardboard tube is the... the bottle cap represents the sensor that...",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
         "label": "What is the FIRST thing you want to improve in version 2?",
-        "placeholder": "Building it always reveals something — what did you discover?"
+        "placeholder": "Building it always reveals something — what did you discover?",
+        "allowAttach": true
       }
     ]
   },
@@ -1325,7 +1373,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-16T00:00:00.000Z",
-    "updatedAt": "2026-07-16T00:00:00.000Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innov-basics-explore-topics",
     "title": "Innovation Basics 1 — Explore & Choose a Topic",
     "type": "submission",
@@ -1350,13 +1398,15 @@
         "id": "q1",
         "type": "text",
         "label": "Which topic did your team CHOOSE to research this season?",
-        "placeholder": "e.g. Saving fireflies from light pollution"
+        "placeholder": "e.g. Saving fireflies from light pollution",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "Why did your team pick this topic over the others?",
-        "placeholder": "What makes your team excited about it? What did the ratings show?"
+        "placeholder": "What makes your team excited about it? What did the ratings show?",
+        "allowAttach": true
       }
     ]
   },
@@ -1368,7 +1418,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-16T00:00:00.000Z",
-    "updatedAt": "2026-07-16T00:00:00.000Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innov-basics-topic-questions",
     "title": "Innovation Basics 2 — Ask the Big Questions",
     "type": "submission",
@@ -1392,13 +1442,15 @@
         "id": "q1",
         "type": "textarea",
         "label": "What is the MOST important thing you learned about your topic so far?",
-        "placeholder": "The one fact you would tell a judge to make them care..."
+        "placeholder": "The one fact you would tell a judge to make them care...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "text",
         "label": "What is one question you still cannot answer and want to ask an expert?",
-        "placeholder": "Something you genuinely cannot find with a quick search"
+        "placeholder": "Something you genuinely cannot find with a quick search",
+        "allowAttach": true
       }
     ]
   },
@@ -1410,7 +1462,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-16T00:00:00.000Z",
-    "updatedAt": "2026-07-16T00:00:00.000Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innov-basics-brainstorm-solutions",
     "title": "Innovation Basics 3 — Brainstorm Solutions",
     "type": "submission",
@@ -1434,7 +1486,8 @@
         "id": "q1",
         "type": "textarea",
         "label": "Which 2-3 ideas are your team favorites, and why?",
-        "placeholder": "You do not have to pick a winner yet — just your top few..."
+        "placeholder": "You do not have to pick a winner yet — just your top few...",
+        "allowAttach": true
       }
     ]
   },
@@ -1446,7 +1499,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-16T00:00:00.000Z",
-    "updatedAt": "2026-07-16T00:00:00.000Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innov-basics-unique-solution",
     "title": "Innovation Basics 4 — Narrow to Your Unique Solution",
     "type": "submission",
@@ -1460,13 +1513,15 @@
         "id": "q1",
         "type": "text",
         "label": "What is your solution called? Give it a name!",
-        "placeholder": "e.g. GlowGuard, FireflyFriendly Lights, ReefRescue..."
+        "placeholder": "e.g. GlowGuard, FireflyFriendly Lights, ReefRescue...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "Describe your solution: what is it, and how does it work?",
-        "placeholder": "Walk through it step by step, like you are explaining to a judge..."
+        "placeholder": "Walk through it step by step, like you are explaining to a judge...",
+        "allowAttach": true
       },
       {
         "id": "links-chart",
@@ -1484,7 +1539,8 @@
         "id": "q3",
         "type": "textarea",
         "label": "What makes your solution UNIQUE? What is your team’s special twist?",
-        "placeholder": "The one thing nobody else is doing..."
+        "placeholder": "The one thing nobody else is doing...",
+        "allowAttach": true
       }
     ]
   },
@@ -1496,7 +1552,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-16T00:00:00.000Z",
-    "updatedAt": "2026-07-16T00:00:00.000Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innov-basics-lego-prototype",
     "title": "Innovation Basics 5 — Build a LEGO Prototype",
     "type": "submission",
@@ -1510,19 +1566,22 @@
         "id": "q1",
         "type": "textarea",
         "label": "Walk us through your LEGO prototype: what does each part represent?",
-        "placeholder": "The blue bricks are the water, the gear is the pump that... "
+        "placeholder": "The blue bricks are the water, the gear is the pump that... ",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "text",
         "label": "What was the hardest part of your solution to show in LEGO?",
-        "placeholder": "e.g. It was hard to show how the sensor works..."
+        "placeholder": "e.g. It was hard to show how the sensor works...",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
         "label": "Now that you have built it, what would you change or add next?",
-        "placeholder": "Building always reveals something new — what did you notice?"
+        "placeholder": "Building always reveals something new — what did you notice?",
+        "allowAttach": true
       }
     ]
   },
@@ -1534,7 +1593,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-16T00:00:00.000Z",
-    "updatedAt": "2026-07-16T00:00:00.000Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innov-basics-tinkercad",
     "title": "Innovation Basics 6 — Model It in Tinkercad (3D)",
     "type": "submission",
@@ -1548,19 +1607,22 @@
         "id": "q1",
         "type": "text",
         "label": "Paste the SHARE LINK to your Tinkercad design:",
-        "placeholder": "https://www.tinkercad.com/things/..."
+        "placeholder": "https://www.tinkercad.com/things/...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "What did you MODIFY or improve compared to your LEGO prototype?",
-        "placeholder": "What did the 3D version let you do that LEGO could not?"
+        "placeholder": "What did the 3D version let you do that LEGO could not?",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "text",
         "label": "What Tinkercad shapes or tools did you use the most?",
-        "placeholder": "e.g. boxes, cylinders, the Hole tool to cut openings..."
+        "placeholder": "e.g. boxes, cylinders, the Hole tool to cut openings...",
+        "allowAttach": true
       }
     ]
   },
@@ -1801,24 +1863,27 @@
         "id": "q1",
         "type": "textarea",
         "label": "What was the most interesting thing you saw or heard in the video?",
-        "placeholder": "Describe what caught your attention and why it stood out to you..."
+        "placeholder": "Describe what caught your attention and why it stood out to you...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "What ecosystem problem do you think BIOGLOW wants teams to help solve?",
-        "placeholder": "Think about the themes shown — pollution, habitat loss, biodiversity? What's the big challenge?"
+        "placeholder": "Think about the themes shown — pollution, habitat loss, biodiversity? What's the big challenge?",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
         "label": "What is one question you still have about the BIOGLOW season?",
-        "placeholder": "What do you want to learn more about? What are you curious or excited about?"
+        "placeholder": "What do you want to learn more about? What are you curious or excited about?",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-ecosystem-questions--fll-demo-student",
@@ -1837,30 +1902,34 @@
         "id": "q1",
         "type": "textarea",
         "label": "In your own words, what is an ecosystem and why does it matter?",
-        "placeholder": "Explain it like you're describing it to a friend who has never heard the word before..."
+        "placeholder": "Explain it like you're describing it to a friend who has never heard the word before...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "Give one real-world example of how losing biodiversity could be a problem.",
-        "placeholder": "Think about food chains, pollinators, forests, oceans... what happens when one species disappears?"
+        "placeholder": "Think about food chains, pollinators, forests, oceans... what happens when one species disappears?",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
         "label": "Pick one animal or plant and describe one thing engineers could copy from it to solve a human problem.",
-        "placeholder": "Think about how the creature moves, builds, survives, or senses its environment..."
+        "placeholder": "Think about how the creature moves, builds, survives, or senses its environment...",
+        "allowAttach": true
       },
       {
         "id": "q4",
         "type": "text",
         "label": "What ecosystem or nature topic would you most want your team to research this season?",
-        "placeholder": "Oceans, rainforests, pollinators, soil, urban wildlife..."
+        "placeholder": "Oceans, rainforests, pollinators, soil, urban wildlife...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-hub-check--fll-demo-student",
@@ -2075,12 +2144,13 @@
         "id": "q1",
         "type": "textarea",
         "label": "If you could ask one of these experts a single question about ecosystems, what would it be?",
-        "placeholder": "Make it a question you genuinely can't answer with a quick web search..."
+        "placeholder": "Make it a question you genuinely can't answer with a quick web search...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-innovation-problem--fll-demo-student",
@@ -2099,24 +2169,27 @@
         "id": "q1",
         "type": "textarea",
         "label": "Write your team's problem statement. Cover WHO, WHAT, WHERE, and WHY.",
-        "placeholder": "Be specific! Who is affected, what exactly is happening, where, and why does it matter..."
+        "placeholder": "Be specific! Who is affected, what exactly is happening, where, and why does it matter...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "How do you KNOW this is a real problem? List at least 2 sources or pieces of evidence.",
-        "placeholder": "An article you read, an expert you found, something from your field trip research, a statistic..."
+        "placeholder": "An article you read, an expert you found, something from your field trip research, a statistic...",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "text",
         "label": "Who could you talk to who deals with this problem in real life?",
-        "placeholder": "Pull from your expert research — a scientist, ranger, engineer, organization..."
+        "placeholder": "Pull from your expert research — a scientist, ranger, engineer, organization...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-innovation-existing-solutions--fll-demo-student",
@@ -2148,12 +2221,13 @@
         "id": "q1",
         "type": "textarea",
         "label": "Based on your chart, what GAP do you see? What is nobody doing well yet?",
-        "placeholder": "This gap is where your team's innovation will live..."
+        "placeholder": "This gap is where your team's innovation will live...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-innovation-solution--fll-demo-student",
@@ -2174,24 +2248,27 @@
         "id": "q1",
         "type": "text",
         "label": "What is your solution called? Give it a memorable name!",
-        "placeholder": "e.g. GlowGuard, FireflyFriendly Lights, BioBeacon..."
+        "placeholder": "e.g. GlowGuard, FireflyFriendly Lights, BioBeacon...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "Describe your solution: what is it and how does it work, step by step?",
-        "placeholder": "Walk through it like you're explaining to a judge who has never seen it..."
+        "placeholder": "Walk through it like you're explaining to a judge who has never seen it...",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
         "label": "Why is your solution better than the existing ones you researched? What gap does it fill?",
-        "placeholder": "Connect back to your Step 2 chart..."
+        "placeholder": "Connect back to your Step 2 chart...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-innovation-feedback--fll-demo-student",
@@ -2222,12 +2299,13 @@
         "id": "q1",
         "type": "textarea",
         "label": "What did you CHANGE about your solution based on the feedback? Describe before vs after.",
-        "placeholder": "Before, our solution did X. After talking to ___, we changed it to Y because..."
+        "placeholder": "Before, our solution did X. After talking to ___, we changed it to Y because...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-innovation-script--fll-demo-student",
@@ -2246,42 +2324,48 @@
         "id": "q1",
         "type": "textarea",
         "label": "PART 1 — Write your Hook (about 30 seconds when spoken):",
-        "placeholder": "A surprising fact, a question to the judges, a mini skit... make them lean in!"
+        "placeholder": "A surprising fact, a question to the judges, a mini skit... make them lean in!",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "PART 2 — Write your Problem section (about 1 minute):",
-        "placeholder": "Who, what, where, why — include your strongest evidence..."
+        "placeholder": "Who, what, where, why — include your strongest evidence...",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
         "label": "PART 3 — Write your Existing Solutions & Gap section (about 1 minute):",
-        "placeholder": "What already exists, what it does well, and the gap your team found..."
+        "placeholder": "What already exists, what it does well, and the gap your team found...",
+        "allowAttach": true
       },
       {
         "id": "q4",
         "type": "textarea",
         "label": "PART 4 — Write your Solution section (about 1.5 minutes):",
-        "placeholder": "Name it, explain how it works step by step, and why it's better..."
+        "placeholder": "Name it, explain how it works step by step, and why it's better...",
+        "allowAttach": true
       },
       {
         "id": "q5",
         "type": "textarea",
         "label": "PART 5 — Write your Sharing & Impact section (about 1 minute):",
-        "placeholder": "Who you shared with, what feedback you got, what you changed, and what's next..."
+        "placeholder": "Who you shared with, what feedback you got, what you changed, and what's next...",
+        "allowAttach": true
       },
       {
         "id": "q6",
         "type": "text",
         "label": "Who says which part? List the speaker for each of the 5 parts.",
-        "placeholder": "e.g. Hook: Maya · Problem: Jaden · Solutions: Ava · Our solution: Liam · Impact: everyone"
+        "placeholder": "e.g. Hook: Maya · Problem: Jaden · Solutions: Ava · Our solution: Liam · Impact: everyone",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-innovation-slides--fll-demo-student",
@@ -2302,24 +2386,27 @@
         "id": "q1",
         "type": "text",
         "label": "Paste the link to your slide deck (Google Slides, PowerPoint, or Canva):",
-        "placeholder": "https://docs.google.com/presentation/..."
+        "placeholder": "https://docs.google.com/presentation/...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "List your slides: for each one, what's the headline and the ONE idea it shows?",
-        "placeholder": "Slide 1: Title — GlowGuard by History Guardians\nSlide 2: Hook — '90% of deep sea animals glow'\nSlide 3: ..."
+        "placeholder": "Slide 1: Title — GlowGuard by History Guardians\nSlide 2: Hook — '90% of deep sea animals glow'\nSlide 3: ...",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "text",
         "label": "Did you practice presenting WITH the slides? How long did your run-through take?",
-        "placeholder": "e.g. Yes — 4 minutes 40 seconds, just under the 5 minute limit!"
+        "placeholder": "e.g. Yes — 4 minutes 40 seconds, just under the 5 minute limit!",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-innovation-poster--fll-demo-student",
@@ -2340,24 +2427,27 @@
         "id": "q1",
         "type": "textarea",
         "label": "Describe your poster layout: what goes in each zone (top, left, middle, right)?",
-        "placeholder": "Top: GlowGuard in huge letters... Left: firefly decline graph... Middle: labeled diagram..."
+        "placeholder": "Top: GlowGuard in huge letters... Left: firefly decline graph... Middle: labeled diagram...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "text",
         "label": "The 10-foot test: stand 10 feet away. Can you read the title and tell what the project is about?",
-        "placeholder": "e.g. Yes! Title is readable and the diagram tells the story"
+        "placeholder": "e.g. Yes! Title is readable and the diagram tells the story",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
         "label": "How does your poster, slides, and script work TOGETHER to tell one story?",
-        "placeholder": "The poster shows..., the slides support our talk by..., the script ties it together with..."
+        "placeholder": "The poster shows..., the slides support our talk by..., the script ties it together with...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "id": "task-innovation-field-trips--fll-demo-student",
@@ -2388,12 +2478,13 @@
         "id": "q1",
         "type": "text",
         "label": "Which place would you visit first, and what would you want to find out there?",
-        "placeholder": "e.g. The aquarium — I want to ask about their coral restoration program"
+        "placeholder": "e.g. The aquarium — I want to ask about their coral restoration program",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-07-27T00:00:00.000Z"
   },
   {
     "assignmentId": "assignment-competition-ready",
@@ -2402,7 +2493,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-judging-deck-all-areas--fll-demo-student",
     "title": "Step 12 — Judging Deck: Slides for ALL FLL Areas 🖥️",
     "description": "At competition, your judging session covers THREE areas: **Innovation Project, Robot Design, and Core Values**. Your innovation slides (Step 6) are only one third of the story — now build the full judging deck.\n\n**Add a Robot Design section (3-4 slides):**\n- Your base bot — photo + why you placed the hub/motors/sensors where you did\n- Attachments — iteration photos from your Attachment Tracker (judges LOVE seeing v1 vs final!)\n- Code strategy — how your programs are organized, gyro use, sensor use\n- What went wrong and how you fixed it (engineering process!)\n\n**Add a Core Values section (2-3 slides):**\n- Your best shout-out stories from the Core Values Journal\n- How your team makes decisions and resolves disagreements\n- A moment your team showed Gracious Professionalism\n\n**Final deck order:** Title → Innovation Project → Robot Design → Core Values → Thank you/Questions slide.",
@@ -2417,19 +2508,22 @@
         "id": "q1",
         "type": "text",
         "label": "Paste the link to your updated full judging deck:",
-        "placeholder": "https://docs.google.com/presentation/..."
+        "placeholder": "https://docs.google.com/presentation/...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "List your Robot Design slides — what does each one show?",
-        "placeholder": "Slide 7: Base bot photo + design choices... Slide 8: Attachment v1 vs final..."
+        "placeholder": "Slide 7: Base bot photo + design choices... Slide 8: Attachment v1 vs final...",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
         "label": "Which Core Values stories did you choose from your journal, and why those?",
-        "placeholder": "We picked the story about... because it shows..."
+        "placeholder": "We picked the story about... because it shows...",
+        "allowAttach": true
       }
     ]
   },
@@ -2440,7 +2534,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-memorize-rehearse--fll-demo-student",
     "title": "Step 13 — Memorize Your Script & Full Rehearsal 🎤",
     "description": "Competition-ready means **no reading from paper**. Judges connect with teams who speak to them, not at a script. Time to memorize and rehearse until your presentation is smooth.\n\n**The memorization ladder:**\n1. Read your part out loud 5 times\n2. Cover the script — say it from memory, peek when stuck\n3. Say it with NO peeking, walking around the room\n4. Present to a family member without the script\n5. Full team run-through WITH slides and a timer\n\n**Rehearsal checklist (do at least 3 full team run-throughs):**\n- Under 5 minutes every time\n- Every member speaks their part from memory\n- Slides advance at the right moments\n- You can answer: 'What was the hardest part?' and 'What would you do next?' — judges always ask follow-ups!",
@@ -2466,13 +2560,15 @@
         "id": "q1",
         "type": "text",
         "label": "Can you say YOUR part completely from memory? Be honest!",
-        "placeholder": "Yes! / Almost — I still peek at the solution section..."
+        "placeholder": "Yes! / Almost — I still peek at the solution section...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "Practice judge follow-up: What was the hardest part of your project, and how did you push through it?",
-        "placeholder": "Answer like a judge just asked you this in the room..."
+        "placeholder": "Answer like a judge just asked you this in the room...",
+        "allowAttach": true
       }
     ]
   },
@@ -2484,7 +2580,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innovation-brainstorm--fll-demo-student",
     "title": "Step 1 — Brainstorm: Problems & Solution Ideas 🧠",
     "type": "submission",
@@ -2520,7 +2616,8 @@
         "id": "q1",
         "type": "textarea",
         "label": "Which 2 problems are your team favorites going into Step 2, and why?",
-        "placeholder": "We are most excited about ___ because... Our second pick is ___ because..."
+        "placeholder": "We are most excited about ___ because... Our second pick is ___ because...",
+        "allowAttach": true
       }
     ]
   },
@@ -2532,7 +2629,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innovation-iteration-plan--fll-demo-student",
     "title": "Step 4 — Choose Your Solution & Plan Your Iterations 🗺️",
     "type": "submission",
@@ -2571,7 +2668,8 @@
         "id": "q1",
         "type": "text",
         "label": "Which solution won, and what is its final score?",
-        "placeholder": "e.g. GlowGuard won with 18/20 — it fills the gap and the whole team is excited"
+        "placeholder": "e.g. GlowGuard won with 18/20 — it fills the gap and the whole team is excited",
+        "allowAttach": true
       }
     ]
   },
@@ -2583,7 +2681,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innovation-iteration-2--fll-demo-student",
     "title": "Step 6 — Iteration 2: Improve Your Design 🔄",
     "type": "submission",
@@ -2609,13 +2707,15 @@
         "id": "q1",
         "type": "textarea",
         "label": "Describe Iteration 2: what changed from v1, and why?",
-        "placeholder": "In v1 we did X, but we realized Y, so v2 does Z..."
+        "placeholder": "In v1 we did X, but we realized Y, so v2 does Z...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "text",
         "label": "Did v2 hit the goal you set for it in your Iteration Plan?",
-        "placeholder": "Yes — the goal was ___ and we got there / Partly — we still need to..."
+        "placeholder": "Yes — the goal was ___ and we got there / Partly — we still need to...",
+        "allowAttach": true
       }
     ]
   },
@@ -2627,7 +2727,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innovation-final-iteration--fll-demo-student",
     "title": "Step 8 — Final Iteration: Lock In Your Design ✅",
     "type": "submission",
@@ -2641,7 +2741,8 @@
         "id": "q1",
         "type": "textarea",
         "label": "Describe your FINAL design. What is it, how does it work, who uses it?",
-        "placeholder": "The complete, judge-ready explanation of your solution..."
+        "placeholder": "The complete, judge-ready explanation of your solution...",
+        "allowAttach": true
       },
       {
         "id": "story-chart",
@@ -2659,7 +2760,8 @@
         "id": "q2",
         "type": "textarea",
         "label": "Which feedback from Step 7 shaped your final design the most?",
-        "placeholder": "When ___ told us ___, we changed ___ because..."
+        "placeholder": "When ___ told us ___, we changed ___ because...",
+        "allowAttach": true
       }
     ]
   },
@@ -2671,7 +2773,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innovation-topic-research--fll-demo-student",
     "title": "Topic Research: Become the Expert",
     "type": "submission",
@@ -2695,13 +2797,15 @@
         "id": "q1",
         "type": "textarea",
         "label": "What was the most surprising thing you learned? Could it work as a presentation hook?",
-        "placeholder": "Judges remember surprising facts — write down the one that made you say WOW..."
+        "placeholder": "Judges remember surprising facts — write down the one that made you say WOW...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "text",
         "label": "What do you still NOT know that you need to find out next?",
-        "placeholder": "e.g. How much does the current solution cost? Who is already working on this?"
+        "placeholder": "e.g. How much does the current solution cost? Who is already working on this?",
+        "allowAttach": true
       }
     ]
   },
@@ -2713,7 +2817,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innovation-define-problem-solution--fll-demo-student",
     "title": "Define It: Your Problem & Your Solution",
     "type": "submission",
@@ -2725,19 +2829,22 @@
         "id": "q1",
         "type": "textarea",
         "label": "PROBLEM DEFINITION — write your team’s official problem statement (2-3 sentences):",
-        "placeholder": "Who is affected, where, what exactly goes wrong, and one fact that proves it is real..."
+        "placeholder": "Who is affected, where, what exactly goes wrong, and one fact that proves it is real...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "SOLUTION DEFINITION — write your team’s official solution statement (2-3 sentences):",
-        "placeholder": "Its name, what it is, and how it fixes the problem..."
+        "placeholder": "Its name, what it is, and how it fixes the problem...",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "text",
         "label": "The 5th-grader test: read both definitions to someone outside the team. Did they understand?",
-        "placeholder": "e.g. Yes! My little brother got it — he asked a great question about..."
+        "placeholder": "e.g. Yes! My little brother got it — he asked a great question about...",
+        "allowAttach": true
       }
     ]
   },
@@ -2749,7 +2856,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innovation-first-prototype--fll-demo-student",
     "title": "First Prototype: Build It & Photograph It",
     "type": "submission",
@@ -2763,19 +2870,22 @@
         "id": "q1",
         "type": "text",
         "label": "What materials did you build your first prototype with?",
-        "placeholder": "e.g. cardboard, bottle caps, LEGO Technic beams, and a lot of tape"
+        "placeholder": "e.g. cardboard, bottle caps, LEGO Technic beams, and a lot of tape",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "Walk us through your prototype: what does each part represent, and how would the real version work?",
-        "placeholder": "The cardboard tube is the... the bottle cap represents the sensor that..."
+        "placeholder": "The cardboard tube is the... the bottle cap represents the sensor that...",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
         "label": "What is the FIRST thing you want to improve in version 2?",
-        "placeholder": "Building it always reveals something — what did you discover?"
+        "placeholder": "Building it always reveals something — what did you discover?",
+        "allowAttach": true
       }
     ]
   },
@@ -2787,7 +2897,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innov-basics-explore-topics--fll-demo-student",
     "title": "Innovation Basics 1 — Explore & Choose a Topic",
     "type": "submission",
@@ -2812,13 +2922,15 @@
         "id": "q1",
         "type": "text",
         "label": "Which topic did your team CHOOSE to research this season?",
-        "placeholder": "e.g. Saving fireflies from light pollution"
+        "placeholder": "e.g. Saving fireflies from light pollution",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "Why did your team pick this topic over the others?",
-        "placeholder": "What makes your team excited about it? What did the ratings show?"
+        "placeholder": "What makes your team excited about it? What did the ratings show?",
+        "allowAttach": true
       }
     ]
   },
@@ -2830,7 +2942,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innov-basics-topic-questions--fll-demo-student",
     "title": "Innovation Basics 2 — Ask the Big Questions",
     "type": "submission",
@@ -2854,13 +2966,15 @@
         "id": "q1",
         "type": "textarea",
         "label": "What is the MOST important thing you learned about your topic so far?",
-        "placeholder": "The one fact you would tell a judge to make them care..."
+        "placeholder": "The one fact you would tell a judge to make them care...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "text",
         "label": "What is one question you still cannot answer and want to ask an expert?",
-        "placeholder": "Something you genuinely cannot find with a quick search"
+        "placeholder": "Something you genuinely cannot find with a quick search",
+        "allowAttach": true
       }
     ]
   },
@@ -2872,7 +2986,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innov-basics-brainstorm-solutions--fll-demo-student",
     "title": "Innovation Basics 3 — Brainstorm Solutions",
     "type": "submission",
@@ -2896,7 +3010,8 @@
         "id": "q1",
         "type": "textarea",
         "label": "Which 2-3 ideas are your team favorites, and why?",
-        "placeholder": "You do not have to pick a winner yet — just your top few..."
+        "placeholder": "You do not have to pick a winner yet — just your top few...",
+        "allowAttach": true
       }
     ]
   },
@@ -2908,7 +3023,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innov-basics-unique-solution--fll-demo-student",
     "title": "Innovation Basics 4 — Narrow to Your Unique Solution",
     "type": "submission",
@@ -2922,13 +3037,15 @@
         "id": "q1",
         "type": "text",
         "label": "What is your solution called? Give it a name!",
-        "placeholder": "e.g. GlowGuard, FireflyFriendly Lights, ReefRescue..."
+        "placeholder": "e.g. GlowGuard, FireflyFriendly Lights, ReefRescue...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "Describe your solution: what is it, and how does it work?",
-        "placeholder": "Walk through it step by step, like you are explaining to a judge..."
+        "placeholder": "Walk through it step by step, like you are explaining to a judge...",
+        "allowAttach": true
       },
       {
         "id": "links-chart",
@@ -2946,7 +3063,8 @@
         "id": "q3",
         "type": "textarea",
         "label": "What makes your solution UNIQUE? What is your team’s special twist?",
-        "placeholder": "The one thing nobody else is doing..."
+        "placeholder": "The one thing nobody else is doing...",
+        "allowAttach": true
       }
     ]
   },
@@ -2958,7 +3076,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innov-basics-lego-prototype--fll-demo-student",
     "title": "Innovation Basics 5 — Build a LEGO Prototype",
     "type": "submission",
@@ -2972,19 +3090,22 @@
         "id": "q1",
         "type": "textarea",
         "label": "Walk us through your LEGO prototype: what does each part represent?",
-        "placeholder": "The blue bricks are the water, the gear is the pump that... "
+        "placeholder": "The blue bricks are the water, the gear is the pump that... ",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "text",
         "label": "What was the hardest part of your solution to show in LEGO?",
-        "placeholder": "e.g. It was hard to show how the sensor works..."
+        "placeholder": "e.g. It was hard to show how the sensor works...",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
         "label": "Now that you have built it, what would you change or add next?",
-        "placeholder": "Building always reveals something new — what did you notice?"
+        "placeholder": "Building always reveals something new — what did you notice?",
+        "allowAttach": true
       }
     ]
   },
@@ -2996,7 +3117,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z",
+    "updatedAt": "2026-07-27T00:00:00.000Z",
     "id": "task-innov-basics-tinkercad--fll-demo-student",
     "title": "Innovation Basics 6 — Model It in Tinkercad (3D)",
     "type": "submission",
@@ -3010,19 +3131,22 @@
         "id": "q1",
         "type": "text",
         "label": "Paste the SHARE LINK to your Tinkercad design:",
-        "placeholder": "https://www.tinkercad.com/things/..."
+        "placeholder": "https://www.tinkercad.com/things/...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
         "label": "What did you MODIFY or improve compared to your LEGO prototype?",
-        "placeholder": "What did the 3D version let you do that LEGO could not?"
+        "placeholder": "What did the 3D version let you do that LEGO could not?",
+        "allowAttach": true
       },
       {
         "id": "q3",
         "type": "text",
         "label": "What Tinkercad shapes or tools did you use the most?",
-        "placeholder": "e.g. boxes, cylinders, the Hole tool to cut openings..."
+        "placeholder": "e.g. boxes, cylinders, the Hole tool to cut openings...",
+        "allowAttach": true
       }
     ]
   },
