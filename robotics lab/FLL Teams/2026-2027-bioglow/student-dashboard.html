@@ -3835,7 +3835,6 @@
         colorLight: '#fff8e1',
         colorBorder: '#fde293',
         desc: 'Show teamwork, inclusion, discovery, and fun in everything your team does.',
-        comingSoon: true,
       },
       {
         id: 'robot-game',
@@ -3845,7 +3844,6 @@
         colorLight: '#e6f4ea',
         colorBorder: '#b7dfc8',
         desc: 'Study the missions, run your robot, and improve your score every session.',
-        comingSoon: true,
       },
     ];
 
@@ -5050,16 +5048,6 @@
           }).join('')}</div>`
         : `<div class="detail-empty">No assignments in this category yet — check back after your next session.</div>`;
 
-      // category-relevant resources
-      const catResources = resources.filter(r => {
-        const rc = (r.category || '').toLowerCase();
-        return rc.includes('rubric') ||
-               (categoryId === 'robot-design' && (rc.includes('robot') || rc.includes('design'))) ||
-               (categoryId === 'innovation' && (rc.includes('article') || rc.includes('bio') || rc.includes('vision') || rc.includes('innovation'))) ||
-               (categoryId === 'core-values' && rc.includes('core')) ||
-               (categoryId === 'robot-game' && (rc.includes('robot') || rc.includes('mission')));
-      });
-
       return `
         <div class="detail-header" style="--cat-color:${cat.color};--cat-light:${cat.colorLight};--cat-border:${cat.colorBorder};">
           <button class="back-btn" onclick="openCategory(null)">← Back</button>
@@ -5076,19 +5064,6 @@
 
         <div class="cat-grid-title">📋 Pre-Season Assignments — ${escapeHtml(cat.label)}</div>
         <div class="detail-task-list">${taskCards}</div>
-
-        ${catResources.length ? `
-          <div class="detail-resources-title">📚 Related Resources</div>
-          <div class="detail-resources-grid">
-            ${catResources.map(r => `
-              <a class="detail-resource-card" href="${escapeHtml(r.url)}" target="_blank" rel="noreferrer">
-                <div class="detail-resource-name">${escapeHtml(r.label)}</div>
-                <div class="detail-resource-desc">${escapeHtml(r.description)}</div>
-                <div class="detail-resource-open">Open →</div>
-              </a>
-            `).join('')}
-          </div>
-        ` : ''}
 
         <div class="detail-log-section">
           <div class="detail-log-title">📝 Log your work</div>
