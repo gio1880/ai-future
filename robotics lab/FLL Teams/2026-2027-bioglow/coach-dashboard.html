@@ -180,6 +180,24 @@
     .ranking-level { display: inline-block; border-radius: 50px; padding: 4px 9px; background: #e8f1fd; color: #1a73e8; font-size: 11px; font-weight: 800; }
     .ranking-guide { color: #5f6368; font-size: 12px; margin: 10px 2px; }
 
+    .visibility-card { background: white; border: 1.5px solid #e8eaed; border-radius: 18px; padding: 22px; margin-bottom: 16px; }
+    .visibility-head { display: flex; justify-content: space-between; align-items: end; gap: 14px; flex-wrap: wrap; }
+    .visibility-team { min-width: 240px; }
+    .visibility-team label, .visibility-filter label { display: block; font-size: 12px; font-weight: 800; margin-bottom: 5px; }
+    .visibility-team select, .visibility-filter select, .visibility-filter input { width: 100%; border: 1.5px solid #dadce0; border-radius: 9px; padding: 9px; background: white; }
+    .visibility-areas { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 16px; }
+    .visibility-toggle { display: flex; align-items: center; gap: 9px; border: 1.5px solid #e8eaed; border-radius: 12px; padding: 12px; font-size: 13px; font-weight: 800; cursor: pointer; }
+    .visibility-toggle input { width: 18px; height: 18px; accent-color: #1e8e5a; }
+    .visibility-toolbar { display: grid; grid-template-columns: 1fr 190px auto auto; gap: 10px; align-items: end; margin-bottom: 14px; }
+    .visibility-lessons { border: 1.5px solid #e8eaed; border-radius: 12px; overflow: hidden; max-height: 560px; overflow-y: auto; }
+    .visibility-row { display: grid; grid-template-columns: 32px minmax(240px, 1fr) 160px 110px; gap: 10px; align-items: center; padding: 10px 12px; border-bottom: 1px solid #f1f3f4; font-size: 13px; }
+    .visibility-row:last-child { border-bottom: none; }
+    .visibility-row input { width: 17px; height: 17px; accent-color: #1e8e5a; }
+    .visibility-row-title { font-weight: 700; }
+    .visibility-row-meta { color: #5f6368; font-size: 12px; }
+    .visibility-actions { display: flex; gap: 10px; align-items: center; margin-top: 14px; }
+    .visibility-bulk-btn { border: 1.5px solid #dadce0; background: white; border-radius: 9px; padding: 9px 13px; font-weight: 800; cursor: pointer; }
+
     .live-grid {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 260px;
@@ -390,6 +408,10 @@
     /* ── Phone-size fixes ── */
     @media (max-width: 640px) {
       .ranking-summary { grid-template-columns: repeat(2, 1fr); }
+      .visibility-areas { grid-template-columns: 1fr 1fr; }
+      .visibility-toolbar { grid-template-columns: 1fr; }
+      .visibility-row { grid-template-columns: 28px 1fr; }
+      .visibility-row-meta { grid-column: 2; }
       .topbar { flex-wrap: wrap; gap: 8px; padding: 12px 16px; }
       .wrap { padding: 16px 12px 50px; }
       .team-card { padding: 16px; }
@@ -440,6 +462,7 @@
       <button class="tab-btn" data-tab="newteam" onclick="showTab('newteam')">🆕 Create Team</button>
       <button class="tab-btn" data-tab="calendar" onclick="showTab('calendar')">📅 Calendar</button>
       <button class="tab-btn" data-tab="curriculum" onclick="showTab('curriculum')">📚 Curriculum</button>
+      <button class="tab-btn" data-tab="visibility" onclick="showTab('visibility')">🎛️ Areas &amp; Lessons</button>
       <button class="tab-btn" data-tab="live" onclick="showTab('live')">Live Slides</button>
     </div>
 
@@ -572,6 +595,39 @@
       </div>
       <div id="coachCalendar"></div>
     </div>
+    <div class="panel" id="panel-curriculum">
+      <div class="visibility-card">
+        <h2 class="form-title">FLL curriculum</h2>
+        <p class="form-sub">Review the complete season curriculum or control exactly which areas and lessons students can see.</p>
+        <div class="visibility-actions">
+          <a class="submit-btn" href="/fll-hub/curriculum" style="text-decoration:none;display:inline-block;">Open curriculum overview</a>
+          <button class="visibility-bulk-btn" onclick="showTab('visibility')">Manage student visibility</button>
+        </div>
+      </div>
+    </div>
+    <div class="panel" id="panel-visibility">
+      <div class="visibility-card">
+        <div class="visibility-head">
+          <div>
+            <h2 class="form-title">Student Hub visibility</h2>
+            <p class="form-sub">Choose what all teams see by default, or customize one team. Disabled content is enforced by the server.</p>
+          </div>
+          <div class="visibility-team"><label for="visibilityTeam">Editing visibility for</label><select id="visibilityTeam" onchange="renderVisibility()"><option value="">All teams (default)</option></select></div>
+        </div>
+        <div class="visibility-areas" id="visibilityAreas"></div>
+      </div>
+      <div class="visibility-card">
+        <div class="visibility-head"><div><h2 class="form-title">Displayed lessons</h2><p class="form-sub">Checked lessons are visible. Use the filters and bulk buttons to update many lessons together.</p></div></div>
+        <div class="visibility-toolbar">
+          <div class="visibility-filter"><label for="visibilitySearch">Search lessons</label><input id="visibilitySearch" type="search" placeholder="Search by title" oninput="renderVisibilityLessons()"></div>
+          <div class="visibility-filter"><label for="visibilityAreaFilter">Filter by area</label><select id="visibilityAreaFilter" onchange="renderVisibilityLessons()"><option value="all">All areas</option><option value="Robot Design">Robot Design</option><option value="Robot Game">Robot Game</option><option value="Innovation Project">Innovation</option><option value="Core Values">Core Values</option></select></div>
+          <button class="visibility-bulk-btn" onclick="bulkSetLessons(true)">Show filtered</button>
+          <button class="visibility-bulk-btn" onclick="bulkSetLessons(false)">Hide filtered</button>
+        </div>
+        <div class="visibility-lessons" id="visibilityLessons"></div>
+        <div class="visibility-actions"><button class="submit-btn" id="visibilitySave" onclick="saveVisibility()">Save visibility</button><button class="visibility-bulk-btn hidden" id="visibilityReset" onclick="resetTeamVisibility()">Reset team to defaults</button><span class="form-msg" id="visibilityMessage"></span></div>
+      </div>
+    </div>
     <div class="panel" id="panel-live">
       <div class="live-grid">
         <div class="live-card" id="livePreview">Loading live slides...</div>
@@ -589,6 +645,7 @@
   <script>
     let roster = null;
     let coachRankings = null;
+    let visibilityDraft = null;
     const rankingCategories = ['building', 'programming', 'speaking', 'research', 'hardWork', 'design3d', 'bricklink', 'printerOperation'];
     const rankingLabels = {
       building: 'LEGO Building', programming: 'Programming', speaking: 'Speaking', research: 'Research',
@@ -611,6 +668,7 @@
       document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === `panel-${id}`));
       if (id === 'live') loadLiveSlides();
       if (id === 'rankings') loadRankings();
+      if (id === 'visibility') renderVisibility();
     }
 
     async function api(url, options = {}) {
@@ -1281,6 +1339,139 @@
       if (!sortSelect.options.length) {
         sortSelect.innerHTML = '<option value="overall">Overall ranking</option><option value="name">Name</option>' + rankingCategories
           .map(category => `<option value="${category}">${rankingLabels[category]}</option>`).join('');
+      }
+    }
+
+    function canonicalVisibilityCategory(category) {
+      if (category === 'Innovation' || category === 'Pre-Season') return 'Innovation Project';
+      if (category === 'Judging') return 'Core Values';
+      return category || 'Other';
+    }
+
+    function visibilityLessons() {
+      const byTitle = new Map();
+      for (const task of (roster?.tasks || [])) {
+        const title = String(task.title || '').trim();
+        if (!title || byTitle.has(title)) continue;
+        byTitle.set(title, { title, category: canonicalVisibilityCategory(task.category), dueDate: task.dueDate || '' });
+      }
+      return [...byTitle.values()].sort((a, b) => a.category.localeCompare(b.category) || a.dueDate.localeCompare(b.dueDate) || a.title.localeCompare(b.title));
+    }
+
+    function settingsForVisibilityTeam(teamId) {
+      const settings = roster?.fllSettings || {};
+      const team = teamId && settings.teamSettings ? settings.teamSettings[teamId] : null;
+      return team || settings;
+    }
+
+    function renderVisibility() {
+      if (!roster) return;
+      const teamSelect = document.getElementById('visibilityTeam');
+      if (teamSelect.options.length <= 1) {
+        teamSelect.innerHTML = '<option value="">All teams (default)</option>' + roster.teams
+          .map(team => `<option value="${escapeHtml(team.id)}">${escapeHtml(team.nickname || team.name)}</option>`).join('');
+      }
+      const teamId = teamSelect.value;
+      const source = settingsForVisibilityTeam(teamId);
+      visibilityDraft = {
+        teamId,
+        disabledAreas: [...(source.disabledAreas || [])],
+        simulatorEnabled: source.simulatorEnabled !== false,
+        hiddenAssignments: [...(source.hiddenAssignments || [])]
+      };
+      const areas = [
+        ['robot-design', '🤖 Robot Design'], ['robot-game', '🎯 Robot Game'],
+        ['innovation', '💡 Innovation'], ['core-values', '🤝 Core Values']
+      ];
+      document.getElementById('visibilityAreas').innerHTML = areas.map(([id, label]) => `
+        <label class="visibility-toggle"><input type="checkbox" ${visibilityDraft.disabledAreas.includes(id) ? '' : 'checked'} onchange="setVisibilityArea('${id}',this.checked)"><span>${label}</span></label>
+      `).join('') + `<label class="visibility-toggle"><input id="visibilitySimulator" type="checkbox" ${visibilityDraft.simulatorEnabled ? 'checked' : ''} onchange="visibilityDraft.simulatorEnabled=this.checked"><span>🕹️ Simulator</span></label>`;
+      renderVisibilityLessons();
+      const message = document.getElementById('visibilityMessage');
+      document.getElementById('visibilityReset').classList.toggle('hidden', !teamId);
+      message.textContent = teamId && !(roster.fllSettings?.teamSettings || {})[teamId]
+        ? 'This team currently uses the all-team defaults. Saving creates a team-specific setup.' : '';
+      message.className = 'form-msg';
+    }
+
+    function setVisibilityArea(areaId, enabled) {
+      const set = new Set(visibilityDraft.disabledAreas);
+      if (enabled) set.delete(areaId); else set.add(areaId);
+      visibilityDraft.disabledAreas = [...set];
+    }
+
+    function filteredVisibilityLessons() {
+      const search = document.getElementById('visibilitySearch').value.trim().toLowerCase();
+      const area = document.getElementById('visibilityAreaFilter').value;
+      return visibilityLessons().filter(lesson =>
+        (area === 'all' || lesson.category === area) && (!search || lesson.title.toLowerCase().includes(search))
+      );
+    }
+
+    function renderVisibilityLessons() {
+      if (!visibilityDraft) return;
+      const hidden = new Set(visibilityDraft.hiddenAssignments);
+      const lessons = filteredVisibilityLessons();
+      document.getElementById('visibilityLessons').innerHTML = lessons.length ? lessons.map(lesson => `
+        <label class="visibility-row">
+          <input class="visibility-lesson-check" type="checkbox" data-title="${escapeHtml(lesson.title)}" ${hidden.has(lesson.title) ? '' : 'checked'} onchange="setVisibilityLesson(this.dataset.title,this.checked)">
+          <span class="visibility-row-title">${escapeHtml(lesson.title)}</span>
+          <span class="visibility-row-meta">${escapeHtml(lesson.category)}</span>
+          <span class="visibility-row-meta">${lesson.dueDate ? escapeHtml(lesson.dueDate) : 'No due date'}</span>
+        </label>`).join('') : '<div class="empty" style="padding:20px">No lessons match this filter.</div>';
+    }
+
+    function setVisibilityLesson(title, visible) {
+      const hidden = new Set(visibilityDraft.hiddenAssignments);
+      if (visible) hidden.delete(title); else hidden.add(title);
+      visibilityDraft.hiddenAssignments = [...hidden];
+    }
+
+    function bulkSetLessons(visible) {
+      for (const lesson of filteredVisibilityLessons()) setVisibilityLesson(lesson.title, visible);
+      renderVisibilityLessons();
+      const message = document.getElementById('visibilityMessage');
+      message.textContent = `${visible ? 'Showing' : 'Hiding'} ${filteredVisibilityLessons().length} filtered lesson(s). Save to apply.`;
+      message.className = 'form-msg';
+    }
+
+    async function saveVisibility() {
+      if (!visibilityDraft) return;
+      const button = document.getElementById('visibilitySave');
+      const message = document.getElementById('visibilityMessage');
+      button.disabled = true;
+      try {
+        const result = await api('/api/fll/coach/settings', {
+          method: 'PATCH',
+          body: JSON.stringify(visibilityDraft)
+        });
+        roster.fllSettings = result.settings;
+        message.textContent = 'Visibility saved. Students on the selected team will see the update when their dashboard refreshes.';
+        message.className = 'form-msg success';
+        showToast('Student Hub visibility saved');
+      } catch (err) {
+        message.textContent = err.message;
+        message.className = 'form-msg error';
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    async function resetTeamVisibility() {
+      if (!visibilityDraft?.teamId || !confirm('Remove this team’s custom visibility and use the all-team defaults?')) return;
+      const message = document.getElementById('visibilityMessage');
+      try {
+        const result = await api('/api/fll/coach/settings', {
+          method: 'PATCH',
+          body: JSON.stringify({ teamId: visibilityDraft.teamId, resetTeam: true })
+        });
+        roster.fllSettings = result.settings;
+        renderVisibility();
+        message.textContent = 'Team reset to the all-team defaults.';
+        message.className = 'form-msg success';
+      } catch (err) {
+        message.textContent = err.message;
+        message.className = 'form-msg error';
       }
     }
 

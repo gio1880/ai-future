@@ -3850,6 +3850,14 @@
     let activeCategory = null; // null = landing, string id = category detail
     let activeTask = null;     // null = not in task detail, string id = task detail
 
+    // ── Coach-controlled visibility (areas + simulator) ──
+    function fllSettings() { return (latestData && latestData.fllSettings) || {}; }
+    function areaDisabled(catId) {
+      const s = fllSettings();
+      return Array.isArray(s.disabledAreas) && s.disabledAreas.includes(catId);
+    }
+    function simulatorEnabled() { return fllSettings().simulatorEnabled !== false; }
+
     // ── Task answer storage ───────────────────────────────────────────────
     function taskStorageKey(userId, taskId) {
       return `bioglow-task-submission-${userId}-${taskId}`;
@@ -4689,6 +4697,7 @@
 
     // ── Robot simulator spotlight — a planning TOOL, always available ────
     function renderSimSpotlight(data) {
+      if (!simulatorEnabled()) return '';   // coach turned the simulator off
       // simulator practice progress (saved by the simulator page)
       let levelsDone = 0;
       try {
@@ -4854,10 +4863,11 @@
         }).length;
         const section = (sections || []).find(s => s.id === cat.id) || {};
 
-        if (cat.comingSoon) {
+        if (cat.comingSoon || areaDisabled(cat.id)) {
+          const disabled = areaDisabled(cat.id);
           return `
             <button class="cat-card cat-card-soon" onclick="openCategory('${cat.id}')" style="--cat-color:${cat.color};--cat-light:${cat.colorLight};--cat-border:${cat.colorBorder};">
-              <div class="cat-soon-badge">Coming soon</div>
+              <div class="cat-soon-badge">${disabled ? 'Disabled by coach' : 'Coming soon'}</div>
               <div class="cat-card-icon">${cat.icon}</div>
               <div class="cat-card-label">${escapeHtml(cat.label)}</div>
               <div class="cat-card-desc">${escapeHtml(cat.desc)}</div>
@@ -4983,7 +4993,9 @@
       if (!cat) return renderLanding(data);
 
       // Categories not yet open show a friendly "coming soon" screen.
-      if (cat.comingSoon) {
+      if (cat.comingSoon || areaDisabled(cat.id)) {
+        const disabled = areaDisabled(cat.id);
+        const availableCategories = CATEGORIES.filter(item => item.id !== cat.id && !item.comingSoon && !areaDisabled(item.id)).slice(0, 2);
         return `
           <div class="detail-header" style="--cat-color:${cat.color};--cat-light:${cat.colorLight};--cat-border:${cat.colorBorder};">
             <button class="back-btn" onclick="openCategory(null)">← Back</button>
@@ -4995,12 +5007,11 @@
           </div>
           <div class="coming-soon-card">
             <div class="coming-soon-emoji">🚧</div>
-            <div class="coming-soon-title">Coming soon!</div>
-            <div class="coming-soon-text">Your coach is still building out the <b>${escapeHtml(cat.label)}</b> assignments. Check back soon — for now, dive into <b>Robot Design</b>, the <b>Innovation Project</b>, or fire up the <b>Robot Simulator</b>!</div>
+            <div class="coming-soon-title">${disabled ? 'Not available right now' : 'Coming soon!'}</div>
+            <div class="coming-soon-text">${disabled ? `Your coach has turned off the <b>${escapeHtml(cat.label)}</b> area for your team.` : `Your coach is still building out the <b>${escapeHtml(cat.label)}</b> assignments. Check back soon.`}</div>
             <div class="coming-soon-actions">
-              <button class="cs-btn" onclick="openCategory('robot-design')">🤖 Robot Design</button>
-              <button class="cs-btn" onclick="openCategory('innovation')">💡 Innovation Project</button>
-              <a class="cs-btn" href="/fll-hub/simulator">🕹️ Simulator</a>
+              ${availableCategories.map(item => `<button class="cs-btn" onclick="openCategory('${item.id}')">${item.icon} ${escapeHtml(item.label)}</button>`).join('')}
+              ${simulatorEnabled() ? '<a class="cs-btn" href="/fll-hub/simulator">🕹️ Simulator</a>' : ''}
             </div>
           </div>
         `;

@@ -39,6 +39,7 @@ const fllMissionAnalysisFile = path.join(fllHubDataDir, 'mission-analysis.json')
 const fllLiveLessonFile = path.join(fllHubDataDir, 'live-lesson.json');
 const fllSimulatorProgressFile = path.join(fllHubDataDir, 'simulator-progress.json');
 const fllCoachRankingsFile = path.join(fllHubDataDir, 'coach-rankings.json');
+const fllSettingsFile = path.join(fllHubDataDir, 'fll-settings.json');
 const codeLabStudentsFile = path.join(__dirname, 'code-lab', 'data', 'students.json');
 const fllSessionCookie = 'fll_session';
 // Students start on their main dashboard after every FLL login.
@@ -61,7 +62,8 @@ const fllDataFileNames = [
 	'resources.json',
 	'live-lesson.json',
 	'simulator-progress.json',
-	'coach-rankings.json'
+	'coach-rankings.json',
+	'fll-settings.json'
 ];
 const fllSessions = new Map();
 const campHubDir = path.join(__dirname, 'robotics lab', 'Summer Camp', '2026-summer-camp');
@@ -1044,6 +1046,7 @@ async function buildDataHealthReport() {
 		'task-submissions.json': 'runtime-submissions',
 		'live-lesson.json': 'runtime-live-state',
 		'simulator-progress.json': 'runtime-student-work',
+		'fll-settings.json': 'runtime-coach-configuration',
 		'coach-rankings.json': 'runtime-coach-assessment'
 	};
 	const campClassifications = {
@@ -1130,6 +1133,56 @@ async function initializeFllDataDir() {
 async function readFllUsers() {
 	const users = await readJsonFile(fllUsersFile, []);
 	return Array.isArray(users) ? users : [];
+}
+
+// ── Coach-controlled visibility settings (which areas/simulator/lessons show) ──
+const FLL_AREA_IDS = ['robot-design', 'innovation', 'core-values', 'robot-game'];
+function normalizeFllSettings(data) {
+	const source = data && typeof data === 'object' ? data : {};
+	const disabledAreas = Array.isArray(source.disabledAreas)
+		? source.disabledAreas.filter((id) => FLL_AREA_IDS.includes(id))
+		: [];
+	const hiddenAssignments = Array.isArray(source.hiddenAssignments)
+		? [...new Set(source.hiddenAssignments.map((t) => cleanMetaString(t, 160)).filter(Boolean))]
+		: [];
+	const teamSettings = {};
+	for (const [teamId, teamValue] of Object.entries(source.teamSettings || {})) {
+		const cleanTeamId = cleanMetaString(teamId, 100);
+		if (!cleanTeamId || !teamValue || typeof teamValue !== 'object') continue;
+		teamSettings[cleanTeamId] = {
+			disabledAreas: Array.isArray(teamValue.disabledAreas) ? [...new Set(teamValue.disabledAreas.filter((id) => FLL_AREA_IDS.includes(id)))] : [],
+			simulatorEnabled: teamValue.simulatorEnabled !== false,
+			hiddenAssignments: Array.isArray(teamValue.hiddenAssignments)
+				? [...new Set(teamValue.hiddenAssignments.map((title) => cleanMetaString(title, 160)).filter(Boolean))]
+				: []
+		};
+	}
+	return {
+		disabledAreas: [...new Set(disabledAreas)],
+		simulatorEnabled: source.simulatorEnabled !== false, // default on
+		hiddenAssignments,
+		teamSettings
+	};
+}
+
+function effectiveFllSettings(settings, teamId) {
+	const normalized = normalizeFllSettings(settings);
+	const team = teamId ? normalized.teamSettings[teamId] : null;
+	return team ? {
+		disabledAreas: team.disabledAreas,
+		simulatorEnabled: team.simulatorEnabled,
+		hiddenAssignments: team.hiddenAssignments
+	} : {
+		disabledAreas: normalized.disabledAreas,
+		simulatorEnabled: normalized.simulatorEnabled,
+		hiddenAssignments: normalized.hiddenAssignments
+	};
+}
+async function readFllSettings() {
+	return normalizeFllSettings(await readJsonFile(fllSettingsFile, {}));
+}
+async function writeFllSettings(settings) {
+	await writeJsonFile(fllSettingsFile, normalizeFllSettings(settings));
 }
 
 async function writeFllUsers(users) {
@@ -4019,7 +4072,7 @@ function sectionProgressFromMilestones(sections, milestones) {
 
 async function getFllStudentDashboardFor(user) {
 	await ensureFllSponsorsTaskForUser(user);
-	const [season, teams, timeline, assignments, tasks, milestones, workLogs, members, schedules, resources, sections, missionAnalysis] = await Promise.all([
+	const [season, teams, timeline, assignments, tasks, milestones, workLogs, members, schedules, resources, sections, missionAnalysis, fllSettings] = await Promise.all([
 		readJsonFile(path.join(fllHubDataDir, 'season.json'), {}),
 		readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
 		readJsonFile(path.join(fllHubDataDir, 'timeline.json'), []),
@@ -4031,8 +4084,13 @@ async function getFllStudentDashboardFor(user) {
 		readJsonFile(fllTeamSchedulesFile, []),
 		readJsonFile(path.join(fllHubDataDir, 'resources.json'), []),
 		readJsonFile(fllSeasonSectionsFile, []),
-		readJsonFile(fllMissionAnalysisFile, [])
+		readJsonFile(fllMissionAnalysisFile, []),
+		readFllSettings()
 	]);
+	const studentSettings = effectiveFllSettings(fllSettings, user.teamId);
+	const hiddenTitles = new Set(studentSettings.hiddenAssignments || []);
+	const disabledAreas = new Set(studentSettings.disabledAreas || []);
+	const taskAreaAliases = { 'Robot Design': 'robot-design', 'Robot Game': 'robot-game', 'Innovation Project': 'innovation', Innovation: 'innovation', 'Core Values': 'core-values', Judging: 'core-values', 'Pre-Season': 'innovation' };
 	const team = (Array.isArray(teams) ? teams : []).find((candidate) => candidate.id === user.teamId) || null;
 	const teamSchedule = (Array.isArray(schedules) ? schedules : []).find((schedule) => schedule.teamId === user.teamId) || null;
 	const nextClass = buildNextClassInfo(teamSchedule);
@@ -4041,9 +4099,11 @@ async function getFllStudentDashboardFor(user) {
 		.sort((a, b) => String(a.dueDate || '').localeCompare(String(b.dueDate || '')));
 	const myTasks = (Array.isArray(tasks) ? tasks : [])
 		.filter((task) => task.teamId === user.teamId && task.assignedTo === user.id)
+		.filter((task) => !disabledAreas.has(taskAreaAliases[task.category] || 'innovation'))
+		.filter((task) => !hiddenTitles.has(task.title))   // coach-hidden lessons never reach students
 		.sort((a, b) => String(a.dueDate || '').localeCompare(String(b.dueDate || '')));
 	const codingFoundationsTask = buildFllCodingFoundationsTask(user);
-	if (!myTasks.some((task) => task.id === codingFoundationsTask.id)) {
+	if (!disabledAreas.has('robot-design') && !hiddenTitles.has(codingFoundationsTask.title) && !myTasks.some((task) => task.id === codingFoundationsTask.id)) {
 		myTasks.push(codingFoundationsTask);
 		myTasks.sort((a, b) => String(a.dueDate || '').localeCompare(String(b.dueDate || '')));
 	}
@@ -4074,7 +4134,8 @@ async function getFllStudentDashboardFor(user) {
 		milestones: teamMilestones,
 		milestoneSummary: summarizeMilestones(teamMilestones),
 		workLogs: myWorkLogs,
-		resources: visibleResources
+		resources: visibleResources,
+		fllSettings: studentSettings
 	};
 }
 
@@ -4871,7 +4932,22 @@ app.get(['/fll-hub/coding-guide', '/fll-hub/coding-guide/'], requireFllAuth, (re
 	res.sendFile(path.join(fllHubDir, 'coding-guide.html'));
 });
 
-app.get(['/fll-hub/simulator', '/fll-hub/simulator/'], requireFllAuth, (req, res) => {
+async function requireFllSimulatorEnabled(req, res, next) {
+	if (req.fllUser?.role === 'coach') return next();
+	try {
+		const settings = effectiveFllSettings(await readFllSettings(), req.fllUser?.teamId || '');
+		if (settings.simulatorEnabled === false) {
+			if (req.path.startsWith('/api/')) return res.status(403).json({ success: false, message: 'The simulator is currently disabled for your team' });
+			return res.redirect(302, '/fll-hub/student');
+		}
+		return next();
+	} catch (err) {
+		console.error('FLL simulator visibility check error:', err);
+		return res.status(500).json({ success: false, message: 'Server error checking simulator access' });
+	}
+}
+
+app.get(['/fll-hub/simulator', '/fll-hub/simulator/'], requireFllAuth, requireFllSimulatorEnabled, (req, res) => {
 	res.sendFile(path.join(fllHubDir, 'simulator.html'));
 });
 
@@ -4879,7 +4955,7 @@ app.get(['/fll-hub/robot-base-tutorial', '/fll-hub/robot-base-tutorial/'], requi
 	res.sendFile(path.join(fllHubDir, 'robot-base-tutorial.html'));
 });
 
-app.get('/api/fll/simulator/progress', requireFllAuth, async (req, res) => {
+app.get('/api/fll/simulator/progress', requireFllAuth, requireFllSimulatorEnabled, async (req, res) => {
 	try {
 		const progress = await readFllSimulatorProgress();
 		const record = progress.find((item) => item && item.studentId === req.fllUser.id) || null;
@@ -4899,7 +4975,7 @@ app.get('/api/fll/simulator/progress', requireFllAuth, async (req, res) => {
 	}
 });
 
-app.post('/api/fll/simulator/progress', requireFllAuth, requireFllStudent, async (req, res) => {
+app.post('/api/fll/simulator/progress', requireFllAuth, requireFllStudent, requireFllSimulatorEnabled, async (req, res) => {
 	try {
 		const levelId = cleanMetaString(req.body.levelId || '', 40);
 		if (!/^level-\d+$/.test(levelId)) {
@@ -4958,13 +5034,14 @@ app.post('/api/fll/simulator/progress', requireFllAuth, requireFllStudent, async
 
 app.get('/api/fll/coach/roster', requireFllAuth, requireFllCoach, async (req, res) => {
 	try {
-		const [teams, members, users, tasks, season, masterRoster] = await Promise.all([
+		const [teams, members, users, tasks, season, masterRoster, fllSettings] = await Promise.all([
 			readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
 			readJsonFile(fllTeamMembersFile, []),
 			readFllUsers(),
 			readJsonFile(fllTasksFile, []),
 			readJsonFile(path.join(fllHubDataDir, 'season.json'), {}),
-			readMasterRoster()
+			readMasterRoster(),
+			readFllSettings()
 		]);
 		const students = users
 			.filter((user) => user.role === 'student' && user.demoAccount !== true)
@@ -4988,12 +5065,75 @@ app.get('/api/fll/coach/roster', requireFllAuth, requireFllCoach, async (req, re
 				students,
 				enrolledMasterStudents,
 				tasks: Array.isArray(tasks) ? tasks : [],
-				season
+				season,
+				fllSettings
 			}
 		});
 	} catch (err) {
 		console.error('FLL coach roster error:', err);
 		return res.status(500).json({ success: false, message: 'Server error loading roster' });
+	}
+});
+
+// Coach reads/updates which areas, the simulator, and which lessons are visible.
+app.get('/api/fll/coach/settings', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		return res.json({ success: true, settings: await readFllSettings() });
+	} catch (err) {
+		console.error('FLL coach settings load error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading settings' });
+	}
+});
+
+app.patch('/api/fll/coach/settings', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const current = await readFllSettings();
+		const teamId = cleanMetaString(req.body.teamId || '', 100);
+		if (teamId) {
+			const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
+			if (!(Array.isArray(teams) ? teams : []).some((team) => team.id === teamId)) {
+				return res.status(400).json({ success: false, message: 'Unknown team' });
+			}
+		}
+		const next = { ...current, teamSettings: { ...(current.teamSettings || {}) } };
+		if (teamId && req.body.resetTeam === true) {
+			delete next.teamSettings[teamId];
+			const saved = normalizeFllSettings(next);
+			await writeFllSettings(saved);
+			return res.json({ success: true, settings: saved });
+		}
+		const target = teamId
+			? { ...effectiveFllSettings(current, teamId) }
+			: next;
+		if (Array.isArray(req.body.disabledAreas)) {
+			target.disabledAreas = req.body.disabledAreas.filter((id) => FLL_AREA_IDS.includes(id));
+		}
+		if (req.body.simulatorEnabled !== undefined) {
+			target.simulatorEnabled = Boolean(req.body.simulatorEnabled);
+		}
+		if (Array.isArray(req.body.hiddenAssignments)) {
+			// full replacement of the hidden list (supports bulk show/hide)
+			target.hiddenAssignments = req.body.hiddenAssignments.map((t) => cleanMetaString(t, 160)).filter(Boolean);
+		}
+		// convenience toggles for a single area / a bulk set of lessons
+		if (typeof req.body.toggleArea === 'string' && FLL_AREA_IDS.includes(req.body.toggleArea)) {
+			const set = new Set(target.disabledAreas);
+			if (req.body.disable) set.add(req.body.toggleArea); else set.delete(req.body.toggleArea);
+			target.disabledAreas = [...set];
+		}
+		if (Array.isArray(req.body.hideTitles) || Array.isArray(req.body.showTitles)) {
+			const set = new Set(target.hiddenAssignments);
+			(req.body.hideTitles || []).forEach((t) => { const c = cleanMetaString(t, 160); if (c) set.add(c); });
+			(req.body.showTitles || []).forEach((t) => { const c = cleanMetaString(t, 160); if (c) set.delete(c); });
+			target.hiddenAssignments = [...set];
+		}
+		if (teamId) next.teamSettings[teamId] = target;
+		const saved = normalizeFllSettings(next);
+		await writeFllSettings(saved);
+		return res.json({ success: true, settings: saved });
+	} catch (err) {
+		console.error('FLL coach settings update error:', err);
+		return res.status(500).json({ success: false, message: 'Server error updating settings' });
 	}
 });
 
