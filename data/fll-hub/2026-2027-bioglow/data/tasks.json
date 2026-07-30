@@ -31159,13 +31159,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -31215,7 +31217,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -31253,7 +31256,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -31292,7 +31296,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -31334,13 +31339,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -31391,7 +31398,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -31430,7 +31438,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -31471,13 +31480,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -31658,13 +31669,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -31714,7 +31727,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -31752,7 +31766,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -31791,7 +31806,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -31833,13 +31849,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -31890,7 +31908,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -31929,7 +31948,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -31970,13 +31990,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -32157,13 +32179,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -32213,7 +32237,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -32251,7 +32276,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -32290,7 +32316,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -32332,13 +32359,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -32389,7 +32418,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -32428,7 +32458,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -32469,13 +32500,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -32656,13 +32689,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -32712,7 +32747,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -32750,7 +32786,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -32789,7 +32826,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -32831,13 +32869,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -32888,7 +32928,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -32927,7 +32968,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -32968,13 +33010,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -33155,13 +33199,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -33211,7 +33257,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -33249,7 +33296,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -33288,7 +33336,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -33330,13 +33379,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -33387,7 +33438,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -33426,7 +33478,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -33467,13 +33520,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -33654,13 +33709,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -33710,7 +33767,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -33748,7 +33806,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -33787,7 +33846,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -33829,13 +33889,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -33886,7 +33948,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -33925,7 +33988,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -33966,13 +34030,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -34153,13 +34219,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -34209,7 +34277,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -34247,7 +34316,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -34286,7 +34356,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -34328,13 +34399,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -34385,7 +34458,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -34424,7 +34498,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -34465,13 +34540,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -34652,13 +34729,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -34708,7 +34787,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -34746,7 +34826,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -34785,7 +34866,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -34827,13 +34909,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -34884,7 +34968,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -34923,7 +35008,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -34964,13 +35050,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -35151,13 +35239,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -35207,7 +35297,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -35245,7 +35336,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -35284,7 +35376,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -35326,13 +35419,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -35383,7 +35478,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -35422,7 +35518,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -35463,13 +35560,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -35650,13 +35749,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -35706,7 +35807,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -35744,7 +35846,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -35783,7 +35886,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -35825,13 +35929,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -35882,7 +35988,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -35921,7 +36028,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -35962,13 +36070,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -36149,13 +36259,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -36205,7 +36317,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -36243,7 +36356,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -36282,7 +36396,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -36324,13 +36439,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -36381,7 +36498,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -36420,7 +36538,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -36461,13 +36580,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -36648,13 +36769,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -36704,7 +36827,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -36742,7 +36866,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -36781,7 +36906,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -36823,13 +36949,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -36880,7 +37008,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -36919,7 +37048,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -36960,13 +37090,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -37147,13 +37279,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -37203,7 +37337,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -37241,7 +37376,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -37280,7 +37416,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -37322,13 +37459,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -37379,7 +37518,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -37418,7 +37558,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -37459,13 +37600,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -37646,13 +37789,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -37702,7 +37847,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -37740,7 +37886,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -37779,7 +37926,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -37821,13 +37969,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -37878,7 +38028,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -37917,7 +38068,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -37958,13 +38110,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -38145,13 +38299,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -38201,7 +38357,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -38239,7 +38396,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -38278,7 +38436,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -38320,13 +38479,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -38377,7 +38538,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -38416,7 +38578,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -38457,13 +38620,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -38644,13 +38809,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -38700,7 +38867,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -38738,7 +38906,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -38777,7 +38946,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -38819,13 +38989,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -38876,7 +39048,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -38915,7 +39088,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -38956,13 +39130,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -39143,13 +39319,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -39199,7 +39377,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -39237,7 +39416,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -39276,7 +39456,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -39318,13 +39499,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -39375,7 +39558,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -39414,7 +39598,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -39455,13 +39640,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -39642,13 +39829,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -39698,7 +39887,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -39736,7 +39926,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -39775,7 +39966,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -39817,13 +40009,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -39874,7 +40068,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -39913,7 +40108,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -39954,13 +40150,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
@@ -40141,13 +40339,15 @@
         "id": "prompt-own-words",
         "type": "textarea",
         "label": "Explain the official prompt in your own words. What is the team being asked to do?",
-        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear."
+        "placeholder": "Describe the challenge, important requirements, and anything that is still unclear.",
+        "allowAttach": true
       },
       {
         "id": "prompt-key-words",
         "type": "textarea",
         "label": "List important words, rules, limits, and questions from the prompt.",
-        "placeholder": "What must the project include? What should your team investigate further?"
+        "placeholder": "What must the project include? What should your team investigate further?",
+        "allowAttach": true
       },
       {
         "id": "topic-brainstorm",
@@ -40197,7 +40397,8 @@
         "id": "narrowing-method",
         "type": "textarea",
         "label": "How did your team narrow the larger list to these five?",
-        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used."
+        "placeholder": "Explain the criteria, discussion, or preliminary scoring you used.",
+        "allowAttach": true
       }
     ]
   },
@@ -40235,7 +40436,8 @@
         "id": "evidence-gaps",
         "type": "textarea",
         "label": "Which topic has the strongest evidence? Which still has unanswered questions?",
-        "placeholder": "Compare the quality and amount of evidence for all five."
+        "placeholder": "Compare the quality and amount of evidence for all five.",
+        "allowAttach": true
       }
     ]
   },
@@ -40274,7 +40476,8 @@
         "id": "solution-patterns",
         "type": "textarea",
         "label": "What patterns, strengths, or repeated limitations did your team notice?",
-        "placeholder": "What appears to work? What important need is still not being met?"
+        "placeholder": "What appears to work? What important need is still not being met?",
+        "allowAttach": true
       }
     ]
   },
@@ -40316,13 +40519,15 @@
         "id": "winning-problem",
         "type": "textarea",
         "label": "Which problem won, and what exact version of the problem will the team pursue?",
-        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates."
+        "placeholder": "State the problem specifically: who is affected, where it happens, and what consequence it creates.",
+        "allowAttach": true
       },
       {
         "id": "fair-decision",
         "type": "textarea",
         "label": "How did your team make the discussion and vote fair and inclusive?",
-        "placeholder": "Explain how everyone participated and how disagreements were handled."
+        "placeholder": "Explain how everyone participated and how disagreements were handled.",
+        "allowAttach": true
       }
     ]
   },
@@ -40373,7 +40578,8 @@
         "id": "outreach-priority",
         "type": "textarea",
         "label": "Which three contacts should the team approach first, and why?",
-        "placeholder": "Rank the best contacts and explain what each could help the team learn."
+        "placeholder": "Rank the best contacts and explain what each could help the team learn.",
+        "allowAttach": true
       }
     ]
   },
@@ -40412,7 +40618,8 @@
         "id": "unmet-need",
         "type": "textarea",
         "label": "What unmet need or opportunity remains after reviewing these solutions?",
-        "placeholder": "Identify a specific gap your team might address."
+        "placeholder": "Identify a specific gap your team might address.",
+        "allowAttach": true
       }
     ]
   },
@@ -40453,13 +40660,15 @@
         "id": "promising-three",
         "type": "textarea",
         "label": "Which three ideas appear most promising, and why?",
-        "placeholder": "Compare impact, originality, feasibility, and connection to the research."
+        "placeholder": "Compare impact, originality, feasibility, and connection to the research.",
+        "allowAttach": true
       },
       {
         "id": "next-test",
         "type": "textarea",
         "label": "What should the team prototype or test next?",
-        "placeholder": "Describe the first simple experiment, model, interview, or prototype."
+        "placeholder": "Describe the first simple experiment, model, interview, or prototype.",
+        "allowAttach": true
       }
     ]
   },
