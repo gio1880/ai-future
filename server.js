@@ -3997,7 +3997,9 @@ function buildFllInnovationTasks(user) {
 }
 
 function requiredFllTasksForUser(user) {
-	return [buildFllSponsorsTask(user), ...buildFllRobotDesignTasks(user), ...buildFllInnovationTasks(user)];
+	// Innovation uses the Step 1–13 curriculum stored in tasks.json, so the
+	// auto-generated numbered Innovation lessons are intentionally NOT injected.
+	return [buildFllSponsorsTask(user), ...buildFllRobotDesignTasks(user)];
 }
 
 async function ensureFllSponsorsAssignments() {
