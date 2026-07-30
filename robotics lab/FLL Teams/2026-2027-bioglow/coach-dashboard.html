@@ -190,11 +190,16 @@
     .visibility-toggle input { width: 18px; height: 18px; accent-color: #1e8e5a; }
     .visibility-toolbar { display: grid; grid-template-columns: 1fr 190px auto auto; gap: 10px; align-items: end; margin-bottom: 14px; }
     .visibility-lessons { border: 1.5px solid #e8eaed; border-radius: 12px; overflow: hidden; max-height: 560px; overflow-y: auto; }
-    .visibility-row { display: grid; grid-template-columns: 32px minmax(240px, 1fr) 160px 110px; gap: 10px; align-items: center; padding: 10px 12px; border-bottom: 1px solid #f1f3f4; font-size: 13px; }
+    .visibility-row { display: grid; grid-template-columns: minmax(240px, 1fr) 150px 180px; gap: 10px; align-items: center; padding: 10px 12px; border-bottom: 1px solid #f1f3f4; font-size: 13px; }
     .visibility-row:last-child { border-bottom: none; }
-    .visibility-row input { width: 17px; height: 17px; accent-color: #1e8e5a; }
+    .visibility-row-toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; min-width: 0; }
+    .visibility-row input[type="checkbox"] { width: 17px; height: 17px; accent-color: #1e8e5a; flex-shrink: 0; }
     .visibility-row-title { font-weight: 700; }
     .visibility-row-meta { color: #5f6368; font-size: 12px; }
+    .visibility-row-due { display: flex; align-items: center; gap: 6px; }
+    .visibility-due-label { color: #80868b; font-size: 11px; font-weight: 700; }
+    .visibility-row-date { border: 1.5px solid #dadce0; border-radius: 8px; padding: 6px 8px; font-size: 12px; font-weight: 600; font-family: inherit; color: #202124; }
+    .visibility-row-date:focus { outline: none; border-color: #1e8e5a; }
     .visibility-actions { display: flex; gap: 10px; align-items: center; margin-top: 14px; }
     .visibility-bulk-btn { border: 1.5px solid #dadce0; background: white; border-radius: 9px; padding: 9px 13px; font-weight: 800; cursor: pointer; }
 
@@ -410,8 +415,8 @@
       .ranking-summary { grid-template-columns: repeat(2, 1fr); }
       .visibility-areas { grid-template-columns: 1fr 1fr; }
       .visibility-toolbar { grid-template-columns: 1fr; }
-      .visibility-row { grid-template-columns: 28px 1fr; }
-      .visibility-row-meta { grid-column: 2; }
+      .visibility-row { grid-template-columns: 1fr; gap: 6px; }
+      .visibility-row-meta, .visibility-row-due { grid-column: 1; }
       .topbar { flex-wrap: wrap; gap: 8px; padding: 12px 16px; }
       .wrap { padding: 16px 12px 50px; }
       .team-card { padding: 16px; }
@@ -1413,12 +1418,34 @@
       const hidden = new Set(visibilityDraft.hiddenAssignments);
       const lessons = filteredVisibilityLessons();
       document.getElementById('visibilityLessons').innerHTML = lessons.length ? lessons.map(lesson => `
-        <label class="visibility-row">
-          <input class="visibility-lesson-check" type="checkbox" data-title="${escapeHtml(lesson.title)}" ${hidden.has(lesson.title) ? '' : 'checked'} onchange="setVisibilityLesson(this.dataset.title,this.checked)">
-          <span class="visibility-row-title">${escapeHtml(lesson.title)}</span>
+        <div class="visibility-row">
+          <label class="visibility-row-toggle">
+            <input class="visibility-lesson-check" type="checkbox" data-title="${escapeHtml(lesson.title)}" ${hidden.has(lesson.title) ? '' : 'checked'} onchange="setVisibilityLesson(this.dataset.title,this.checked)">
+            <span class="visibility-row-title">${escapeHtml(lesson.title)}</span>
+          </label>
           <span class="visibility-row-meta">${escapeHtml(lesson.category)}</span>
-          <span class="visibility-row-meta">${lesson.dueDate ? escapeHtml(lesson.dueDate) : 'No due date'}</span>
-        </label>`).join('') : '<div class="empty" style="padding:20px">No lessons match this filter.</div>';
+          <span class="visibility-row-due">
+            <span class="visibility-due-label">Due</span>
+            <input class="visibility-row-date" type="date" value="${lesson.dueDate ? escapeHtml(String(lesson.dueDate).slice(0,10)) : ''}" data-title="${escapeHtml(lesson.title)}" onchange="setLessonDueDate(this.dataset.title, this.value)" title="Set the due date for this lesson (updates every team's copy)">
+          </span>
+        </div>`).join('') : '<div class="empty" style="padding:20px">No lessons match this filter.</div>';
+    }
+
+    async function setLessonDueDate(title, date) {
+      const message = document.getElementById('visibilityMessage');
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
+      try {
+        const result = await api('/api/fll/coach/assignments', {
+          method: 'PATCH',
+          body: JSON.stringify({ matchTitle: title, dueDate: date })
+        });
+        (roster.tasks || []).forEach(t => { if (t.title === title) t.dueDate = date; });
+        message.textContent = `✓ Due date for "${title}" set to ${date} (${result.count} team cop${result.count === 1 ? 'y' : 'ies'}).`;
+        message.className = 'form-msg success';
+      } catch (err) {
+        message.textContent = err.message || 'Could not update the due date.';
+        message.className = 'form-msg error';
+      }
     }
 
     function setVisibilityLesson(title, visible) {
