@@ -33884,5 +33884,565 @@
         "allowAttach": true
       }
     ]
+  },
+  {
+    "id": "task-base-bot-tracker",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-claire-zhai-33c762",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-history-guardians",
+    "assignedTo": "student-claire-zhai-33c762",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-luke-tisserant-33a686",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-history-guardians",
+    "assignedTo": "student-luke-tisserant-33a686",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-mason-yuan-1f9680",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-history-guardians",
+    "assignedTo": "student-mason-yuan-1f9680",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-isabella-feng-dde604",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-history-guardians",
+    "assignedTo": "student-isabella-feng-dde604",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-domenico-petrini-6ef9cb",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-tidal-engineers",
+    "assignedTo": "student-domenico-petrini-6ef9cb",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-elis-fishman-e7aa78",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-tidal-engineers",
+    "assignedTo": "student-elis-fishman-e7aa78",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-isaiah-irwin-2f1d7b",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-tidal-engineers",
+    "assignedTo": "student-isaiah-irwin-2f1d7b",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-finn-fitzner-3e1a78",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-tidal-engineers",
+    "assignedTo": "student-finn-fitzner-3e1a78",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-lawrence-liu-cb31cb",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-firefox",
+    "assignedTo": "student-lawrence-liu-cb31cb",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-vincent-liu-36515a",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-firefox",
+    "assignedTo": "student-vincent-liu-36515a",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-thales-liu-be7a7e",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-firefox",
+    "assignedTo": "student-thales-liu-be7a7e",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-adam-zeng-5bdd20",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-firefox",
+    "assignedTo": "student-adam-zeng-5bdd20",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-estella-6e878f",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-firefox",
+    "assignedTo": "student-estella-6e878f",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-sanjit-harnal-b05b32",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-wcdc-fighters",
+    "assignedTo": "student-sanjit-harnal-b05b32",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-mason-p-ed2ab1",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-wcdc-fighters",
+    "assignedTo": "student-mason-p-ed2ab1",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-winston-lee-96b448",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-wcdc-fighters",
+    "assignedTo": "student-winston-lee-96b448",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-ethan-deng-56ffe3",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-wcdc-fighters",
+    "assignedTo": "student-ethan-deng-56ffe3",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--student-demo",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-history-guardians",
+    "assignedTo": "student-demo",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-base-bot-tracker--fll-demo-student",
+    "assignmentId": "assignment-robot-prep",
+    "teamId": "team-demo",
+    "assignedTo": "fll-demo-student",
+    "title": "Base Robot Design Tracker",
+    "category": "Robot Design",
+    "type": "tracker",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
+    "trackerConfig": {
+      "itemNoun": "Base Bot",
+      "namePlaceholder": "Design name (e.g. Compact Two-Motor Base)",
+      "purposePlaceholder": "Describe this design — e.g. low & stable, quick-swap attachment frame",
+      "addLabel": "Add another base bot design",
+      "badge": "🤖 Base Robot Tracker",
+      "photoLabel": "📸 Add a photo of this version",
+      "emptyText": "No photos yet — build v1 and snap a picture!",
+      "defaults": [
+        "Our Base Robot"
+      ]
+    },
+    "createdBy": "coach-default",
+    "createdAt": "2026-08-03T17:48:42.436Z",
+    "updatedAt": "2026-08-03T17:48:42.436Z"
   }
 ]

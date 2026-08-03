@@ -4354,16 +4354,35 @@
       `;
     }
 
-    // ── Attachment tracker ────────────────────────────────────────────────
-    function trackerKey(userId) { return `bioglow-attachments-${userId}`; }
+    // ── Iteration tracker (attachments, base robot, etc.) ─────────────────
+    // Per-task storage so different trackers (attachments vs base bot) don't collide.
+    function trackerKey(userId) {
+      const tid = activeTask || '';
+      if (tid.startsWith('task-attachment-tracker')) return `bioglow-attachments-${userId}`; // legacy key
+      return `bioglow-tracker-${userId}-${tid}`;
+    }
+
+    function activeTrackerTask() { return (latestData && latestData.tasks || []).find(t => t.id === activeTask); }
+    function trackerConfig() {
+      const c = ((activeTrackerTask() || {}).trackerConfig) || {};
+      return {
+        itemNoun: c.itemNoun || 'Attachment',
+        namePlaceholder: c.namePlaceholder || 'Attachment name',
+        purposePlaceholder: c.purposePlaceholder || 'What is it for? e.g. Lift missions — forklift arm',
+        addLabel: c.addLabel || 'Add another attachment',
+        badge: c.badge || '🔧 Attachment Tracker',
+        photoLabel: c.photoLabel || '📸 Add iteration photo',
+        emptyText: c.emptyText || 'No photos yet — snap your first version below!',
+        defaults: (Array.isArray(c.defaults) && c.defaults.length) ? c.defaults : ['Attachment 1','Attachment 2','Attachment 3','Attachment 4']
+      };
+    }
 
     function getAttachments(userId) {
       try {
         const saved = JSON.parse(localStorage.getItem(trackerKey(userId)) || 'null');
         if (saved && saved.length) return saved;
       } catch {}
-      // default: Attachment 1–4
-      return [1,2,3,4].map(n => ({ id: `att-${n}`, name: `Attachment ${n}`, purpose: '', iterations: [] }));
+      return trackerConfig().defaults.map((name, i) => ({ id: `att-${i + 1}`, name, purpose: '', iterations: [] }));
     }
 
     function saveAttachments(userId, attachments) {
@@ -4376,7 +4395,7 @@
 
     function addAttachment(userId, taskId) {
       const atts = getAttachments(userId);
-      atts.push({ id: `att-${Date.now()}`, name: `Attachment ${atts.length + 1}`, purpose: '', iterations: [] });
+      atts.push({ id: `att-${Date.now()}`, name: `${trackerConfig().itemNoun} ${atts.length + 1}`, purpose: '', iterations: [] });
       saveAttachments(userId, atts);
       app.innerHTML = renderTaskDetail(latestData, taskId);
       wireListeners();
@@ -4458,18 +4477,20 @@
     }
 
     function renderAttachmentTracker(task, userId, ctxIcon) {
+      const cfg = trackerConfig();
       const atts = getAttachments(userId);
       const totalPhotos = atts.reduce((n, a) => n + a.iterations.length, 0);
+      const nounLower = cfg.itemNoun.toLowerCase();
 
       const attCards = atts.map(att => `
         <div class="att-card">
           <div class="att-card-head">
-            <input class="att-name-input" type="text" value="${escapeHtml(att.name)}" placeholder="Attachment name"
+            <input class="att-name-input" type="text" value="${escapeHtml(att.name)}" placeholder="${escapeHtml(cfg.namePlaceholder)}"
               onchange="updateAttachmentField('${escapeHtml(userId)}','${escapeHtml(att.id)}','name',this.value)">
             <span class="att-iter-count">${att.iterations.length} version${att.iterations.length !== 1 ? 's' : ''}</span>
-            <button class="att-delete-btn" onclick="removeAttachment('${escapeHtml(userId)}','${escapeHtml(task.id)}','${escapeHtml(att.id)}')" title="Delete attachment">✕</button>
+            <button class="att-delete-btn" onclick="removeAttachment('${escapeHtml(userId)}','${escapeHtml(task.id)}','${escapeHtml(att.id)}')" title="Delete ${escapeHtml(nounLower)}">✕</button>
           </div>
-          <input class="att-purpose-input" type="text" value="${escapeHtml(att.purpose)}" placeholder="What is it for? e.g. Lift missions — forklift arm"
+          <input class="att-purpose-input" type="text" value="${escapeHtml(att.purpose)}" placeholder="${escapeHtml(cfg.purposePlaceholder)}"
             onchange="updateAttachmentField('${escapeHtml(userId)}','${escapeHtml(att.id)}','purpose',this.value)">
 
           ${att.iterations.length ? `
@@ -4487,10 +4508,10 @@
                 </div>
               `).join('')}
             </div>
-          ` : `<div class="att-no-iterations">No photos yet — snap your first version below!</div>`}
+          ` : `<div class="att-no-iterations">${escapeHtml(cfg.emptyText)}</div>`}
 
           <label class="att-add-photo-btn">
-            📸 Add iteration photo
+            ${escapeHtml(cfg.photoLabel)}
             <input type="file" accept="image/*" style="display:none"
               onchange="addIterationPhoto(this,'${escapeHtml(userId)}','${escapeHtml(task.id)}','${escapeHtml(att.id)}')">
           </label>
@@ -4504,9 +4525,9 @@
         <div class="ta-detail">
           <div class="ta-header">
             <div class="ta-badges">
-              <span class="ta-badge ta-badge-type">🔧 Attachment Tracker</span>
+              <span class="ta-badge ta-badge-type">${escapeHtml(cfg.badge)}</span>
               <span class="ta-badge ta-badge-ctx">${ctxIcon}</span>
-              <span class="ta-badge ta-badge-done">${atts.length} attachments · ${totalPhotos} photos</span>
+              <span class="ta-badge ta-badge-done">${atts.length} ${escapeHtml(nounLower)}${atts.length !== 1 ? 's' : ''} · ${totalPhotos} photos</span>
             </div>
             <h1 class="ta-title">${escapeHtml(task.title)}</h1>
           </div>
@@ -4520,7 +4541,7 @@
           </div>
 
           <div class="att-add-row">
-            <button class="att-add-attachment-btn" onclick="addAttachment('${escapeHtml(userId)}','${escapeHtml(task.id)}')">＋ Add another attachment</button>
+            <button class="att-add-attachment-btn" onclick="addAttachment('${escapeHtml(userId)}','${escapeHtml(task.id)}')">＋ ${escapeHtml(cfg.addLabel)}</button>
           </div>
         </div>
       `;
