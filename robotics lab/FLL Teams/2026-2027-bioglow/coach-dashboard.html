@@ -1399,10 +1399,40 @@
       message.className = 'form-msg';
     }
 
+    // map a lesson's category to its FLL area id
+    function areaIdForCategory(category) {
+      const c = String(category || '').toLowerCase();
+      if (c.includes('robot design')) return 'robot-design';
+      if (c.includes('robot game') || c.includes('robot performance')) return 'robot-game';
+      if (c.includes('innovation') || c === 'pre-season') return 'innovation';
+      if (c.includes('core value') || c === 'judging') return 'core-values';
+      return null;
+    }
+
     function setVisibilityArea(areaId, enabled) {
       const set = new Set(visibilityDraft.disabledAreas);
-      if (enabled) set.delete(areaId); else set.add(areaId);
-      visibilityDraft.disabledAreas = [...set];
+      const message = document.getElementById('visibilityMessage');
+      if (enabled) {
+        set.delete(areaId);
+        // Enabling an area also reveals its lessons, so they actually show up.
+        const hidden = new Set(visibilityDraft.hiddenAssignments);
+        let revealed = 0;
+        for (const lesson of visibilityLessons()) {
+          if (areaIdForCategory(lesson.category) === areaId && hidden.has(lesson.title)) { hidden.delete(lesson.title); revealed++; }
+        }
+        visibilityDraft.hiddenAssignments = [...hidden];
+        visibilityDraft.disabledAreas = [...set];
+        renderVisibilityLessons();
+        message.textContent = revealed
+          ? `Enabled this area and made its ${revealed} lesson(s) visible. Click "Save visibility" to apply.`
+          : 'Area enabled. Click "Save visibility" to apply.';
+        message.className = 'form-msg';
+      } else {
+        set.add(areaId);
+        visibilityDraft.disabledAreas = [...set];
+        message.textContent = 'Area hidden (students see "Coming soon"). Click "Save visibility" to apply.';
+        message.className = 'form-msg';
+      }
     }
 
     function filteredVisibilityLessons() {
