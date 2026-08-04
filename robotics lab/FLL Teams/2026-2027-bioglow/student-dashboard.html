@@ -3238,8 +3238,6 @@
         </div>
       </div>
       <div class="nav-actions">
-        <a class="link-chip" href="/robotics-lab">Robotics Lab</a>
-        <span class="chip" id="teamPill">FLL Team</span>
         <button id="logoutButton" type="button">Sign out</button>
       </div>
     </div>
@@ -3318,7 +3316,6 @@
   <script>
     const app = document.getElementById('app');
     const userLine = document.getElementById('userLine');
-    const teamPill = document.getElementById('teamPill');
     const logoutButton = document.getElementById('logoutButton');
     const toast = document.getElementById('toast');
     const liveBanner = document.getElementById('liveBanner');
@@ -5459,7 +5456,6 @@
       latestData = data;
       const { user, team } = data;
       userLine.textContent = `${user.name} – ${team ? team.name : 'No team assigned'}`;
-      teamPill.textContent = team ? team.nickname || team.name : 'Student';
       maybeShowWelcomeScreen(user);
 
       app.innerHTML = activeTask
