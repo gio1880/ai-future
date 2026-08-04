@@ -2228,6 +2228,66 @@
       margin-bottom: 10px;
     }
 
+    /* ── rich lesson text (headings, quotes, tables) ── */
+    /* weight matches the hub-wide heading rule (600, set !important above) */
+    .md-h {
+      color: #202124;
+      font-weight: 600;
+      margin: 16px 0 6px;
+      line-height: 1.3;
+    }
+    h3.md-h { font-size: 15px; }
+    h4.md-h { font-size: 13.5px; }
+
+    .md-quote {
+      margin: 12px 0;
+      padding: 12px 16px;
+      background: #eef4ff;
+      border-left: 4px solid #1a73e8;
+      border-radius: 0 10px 10px 0;
+      color: #17407a;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .md-table-wrap {
+      margin: 12px 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .md-table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 320px;
+      font-size: 12.5px;
+    }
+
+    .md-table th,
+    .md-table td {
+      border: 1px solid #e3e6ea;
+      padding: 7px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .md-table th {
+      background: #f1f5fb;
+      color: #202124;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .md-table tbody tr:nth-child(even) td { background: #fafbfc; }
+
+    .detail-task-desc code {
+      background: #f1f3f4;
+      border-radius: 5px;
+      padding: 1px 5px;
+      font-size: 12px;
+    }
+
     .detail-task-meta {
       display: flex;
       gap: 7px;
@@ -4548,19 +4608,72 @@
     }
 
     // ── Simple markdown-ish renderer (bold, newlines, bullets) ───────────
+    // Supports: ## / ### headings, > blockquotes, | tables |, - bullets,
+    // 1. numbered lists, **bold**, and `code`. Input is escaped first, so
+    // blockquote/table markers are matched in their escaped form (&gt;).
     function renderMarkdownish(text) {
       if (!text) return '';
+      const inline = (s) => s
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/`([^`]+?)`/g, '<code>$1</code>');
       const escaped = text
         .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+      const isTableRow = (l) => /^\|.*\|$/.test(l.trim());
+      const isDivider  = (l) => /^\|[\s:|-]+\|$/.test(l.trim());
+      const cells = (l) => l.trim().replace(/^\||\|$/g,'').split('|').map(c => c.trim());
+
       return escaped
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\n- /g, '\n• ')
         .split('\n\n')
-        .map(para => para.trim())
+        .map(block => block.trim())
         .filter(Boolean)
-        .map(para => para.startsWith('•') || para.includes('\n•')
-          ? `<ul>${para.split('\n').map(l => l.replace(/^• /,'').trim()).filter(Boolean).map(l => `<li>${l}</li>`).join('')}</ul>`
-          : `<p>${para.replace(/\n/g,'<br>')}</p>`)
+        .map(block => {
+          const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
+
+          // table: | a | b |  with a --- divider row
+          if (lines.length > 1 && lines.every(isTableRow) && lines.some(isDivider)) {
+            const rows = lines.filter(l => !isDivider(l));
+            const head = cells(rows[0]).map(c => `<th>${inline(c)}</th>`).join('');
+            const body = rows.slice(1)
+              .map(r => `<tr>${cells(r).map(c => `<td>${inline(c)}</td>`).join('')}</tr>`)
+              .join('');
+            return `<div class="md-table-wrap"><table class="md-table"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+          }
+
+          // blockquote (escaped '>' is '&gt;')
+          if (lines.every(l => l.startsWith('&gt;'))) {
+            const inner = lines.map(l => l.replace(/^&gt;\s?/,'')).join(' ');
+            return `<blockquote class="md-quote">${inline(inner)}</blockquote>`;
+          }
+
+          // headings — a block that is only a heading line
+          if (lines.length === 1 && /^#{2,4}\s+/.test(lines[0])) {
+            const level = lines[0].match(/^#+/)[0].length;
+            const tag = level === 2 ? 'h3' : 'h4';
+            return `<${tag} class="md-h">${inline(lines[0].replace(/^#+\s+/,''))}</${tag}>`;
+          }
+
+          // bullet list
+          if (lines.every(l => /^-\s+/.test(l))) {
+            return `<ul>${lines.map(l => `<li>${inline(l.replace(/^-\s+/,''))}</li>`).join('')}</ul>`;
+          }
+
+          // numbered list
+          if (lines.length > 1 && lines.every(l => /^\d+\.\s+/.test(l))) {
+            return `<ol>${lines.map(l => `<li>${inline(l.replace(/^\d+\.\s+/,''))}</li>`).join('')}</ol>`;
+          }
+
+          // mixed paragraph — promote a leading heading, keep the rest inline
+          const out = lines.map(l => {
+            if (/^#{2,4}\s+/.test(l)) {
+              const tag = l.match(/^#+/)[0].length === 2 ? 'h3' : 'h4';
+              return `</p><${tag} class="md-h">${inline(l.replace(/^#+\s+/,''))}</${tag}><p>`;
+            }
+            if (/^-\s+/.test(l)) return `• ${inline(l.replace(/^-\s+/,''))}<br>`;
+            return `${inline(l)}<br>`;
+          }).join('');
+          return `<p>${out}</p>`.replace(/<p><\/p>/g,'').replace(/<br><\/p>/g,'</p>');
+        })
         .join('');
     }
 

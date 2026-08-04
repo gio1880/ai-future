@@ -5,7 +5,7 @@
     "teamId": "team-01",
     "assignedTo": "student-team-01-a",
     "title": "What is Bioluminescence?",
-    "description": "The season is called BIOGLOW — so let's learn about how nature actually glows! **Bioluminescence** is when living things produce their own light through a chemical reaction inside their bodies.\n\n**How it works:**\nA molecule called **luciferin** reacts with oxygen, helped by an enzyme called **luciferase**. The reaction releases energy as light — a cold light, with almost no heat. (A light bulb wastes most of its energy as heat; a firefly wastes almost none!)\n\n**Who glows?**\n- **Fireflies** — flash patterns to find mates\n- **Anglerfish** — dangle a glowing lure to attract prey in the deep sea\n- **Dinoflagellates (glowing plankton)** — light up waves and footprints on beaches when disturbed\n- **Glowing fungi** — like the ghost fungus, glow to attract insects that spread their spores\n- **Vampire squid & jellyfish** — flash or squirt glowing mucus to confuse predators\n\n**Why glow?** The big four reasons: finding mates, attracting prey, scaring or confusing predators, and communication.",
+    "description": "BIOGLOW gets its name from living things that make their own light. It's a great hook into this season — but here's the thing to know up front: **the official challenge is about biodiversity**, not only about glowing.\n\n> **Your season challenge:** Identify a problem that puts biodiversity at risk, and design an innovative solution that can help.\n\nGlowing species are one of the most striking *examples* of biodiversity, and several of them are genuinely at risk — which makes them a strong starting point for your Innovation Project.\n\n## ✨ What is bioluminescence?\n\nBioluminescence is light made by a living thing through a chemical reaction inside its body. A molecule called **luciferin** reacts with oxygen, helped along by an enzyme called **luciferase**, and the energy comes out as light instead of heat. That's why it's called \"cold light\" — a firefly's glow is nearly 100% light and almost no wasted warmth, far more efficient than a light bulb.\n\n## 🌊 Who glows, and why\n\n| Creature | Why it glows |\n|---|---|\n| **Fireflies** | Flash patterns to find a mate |\n| **Anglerfish** | A glowing lure to attract prey in the deep sea |\n| **Dinoflagellates** (plankton) | Flash when disturbed — startles predators, lights up waves |\n| **Foxfire fungi** | Glowing mushrooms that may attract spore-spreading insects |\n| **Glowworms** | Sticky glowing threads to trap insects in caves |\n\nMost bioluminescence on Earth is in the **ocean** — the deep sea is the largest habitat on the planet, and the majority of animals down there make light.\n\n## 🔗 Why this matters for biodiversity\n\nGlowing species are sensitive indicators. Fireflies are declining from **light pollution**, habitat loss, and pesticides — when porch lights and streetlights wash out the dark, fireflies can't see each other's mating flashes. Fewer fireflies means fewer insects feeding local birds. A species disappearing is rarely just one species.\n\nThat's your bridge: a glowing species is a vivid, *specific*, often *local* way into a real biodiversity problem.",
     "category": "Pre-Season",
     "type": "lesson",
     "workContext": "home",
@@ -15,25 +15,35 @@
       {
         "id": "q1",
         "type": "textarea",
-        "label": "In your own words, what is bioluminescence and how does the chemical reaction work?",
-        "placeholder": "Use the words luciferin and luciferase if you can..."
+        "label": "In your own words, how does bioluminescence work?",
+        "placeholder": "Mention luciferin, luciferase, and why it is called \"cold light\"...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
-        "label": "Pick one glowing creature and explain WHY it glows. What does the light do for it?",
-        "placeholder": "Firefly, anglerfish, plankton, fungus, squid... what's the survival advantage?"
+        "label": "Pick one glowing organism and explain why it glows.",
+        "placeholder": "Mating, luring prey, defense, or something else...",
+        "allowAttach": true
       },
       {
         "id": "q3",
-        "type": "text",
-        "label": "Fireflies make light with almost no heat. Why might engineers be interested in copying that?",
-        "placeholder": "Think about light bulbs, energy waste, efficiency..."
+        "type": "textarea",
+        "label": "How could light pollution put a glowing species at risk?",
+        "placeholder": "Think about what happens when a firefly cannot see another firefly flash...",
+        "allowAttach": true
+      },
+      {
+        "id": "q4",
+        "type": "textarea",
+        "label": "Could a glowing species be the start of your Innovation Project? What problem would you tackle?",
+        "placeholder": "Remember the official prompt: a problem that puts biodiversity at risk...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-10T00:00:00.000Z",
-    "updatedAt": "2026-06-10T00:00:00.000Z"
+    "updatedAt": "2026-08-04T17:53:06.979Z"
   },
   {
     "id": "task-glowing-ecosystems",
@@ -77,7 +87,7 @@
     "teamId": "team-01",
     "assignedTo": "student-team-01-a",
     "title": "Glow Hunt: Research 3 Bioluminescent Organisms",
-    "description": "Time to become a bioluminescence researcher! Pick **3 organisms that glow** (or use light in a cool way) and dig into how and why they do it.\n\n**Ideas to get you started:** fireflies, anglerfish, dinoflagellates, ghost fungus, glow-worms, vampire squid, crystal jellyfish, lanternfish, railroad worms, flashlight fish, foxfire fungus, comb jellies...\n\n**Good sources:** National Geographic, Smithsonian Ocean, Monterey Bay Aquarium, your local library. Write your findings in your own words — no copy-paste!\n\n**Bonus connection:** the crystal jellyfish's glowing protein (GFP) won scientists a Nobel Prize — doctors now use it to watch diseases move through cells. Nature's glow is already saving lives. What else could it do?",
+    "description": "Time to research like a scientist. You'll pick **3 bioluminescent organisms**, learn their stories, and — this is the part that matters for your season — figure out **what puts each one at risk**.\n\n> **Your season challenge:** Identify a problem that puts biodiversity at risk, and design an innovative solution that can help.\n\n## 🔍 For each of your 3 organisms, find out\n\n1. **Name** (common + scientific if you can find it)\n2. **Where it lives** — ocean, forest, cave, freshwater?\n3. **Why it glows** — mating, luring prey, defense, camouflage?\n4. **What threatens it** — light pollution, habitat loss, warming water, pesticides, pollution?\n5. **Who else depends on it** — what eats it, or what does it eat? What breaks if it disappears?\n\nThat last question is the biodiversity question. Nothing in an ecosystem exists alone.\n\n## 📚 Good places to look\n\n- National Geographic and Smithsonian Ocean\n- NOAA Ocean Exploration (great for deep-sea species)\n- Your local nature center, park website, or state wildlife agency\n- **Xerces Society** — excellent on firefly and pollinator declines\n\n## 💡 Keep an eye out\n\nWhile researching, note anything that makes you think *\"someone should fix that.\"* Those notes feed straight into your Step 1 brainstorm — and one of them might become your team's Innovation Project.",
     "category": "Pre-Season",
     "type": "submission",
     "workContext": "home",
@@ -87,28 +97,44 @@
     "photoPrompt": "Optional: upload a drawing or notes page of your favorite glowing organism.",
     "questions": [
       {
-        "id": "glow-chart",
-        "type": "table",
-        "label": "Research 3 glowing organisms and fill out your chart:",
-        "columns": [
-          "Organism",
-          "Where it lives",
-          "Why it glows",
-          "Coolest fact you found"
-        ],
-        "minRows": 3,
-        "maxRows": 6
-      },
-      {
         "id": "q1",
         "type": "textarea",
-        "label": "Which organism amazed you the most, and what question would you want to ask a scientist about it?",
-        "placeholder": "What are you still curious about after your research?"
+        "label": "Organism 1 — name, where it lives, why it glows, and what threatens it:",
+        "placeholder": "Add a photo or a link to your best source...",
+        "allowAttach": true
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "label": "Organism 2 — name, where it lives, why it glows, and what threatens it:",
+        "placeholder": "Add a photo or a link to your best source...",
+        "allowAttach": true
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
+        "label": "Organism 3 — name, where it lives, why it glows, and what threatens it:",
+        "placeholder": "Add a photo or a link to your best source...",
+        "allowAttach": true
+      },
+      {
+        "id": "q4",
+        "type": "textarea",
+        "label": "Which of the three is most at risk, and what would be lost if it disappeared?",
+        "placeholder": "Think about the whole food web around it, not just the one species...",
+        "allowAttach": true
+      },
+      {
+        "id": "q5",
+        "type": "textarea",
+        "label": "What did you find that made you think \"someone should fix that\"?",
+        "placeholder": "Save these — they feed your Step 1 brainstorm...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-10T00:00:00.000Z",
-    "updatedAt": "2026-06-10T00:00:00.000Z"
+    "updatedAt": "2026-08-04T17:53:06.979Z"
   },
   {
     "id": "task-watch-teaser",
@@ -155,8 +181,8 @@
     "assignmentId": "assignment-kickoff-prep",
     "teamId": "team-01",
     "assignedTo": "student-team-01-a",
-    "title": "Explore the BIOGLOW Season Theme",
-    "description": "Before the official challenge drops, researchers have already been studying the problems BIOGLOW will focus on. Read through the background below, then answer the questions using your own words. There are no wrong answers — just think like a scientist!\n\n**What is an ecosystem?**\nAn ecosystem is a community of living things (plants, animals, fungi, bacteria) interacting with each other and their environment. Healthy ecosystems provide clean air, water, food, and stability for all life on Earth.\n\n**What is biodiversity?**\nBiodiversity means the variety of life in an area. The more diverse an ecosystem, the more resilient it is — like a team where everyone has different skills.\n\n**What is nature-inspired technology (biomimicry)?**\nBiomimicry is when engineers look to nature for design ideas. Examples: Velcro was inspired by burrs, bullet trains shaped like kingfisher beaks, solar panels modeled on leaves.",
+    "title": "The Official BIOGLOW Challenge 🌍",
+    "description": "The official BIOGLOW season is here. This is the actual challenge your team will be judged on, straight from the FIRST LEGO League Challenge Team Meeting Guide.\n\n## 🎯 Your Innovation Project challenge\n\n> **Identify a problem that puts biodiversity at risk, and design an innovative solution that can help.**\n\nThat one sentence is the whole season. Every research assignment, every prototype, every slide you build points back at it.\n\n## 🌱 What \"biodiversity\" means here\n\nBiodiversity is the variety of life in a place — plants, animals, fungi, insects, bacteria — and how they depend on each other. It's a health signal for the planet: the more varied the life in an ecosystem, the better that ecosystem survives shocks like disease, drought, or a new predator. When species disappear, the whole web gets more fragile.\n\nBIOGLOW is part of the larger **FIRST CANOPY** season. The big idea: scientists and engineers protect nature by observing animals, monitoring plant diversity, and building technology inspired by the natural world — and your team is going to do exactly that.\n\n## 💡 Project Sparks\n\nYour Engineering Notebook (page 6) has a set of **Project Sparks** — starter problems the challenge suggests. Your team can:\n- Pick one of the Project Sparks, **or**\n- Choose a biodiversity problem of your own\n\nBoth are completely allowed. Local problems tend to impress judges, because you can talk to real people affected by them.\n\n## ⏱ The deadline that matters\n\nYour team must **lock in its problem statement by Session 3**. Explore widely now, then commit.\n\n## 🏆 The three judged areas\n\n| Area | What you present |\n|---|---|\n| **Innovation Project** | The biodiversity problem you chose + your solution |\n| **Robot Design** | How you designed, built, and coded your robot (5-minute explanation) |\n| **Core Values** | How your team works together — judged across *everything* |\n\nRead it all, then answer below in your own words.",
     "category": "Innovation Project",
     "type": "lesson",
     "workContext": "home",
@@ -166,35 +192,35 @@
       {
         "id": "q1",
         "type": "textarea",
-        "label": "In your own words, what is an ecosystem and why does it matter?",
-        "placeholder": "Explain it like you're describing it to a friend who has never heard the word before...",
+        "label": "In your own words, what is the BIOGLOW challenge asking your team to do this season?",
+        "placeholder": "Say it like you would explain it to a friend who has never heard of FLL...",
         "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
-        "label": "Give one real-world example of how losing biodiversity could be a problem.",
-        "placeholder": "Think about food chains, pollinators, forests, oceans... what happens when one species disappears?",
+        "label": "What does biodiversity mean, and why does it matter that it stays healthy?",
+        "placeholder": "Think about what happens to an ecosystem when species start disappearing...",
         "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
-        "label": "Pick one animal or plant and describe one thing engineers could copy from it to solve a human problem.",
-        "placeholder": "Think about how the creature moves, builds, survives, or senses its environment...",
+        "label": "Name a biodiversity problem you have noticed near where YOU live.",
+        "placeholder": "Fewer bees or fireflies than you remember? A polluted creek? Trees being cut? Invasive plants taking over a park?",
         "allowAttach": true
       },
       {
         "id": "q4",
-        "type": "text",
-        "label": "What ecosystem or nature topic would you most want your team to research this season?",
-        "placeholder": "Oceans, rainforests, pollinators, soil, urban wildlife...",
+        "type": "textarea",
+        "label": "Which Project Spark (or your own idea) does your team want to explore, and why does it interest you?",
+        "placeholder": "You are not locked in yet — this is your starting direction before Session 3...",
         "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-08T00:00:00.000Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z"
+    "updatedAt": "2026-08-04T17:53:06.979Z"
   },
   {
     "id": "task-kit-check-batteries",
@@ -202,7 +228,7 @@
     "teamId": "team-01",
     "assignedTo": "student-team-01-a",
     "title": "Prepare for Mission Release Day",
-    "description": "On August 4th, the official BIOGLOW field and missions will be released. The best teams hit the ground running — they already know the mission categories and have a plan for how to analyze them.\n\nReview the five core robot-game mission types below, then complete the assignment by writing your own notes and submitting a photo of your preparation work.\n\n**Mission Types:**\n- **Push / Pull** — Robot nudges or drags an object into a scoring zone\n- **Drop-off** — Robot carries an item and releases it in the right spot\n- **Pick-up** — Robot grabs or lifts an item from a location\n- **Lift / Raise** — Robot lifts a beam, flap, or platform to a specific position\n- **Precision** — Robot must interact with a small target or stop at an exact position",
+    "description": "The official BIOGLOW robot game is built around mission models you construct from your **Challenge Set** and secure to the challenge mat. The best teams hit the ground running — they know how the game works before they touch a mission.\n\n## 🤖 How the robot game actually works\n\n| Fact | Detail |\n|---|---|\n| **Match length** | **2.5 minutes** |\n| **Where missions are defined** | The **Robot Game Rulebook** in your Challenge Set + the season mission video |\n| **Field setup** | Page 7 of the Rulebook — models attach to the mat with **Dual Lock** squares |\n| **Your kit** | LEGO Education **SPIKE Prime** set + BIOGLOW **Challenge Set** |\n| **Where to take notes** | **Page 30** of your Engineering Notebook (make copies — one per mission) |\n\n## 🎓 The robot skills the season expects\n\nThe official session plan builds your driving skills in this order, using the SPIKE app's **Competition Ready** unit:\n\n1. **Training Camp 1 — Driving Around:** move forward, backward, and turn\n2. **Training Camp 2 — Playing with Objects:** power an attachment, avoid obstacles with a sensor\n3. **Training Camp 3 — Reacting to Lines:** follow and detect lines with a sensor\n4. **Guided Mission:** run one full mission until it works *consistently*\n5. *(Optional)* **Assembling an Advanced Driving Base**\n\n## 📋 Mission types you will see\n\nEvery FLL season's missions are built from the same handful of actions. Learning to spot them makes analyzing a brand-new mission fast:\n\n- **Push / Pull** — nudge or drag an object into a scoring zone\n- **Drop-off** — carry an item and release it in the right spot\n- **Pick-up** — grab or lift an item from a location\n- **Lift / Raise** — raise a beam, flap, or platform to a position\n- **Precision** — hit a small target or stop at an exact spot\n\n## ✅ Your job right now\n\nBuild the mission models carefully, set up the field from the Rulebook, watch the mission video, and figure out how the models connect to the **Project Sparks** on page 6 of your notebook. Then answer below.\n\n*(Coach note: once your Challenge Set arrives, the specific mission names and point values come from the Robot Game Rulebook — record them on the Mission Analysis Board assignment.)*",
     "category": "Robot Game",
     "type": "submission",
     "workContext": "lab",
@@ -214,28 +240,42 @@
       {
         "id": "q1",
         "type": "textarea",
-        "label": "For each mission type (push/pull, drop-off, pick-up, lift, precision) — write one example of what it might look like on a BIOGLOW field.",
-        "placeholder": "Push/Pull: pushing a log into a river zone...\nDrop-off: delivering a seed pod...\nPick-up: grabbing a coral piece...\nLift: raising a habitat gate...\nPrecision: stopping at a GPS marker...",
+        "label": "Which mission models did you build, and which one looks most interesting to your team?",
+        "placeholder": "Describe what the model does when your robot interacts with it...",
         "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
-        "label": "Which mission type do you think will be the hardest for your robot to do? Why?",
-        "placeholder": "Think about what your robot needs to do mechanically — grippers, arms, positioning...",
+        "label": "For each mission type (push/pull, drop-off, pick-up, lift, precision) — write one example you can see on your BIOGLOW field.",
+        "placeholder": "Walk the mat and match each model to the action your robot would need to do...",
         "allowAttach": true
       },
       {
         "id": "q3",
-        "type": "text",
-        "label": "On a scale of 1–10, how ready do you feel for mission release day? What would make you more ready?",
-        "placeholder": "e.g. 7/10 — I'd feel more ready if I practiced driving more...",
+        "type": "textarea",
+        "label": "How do the mission models connect to the biodiversity theme and the Project Sparks?",
+        "placeholder": "What real-world nature story does each model seem to be telling?",
+        "allowAttach": true
+      },
+      {
+        "id": "q4",
+        "type": "textarea",
+        "label": "Which mission type do you think will be hardest for your robot? Why?",
+        "placeholder": "Think about precision, attachments, and how far the robot has to drive...",
+        "allowAttach": true
+      },
+      {
+        "id": "q5",
+        "type": "textarea",
+        "label": "On a scale of 1–10, how ready does your team feel for the robot game? What would make you more ready?",
+        "placeholder": "Be honest — this tells your coach what to work on next...",
         "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-08T00:00:00.000Z",
-    "updatedAt": "2026-06-08T00:00:00.000Z"
+    "updatedAt": "2026-08-04T17:53:06.979Z"
   },
   {
     "id": "task-robot-game-analysis",
@@ -609,7 +649,7 @@
     "teamId": "team-01",
     "assignedTo": "student-team-01-a",
     "title": "Step 2 — Pick Your Problem",
-    "description": "Every great Innovation Project starts with a clearly defined problem. Not \"pollution is bad\" — that's too big. A great FLL problem is **specific, real, and affects real people or ecosystems**.\n\n**A strong problem statement answers:**\n1. **WHO** is affected? (people, animals, an ecosystem)\n2. **WHAT** exactly is the problem?\n3. **WHERE** does it happen? (bonus points if it's local!)\n4. **WHY** does it matter?\n\n**Example:** \"Fireflies in our county are disappearing because streetlights and porch lights confuse their mating flashes. Local kids may grow up never seeing a firefly.\" — specific, local, and you can picture who loses.\n\nUse everything you learned in your research assignments (bioluminescence, glowing ecosystems, expert research) to pick the problem your team will solve this season.",
+    "description": "Every great Innovation Project starts with a clearly defined problem. Not \"pollution is bad\" — that's too big. A great FLL problem is **specific, real, and affects real people or ecosystems**.\n\n## 🎯 It has to connect to the official prompt\n\n> **Identify a problem that puts biodiversity at risk, and design an innovative solution that can help.**\n\nYour problem statement must make the biodiversity link obvious. A judge should read it and immediately see what living thing is at risk.\n\n## ✍️ A strong problem statement answers\n\n1. **WHO / WHAT** is affected? (a species, an ecosystem, a community)\n2. **WHAT** exactly is the problem?\n3. **WHERE** does it happen? (bonus points if it's local!)\n4. **WHY** does it matter — and **why does the problem exist**?\n5. **WHO** would benefit if it got solved?\n\n**Example:** \"Fireflies in our county are disappearing because streetlights and porch lights drown out their mating flashes. Fewer fireflies means fewer of the insects that feed local birds — and local kids may grow up never seeing one.\" — specific, local, biodiversity link is crystal clear.\n\n## 📓 Where this goes\n\nWrite your final statement on the **Innovation Project Planning sheet (page 29)** of your Engineering Notebook. That's the page judges and your coach will look at all season.\n\n## 🤝 Choose something everyone supports\n\nYour team probably won't pick every member's favorite. That's normal. What matters is landing on a problem **everyone is willing to get behind** — that's the Core Value of Inclusion in action.\n\n⏱ **Due by Session 3** — this is the deadline set by the official season guide.",
     "category": "Innovation Project",
     "type": "submission",
     "workContext": "class",
@@ -619,19 +659,33 @@
       {
         "id": "q1",
         "type": "textarea",
-        "label": "Write your team's problem statement. Cover WHO, WHAT, WHERE, and WHY.",
-        "placeholder": "Be specific! Who is affected, what exactly is happening, where, and why does it matter...",
+        "label": "Write your team's problem statement. Cover WHO/WHAT, WHERE, and WHY.",
+        "placeholder": "Be specific! What living thing or ecosystem is at risk, what exactly is happening, where, and why does it matter...",
         "allowAttach": true
       },
       {
         "id": "q2",
+        "type": "textarea",
+        "label": "How does this problem put BIODIVERSITY at risk? Make the link obvious.",
+        "placeholder": "What species or ecosystem loses out, and what happens to the web around it...",
+        "allowAttach": true
+      },
+      {
+        "id": "q3",
         "type": "textarea",
         "label": "How do you KNOW this is a real problem? List at least 2 sources or pieces of evidence.",
         "placeholder": "An article you read, an expert you found, something from your field trip research, a statistic...",
         "allowAttach": true
       },
       {
-        "id": "q3",
+        "id": "q4",
+        "type": "textarea",
+        "label": "Why does this problem exist in the first place, and who would benefit most if it were solved?",
+        "placeholder": "Causes matter — judges ask about them. And name the people, animals, or places that win...",
+        "allowAttach": true
+      },
+      {
+        "id": "q5",
         "type": "text",
         "label": "Who could you talk to who deals with this problem in real life?",
         "placeholder": "Pull from your expert research — a scientist, ranger, engineer, organization...",
@@ -640,7 +694,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z"
+    "updatedAt": "2026-08-04T17:53:06.979Z"
   },
   {
     "id": "task-innovation-existing-solutions",
@@ -1078,43 +1132,33 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z",
+    "updatedAt": "2026-08-04T17:53:06.979Z",
     "id": "task-innovation-brainstorm",
     "title": "Step 1 — Brainstorm: Problems & Solution Ideas 🧠",
     "type": "submission",
     "workContext": "class",
     "dueDate": "2026-08-08",
-    "description": "Great teams never run with their FIRST idea — they brainstorm MANY ideas and pick the best. Today there are no bad ideas: quantity beats quality, wild ideas welcome, build on each other.\n\n**Round 1 — Problem Storm (15 min):** Using everything from your bio research (bioluminescence, glowing ecosystems, experts, field trips), list every ecosystem problem you can think of. Aim for at least 5. Local problems score bonus points with judges!\n\n**Round 2 — Solution Storm (15 min):** Pick your 2-3 favorite problems and throw out every solution idea you can imagine — devices, apps, campaigns, new materials, nature-inspired designs. At least 5 total.\n\n**Brainstorm rules:**\n- No criticizing ideas during the storm — judge later, generate now\n- Wild ideas are welcome (they often hide great ones inside)\n- Build on teammates: 'yes, AND...' beats 'no, but...'\n- Write everything down, even the silly ones",
+    "description": "Great teams never run with their FIRST idea — they brainstorm MANY ideas and pick the best. Today there are no bad ideas: quantity beats quality, wild ideas welcome, build on each other.\n\n## 🎯 Aim everything at the official prompt\n\n> **Identify a problem that puts biodiversity at risk, and design an innovative solution that can help.**\n\nSo every problem on your list should finish this sentence: *\"This puts biodiversity at risk because…\"* If it doesn't, it's a fine idea — just not a BIOGLOW idea.\n\n**Round 1 — Problem Storm (15 min):** List every biodiversity problem you can think of. Pull from your research, the **Project Sparks** on page 6 of your Engineering Notebook, and things you have actually seen near home. Aim for at least 5. Local problems score bonus points with judges.\n\nPlaces to look for problems:\n- 🐝 **Pollinators** — bees, butterflies, and the food supply that depends on them\n- 🌊 **Water** — runoff, plastics, warming water, fish and amphibians\n- 🌳 **Habitat loss** — building, farming, and roads splitting habitats apart\n- 🦠 **Invasive species** — plants or animals crowding out natives\n- 💡 **Light and noise pollution** — confusing animals that navigate by dark and quiet (this is where fireflies and other glowing species come in!)\n- 🌡️ **Climate shifts** — species moving, blooming, or migrating at the wrong time\n\n**Round 2 — Solution Storm (15 min):** Pick your 2-3 favorite problems and throw out every solution idea you can imagine — devices, apps, campaigns, new materials, nature-inspired designs. At least 5 total.\n\n**Brainstorm rules:**\n- No criticizing ideas during the storm — judge later, generate now\n- Wild ideas are welcome (they often hide great ones inside)\n- Build on teammates: 'yes, AND...' beats 'no, but...'\n- Write everything down, even the silly ones\n\n⏱ **Remember:** your problem statement is due by **Session 3**, so go wide today.",
     "questions": [
-      {
-        "id": "problems-chart",
-        "type": "table",
-        "label": "Round 1 — list at least 5 ecosystem problems your team could research:",
-        "columns": [
-          "Problem",
-          "Who/what is affected",
-          "Why it interests your team"
-        ],
-        "minRows": 5,
-        "maxRows": 10
-      },
-      {
-        "id": "solutions-chart",
-        "type": "table",
-        "label": "Round 2 — list at least 5 solution ideas for your favorite problems:",
-        "columns": [
-          "Solution idea",
-          "Which problem it solves",
-          "Wild or realistic?"
-        ],
-        "minRows": 5,
-        "maxRows": 10
-      },
       {
         "id": "q1",
         "type": "textarea",
+        "label": "Round 1 — list at least 5 biodiversity problems your team could research:",
+        "placeholder": "For each one, finish the sentence: \"This puts biodiversity at risk because...\"",
+        "allowAttach": true
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "label": "Round 2 — list at least 5 solution ideas for your favorite problems:",
+        "placeholder": "Devices, apps, campaigns, materials, nature-inspired designs — go wide, judge later...",
+        "allowAttach": true
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
         "label": "Which 2 problems are your team favorites going into Step 2, and why?",
-        "placeholder": "We are most excited about ___ because... Our second pick is ___ because...",
+        "placeholder": "Which ones are specific, local, and something you could actually help with?",
         "allowAttach": true
       }
     ]
@@ -1505,7 +1549,7 @@
     "teamId": "team-demo",
     "assignedTo": "fll-demo-student",
     "title": "What is Bioluminescence?",
-    "description": "The season is called BIOGLOW — so let's learn about how nature actually glows! **Bioluminescence** is when living things produce their own light through a chemical reaction inside their bodies.\n\n**How it works:**\nA molecule called **luciferin** reacts with oxygen, helped by an enzyme called **luciferase**. The reaction releases energy as light — a cold light, with almost no heat. (A light bulb wastes most of its energy as heat; a firefly wastes almost none!)\n\n**Who glows?**\n- **Fireflies** — flash patterns to find mates\n- **Anglerfish** — dangle a glowing lure to attract prey in the deep sea\n- **Dinoflagellates (glowing plankton)** — light up waves and footprints on beaches when disturbed\n- **Glowing fungi** — like the ghost fungus, glow to attract insects that spread their spores\n- **Vampire squid & jellyfish** — flash or squirt glowing mucus to confuse predators\n\n**Why glow?** The big four reasons: finding mates, attracting prey, scaring or confusing predators, and communication.",
+    "description": "BIOGLOW gets its name from living things that make their own light. It's a great hook into this season — but here's the thing to know up front: **the official challenge is about biodiversity**, not only about glowing.\n\n> **Your season challenge:** Identify a problem that puts biodiversity at risk, and design an innovative solution that can help.\n\nGlowing species are one of the most striking *examples* of biodiversity, and several of them are genuinely at risk — which makes them a strong starting point for your Innovation Project.\n\n## ✨ What is bioluminescence?\n\nBioluminescence is light made by a living thing through a chemical reaction inside its body. A molecule called **luciferin** reacts with oxygen, helped along by an enzyme called **luciferase**, and the energy comes out as light instead of heat. That's why it's called \"cold light\" — a firefly's glow is nearly 100% light and almost no wasted warmth, far more efficient than a light bulb.\n\n## 🌊 Who glows, and why\n\n| Creature | Why it glows |\n|---|---|\n| **Fireflies** | Flash patterns to find a mate |\n| **Anglerfish** | A glowing lure to attract prey in the deep sea |\n| **Dinoflagellates** (plankton) | Flash when disturbed — startles predators, lights up waves |\n| **Foxfire fungi** | Glowing mushrooms that may attract spore-spreading insects |\n| **Glowworms** | Sticky glowing threads to trap insects in caves |\n\nMost bioluminescence on Earth is in the **ocean** — the deep sea is the largest habitat on the planet, and the majority of animals down there make light.\n\n## 🔗 Why this matters for biodiversity\n\nGlowing species are sensitive indicators. Fireflies are declining from **light pollution**, habitat loss, and pesticides — when porch lights and streetlights wash out the dark, fireflies can't see each other's mating flashes. Fewer fireflies means fewer insects feeding local birds. A species disappearing is rarely just one species.\n\nThat's your bridge: a glowing species is a vivid, *specific*, often *local* way into a real biodiversity problem.",
     "category": "Pre-Season",
     "type": "lesson",
     "workContext": "home",
@@ -1515,25 +1559,35 @@
       {
         "id": "q1",
         "type": "textarea",
-        "label": "In your own words, what is bioluminescence and how does the chemical reaction work?",
-        "placeholder": "Use the words luciferin and luciferase if you can..."
+        "label": "In your own words, how does bioluminescence work?",
+        "placeholder": "Mention luciferin, luciferase, and why it is called \"cold light\"...",
+        "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
-        "label": "Pick one glowing creature and explain WHY it glows. What does the light do for it?",
-        "placeholder": "Firefly, anglerfish, plankton, fungus, squid... what's the survival advantage?"
+        "label": "Pick one glowing organism and explain why it glows.",
+        "placeholder": "Mating, luring prey, defense, or something else...",
+        "allowAttach": true
       },
       {
         "id": "q3",
-        "type": "text",
-        "label": "Fireflies make light with almost no heat. Why might engineers be interested in copying that?",
-        "placeholder": "Think about light bulbs, energy waste, efficiency..."
+        "type": "textarea",
+        "label": "How could light pollution put a glowing species at risk?",
+        "placeholder": "Think about what happens when a firefly cannot see another firefly flash...",
+        "allowAttach": true
+      },
+      {
+        "id": "q4",
+        "type": "textarea",
+        "label": "Could a glowing species be the start of your Innovation Project? What problem would you tackle?",
+        "placeholder": "Remember the official prompt: a problem that puts biodiversity at risk...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-04T17:53:06.979Z"
   },
   {
     "id": "task-glowing-ecosystems--fll-demo-student",
@@ -1577,7 +1631,7 @@
     "teamId": "team-demo",
     "assignedTo": "fll-demo-student",
     "title": "Glow Hunt: Research 3 Bioluminescent Organisms",
-    "description": "Time to become a bioluminescence researcher! Pick **3 organisms that glow** (or use light in a cool way) and dig into how and why they do it.\n\n**Ideas to get you started:** fireflies, anglerfish, dinoflagellates, ghost fungus, glow-worms, vampire squid, crystal jellyfish, lanternfish, railroad worms, flashlight fish, foxfire fungus, comb jellies...\n\n**Good sources:** National Geographic, Smithsonian Ocean, Monterey Bay Aquarium, your local library. Write your findings in your own words — no copy-paste!\n\n**Bonus connection:** the crystal jellyfish's glowing protein (GFP) won scientists a Nobel Prize — doctors now use it to watch diseases move through cells. Nature's glow is already saving lives. What else could it do?",
+    "description": "Time to research like a scientist. You'll pick **3 bioluminescent organisms**, learn their stories, and — this is the part that matters for your season — figure out **what puts each one at risk**.\n\n> **Your season challenge:** Identify a problem that puts biodiversity at risk, and design an innovative solution that can help.\n\n## 🔍 For each of your 3 organisms, find out\n\n1. **Name** (common + scientific if you can find it)\n2. **Where it lives** — ocean, forest, cave, freshwater?\n3. **Why it glows** — mating, luring prey, defense, camouflage?\n4. **What threatens it** — light pollution, habitat loss, warming water, pesticides, pollution?\n5. **Who else depends on it** — what eats it, or what does it eat? What breaks if it disappears?\n\nThat last question is the biodiversity question. Nothing in an ecosystem exists alone.\n\n## 📚 Good places to look\n\n- National Geographic and Smithsonian Ocean\n- NOAA Ocean Exploration (great for deep-sea species)\n- Your local nature center, park website, or state wildlife agency\n- **Xerces Society** — excellent on firefly and pollinator declines\n\n## 💡 Keep an eye out\n\nWhile researching, note anything that makes you think *\"someone should fix that.\"* Those notes feed straight into your Step 1 brainstorm — and one of them might become your team's Innovation Project.",
     "category": "Pre-Season",
     "type": "submission",
     "workContext": "home",
@@ -1587,28 +1641,44 @@
     "photoPrompt": "Optional: upload a drawing or notes page of your favorite glowing organism.",
     "questions": [
       {
-        "id": "glow-chart",
-        "type": "table",
-        "label": "Research 3 glowing organisms and fill out your chart:",
-        "columns": [
-          "Organism",
-          "Where it lives",
-          "Why it glows",
-          "Coolest fact you found"
-        ],
-        "minRows": 3,
-        "maxRows": 6
-      },
-      {
         "id": "q1",
         "type": "textarea",
-        "label": "Which organism amazed you the most, and what question would you want to ask a scientist about it?",
-        "placeholder": "What are you still curious about after your research?"
+        "label": "Organism 1 — name, where it lives, why it glows, and what threatens it:",
+        "placeholder": "Add a photo or a link to your best source...",
+        "allowAttach": true
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "label": "Organism 2 — name, where it lives, why it glows, and what threatens it:",
+        "placeholder": "Add a photo or a link to your best source...",
+        "allowAttach": true
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
+        "label": "Organism 3 — name, where it lives, why it glows, and what threatens it:",
+        "placeholder": "Add a photo or a link to your best source...",
+        "allowAttach": true
+      },
+      {
+        "id": "q4",
+        "type": "textarea",
+        "label": "Which of the three is most at risk, and what would be lost if it disappeared?",
+        "placeholder": "Think about the whole food web around it, not just the one species...",
+        "allowAttach": true
+      },
+      {
+        "id": "q5",
+        "type": "textarea",
+        "label": "What did you find that made you think \"someone should fix that\"?",
+        "placeholder": "Save these — they feed your Step 1 brainstorm...",
+        "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-04T17:53:06.979Z"
   },
   {
     "id": "task-watch-teaser--fll-demo-student",
@@ -1655,8 +1725,8 @@
     "assignmentId": "assignment-kickoff-prep",
     "teamId": "team-demo",
     "assignedTo": "fll-demo-student",
-    "title": "Explore the BIOGLOW Season Theme",
-    "description": "Before the official challenge drops, researchers have already been studying the problems BIOGLOW will focus on. Read through the background below, then answer the questions using your own words. There are no wrong answers — just think like a scientist!\n\n**What is an ecosystem?**\nAn ecosystem is a community of living things (plants, animals, fungi, bacteria) interacting with each other and their environment. Healthy ecosystems provide clean air, water, food, and stability for all life on Earth.\n\n**What is biodiversity?**\nBiodiversity means the variety of life in an area. The more diverse an ecosystem, the more resilient it is — like a team where everyone has different skills.\n\n**What is nature-inspired technology (biomimicry)?**\nBiomimicry is when engineers look to nature for design ideas. Examples: Velcro was inspired by burrs, bullet trains shaped like kingfisher beaks, solar panels modeled on leaves.",
+    "title": "The Official BIOGLOW Challenge 🌍",
+    "description": "The official BIOGLOW season is here. This is the actual challenge your team will be judged on, straight from the FIRST LEGO League Challenge Team Meeting Guide.\n\n## 🎯 Your Innovation Project challenge\n\n> **Identify a problem that puts biodiversity at risk, and design an innovative solution that can help.**\n\nThat one sentence is the whole season. Every research assignment, every prototype, every slide you build points back at it.\n\n## 🌱 What \"biodiversity\" means here\n\nBiodiversity is the variety of life in a place — plants, animals, fungi, insects, bacteria — and how they depend on each other. It's a health signal for the planet: the more varied the life in an ecosystem, the better that ecosystem survives shocks like disease, drought, or a new predator. When species disappear, the whole web gets more fragile.\n\nBIOGLOW is part of the larger **FIRST CANOPY** season. The big idea: scientists and engineers protect nature by observing animals, monitoring plant diversity, and building technology inspired by the natural world — and your team is going to do exactly that.\n\n## 💡 Project Sparks\n\nYour Engineering Notebook (page 6) has a set of **Project Sparks** — starter problems the challenge suggests. Your team can:\n- Pick one of the Project Sparks, **or**\n- Choose a biodiversity problem of your own\n\nBoth are completely allowed. Local problems tend to impress judges, because you can talk to real people affected by them.\n\n## ⏱ The deadline that matters\n\nYour team must **lock in its problem statement by Session 3**. Explore widely now, then commit.\n\n## 🏆 The three judged areas\n\n| Area | What you present |\n|---|---|\n| **Innovation Project** | The biodiversity problem you chose + your solution |\n| **Robot Design** | How you designed, built, and coded your robot (5-minute explanation) |\n| **Core Values** | How your team works together — judged across *everything* |\n\nRead it all, then answer below in your own words.",
     "category": "Innovation Project",
     "type": "lesson",
     "workContext": "home",
@@ -1666,35 +1736,35 @@
       {
         "id": "q1",
         "type": "textarea",
-        "label": "In your own words, what is an ecosystem and why does it matter?",
-        "placeholder": "Explain it like you're describing it to a friend who has never heard the word before...",
+        "label": "In your own words, what is the BIOGLOW challenge asking your team to do this season?",
+        "placeholder": "Say it like you would explain it to a friend who has never heard of FLL...",
         "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
-        "label": "Give one real-world example of how losing biodiversity could be a problem.",
-        "placeholder": "Think about food chains, pollinators, forests, oceans... what happens when one species disappears?",
+        "label": "What does biodiversity mean, and why does it matter that it stays healthy?",
+        "placeholder": "Think about what happens to an ecosystem when species start disappearing...",
         "allowAttach": true
       },
       {
         "id": "q3",
         "type": "textarea",
-        "label": "Pick one animal or plant and describe one thing engineers could copy from it to solve a human problem.",
-        "placeholder": "Think about how the creature moves, builds, survives, or senses its environment...",
+        "label": "Name a biodiversity problem you have noticed near where YOU live.",
+        "placeholder": "Fewer bees or fireflies than you remember? A polluted creek? Trees being cut? Invasive plants taking over a park?",
         "allowAttach": true
       },
       {
         "id": "q4",
-        "type": "text",
-        "label": "What ecosystem or nature topic would you most want your team to research this season?",
-        "placeholder": "Oceans, rainforests, pollinators, soil, urban wildlife...",
+        "type": "textarea",
+        "label": "Which Project Spark (or your own idea) does your team want to explore, and why does it interest you?",
+        "placeholder": "You are not locked in yet — this is your starting direction before Session 3...",
         "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z"
+    "updatedAt": "2026-08-04T17:53:06.979Z"
   },
   {
     "id": "task-hub-check--fll-demo-student",
@@ -1933,7 +2003,7 @@
     "teamId": "team-demo",
     "assignedTo": "fll-demo-student",
     "title": "Step 2 — Pick Your Problem",
-    "description": "Every great Innovation Project starts with a clearly defined problem. Not \"pollution is bad\" — that's too big. A great FLL problem is **specific, real, and affects real people or ecosystems**.\n\n**A strong problem statement answers:**\n1. **WHO** is affected? (people, animals, an ecosystem)\n2. **WHAT** exactly is the problem?\n3. **WHERE** does it happen? (bonus points if it's local!)\n4. **WHY** does it matter?\n\n**Example:** \"Fireflies in our county are disappearing because streetlights and porch lights confuse their mating flashes. Local kids may grow up never seeing a firefly.\" — specific, local, and you can picture who loses.\n\nUse everything you learned in your research assignments (bioluminescence, glowing ecosystems, expert research) to pick the problem your team will solve this season.",
+    "description": "Every great Innovation Project starts with a clearly defined problem. Not \"pollution is bad\" — that's too big. A great FLL problem is **specific, real, and affects real people or ecosystems**.\n\n## 🎯 It has to connect to the official prompt\n\n> **Identify a problem that puts biodiversity at risk, and design an innovative solution that can help.**\n\nYour problem statement must make the biodiversity link obvious. A judge should read it and immediately see what living thing is at risk.\n\n## ✍️ A strong problem statement answers\n\n1. **WHO / WHAT** is affected? (a species, an ecosystem, a community)\n2. **WHAT** exactly is the problem?\n3. **WHERE** does it happen? (bonus points if it's local!)\n4. **WHY** does it matter — and **why does the problem exist**?\n5. **WHO** would benefit if it got solved?\n\n**Example:** \"Fireflies in our county are disappearing because streetlights and porch lights drown out their mating flashes. Fewer fireflies means fewer of the insects that feed local birds — and local kids may grow up never seeing one.\" — specific, local, biodiversity link is crystal clear.\n\n## 📓 Where this goes\n\nWrite your final statement on the **Innovation Project Planning sheet (page 29)** of your Engineering Notebook. That's the page judges and your coach will look at all season.\n\n## 🤝 Choose something everyone supports\n\nYour team probably won't pick every member's favorite. That's normal. What matters is landing on a problem **everyone is willing to get behind** — that's the Core Value of Inclusion in action.\n\n⏱ **Due by Session 3** — this is the deadline set by the official season guide.",
     "category": "Innovation Project",
     "type": "submission",
     "workContext": "class",
@@ -1943,19 +2013,33 @@
       {
         "id": "q1",
         "type": "textarea",
-        "label": "Write your team's problem statement. Cover WHO, WHAT, WHERE, and WHY.",
-        "placeholder": "Be specific! Who is affected, what exactly is happening, where, and why does it matter...",
+        "label": "Write your team's problem statement. Cover WHO/WHAT, WHERE, and WHY.",
+        "placeholder": "Be specific! What living thing or ecosystem is at risk, what exactly is happening, where, and why does it matter...",
         "allowAttach": true
       },
       {
         "id": "q2",
+        "type": "textarea",
+        "label": "How does this problem put BIODIVERSITY at risk? Make the link obvious.",
+        "placeholder": "What species or ecosystem loses out, and what happens to the web around it...",
+        "allowAttach": true
+      },
+      {
+        "id": "q3",
         "type": "textarea",
         "label": "How do you KNOW this is a real problem? List at least 2 sources or pieces of evidence.",
         "placeholder": "An article you read, an expert you found, something from your field trip research, a statistic...",
         "allowAttach": true
       },
       {
-        "id": "q3",
+        "id": "q4",
+        "type": "textarea",
+        "label": "Why does this problem exist in the first place, and who would benefit most if it were solved?",
+        "placeholder": "Causes matter — judges ask about them. And name the people, animals, or places that win...",
+        "allowAttach": true
+      },
+      {
+        "id": "q5",
         "type": "text",
         "label": "Who could you talk to who deals with this problem in real life?",
         "placeholder": "Pull from your expert research — a scientist, ranger, engineer, organization...",
@@ -1964,7 +2048,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z"
+    "updatedAt": "2026-08-04T17:53:06.979Z"
   },
   {
     "id": "task-innovation-existing-solutions--fll-demo-student",
@@ -2355,43 +2439,33 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z",
+    "updatedAt": "2026-08-04T17:53:06.979Z",
     "id": "task-innovation-brainstorm--fll-demo-student",
     "title": "Step 1 — Brainstorm: Problems & Solution Ideas 🧠",
     "type": "submission",
     "workContext": "class",
     "dueDate": "2026-08-08",
-    "description": "Great teams never run with their FIRST idea — they brainstorm MANY ideas and pick the best. Today there are no bad ideas: quantity beats quality, wild ideas welcome, build on each other.\n\n**Round 1 — Problem Storm (15 min):** Using everything from your bio research (bioluminescence, glowing ecosystems, experts, field trips), list every ecosystem problem you can think of. Aim for at least 5. Local problems score bonus points with judges!\n\n**Round 2 — Solution Storm (15 min):** Pick your 2-3 favorite problems and throw out every solution idea you can imagine — devices, apps, campaigns, new materials, nature-inspired designs. At least 5 total.\n\n**Brainstorm rules:**\n- No criticizing ideas during the storm — judge later, generate now\n- Wild ideas are welcome (they often hide great ones inside)\n- Build on teammates: 'yes, AND...' beats 'no, but...'\n- Write everything down, even the silly ones",
+    "description": "Great teams never run with their FIRST idea — they brainstorm MANY ideas and pick the best. Today there are no bad ideas: quantity beats quality, wild ideas welcome, build on each other.\n\n## 🎯 Aim everything at the official prompt\n\n> **Identify a problem that puts biodiversity at risk, and design an innovative solution that can help.**\n\nSo every problem on your list should finish this sentence: *\"This puts biodiversity at risk because…\"* If it doesn't, it's a fine idea — just not a BIOGLOW idea.\n\n**Round 1 — Problem Storm (15 min):** List every biodiversity problem you can think of. Pull from your research, the **Project Sparks** on page 6 of your Engineering Notebook, and things you have actually seen near home. Aim for at least 5. Local problems score bonus points with judges.\n\nPlaces to look for problems:\n- 🐝 **Pollinators** — bees, butterflies, and the food supply that depends on them\n- 🌊 **Water** — runoff, plastics, warming water, fish and amphibians\n- 🌳 **Habitat loss** — building, farming, and roads splitting habitats apart\n- 🦠 **Invasive species** — plants or animals crowding out natives\n- 💡 **Light and noise pollution** — confusing animals that navigate by dark and quiet (this is where fireflies and other glowing species come in!)\n- 🌡️ **Climate shifts** — species moving, blooming, or migrating at the wrong time\n\n**Round 2 — Solution Storm (15 min):** Pick your 2-3 favorite problems and throw out every solution idea you can imagine — devices, apps, campaigns, new materials, nature-inspired designs. At least 5 total.\n\n**Brainstorm rules:**\n- No criticizing ideas during the storm — judge later, generate now\n- Wild ideas are welcome (they often hide great ones inside)\n- Build on teammates: 'yes, AND...' beats 'no, but...'\n- Write everything down, even the silly ones\n\n⏱ **Remember:** your problem statement is due by **Session 3**, so go wide today.",
     "questions": [
-      {
-        "id": "problems-chart",
-        "type": "table",
-        "label": "Round 1 — list at least 5 ecosystem problems your team could research:",
-        "columns": [
-          "Problem",
-          "Who/what is affected",
-          "Why it interests your team"
-        ],
-        "minRows": 5,
-        "maxRows": 10
-      },
-      {
-        "id": "solutions-chart",
-        "type": "table",
-        "label": "Round 2 — list at least 5 solution ideas for your favorite problems:",
-        "columns": [
-          "Solution idea",
-          "Which problem it solves",
-          "Wild or realistic?"
-        ],
-        "minRows": 5,
-        "maxRows": 10
-      },
       {
         "id": "q1",
         "type": "textarea",
+        "label": "Round 1 — list at least 5 biodiversity problems your team could research:",
+        "placeholder": "For each one, finish the sentence: \"This puts biodiversity at risk because...\"",
+        "allowAttach": true
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "label": "Round 2 — list at least 5 solution ideas for your favorite problems:",
+        "placeholder": "Devices, apps, campaigns, materials, nature-inspired designs — go wide, judge later...",
+        "allowAttach": true
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
         "label": "Which 2 problems are your team favorites going into Step 2, and why?",
-        "placeholder": "We are most excited about ___ because... Our second pick is ___ because...",
+        "placeholder": "Which ones are specific, local, and something you could actually help with?",
         "allowAttach": true
       }
     ]
@@ -2878,7 +2952,7 @@
     "teamId": "team-demo",
     "assignedTo": "fll-demo-student",
     "title": "Prepare for Mission Release Day",
-    "description": "On August 4th, the official BIOGLOW field and missions will be released. The best teams hit the ground running — they already know the mission categories and have a plan for how to analyze them.\n\nReview the five core robot-game mission types below, then complete the assignment by writing your own notes and submitting a photo of your preparation work.\n\n**Mission Types:**\n- **Push / Pull** — Robot nudges or drags an object into a scoring zone\n- **Drop-off** — Robot carries an item and releases it in the right spot\n- **Pick-up** — Robot grabs or lifts an item from a location\n- **Lift / Raise** — Robot lifts a beam, flap, or platform to a specific position\n- **Precision** — Robot must interact with a small target or stop at an exact position",
+    "description": "The official BIOGLOW robot game is built around mission models you construct from your **Challenge Set** and secure to the challenge mat. The best teams hit the ground running — they know how the game works before they touch a mission.\n\n## 🤖 How the robot game actually works\n\n| Fact | Detail |\n|---|---|\n| **Match length** | **2.5 minutes** |\n| **Where missions are defined** | The **Robot Game Rulebook** in your Challenge Set + the season mission video |\n| **Field setup** | Page 7 of the Rulebook — models attach to the mat with **Dual Lock** squares |\n| **Your kit** | LEGO Education **SPIKE Prime** set + BIOGLOW **Challenge Set** |\n| **Where to take notes** | **Page 30** of your Engineering Notebook (make copies — one per mission) |\n\n## 🎓 The robot skills the season expects\n\nThe official session plan builds your driving skills in this order, using the SPIKE app's **Competition Ready** unit:\n\n1. **Training Camp 1 — Driving Around:** move forward, backward, and turn\n2. **Training Camp 2 — Playing with Objects:** power an attachment, avoid obstacles with a sensor\n3. **Training Camp 3 — Reacting to Lines:** follow and detect lines with a sensor\n4. **Guided Mission:** run one full mission until it works *consistently*\n5. *(Optional)* **Assembling an Advanced Driving Base**\n\n## 📋 Mission types you will see\n\nEvery FLL season's missions are built from the same handful of actions. Learning to spot them makes analyzing a brand-new mission fast:\n\n- **Push / Pull** — nudge or drag an object into a scoring zone\n- **Drop-off** — carry an item and release it in the right spot\n- **Pick-up** — grab or lift an item from a location\n- **Lift / Raise** — raise a beam, flap, or platform to a position\n- **Precision** — hit a small target or stop at an exact spot\n\n## ✅ Your job right now\n\nBuild the mission models carefully, set up the field from the Rulebook, watch the mission video, and figure out how the models connect to the **Project Sparks** on page 6 of your notebook. Then answer below.\n\n*(Coach note: once your Challenge Set arrives, the specific mission names and point values come from the Robot Game Rulebook — record them on the Mission Analysis Board assignment.)*",
     "category": "Robot Game",
     "type": "submission",
     "workContext": "lab",
@@ -2890,28 +2964,42 @@
       {
         "id": "q1",
         "type": "textarea",
-        "label": "For each mission type (push/pull, drop-off, pick-up, lift, precision) — write one example of what it might look like on a BIOGLOW field.",
-        "placeholder": "Push/Pull: pushing a log into a river zone...\nDrop-off: delivering a seed pod...\nPick-up: grabbing a coral piece...\nLift: raising a habitat gate...\nPrecision: stopping at a GPS marker...",
+        "label": "Which mission models did you build, and which one looks most interesting to your team?",
+        "placeholder": "Describe what the model does when your robot interacts with it...",
         "allowAttach": true
       },
       {
         "id": "q2",
         "type": "textarea",
-        "label": "Which mission type do you think will be the hardest for your robot to do? Why?",
-        "placeholder": "Think about what your robot needs to do mechanically — grippers, arms, positioning...",
+        "label": "For each mission type (push/pull, drop-off, pick-up, lift, precision) — write one example you can see on your BIOGLOW field.",
+        "placeholder": "Walk the mat and match each model to the action your robot would need to do...",
         "allowAttach": true
       },
       {
         "id": "q3",
-        "type": "text",
-        "label": "On a scale of 1–10, how ready do you feel for mission release day? What would make you more ready?",
-        "placeholder": "e.g. 7/10 — I'd feel more ready if I practiced driving more...",
+        "type": "textarea",
+        "label": "How do the mission models connect to the biodiversity theme and the Project Sparks?",
+        "placeholder": "What real-world nature story does each model seem to be telling?",
+        "allowAttach": true
+      },
+      {
+        "id": "q4",
+        "type": "textarea",
+        "label": "Which mission type do you think will be hardest for your robot? Why?",
+        "placeholder": "Think about precision, attachments, and how far the robot has to drive...",
+        "allowAttach": true
+      },
+      {
+        "id": "q5",
+        "type": "textarea",
+        "label": "On a scale of 1–10, how ready does your team feel for the robot game? What would make you more ready?",
+        "placeholder": "Be honest — this tells your coach what to work on next...",
         "allowAttach": true
       }
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-07-29T18:37:02.197Z"
+    "updatedAt": "2026-08-04T17:53:06.979Z"
   },
   {
     "id": "task-robot-game-analysis--fll-demo-student",

@@ -3,8 +3,8 @@
   "year": "2026-2027",
   "releaseDate": "2026-08-04",
   "program": "FIRST LEGO League",
-  "editionNotes": "BIOGLOW includes Founders Edition and Future Edition context. This hub is prepared for SPIKE-based FLL team planning and can be updated as regional details are confirmed.",
-  "themeSummary": "Teams explore ecosystems and the connections between nature, technology, creativity, and innovation.",
+  "editionNotes": "Season facts on this page come from the official FIRST LEGO League Challenge BIOGLOW Team Meeting Guide (2026). Specific robot game missions live in the Robot Game Rulebook that ships with the Challenge Set.",
+  "themeSummary": "Biodiversity — how plants, animals, and ecosystems work together — shows the health of our planet. Teams use STEM, teamwork, and creativity to explore how innovation can support biodiversity and build a healthier, more connected world.",
   "currentPhaseId": "pre-season",
   "officialLinks": [
     {
@@ -45,5 +45,48 @@
       "predictedChampionship": "2027-03-13",
       "notes": "Predicted from past seasons: qualifiers mid-Jan to mid-Feb, NYC Championship in March."
     }
+  ],
+  "firstSeasonName": "FIRST CANOPY",
+  "innovationPrompt": "Identify a problem that puts biodiversity at risk, and design an innovative solution that can help.",
+  "themeStory": "BIOGLOW sits inside the FIRST CANOPY season. Biodiversity is a signal of planetary health: the more varied the life in an ecosystem, the more resilient it is. Scientists and engineers protect nature by observing animals, monitoring plant diversity, and building technology inspired by the natural world. This season your team takes inspiration from nature — and from each other — to design a thriving future for our shared home.",
+  "robotGame": {
+    "matchLengthSeconds": 150,
+    "matchLengthLabel": "2.5 minutes",
+    "equipment": "LEGO Education SPIKE Prime set + BIOGLOW Challenge Set (mission models, challenge mat, Dual Lock fasteners)",
+    "missionSource": "Robot Game Rulebook + season mission video",
+    "note": "Mission models are built from the Challenge Set instructions and secured to the mat with Dual Lock squares. Field setup instructions are on page 7 of the Robot Game Rulebook."
+  },
+  "coreValues": [
+    {
+      "name": "Discovery",
+      "line": "We explore new skills and ideas."
+    },
+    {
+      "name": "Innovation",
+      "line": "We use creativity and persistence to solve problems."
+    },
+    {
+      "name": "Impact",
+      "line": "We apply what we learn to improve our world."
+    },
+    {
+      "name": "Inclusion",
+      "line": "We respect each other and embrace our differences."
+    },
+    {
+      "name": "Teamwork",
+      "line": "We are stronger when we work together."
+    },
+    {
+      "name": "Fun",
+      "line": "We enjoy and celebrate what we do!"
+    }
+  ],
+  "engineeringDesignProcess": [
+    "Identify",
+    "Design",
+    "Create",
+    "Iterate",
+    "Communicate"
   ]
 }
