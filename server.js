@@ -4039,15 +4039,26 @@ async function ensureFllSponsorsTaskForUser(user) {
 // a live server could end up with students who have NO tasks at all. This ensures
 // every student always has a copy of every curriculum lesson, self-healing that gap.
 const FLL_TEMPLATE_TEAM_ID = 'team-01';
-const FLL_TEMPLATE_STUDENT_ID = 'student-team-01-a';
+// Curriculum templates all live on the placeholder team `team-01`, but they are
+// spread across more than one placeholder student (student-team-01-a / -b), so
+// match on the TEAM and dedupe by title. Filtering by a single placeholder
+// student silently drops whole lessons.
+function fllCurriculumTemplates(tasks) {
+	const seen = new Set();
+	return (Array.isArray(tasks) ? tasks : []).filter((task) => {
+		if (task.teamId !== FLL_TEMPLATE_TEAM_ID) return false;
+		if (seen.has(task.title)) return false;
+		seen.add(task.title);
+		return true;
+	});
+}
+
 async function ensureFllCurriculumTasksForUser(user) {
 	if (!user?.id || !user?.teamId || user.role !== 'student') return;
 	if (user.teamId === FLL_TEMPLATE_TEAM_ID) return; // never re-distribute onto the template team
 	const tasks = await readJsonFile(fllTasksFile, []);
 	if (!Array.isArray(tasks)) return;
-	const templates = tasks.filter(
-		(task) => task.teamId === FLL_TEMPLATE_TEAM_ID && task.assignedTo === FLL_TEMPLATE_STUDENT_ID
-	);
+	const templates = fllCurriculumTemplates(tasks);
 	if (!templates.length) return;
 	const mineIds = new Set(tasks.filter((task) => task.assignedTo === user.id).map((task) => task.id));
 	const mineTitles = new Set(
@@ -4096,9 +4107,7 @@ async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 	if (!Array.isArray(seedTasks) || !Array.isArray(liveTasks)) {
 		return { success: false, message: 'Curriculum data is not readable.' };
 	}
-	const templates = seedTasks.filter(
-		(task) => task.teamId === FLL_TEMPLATE_TEAM_ID && task.assignedTo === FLL_TEMPLATE_STUDENT_ID
-	);
+	const templates = fllCurriculumTemplates(seedTasks);
 	if (!templates.length) return { success: false, message: 'No seed curriculum templates found.' };
 
 	const now = new Date().toISOString();
