@@ -577,7 +577,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -589,7 +590,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-10T00:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -29331,7 +29332,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -29350,7 +29352,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -29380,7 +29382,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -29399,7 +29402,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -29429,7 +29432,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -29448,7 +29452,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -29478,7 +29482,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -29497,7 +29502,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -29527,7 +29532,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -29546,7 +29552,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -29576,7 +29582,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -29595,7 +29602,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -29625,7 +29632,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -29644,7 +29652,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -29674,7 +29682,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -29693,7 +29702,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -29723,7 +29732,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -29742,7 +29752,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -29772,7 +29782,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -29791,7 +29802,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -29821,7 +29832,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -29840,7 +29852,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -29870,7 +29882,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -29889,7 +29902,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -29919,7 +29932,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -29938,7 +29952,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -29968,7 +29982,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -29987,7 +30002,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -30017,7 +30032,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -30036,7 +30052,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -30066,7 +30082,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -30085,7 +30102,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -30115,7 +30132,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -30134,7 +30152,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -30164,7 +30182,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -30183,7 +30202,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -30213,7 +30232,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -30232,7 +30252,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -30262,7 +30282,8 @@
           "Priority (Yes/Maybe/No)"
         ],
         "minRows": 6,
-        "maxRows": 25
+        "maxRows": 25,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -30281,7 +30302,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -30445,7 +30466,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -30457,7 +30479,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -30684,7 +30706,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -30696,7 +30719,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -30923,7 +30946,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -30935,7 +30959,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -31162,7 +31186,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -31174,7 +31199,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -31401,7 +31426,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -31413,7 +31439,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -31640,7 +31666,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -31652,7 +31679,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -31879,7 +31906,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -31891,7 +31919,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -32118,7 +32146,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -32130,7 +32159,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -32357,7 +32386,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -32369,7 +32399,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -32596,7 +32626,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -32608,7 +32639,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -32835,7 +32866,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -32847,7 +32879,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -33074,7 +33106,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -33086,7 +33119,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -33313,7 +33346,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -33325,7 +33359,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -33552,7 +33586,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -33564,7 +33599,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -33791,7 +33826,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -33803,7 +33839,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -34030,7 +34066,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -34042,7 +34079,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -34269,7 +34306,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -34281,7 +34319,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -34508,7 +34546,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -34520,7 +34559,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {
@@ -34747,7 +34786,8 @@
           "Attachment needed"
         ],
         "minRows": 3,
-        "maxRows": 8
+        "maxRows": 8,
+        "editableColumns": true
       },
       {
         "id": "q1",
@@ -34759,7 +34799,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "updatedAt": "2026-08-04T19:44:12.513Z",
     "videoId": "uhZZ8O1StiQ"
   },
   {

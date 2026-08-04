@@ -1490,6 +1490,87 @@
       padding: 10px 12px;
       border-bottom: 1.5px solid #e0e3e8;
     }
+    /* ── editable column headings ── */
+    .ta-table th.ta-th-edit {
+      padding: 6px 8px;
+      white-space: nowrap;
+    }
+    .ta-th-edit > :first-child { min-width: 0; }
+    .ta-th-inner {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .ta-table-head {
+      border: 1.5px solid transparent;
+      border-radius: 7px;
+      background: transparent;
+      padding: 4px 7px;
+      width: 100%;
+      min-width: 90px;
+      font: inherit;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #3c4043;
+      cursor: text;
+    }
+    .ta-table-head:hover { border-color: #dadce0; background: #fff; }
+    .ta-table-head:focus {
+      outline: none;
+      border-color: #1a73e8;
+      background: #fff;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    /* the hub styles every <button> as a navy pill with !important, which would
+       swallow this tiny inline control — opt out explicitly */
+    .ta-col-del {
+      border: none !important;
+      background: transparent !important;
+      color: #80868b !important;
+      cursor: pointer;
+      font-size: 12px !important;
+      font-weight: 700;
+      line-height: 1 !important;
+      padding: 2px !important;
+      width: 18px;
+      height: 18px;
+      min-width: 0 !important;
+      min-height: 0 !important;
+      border-radius: 4px !important;
+      margin-left: 4px;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: none !important;
+    }
+    .ta-col-del:hover { background: #fce8e6 !important; color: #d93025 !important; }
+    .ta-col-tools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .ta-col-hint {
+      font-size: 11.5px;
+      color: #80868b;
+    }
+    .ta-col-reset {
+      border: 1.5px solid #dadce0;
+      background: #fff;
+      border-radius: 50px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #5f6368;
+      cursor: pointer;
+    }
+    .ta-col-reset:hover { border-color: #1a73e8; color: #1a73e8; }
+
     .ta-table td {
       padding: 0;
       border-bottom: 1px solid #f1f3f4;
@@ -4068,7 +4149,7 @@
       const questionsHtml = (task.questions || []).map((q, i) => {
         let inputEl;
         if (q.type === 'table') {
-          inputEl = renderTableQuestion(q, answers[q.id], submitted);
+          inputEl = renderTableQuestion(q, answers[q.id], submitted, answers[`${q.id}__cols`]);
         } else if (q.type === 'textarea') {
           const val = escapeHtml(answers[q.id] || '');
           inputEl = `<textarea class="ta-answer" id="ta-q-${escapeHtml(q.id)}" data-qid="${escapeHtml(q.id)}" placeholder="${escapeHtml(q.placeholder || '')}" rows="4" ${submitted ? 'readonly' : ''}>${val}</textarea>`;
@@ -4215,32 +4296,160 @@
     }
 
     // ── Table question renderer ───────────────────────────────────────────
-    function renderTableQuestion(q, savedVal, submitted) {
+    // Columns default to q.columns. When q.editableColumns is set, the team can
+    // rename / add / remove columns; their version is saved per task under
+    // answers[`${q.id}__cols`] so the lesson's defaults stay intact.
+    const MAX_TABLE_COLS = 12;
+
+    function tableColumns(q, savedCols) {
+      let cols = null;
+      try { cols = JSON.parse(savedCols || 'null'); } catch { cols = null; }
+      if (Array.isArray(cols) && cols.length) return cols.map(c => String(c));
+      return (q.columns || []).slice();
+    }
+
+    function renderTableQuestion(q, savedVal, submitted, savedCols) {
       let rows = [];
       try { rows = JSON.parse(savedVal || '[]'); } catch { rows = []; }
       const minRows = q.minRows || 2;
       const maxRows = q.maxRows || 8;
       const rowCount = Math.min(maxRows, Math.max(minRows, rows.length || minRows));
-      const cols = q.columns || [];
+      const cols = tableColumns(q, savedCols);
+      const editable = !!q.editableColumns && !submitted;
+      const qid = escapeHtml(q.id);
 
       const bodyRows = [];
       for (let r = 0; r < rowCount; r++) {
         const cells = cols.map((c, cIdx) => {
           const cellVal = escapeHtml((rows[r] && rows[r][cIdx]) || '');
-          return `<td><input class="ta-table-cell" type="text" data-tq="${escapeHtml(q.id)}" data-trow="${r}" data-tcol="${cIdx}" value="${cellVal}" ${submitted ? 'readonly' : ''}></td>`;
+          return `<td><input class="ta-table-cell" type="text" data-tq="${qid}" data-trow="${r}" data-tcol="${cIdx}" value="${cellVal}" ${submitted ? 'readonly' : ''}></td>`;
         }).join('');
         bodyRows.push(`<tr>${cells}</tr>`);
       }
 
+      const headCells = cols.map((c, cIdx) => {
+        if (!editable) return `<th>${escapeHtml(c)}</th>`;
+        return `<th class="ta-th-edit"><div class="ta-th-inner">
+          <input class="ta-table-head" type="text" data-thq="${qid}" data-thcol="${cIdx}"
+            value="${escapeHtml(c)}" title="Rename this column" aria-label="Column ${cIdx + 1} name">
+          ${cols.length > 1 ? `<button class="ta-col-del" title="Remove this column"
+            onclick="removeTableColumn('${qid}', ${cIdx})" aria-label="Remove column ${escapeHtml(c)}">✕</button>` : ''}
+        </div></th>`;
+      }).join('');
+
+      const colTools = editable ? `
+        <div class="ta-col-tools">
+          <span class="ta-col-hint">✏️ Tap a heading to rename it</span>
+          ${cols.length < MAX_TABLE_COLS
+            ? `<button class="ta-table-addrow" onclick="addTableColumn('${qid}')">＋ Add column</button>` : ''}
+          <button class="ta-col-reset" onclick="resetTableColumns('${qid}')">↺ Reset to default</button>
+        </div>` : '';
+
       return `
-        <div class="ta-table-wrap" data-table-qid="${escapeHtml(q.id)}" data-maxrows="${maxRows}">
+        <div class="ta-table-wrap" data-table-qid="${qid}" data-maxrows="${maxRows}"
+          data-editable-cols="${editable ? '1' : ''}" data-default-cols="${escapeHtml(JSON.stringify(q.columns || []))}">
           <table class="ta-table">
-            <thead><tr>${cols.map(c => `<th>${escapeHtml(c)}</th>`).join('')}</tr></thead>
+            <thead><tr>${headCells}</tr></thead>
             <tbody>${bodyRows.join('')}</tbody>
           </table>
-          ${!submitted && rowCount < maxRows ? `<button class="ta-table-addrow" onclick="addTableRow('${escapeHtml(q.id)}')">＋ Add row</button>` : ''}
+          ${!submitted && rowCount < maxRows ? `<button class="ta-table-addrow" onclick="addTableRow('${qid}')">＋ Add row</button>` : ''}
+          ${colTools}
         </div>
       `;
+    }
+
+    // ── column editing (rename is handled by the header inputs themselves) ──
+    function tableWrap(qid) { return document.querySelector(`[data-table-qid="${qid}"]`); }
+
+    function reindexTableColumns(wrap) {
+      wrap.querySelectorAll('thead th').forEach((th, i) => {
+        const input = th.querySelector('.ta-table-head');
+        if (input) input.dataset.thcol = String(i);
+        const del = th.querySelector('.ta-col-del');
+        if (del) del.setAttribute('onclick', `removeTableColumn('${wrap.dataset.tableQid}', ${i})`);
+      });
+      wrap.querySelectorAll('tbody tr').forEach(tr => {
+        tr.querySelectorAll('.ta-table-cell').forEach((cell, i) => { cell.dataset.tcol = String(i); });
+      });
+    }
+
+    function addTableColumn(qid) {
+      const wrap = tableWrap(qid);
+      if (!wrap) return;
+      const headRow = wrap.querySelector('thead tr');
+      if (headRow.querySelectorAll('th').length >= MAX_TABLE_COLS) return;
+      const idx = headRow.querySelectorAll('th').length;
+      const th = document.createElement('th');
+      th.className = 'ta-th-edit';
+      th.innerHTML = `<div class="ta-th-inner">
+        <input class="ta-table-head" type="text" data-thq="${qid}" data-thcol="${idx}" value="New column" title="Rename this column">
+        <button class="ta-col-del" title="Remove this column" onclick="removeTableColumn('${qid}', ${idx})">✕</button>
+      </div>`;
+      headRow.appendChild(th);
+      wrap.querySelectorAll('tbody tr').forEach((tr, r) => {
+        const td = document.createElement('td');
+        const input = document.createElement('input');
+        input.className = 'ta-table-cell';
+        input.type = 'text';
+        input.dataset.tq = qid;
+        input.dataset.trow = String(r);
+        input.dataset.tcol = String(idx);
+        td.appendChild(input);
+        tr.appendChild(td);
+      });
+      reindexTableColumns(wrap);
+      const fresh = headRow.querySelectorAll('.ta-table-head')[idx];
+      if (fresh) { fresh.focus(); fresh.select(); }
+    }
+
+    function removeTableColumn(qid, colIdx) {
+      const wrap = tableWrap(qid);
+      if (!wrap) return;
+      const ths = wrap.querySelectorAll('thead th');
+      if (ths.length <= 1) return;
+      const name = (ths[colIdx].querySelector('.ta-table-head') || {}).value || 'this column';
+      if (!confirm(`Remove the “${name}” column? Anything typed in it will be cleared.`)) return;
+      ths[colIdx].remove();
+      // drop the matching cell from every row so data stays aligned
+      wrap.querySelectorAll('tbody tr').forEach(tr => {
+        const cells = tr.querySelectorAll('td');
+        if (cells[colIdx]) cells[colIdx].remove();
+      });
+      reindexTableColumns(wrap);
+    }
+
+    function resetTableColumns(qid) {
+      const wrap = tableWrap(qid);
+      if (!wrap) return;
+      if (!confirm('Put the columns back to the lesson defaults? Your typed answers stay, but extra columns are removed.')) return;
+      let defaults = [];
+      try { defaults = JSON.parse(wrap.dataset.defaultCols || '[]'); } catch { defaults = []; }
+      if (!defaults.length) return;
+      const headRow = wrap.querySelector('thead tr');
+      const current = headRow.querySelectorAll('th').length;
+      // trim extras
+      for (let i = current - 1; i >= defaults.length; i--) {
+        headRow.querySelectorAll('th')[i].remove();
+        wrap.querySelectorAll('tbody tr').forEach(tr => {
+          const cells = tr.querySelectorAll('td');
+          if (cells[i]) cells[i].remove();
+        });
+      }
+      // add any missing, then rename all back
+      while (headRow.querySelectorAll('th').length < defaults.length) addTableColumn(qid);
+      headRow.querySelectorAll('.ta-table-head').forEach((input, i) => { input.value = defaults[i] || ''; });
+      reindexTableColumns(wrap);
+    }
+
+    function collectTableColumns(qid) {
+      const wrap = tableWrap(qid);
+      if (!wrap || !wrap.dataset.editableCols) return '';
+      const names = [...wrap.querySelectorAll('.ta-table-head')].map((el, i) => (el.value || '').trim() || `Column ${i + 1}`);
+      if (!names.length) return '';
+      let defaults = [];
+      try { defaults = JSON.parse(wrap.dataset.defaultCols || '[]'); } catch { defaults = []; }
+      // only persist when the team actually changed something
+      return JSON.stringify(names) === JSON.stringify(defaults) ? '' : JSON.stringify(names);
     }
 
     function addTableRow(qid) {
@@ -4821,10 +5030,13 @@
         el.classList.remove('ta-answer-error');
         answers[el.dataset.qid] = el.value || el.textContent || '';
       });
-      // table questions store rows as JSON
+      // table questions store rows as JSON, plus any renamed columns
       document.querySelectorAll('[data-table-qid]').forEach(wrap => {
         const qid = wrap.dataset.tableQid;
         answers[qid] = collectTableAnswer(qid);
+        // saved answers are MERGED on save, so write '' (not a delete) to
+        // genuinely clear a previous rename and fall back to lesson defaults
+        answers[`${qid}__cols`] = collectTableColumns(qid);
       });
       return answers;
     }
