@@ -4035,8 +4035,8 @@
         return renderAttachmentTracker(task, userId, ctxIcon);
       }
 
-      // ── video embed ──
-      const videoHtml = (task.type === 'video' && task.videoId) ? `
+      // ── video embed (any lesson may carry a videoId, not just type:'video') ──
+      const videoHtml = task.videoId ? `
         <div class="ta-video-section">
           <div class="ta-video-label">📺 Watch the video below before answering the questions</div>
           <div class="ta-video-wrap">

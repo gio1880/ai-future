@@ -314,7 +314,8 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-09T00:00:00.000Z",
-    "updatedAt": "2026-06-09T00:00:00.000Z"
+    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "videoId": "uhZZ8O1StiQ"
   },
   {
     "id": "task-team-shareout",
@@ -588,7 +589,8 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-10T00:00:00.000Z",
-    "updatedAt": "2026-06-11T00:00:00.000Z"
+    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "videoId": "uhZZ8O1StiQ"
   },
   {
     "id": "task-core-values-journal",
@@ -2896,7 +2898,8 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-07-27T12:00:00.000Z"
+    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "videoId": "uhZZ8O1StiQ"
   },
   {
     "id": "task-mission-analysis-board--fll-demo-student",
@@ -2944,7 +2947,8 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-27T12:00:00.000Z",
-    "updatedAt": "2026-07-27T12:00:00.000Z"
+    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "videoId": "uhZZ8O1StiQ"
   },
   {
     "id": "task-kit-check-batteries--fll-demo-student",
@@ -3038,7 +3042,8 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-07-29T18:37:02.197Z"
+    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "videoId": "uhZZ8O1StiQ"
   },
   {
     "id": "task-team-shareout--fll-demo-student",
@@ -3118,7 +3123,8 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-07-29T18:37:02.197Z"
+    "updatedAt": "2026-08-04T18:48:01.704Z",
+    "videoId": "uhZZ8O1StiQ"
   },
   {
     "id": "task-core-values-journal--fll-demo-student",
