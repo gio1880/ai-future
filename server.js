@@ -4033,6 +4033,50 @@ async function ensureFllSponsorsTaskForUser(user) {
 	if (changed) await writeJsonFile(fllTasksFile, tasks);
 }
 
+// The season curriculum lives as template tasks on the placeholder team `team-01`
+// (assigned to `student-team-01-a`). Real teams get their own per-student copies.
+// This distribution was originally a one-time data operation, so a team created on
+// a live server could end up with students who have NO tasks at all. This ensures
+// every student always has a copy of every curriculum lesson, self-healing that gap.
+const FLL_TEMPLATE_TEAM_ID = 'team-01';
+const FLL_TEMPLATE_STUDENT_ID = 'student-team-01-a';
+async function ensureFllCurriculumTasksForUser(user) {
+	if (!user?.id || !user?.teamId || user.role !== 'student') return;
+	if (user.teamId === FLL_TEMPLATE_TEAM_ID) return; // never re-distribute onto the template team
+	const tasks = await readJsonFile(fllTasksFile, []);
+	if (!Array.isArray(tasks)) return;
+	const templates = tasks.filter(
+		(task) => task.teamId === FLL_TEMPLATE_TEAM_ID && task.assignedTo === FLL_TEMPLATE_STUDENT_ID
+	);
+	if (!templates.length) return;
+	const mineIds = new Set(tasks.filter((task) => task.assignedTo === user.id).map((task) => task.id));
+	const mineTitles = new Set(
+		tasks.filter((task) => task.teamId === user.teamId && task.assignedTo === user.id).map((task) => task.title)
+	);
+	const now = new Date().toISOString();
+	let changed = false;
+	for (const template of templates) {
+		const distributedId = `${template.id}--${user.id}`;
+		if (mineIds.has(distributedId) || mineTitles.has(template.title)) continue;
+		const copy = {
+			...template,
+			id: distributedId,
+			teamId: user.teamId,
+			assignedTo: user.id,
+			status: 'todo',
+			createdAt: now,
+			updatedAt: now
+		};
+		delete copy.answers;
+		delete copy.submission;
+		tasks.push(copy);
+		mineIds.add(distributedId);
+		mineTitles.add(template.title);
+		changed = true;
+	}
+	if (changed) await writeJsonFile(fllTasksFile, tasks);
+}
+
 function isGeneratedFllCodingTaskId(taskId, user) {
 	return taskId === `task-coding-foundations-${user?.id || ''}`;
 }
@@ -4074,6 +4118,7 @@ function sectionProgressFromMilestones(sections, milestones) {
 
 async function getFllStudentDashboardFor(user) {
 	await ensureFllSponsorsTaskForUser(user);
+	await ensureFllCurriculumTasksForUser(user);
 	const [season, teams, timeline, assignments, tasks, milestones, workLogs, members, schedules, resources, sections, missionAnalysis, fllSettings] = await Promise.all([
 		readJsonFile(path.join(fllHubDataDir, 'season.json'), {}),
 		readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
