@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-28T17:47:28.645Z",
+  "updatedAt": "2026-08-03T20:19:10.402Z",
   "settings": {
     "summerWeeks": [
       {
@@ -1207,7 +1207,8 @@
       "hubAccess": [
         "fll-hub"
       ],
-      "updatedAt": "2026-06-25T20:50:03.287Z"
+      "updatedAt": "2026-06-25T20:50:03.287Z",
+      "lastStudentPortalLoginAt": "2026-08-03T20:19:10.402Z"
     },
     {
       "id": "master-summer-2026-ella-xue",
@@ -1675,7 +1676,7 @@
       "summerRosterSource": "summer-2026-screenshot-grade-roster",
       "campUserId": "camp-demo-summer-camper",
       "createdAt": "2026-06-26T23:13:12.327Z",
-      "updatedAt": "2026-07-28T17:47:28.380Z",
+      "updatedAt": "2026-08-03T20:19:00.452Z",
       "lastStudentPortalLoginAt": "2026-07-14T18:29:12.617Z",
       "fllUserId": "fll-demo-student",
       "fllTeamId": "team-demo"
