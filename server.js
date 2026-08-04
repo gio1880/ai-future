@@ -4077,6 +4077,97 @@ async function ensureFllCurriculumTasksForUser(user) {
 	if (changed) await writeJsonFile(fllTasksFile, tasks);
 }
 
+// ── Curriculum resync (seed ➜ live disk) ─────────────────────────────────────
+// On Render the live data sits on a persistent disk and is only seeded when a
+// file is MISSING, so edited lesson content in the repo never reaches students.
+// This resyncs lesson CONTENT only. It deliberately preserves per-student
+// runtime state that also lives in tasks.json:
+//   preserved: status, dueDate (coach-edited), assignedTo, teamId, createdAt
+//   synced:    title, description, questions, category, type, workContext,
+//              videoId, trackerConfig
+// Student answers live in task-submissions.json and are never touched here.
+// Nothing is ever deleted.
+const FLL_CONTENT_FIELDS = ['title', 'description', 'questions', 'category', 'type', 'workContext'];
+const FLL_OPTIONAL_CONTENT_FIELDS = ['videoId', 'trackerConfig'];
+
+async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
+	const seedTasks = await readJsonFile(path.join(fllSeedDataDir, 'tasks.json'), []);
+	const liveTasks = await readJsonFile(fllTasksFile, []);
+	if (!Array.isArray(seedTasks) || !Array.isArray(liveTasks)) {
+		return { success: false, message: 'Curriculum data is not readable.' };
+	}
+	const templates = seedTasks.filter(
+		(task) => task.teamId === FLL_TEMPLATE_TEAM_ID && task.assignedTo === FLL_TEMPLATE_STUDENT_ID
+	);
+	if (!templates.length) return { success: false, message: 'No seed curriculum templates found.' };
+
+	const now = new Date().toISOString();
+	const updatedTitles = new Set();
+	const addedTitles = [];
+	let updatedCount = 0;
+
+	for (const template of templates) {
+		const matches = liveTasks.filter(
+			(task) => task.id === template.id || task.id.startsWith(template.id + '--')
+		);
+		if (!matches.length) {
+			// lesson is new since the live disk was seeded — add the template itself
+			addedTitles.push(template.title);
+			if (!dryRun) liveTasks.push({ ...template, createdAt: now, updatedAt: now });
+			continue;
+		}
+		for (const task of matches) {
+			let changed = false;
+			for (const field of FLL_CONTENT_FIELDS) {
+				if (template[field] === undefined) continue;
+				if (JSON.stringify(task[field]) === JSON.stringify(template[field])) continue;
+				if (!dryRun) task[field] = JSON.parse(JSON.stringify(template[field]));
+				changed = true;
+			}
+			for (const field of FLL_OPTIONAL_CONTENT_FIELDS) {
+				const seedHas = template[field] !== undefined;
+				if (seedHas && JSON.stringify(task[field]) !== JSON.stringify(template[field])) {
+					if (!dryRun) task[field] = JSON.parse(JSON.stringify(template[field]));
+					changed = true;
+				} else if (!seedHas && task[field] !== undefined) {
+					if (!dryRun) delete task[field];
+					changed = true;
+				}
+			}
+			if (changed) {
+				if (!dryRun) task.updatedAt = now;
+				updatedCount += 1;
+				updatedTitles.add(template.title);
+			}
+		}
+	}
+
+	// season.json is pure content (no runtime state) — safe to replace wholesale
+	let seasonSynced = false;
+	const seedSeason = await readJsonFile(path.join(fllSeedDataDir, 'season.json'), null);
+	if (seedSeason && typeof seedSeason === 'object') {
+		const liveSeason = await readJsonFile(path.join(fllHubDataDir, 'season.json'), null);
+		if (JSON.stringify(seedSeason) !== JSON.stringify(liveSeason)) {
+			seasonSynced = true;
+			if (!dryRun) await writeJsonFile(path.join(fllHubDataDir, 'season.json'), seedSeason);
+		}
+	}
+
+	if (!dryRun && (updatedCount || addedTitles.length)) {
+		await writeJsonFile(fllTasksFile, liveTasks);
+	}
+	return {
+		success: true,
+		dryRun,
+		lessonsUpdated: updatedTitles.size,
+		taskCopiesUpdated: updatedCount,
+		lessonsAdded: addedTitles.length,
+		addedTitles,
+		updatedTitles: [...updatedTitles],
+		seasonSynced
+	};
+}
+
 function isGeneratedFllCodingTaskId(taskId, user) {
 	return taskId === `task-coding-foundations-${user?.id || ''}`;
 }
@@ -5181,6 +5272,19 @@ app.patch('/api/fll/coach/settings', requireFllAuth, requireFllCoach, async (req
 	} catch (err) {
 		console.error('FLL coach settings update error:', err);
 		return res.status(500).json({ success: false, message: 'Server error updating settings' });
+	}
+});
+
+// Push updated lesson content from the deployed repo onto the live data disk.
+// Pass { dryRun: true } to preview what would change without writing.
+app.post('/api/fll/coach/sync-curriculum', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const result = await syncFllCurriculumFromSeed({ dryRun: req.body.dryRun === true });
+		if (!result.success) return res.status(400).json(result);
+		return res.json(result);
+	} catch (err) {
+		console.error('FLL curriculum sync error:', err);
+		return res.status(500).json({ success: false, message: 'Server error syncing curriculum' });
 	}
 });
 

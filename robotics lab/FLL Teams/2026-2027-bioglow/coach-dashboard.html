@@ -632,6 +632,16 @@
         <div class="visibility-lessons" id="visibilityLessons"></div>
         <div class="visibility-actions"><button class="submit-btn" id="visibilitySave" onclick="saveVisibility()">Save visibility</button><button class="visibility-bulk-btn hidden" id="visibilityReset" onclick="resetTeamVisibility()">Reset team to defaults</button><span class="form-msg" id="visibilityMessage"></span></div>
       </div>
+      <div class="card">
+        <h3 class="card-title">📥 Update lesson content</h3>
+        <p class="card-sub">Pulls the newest lesson wording, questions, and videos from the latest deployment onto the live hub. Student progress, submitted answers, and any due dates you set are kept as they are. Nothing is deleted.</p>
+        <div class="visibility-actions">
+          <button class="visibility-bulk-btn" onclick="syncCurriculum(true)">Preview changes</button>
+          <button class="submit-btn" id="curriculumSyncBtn" onclick="syncCurriculum(false)">Update lessons now</button>
+          <span class="form-msg" id="curriculumSyncMessage"></span>
+        </div>
+        <div class="visibility-lessons hidden" id="curriculumSyncDetail"></div>
+      </div>
     </div>
     <div class="panel" id="panel-live">
       <div class="live-grid">
@@ -1506,6 +1516,45 @@
         message.textContent = 'Visibility saved. Students on the selected team will see the update when their dashboard refreshes.';
         message.className = 'form-msg success';
         showToast('Student Hub visibility saved');
+      } catch (err) {
+        message.textContent = err.message;
+        message.className = 'form-msg error';
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    async function syncCurriculum(dryRun) {
+      const message = document.getElementById('curriculumSyncMessage');
+      const detail = document.getElementById('curriculumSyncDetail');
+      const button = document.getElementById('curriculumSyncBtn');
+      if (!dryRun && !confirm('Update every lesson on the live hub to the newest version?\n\nStudent progress, submitted answers, and your due dates are kept.')) return;
+      button.disabled = true;
+      message.textContent = dryRun ? 'Checking...' : 'Updating lessons...';
+      message.className = 'form-msg';
+      try {
+        const result = await api('/api/fll/coach/sync-curriculum', {
+          method: 'POST',
+          body: JSON.stringify({ dryRun: !!dryRun })
+        });
+        const nothing = !result.lessonsUpdated && !result.lessonsAdded && !result.seasonSynced;
+        if (nothing) {
+          message.textContent = 'Already up to date — no changes needed.';
+          message.className = 'form-msg success';
+          detail.classList.add('hidden');
+        } else {
+          const bits = [];
+          if (result.lessonsUpdated) bits.push(`${result.lessonsUpdated} lesson(s) ${dryRun ? 'would be updated' : 'updated'}`);
+          if (result.lessonsAdded) bits.push(`${result.lessonsAdded} new lesson(s) ${dryRun ? 'would be added' : 'added'}`);
+          if (result.seasonSynced) bits.push(`season info ${dryRun ? 'would be refreshed' : 'refreshed'}`);
+          message.textContent = (dryRun ? 'Preview: ' : '✅ Done — ') + bits.join(', ') +
+            (dryRun ? '. Nothing has changed yet.' : '. Students see it on their next refresh.');
+          message.className = 'form-msg success';
+          const names = [...(result.updatedTitles || []), ...(result.addedTitles || [])];
+          detail.innerHTML = names.map(t => `<div class="visibility-row"><strong>${escapeHtml(t)}</strong></div>`).join('');
+          detail.classList.remove('hidden');
+        }
+        if (!dryRun) { await loadRoster(); showToast('Lesson content updated'); }
       } catch (err) {
         message.textContent = err.message;
         message.className = 'form-msg error';
