@@ -181,6 +181,38 @@
     .ranking-guide { color: var(--t-muted); font-size: 12px; margin: 10px 2px; }
 
     .visibility-card { background: var(--s-card); border: 1.5px solid var(--s-line); border-radius: 18px; padding: 22px; margin-bottom: 16px; }
+
+    /* ── Submitted work ── */
+    .sub-empty, .sub-empty-inline { color: var(--t-muted); font-size: 13.5px; padding: 18px 4px; }
+    .sub-empty-inline { padding: 4px 0 10px; font-style: italic; }
+    .sub-card { border: 1.5px solid var(--s-line); border-radius: 14px; margin-bottom: 10px; overflow: hidden; background: var(--s-card); }
+    .sub-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; cursor: pointer; flex-wrap: wrap; }
+    .sub-head:hover { background: var(--s-raised); }
+    .sub-head-main { min-width: 0; }
+    .sub-student { font-weight: 800; font-size: 14px; color: var(--t-ink); }
+    .sub-lesson { font-size: 12.5px; color: var(--t-muted); margin-top: 2px; }
+    .sub-head-meta { display: flex; align-items: center; gap: 8px; flex-shrink: 0; flex-wrap: wrap; }
+    .sub-team { font-size: 11px; font-weight: 800; background: var(--tint-blue); color: #1a73e8; border-radius: 50px; padding: 3px 10px; white-space: nowrap; }
+    .sub-when { font-size: 11.5px; color: var(--t-faint); white-space: nowrap; }
+    .sub-count { font-size: 11.5px; color: var(--t-muted); }
+    .sub-caret { color: var(--t-faint); font-size: 12px; }
+    .sub-body { display: none; padding: 0 14px 14px; border-top: 1px solid var(--s-line); }
+    .sub-body.open { display: block; padding-top: 12px; }
+    .sub-answer { margin-bottom: 12px; }
+    .sub-qid { display: inline-block; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--t-faint); margin-bottom: 3px; }
+    .sub-atext { font-size: 13.5px; line-height: 1.55; color: var(--t-body); white-space: pre-wrap; word-break: break-word; }
+    .sub-atext a { color: #1a73e8; }
+    .sub-photos { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+    .sub-photos img { width: 108px; height: 108px; object-fit: cover; border-radius: 10px; border: 1.5px solid var(--s-line); display: block; }
+    .sub-files { margin-top: 10px; }
+    .sub-file { display: inline-block; font-size: 12.5px; font-weight: 700; color: #1a73e8; text-decoration: none; border: 1.5px solid var(--s-line-2); border-radius: 50px; padding: 6px 12px; }
+    .sub-file:hover { border-color: #1a73e8; }
+    .sub-missing { background: var(--tint-amber); border: 1.5px solid var(--s-line); border-radius: 12px; padding: 11px 14px; margin-bottom: 12px; font-size: 12.5px; line-height: 1.5; color: var(--t-body); }
+    .sub-missing-done { background: var(--tint-green); }
+    .sub-tablewrap { overflow-x: auto; margin-top: 4px; }
+    .sub-table { border-collapse: collapse; font-size: 12.5px; min-width: 300px; }
+    .sub-table td { border: 1px solid var(--s-line); padding: 6px 9px; vertical-align: top; color: var(--t-body); }
+    .sub-table tr:first-child td { background: var(--s-subtle); font-weight: 700; }
     .visibility-head { display: flex; justify-content: space-between; align-items: end; gap: 14px; flex-wrap: wrap; }
     .visibility-team { min-width: 240px; }
     .visibility-team label, .visibility-filter label { display: block; font-size: 12px; font-weight: 800; margin-bottom: 5px; }
@@ -470,6 +502,7 @@
       <button class="tab-btn" data-tab="newteam" onclick="showTab('newteam')">🆕 Create Team</button>
       <button class="tab-btn" data-tab="calendar" onclick="showTab('calendar')">📅 Calendar</button>
       <button class="tab-btn" data-tab="curriculum" onclick="showTab('curriculum')">📚 Curriculum</button>
+      <button class="tab-btn" data-tab="submissions" onclick="showTab('submissions')">📬 Submitted Work</button>
       <button class="tab-btn" data-tab="visibility" onclick="showTab('visibility')">🎛️ Areas &amp; Lessons</button>
       <button class="tab-btn" data-tab="live" onclick="showTab('live')">Live Slides</button>
     </div>
@@ -613,6 +646,33 @@
         </div>
       </div>
     </div>
+    <div class="panel" id="panel-submissions">
+      <div class="visibility-card">
+        <div class="visibility-head">
+          <div>
+            <h2 class="form-title">Submitted work</h2>
+            <p class="form-sub">Everything students have turned in, newest first. Answers, photos, and attached files are all here.</p>
+          </div>
+        </div>
+        <div class="visibility-controls">
+          <div class="visibility-filter">
+            <label for="subTeamFilter">Team</label>
+            <select id="subTeamFilter" onchange="renderSubmissions()"><option value="all">All teams</option></select>
+          </div>
+          <div class="visibility-filter">
+            <label for="subLessonFilter">Assignment</label>
+            <select id="subLessonFilter" onchange="renderSubmissions()"><option value="all">All assignments</option></select>
+          </div>
+          <div class="visibility-filter">
+            <label for="subSearch">Search student</label>
+            <input id="subSearch" type="text" placeholder="Search by name" oninput="renderSubmissions()">
+          </div>
+          <button class="visibility-bulk-btn" onclick="loadSubmissions(true)">↻ Refresh</button>
+        </div>
+        <div id="submissionsSummary" class="form-msg"></div>
+        <div id="submissionsWrap">Loading…</div>
+      </div>
+    </div>
     <div class="panel" id="panel-visibility">
       <div class="visibility-card">
         <div class="visibility-head">
@@ -700,6 +760,195 @@
       if (id === 'live') loadLiveSlides();
       if (id === 'rankings') loadRankings();
       if (id === 'visibility') renderVisibility();
+      if (id === 'submissions') loadSubmissions();
+    }
+
+    // ── Submitted work ────────────────────────────────────────────────────
+    // Students POST to /api/fll/tasks/:id/submission when they turn an
+    // assignment in; this reads them back for the coach.
+    let submissionsCache = null;
+
+    async function loadSubmissions(force) {
+      const wrap = document.getElementById('submissionsWrap');
+      if (submissionsCache && !force) { renderSubmissions(); return; }
+      wrap.textContent = 'Loading…';
+      try {
+        const result = await api('/api/fll/coach/task-submissions');
+        submissionsCache = Array.isArray(result.submissions) ? result.submissions : [];
+        buildSubmissionFilters();
+        renderSubmissions();
+      } catch (err) {
+        wrap.innerHTML = `<div class="form-msg error">${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    // a submitted task id is `${templateId}--${studentId}` — strip the student
+    // part so every student's copy groups under one assignment name
+    function submissionLessonTitle(sub) {
+      const task = (roster?.tasks || []).find(t => t.id === sub.taskId);
+      if (task) return task.title;
+      const base = String(sub.taskId || '').split('--')[0];
+      const anyCopy = (roster?.tasks || []).find(t => t.id === base || t.id.startsWith(base + '--'));
+      return anyCopy ? anyCopy.title : base || 'Assignment';
+    }
+
+    // map question id -> the question the student was actually answering,
+    // so the coach reads the prompt instead of "q1"
+    function submissionQuestionLabels(sub) {
+      const base = String(sub.taskId || '').split('--')[0];
+      const task = (roster?.tasks || []).find(t => t.id === sub.taskId)
+        || (roster?.tasks || []).find(t => t.id === base || t.id.startsWith(base + '--'));
+      const map = {};
+      for (const q of (task?.questions || [])) if (q.id) map[q.id] = q.label || q.id;
+      return map;
+    }
+
+    // table questions are stored as a JSON array of rows
+    function isTableAnswer(value) {
+      if (typeof value !== 'string' || !value.trim().startsWith('[')) return false;
+      try { const p = JSON.parse(value); return Array.isArray(p) && Array.isArray(p[0]); }
+      catch { return false; }
+    }
+
+    function renderSubmissionTable(value) {
+      let rows = [];
+      try { rows = JSON.parse(value); } catch { return escapeHtml(value); }
+      if (!rows.length) return '<em>empty table</em>';
+      return `<div class="sub-tablewrap"><table class="sub-table"><tbody>${
+        rows.map(r => `<tr>${(r || []).map(c => `<td>${escapeHtml(c || '')}</td>`).join('')}</tr>`).join('')
+      }</tbody></table></div>`;
+    }
+
+    function submissionTeamName(sub) {
+      const team = (roster?.teams || []).find(t => t.id === sub.teamId);
+      return team ? (team.nickname || team.name) : (sub.teamId || '—');
+    }
+
+    function buildSubmissionFilters() {
+      const teamSel = document.getElementById('subTeamFilter');
+      const lessonSel = document.getElementById('subLessonFilter');
+      const teams = [...new Set(submissionsCache.map(s => s.teamId))];
+      const lessons = [...new Set(submissionsCache.map(submissionLessonTitle))].sort();
+      teamSel.innerHTML = '<option value="all">All teams</option>' +
+        teams.map(id => `<option value="${escapeHtml(id)}">${escapeHtml(submissionTeamName({ teamId: id }))}</option>`).join('');
+      lessonSel.innerHTML = '<option value="all">All assignments</option>' +
+        lessons.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+    }
+
+    function renderSubmissions() {
+      const wrap = document.getElementById('submissionsWrap');
+      const summary = document.getElementById('submissionsSummary');
+      if (!submissionsCache) return;
+      const teamId = document.getElementById('subTeamFilter').value;
+      const lesson = document.getElementById('subLessonFilter').value;
+      const search = (document.getElementById('subSearch').value || '').trim().toLowerCase();
+
+      const rows = submissionsCache
+        .filter(s => teamId === 'all' || s.teamId === teamId)
+        .filter(s => lesson === 'all' || submissionLessonTitle(s) === lesson)
+        .filter(s => !search || String(s.studentName || '').toLowerCase().includes(search))
+        .sort((a, b) => String(b.submittedAt || '').localeCompare(String(a.submittedAt || '')));
+
+      summary.textContent = submissionsCache.length
+        ? `Showing ${rows.length} of ${submissionsCache.length} submission${submissionsCache.length !== 1 ? 's' : ''}.`
+        : '';
+      summary.className = 'form-msg';
+
+      // when one assignment is picked, show who still owes it
+      let missingHtml = '';
+      if (lesson !== 'all') {
+        const turnedIn = new Set(submissionsCache
+          .filter(s => submissionLessonTitle(s) === lesson)
+          .map(s => s.studentId));
+        const expected = (roster?.students || [])
+          .filter(st => teamId === 'all' || st.teamId === teamId)
+          .filter(st => !turnedIn.has(st.id));
+        missingHtml = expected.length
+          ? `<div class="sub-missing"><strong>${expected.length} not turned in yet:</strong> ${
+              expected.map(st => escapeHtml(st.name)).join(', ')}</div>`
+          : '<div class="sub-missing sub-missing-done"><strong>Everyone has turned this one in ✓</strong></div>';
+      }
+
+      if (!submissionsCache.length) {
+        wrap.innerHTML = '<div class="sub-empty">No work has been turned in yet. Submissions appear here as soon as a student presses <strong>Turn in</strong>.</div>';
+        return;
+      }
+      if (!rows.length) {
+        wrap.innerHTML = missingHtml + '<div class="sub-empty">No submissions match these filters.</div>';
+        return;
+      }
+
+      wrap.innerHTML = missingHtml + rows.map((sub, i) => {
+        const qLabels = submissionQuestionLabels(sub);
+        const answers = Object.entries(sub.answers || {})
+          .filter(([k, v]) => v && String(v).trim() && !k.endsWith('__photo') && !k.endsWith('__cols'))
+          .map(([k, v]) => {
+            const isLink = k.endsWith('__link');
+            const baseId = isLink ? k.replace(/__link$/, '') : k;
+            const label = isLink
+              ? `Link — ${qLabels[baseId] || baseId}`
+              : (qLabels[k] || k);
+            let body;
+            if (isLink) {
+              body = `<a href="${escapeHtml(v)}" target="_blank" rel="noopener noreferrer">${escapeHtml(v)}</a>`;
+            } else if (isTableAnswer(v)) {
+              body = renderSubmissionTable(v);
+            } else {
+              body = escapeHtml(v).replace(/\n/g, '<br>');
+            }
+            return `<div class="sub-answer"><span class="sub-qid">${escapeHtml(label)}</span><div class="sub-atext">${body}</div></div>`;
+          }).join('');
+
+        const qPhotos = Object.entries(sub.answers || {})
+          .filter(([k, v]) => k.endsWith('__photo') && v)
+          .map(([, v]) => v);
+        const photos = [...(sub.photos || []), ...qPhotos];
+        const photoHtml = photos.length
+          ? `<div class="sub-photos">${photos.map((p, n) =>
+              `<a href="${escapeHtml(p)}" target="_blank" rel="noopener noreferrer"><img src="${escapeHtml(p)}" alt="Photo ${n + 1}" loading="lazy"></a>`).join('')}</div>`
+          : '';
+
+        const files = (sub.files || []).filter(f => f && f.data)
+          .map(f => `<a class="sub-file" href="${escapeHtml(f.data)}" download="${escapeHtml(f.name)}">📎 ${escapeHtml(f.name)}</a>`).join('');
+
+        return `
+          <div class="sub-card">
+            <div class="sub-head" onclick="toggleSubmission(${i})">
+              <div class="sub-head-main">
+                <div class="sub-student">${escapeHtml(sub.studentName || 'Student')}</div>
+                <div class="sub-lesson">${escapeHtml(submissionLessonTitle(sub))}</div>
+              </div>
+              <div class="sub-head-meta">
+                <span class="sub-team">${escapeHtml(submissionTeamName(sub))}</span>
+                <span class="sub-when">${escapeHtml(formatSubmittedAt(sub.submittedAt))}</span>
+                ${photos.length ? `<span class="sub-count">📷 ${photos.length}</span>` : ''}
+                ${files ? '<span class="sub-count">📎</span>' : ''}
+                <span class="sub-caret" id="sub-caret-${i}">▾</span>
+              </div>
+            </div>
+            <div class="sub-body" id="sub-body-${i}">
+              ${answers || '<div class="sub-empty-inline">No written answers.</div>'}
+              ${photoHtml}
+              ${files ? `<div class="sub-files">${files}</div>` : ''}
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function toggleSubmission(i) {
+      const body = document.getElementById(`sub-body-${i}`);
+      const caret = document.getElementById(`sub-caret-${i}`);
+      if (!body) return;
+      const open = body.classList.toggle('open');
+      if (caret) caret.textContent = open ? '▴' : '▾';
+    }
+
+    function formatSubmittedAt(value) {
+      if (!value) return '';
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return '';
+      return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ' · ' +
+             d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
     }
 
     async function api(url, options = {}) {
