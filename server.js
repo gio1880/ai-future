@@ -1073,7 +1073,9 @@ async function buildDataHealthReport() {
 		area: 'Master Roster',
 		fileName: 'master-roster.json',
 		classification: 'managed-summer-roster',
-		summer2026Ready: hasSummer2026Roster(roster),
+		// Once the seed has run, the live roster is authoritative — a coach renaming
+		// or removing a camper is a valid edit, not a broken roster.
+		summer2026Ready: Boolean(roster.migrations?.[summerRosterSource]) || hasSummer2026Roster(roster),
 		activeSummerClasses: (roster.classes || []).filter((item) => item.term === 'summer' && item.active !== false).map((item) => item.name),
 		summer2026Students: (roster.students || []).filter((student) => student.summerRosterSource === summerRosterSource && student.demoAccount !== true).length,
 		demoStudentReady: (roster.students || []).some((student) => student.demoAccount === true && String(student.portalUsername || '').toLowerCase() === 'demo')
@@ -2221,7 +2223,12 @@ function normalizeMasterRoster(data) {
 			summerWeeks: Array.isArray(source.settings?.summerWeeks) ? source.settings.summerWeeks : fallback.settings.summerWeeks
 		},
 		classes: Array.isArray(source.classes) ? source.classes : fallback.classes,
-		students: Array.isArray(source.students) ? source.students : []
+		students: Array.isArray(source.students) ? source.students : [],
+		// Records one-time data migrations that have already run. Without this the
+		// object rebuild here would drop the marker on every read/write.
+		migrations: (source.migrations && typeof source.migrations === 'object' && !Array.isArray(source.migrations))
+			? source.migrations
+			: {}
 	};
 }
 
@@ -2347,9 +2354,28 @@ function summerClassNameForId(classId) {
 	return item ? item.name : 'Summer Camp';
 }
 
+// One-time seeding of the summer 2026 roster from the hard-coded list above.
+//
+// This used to re-run whenever the live roster stopped matching that list
+// exactly. Any coach edit broke the match, so on the next restart the seed was
+// re-applied: a renamed camper came back under the old (misspelled) name as a
+// duplicate, and a deleted camper was recreated. Once seeded, the live roster
+// is the source of truth, so record that this ran and never seed again.
 async function migrateSummer2026RosterData() {
 	const roster = await readMasterRoster();
-	if (hasSummer2026Roster(roster)) return roster;
+	if (roster.migrations?.[summerRosterSource]) return roster;   // already seeded
+
+	// Rosters seeded before the marker existed: detect that the seed already ran
+	// (campers carry summerRosterSource) and just stamp it, so coach edits stand.
+	const alreadySeeded = hasSummer2026Roster(roster)
+		|| (roster.students || []).some((student) => student.summerRosterSource === summerRosterSource);
+	if (alreadySeeded) {
+		await writeMasterRoster({
+			...roster,
+			migrations: { ...(roster.migrations || {}), [summerRosterSource]: new Date().toISOString() }
+		});
+		return readMasterRoster();
+	}
 
 	const now = new Date().toISOString();
 	const targetClasses = summer2026RosterClasses(now);
@@ -2419,7 +2445,13 @@ async function migrateSummer2026RosterData() {
 		}
 	}
 
-	const migratedRoster = { ...roster, classes: nextClasses, students, updatedAt: now };
+	const migratedRoster = {
+		...roster,
+		classes: nextClasses,
+		students,
+		updatedAt: now,
+		migrations: { ...(roster.migrations || {}), [summerRosterSource]: now }
+	};
 	await writeMasterRoster(migratedRoster);
 	await syncSummer2026CampUsers(migratedRoster);
 	return readMasterRoster();
