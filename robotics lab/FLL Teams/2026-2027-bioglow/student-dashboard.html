@@ -1784,6 +1784,20 @@
       white-space: nowrap;
       flex-shrink: 0;
     }
+    /* target met (e.g. all 3 prototype sketches uploaded) */
+    .att-iter-count-done {
+      background: #e6f4ea;
+      color: #137333;
+    }
+    .att-target-hint {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #b06000;
+      background: #fef7e0;
+      border-radius: 8px;
+      padding: 6px 10px;
+      margin-top: 8px;
+    }
     .att-delete-btn {
       background: none;
       border: none;
@@ -4639,6 +4653,11 @@
         badge: c.badge || '🔧 Attachment Tracker',
         photoLabel: c.photoLabel || '📸 Add iteration photo',
         emptyText: c.emptyText || 'No photos yet — snap your first version below!',
+        // when set, each item asks for this many uploads (e.g. 3 prototype
+        // sketches per mission) and shows its own progress
+        targetPerItem: Number(c.targetPerItem) > 0 ? Number(c.targetPerItem) : 0,
+        versionLabel: c.versionLabel || 'v',
+        notePlaceholder: c.notePlaceholder || 'What changed in this version?',
         defaults: (Array.isArray(c.defaults) && c.defaults.length) ? c.defaults : ['Attachment 1','Attachment 2','Attachment 3','Attachment 4']
       };
     }
@@ -4748,12 +4767,19 @@
       const totalPhotos = atts.reduce((n, a) => n + a.iterations.length, 0);
       const nounLower = cfg.itemNoun.toLowerCase();
 
-      const attCards = atts.map(att => `
+      const target = cfg.targetPerItem;
+      const attCards = atts.map(att => {
+        const done = att.iterations.length;
+        const remaining = target ? Math.max(0, target - done) : 0;
+        const countLabel = target
+          ? `${done} of ${target}`
+          : `${done} version${done !== 1 ? 's' : ''}`;
+        return `
         <div class="att-card">
           <div class="att-card-head">
             <input class="att-name-input" type="text" value="${escapeHtml(att.name)}" placeholder="${escapeHtml(cfg.namePlaceholder)}"
               onchange="updateAttachmentField('${escapeHtml(userId)}','${escapeHtml(att.id)}','name',this.value)">
-            <span class="att-iter-count">${att.iterations.length} version${att.iterations.length !== 1 ? 's' : ''}</span>
+            <span class="att-iter-count${target && !remaining ? ' att-iter-count-done' : ''}">${countLabel}${target && !remaining ? ' ✓' : ''}</span>
             <button class="att-delete-btn" onclick="removeAttachment('${escapeHtml(userId)}','${escapeHtml(task.id)}','${escapeHtml(att.id)}')" title="Delete ${escapeHtml(nounLower)}">✕</button>
           </div>
           <input class="att-purpose-input" type="text" value="${escapeHtml(att.purpose)}" placeholder="${escapeHtml(cfg.purposePlaceholder)}"
@@ -4764,11 +4790,11 @@
               ${att.iterations.map((it, idx) => `
                 <div class="att-iteration">
                   <div class="att-iter-imgwrap">
-                    <img class="att-iter-img" src="${it.photo}" alt="Version ${idx + 1}">
-                    <span class="att-iter-version">v${idx + 1}</span>
+                    <img class="att-iter-img" src="${it.photo}" alt="${escapeHtml(cfg.versionLabel)}${idx + 1}">
+                    <span class="att-iter-version">${escapeHtml(cfg.versionLabel)}${idx + 1}</span>
                     <button class="att-iter-delete" onclick="removeIteration('${escapeHtml(userId)}','${escapeHtml(task.id)}','${escapeHtml(att.id)}','${escapeHtml(it.id)}')">✕</button>
                   </div>
-                  <input class="att-iter-note" type="text" value="${escapeHtml(it.note)}" placeholder="What changed in this version?"
+                  <input class="att-iter-note" type="text" value="${escapeHtml(it.note)}" placeholder="${escapeHtml(cfg.notePlaceholder)}"
                     onchange="updateIterationNote('${escapeHtml(userId)}','${escapeHtml(att.id)}','${escapeHtml(it.id)}',this.value)">
                   <div class="att-iter-time">🕐 ${escapeHtml(journalTimestamp(it.createdAt))}</div>
                 </div>
@@ -4776,13 +4802,16 @@
             </div>
           ` : `<div class="att-no-iterations">${escapeHtml(cfg.emptyText)}</div>`}
 
+          ${target && remaining ? `<div class="att-target-hint">${remaining} more to go — ${target} needed for this ${escapeHtml(nounLower)}</div>` : ''}
+
           <label class="att-add-photo-btn">
             ${escapeHtml(cfg.photoLabel)}
             <input type="file" accept="image/*" style="display:none"
               onchange="addIterationPhoto(this,'${escapeHtml(userId)}','${escapeHtml(task.id)}','${escapeHtml(att.id)}')">
           </label>
         </div>
-      `).join('');
+      `;
+      }).join('');
 
       return `
         <div class="ta-back-row">
@@ -4793,7 +4822,7 @@
             <div class="ta-badges">
               <span class="ta-badge ta-badge-type">${escapeHtml(cfg.badge)}</span>
               <span class="ta-badge ta-badge-ctx">${ctxIcon}</span>
-              <span class="ta-badge ta-badge-done">${atts.length} ${escapeHtml(nounLower)}${atts.length !== 1 ? 's' : ''} · ${totalPhotos} photos</span>
+              <span class="ta-badge ta-badge-done">${atts.length} ${escapeHtml(nounLower)}${atts.length !== 1 ? 's' : ''} · ${totalPhotos}${cfg.targetPerItem ? ` / ${atts.length * cfg.targetPerItem}` : ''} ${cfg.targetPerItem ? 'drawings' : 'photos'}</span>
             </div>
             <h1 class="ta-title">${escapeHtml(task.title)}</h1>
           </div>

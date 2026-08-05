@@ -3248,5 +3248,39 @@
     "createdBy": "coach-default",
     "createdAt": "2026-08-03T17:48:42.436Z",
     "updatedAt": "2026-08-03T17:48:42.436Z"
+  },
+  {
+    "id": "task-mission-prototype-sketches",
+    "assignmentId": "assignment-kickoff-prep",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "Mission Prototype Sketches: 3 Ideas Per Mission ✏️",
+    "category": "Robot Game",
+    "type": "tracker",
+    "workContext": "class",
+    "status": "todo",
+    "dueDate": "2026-09-18",
+    "description": "Before you build anything, **draw it**. Real engineers sketch several ideas before picking one — it is far cheaper to throw away a drawing than a built attachment.\n\n## ✏️ What you have to do\n\nFor **every mission** your team plans to attempt, draw **three different prototype ideas** for how your robot could solve it. Not three copies of the same idea — three genuinely different approaches.\n\nThen photograph each drawing and upload it here under that mission.\n\n## 🧠 How to get three genuinely different ideas\n\nIf your three sketches all look alike, push harder. Try changing one big thing each time:\n\n- **Different mechanism** — a pusher, a fork/lift, a hook, a scoop, a claw, a ramp\n- **Different approach angle** — head-on, from the side, or on the way back from another mission\n- **Different power** — passive (a fixed shape that does the work while driving) vs. active (a motor)\n- **Different size** — one big attachment that does two missions vs. a small dedicated one\n- **Different timing** — solve it early in the run, or combine it with a neighbouring mission\n\n## 🖊️ What each drawing needs\n\n1. The **mission model** it interacts with\n2. The **attachment shape** — how it grabs, pushes, lifts, or drops\n3. An **arrow showing the motion** — which way does it move?\n4. A note on **which port or motor** it would use, if it needs one\n5. Roughly **where the robot approaches from**\n\nPencil on paper is perfect. Neatness does not score points — clear thinking does.\n\n## 🤔 Then pick one\n\nUnder each drawing, write what is good and bad about it. When all three are up, decide which one you will build first and say **why** in that mission's notes. Judges love hearing \"we tried three ideas and chose this one because…\"\n\n## 📋 How to use this page\n\n1. Rename each card to a real mission from the **Robot Game Rulebook**\n2. In the notes line, write what that mission actually requires\n3. Upload **3 drawings** per mission — the card turns green when you hit three\n4. Add a card for every mission your team is attempting\n\n> **Tip for judges:** keep these sketches in your Engineering Notebook too. Showing your rejected ideas is strong evidence of the Engineering Design Process.",
+    "trackerConfig": {
+      "itemNoun": "Mission",
+      "namePlaceholder": "Mission name / number (e.g. M03 Coral Nursery)",
+      "purposePlaceholder": "What does this mission need? e.g. push a lever left, then lift a hoop",
+      "addLabel": "Add another mission",
+      "badge": "✏️ Mission Prototype Sketches",
+      "photoLabel": "✏️ Add a prototype drawing",
+      "emptyText": "No drawings yet — sketch 3 different ideas for this mission, then photograph them.",
+      "notePlaceholder": "What is good and bad about this idea?",
+      "versionLabel": "Idea ",
+      "targetPerItem": 3,
+      "defaults": [
+        "Mission 1",
+        "Mission 2",
+        "Mission 3"
+      ]
+    },
+    "questions": [],
+    "createdBy": "coach",
+    "createdAt": "2026-08-05T17:58:07.512Z",
+    "updatedAt": "2026-08-05T17:58:07.512Z"
   }
 ]
