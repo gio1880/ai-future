@@ -25,11 +25,13 @@
       --grass-light: #e7f7ec;
       --purple: #7c51d4;
       --purple-light: #f0ebfd;
-      --ink: #10233f;
-      --muted: #5f6c80;
-      --line: #dce5ef;
-      --bg: #f7f8fa;
-      --white: #ffffff;
+      --ink: var(--t-ink);
+      --muted: var(--t-muted);
+      --line: var(--s-line);
+      --bg: var(--s-page);
+      --white: var(--s-card);
+      /* solid button fill — must stay dark behind white text in BOTH themes */
+      --btn-solid: #10233f;
       --radius: 16px;
       --radius-sm: 10px;
       --shadow: 0 4px 20px rgba(11, 42, 74, 0.08);
@@ -93,7 +95,7 @@
       border-radius: 8px;
       border: 1px solid var(--line);
       padding: 4px;
-      background: white;
+      background: var(--s-card);
     }
 
     .brand-text strong { display: block; font-size: 15px; font-weight: 800; }
@@ -107,7 +109,7 @@
       border: 1.5px solid var(--line);
       font-size: 13px;
       font-weight: 700;
-      background: white;
+      background: var(--s-card);
       color: var(--muted);
     }
 
@@ -120,7 +122,7 @@
       font-weight: 800;
       font-size: 13px;
       cursor: pointer;
-      background: var(--ink);
+      background: var(--btn-solid);
       color: white;
       transition: opacity 0.15s;
     }
@@ -223,7 +225,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: white;
+      background: var(--s-card);
       border: 1.5px solid #f0dc8e;
       border-radius: 50px;
       padding: 5px 13px;
@@ -245,7 +247,7 @@
     .section-sub { font-size: 14px; color: var(--muted); margin-bottom: 18px; }
 
     .progress-card {
-      background: white;
+      background: var(--s-card);
       border: 1.5px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -283,7 +285,7 @@
     }
 
     .week-card {
-      background: white;
+      background: var(--s-card);
       border: 1.5px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -378,7 +380,7 @@
       flex-shrink: 0;
       width: 76px;
       text-align: center;
-      background: white;
+      background: var(--s-card);
       border: 1.5px solid var(--line);
       border-radius: var(--radius-sm);
       padding: 8px 6px;
@@ -428,7 +430,7 @@
     }
 
     .assignment-table-wrap {
-      background: white;
+      background: var(--s-card);
       border: 1.5px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -490,7 +492,7 @@
       align-items: center;
       border: 1.5px solid var(--line);
       border-radius: 999px;
-      background: #fff;
+      background: var(--s-card);
       color: var(--ink);
       padding: 9px 14px;
       font-size: 13px;
@@ -522,14 +524,14 @@
       color: var(--grass);
     }
     .begin-card {
-      background: #fff;
+      background: var(--s-card);
       border: 1.5px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 22px 24px;
       margin-bottom: 28px;
     }
-    .begin-card.is-ready { border-color: #bce5c8; background: linear-gradient(180deg, #fff, var(--grass-light)); }
+    .begin-card.is-ready { border-color: #bce5c8; background: linear-gradient(180deg, var(--s-card), var(--grass-light)); }
     .begin-kicker {
       color: var(--sun-deep);
       font-size: 12px;
@@ -556,7 +558,7 @@
       margin-top: 16px;
       padding: 16px 18px;
       border-radius: 14px;
-      background: #fff;
+      background: var(--s-card);
       border: 1.5px solid #bce5c8;
       color: #14663b;
       font-weight: 800;
@@ -587,7 +589,7 @@
     }
 
     .submit-card {
-      background: white;
+      background: var(--s-card);
       border: 1.5px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -612,7 +614,7 @@
       border: 1.5px solid var(--line);
       border-radius: var(--radius-sm);
       padding: 11px 13px;
-      background: white;
+      background: var(--s-card);
       color: var(--ink);
       outline: none;
     }
@@ -659,7 +661,7 @@
     .photo-input-row .cam-take:hover { background: #14365a; }
     .photo-input-row .file-btn {
       display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
-      border: 1.5px solid var(--line); background: #fff; color: var(--ink);
+      border: 1.5px solid var(--line); background: var(--s-card); color: var(--ink);
       border-radius: 12px; font-weight: 800; font-size: 15px; padding: 12px 18px; min-height: 48px;
     }
     .photo-input-row .file-btn:hover { border-color: var(--sun); }
@@ -693,7 +695,7 @@
     .cam-btn.shoot:hover { background: #ffd84d; }
 
     .points-card {
-      background: white;
+      background: var(--s-card);
       border: 1.5px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -728,7 +730,7 @@
       border: 1px solid var(--line);
       border-radius: var(--radius-sm);
       padding: 10px 12px;
-      background: #fbfcfd;
+      background: var(--s-raised);
       font-size: 13px;
     }
 
@@ -747,14 +749,14 @@
       border: 1px solid var(--line);
       border-radius: var(--radius-sm);
       padding: 12px;
-      background: #fbfcfd;
+      background: var(--s-raised);
     }
 
     .print-request-item strong { display: block; margin-bottom: 4px; }
     .print-request-item p { color: var(--muted); font-size: 13px; line-height: 1.5; margin-top: 6px; }
 
     .classroom-card {
-      background: white;
+      background: var(--s-card);
       border: 1.5px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -773,13 +775,13 @@
       border: 1px solid var(--line);
       border-radius: var(--radius-sm);
       padding: 13px;
-      background: #fbfcfd;
+      background: var(--s-raised);
     }
 
     .classroom-tile strong { display: block; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
     .timer-readout { font-size: 30px; font-weight: 900; color: var(--sun-deep); }
     .group-list { display: grid; gap: 10px; margin-top: 14px; }
-    .group-item { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px; background: #fbfcfd; }
+    .group-item { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px; background: var(--s-raised); }
     .group-item h4 { margin: 0 0 5px; font-size: 15px; }
     .group-item p { margin: 5px 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
 
@@ -803,7 +805,7 @@
     }
 
     .resource-card {
-      background: white;
+      background: var(--s-card);
       border-radius: var(--radius);
       border: 1.5px solid var(--line);
       padding: 18px;
@@ -856,7 +858,7 @@
     .announce-list { display: grid; gap: 14px; }
 
     .announce-card {
-      background: white;
+      background: var(--s-card);
       border-radius: var(--radius);
       border: 1.5px solid var(--line);
       padding: 20px;
@@ -1004,7 +1006,7 @@
       align-items: center; justify-content: center; padding: clamp(16px, 4vw, 40px); overflow-y: auto;
     }
     .lo-q-layer.show { display: flex; }
-    .lo-q-card { max-width: 760px; width: 100%; background: #fff; border-radius: 22px; padding: clamp(22px, 4vw, 40px); box-shadow: 0 24px 60px rgba(7,20,38,0.4); }
+    .lo-q-card { max-width: 760px; width: 100%; background: var(--s-card); border-radius: 22px; padding: clamp(22px, 4vw, 40px); box-shadow: 0 24px 60px rgba(7,20,38,0.4); }
     .lo-q-card h1 { font-size: clamp(24px, 4.6vw, 40px); font-weight: 900; line-height: 1.12; margin: 4px 0 14px; }
     .lo-q-card .lo-text { font-size: clamp(17px, 2.5vw, 23px); line-height: 1.5; color: var(--ink); }
     .lo-q-card.result { text-align: center; }
@@ -1018,14 +1020,14 @@
       gap: 14px; margin-top: 6px;
     }
     .monster-card {
-      background: #fff; border: 1.5px solid var(--line); border-radius: 18px;
+      background: var(--s-card); border: 1.5px solid var(--line); border-radius: 18px;
       padding: 12px 8px 14px; text-align: center; box-shadow: var(--shadow);
       display: flex; flex-direction: column; align-items: center; gap: 6px;
       transition: transform 0.12s, box-shadow 0.15s;
     }
     .monster-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
     .monster-card.is-me {
-      border-color: var(--gold); background: linear-gradient(180deg, var(--sun-light), #fff);
+      border-color: var(--gold); background: linear-gradient(180deg, var(--sun-light), var(--s-card));
       box-shadow: 0 0 0 2px var(--gold);
     }
     .monster-points {
@@ -1044,6 +1046,8 @@
     @media (max-width: 520px) { .monster-grid { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); } .monster-char { width: 60px; height: 62px; } }
   </style>
   <link rel="stylesheet" href="/assets/css/af-hub-system.css" />
+  <link rel="stylesheet" href="/assets/css/theme.css">
+  <script>(function(){try{var t=localStorage.getItem("af-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
 </head>
 <body>
 
@@ -1057,6 +1061,7 @@
         </div>
       </div>
       <div class="topbar-right">
+        <button class="theme-toggle" type="button" onclick="toggleTheme()" title="Switch between light and dark" aria-label="Switch between light and dark"><span class="ti-dark">🌙</span><span class="ti-light">☀️</span></button>
         <button class="btn" id="logoutButton">Sign out</button>
       </div>
     </div>
@@ -1120,6 +1125,19 @@
   <input type="file" id="camFallbackInput" accept="image/*" capture="environment" hidden>
 
   <script>
+
+    // ── Light / dark theme ──────────────────────────────────────────────
+    // No stored choice = follow the device. The toggle stores an explicit
+    // override on <html data-theme> and in localStorage.
+    function toggleTheme() {
+      var root = document.documentElement;
+      var current = root.getAttribute('data-theme');
+      var isDark = current ? current === 'dark'
+        : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var next = isDark ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('af-theme', next); } catch (e) {}
+    }
     const app = document.getElementById('app');
     const userLine = document.getElementById('userLine');
     const logoutButton = document.getElementById('logoutButton');

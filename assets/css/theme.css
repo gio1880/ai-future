@@ -1,0 +1,216 @@
+/* ──────────────────────────────────────────────────────────────
+   AI Future — light / dark theme tokens
+   Only custom properties live here, so linking this file never
+   changes how a page looks until the page actually uses a token.
+
+   Theme resolution:
+     no data-theme      → follow the device (prefers-color-scheme)
+     data-theme="dark"  → force dark
+     data-theme="light" → force light
+   The toggle in each hub writes data-theme onto <html>.
+   ────────────────────────────────────────────────────────────── */
+
+:root {
+  color-scheme: light;
+
+  /* surfaces */
+  --s-page:   #eef3fc;   /* page background            */
+  --s-card:   #ffffff;   /* cards, panels, sheets      */
+  --s-raised: #fafbfc;   /* subtly raised/inset areas  */
+  --s-subtle: #f1f3f4;   /* chips, inputs, table heads */
+
+  /* lines */
+  --s-line:   #e8eaed;   /* hairline borders           */
+  --s-line-2: #dadce0;   /* stronger borders, inputs   */
+  --s-line-3: #bdc1c6;   /* strongest borders          */
+
+  /* text */
+  --t-ink:   #202124;    /* headings / primary text    */
+  --t-body:  #3c4043;    /* body text                  */
+  --t-muted: #5f6368;    /* secondary text             */
+  --t-faint: #80868b;    /* hints, timestamps          */
+
+  /* soft status tints (backgrounds behind coloured text) */
+  --tint-blue:  #e8f1fd;
+  --tint-green: #e6f4ea;
+  --tint-red:   #fce8e6;
+  --tint-amber: #fff3e0;
+
+  /* solid dark button fill — always sits behind white text */
+  --btn-solid: #10233f;
+
+  /* elevation — softer in light, deeper in dark */
+  --s-shadow:   0 2px 4px rgba(7, 62, 119, .04), 0 10px 26px rgba(7, 62, 119, .08);
+  --s-shadow-h: 0 16px 40px rgba(7, 62, 119, .18);
+}
+
+/* Dark values, shared by the auto (device) and forced paths.
+   Kept in sync deliberately — edit both blocks together. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --s-page:   #0f1720;
+    --s-card:   #18212e;
+    --s-raised: #1e2836;
+    --s-subtle: #222d3c;
+
+    --s-line:   #2b3849;
+    --s-line-2: #35455a;
+    --s-line-3: #44566d;
+
+    --t-ink:   #e9eff7;
+    --t-body:  #cfd9e5;
+    --t-muted: #a2b0c2;
+    --t-faint: #8895a6;
+
+    --tint-blue:  #17293f;
+    --tint-green: #14301f;
+    --tint-red:   #3a1d1a;
+    --tint-amber: #392c12;
+
+    --btn-solid: #1d4d80;
+
+    /* Bridge: af-hub-system.css defines these and is loaded before this file,
+       so remap its surface/text tokens for dark. Brand solids (navy, gold,
+       blue, green) are left alone — they sit behind white text. */
+    --af-page:       #0f1720;
+    --af-card:       #18212e;
+    --af-ink:        #e9eff7;
+    --af-muted:      #a2b0c2;
+    --af-line:       #2b3849;
+    --af-blue-soft:  #17293f;
+    --af-green-soft: #14301f;
+    --af-sun-soft:   #392c12;
+
+    /* Camp hub accent tints (defined in that page's :root) — pale blocks
+       become muted so they don't glare on a dark page. */
+    --sun-light:    #392c12;
+    --sun-mid:      #5a4a22;
+    --sky-light:    #17293f;
+    --grass-light:  #14301f;
+    --purple-light: #241b3d;
+    --red-light:    #3a1d1a;
+
+    --s-shadow:   0 2px 4px rgba(0, 0, 0, .30), 0 10px 26px rgba(0, 0, 0, .38);
+    --s-shadow-h: 0 16px 40px rgba(0, 0, 0, .50);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --s-page:   #0f1720;
+  --s-card:   #18212e;
+  --s-raised: #1e2836;
+  --s-subtle: #222d3c;
+
+  --s-line:   #2b3849;
+  --s-line-2: #35455a;
+  --s-line-3: #44566d;
+
+  --t-ink:   #e9eff7;
+  --t-body:  #cfd9e5;
+  --t-muted: #a2b0c2;
+  --t-faint: #8895a6;
+
+  --tint-blue:  #17293f;
+  --tint-green: #14301f;
+  --tint-red:   #3a1d1a;
+  --tint-amber: #392c12;
+
+  --btn-solid: #1d4d80;
+
+  /* Bridge: af-hub-system.css defines these and is loaded before this file,
+     so remap its surface/text tokens for dark. Brand solids (navy, gold,
+     blue, green) are left alone — they sit behind white text. */
+  --af-page:       #0f1720;
+  --af-card:       #18212e;
+  --af-ink:        #e9eff7;
+  --af-muted:      #a2b0c2;
+  --af-line:       #2b3849;
+  --af-blue-soft:  #17293f;
+  --af-green-soft: #14301f;
+  --af-sun-soft:   #392c12;
+
+  /* Camp hub accent tints (defined in that page's :root) — pale blocks
+     become muted so they don't glare on a dark page. */
+  --sun-light:    #392c12;
+  --sun-mid:      #5a4a22;
+  --sky-light:    #17293f;
+  --grass-light:  #14301f;
+  --purple-light: #241b3d;
+  --red-light:    #3a1d1a;
+
+  --s-shadow:   0 2px 4px rgba(0, 0, 0, .30), 0 10px 26px rgba(0, 0, 0, .38);
+  --s-shadow-h: 0 16px 40px rgba(0, 0, 0, .50);
+}
+
+/* ── Dark overrides for rules af-hub-system.css hard-codes ──
+   That file sets these with !important on a literal colour, so a token
+   remap alone cannot reach them. Kept to the few rules that actually
+   paint a light surface. */
+:root[data-theme="dark"] .appbar,
+:root[data-theme="dark"] .topbar {
+  background: rgba(24, 33, 46, .92) !important;
+  border-bottom-color: var(--s-line) !important;
+}
+:root[data-theme="dark"] .btn-outline:hover {
+  background: rgba(255, 255, 255, .08) !important;
+}
+/* hub name in the header is painted with the deep-navy brand colour, which
+   disappears on a dark bar — that token stays navy for fills, so fix the text */
+:root[data-theme="dark"] .brand-title strong,
+:root[data-theme="dark"] .brand-text strong { color: var(--t-ink); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .appbar,
+  :root:not([data-theme="light"]) .topbar {
+    background: rgba(24, 33, 46, .92) !important;
+    border-bottom-color: var(--s-line) !important;
+  }
+  :root:not([data-theme="light"]) .btn-outline:hover {
+    background: rgba(255, 255, 255, .08) !important;
+  }
+  :root:not([data-theme="light"]) .brand-title strong,
+  :root:not([data-theme="light"]) .brand-text strong { color: var(--t-ink); }
+}
+
+/* ── Theme toggle button (shared by all four hubs) ── */
+.theme-toggle {
+  border: 1.5px solid var(--s-line-2) !important;
+  background: var(--s-card) !important;
+  color: var(--t-muted) !important;
+  border-radius: 999px !important;
+  width: 38px;
+  height: 38px;
+  min-width: 0 !important;
+  padding: 0 !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: none !important;
+}
+.theme-toggle:hover {
+  border-color: var(--s-line-3) !important;
+  color: var(--t-ink) !important;
+}
+/* show the icon for the theme you'd switch TO */
+.theme-toggle .ti-dark { display: inline; }
+.theme-toggle .ti-light { display: none; }
+:root[data-theme="dark"] .theme-toggle .ti-dark { display: none; }
+:root[data-theme="dark"] .theme-toggle .ti-light { display: inline; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .ti-dark { display: none; }
+  :root:not([data-theme="light"]) .theme-toggle .ti-light { display: inline; }
+}
+
+/* Images and drawings keep their own colours, but soften the glare
+   of pure-white user photos against a dark page. */
+:root[data-theme="dark"] img:not([src*=".svg"]) { filter: brightness(.92); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) img:not([src*=".svg"]) { filter: brightness(.92); }
+}
