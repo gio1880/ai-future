@@ -6174,7 +6174,11 @@ app.post('/api/fll/tasks/:id/submission', requireFllAuth, requireFllStudent, asy
 		const existingIndex = submissions.findIndex((item) => item.taskId === task.id && item.studentId === req.fllUser.id);
 		// A turned-in assignment is locked until a coach reopens it. Enforced
 		// here, not just in the UI, so it cannot be bypassed from the console.
-		if (existingIndex >= 0 && !submissions[existingIndex].reopened) {
+		// Trackers and the journal are exempt: they are meant to grow all
+		// season (new prototype drawings, new journal entries), so needing a
+		// coach to unlock them every time would be pure friction.
+		const growsAllSeason = task.type === 'tracker' || task.type === 'journal';
+		if (existingIndex >= 0 && !submissions[existingIndex].reopened && !growsAllSeason) {
 			return res.status(409).json({
 				success: false,
 				message: 'This assignment has already been turned in. Ask your coach to reopen it if you need to change your answers.'

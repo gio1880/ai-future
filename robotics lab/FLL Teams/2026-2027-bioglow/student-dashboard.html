@@ -5303,29 +5303,26 @@
     function specialSubmitRow(userId, taskId, kind, savedSubmission) {
       const serverAt = (latestData.submittedTasks || {})[taskId] || null;
       const submittedAt = (savedSubmission && savedSubmission.submittedAt) || serverAt;
-      const isReopened = !!((latestData.submissionState || {})[taskId] || {}).reopened;
-      if (submittedAt && !isReopened) {
-        savedSubmission = { ...(savedSubmission || {}), submittedAt };
-        return `
-          <div class="ta-done-banner">
-            <div class="ta-done-icon">✅</div>
-            <div>
-              <div class="ta-done-title">Sent to your coach!</div>
-              <div class="ta-done-sub">Submitted ${escapeHtml(formatDate(savedSubmission.submittedAt))} · Ask your coach to reopen it if you need to add more.</div>
-            </div>
+      // Trackers and the journal keep growing all season, so they are never
+      // locked — the student can send updated work whenever they add to it.
+      // The server exempts these types too.
+      const alreadySent = submittedAt ? `
+        <div class="ta-done-banner">
+          <div class="ta-done-icon">✅</div>
+          <div>
+            <div class="ta-done-title">Sent to your coach!</div>
+            <div class="ta-done-sub">Last sent ${escapeHtml(formatDate(submittedAt))} · keep adding, then send again.</div>
           </div>
-          ${integrityFlagBanner(taskId)}
-          ${coachReviewBanner(taskId)}
-          ${reopenRow(taskId)}
-          <div class="ta-submit-hint" id="ta-submit-msg"></div>`;
-      }
+        </div>
+        ${coachReviewBanner(taskId)}` : '';
+
       return `
         ${integrityFlagBanner(taskId)}
-        ${isReopened ? reopenRow(taskId) : ''}
+        ${alreadySent}
         ${integrityNotice()}
         <div class="ta-submit-row">
           <button class="ta-submit-btn" onclick="submitSpecialTask('${escapeHtml(userId)}','${escapeHtml(taskId)}','${kind}')">
-            ✅ Send to my coach
+            ${submittedAt ? '🔄 Send updated work' : '✅ Send to my coach'}
           </button>
           <button class="ta-save-btn" onclick="saveSpecialDraft('${escapeHtml(userId)}','${escapeHtml(taskId)}')">
             💾 Save draft
