@@ -5329,6 +5329,66 @@ app.post('/api/fll/coach/sync-curriculum', requireFllAuth, requireFllCoach, asyn
 	}
 });
 
+// Who is currently in the student hub. The student dashboard polls an
+// authenticated endpoint every few seconds and requireFllAuth refreshes
+// session.lastSeen, so this is accurate to within seconds while a hub tab
+// is open. Sessions are in memory, so a restart shows everyone offline
+// until their next poll — reported via `sinceRestartMs` so the UI can say so.
+const FLL_ONLINE_WINDOW_MS = 90 * 1000;        // actively polling right now
+const FLL_IDLE_WINDOW_MS = 15 * 60 * 1000;     // tab open but quiet / just left
+const fllServerStartedAt = Date.now();
+
+app.get('/api/fll/coach/live-students', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const [users, teams] = await Promise.all([
+			readFllUsers(),
+			readJsonFile(path.join(fllHubDataDir, 'teams.json'), [])
+		]);
+		const usersById = new Map((Array.isArray(users) ? users : []).map((u) => [u.id, u]));
+		const teamsById = new Map((Array.isArray(teams) ? teams : []).map((t) => [t.id, t]));
+		const now = Date.now();
+
+		// one entry per student, keeping their most recent session
+		const latest = new Map();
+		for (const session of fllSessions.values()) {
+			const user = usersById.get(session.userId);
+			if (!user || user.role !== 'student' || user.active === false) continue;
+			const prev = latest.get(user.id);
+			if (!prev || session.lastSeen > prev.lastSeen) latest.set(user.id, session);
+		}
+
+		const students = [];
+		for (const [userId, session] of latest) {
+			const idleMs = now - session.lastSeen;
+			if (idleMs > FLL_IDLE_WINDOW_MS) continue;
+			const user = usersById.get(userId);
+			const team = teamsById.get(user.teamId);
+			students.push({
+				id: user.id,
+				name: user.name,
+				teamId: user.teamId || '',
+				teamName: team ? (team.nickname || team.name) : '',
+				status: idleMs <= FLL_ONLINE_WINDOW_MS ? 'online' : 'idle',
+				idleSeconds: Math.round(idleMs / 1000),
+				since: new Date(session.createdAt).toISOString()
+			});
+		}
+		students.sort((a, b) => a.idleSeconds - b.idleSeconds || a.name.localeCompare(b.name));
+
+		return res.json({
+			success: true,
+			onlineCount: students.filter((s) => s.status === 'online').length,
+			idleCount: students.filter((s) => s.status === 'idle').length,
+			students,
+			sinceRestartMs: now - fllServerStartedAt,
+			checkedAt: new Date().toISOString()
+		});
+	} catch (err) {
+		console.error('FLL live students error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading who is online' });
+	}
+});
+
 const fllRankingCategories = ['building', 'programming', 'speaking', 'research', 'hardWork', 'design3d', 'bricklink', 'printerOperation'];
 
 function normalizeFllCoachRankings(data) {

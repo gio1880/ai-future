@@ -182,6 +182,27 @@
 
     .visibility-card { background: var(--s-card); border: 1.5px solid var(--s-line); border-radius: 18px; padding: 22px; margin-bottom: 16px; }
 
+    /* ── Who's online ── */
+    .online-counts { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+    .online-stat { background: var(--s-subtle); border-radius: 14px; padding: 12px 20px; text-align: center; min-width: 118px; }
+    .online-stat-live { background: var(--tint-green); }
+    .online-num { font-size: 30px; font-weight: 900; line-height: 1; color: var(--t-ink); }
+    .online-stat-live .online-num { color: #1e8e5a; }
+    .online-lbl { font-size: 11.5px; font-weight: 700; color: var(--t-muted); margin-top: 5px; }
+    .online-updated { font-size: 11.5px; color: var(--t-faint); }
+    .online-team { margin-bottom: 14px; }
+    .online-team-head { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--t-muted); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .online-team-count { background: var(--tint-green); color: #1e8e5a; border-radius: 50px; padding: 2px 9px; font-size: 11px; }
+    .online-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .online-chip { display: inline-flex; align-items: center; gap: 7px; border: 1.5px solid var(--s-line); border-radius: 50px; padding: 7px 13px; font-size: 13px; background: var(--s-card); }
+    .online-chip.is-online { border-color: #b7dfca; background: var(--tint-green); }
+    .online-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--s-line-3); flex-shrink: 0; }
+    .online-chip.is-online .online-dot { background: #1e8e5a; animation: onlinePulse 2s ease-in-out infinite; }
+    @keyframes onlinePulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+    .online-name { font-weight: 700; color: var(--t-ink); }
+    .online-ago { font-size: 11.5px; color: var(--t-faint); }
+    @media (prefers-reduced-motion: reduce) { .online-chip.is-online .online-dot { animation: none; } }
+
     /* ── Submitted work ── */
     .sub-empty, .sub-empty-inline { color: var(--t-muted); font-size: 13.5px; padding: 18px 4px; }
     .sub-empty-inline { padding: 4px 0 10px; font-style: italic; }
@@ -502,6 +523,7 @@
       <button class="tab-btn" data-tab="newteam" onclick="showTab('newteam')">🆕 Create Team</button>
       <button class="tab-btn" data-tab="calendar" onclick="showTab('calendar')">📅 Calendar</button>
       <button class="tab-btn" data-tab="curriculum" onclick="showTab('curriculum')">📚 Curriculum</button>
+      <button class="tab-btn" data-tab="online" onclick="showTab('online')">🟢 Who's Online</button>
       <button class="tab-btn" data-tab="submissions" onclick="showTab('submissions')">📬 Submitted Work</button>
       <button class="tab-btn" data-tab="visibility" onclick="showTab('visibility')">🎛️ Areas &amp; Lessons</button>
       <button class="tab-btn" data-tab="live" onclick="showTab('live')">Live Slides</button>
@@ -646,6 +668,30 @@
         </div>
       </div>
     </div>
+    <div class="panel" id="panel-online">
+      <div class="visibility-card">
+        <div class="visibility-head">
+          <div>
+            <h2 class="form-title">Who's online right now</h2>
+            <p class="form-sub">Students with the hub open. Updates every 10 seconds on its own.</p>
+          </div>
+        </div>
+        <div class="online-counts">
+          <div class="online-stat online-stat-live">
+            <div class="online-num" id="onlineNum">–</div>
+            <div class="online-lbl">In the hub now</div>
+          </div>
+          <div class="online-stat">
+            <div class="online-num" id="idleNum">–</div>
+            <div class="online-lbl">Just stepped away</div>
+          </div>
+          <button class="visibility-bulk-btn" onclick="loadOnline()">↻ Refresh now</button>
+          <span class="online-updated" id="onlineUpdated"></span>
+        </div>
+        <div id="onlineNote" class="sub-missing hidden"></div>
+        <div id="onlineWrap">Loading…</div>
+      </div>
+    </div>
     <div class="panel" id="panel-submissions">
       <div class="visibility-card">
         <div class="visibility-head">
@@ -761,6 +807,90 @@
       if (id === 'rankings') loadRankings();
       if (id === 'visibility') renderVisibility();
       if (id === 'submissions') loadSubmissions();
+      // only poll while the tab is actually being looked at
+      if (id === 'online') startOnlinePolling(); else stopOnlinePolling();
+    }
+
+    // ── Who's online ──────────────────────────────────────────────────────
+    let onlineTimer = null;
+
+    function startOnlinePolling() {
+      loadOnline();
+      stopOnlinePolling();
+      onlineTimer = setInterval(loadOnline, 10000);
+    }
+
+    function stopOnlinePolling() {
+      if (onlineTimer) { clearInterval(onlineTimer); onlineTimer = null; }
+    }
+
+    // don't keep polling when the browser tab is in the background
+    document.addEventListener('visibilitychange', () => {
+      const viewing = !document.hidden &&
+        document.getElementById('panel-online')?.classList.contains('active');
+      if (viewing) startOnlinePolling(); else stopOnlinePolling();
+    });
+
+    async function loadOnline() {
+      const wrap = document.getElementById('onlineWrap');
+      try {
+        const result = await api('/api/fll/coach/live-students');
+        renderOnline(result);
+      } catch (err) {
+        wrap.innerHTML = `<div class="form-msg error">${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderOnline(data) {
+      document.getElementById('onlineNum').textContent = data.onlineCount;
+      document.getElementById('idleNum').textContent = data.idleCount;
+      document.getElementById('onlineUpdated').textContent =
+        'Updated ' + new Date(data.checkedAt).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit', second: '2-digit' });
+
+      // sessions live in memory, so a fresh deploy looks empty until students poll again
+      const note = document.getElementById('onlineNote');
+      if (data.sinceRestartMs < 3 * 60 * 1000 && !data.students.length) {
+        note.textContent = 'The server restarted less than a few minutes ago, so nobody shows yet. Students reappear here within seconds of using the hub.';
+        note.classList.remove('hidden');
+      } else {
+        note.classList.add('hidden');
+      }
+
+      const wrap = document.getElementById('onlineWrap');
+      if (!data.students.length) {
+        wrap.innerHTML = '<div class="sub-empty">No students in the hub right now.</div>';
+        return;
+      }
+
+      // group by team so a coach can see a whole table at a glance
+      const byTeam = {};
+      for (const s of data.students) {
+        const key = s.teamName || 'No team';
+        (byTeam[key] = byTeam[key] || []).push(s);
+      }
+      wrap.innerHTML = Object.entries(byTeam)
+        .sort((a, b) => b[1].length - a[1].length)
+        .map(([team, students]) => `
+          <div class="online-team">
+            <div class="online-team-head">
+              ${escapeHtml(team)}
+              <span class="online-team-count">${students.filter(s => s.status === 'online').length} online</span>
+            </div>
+            <div class="online-list">
+              ${students.map(s => `
+                <div class="online-chip ${s.status === 'online' ? 'is-online' : 'is-idle'}">
+                  <span class="online-dot"></span>
+                  <span class="online-name">${escapeHtml(s.name)}</span>
+                  <span class="online-ago">${s.status === 'online' ? 'now' : formatIdle(s.idleSeconds)}</span>
+                </div>`).join('')}
+            </div>
+          </div>`).join('');
+    }
+
+    function formatIdle(seconds) {
+      if (seconds < 90) return 'now';
+      const mins = Math.round(seconds / 60);
+      return `${mins}m ago`;
     }
 
     // ── Submitted work ────────────────────────────────────────────────────
