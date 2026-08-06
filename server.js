@@ -4294,6 +4294,17 @@ async function getFllStudentDashboardFor(user) {
 	const teamMembers = (Array.isArray(members) ? members : []).filter((member) => member.teamId === user.teamId);
 	const visibleResources = visibleFllResources(resources, user);
 	const teamMissionAnalysis = (Array.isArray(missionAnalysis) ? missionAnalysis : []).filter((mission) => mission.teamId === user.teamId);
+	// this student's own coach feedback — never anyone else's
+	const allSubmissions = await readJsonFile(fllTaskSubmissionsFile, []);
+	const myReviews = {};
+	const mySubmittedAt = {};
+	for (const submission of (Array.isArray(allSubmissions) ? allSubmissions : [])) {
+		if (submission.studentId !== user.id) continue;
+		// server is the source of truth for "did I turn this in", so a student
+		// who submitted on another device still sees it as submitted here
+		if (submission.submittedAt) mySubmittedAt[submission.taskId] = submission.submittedAt;
+		if (submission.review) myReviews[submission.taskId] = submission.review;
+	}
 	const safeSections = Array.isArray(sections) ? sections : [];
 	return {
 		user: publicFllUser(user),
@@ -4314,6 +4325,9 @@ async function getFllStudentDashboardFor(user) {
 		milestoneSummary: summarizeMilestones(teamMilestones),
 		workLogs: myWorkLogs,
 		resources: visibleResources,
+		// coach feedback on this student's own submissions, keyed by task id
+		submissionReviews: myReviews,
+		submittedTasks: mySubmittedAt,
 		fllSettings: studentSettings
 	};
 }
@@ -6003,6 +6017,39 @@ app.get('/api/fll/coach/task-submissions', requireFllAuth, requireFllCoach, asyn
 	}
 });
 
+// Coach marks a submission as read, optionally with an FLL rubric level and
+// a note back to the student. Levels mirror the official judging rubric so
+// coaches grade in the language the season already uses.
+const FLL_REVIEW_LEVELS = ['beginning', 'developing', 'accomplished', 'exceeds'];
+
+app.patch('/api/fll/coach/task-submissions/:id', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const stored = await readJsonFile(fllTaskSubmissionsFile, []);
+		const submissions = Array.isArray(stored) ? stored : [];
+		const index = submissions.findIndex((item) => item.id === req.params.id);
+		if (index < 0) return res.status(404).json({ success: false, message: 'Submission not found' });
+
+		if (req.body.clearReview === true) {
+			delete submissions[index].review;
+			await writeJsonFile(fllTaskSubmissionsFile, submissions);
+			return res.json({ success: true, submission: submissions[index] });
+		}
+
+		const level = cleanMetaString(req.body.level || '', 20).toLowerCase();
+		submissions[index].review = {
+			reviewedAt: new Date().toISOString(),
+			reviewedBy: req.fllUser.name || 'Coach',
+			level: FLL_REVIEW_LEVELS.includes(level) ? level : '',
+			feedback: cleanMetaString(req.body.feedback || '', 2000)
+		};
+		await writeJsonFile(fllTaskSubmissionsFile, submissions);
+		return res.json({ success: true, submission: submissions[index] });
+	} catch (err) {
+		console.error('FLL submission review error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving your review' });
+	}
+});
+
 app.post('/api/fll/tasks/:id/submission', requireFllAuth, requireFllStudent, async (req, res) => {
 	try {
 		const [tasks, stored] = await Promise.all([
@@ -6039,8 +6086,16 @@ app.post('/api/fll/tasks/:id/submission', requireFllAuth, requireFllStudent, asy
 			submittedAt: new Date().toISOString()
 		};
 		const existingIndex = submissions.findIndex((item) => item.taskId === task.id && item.studentId === req.fllUser.id);
-		if (existingIndex >= 0) submissions[existingIndex] = payload;
-		else submissions.push(payload);
+		if (existingIndex >= 0) {
+			// Re-submitting replaces the work, but the coach's note is theirs and
+			// the student should keep seeing it. Carry it over marked stale so the
+			// coach knows this was changed after they read it.
+			const previousReview = submissions[existingIndex].review;
+			if (previousReview) payload.review = { ...previousReview, stale: true };
+			submissions[existingIndex] = payload;
+		} else {
+			submissions.push(payload);
+		}
 		await writeJsonFile(fllTaskSubmissionsFile, submissions);
 		return res.status(existingIndex >= 0 ? 200 : 201).json({ success: true, submission: payload });
 	} catch (err) {

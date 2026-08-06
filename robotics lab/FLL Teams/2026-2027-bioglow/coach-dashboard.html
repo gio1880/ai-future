@@ -230,6 +230,20 @@
     .sub-file:hover { border-color: #1a73e8; }
     .sub-missing { background: var(--tint-amber); border: 1.5px solid var(--s-line); border-radius: 12px; padding: 11px 14px; margin-bottom: 12px; font-size: 12.5px; line-height: 1.5; color: var(--t-body); }
     .sub-missing-done { background: var(--tint-green); }
+    /* review state */
+    .sub-badge { font-size: 10.5px; font-weight: 800; border-radius: 50px; padding: 3px 9px; white-space: nowrap; }
+    .sub-badge-new { background: var(--tint-amber); color: #b06000; }
+    .sub-badge-done { background: var(--tint-green); color: #1e8e5a; }
+    .sub-badge-stale { background: var(--tint-red); color: #d93025; }
+    .rv-box { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--s-line-2); }
+    .rv-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--t-muted); margin-bottom: 6px; }
+    .rv-meta { font-size: 11.5px; color: var(--t-faint); margin-bottom: 8px; }
+    .rv-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+    .rv-level { border: 1.5px solid var(--s-line-2); border-radius: 10px; padding: 8px 10px; font: inherit; font-size: 13px; background: var(--s-card); color: var(--t-ink); }
+    .rv-feedback { flex: 1; min-width: 200px; border: 1.5px solid var(--s-line-2); border-radius: 10px; padding: 8px 11px; font: inherit; font-size: 13px; background: var(--s-card); color: var(--t-ink); }
+    .rv-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .rv-save { padding: 8px 16px !important; font-size: 13px !important; }
+
     .sub-tablewrap { overflow-x: auto; margin-top: 4px; }
     .sub-table { border-collapse: collapse; font-size: 12.5px; min-width: 300px; }
     .sub-table td { border: 1px solid var(--s-line); padding: 6px 9px; vertical-align: top; color: var(--t-body); }
@@ -713,6 +727,14 @@
             <label for="subSearch">Search student</label>
             <input id="subSearch" type="text" placeholder="Search by name" oninput="renderSubmissions()">
           </div>
+          <div class="visibility-filter">
+            <label for="subReadFilter">Review status</label>
+            <select id="subReadFilter" onchange="renderSubmissions()">
+              <option value="all">All</option>
+              <option value="unread">Needs reading</option>
+              <option value="read">Already read</option>
+            </select>
+          </div>
           <button class="visibility-bulk-btn" onclick="loadSubmissions(true)">↻ Refresh</button>
         </div>
         <div id="submissionsSummary" class="form-msg"></div>
@@ -973,10 +995,16 @@
       const lesson = document.getElementById('subLessonFilter').value;
       const search = (document.getElementById('subSearch').value || '').trim().toLowerCase();
 
+      const readState = document.getElementById('subReadFilter').value;
       const rows = submissionsCache
         .filter(s => teamId === 'all' || s.teamId === teamId)
         .filter(s => lesson === 'all' || submissionLessonTitle(s) === lesson)
         .filter(s => !search || String(s.studentName || '').toLowerCase().includes(search))
+        .filter(s => {
+          if (readState === 'all') return true;
+          const read = s.review && !s.review.stale;   // changed since = needs another look
+          return readState === 'read' ? read : !read;
+        })
         .sort((a, b) => String(b.submittedAt || '').localeCompare(String(a.submittedAt || '')));
 
       summary.textContent = submissionsCache.length
@@ -1053,6 +1081,7 @@
                 <span class="sub-when">${escapeHtml(formatSubmittedAt(sub.submittedAt))}</span>
                 ${photos.length ? `<span class="sub-count">📷 ${photos.length}</span>` : ''}
                 ${files ? '<span class="sub-count">📎</span>' : ''}
+                ${reviewBadge(sub.review)}
                 <span class="sub-caret" id="sub-caret-${i}">▾</span>
               </div>
             </div>
@@ -1060,9 +1089,105 @@
               ${answers || '<div class="sub-empty-inline">No written answers.</div>'}
               ${photoHtml}
               ${files ? `<div class="sub-files">${files}</div>` : ''}
+              ${reviewEditor(sub, i)}
             </div>
           </div>`;
       }).join('');
+    }
+
+    // ── Reviewing a submission ────────────────────────────────────────────
+    // Levels mirror the official FLL judging rubric so coaches grade in the
+    // language the season already uses.
+    const REVIEW_LEVELS = [
+      { id: '', label: 'No level' },
+      { id: 'beginning', label: 'Beginning' },
+      { id: 'developing', label: 'Developing' },
+      { id: 'accomplished', label: 'Accomplished' },
+      { id: 'exceeds', label: 'Exceeds' }
+    ];
+
+    function reviewLevelLabel(id) {
+      const found = REVIEW_LEVELS.find(l => l.id === id);
+      return found ? found.label : '';
+    }
+
+    function reviewBadge(review) {
+      if (!review) return '<span class="sub-badge sub-badge-new">Unread</span>';
+      if (review.stale) return '<span class="sub-badge sub-badge-stale">Changed since you read it</span>';
+      // review.level is '' when the coach only marked it read without a level
+      const level = review.level ? reviewLevelLabel(review.level) : '';
+      return `<span class="sub-badge sub-badge-done">✓ Read${level ? ' · ' + escapeHtml(level) : ''}</span>`;
+    }
+
+    function reviewEditor(sub, i) {
+      const review = sub.review || {};
+      const options = REVIEW_LEVELS.map(l =>
+        `<option value="${l.id}"${review.level === l.id ? ' selected' : ''}>${escapeHtml(l.label)}</option>`).join('');
+      const meta = review.reviewedAt
+        ? `<div class="rv-meta">Last read by ${escapeHtml(review.reviewedBy || 'Coach')} · ${escapeHtml(formatSubmittedAt(review.reviewedAt))}${review.stale ? ' — the student has changed it since' : ''}</div>`
+        : '';
+      return `
+        <div class="rv-box">
+          <div class="rv-title">📋 Your review</div>
+          ${meta}
+          <div class="rv-row">
+            <select class="rv-level" id="rv-level-${i}">${options}</select>
+            <input class="rv-feedback" id="rv-feedback-${i}" type="text"
+              placeholder="Feedback for the student (optional)" value="${escapeHtml(review.feedback || '')}">
+          </div>
+          <div class="rv-actions">
+            <button class="submit-btn rv-save" onclick="saveReview('${escapeHtml(sub.id)}', ${i})">
+              ${review.reviewedAt && !review.stale ? 'Update review' : 'Mark as read'}
+            </button>
+            ${review.reviewedAt ? `<button class="visibility-bulk-btn" onclick="clearReview('${escapeHtml(sub.id)}')">Clear</button>` : ''}
+            <span class="form-msg" id="rv-msg-${i}"></span>
+          </div>
+        </div>`;
+    }
+
+    async function saveReview(submissionId, i) {
+      const msg = document.getElementById(`rv-msg-${i}`);
+      const level = document.getElementById(`rv-level-${i}`).value;
+      const feedback = document.getElementById(`rv-feedback-${i}`).value;
+      msg.textContent = 'Saving…';
+      msg.className = 'form-msg';
+      try {
+        const result = await api(`/api/fll/coach/task-submissions/${encodeURIComponent(submissionId)}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ level, feedback })
+        });
+        const idx = submissionsCache.findIndex(s => s.id === submissionId);
+        if (idx >= 0) submissionsCache[idx] = result.submission;
+        renderSubmissions();
+        reopenSubmission(submissionId);
+        showToast('Marked as read ✓');
+      } catch (err) {
+        msg.textContent = err.message;
+        msg.className = 'form-msg error';
+      }
+    }
+
+    async function clearReview(submissionId) {
+      if (!confirm('Remove your review from this submission?')) return;
+      try {
+        const result = await api(`/api/fll/coach/task-submissions/${encodeURIComponent(submissionId)}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ clearReview: true })
+        });
+        const idx = submissionsCache.findIndex(s => s.id === submissionId);
+        if (idx >= 0) submissionsCache[idx] = result.submission;
+        renderSubmissions();
+        reopenSubmission(submissionId);
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    // keep the card the coach was working in open after a re-render
+    function reopenSubmission(submissionId) {
+      const rows = [...document.querySelectorAll('.sub-card')];
+      const idx = rows.findIndex(c => c.innerHTML.includes(submissionId));
+      if (idx >= 0) toggleSubmission(idx);
     }
 
     function toggleSubmission(i) {

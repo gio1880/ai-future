@@ -1410,6 +1410,30 @@
     .ta-submit-hint.error { color: #d93025; }
     .ta-submit-hint.success { color: #1e8e5a; }
 
+    /* ── coach feedback on a submission ── */
+    .ta-review-banner {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--tint-blue);
+      border: 1.5px solid #b9d4f5;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin: 12px 0 4px;
+    }
+    .ta-review-banner.is-stale { background: var(--tint-amber); border-color: #f0d9a8; }
+    .ta-review-icon { font-size: 20px; line-height: 1.2; flex-shrink: 0; }
+    .ta-review-title { font-weight: 800; font-size: 14px; color: var(--t-ink); }
+    .ta-review-level {
+      display: inline-block; background: #1a73e8; color: #fff;
+      border-radius: 50px; padding: 1px 10px; font-size: 12px; margin-left: 2px;
+    }
+    .ta-review-feedback {
+      font-size: 13.5px; line-height: 1.55; color: var(--t-body);
+      margin-top: 6px; font-style: italic;
+    }
+    .ta-review-meta { font-size: 11.5px; color: var(--t-muted); margin-top: 6px; }
+
     .ta-done-banner {
       margin: 22px 28px;
       background: var(--tint-green);
@@ -4128,7 +4152,11 @@
       const answers = (saved && saved.answers) || {};
       const taskPhotos = getTaskPhotos(saved);
       const taskFiles = getTaskFiles(saved);
-      const submitted = !!(saved && saved.submittedAt);
+      // localStorage holds this device's copy, but the server knows about
+      // submissions made anywhere — trust either.
+      const serverSubmittedAt = (latestData.submittedTasks || {})[taskId] || null;
+      const submittedAt = (saved && saved.submittedAt) || serverSubmittedAt;
+      const submitted = !!submittedAt;
 
       const typeLabel = { video: '🎬 Video Lesson', lesson: '📖 Lesson', submission: '📤 Submission', journal: '📓 Journal', tracker: '🔧 Tracker' }[task.type] || '📋 Assignment';
       const ctxIcon = { lab:'🔬 Lab', home:'🏠 Home', class:'📋 Class' }[task.workContext] || '📌 Any';
@@ -4269,9 +4297,10 @@
           <div class="ta-done-icon">✅</div>
           <div>
             <div class="ta-done-title">Assignment submitted!</div>
-            <div class="ta-done-sub">Submitted ${escapeHtml(formatDate(saved.submittedAt))} · Your coach can see your answers.</div>
+            <div class="ta-done-sub">Submitted ${escapeHtml(formatDate(submittedAt))} · Your coach can see your answers.</div>
           </div>
         </div>
+        ${coachReviewBanner(taskId)}
       ` : `
         <div class="ta-submit-row">
           <button class="ta-submit-btn" onclick="submitTaskAnswers('${escapeHtml(userId)}','${escapeHtml(taskId)}')">
@@ -5017,6 +5046,39 @@
       wireListeners();
     }
 
+    // ── Coach feedback ────────────────────────────────────────────────────
+    // Shown once a coach has read a submission. Levels are the official FLL
+    // judging rubric wording, so students see the same language as at an event.
+    const REVIEW_LEVEL_LABELS = {
+      beginning: 'Beginning',
+      developing: 'Developing',
+      accomplished: 'Accomplished',
+      exceeds: 'Exceeds'
+    };
+
+    function coachReviewBanner(taskId) {
+      const review = (latestData.submissionReviews || {})[taskId];
+      if (!review) return '';
+      const level = REVIEW_LEVEL_LABELS[review.level] || '';
+      const stale = review.stale;
+      return `
+        <div class="ta-review-banner${stale ? ' is-stale' : ''}">
+          <div class="ta-review-icon">${stale ? '🔄' : '👀'}</div>
+          <div class="ta-review-main">
+            <div class="ta-review-title">
+              ${stale
+                ? 'Your coach read your earlier version'
+                : `Your coach read this${level ? ` — <span class="ta-review-level">${escapeHtml(level)}</span>` : ''}`}
+            </div>
+            ${review.feedback ? `<div class="ta-review-feedback">“${escapeHtml(review.feedback)}”</div>` : ''}
+            <div class="ta-review-meta">
+              ${escapeHtml(review.reviewedBy || 'Coach')} · ${escapeHtml(formatDate(review.reviewedAt))}
+              ${stale ? ' · you have changed it since, so they will take another look' : ''}
+            </div>
+          </div>
+        </div>`;
+    }
+
     // ── Tracker / journal submission ──────────────────────────────────────
     // These two lesson types render their own page and keep their work in
     // localStorage. That means it never reached the coach, so serialise it
@@ -5081,7 +5143,10 @@
 
     // Shared submit/save row for the tracker + journal pages.
     function specialSubmitRow(userId, taskId, kind, savedSubmission) {
-      if (savedSubmission && savedSubmission.submittedAt) {
+      const serverAt = (latestData.submittedTasks || {})[taskId] || null;
+      const submittedAt = (savedSubmission && savedSubmission.submittedAt) || serverAt;
+      if (submittedAt) {
+        savedSubmission = { ...(savedSubmission || {}), submittedAt };
         return `
           <div class="ta-done-banner">
             <div class="ta-done-icon">✅</div>
@@ -5090,6 +5155,7 @@
               <div class="ta-done-sub">Submitted ${escapeHtml(formatDate(savedSubmission.submittedAt))} · You can keep adding and submit again.</div>
             </div>
           </div>
+          ${coachReviewBanner(taskId)}
           <div class="ta-submit-row">
             <button class="ta-submit-btn" onclick="submitSpecialTask('${escapeHtml(userId)}','${escapeHtml(taskId)}','${kind}')">
               🔄 Send updated work
