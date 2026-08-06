@@ -4646,6 +4646,8 @@
           <div class="cv-values-grid">
             ${valueCards}
           </div>
+
+          ${specialSubmitRow(userId, task.id, 'journal', getTaskSubmission(userId, task.id))}
         </div>
       `;
     }
@@ -4854,6 +4856,8 @@
           <div class="att-add-row">
             <button class="att-add-attachment-btn" onclick="addAttachment('${escapeHtml(userId)}','${escapeHtml(task.id)}')">＋ ${escapeHtml(cfg.addLabel)}</button>
           </div>
+
+          ${specialSubmitRow(userId, task.id, 'tracker', getTaskSubmission(userId, task.id))}
         </div>
       `;
     }
@@ -5011,6 +5015,106 @@
       localStorage.setItem(taskStorageKey(userId, taskId), JSON.stringify(existing));
       app.innerHTML = renderTaskDetail(latestData, taskId);
       wireListeners();
+    }
+
+    // ── Tracker / journal submission ──────────────────────────────────────
+    // These two lesson types render their own page and keep their work in
+    // localStorage. That means it never reached the coach, so serialise it
+    // into the same submission payload every other assignment uses.
+    function trackerSubmissionPayload(userId) {
+      const cfg = trackerConfig();
+      const items = getAttachments(userId);
+      const answers = {};
+      const photos = [];
+      items.forEach((item, i) => {
+        const name = (item.name || `${cfg.itemNoun} ${i + 1}`).trim();
+        const lines = [];
+        if ((item.purpose || '').trim()) lines.push(item.purpose.trim());
+        item.iterations.forEach((it, n) => {
+          lines.push(`${cfg.versionLabel}${n + 1}: ${(it.note || '').trim() || '(no note)'}`);
+          if (it.photo) photos.push(it.photo);
+        });
+        answers[name] = lines.join('\n') || '(nothing recorded yet)';
+      });
+      return { answers, photos, itemCount: items.length, photoCount: photos.length };
+    }
+
+    function journalSubmissionPayload(userId) {
+      const entries = getJournalEntries(userId);
+      const answers = {};
+      for (const cv of CORE_VALUES) {
+        const mine = entries.filter(e => e.value === cv.id);
+        if (!mine.length) continue;
+        answers[cv.label] = mine.map(e => `• ${e.text}`).join('\n');
+      }
+      return { answers, photos: [], itemCount: entries.length, photoCount: 0 };
+    }
+
+    async function submitSpecialTask(userId, taskId, kind) {
+      const msg = document.getElementById('ta-submit-msg');
+      const payload = kind === 'journal'
+        ? journalSubmissionPayload(userId)
+        : trackerSubmissionPayload(userId);
+      if (!Object.keys(payload.answers).length) {
+        if (msg) { msg.textContent = 'Add some work before submitting.'; msg.className = 'ta-submit-hint error'; }
+        return;
+      }
+      if (msg) { msg.textContent = 'Submitting...'; msg.className = 'ta-submit-hint'; }
+      try {
+        const response = await fetch(`/api/fll/tasks/${encodeURIComponent(taskId)}/submission`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ answers: payload.answers, photos: payload.photos, files: [] })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Submission failed');
+      } catch (error) {
+        if (msg) { msg.textContent = error.message || 'Could not submit. Please try again.'; msg.className = 'ta-submit-hint error'; }
+        return;
+      }
+      markTaskSubmitted(userId, taskId);
+      updateTaskStatus(taskId, 'done');
+      showToast('Sent to your coach ✅');
+      app.innerHTML = renderTaskDetail(latestData, taskId);
+      wireListeners();
+    }
+
+    // Shared submit/save row for the tracker + journal pages.
+    function specialSubmitRow(userId, taskId, kind, savedSubmission) {
+      if (savedSubmission && savedSubmission.submittedAt) {
+        return `
+          <div class="ta-done-banner">
+            <div class="ta-done-icon">✅</div>
+            <div>
+              <div class="ta-done-title">Sent to your coach!</div>
+              <div class="ta-done-sub">Submitted ${escapeHtml(formatDate(savedSubmission.submittedAt))} · You can keep adding and submit again.</div>
+            </div>
+          </div>
+          <div class="ta-submit-row">
+            <button class="ta-submit-btn" onclick="submitSpecialTask('${escapeHtml(userId)}','${escapeHtml(taskId)}','${kind}')">
+              🔄 Send updated work
+            </button>
+          </div>
+          <div class="ta-submit-hint" id="ta-submit-msg"></div>`;
+      }
+      return `
+        <div class="ta-submit-row">
+          <button class="ta-submit-btn" onclick="submitSpecialTask('${escapeHtml(userId)}','${escapeHtml(taskId)}','${kind}')">
+            ✅ Send to my coach
+          </button>
+          <button class="ta-save-btn" onclick="saveSpecialDraft('${escapeHtml(userId)}','${escapeHtml(taskId)}')">
+            💾 Save draft
+          </button>
+        </div>
+        <div class="ta-submit-hint" id="ta-submit-msg"></div>`;
+    }
+
+    // Tracker/journal edits already persist to localStorage on every change,
+    // so "Save draft" is a confirmation that the work is safely stored.
+    function saveSpecialDraft(userId, taskId) {
+      const msg = document.getElementById('ta-submit-msg');
+      if (msg) { msg.textContent = 'Draft saved on this device. Press “Send to my coach” when you want them to see it.'; msg.className = 'ta-submit-hint'; }
+      showToast('Draft saved 💾');
     }
 
     // ── Save draft ────────────────────────────────────────────────────────
