@@ -364,13 +364,12 @@
     "teamId": "team-01",
     "assignedTo": "student-team-01-a",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -404,7 +403,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-10T00:00:00.000Z",
-    "updatedAt": "2026-06-10T00:00:00.000Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check",
@@ -1775,13 +1784,12 @@
     "teamId": "team-history-guardians",
     "assignedTo": "student-claire-zhai-33c762",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -1815,7 +1823,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-claire-zhai-33c762",
@@ -3082,13 +3100,12 @@
     "teamId": "team-history-guardians",
     "assignedTo": "student-luke-tisserant-33a686",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -3122,7 +3139,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-luke-tisserant-33a686",
@@ -4389,13 +4416,12 @@
     "teamId": "team-history-guardians",
     "assignedTo": "student-mason-yuan-1f9680",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -4429,7 +4455,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-mason-yuan-1f9680",
@@ -5696,13 +5732,12 @@
     "teamId": "team-history-guardians",
     "assignedTo": "student-isabella-feng-dde604",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -5736,7 +5771,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-isabella-feng-dde604",
@@ -7003,13 +7048,12 @@
     "teamId": "team-tidal-engineers",
     "assignedTo": "student-domenico-petrini-6ef9cb",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -7043,7 +7087,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-domenico-petrini-6ef9cb",
@@ -8310,13 +8364,12 @@
     "teamId": "team-tidal-engineers",
     "assignedTo": "student-elis-fishman-e7aa78",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -8350,7 +8403,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-elis-fishman-e7aa78",
@@ -9617,13 +9680,12 @@
     "teamId": "team-tidal-engineers",
     "assignedTo": "student-isaiah-irwin-2f1d7b",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -9657,7 +9719,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-isaiah-irwin-2f1d7b",
@@ -10924,13 +10996,12 @@
     "teamId": "team-tidal-engineers",
     "assignedTo": "student-finn-fitzner-3e1a78",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -10964,7 +11035,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-finn-fitzner-3e1a78",
@@ -12231,13 +12312,12 @@
     "teamId": "team-firefox",
     "assignedTo": "student-lawrence-liu-cb31cb",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -12271,7 +12351,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-lawrence-liu-cb31cb",
@@ -13538,13 +13628,12 @@
     "teamId": "team-firefox",
     "assignedTo": "student-vincent-liu-36515a",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -13578,7 +13667,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-vincent-liu-36515a",
@@ -14845,13 +14944,12 @@
     "teamId": "team-firefox",
     "assignedTo": "student-thales-liu-be7a7e",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -14885,7 +14983,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-thales-liu-be7a7e",
@@ -16152,13 +16260,12 @@
     "teamId": "team-firefox",
     "assignedTo": "student-adam-zeng-5bdd20",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -16192,7 +16299,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-adam-zeng-5bdd20",
@@ -17459,13 +17576,12 @@
     "teamId": "team-firefox",
     "assignedTo": "student-estella-6e878f",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -17499,7 +17615,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-estella-6e878f",
@@ -18766,13 +18892,12 @@
     "teamId": "team-wcdc-fighters",
     "assignedTo": "student-sanjit-harnal-b05b32",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -18806,7 +18931,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-sanjit-harnal-b05b32",
@@ -20073,13 +20208,12 @@
     "teamId": "team-wcdc-fighters",
     "assignedTo": "student-mason-p-ed2ab1",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -20113,7 +20247,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-mason-p-ed2ab1",
@@ -21380,13 +21524,12 @@
     "teamId": "team-wcdc-fighters",
     "assignedTo": "student-winston-lee-96b448",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -21420,7 +21563,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-winston-lee-96b448",
@@ -22687,13 +22840,12 @@
     "teamId": "team-wcdc-fighters",
     "assignedTo": "student-ethan-deng-56ffe3",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -22727,7 +22879,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-ethan-deng-56ffe3",
@@ -23994,13 +24156,12 @@
     "teamId": "team-history-guardians",
     "assignedTo": "student-demo",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -24034,7 +24195,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--student-demo",
@@ -25301,13 +25472,12 @@
     "teamId": "team-demo",
     "assignedTo": "fll-demo-student",
     "title": "Hub Check: Find a Reliable Gyro",
-    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. A drifting gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs and find the most reliable one for your team.\n\n**How to test for drift:**\n1. Place the hub flat on the table and don't touch it\n2. Run the test code below and watch the angle reading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad gyro slowly climbs: 0... 1... 2... 3...\n\n**How to test responsiveness:**\n1. Run the code, then rotate the hub exactly 90° using a corner of the table as a guide\n2. A good gyro reads 89–91. A bad one is off by 3° or more.",
+    "description": "Not all SPIKE hubs are equal! Some hubs have gyro sensors that **drift** — the angle reading slowly changes even when the hub is sitting perfectly still. Others measure turns badly. A bad gyro will ruin your turns and straight-line driving all season.\n\n**Your mission:** Test at least 2 hubs with **both** tests below, then pick the best one for competition.\n\n## 🧊 Test 1 — Drift (does it stay at zero?)\n\n1. Place the hub flat on the table and do not touch it\n2. Run the **drift test** code and watch the heading for 60 seconds\n3. A good gyro stays at 0 (or flickers ±1 at most). A bad one slowly climbs: 0… 1… 2… 3…\n\n## 🔄 Test 2 — Turning (does it measure a turn correctly?)\n\n1. Line the hub up against a straight edge of the table\n2. Run the **turn test** code — the heading shows on the hub screen so you can read it while you turn\n3. Rotate the hub exactly 90° using a table corner as your guide\n4. A good gyro reads **89–91**. Off by 3° or more is a bad hub\n5. Press the **centre button** to zero it and repeat — do it **3 times**\n\n**Why 3 times?** A hub that reads 90, then 87, then 93 is *unreliable*, even though the average looks perfect. Consistency matters more than one good reading.",
     "category": "Robot Design",
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-07-10",
-    "codeExample": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)",
     "allowPhoto": true,
     "photoPrompt": "Take a photo of your testing setup (hub on table with VS Code output visible).",
     "questions": [
@@ -25341,7 +25511,17 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-06T19:36:22.138Z",
+    "codeExamples": [
+      {
+        "label": "Test 1 — Drift test (hub sits still)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\ntimer = StopWatch()\n\n# Watch the heading for 60 seconds while the hub sits still.\n# A good gyro stays at 0. A bad one drifts: 1, 2, 3...\nwhile timer.time() < 60000:\n    print(\"Heading:\", hub.imu.heading())\n    wait(1000)"
+      },
+      {
+        "label": "Test 2 — Turn test (rotate the hub 90°)",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\nhub.imu.reset_heading(0)\n\n# TURN TEST - does this hub measure a turn accurately?\n#\n# 1. Put the hub flat on the table, lined up against a straight edge.\n# 2. Start this program. The heading shows on the hub screen AND below.\n# 3. Turn the hub exactly 90 degrees, using a table corner as your guide.\n# 4. Read the number.  89-91 = good hub.  Off by 3 or more = bad hub.\n# 5. Press the CENTER button to zero it again and retest.\n#\n# Do it 3 times and write down all 3 readings - a hub that reads 90, then\n# 87, then 93 is unreliable even though the average looks fine.\n\nwhile True:\n    heading = hub.imu.heading()\n    print(\"Heading:\", round(heading, 1))\n\n    # the hub screen can only show -99 to 99\n    if -99 < heading < 99:\n        hub.display.number(int(heading))\n    else:\n        hub.display.char(\"X\")\n\n    if Button.CENTER in hub.buttons.pressed():\n        hub.imu.reset_heading(0)\n        print(\"--- reset to 0, turn again ---\")\n        wait(600)\n\n    wait(100)"
+      }
+    ]
   },
   {
     "id": "task-motor-check--fll-demo-student",

@@ -4248,15 +4248,21 @@
       ` : '';
 
       // ── example code block ──
-      const codeHtml = task.codeExample ? `
+      // A lesson can carry one snippet (codeExample) or several labelled ones
+      // (codeExamples: [{label, code}]). Both forms render the same way.
+      const codeBlocks = Array.isArray(task.codeExamples) && task.codeExamples.length
+        ? task.codeExamples
+        : (task.codeExample ? [{ label: '', code: task.codeExample }] : []);
+
+      const codeHtml = codeBlocks.map((block) => `
         <div class="ta-code-section">
           <div class="ta-code-header">
-            <span class="ta-code-label">🐍 Example Pybricks code — copy this into VS Code</span>
+            <span class="ta-code-label">🐍 ${escapeHtml(block.label || 'Example Pybricks code — copy this into VS Code')}</span>
             <button class="ta-code-copy" onclick="copyTaskCode(this)">📋 Copy code</button>
           </div>
-          <pre class="ta-code-block"><code>${escapeHtml(task.codeExample)}</code></pre>
+          <pre class="ta-code-block"><code>${escapeHtml(block.code || '')}</code></pre>
         </div>
-      ` : '';
+      `).join('');
 
       // ── questions ──
       const questionsHtml = (task.questions || []).map((q, i) => {
