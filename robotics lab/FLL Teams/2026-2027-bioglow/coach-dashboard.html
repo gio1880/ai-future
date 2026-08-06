@@ -244,6 +244,23 @@
     .rv-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .rv-save { padding: 8px 16px !important; font-size: 13px !important; }
 
+    .sub-badge-req { background: var(--tint-amber); color: #b06000; }
+    .sub-badge-open { background: var(--tint-blue); color: #1a73e8; }
+    .sub-badge-flag { background: var(--tint-red); color: #d93025; }
+    .ax-box { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--s-line-2); }
+    .ax-request { background: var(--tint-amber); border-radius: 12px; padding: 11px 14px; margin-bottom: 10px; }
+    .ax-request-title { font-weight: 800; font-size: 13px; color: #b06000; }
+    .ax-request-reason { font-size: 13px; font-style: italic; color: var(--t-body); margin-top: 5px; }
+    .ax-request-meta { font-size: 11.5px; color: var(--t-muted); margin-top: 5px; }
+    .ax-note { font-size: 12.5px; color: var(--t-muted); margin-bottom: 10px; }
+    .ax-note-open { color: #1a73e8; font-weight: 700; }
+    .ax-flag { background: var(--tint-red); border-radius: 12px; padding: 11px 14px; margin-bottom: 10px; }
+    .ax-flag-title { font-weight: 800; font-size: 13px; color: #d93025; }
+    .ax-flag-note { font-size: 13px; font-style: italic; color: var(--t-body); margin-top: 5px; }
+    .ax-flag .visibility-bulk-btn { margin-top: 8px; }
+    .ax-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .ax-flag-btn { color: #d93025 !important; }
+
     .sub-tablewrap { overflow-x: auto; margin-top: 4px; }
     .sub-table { border-collapse: collapse; font-size: 12.5px; min-width: 300px; }
     .sub-table td { border: 1px solid var(--s-line); padding: 6px 9px; vertical-align: top; color: var(--t-body); }
@@ -733,6 +750,8 @@
               <option value="all">All</option>
               <option value="unread">Needs reading</option>
               <option value="read">Already read</option>
+              <option value="requests">Wants to redo</option>
+              <option value="flagged">Flagged</option>
             </select>
           </div>
           <button class="visibility-bulk-btn" onclick="loadSubmissions(true)">↻ Refresh</button>
@@ -1002,6 +1021,8 @@
         .filter(s => !search || String(s.studentName || '').toLowerCase().includes(search))
         .filter(s => {
           if (readState === 'all') return true;
+          if (readState === 'requests') return s.reopenRequest && !s.reopenRequest.declinedAt;
+          if (readState === 'flagged') return !!s.flag;
           const read = s.review && !s.review.stale;   // changed since = needs another look
           return readState === 'read' ? read : !read;
         })
@@ -1081,6 +1102,9 @@
                 <span class="sub-when">${escapeHtml(formatSubmittedAt(sub.submittedAt))}</span>
                 ${photos.length ? `<span class="sub-count">📷 ${photos.length}</span>` : ''}
                 ${files ? '<span class="sub-count">📎</span>' : ''}
+                ${sub.reopenRequest && !sub.reopenRequest.declinedAt ? '<span class="sub-badge sub-badge-req">✋ Wants to redo</span>' : ''}
+                ${sub.reopened ? '<span class="sub-badge sub-badge-open">🔓 Open</span>' : ''}
+                ${sub.flag ? '<span class="sub-badge sub-badge-flag">⚠️ Flagged</span>' : ''}
                 ${reviewBadge(sub.review)}
                 <span class="sub-caret" id="sub-caret-${i}">▾</span>
               </div>
@@ -1090,6 +1114,7 @@
               ${photoHtml}
               ${files ? `<div class="sub-files">${files}</div>` : ''}
               ${reviewEditor(sub, i)}
+              ${accessEditor(sub, i)}
             </div>
           </div>`;
       }).join('');
@@ -1143,6 +1168,98 @@
             <span class="form-msg" id="rv-msg-${i}"></span>
           </div>
         </div>`;
+    }
+
+    // ── Reopening + integrity flags ───────────────────────────────────────
+    function accessEditor(sub, i) {
+      const req = sub.reopenRequest;
+      const pending = req && !req.declinedAt;
+      const flag = sub.flag;
+
+      const requestBlock = pending ? `
+        <div class="ax-request">
+          <div class="ax-request-title">✋ ${escapeHtml(sub.studentName)} asked to redo this</div>
+          ${req.reason ? `<div class="ax-request-reason">“${escapeHtml(req.reason)}”</div>` : ''}
+          <div class="ax-request-meta">Asked ${escapeHtml(formatSubmittedAt(req.requestedAt))}</div>
+        </div>` : '';
+
+      const declined = req && req.declinedAt
+        ? `<div class="ax-note">You declined this on ${escapeHtml(formatSubmittedAt(req.declinedAt))}.</div>` : '';
+
+      const openState = sub.reopened
+        ? `<div class="ax-note ax-note-open">🔓 Open for edits — reopened by ${escapeHtml(sub.reopened.by || 'a coach')}. It locks again once they turn it back in.</div>`
+        : '';
+
+      const flagBlock = flag ? `
+        <div class="ax-flag">
+          <div class="ax-flag-title">⚠️ ${escapeHtml(flag.type === 'plagiarism' ? 'Flagged: possible plagiarism' : 'Flagged: academic integrity')}</div>
+          ${flag.note ? `<div class="ax-flag-note">“${escapeHtml(flag.note)}”</div>` : ''}
+          <div class="ax-request-meta">By ${escapeHtml(flag.flaggedBy || 'Coach')} · ${escapeHtml(formatSubmittedAt(flag.flaggedAt))} · the student can see this</div>
+          <button class="visibility-bulk-btn" onclick="submissionAccess('${escapeHtml(sub.id)}','unflag')">Remove flag</button>
+        </div>` : '';
+
+      return `
+        <div class="ax-box">
+          ${requestBlock}${declined}${openState}${flagBlock}
+          <div class="ax-actions">
+            ${sub.reopened
+              ? `<button class="visibility-bulk-btn" onclick="submissionAccess('${escapeHtml(sub.id)}','lock')">🔒 Lock again</button>`
+              : `<button class="submit-btn rv-save" onclick="submissionAccess('${escapeHtml(sub.id)}','reopen', true)">🔓 ${pending ? 'Allow redo' : 'Reopen for edits'}</button>`}
+            ${pending ? `<button class="visibility-bulk-btn" onclick="submissionAccess('${escapeHtml(sub.id)}','decline', true)">Decline</button>` : ''}
+            ${!flag ? `<button class="visibility-bulk-btn ax-flag-btn" onclick="flagSubmission('${escapeHtml(sub.id)}')">⚠️ Flag a concern</button>` : ''}
+          </div>
+        </div>`;
+    }
+
+    async function submissionAccess(submissionId, action, askNote) {
+      let note = '';
+      if (askNote) {
+        const prompts = {
+          reopen: 'Message for the student (optional) — e.g. what to fix:',
+          decline: 'Why are you keeping it closed? (optional)'
+        };
+        const answer = prompt(prompts[action] || 'Note (optional):');
+        if (answer === null) return;
+        note = answer;
+      }
+      try {
+        const result = await api(`/api/fll/coach/task-submissions/${encodeURIComponent(submissionId)}/access`, {
+          method: 'PATCH',
+          body: JSON.stringify({ action, note })
+        });
+        const idx = submissionsCache.findIndex(s => s.id === submissionId);
+        if (idx >= 0) submissionsCache[idx] = result.submission;
+        renderSubmissions();
+        reopenSubmission(submissionId);
+        showToast(action === 'reopen' ? 'Reopened for the student 🔓'
+          : action === 'lock' ? 'Locked again 🔒'
+          : action === 'unflag' ? 'Flag removed'
+          : 'Saved');
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    async function flagSubmission(submissionId) {
+      const which = prompt('Flag this as:\n\n1 = Possible plagiarism (copied work)\n2 = Academic integrity (not their own work)\n\nType 1 or 2:');
+      if (which === null) return;
+      const flagType = which.trim() === '2' ? 'academic-integrity' : which.trim() === '1' ? 'plagiarism' : null;
+      if (!flagType) { alert('Please type 1 or 2.'); return; }
+      const note = prompt('What did you notice? The student will see this, so keep it factual and kind:');
+      if (note === null) return;
+      try {
+        const result = await api(`/api/fll/coach/task-submissions/${encodeURIComponent(submissionId)}/access`, {
+          method: 'PATCH',
+          body: JSON.stringify({ action: 'flag', flagType, note })
+        });
+        const idx = submissionsCache.findIndex(s => s.id === submissionId);
+        if (idx >= 0) submissionsCache[idx] = result.submission;
+        renderSubmissions();
+        reopenSubmission(submissionId);
+        showToast('Flagged — the student can see this');
+      } catch (err) {
+        alert(err.message);
+      }
     }
 
     async function saveReview(submissionId, i) {

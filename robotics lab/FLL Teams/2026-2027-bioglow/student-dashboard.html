@@ -1410,6 +1410,64 @@
     .ta-submit-hint.error { color: #d93025; }
     .ta-submit-hint.success { color: #1e8e5a; }
 
+    /* ── academic integrity notice ── */
+    .ta-integrity {
+      border: 1.5px solid var(--s-line-2);
+      border-radius: 14px;
+      padding: 0;
+      margin: 14px 0;
+      background: var(--s-raised);
+      overflow: hidden;
+    }
+    .ta-integrity-head {
+      display: flex; align-items: center; gap: 9px;
+      padding: 13px 16px; cursor: pointer;
+      font-weight: 800; font-size: 13.5px; color: var(--t-ink);
+      list-style: none;
+    }
+    .ta-integrity-head::-webkit-details-marker { display: none; }
+    .ta-integrity-head::after { content: '▾'; margin-left: auto; color: var(--t-faint); font-size: 12px; }
+    .ta-integrity[open] .ta-integrity-head::after { content: '▴'; }
+    .ta-integrity-body {
+      padding: 0 16px 15px;
+      font-size: 13px; line-height: 1.6; color: var(--t-body);
+      border-top: 1px solid var(--s-line);
+    }
+    .ta-integrity-body p { margin: 10px 0; }
+    .ta-integrity-body ul { margin: 8px 0 8px 20px; }
+    .ta-integrity-body li { margin-bottom: 5px; }
+    .ta-integrity-note { color: var(--t-muted); font-size: 12.5px; }
+
+    /* ── coach flagged a concern ── */
+    .ta-flag-banner {
+      display: flex; gap: 12px; align-items: flex-start;
+      background: var(--tint-red);
+      border: 1.5px solid #f3b7b0;
+      border-radius: 14px; padding: 14px 16px; margin: 12px 0;
+    }
+    .ta-flag-icon { font-size: 20px; flex-shrink: 0; }
+    .ta-flag-title { font-weight: 800; font-size: 14px; color: #b3261e; }
+    .ta-flag-note { font-size: 13.5px; font-style: italic; color: var(--t-body); margin-top: 6px; }
+    .ta-flag-meta { font-size: 11.5px; color: var(--t-muted); margin-top: 6px; }
+    .ta-flag-help { font-size: 12.5px; color: var(--t-body); margin-top: 8px; }
+
+    /* ── locked / reopen ── */
+    .ta-reopen-row {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      margin: 12px 0 4px;
+    }
+    .ta-reopen-hint { font-size: 12.5px; color: var(--t-muted); }
+    .ta-reopen-banner {
+      border-radius: 14px; padding: 13px 16px; margin: 12px 0;
+      font-size: 13.5px; line-height: 1.5; color: var(--t-body);
+      border: 1.5px solid var(--s-line-2); background: var(--s-raised);
+    }
+    .ta-reopen-banner.is-open { background: var(--tint-green); border-color: #b7dfca; }
+    .ta-reopen-banner.is-pending { background: var(--tint-amber); border-color: #f0d9a8; }
+    .ta-reopen-banner.is-declined { background: var(--s-subtle); }
+    .ta-reopen-note { font-style: italic; margin-top: 6px; color: var(--t-muted); }
+    .ta-reopen-banner .ta-save-btn { margin-top: 10px; }
+
     /* ── coach feedback on a submission ── */
     .ta-review-banner {
       display: flex;
@@ -4292,7 +4350,9 @@
       ` : '';
 
       // ── submit / done state ──
-      const submitArea = submitted ? `
+      const reopenedNow = !!((latestData.submissionState || {})[taskId] || {}).reopened;
+      const submitArea = (submitted && !reopenedNow) ? `
+        ${integrityFlagBanner(taskId)}
         <div class="ta-done-banner">
           <div class="ta-done-icon">✅</div>
           <div>
@@ -4301,7 +4361,11 @@
           </div>
         </div>
         ${coachReviewBanner(taskId)}
+        ${reopenRow(taskId)}
       ` : `
+        ${integrityFlagBanner(taskId)}
+        ${reopenedNow ? reopenRow(taskId) : ''}
+        ${integrityNotice()}
         <div class="ta-submit-row">
           <button class="ta-submit-btn" onclick="submitTaskAnswers('${escapeHtml(userId)}','${escapeHtml(taskId)}')">
             ✅ Submit assignment
@@ -5079,6 +5143,100 @@
         </div>`;
     }
 
+    // ── Academic integrity ────────────────────────────────────────────────
+    // Shown on every assignment above the submit buttons, so students read
+    // what counts as plagiarism BEFORE they turn work in.
+    function integrityNotice() {
+      return `
+        <details class="ta-integrity">
+          <summary class="ta-integrity-head">
+            <span>🛡️</span>
+            <span>Before you turn in — doing your own work</span>
+          </summary>
+          <div class="ta-integrity-body">
+            <p><strong>Plagiarism</strong> means using someone else's words, pictures, code, or ideas and letting people think they are yours. It counts as plagiarism whether it came from a website, a book, an AI chatbot, another team, or a teammate — if you did not make it, you have to say where it came from.</p>
+            <p><strong>Academic dishonesty</strong> is anything that makes your work look like more than you really did: copying another student's answers, having someone else do the work for you, making up research or sources, or turning in a photo of a build that is not yours.</p>
+            <p><strong>How to stay on the right side of it:</strong></p>
+            <ul>
+              <li>Write answers in your own words, even when the facts come from somewhere else</li>
+              <li>Name your sources — a link or a book title is enough</li>
+              <li>Say which parts a teammate helped with, and what you did yourself</li>
+              <li>If you used an AI tool, say so and explain what you changed</li>
+            </ul>
+            <p class="ta-integrity-note">In FIRST LEGO League this is part of <strong>Gracious Professionalism</strong>. Judges would far rather see honest, unfinished work than perfect work that is not yours. If your coach thinks something was copied, they will flag it and talk with you about it.</p>
+          </div>
+        </details>`;
+    }
+
+    // ── Flag shown to the student when a coach raises a concern ──
+    function integrityFlagBanner(taskId) {
+      const state = (latestData.submissionState || {})[taskId];
+      const flag = state && state.flag;
+      if (!flag) return '';
+      const label = flag.type === 'plagiarism' ? 'Possible plagiarism' : 'Academic integrity concern';
+      return `
+        <div class="ta-flag-banner">
+          <div class="ta-flag-icon">⚠️</div>
+          <div>
+            <div class="ta-flag-title">${escapeHtml(label)} — your coach wants to talk with you</div>
+            ${flag.note ? `<div class="ta-flag-note">“${escapeHtml(flag.note)}”</div>` : ''}
+            <div class="ta-flag-meta">Raised by ${escapeHtml(flag.flaggedBy || 'your coach')} · ${escapeHtml(formatDate(flag.flaggedAt))}</div>
+            <div class="ta-flag-help">This is not a punishment. Go through the work together, explain how you made it, and fix anything that needs a source.</div>
+          </div>
+        </div>`;
+    }
+
+    // ── Locked / reopen request ──
+    function reopenRow(taskId) {
+      const state = (latestData.submissionState || {})[taskId] || {};
+      if (state.reopened) {
+        return `
+          <div class="ta-reopen-banner is-open">
+            🔓 <strong>Your coach reopened this.</strong> Make your changes, then turn it in again.
+            ${state.reopened.note ? `<div class="ta-reopen-note">“${escapeHtml(state.reopened.note)}”</div>` : ''}
+          </div>`;
+      }
+      const request = state.reopenRequest;
+      if (request && request.declinedAt) {
+        return `
+          <div class="ta-reopen-banner is-declined">
+            Your coach kept this closed for now.
+            ${request.declineNote ? `<div class="ta-reopen-note">“${escapeHtml(request.declineNote)}”</div>` : ''}
+            <button class="ta-save-btn" onclick="requestReopen('${escapeHtml(taskId)}')">Ask again</button>
+          </div>`;
+      }
+      if (request) {
+        return `
+          <div class="ta-reopen-banner is-pending">
+            ⏳ <strong>Waiting on your coach.</strong> You asked to change this on ${escapeHtml(formatDate(request.requestedAt))}.
+          </div>`;
+      }
+      return `
+        <div class="ta-reopen-row">
+          <span class="ta-reopen-hint">Need to change something?</span>
+          <button class="ta-save-btn" onclick="requestReopen('${escapeHtml(taskId)}')">✋ Ask coach to reopen</button>
+        </div>`;
+    }
+
+    async function requestReopen(taskId) {
+      const reason = prompt('What do you need to change? Your coach will see this.');
+      if (reason === null) return;
+      try {
+        const response = await fetch(`/api/fll/tasks/${encodeURIComponent(taskId)}/reopen-request`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reason })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Could not send that');
+        showToast('Sent to your coach ✋');
+        await loadDashboard();
+        openTask(taskId);
+      } catch (error) {
+        showToast(error.message);
+      }
+    }
+
     // ── Tracker / journal submission ──────────────────────────────────────
     // These two lesson types render their own page and keep their work in
     // localStorage. That means it never reached the coach, so serialise it
@@ -5145,25 +5303,26 @@
     function specialSubmitRow(userId, taskId, kind, savedSubmission) {
       const serverAt = (latestData.submittedTasks || {})[taskId] || null;
       const submittedAt = (savedSubmission && savedSubmission.submittedAt) || serverAt;
-      if (submittedAt) {
+      const isReopened = !!((latestData.submissionState || {})[taskId] || {}).reopened;
+      if (submittedAt && !isReopened) {
         savedSubmission = { ...(savedSubmission || {}), submittedAt };
         return `
           <div class="ta-done-banner">
             <div class="ta-done-icon">✅</div>
             <div>
               <div class="ta-done-title">Sent to your coach!</div>
-              <div class="ta-done-sub">Submitted ${escapeHtml(formatDate(savedSubmission.submittedAt))} · You can keep adding and submit again.</div>
+              <div class="ta-done-sub">Submitted ${escapeHtml(formatDate(savedSubmission.submittedAt))} · Ask your coach to reopen it if you need to add more.</div>
             </div>
           </div>
+          ${integrityFlagBanner(taskId)}
           ${coachReviewBanner(taskId)}
-          <div class="ta-submit-row">
-            <button class="ta-submit-btn" onclick="submitSpecialTask('${escapeHtml(userId)}','${escapeHtml(taskId)}','${kind}')">
-              🔄 Send updated work
-            </button>
-          </div>
+          ${reopenRow(taskId)}
           <div class="ta-submit-hint" id="ta-submit-msg"></div>`;
       }
       return `
+        ${integrityFlagBanner(taskId)}
+        ${isReopened ? reopenRow(taskId) : ''}
+        ${integrityNotice()}
         <div class="ta-submit-row">
           <button class="ta-submit-btn" onclick="submitSpecialTask('${escapeHtml(userId)}','${escapeHtml(taskId)}','${kind}')">
             ✅ Send to my coach

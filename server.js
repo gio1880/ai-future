@@ -4298,12 +4298,18 @@ async function getFllStudentDashboardFor(user) {
 	const allSubmissions = await readJsonFile(fllTaskSubmissionsFile, []);
 	const myReviews = {};
 	const mySubmittedAt = {};
+	const mySubmissionState = {};
 	for (const submission of (Array.isArray(allSubmissions) ? allSubmissions : [])) {
 		if (submission.studentId !== user.id) continue;
 		// server is the source of truth for "did I turn this in", so a student
 		// who submitted on another device still sees it as submitted here
 		if (submission.submittedAt) mySubmittedAt[submission.taskId] = submission.submittedAt;
 		if (submission.review) myReviews[submission.taskId] = submission.review;
+		mySubmissionState[submission.taskId] = {
+			reopened: submission.reopened ? { at: submission.reopened.at, by: submission.reopened.by, note: submission.reopened.note || '' } : null,
+			reopenRequest: submission.reopenRequest || null,
+			flag: submission.flag ? { type: submission.flag.type, note: submission.flag.note || '', flaggedBy: submission.flag.flaggedBy, flaggedAt: submission.flag.flaggedAt } : null
+		};
 	}
 	const safeSections = Array.isArray(sections) ? sections : [];
 	return {
@@ -4328,6 +4334,7 @@ async function getFllStudentDashboardFor(user) {
 		// coach feedback on this student's own submissions, keyed by task id
 		submissionReviews: myReviews,
 		submittedTasks: mySubmittedAt,
+		submissionState: mySubmissionState,
 		fllSettings: studentSettings
 	};
 }
@@ -6050,6 +6057,85 @@ app.patch('/api/fll/coach/task-submissions/:id', requireFllAuth, requireFllCoach
 	}
 });
 
+// Once turned in, an assignment is locked. A student asks their coach to
+// reopen it; the coach grants or declines. Coaches can also reopen without
+// being asked.
+app.post('/api/fll/tasks/:id/reopen-request', requireFllAuth, requireFllStudent, async (req, res) => {
+	try {
+		const stored = await readJsonFile(fllTaskSubmissionsFile, []);
+		const submissions = Array.isArray(stored) ? stored : [];
+		const index = submissions.findIndex((item) => item.taskId === req.params.id && item.studentId === req.fllUser.id);
+		if (index < 0) return res.status(404).json({ success: false, message: 'You have not turned this in yet' });
+		const submission = submissions[index];
+		if (submission.reopened) {
+			return res.json({ success: true, submission, message: 'This is already open for changes.' });
+		}
+		submission.reopenRequest = {
+			requestedAt: new Date().toISOString(),
+			reason: cleanMetaString(req.body.reason || '', 500)
+		};
+		await writeJsonFile(fllTaskSubmissionsFile, submissions);
+		return res.json({ success: true, submission });
+	} catch (err) {
+		console.error('FLL reopen request error:', err);
+		return res.status(500).json({ success: false, message: 'Server error sending your request' });
+	}
+});
+
+const FLL_FLAG_TYPES = ['plagiarism', 'academic-integrity'];
+
+app.patch('/api/fll/coach/task-submissions/:id/access', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const stored = await readJsonFile(fllTaskSubmissionsFile, []);
+		const submissions = Array.isArray(stored) ? stored : [];
+		const index = submissions.findIndex((item) => item.id === req.params.id);
+		if (index < 0) return res.status(404).json({ success: false, message: 'Submission not found' });
+		const submission = submissions[index];
+		const action = cleanMetaString(req.body.action || '', 30);
+
+		if (action === 'reopen') {
+			submission.reopened = {
+				at: new Date().toISOString(),
+				by: req.fllUser.name || 'Coach',
+				note: cleanMetaString(req.body.note || '', 500)
+			};
+			delete submission.reopenRequest;
+		} else if (action === 'decline') {
+			submission.reopenRequest = {
+				...(submission.reopenRequest || {}),
+				declinedAt: new Date().toISOString(),
+				declinedBy: req.fllUser.name || 'Coach',
+				declineNote: cleanMetaString(req.body.note || '', 500)
+			};
+		} else if (action === 'lock') {
+			delete submission.reopened;
+			delete submission.reopenRequest;
+		} else if (action === 'flag') {
+			const type = cleanMetaString(req.body.flagType || '', 40);
+			if (!FLL_FLAG_TYPES.includes(type)) {
+				return res.status(400).json({ success: false, message: 'Unknown flag type' });
+			}
+			submission.flag = {
+				type,
+				note: cleanMetaString(req.body.note || '', 1000),
+				flaggedAt: new Date().toISOString(),
+				flaggedBy: req.fllUser.name || 'Coach',
+				questionId: cleanMetaString(req.body.questionId || '', 120)
+			};
+		} else if (action === 'unflag') {
+			delete submission.flag;
+		} else {
+			return res.status(400).json({ success: false, message: 'Unknown action' });
+		}
+
+		await writeJsonFile(fllTaskSubmissionsFile, submissions);
+		return res.json({ success: true, submission });
+	} catch (err) {
+		console.error('FLL submission access error:', err);
+		return res.status(500).json({ success: false, message: 'Server error updating this submission' });
+	}
+});
+
 app.post('/api/fll/tasks/:id/submission', requireFllAuth, requireFllStudent, async (req, res) => {
 	try {
 		const [tasks, stored] = await Promise.all([
@@ -6086,12 +6172,24 @@ app.post('/api/fll/tasks/:id/submission', requireFllAuth, requireFllStudent, asy
 			submittedAt: new Date().toISOString()
 		};
 		const existingIndex = submissions.findIndex((item) => item.taskId === task.id && item.studentId === req.fllUser.id);
+		// A turned-in assignment is locked until a coach reopens it. Enforced
+		// here, not just in the UI, so it cannot be bypassed from the console.
+		if (existingIndex >= 0 && !submissions[existingIndex].reopened) {
+			return res.status(409).json({
+				success: false,
+				message: 'This assignment has already been turned in. Ask your coach to reopen it if you need to change your answers.'
+			});
+		}
 		if (existingIndex >= 0) {
 			// Re-submitting replaces the work, but the coach's note is theirs and
 			// the student should keep seeing it. Carry it over marked stale so the
 			// coach knows this was changed after they read it.
-			const previousReview = submissions[existingIndex].review;
-			if (previousReview) payload.review = { ...previousReview, stale: true };
+			const previous = submissions[existingIndex];
+			if (previous.review) payload.review = { ...previous.review, stale: true };
+			// a flag is a record of what happened — it survives a resubmission
+			if (previous.flag) payload.flag = previous.flag;
+			// the reopen was for this one edit; close it again
+			payload.resubmitCount = (previous.resubmitCount || 0) + 1;
 			submissions[existingIndex] = payload;
 		} else {
 			submissions.push(payload);
