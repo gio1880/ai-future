@@ -515,7 +515,7 @@
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
-    "dueDate": "2026-08-01",
+    "dueDate": "2026-09-05",
     "allowPhoto": true,
     "photoPrompt": "Upload a photo of your attachment and your build instructions (step photos or sketches).",
     "questions": [
@@ -543,7 +543,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-10T00:00:00.000Z",
-    "updatedAt": "2026-06-10T00:00:00.000Z"
+    "updatedAt": "2026-08-10T16:42:21.170Z"
   },
   {
     "id": "task-attachment-tracker",
@@ -1451,12 +1451,12 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-16T00:00:00.000Z",
-    "updatedAt": "2026-07-16T00:00:00.000Z",
+    "updatedAt": "2026-08-10T16:42:21.170Z",
     "id": "task-robot-build-photo-log",
     "title": "Robot Build Photo Log",
     "type": "submission",
     "workContext": "lab",
-    "dueDate": "2026-07-18",
+    "dueDate": "2026-08-29",
     "allowPhoto": true,
     "photoPrompt": "Snap a photo of your robot at the END of today’s build session. Add a new photo each session to build your log!",
     "description": "Judges LOVE to see how your robot grew over time. This is your **build photo log** — take a picture of your robot at the end of every build session so you have a visual story from empty baseplate to competition machine.\n\n**Why this matters:**\n- Shows judges your engineering PROCESS, not just the finished robot\n- Helps your team remember what you changed and why\n- Makes your engineering notebook look amazing\n\n**Each session:**\n1. Build or improve your robot\n2. **Photograph it** from the front and side before you pack up\n3. Write one line about what you added or fixed today",
@@ -1490,12 +1490,12 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-16T00:00:00.000Z",
-    "updatedAt": "2026-07-16T00:00:00.000Z",
+    "updatedAt": "2026-08-10T16:42:21.170Z",
     "id": "task-robot-wiring-photo",
     "title": "Wiring Map: Photograph Your Ports",
     "type": "submission",
     "workContext": "lab",
-    "dueDate": "2026-07-22",
+    "dueDate": "2026-08-29",
     "allowPhoto": true,
     "photoPrompt": "Upload a clear, close-up photo of your hub showing which motors and sensors are plugged into which ports.",
     "description": "When an attachment breaks at competition or a program acts weird, the first thing to check is: **is everything plugged into the right port?** A wiring photo saves you every time.\n\n**Your mission:** take a close-up photo of your SPIKE hub showing every cable, then map out what is plugged into each port. This is exactly what your code's `Motor(Port.B)` lines have to match!\n\n**Tip:** label your cables with tape (B, C, D, F...) so a photo instantly shows the setup.",
@@ -1935,7 +1935,7 @@
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
-    "dueDate": "2026-08-01",
+    "dueDate": "2026-09-05",
     "allowPhoto": true,
     "photoPrompt": "Upload a photo of your attachment and your build instructions (step photos or sketches).",
     "questions": [
@@ -1963,7 +1963,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-10T16:42:21.170Z"
   },
   {
     "id": "task-attachment-tracker--fll-demo-student",
@@ -2767,12 +2767,12 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z",
+    "updatedAt": "2026-08-10T16:42:21.170Z",
     "id": "task-robot-build-photo-log--fll-demo-student",
     "title": "Robot Build Photo Log",
     "type": "submission",
     "workContext": "lab",
-    "dueDate": "2026-07-18",
+    "dueDate": "2026-08-29",
     "allowPhoto": true,
     "photoPrompt": "Snap a photo of your robot at the END of today’s build session. Add a new photo each session to build your log!",
     "description": "Judges LOVE to see how your robot grew over time. This is your **build photo log** — take a picture of your robot at the end of every build session so you have a visual story from empty baseplate to competition machine.\n\n**Why this matters:**\n- Shows judges your engineering PROCESS, not just the finished robot\n- Helps your team remember what you changed and why\n- Makes your engineering notebook look amazing\n\n**Each session:**\n1. Build or improve your robot\n2. **Photograph it** from the front and side before you pack up\n3. Write one line about what you added or fixed today",
@@ -2806,12 +2806,12 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z",
+    "updatedAt": "2026-08-10T16:42:21.170Z",
     "id": "task-robot-wiring-photo--fll-demo-student",
     "title": "Wiring Map: Photograph Your Ports",
     "type": "submission",
     "workContext": "lab",
-    "dueDate": "2026-07-22",
+    "dueDate": "2026-08-29",
     "allowPhoto": true,
     "photoPrompt": "Upload a clear, close-up photo of your hub showing which motors and sensors are plugged into which ports.",
     "description": "When an attachment breaks at competition or a program acts weird, the first thing to check is: **is everything plugged into the right port?** A wiring photo saves you every time.\n\n**Your mission:** take a close-up photo of your SPIKE hub showing every cable, then map out what is plugged into each port. This is exactly what your code's `Motor(Port.B)` lines have to match!\n\n**Tip:** label your cables with tape (B, C, D, F...) so a photo instantly shows the setup.",
@@ -3221,7 +3221,7 @@
     "type": "tracker",
     "workContext": "lab",
     "status": "todo",
-    "dueDate": "2026-08-15",
+    "dueDate": "2026-08-01",
     "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
     "trackerConfig": {
       "itemNoun": "Base Bot",
@@ -3237,7 +3237,7 @@
     },
     "createdBy": "coach-default",
     "createdAt": "2026-08-03T17:48:42.436Z",
-    "updatedAt": "2026-08-03T17:48:42.436Z"
+    "updatedAt": "2026-08-10T16:42:21.170Z"
   },
   {
     "id": "task-base-bot-tracker--fll-demo-student",
@@ -3249,7 +3249,7 @@
     "type": "tracker",
     "workContext": "lab",
     "status": "todo",
-    "dueDate": "2026-08-15",
+    "dueDate": "2026-08-01",
     "description": "Your **base robot** (the drive base) is the foundation of everything — every mission and attachment depends on it. Great teams don't build it once; they **iterate**: build a version, test it, find weaknesses, and rebuild it better.\n\nUse this tracker to photograph **every version of your base robot** as it evolves. For each version, snap a photo and write what you changed and why.\n\n**What makes a strong base robot:**\n- Low and stable (does not tip during fast stops)\n- Easy access to the hub buttons and charging port\n- Quick attachment swaps (under 10 seconds)\n- Wheels protected from hitting mission models\n\n**How to use this tracker:**\n1. Build your first base robot (v1)\n2. Tap **Add a photo of this version** and take a picture\n3. Write what this version does well and what you want to improve\n4. Rebuild, then add the next version photo — watch your robot evolve!",
     "trackerConfig": {
       "itemNoun": "Base Bot",
@@ -3265,7 +3265,7 @@
     },
     "createdBy": "coach-default",
     "createdAt": "2026-08-03T17:48:42.436Z",
-    "updatedAt": "2026-08-03T17:48:42.436Z"
+    "updatedAt": "2026-08-10T16:42:21.170Z"
   },
   {
     "id": "task-mission-prototype-sketches",
@@ -3300,5 +3300,216 @@
     "createdBy": "coach",
     "createdAt": "2026-08-05T17:58:07.512Z",
     "updatedAt": "2026-08-05T17:58:07.512Z"
+  },
+  {
+    "id": "task-distance-calibration",
+    "assignmentId": "assignment-kickoff-prep",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "Calibration 1 — How Far Does Your Robot Really Drive? 📏",
+    "category": "Robot Design",
+    "type": "submission",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-08",
+    "description": "Ask your robot to drive 50 cm and it will drive… something close to 50 cm. **Close is not good enough.** Every mission depends on the robot ending up where you expected, so the first thing you calibrate is distance.\n\n## 🎯 Why this matters\n\nYour code says `drive.straight(500)`. The robot works out how many times to spin the wheels using the **wheel diameter you typed in**. If that number is even 2 mm wrong, the robot is wrong on every single move — and the error grows the further it drives.\n\n## 📏 What to do\n\n1. **Measure your wheel** with a ruler, across the middle, in millimetres. Put that in `WHEEL_DIAMETER`.\n2. **Measure the axle track** — centre of the left wheel to centre of the right wheel. Put that in `AXLE_TRACK`.\n3. Run the distance test **3 times** and record every result.\n4. If it is off, use the fix calculator, change the number, and test again.\n\n**Repeat until your robot lands within 5 mm of 500 mm, three times in a row.**\n\n## 🧠 The thing most teams miss\n\nRun it 3 times *before* changing anything. If you get 498, 501, 499 — your robot is consistent and just needs the number tweaked. If you get 480, 520, 495 — something is **loose or slipping**, and no amount of maths will fix it. Check your wheels are tight on the axles first.",
+    "codeExamples": [
+      {
+        "label": "Distance test — drive 500 mm and measure",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.parameters import Port, Direction\nfrom pybricks.robotics import DriveBase\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\n\n# ---- CHANGE THESE FOUR LINES TO MATCH YOUR ROBOT ----\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.B)\nWHEEL_DIAMETER = 56    # mm - measure your wheel with a ruler\nAXLE_TRACK = 112       # mm - centre of left wheel to centre of right wheel\n# -----------------------------------------------------\n\ndrive = DriveBase(left_motor, right_motor, WHEEL_DIAMETER, AXLE_TRACK)\n\n# DISTANCE TEST - does your robot drive exactly as far as you asked?\n#\n# 1. Stick tape on the floor. Line the robot's FRONT edge up with it.\n# 2. Run this program. It asks the robot for exactly 500 mm.\n# 3. Measure the real distance from the tape to the robot's front edge.\n# 4. Write both numbers in your table below.\n# 5. Drove too FAR? Your WHEEL_DIAMETER number is too big. Too SHORT? Too small.\n#\n# Do it 3 times without changing anything - if you get 498, 501, 499 your\n# robot is consistent. If you get 480, 520, 495 something is loose.\n\ndrive.straight(500)\nwait(500)\n\nprint(\"Asked for: 500 mm\")\nprint(\"Now measure what you actually got.\")"
+      },
+      {
+        "label": "Fix calculator — work out the right wheel diameter",
+        "code": "# FIXING YOUR WHEEL DIAMETER\n#\n# Do the maths, then put the new number into WHEEL_DIAMETER and test again.\n#\n#     new diameter = old diameter x (asked for / actually drove)\n#\n# Example: you used 56 mm, asked for 500 mm, but it only drove 480 mm.\n#\n#     new diameter = 56 x (500 / 480) = 58.3 mm\n#\n# Use the calculator below by editing the three numbers, then run it.\n\nold_diameter = 56\nasked_for = 500\nactually_drove = 480\n\nnew_diameter = old_diameter * (asked_for / actually_drove)\nprint(\"Put this in WHEEL_DIAMETER:\", round(new_diameter, 1))"
+      }
+    ],
+    "questions": [
+      {
+        "id": "dist-table",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Distance calibration log — one row per test run:",
+        "columns": [
+          "Try #",
+          "Wheel diameter used (mm)",
+          "Asked for (mm)",
+          "Actually drove (mm)",
+          "Error (mm)",
+          "New diameter to try"
+        ],
+        "minRows": 3,
+        "maxRows": 15
+      },
+      {
+        "id": "q1",
+        "type": "text",
+        "allowAttach": true,
+        "label": "What wheel diameter did your team end up with?",
+        "placeholder": "e.g. 57.6 mm — three runs in a row within 3 mm of 500"
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Were your three runs consistent, or all over the place? What did you do about it?",
+        "placeholder": "If they were scattered, what did you find — loose wheels, slipping, a bent axle...?"
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "A mission model is 1.2 m from your launch area. With your error, how far off would the robot be?",
+        "placeholder": "Do the maths — if you are 3 mm off over 500 mm, how much is that over 1200 mm?"
+      }
+    ],
+    "createdBy": "coach",
+    "createdAt": "2026-08-10T16:42:21.170Z",
+    "updatedAt": "2026-08-10T16:42:21.170Z"
+  },
+  {
+    "id": "task-speed-calibration",
+    "assignmentId": "assignment-kickoff-prep",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "Calibration 2 — Straight & Turning at Different Speeds ⚡",
+    "category": "Robot Design",
+    "type": "submission",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-15",
+    "description": "A fast robot that misses is worth **nothing**. A slow robot that hits every time wins matches. In this assignment you find out where *your* robot stops being reliable.\n\n## ⚡ Why this matters\n\nYou get **2.5 minutes** per match. It is tempting to run everything at full speed — but most robots lose accuracy as they speed up, especially when **turning**. Your job is to find the fastest speed that is still repeatable, and use that everywhere.\n\n## 🏁 Part 1 — Driving straight\n\nRun the straight-line test. It drives 500 mm at **three different speeds** and pauses between each so you can measure. Record every result.\n\n## 🔄 Part 2 — Turning\n\nRun the turn test. It turns 90° at **three different rates**. Turning is usually where accuracy dies first — a robot that turns 90° slowly but 84° quickly will drift further off with every mission it chains together.\n\n## 🎯 What you are looking for\n\nThe point where the error jumps. Something like:\n\n| Speed | Error |\n|---|---|\n| 100 mm/s | 2 mm |\n| 300 mm/s | 4 mm |\n| 500 mm/s | **23 mm** ← too fast |\n\nThat robot's competition speed is **300**, not 500. Write it down and use it in every mission program.",
+    "codeExamples": [
+      {
+        "label": "Part 1 — Straight line at 3 speeds",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.parameters import Port, Direction\nfrom pybricks.robotics import DriveBase\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\n\n# ---- CHANGE THESE FOUR LINES TO MATCH YOUR ROBOT ----\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.B)\nWHEEL_DIAMETER = 56    # mm - measure your wheel with a ruler\nAXLE_TRACK = 112       # mm - centre of left wheel to centre of right wheel\n# -----------------------------------------------------\n\ndrive = DriveBase(left_motor, right_motor, WHEEL_DIAMETER, AXLE_TRACK)\n\n# SPEED TEST - does your robot stay accurate when it goes faster?\n#\n# 1. Tape a start line on the floor.\n# 2. Run this program. It drives 500 mm THREE times, each one faster.\n# 3. After each run the robot stops and waits - measure it, then press the\n#    CENTER button to start the next speed.\n# 4. Write every result in your table.\n#\n# Fast is only useful if it is still accurate. Most teams find one speed\n# where the robot is quick AND repeatable - that is your competition speed.\n\nfrom pybricks.parameters import Button\n\nfor speed in [100, 300, 500]:      # mm per second\n    drive.settings(straight_speed=speed)\n\n    print(\"---\")\n    print(\"Speed:\", speed, \"mm/s - line the robot up, then press CENTER\")\n    while Button.CENTER not in hub.buttons.pressed():\n        wait(50)\n    wait(600)\n\n    drive.straight(500)\n    wait(500)\n    print(\"Asked for 500 mm at\", speed, \"mm/s. Measure it now.\")\n\nprint(\"--- done, now do the turn half ---\")"
+      },
+      {
+        "label": "Part 2 — Turning at 3 speeds",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.parameters import Port, Direction\nfrom pybricks.robotics import DriveBase\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\n\n# ---- CHANGE THESE FOUR LINES TO MATCH YOUR ROBOT ----\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.B)\nWHEEL_DIAMETER = 56    # mm - measure your wheel with a ruler\nAXLE_TRACK = 112       # mm - centre of left wheel to centre of right wheel\n# -----------------------------------------------------\n\ndrive = DriveBase(left_motor, right_motor, WHEEL_DIAMETER, AXLE_TRACK)\n\n# TURN SPEED TEST - does your robot turn accurately when it turns faster?\n#\n# 1. Line the robot up against a straight edge (tape works well).\n# 2. Run this program. It turns 90 degrees THREE times, each one faster.\n# 3. After each turn, measure the real angle - a paper square or the table\n#    corner is a good guide. Press CENTER for the next speed.\n# 4. Write every result in your table.\n#\n# Turning is usually where accuracy dies first. A robot that turns 90 at\n# slow speed but 84 at fast speed will drift further off with every mission.\n\nfrom pybricks.parameters import Button\n\nfor rate in [45, 90, 180]:         # degrees per second\n    drive.settings(turn_rate=rate)\n\n    print(\"---\")\n    print(\"Turn rate:\", rate, \"deg/s - line the robot up, then press CENTER\")\n    while Button.CENTER not in hub.buttons.pressed():\n        wait(50)\n    wait(600)\n\n    drive.turn(90)\n    wait(500)\n    print(\"Asked for 90 degrees at\", rate, \"deg/s. Measure it now.\")\n\nprint(\"--- done ---\")"
+      }
+    ],
+    "questions": [
+      {
+        "id": "speed-table",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Straight-line results — one row per speed:",
+        "columns": [
+          "Speed (mm/s)",
+          "Asked for (mm)",
+          "Actually drove (mm)",
+          "Error (mm)",
+          "Still accurate? (Y/N)"
+        ],
+        "minRows": 3,
+        "maxRows": 10
+      },
+      {
+        "id": "turn-table",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Turning results — one row per turn rate:",
+        "columns": [
+          "Turn rate (deg/s)",
+          "Asked for (deg)",
+          "Actually turned (deg)",
+          "Error (deg)",
+          "Still accurate? (Y/N)"
+        ],
+        "minRows": 3,
+        "maxRows": 10
+      },
+      {
+        "id": "q1",
+        "type": "text",
+        "allowAttach": true,
+        "label": "What driving speed and turn rate is your team using for competition?",
+        "placeholder": "e.g. 300 mm/s straight, 90 deg/s turning"
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "At what speed did your robot stop being accurate — and what do you think causes that?",
+        "placeholder": "Think about wheel slip, weight, how suddenly it stops, where the battery sits..."
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Was straight driving or turning worse? Why does that matter in a real match?",
+        "placeholder": "Think about a run where you turn 6 times before reaching the last mission..."
+      }
+    ],
+    "createdBy": "coach",
+    "createdAt": "2026-08-10T16:42:21.170Z",
+    "updatedAt": "2026-08-10T16:42:21.170Z"
+  },
+  {
+    "id": "task-square-test",
+    "assignmentId": "assignment-kickoff-prep",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "Calibration 3 — The Square Test: Prove It Drives True 🔲",
+    "category": "Robot Design",
+    "type": "submission",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-22",
+    "description": "This is the test that catches everything. Your robot drives a square and should finish **exactly where it started, pointing the same way**. Any error in distance or turning shows up here — because it happens **four times**.\n\n## 🔲 Why the square is the classic test\n\nOne turn being 2° off is easy to miss. Do it four times and you are 8° off, and the robot ends up somewhere completely different. The square multiplies your errors until you can see them with your own eyes.\n\n## 📐 What to do\n\n1. Put the robot on tape. **Draw round its base** or mark two corners so you know exactly where it started.\n2. Run the program. It drives a **200 mm**, then **400 mm**, then **600 mm** square, pausing between each.\n3. After each one, measure:\n   - the **gap** between where it started and where it finished\n   - how far round it is **pointing** compared to the start\n4. Record all three in your table.\n\n## 🎯 How good is good?\n\n| Gap on a 400 mm square | Verdict |\n|---|---|\n| Under 20 mm | Competition ready 🏆 |\n| 20–50 mm | Usable, keep tuning |\n| Over 50 mm | Go back to Calibration 1 |\n\n## 🧠 Reading your results\n\n- **Ends up short or long, but pointing the right way** → distance is off, redo Calibration 1\n- **Right place-ish but pointing wrong** → turning is off, redo Calibration 2\n- **Small square fine, big square bad** → your error is a *percentage*, so it grows with distance\n- **Different every time** → something is loose, or your battery is low\n\nFix what the pattern tells you, then run it again.",
+    "codeExamples": [
+      {
+        "label": "Square test — 200 mm, 400 mm and 600 mm squares",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.parameters import Port, Direction\nfrom pybricks.robotics import DriveBase\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\n\n# ---- CHANGE THESE FOUR LINES TO MATCH YOUR ROBOT ----\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.B)\nWHEEL_DIAMETER = 56    # mm - measure your wheel with a ruler\nAXLE_TRACK = 112       # mm - centre of left wheel to centre of right wheel\n# -----------------------------------------------------\n\ndrive = DriveBase(left_motor, right_motor, WHEEL_DIAMETER, AXLE_TRACK)\n\n# THE SQUARE TEST - the real test of whether your robot drives true.\n#\n# The robot drives a square and should finish EXACTLY where it started,\n# pointing the same way. Any error in distance or turning shows up here,\n# because it gets multiplied four times.\n#\n# 1. Put the robot on tape. Draw around its base, or mark two corners.\n# 2. Run this program.\n# 3. When it stops, measure the GAP between where it started and where it\n#    finished, and how far round it is pointing.\n# 4. Press CENTER to run the next size square.\n#\n# A great robot finishes within 2 cm on a 30 cm square. Under 5 cm is fine\n# to start with. If it is way off, go back and redo the distance test.\n\nfrom pybricks.parameters import Button\n\nfor side in [200, 400, 600]:       # mm - small, medium, big square\n    print(\"---\")\n    print(\"Square with\", side, \"mm sides - line up on your mark, press CENTER\")\n    while Button.CENTER not in hub.buttons.pressed():\n        wait(50)\n    wait(600)\n\n    for corner in range(4):\n        drive.straight(side)\n        drive.turn(90)\n\n    wait(500)\n    print(\"Finished the\", side, \"mm square. Measure the gap now.\")\n\nprint(\"--- all three squares done ---\")"
+      }
+    ],
+    "questions": [
+      {
+        "id": "square-table",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Square test results — one row per square size:",
+        "columns": [
+          "Square side (mm)",
+          "Speed used",
+          "Gap from start (mm)",
+          "Pointing off by (deg)",
+          "Verdict"
+        ],
+        "minRows": 3,
+        "maxRows": 12
+      },
+      {
+        "id": "q1",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "What pattern did you see as the squares got bigger? What does that tell you?",
+        "placeholder": "Did the gap stay about the same, or grow with the size of the square?"
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Based on your results, what did you go back and fix — distance, turning, or the build?",
+        "placeholder": "Use the \"reading your results\" guide above and explain your reasoning..."
+      },
+      {
+        "id": "q3",
+        "type": "text",
+        "allowAttach": true,
+        "label": "Best gap your team achieved on the 400 mm square:",
+        "placeholder": "e.g. 14 mm — add a photo of the robot back on its mark"
+      },
+      {
+        "id": "q4",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Judges love this test. How would you explain it to them in 30 seconds?",
+        "placeholder": "What did you test, what did you find, what did you change, what happened after..."
+      }
+    ],
+    "createdBy": "coach",
+    "createdAt": "2026-08-10T16:42:21.170Z",
+    "updatedAt": "2026-08-10T16:42:21.170Z"
   }
 ]
