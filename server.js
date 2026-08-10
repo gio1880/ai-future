@@ -4337,17 +4337,43 @@ async function getFllStudentDashboardFor(user) {
 	const myReviews = {};
 	const mySubmittedAt = {};
 	const mySubmissionState = {};
-	for (const submission of (Array.isArray(allSubmissions) ? allSubmissions : [])) {
-		if (submission.studentId !== user.id) continue;
+	// Team work is often turned in by one student. A coach can mark a
+	// submission as also counting for teammates; they then see the same
+	// grade and comment, and it stops showing as missing for them.
+	// Task ids are per-student (`task-x--studentA`), so shared credit is
+	// matched on the template part and mapped onto that student's own copy.
+	const myTaskIdByBase = new Map();
+	for (const task of myTasks) myTaskIdByBase.set(String(task.id).split('--')[0], task.id);
+
+	const allSubs = Array.isArray(allSubmissions) ? allSubmissions : [];
+
+	function applySubmission(submission, taskId, sharedFrom) {
 		// server is the source of truth for "did I turn this in", so a student
 		// who submitted on another device still sees it as submitted here
-		if (submission.submittedAt) mySubmittedAt[submission.taskId] = submission.submittedAt;
-		if (submission.review) myReviews[submission.taskId] = submission.review;
-		mySubmissionState[submission.taskId] = {
+		if (submission.submittedAt) mySubmittedAt[taskId] = submission.submittedAt;
+		if (submission.review) myReviews[taskId] = submission.review;
+		mySubmissionState[taskId] = {
 			reopened: submission.reopened ? { at: submission.reopened.at, by: submission.reopened.by, note: submission.reopened.note || '' } : null,
-			reopenRequest: submission.reopenRequest || null,
-			flag: submission.flag ? { type: submission.flag.type, note: submission.flag.note || '', flaggedBy: submission.flag.flaggedBy, flaggedAt: submission.flag.flaggedAt } : null
+			reopenRequest: sharedFrom ? null : (submission.reopenRequest || null),
+			flag: submission.flag ? { type: submission.flag.type, note: submission.flag.note || '', flaggedBy: submission.flag.flaggedBy, flaggedAt: submission.flag.flaggedAt } : null,
+			sharedFrom: sharedFrom || null
 		};
+	}
+
+	// Own work first, so a student who turned in their own version never
+	// inherits a teammate's grade for it — regardless of file order.
+	for (const submission of allSubs) {
+		if (submission.studentId !== user.id) continue;
+		applySubmission(submission, submission.taskId, null);
+	}
+
+	// Then shared credit, only for lessons this student has not done themselves.
+	for (const submission of allSubs) {
+		if (submission.studentId === user.id) continue;
+		if (!Array.isArray(submission.sharedWith) || !submission.sharedWith.includes(user.id)) continue;
+		const taskId = myTaskIdByBase.get(String(submission.taskId).split('--')[0]);
+		if (!taskId || mySubmittedAt[taskId]) continue;
+		applySubmission(submission, taskId, submission.studentName || 'a teammate');
 	}
 	const safeSections = Array.isArray(sections) ? sections : [];
 	return {
@@ -6248,6 +6274,49 @@ app.post('/api/fll/tasks/:id/reopen-request', requireFllAuth, requireFllStudent,
 	} catch (err) {
 		console.error('FLL reopen request error:', err);
 		return res.status(500).json({ success: false, message: 'Server error sending your request' });
+	}
+});
+
+// Mark one submission as also counting for teammates. Used for genuine team
+// work — a mission analysis board or a robot design one student typed up on
+// behalf of the group.
+app.patch('/api/fll/coach/task-submissions/:id/share', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const stored = await readJsonFile(fllTaskSubmissionsFile, []);
+		const submissions = Array.isArray(stored) ? stored : [];
+		const index = submissions.findIndex((item) => item.id === req.params.id);
+		if (index < 0) return res.status(404).json({ success: false, message: 'Submission not found' });
+		const submission = submissions[index];
+
+		const requested = Array.isArray(req.body.studentIds) ? req.body.studentIds : [];
+		const users = await readFllUsers();
+		const byId = new Map(users.map((u) => [u.id, u]));
+
+		// only real students on the same team, never the author themselves
+		const sharedWith = [...new Set(requested.map((id) => cleanMetaString(id, 160)))]
+			.filter((id) => {
+				const student = byId.get(id);
+				return student
+					&& student.role === 'student'
+					&& student.active !== false
+					&& student.teamId === submission.teamId
+					&& id !== submission.studentId;
+			});
+
+		if (sharedWith.length) {
+			submission.sharedWith = sharedWith;
+			submission.sharedBy = req.fllUser.name || 'Coach';
+			submission.sharedAt = new Date().toISOString();
+		} else {
+			delete submission.sharedWith;
+			delete submission.sharedBy;
+			delete submission.sharedAt;
+		}
+		await writeJsonFile(fllTaskSubmissionsFile, submissions);
+		return res.json({ success: true, submission });
+	} catch (err) {
+		console.error('FLL share submission error:', err);
+		return res.status(500).json({ success: false, message: 'Server error sharing this submission' });
 	}
 });
 

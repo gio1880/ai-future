@@ -1468,6 +1468,17 @@
     .ta-reopen-note { font-style: italic; margin-top: 6px; color: var(--t-muted); }
     .ta-reopen-banner .ta-save-btn { margin-top: 10px; }
 
+    .ta-shared-note {
+      background: var(--tint-blue);
+      border: 1.5px solid #b9d4f5;
+      border-radius: 12px;
+      padding: 11px 14px;
+      margin: 12px 0 4px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--t-body);
+    }
+
     /* ── coach feedback on a submission ── */
     .ta-review-banner {
       display: flex;
@@ -4366,6 +4377,7 @@
             <div class="ta-done-sub">Submitted ${escapeHtml(formatDate(submittedAt))} · Your coach can see your answers.</div>
           </div>
         </div>
+        ${sharedCreditNote(taskId)}
         ${coachReviewBanner(taskId)}
         ${reopenRow(taskId)}
       ` : `
@@ -5126,6 +5138,13 @@
       exceeds: 'Exceeds'
     };
 
+    // credit given because a teammate turned in the team's shared work
+    function sharedCreditNote(taskId) {
+      const from = ((latestData.submissionState || {})[taskId] || {}).sharedFrom;
+      if (!from) return '';
+      return `<div class="ta-shared-note">👥 Your coach counted <strong>${escapeHtml(from)}</strong>'s submission for you too — this was team work.</div>`;
+    }
+
     function coachReviewBanner(taskId) {
       const review = (latestData.submissionReviews || {})[taskId];
       if (!review) return '';
@@ -5320,6 +5339,7 @@
             <div class="ta-done-sub">Last sent ${escapeHtml(formatDate(submittedAt))} · keep adding, then send again.</div>
           </div>
         </div>
+        ${sharedCreditNote(taskId)}
         ${coachReviewBanner(taskId)}` : '';
 
       return `

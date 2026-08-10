@@ -182,6 +182,16 @@
 
     .visibility-card { background: var(--s-card); border: 1.5px solid var(--s-line); border-radius: 18px; padding: 22px; margin-bottom: 16px; }
 
+    /* ── shared credit ── */
+    .sub-badge-share { background: var(--tint-blue); color: #1a73e8; }
+    .sh-box { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--s-line-2); }
+    .sh-meta { font-size: 12px; color: var(--t-muted); margin-bottom: 8px; }
+    .sh-list { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 9px; }
+    .sh-chip { display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid var(--s-line-2);
+      border-radius: 50px; padding: 6px 12px; font-size: 12.5px; cursor: pointer; background: var(--s-card); color: var(--t-body); }
+    .sh-chip.is-on { border-color: #1a73e8; background: var(--tint-blue); color: #1a73e8; font-weight: 700; }
+    .sh-chip input { margin: 0; }
+
     /* ── Robot tuning profiles ── */
     .rp-team { margin-bottom: 18px; }
     .rp-team-head { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--t-muted); margin-bottom: 8px; }
@@ -1235,6 +1245,7 @@
                 ${sub.reopenRequest && !sub.reopenRequest.declinedAt ? '<span class="sub-badge sub-badge-req">✋ Wants to redo</span>' : ''}
                 ${sub.reopened ? '<span class="sub-badge sub-badge-open">🔓 Open</span>' : ''}
                 ${sub.flag ? '<span class="sub-badge sub-badge-flag">⚠️ Flagged</span>' : ''}
+                ${(sub.sharedWith || []).length ? `<span class="sub-badge sub-badge-share">👥 +${sub.sharedWith.length}</span>` : ''}
                 ${reviewBadge(sub.review)}
                 <span class="sub-caret" id="sub-caret-${i}">▾</span>
               </div>
@@ -1243,11 +1254,72 @@
               ${answers || '<div class="sub-empty-inline">No written answers.</div>'}
               ${photoHtml}
               ${files ? `<div class="sub-files">${files}</div>` : ''}
+              ${shareEditor(sub, i)}
               ${reviewEditor(sub, i)}
               ${accessEditor(sub, i)}
             </div>
           </div>`;
       }).join('');
+    }
+
+    // ── Counting one submission for the whole team ────────────────────────
+    // A lot of FLL work is genuinely shared — one student types up the
+    // mission analysis for the group. Ticking teammates here gives them the
+    // same grade and comment and clears "missing" on their hub.
+    function shareEditor(sub, i) {
+      const teammates = (roster?.students || [])
+        .filter(s => s.teamId === sub.teamId && s.id !== sub.studentId);
+      if (!teammates.length) return '';
+      const shared = new Set(sub.sharedWith || []);
+
+      const boxes = teammates.map(s => `
+        <label class="sh-chip${shared.has(s.id) ? ' is-on' : ''}">
+          <input type="checkbox" data-share="${escapeHtml(String(i))}" value="${escapeHtml(s.id)}"${shared.has(s.id) ? ' checked' : ''}>
+          <span>${escapeHtml(s.name)}</span>
+        </label>`).join('');
+
+      const meta = shared.size
+        ? `<div class="sh-meta">Counting for ${shared.size} teammate${shared.size !== 1 ? 's' : ''}${sub.sharedBy ? ` · set by ${escapeHtml(sub.sharedBy)}` : ''}. They see this grade and comment, and it is no longer missing for them.</div>`
+        : '<div class="sh-meta">Tick anyone this also counts for — useful when one student turns in work the team did together.</div>';
+
+      return `
+        <div class="sh-box">
+          <div class="rv-title">👥 Also counts for</div>
+          ${meta}
+          <div class="sh-list">${boxes}</div>
+          <div class="rv-actions">
+            <button class="visibility-bulk-btn" onclick="saveShare('${escapeHtml(sub.id)}', ${i})">Save who it counts for</button>
+            <button class="visibility-bulk-btn" onclick="shareWholeTeam('${escapeHtml(sub.id)}', ${i})">Select whole team</button>
+            <span class="form-msg" id="sh-msg-${i}"></span>
+          </div>
+        </div>`;
+    }
+
+    function shareWholeTeam(submissionId, i) {
+      document.querySelectorAll(`[data-share="${i}"]`).forEach(cb => { cb.checked = true; });
+      saveShare(submissionId, i);
+    }
+
+    async function saveShare(submissionId, i) {
+      const msg = document.getElementById(`sh-msg-${i}`);
+      const studentIds = [...document.querySelectorAll(`[data-share="${i}"]`)]
+        .filter(cb => cb.checked).map(cb => cb.value);
+      msg.textContent = 'Saving…';
+      msg.className = 'form-msg';
+      try {
+        const result = await api(`/api/fll/coach/task-submissions/${encodeURIComponent(submissionId)}/share`, {
+          method: 'PATCH',
+          body: JSON.stringify({ studentIds })
+        });
+        const idx = submissionsCache.findIndex(s => s.id === submissionId);
+        if (idx >= 0) submissionsCache[idx] = result.submission;
+        renderSubmissions();
+        reopenSubmission(submissionId);
+        showToast(studentIds.length ? `Now counts for ${studentIds.length} more 👥` : 'No longer shared');
+      } catch (err) {
+        msg.textContent = err.message;
+        msg.className = 'form-msg error';
+      }
     }
 
     // ── Reviewing a submission ────────────────────────────────────────────
