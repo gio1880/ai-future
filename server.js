@@ -38,6 +38,7 @@ const fllSeasonSectionsFile = path.join(fllHubDataDir, 'season-sections.json');
 const fllMissionAnalysisFile = path.join(fllHubDataDir, 'mission-analysis.json');
 const fllLiveLessonFile = path.join(fllHubDataDir, 'live-lesson.json');
 const fllSimulatorProgressFile = path.join(fllHubDataDir, 'simulator-progress.json');
+const fllRobotProfilesFile = path.join(fllHubDataDir, 'robot-profiles.json');
 const fllCoachRankingsFile = path.join(fllHubDataDir, 'coach-rankings.json');
 const fllSettingsFile = path.join(fllHubDataDir, 'fll-settings.json');
 const codeLabStudentsFile = path.join(__dirname, 'code-lab', 'data', 'students.json');
@@ -62,6 +63,7 @@ const fllDataFileNames = [
 	'resources.json',
 	'live-lesson.json',
 	'simulator-progress.json',
+	'robot-profiles.json',
 	'coach-rankings.json',
 	'fll-settings.json'
 ];
@@ -1046,6 +1048,7 @@ async function buildDataHealthReport() {
 		'task-submissions.json': 'runtime-submissions',
 		'live-lesson.json': 'runtime-live-state',
 		'simulator-progress.json': 'runtime-student-work',
+		'robot-profiles.json': 'runtime-student-work',
 		'fll-settings.json': 'runtime-coach-configuration',
 		'coach-rankings.json': 'runtime-coach-assessment'
 	};
@@ -5185,6 +5188,137 @@ async function requireFllSimulatorEnabled(req, res, next) {
 app.get(['/fll-hub/simulator', '/fll-hub/simulator/'], requireFllAuth, requireFllSimulatorEnabled, (req, res) => {
 	res.sendFile(path.join(fllHubDir, 'simulator.html'));
 });
+
+// ── Robot profiles: tuning the simulator to match the real robot ────────────
+// A real robot never drives exactly what the maths says — wheels slip, weight
+// shifts, the mat has grip. Students measure the difference in the calibration
+// lessons and record it here as a trim, so code written in the simulator moves
+// the same distance it will on the table.
+//
+// Each student keeps their own profile. A coach can promote one to be the
+// team's ACTIVE profile, and every simulator on that team then loads it.
+const ROBOT_PROFILE_FIELDS = {
+	wheelDiameter: { min: 20, max: 120, fallback: 56 },
+	axleTrack:     { min: 50, max: 250, fallback: 122 },
+	robotW:        { min: 80, max: 400, fallback: 160 },
+	robotL:        { min: 80, max: 400, fallback: 180 },
+	// measured real-world correction: 1 = perfect, 0.98 = drives 2% short
+	driveTrim:     { min: 0.5, max: 1.5, fallback: 1 },
+	turnTrim:      { min: 0.5, max: 1.5, fallback: 1 },
+	straightSpeed: { min: 20, max: 1000, fallback: 400 },
+	turnRate:      { min: 10, max: 500, fallback: 200 }
+};
+
+function normalizeRobotProfile(raw) {
+	const source = raw && typeof raw === 'object' ? raw : {};
+	const profile = {};
+	for (const [key, rule] of Object.entries(ROBOT_PROFILE_FIELDS)) {
+		const value = Number(source[key]);
+		profile[key] = Number.isFinite(value)
+			? Math.max(rule.min, Math.min(rule.max, value))
+			: rule.fallback;
+	}
+	// what they actually measured, kept so the numbers can be shown back
+	const m = source.measured && typeof source.measured === 'object' ? source.measured : {};
+	profile.measured = {
+		askedMm: Number(m.askedMm) || 0,
+		actualMm: Number(m.actualMm) || 0,
+		askedDeg: Number(m.askedDeg) || 0,
+		actualDeg: Number(m.actualDeg) || 0
+	};
+	profile.note = cleanMetaString(source.note || '', 500);
+	return profile;
+}
+
+async function readRobotProfiles() {
+	const data = await readJsonFile(fllRobotProfilesFile, {});
+	const source = data && typeof data === 'object' && !Array.isArray(data) ? data : {};
+	return {
+		students: source.students && typeof source.students === 'object' ? source.students : {},
+		teamActive: source.teamActive && typeof source.teamActive === 'object' ? source.teamActive : {}
+	};
+}
+
+// A student's simulator uses the team's active profile when a coach has
+// published one, otherwise their own saved numbers.
+app.get('/api/fll/simulator/profile', requireFllAuth, async (req, res) => {
+	try {
+		const store = await readRobotProfiles();
+		const mine = store.students[req.fllUser.id] || null;
+		const active = store.teamActive[req.fllUser.teamId] || null;
+		return res.json({
+			success: true,
+			mine: mine ? normalizeRobotProfile(mine) : null,
+			active: active ? { ...normalizeRobotProfile(active), activatedBy: active.activatedBy || '', activatedAt: active.activatedAt || '', sourceStudentName: active.sourceStudentName || '' } : null,
+			usingActive: !!active
+		});
+	} catch (err) {
+		console.error('FLL robot profile load error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading your robot profile' });
+	}
+});
+
+app.put('/api/fll/simulator/profile', requireFllAuth, requireFllStudent, async (req, res) => {
+	try {
+		const store = await readRobotProfiles();
+		const profile = normalizeRobotProfile(req.body);
+		store.students[req.fllUser.id] = {
+			...profile,
+			studentId: req.fllUser.id,
+			studentName: req.fllUser.name,
+			teamId: req.fllUser.teamId,
+			updatedAt: new Date().toISOString()
+		};
+		await writeJsonFile(fllRobotProfilesFile, store);
+		return res.json({ success: true, profile: store.students[req.fllUser.id] });
+	} catch (err) {
+		console.error('FLL robot profile save error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving your robot profile' });
+	}
+});
+
+app.get('/api/fll/coach/robot-profiles', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const store = await readRobotProfiles();
+		return res.json({
+			success: true,
+			profiles: Object.values(store.students),
+			teamActive: store.teamActive
+		});
+	} catch (err) {
+		console.error('FLL coach robot profiles error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading robot profiles' });
+	}
+});
+
+// Coach publishes one student's tuned numbers to the whole team, or clears it.
+app.patch('/api/fll/coach/robot-profiles/:teamId', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const teamId = cleanMetaString(req.params.teamId, 100);
+		const store = await readRobotProfiles();
+		if (req.body.clear === true) {
+			delete store.teamActive[teamId];
+			await writeJsonFile(fllRobotProfilesFile, store);
+			return res.json({ success: true, teamActive: store.teamActive });
+		}
+		const sourceId = cleanMetaString(req.body.studentId || '', 160);
+		const source = store.students[sourceId];
+		if (!source) return res.status(404).json({ success: false, message: 'That student has not saved a robot profile yet' });
+		store.teamActive[teamId] = {
+			...normalizeRobotProfile(source),
+			sourceStudentId: sourceId,
+			sourceStudentName: source.studentName || '',
+			activatedBy: req.fllUser.name || 'Coach',
+			activatedAt: new Date().toISOString()
+		};
+		await writeJsonFile(fllRobotProfilesFile, store);
+		return res.json({ success: true, teamActive: store.teamActive });
+	} catch (err) {
+		console.error('FLL activate robot profile error:', err);
+		return res.status(500).json({ success: false, message: 'Server error activating that profile' });
+	}
+});
+
 
 app.get(['/fll-hub/robot-base-tutorial', '/fll-hub/robot-base-tutorial/'], requireFllAuth, (req, res) => {
 	res.sendFile(path.join(fllHubDir, 'robot-base-tutorial.html'));

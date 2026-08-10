@@ -267,6 +267,27 @@
             <button class="btn-mini" onclick="resetConfig()">↺ Standard SPIKE (56 mm wheel)</button>
           </div>
         </div>
+
+        <div class="panel">
+          <div class="panel-title">🎯 Tune to your real robot</div>
+          <div class="panel-sub">Real robots slip. Drive your <b>actual</b> robot, type what you asked for and what really happened, and the simulator will move the same amount.</div>
+
+          <div class="cfg-grid">
+            <div><label class="cfg-label" for="tuneAskMm">Asked for (mm)</label><input class="cfg-input" id="tuneAskMm" type="number" min="1" step="1" placeholder="500"></div>
+            <div><label class="cfg-label" for="tuneGotMm">Really drove (mm)</label><input class="cfg-input" id="tuneGotMm" type="number" min="1" step="1" placeholder="492"></div>
+            <div><label class="cfg-label" for="tuneAskDeg">Asked turn (°)</label><input class="cfg-input" id="tuneAskDeg" type="number" min="1" step="1" placeholder="90"></div>
+            <div><label class="cfg-label" for="tuneGotDeg">Really turned (°)</label><input class="cfg-input" id="tuneGotDeg" type="number" min="1" step="1" placeholder="87"></div>
+          </div>
+
+          <div class="cfg-note" id="tuneReadout">Drive trim 1.000 · Turn trim 1.000 — simulator is running perfect physics.</div>
+
+          <div class="cfg-actions">
+            <button class="btn-mini" onclick="applyTuning()">Calculate trim</button>
+            <button class="btn-mini" onclick="saveProfileToServer()">💾 Save to my hub</button>
+            <button class="btn-mini" onclick="resetTuning()">↺ Perfect physics</button>
+          </div>
+          <div class="cfg-note" id="profileStatus"></div>
+        </div>
       </div>
     </div>
   </main>
@@ -300,7 +321,11 @@
 
     // ═══════════════════ PHYSICAL ROBOT (editable) ══════════════════════════
     // Standard SPIKE small wheel: 56 mm ⌀ → one rotation = 175.93 mm (≈17.6 cm)
-    const STANDARD = { wheelDiameter: 56, axleTrack: 122, robotW: 160, robotL: 180 };
+    // driveTrim / turnTrim are the REAL-WORLD correction measured on the table:
+    // 1 = the robot does exactly what it is told, 0.98 = it comes up 2% short.
+    // Students measure these in the calibration lessons and save them, so the
+    // simulator moves the same distance their actual robot does.
+    const STANDARD = { wheelDiameter: 56, axleTrack: 122, robotW: 160, robotL: 180, driveTrim: 1, turnTrim: 1 };
     let cfg = { ...STANDARD };
     try { const s = JSON.parse(localStorage.getItem('bioglow-sim-config') || 'null'); if (s) cfg = { ...STANDARD, ...s }; } catch (e) {}
     function wheelCirc() { return Math.PI * cfg.wheelDiameter; }
@@ -727,14 +752,20 @@ if hub.imu.ready():
 
     // real-life realism: distances scale if the code's DriveBase numbers
     // don't match the physical robot (exactly like real Pybricks)
+    // trims are the measured real-world slip, so they apply to every run —
+    // even a perfectly-matched DriveBase still drives short on a real mat
+    function driveTrim() { return Number(cfg.driveTrim) || 1; }
+    function turnTrimFactor() { return Number(cfg.turnTrim) || 1; }
+
     function distScale() {
-      if (!runCfg || !runCfg.codeWheel) return 1;
-      return cfg.wheelDiameter / runCfg.codeWheel;
+      if (!runCfg || !runCfg.codeWheel) return driveTrim();
+      return (cfg.wheelDiameter / runCfg.codeWheel) * driveTrim();
     }
     function turnScale() {
-      if (!runCfg || runCfg.useGyro) return 1;              // gyro turns are always true
-      if (!runCfg.codeWheel || !runCfg.codeAxle) return 1;
-      return (cfg.wheelDiameter / runCfg.codeWheel) * (runCfg.codeAxle / cfg.axleTrack);
+      // a gyro fixes the axle-track maths, but not the physical slip
+      if (!runCfg || runCfg.useGyro) return turnTrimFactor();
+      if (!runCfg.codeWheel || !runCfg.codeAxle) return turnTrimFactor();
+      return (cfg.wheelDiameter / runCfg.codeWheel) * (runCfg.codeAxle / cfg.axleTrack) * turnTrimFactor();
     }
 
     function stepProgram(dt) {
@@ -929,6 +960,114 @@ if hub.imu.ready():
       fillConfigInputs(); clampToField(); draw();
     }
 
+    // ═══════════════ TUNING TO THE REAL ROBOT ══════════════════════════════
+    // trim = what the robot really did / what we asked for.
+    // Drive 500 and get 492 → trim 0.984, so the simulator also comes up short.
+    let profileLocked = false;   // true when the coach has published a team profile
+
+    function tuneNum(id) {
+      const v = Number(document.getElementById(id).value);
+      return Number.isFinite(v) && v > 0 ? v : 0;
+    }
+
+    function applyTuning() {
+      if (profileLocked) { showProfileStatus('Your coach has set the team profile — you cannot change it here.', true); return; }
+      const askMm = tuneNum('tuneAskMm'), gotMm = tuneNum('tuneGotMm');
+      const askDeg = tuneNum('tuneAskDeg'), gotDeg = tuneNum('tuneGotDeg');
+      if (askMm && gotMm) cfg.driveTrim = clampTrim(gotMm / askMm);
+      if (askDeg && gotDeg) cfg.turnTrim = clampTrim(gotDeg / askDeg);
+      cfg.measured = { askedMm: askMm, actualMm: gotMm, askedDeg: askDeg, actualDeg: gotDeg };
+      localStorage.setItem('bioglow-sim-config', JSON.stringify(cfg));
+      updateTuneReadout();
+      draw();
+    }
+
+    function clampTrim(v) { return Math.max(0.5, Math.min(1.5, v)); }
+
+    function resetTuning() {
+      if (profileLocked) { showProfileStatus('Your coach has set the team profile — you cannot change it here.', true); return; }
+      cfg.driveTrim = 1; cfg.turnTrim = 1; cfg.measured = null;
+      ['tuneAskMm','tuneGotMm','tuneAskDeg','tuneGotDeg'].forEach(id => { document.getElementById(id).value = ''; });
+      localStorage.setItem('bioglow-sim-config', JSON.stringify(cfg));
+      updateTuneReadout(); draw();
+    }
+
+    function updateTuneReadout() {
+      const d = driveTrim(), t = turnTrimFactor();
+      const el = document.getElementById('tuneReadout');
+      if (!el) return;
+      if (Math.abs(d - 1) < 0.0005 && Math.abs(t - 1) < 0.0005) {
+        el.textContent = 'Drive trim 1.000 · Turn trim 1.000 — simulator is running perfect physics.';
+        return;
+      }
+      const pct = (x) => ((x - 1) * 100).toFixed(1);
+      el.innerHTML = `Drive trim <b>${d.toFixed(3)}</b> (${d < 1 ? 'short' : 'long'} by ${Math.abs(pct(d))}%) · ` +
+        `Turn trim <b>${t.toFixed(3)}</b> (${t < 1 ? 'under' : 'over'}-turns by ${Math.abs(pct(t))}%)<br>` +
+        `Ask the simulator for 1000 mm and it will travel <b>${Math.round(1000 * d)} mm</b>, just like your robot.`;
+    }
+
+    function fillTuneInputs() {
+      const m = cfg.measured || {};
+      document.getElementById('tuneAskMm').value = m.askedMm || '';
+      document.getElementById('tuneGotMm').value = m.actualMm || '';
+      document.getElementById('tuneAskDeg').value = m.askedDeg || '';
+      document.getElementById('tuneGotDeg').value = m.actualDeg || '';
+      updateTuneReadout();
+    }
+
+    function showProfileStatus(msg, isWarn) {
+      const el = document.getElementById('profileStatus');
+      if (!el) return;
+      el.textContent = msg;
+      el.style.color = isWarn ? '#b06000' : '';
+    }
+
+    async function saveProfileToServer() {
+      if (profileLocked) { showProfileStatus('Your coach has set the team profile — you cannot change it here.', true); return; }
+      try {
+        const r = await fetch('/api/fll/simulator/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            wheelDiameter: cfg.wheelDiameter, axleTrack: cfg.axleTrack,
+            robotW: cfg.robotW, robotL: cfg.robotL,
+            driveTrim: cfg.driveTrim, turnTrim: cfg.turnTrim,
+            measured: cfg.measured || {}
+          })
+        });
+        const j = await r.json();
+        if (!r.ok || !j.success) throw new Error(j.message || 'Could not save');
+        showProfileStatus('Saved to your hub ✓ Your coach can see this and share it with the team.');
+      } catch (e) {
+        showProfileStatus(e.message, true);
+      }
+    }
+
+    // On open: if the coach has published a team profile, use it and lock the
+    // inputs; otherwise fall back to whatever this student saved.
+    async function loadProfileFromServer() {
+      try {
+        const r = await fetch('/api/fll/simulator/profile');
+        const j = await r.json();
+        if (!j.success) return;
+        const source = j.active || j.mine;
+        if (!source) { fillTuneInputs(); return; }
+        cfg = { ...cfg, ...source };
+        if (source.measured) cfg.measured = source.measured;
+        localStorage.setItem('bioglow-sim-config', JSON.stringify(cfg));
+        profileLocked = !!j.active;
+        fillConfigInputs(); fillTuneInputs(); clampToField(); draw();
+        if (profileLocked) {
+          ['cfgWheel','cfgAxle','cfgW','cfgL','tuneAskMm','tuneGotMm','tuneAskDeg','tuneGotDeg']
+            .forEach(id => { const el = document.getElementById(id); if (el) el.disabled = true; });
+          showProfileStatus(`🔒 Using your team's tuned robot — set by ${j.active.activatedBy || 'your coach'}` +
+            (j.active.sourceStudentName ? ` from ${j.active.sourceStudentName}'s measurements` : '') + '.');
+        } else {
+          showProfileStatus('Using your own saved tuning.');
+        }
+      } catch (e) { /* offline — keep the local copy */ }
+    }
+
     // ═══════════════════ SOUND ══════════════════════════════════════════════
     let audioCtx = null;
     function playBeep(freq) {
@@ -1083,8 +1222,11 @@ if hub.imu.ready():
     // ═══════════════════ INIT ═══════════════════════════════════════════════
     fieldImg.onload = draw;
     fillConfigInputs();
+    fillTuneInputs();
     selectLevel(0);
     setInterval(tick, 16);
+    // pull the saved / coach-published robot profile once the page is up
+    loadProfileFromServer();
   </script>
 </body>
 </html>

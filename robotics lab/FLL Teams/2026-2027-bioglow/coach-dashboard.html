@@ -182,6 +182,21 @@
 
     .visibility-card { background: var(--s-card); border: 1.5px solid var(--s-line); border-radius: 18px; padding: 22px; margin-bottom: 16px; }
 
+    /* ── Robot tuning profiles ── */
+    .rp-team { margin-bottom: 18px; }
+    .rp-team-head { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--t-muted); margin-bottom: 8px; }
+    .rp-active { background: var(--tint-green); border: 1.5px solid #b7dfca; border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; }
+    .rp-active-title { font-weight: 800; font-size: 13px; color: #1e8e5a; }
+    .rp-active-body { font-size: 13px; color: var(--t-body); margin-top: 5px; }
+    .rp-active .visibility-bulk-btn { margin-top: 9px; }
+    .rp-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+      border: 1.5px solid var(--s-line); border-radius: 12px; padding: 11px 14px; margin-bottom: 8px; background: var(--s-card); }
+    .rp-row.is-active { border-color: #b7dfca; background: var(--tint-green); }
+    .rp-row-main { min-width: 0; }
+    .rp-student { font-weight: 800; font-size: 13.5px; color: var(--t-ink); }
+    .rp-nums { font-size: 12.5px; color: var(--t-body); margin-top: 3px; }
+    .rp-meta { font-size: 11.5px; color: var(--t-muted); margin-top: 3px; }
+
     /* ── Who's online ── */
     .online-counts { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
     .online-stat { background: var(--s-subtle); border-radius: 14px; padding: 12px 20px; text-align: center; min-width: 118px; }
@@ -555,6 +570,7 @@
       <button class="tab-btn" data-tab="calendar" onclick="showTab('calendar')">📅 Calendar</button>
       <button class="tab-btn" data-tab="curriculum" onclick="showTab('curriculum')">📚 Curriculum</button>
       <button class="tab-btn" data-tab="online" onclick="showTab('online')">🟢 Who's Online</button>
+      <button class="tab-btn" data-tab="robots" onclick="showTab('robots')">🎯 Robot Tuning</button>
       <button class="tab-btn" data-tab="submissions" onclick="showTab('submissions')">📬 Submitted Work</button>
       <button class="tab-btn" data-tab="visibility" onclick="showTab('visibility')">🎛️ Areas &amp; Lessons</button>
       <button class="tab-btn" data-tab="live" onclick="showTab('live')">Live Slides</button>
@@ -697,6 +713,17 @@
           <a class="submit-btn" href="/fll-hub/curriculum" style="text-decoration:none;display:inline-block;">Open curriculum overview</a>
           <button class="visibility-bulk-btn" onclick="showTab('visibility')">Manage student visibility</button>
         </div>
+      </div>
+    </div>
+    <div class="panel" id="panel-robots">
+      <div class="visibility-card">
+        <div class="visibility-head">
+          <div>
+            <h2 class="form-title">Robot tuning profiles</h2>
+            <p class="form-sub">Students measure their real robot in the calibration lessons and save the numbers here. Activate one for a team and every simulator on that team uses it, so the code they write moves the same distance on the table.</p>
+          </div>
+        </div>
+        <div id="robotsWrap">Loading&hellip;</div>
       </div>
     </div>
     <div class="panel" id="panel-online">
@@ -848,8 +875,111 @@
       if (id === 'rankings') loadRankings();
       if (id === 'visibility') renderVisibility();
       if (id === 'submissions') loadSubmissions();
+      if (id === 'robots') loadRobotProfiles();
       // only poll while the tab is actually being looked at
       if (id === 'online') startOnlinePolling(); else stopOnlinePolling();
+    }
+
+    // ── Robot tuning profiles ─────────────────────────────────────────────
+    // Activating one pushes those numbers into every simulator on the team.
+    let robotProfileData = null;
+
+    async function loadRobotProfiles() {
+      const wrap = document.getElementById('robotsWrap');
+      try {
+        robotProfileData = await api('/api/fll/coach/robot-profiles');
+        renderRobotProfiles();
+      } catch (err) {
+        wrap.innerHTML = `<div class="form-msg error">${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function trimLabel(value) {
+      const v = Number(value) || 1;
+      if (Math.abs(v - 1) < 0.0005) return 'exact';
+      const pct = Math.abs((v - 1) * 100).toFixed(1);
+      return `${v.toFixed(3)} (${v < 1 ? 'short' : 'long'} ${pct}%)`;
+    }
+
+    function renderRobotProfiles() {
+      const wrap = document.getElementById('robotsWrap');
+      const profiles = robotProfileData.profiles || [];
+      const teamActive = robotProfileData.teamActive || {};
+      const teams = (roster?.teams || []);
+
+      if (!profiles.length) {
+        wrap.innerHTML = '<div class="sub-empty">No student has saved a robot profile yet. They do this in the simulator after the calibration lessons — <strong>Tune to your real robot → Save to my hub</strong>.</div>';
+        return;
+      }
+
+      wrap.innerHTML = teams.map(team => {
+        const mine = profiles.filter(p => p.teamId === team.id);
+        const active = teamActive[team.id];
+        if (!mine.length && !active) return '';
+
+        const activeBlock = active ? `
+          <div class="rp-active">
+            <div class="rp-active-title">🔒 Active for this team — every simulator is using this</div>
+            <div class="rp-active-body">
+              Wheel ${escapeHtml(String(active.wheelDiameter))} mm · axle ${escapeHtml(String(active.axleTrack))} mm ·
+              drive trim <strong>${trimLabel(active.driveTrim)}</strong> · turn trim <strong>${trimLabel(active.turnTrim)}</strong>
+            </div>
+            <div class="rp-meta">Set by ${escapeHtml(active.activatedBy || 'a coach')}${active.sourceStudentName ? ` from ${escapeHtml(active.sourceStudentName)}'s measurements` : ''} · ${escapeHtml(formatSubmittedAt(active.activatedAt))}</div>
+            <button class="visibility-bulk-btn" onclick="clearTeamProfile('${escapeHtml(team.id)}')">Turn off — let students use their own</button>
+          </div>` : '';
+
+        const rows = mine.map(p => {
+          const isActive = active && active.sourceStudentId === p.studentId;
+          const m = p.measured || {};
+          const measured = (m.askedMm && m.actualMm)
+            ? `asked ${m.askedMm} mm → drove ${m.actualMm} mm`
+            : 'no distance measurement';
+          const measuredTurn = (m.askedDeg && m.actualDeg)
+            ? ` · asked ${m.askedDeg}° → turned ${m.actualDeg}°` : '';
+          return `
+            <div class="rp-row${isActive ? ' is-active' : ''}">
+              <div class="rp-row-main">
+                <div class="rp-student">${escapeHtml(p.studentName || p.studentId)}${isActive ? ' <span class="sub-badge sub-badge-done">in use</span>' : ''}</div>
+                <div class="rp-nums">Wheel ${escapeHtml(String(p.wheelDiameter))} mm · axle ${escapeHtml(String(p.axleTrack))} mm · drive ${trimLabel(p.driveTrim)} · turn ${trimLabel(p.turnTrim)}</div>
+                <div class="rp-meta">${escapeHtml(measured)}${escapeHtml(measuredTurn)} · saved ${escapeHtml(formatSubmittedAt(p.updatedAt))}</div>
+              </div>
+              ${isActive ? '' : `<button class="submit-btn rv-save" onclick="activateTeamProfile('${escapeHtml(team.id)}','${escapeHtml(p.studentId)}')">Use for this team</button>`}
+            </div>`;
+        }).join('');
+
+        return `
+          <div class="rp-team">
+            <div class="rp-team-head">${escapeHtml(team.nickname || team.name)}</div>
+            ${activeBlock}
+            ${rows || '<div class="sub-empty-inline">No saved profiles from this team yet.</div>'}
+          </div>`;
+      }).join('') || '<div class="sub-empty">No profiles match your teams yet.</div>';
+    }
+
+    async function activateTeamProfile(teamId, studentId) {
+      if (!confirm('Use these numbers for the whole team?\n\nEvery student\'s simulator will switch to this tuned robot, and they will not be able to change it until you turn it off.')) return;
+      try {
+        const result = await api(`/api/fll/coach/robot-profiles/${encodeURIComponent(teamId)}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ studentId })
+        });
+        robotProfileData.teamActive = result.teamActive;
+        renderRobotProfiles();
+        showToast('Team simulators updated 🎯');
+      } catch (err) { alert(err.message); }
+    }
+
+    async function clearTeamProfile(teamId) {
+      if (!confirm('Turn this off? Students go back to tuning their own simulator.')) return;
+      try {
+        const result = await api(`/api/fll/coach/robot-profiles/${encodeURIComponent(teamId)}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ clear: true })
+        });
+        robotProfileData.teamActive = result.teamActive;
+        renderRobotProfiles();
+        showToast('Students can tune their own again');
+      } catch (err) { alert(err.message); }
     }
 
     // ── Who's online ──────────────────────────────────────────────────────

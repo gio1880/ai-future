@@ -515,7 +515,7 @@
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
-    "dueDate": "2026-09-05",
+    "dueDate": "2026-09-12",
     "allowPhoto": true,
     "photoPrompt": "Upload a photo of your attachment and your build instructions (step photos or sketches).",
     "questions": [
@@ -543,7 +543,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-10T00:00:00.000Z",
-    "updatedAt": "2026-08-10T16:42:21.170Z"
+    "updatedAt": "2026-08-10T16:58:39.674Z"
   },
   {
     "id": "task-attachment-tracker",
@@ -1451,12 +1451,12 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-16T00:00:00.000Z",
-    "updatedAt": "2026-08-10T16:42:21.170Z",
+    "updatedAt": "2026-08-10T16:58:39.674Z",
     "id": "task-robot-build-photo-log",
     "title": "Robot Build Photo Log",
     "type": "submission",
     "workContext": "lab",
-    "dueDate": "2026-08-29",
+    "dueDate": "2026-09-05",
     "allowPhoto": true,
     "photoPrompt": "Snap a photo of your robot at the END of today’s build session. Add a new photo each session to build your log!",
     "description": "Judges LOVE to see how your robot grew over time. This is your **build photo log** — take a picture of your robot at the end of every build session so you have a visual story from empty baseplate to competition machine.\n\n**Why this matters:**\n- Shows judges your engineering PROCESS, not just the finished robot\n- Helps your team remember what you changed and why\n- Makes your engineering notebook look amazing\n\n**Each session:**\n1. Build or improve your robot\n2. **Photograph it** from the front and side before you pack up\n3. Write one line about what you added or fixed today",
@@ -1490,12 +1490,12 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-16T00:00:00.000Z",
-    "updatedAt": "2026-08-10T16:42:21.170Z",
+    "updatedAt": "2026-08-10T16:58:39.674Z",
     "id": "task-robot-wiring-photo",
     "title": "Wiring Map: Photograph Your Ports",
     "type": "submission",
     "workContext": "lab",
-    "dueDate": "2026-08-29",
+    "dueDate": "2026-09-05",
     "allowPhoto": true,
     "photoPrompt": "Upload a clear, close-up photo of your hub showing which motors and sensors are plugged into which ports.",
     "description": "When an attachment breaks at competition or a program acts weird, the first thing to check is: **is everything plugged into the right port?** A wiring photo saves you every time.\n\n**Your mission:** take a close-up photo of your SPIKE hub showing every cable, then map out what is plugged into each port. This is exactly what your code's `Motor(Port.B)` lines have to match!\n\n**Tip:** label your cables with tape (B, C, D, F...) so a photo instantly shows the setup.",
@@ -1935,7 +1935,7 @@
     "type": "submission",
     "workContext": "lab",
     "status": "todo",
-    "dueDate": "2026-09-05",
+    "dueDate": "2026-09-12",
     "allowPhoto": true,
     "photoPrompt": "Upload a photo of your attachment and your build instructions (step photos or sketches).",
     "questions": [
@@ -1963,7 +1963,7 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-08-10T16:42:21.170Z"
+    "updatedAt": "2026-08-10T16:58:39.674Z"
   },
   {
     "id": "task-attachment-tracker--fll-demo-student",
@@ -2767,12 +2767,12 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-08-10T16:42:21.170Z",
+    "updatedAt": "2026-08-10T16:58:39.674Z",
     "id": "task-robot-build-photo-log--fll-demo-student",
     "title": "Robot Build Photo Log",
     "type": "submission",
     "workContext": "lab",
-    "dueDate": "2026-08-29",
+    "dueDate": "2026-09-05",
     "allowPhoto": true,
     "photoPrompt": "Snap a photo of your robot at the END of today’s build session. Add a new photo each session to build your log!",
     "description": "Judges LOVE to see how your robot grew over time. This is your **build photo log** — take a picture of your robot at the end of every build session so you have a visual story from empty baseplate to competition machine.\n\n**Why this matters:**\n- Shows judges your engineering PROCESS, not just the finished robot\n- Helps your team remember what you changed and why\n- Makes your engineering notebook look amazing\n\n**Each session:**\n1. Build or improve your robot\n2. **Photograph it** from the front and side before you pack up\n3. Write one line about what you added or fixed today",
@@ -2806,12 +2806,12 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-08-10T16:42:21.170Z",
+    "updatedAt": "2026-08-10T16:58:39.674Z",
     "id": "task-robot-wiring-photo--fll-demo-student",
     "title": "Wiring Map: Photograph Your Ports",
     "type": "submission",
     "workContext": "lab",
-    "dueDate": "2026-08-29",
+    "dueDate": "2026-09-05",
     "allowPhoto": true,
     "photoPrompt": "Upload a clear, close-up photo of your hub showing which motors and sensors are plugged into which ports.",
     "description": "When an attachment breaks at competition or a program acts weird, the first thing to check is: **is everything plugged into the right port?** A wiring photo saves you every time.\n\n**Your mission:** take a close-up photo of your SPIKE hub showing every cable, then map out what is plugged into each port. This is exactly what your code's `Motor(Port.B)` lines have to match!\n\n**Tip:** label your cables with tape (B, C, D, F...) so a photo instantly shows the setup.",
@@ -3511,5 +3511,67 @@
     "createdBy": "coach",
     "createdAt": "2026-08-10T16:42:21.170Z",
     "updatedAt": "2026-08-10T16:42:21.170Z"
+  },
+  {
+    "id": "task-simulator-tuning",
+    "assignmentId": "assignment-kickoff-prep",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "Calibration 4 — Tune the Simulator to Your Real Robot 🎮",
+    "category": "Robot Design",
+    "type": "submission",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-08-29",
+    "description": "You already know your robot does not drive *exactly* what you ask. Now you are going to teach the **simulator** the same thing — so a path that works on screen also works on the table.\n\n## 🤔 Why the simulator needs tuning\n\nThe simulator runs **perfect physics**. Ask for 1000 mm and it moves exactly 1000 mm. Your real robot slips a little on the mat, so it might only travel 984 mm.\n\nPlan a mission on an untuned simulator and every single move is slightly wrong when you run it for real. Tune it once, and the simulator becomes a genuine practice table.\n\n## 📏 Step 1 — Measure the real robot\n\nRun the program below on your **actual robot**. It drives **1000 mm**, then turns a **full 360°**.\n\nLong moves are used on purpose: a 2% error over 500 mm is only 10 mm and easy to miss, but over 1000 mm it is 20 mm and obvious. The full circle does the same for turning.\n\nWrite down:\n- how far it **really** drove\n- how far round it **really** turned\n\n## 🎯 Step 2 — Teach the simulator\n\nOpen the **Simulator**, find the **🎯 Tune to your real robot** panel, and type in all four numbers:\n\n| Box | What to type |\n|---|---|\n| Asked for (mm) | 1000 |\n| Really drove (mm) | what you measured |\n| Asked turn (°) | 360 |\n| Really turned (°) | what you measured |\n\nPress **Calculate trim**. The simulator works out your correction and tells you what it will do:\n\n> *Ask the simulator for 1000 mm and it will travel 984 mm, just like your robot.*\n\nThen press **💾 Save to my hub** so your coach can see it.\n\n## ✅ Step 3 — Prove it worked\n\nRun the **same** program in the simulator and on the real robot, starting from the same spot. They should now finish in **about the same place**. If they still disagree, re-measure — it is easy to read a tape measure from the wrong edge of the robot.\n\n## 🏁 Step 4 — Now go build paths\n\nOnce it is tuned you can plan real mission routes on screen and trust them. This is the whole point: **fewer wasted runs on the real table.**\n\n> **Coach note:** your coach can pick the best-tuned profile on your team and switch everyone's simulator to it, so the whole team plans against the same robot.",
+    "codeExamples": [
+      {
+        "label": "Matching run — 1000 mm straight, then a full 360° turn",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.parameters import Port, Direction, Button\nfrom pybricks.robotics import DriveBase\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\n\n# ---- USE THE SAME NUMBERS AS YOUR SIMULATOR ----\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.B)\nWHEEL_DIAMETER = 56\nAXLE_TRACK = 112\n# ------------------------------------------------\n\ndrive = DriveBase(left_motor, right_motor, WHEEL_DIAMETER, AXLE_TRACK)\n\n# MATCHING RUN - run this EXACT program on the real robot, then run the\n# same moves in the simulator, and compare where the two end up.\n#\n# 1. Mark your start position with tape.\n# 2. Press CENTER to run.\n# 3. Measure how far it really went and how far round it really turned.\n# 4. Type those numbers into the simulator's \"Tune to your real robot\" box.\n\nprint(\"Line up on your mark, then press CENTER\")\nwhile Button.CENTER not in hub.buttons.pressed():\n    wait(50)\nwait(600)\n\ndrive.straight(1000)          # a long run makes the error easy to see\nwait(400)\nprint(\"Measure the distance now, then press CENTER for the turn\")\n\nwhile Button.CENTER not in hub.buttons.pressed():\n    wait(50)\nwait(600)\n\ndrive.turn(360)               # a full circle multiplies the turn error\nwait(400)\nprint(\"Measure how far past (or short of) a full circle it finished.\")"
+      }
+    ],
+    "questions": [
+      {
+        "id": "sim-tune-table",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Your measurements — run it at least twice to check you get the same answer:",
+        "columns": [
+          "Run #",
+          "Asked (mm)",
+          "Really drove (mm)",
+          "Asked turn (°)",
+          "Really turned (°)",
+          "Drive trim",
+          "Turn trim"
+        ],
+        "minRows": 2,
+        "maxRows": 10
+      },
+      {
+        "id": "q1",
+        "type": "text",
+        "allowAttach": true,
+        "label": "What drive trim and turn trim did you save into the simulator?",
+        "placeholder": "e.g. drive 0.984, turn 0.971 — the simulator showed both after Calculate trim"
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Step 3 — you ran the same program in both. How close did they finish? Add a photo if you can.",
+        "placeholder": "e.g. the real robot stopped about 1 cm behind where the simulator said..."
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Why is a tuned simulator worth the effort? What can your team do now that you could not before?",
+        "placeholder": "Think about how many real runs it takes to get one mission right, and who else can work while the robot is busy..."
+      }
+    ],
+    "createdBy": "coach",
+    "createdAt": "2026-08-10T16:58:39.674Z",
+    "updatedAt": "2026-08-10T16:58:39.674Z"
   }
 ]
