@@ -3312,15 +3312,15 @@
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-08-08",
-    "description": "Ask your robot to drive 50 cm and it will drive… something close to 50 cm. **Close is not good enough.** Every mission depends on the robot ending up where you expected, so the first thing you calibrate is distance.\n\n## 🎯 Why this matters\n\nYour code says `drive.straight(500)`. The robot works out how many times to spin the wheels using the **wheel diameter you typed in**. If that number is even 2 mm wrong, the robot is wrong on every single move — and the error grows the further it drives.\n\n## 📏 What to do\n\n1. **Measure your wheel** with a ruler, across the middle, in millimetres. Put that in `WHEEL_DIAMETER`.\n2. **Measure the axle track** — centre of the left wheel to centre of the right wheel. Put that in `AXLE_TRACK`.\n3. Run the distance test **3 times** and record every result.\n4. If it is off, use the fix calculator, change the number, and test again.\n\n**Repeat until your robot lands within 5 mm of 500 mm, three times in a row.**\n\n## 🧠 The thing most teams miss\n\nRun it 3 times *before* changing anything. If you get 498, 501, 499 — your robot is consistent and just needs the number tweaked. If you get 480, 520, 495 — something is **loose or slipping**, and no amount of maths will fix it. Check your wheels are tight on the axles first.",
+    "description": "Ask your robot to drive 50 cm and it will drive… something close to 50 cm. **Close is not good enough.** Every mission depends on the robot ending up where you expected, so distance is the first thing you calibrate.\n\n## 🤖 The robot measures itself\n\nYou do not sit there with a tape measure for this one. The program drives **every combination** of three distances (300, 500, 700 mm) and three speeds (300, 500, 700 mm/s), **twice each** — 18 runs — and prints a results table at the end:\n\n```\nrequested | speed | drivebase | encoder_avg | left | right | err_mm | err_%\n```\n\nCopy those rows straight into your table below.\n\n## 🔍 What each column tells you\n\n| Column | What it means |\n|---|---|\n| **drivebase** | what Pybricks thinks it drove |\n| **encoder_avg** | the two wheels averaged |\n| **left / right** | each wheel on its own |\n| **err_mm / err_%** | how far off it was |\n\n**Watch the left and right columns.** If one wheel travelled noticeably further than the other, your robot is pulling to one side — that is a build problem, not a code problem.\n\n## 📏 Then the ruler check\n\nHere is the catch: **encoders cannot see wheel slip.** If a wheel spins without gripping, the encoder happily counts it. So the second program drives 1000 mm and you check it with a real tape measure.\n\nIf the ruler says **less** than the encoder did, your wheels are slipping — and that is the number that matters, because it is what actually happens on the mat.\n\n## 🎯 What good looks like\n\n- **err_% under 1%** across the table\n- The **same** error at every speed (if it gets worse when faster, that is slip)\n- **left and right within a few mm** of each other\n- **Ruler within 1%** of the encoder",
     "codeExamples": [
       {
-        "label": "Distance test — drive 500 mm and measure",
-        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.parameters import Port, Direction\nfrom pybricks.robotics import DriveBase\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\n\n# ---- CHANGE THESE FOUR LINES TO MATCH YOUR ROBOT ----\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.B)\nWHEEL_DIAMETER = 56    # mm - measure your wheel with a ruler\nAXLE_TRACK = 112       # mm - centre of left wheel to centre of right wheel\n# -----------------------------------------------------\n\ndrive = DriveBase(left_motor, right_motor, WHEEL_DIAMETER, AXLE_TRACK)\n\n# DISTANCE TEST - does your robot drive exactly as far as you asked?\n#\n# 1. Stick tape on the floor. Line the robot's FRONT edge up with it.\n# 2. Run this program. It asks the robot for exactly 500 mm.\n# 3. Measure the real distance from the tape to the robot's front edge.\n# 4. Write both numbers in your table below.\n# 5. Drove too FAR? Your WHEEL_DIAMETER number is too big. Too SHORT? Too small.\n#\n# Do it 3 times without changing anything - if you get 498, 501, 499 your\n# robot is consistent. If you get 480, 520, 495 something is loose.\n\ndrive.straight(500)\nwait(500)\n\nprint(\"Asked for: 500 mm\")\nprint(\"Now measure what you actually got.\")"
+        "label": "Encoder distance lab — 18 runs, prints a results table",
+        "code": "\"\"\"\nStudent Encoder Distance Test Lab\n\nMain goal:\nCompare requested straight distance vs encoder-measured distance.\n\nThis version focuses on straight driving only.\n\"\"\"\n\nfrom pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.robotics import DriveBase\nfrom pybricks.parameters import Port, Direction, Stop\nfrom pybricks.tools import wait\n\n\n# Robot physical constants.\nWHEEL_DIAMETER_MM = 56\nAXLE_TRACK_MM = 122\n\n\n# Hardware setup.\nhub = PrimeHub()\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.E, Direction.CLOCKWISE)\nRAM = Motor(Port.F)\nLAM = Motor(Port.B)\n\nrobot = DriveBase(left_motor, right_motor, WHEEL_DIAMETER_MM, AXLE_TRACK_MM)\nrobot.use_gyro(True)\n\n\n# STUDENT SETTINGS (safe to edit)\nTEST_DISTANCES_MM = [300, 500, 700]\nTEST_SPEEDS_MM_S = [300, 500, 700]\nREPEATS_PER_TEST = 2\n\nSTRAIGHT_ACCELERATION = 400\nPAUSE_BETWEEN_TESTS_MS = 1000\n\n\ndef reset_all():\n    \"\"\"Reset drivebase distance/angle and motor encoders.\"\"\"\n    robot.reset()\n    left_motor.reset_angle(0)\n    right_motor.reset_angle(0)\n\n\ndef encoder_mm_from_motor_angle(angle_deg):\n    \"\"\"Convert wheel rotation in degrees to travel distance in mm.\"\"\"\n    wheel_circumference_mm = 3.14159 * WHEEL_DIAMETER_MM\n    return (angle_deg / 360.0) * wheel_circumference_mm\n\n\ndef run_one_distance_test(distance_mm, speed_mm_s):\n    \"\"\"Drive one straight move and return encoder-based measurements.\"\"\"\n    reset_all()\n\n    robot.settings(\n        straight_speed=speed_mm_s,\n        straight_acceleration=STRAIGHT_ACCELERATION,\n        turn_rate=400,\n        turn_acceleration=300,\n    )\n\n    start_left = left_motor.angle()\n    start_right = right_motor.angle()\n\n    robot.straight(distance_mm, then=Stop.HOLD)\n\n    end_left = left_motor.angle()\n    end_right = right_motor.angle()\n\n    left_delta_deg = end_left - start_left\n    right_delta_deg = end_right - start_right\n\n    left_mm = encoder_mm_from_motor_angle(left_delta_deg)\n    right_mm = encoder_mm_from_motor_angle(right_delta_deg)\n    avg_encoder_mm = (left_mm + right_mm) / 2\n\n    drivebase_mm = robot.distance()\n    error_mm = avg_encoder_mm - distance_mm\n\n    if distance_mm != 0:\n        error_percent = (error_mm / distance_mm) * 100\n    else:\n        error_percent = 0\n\n    return (\n        distance_mm,\n        speed_mm_s,\n        drivebase_mm,\n        avg_encoder_mm,\n        left_mm,\n        right_mm,\n        error_mm,\n        error_percent,\n    )\n\n\ndef print_results_table(results):\n    print(\"\\n=== ENCODER DISTANCE RESULTS ===\")\n    print(\"requested | speed | drivebase | encoder_avg | left | right | err_mm | err_%\")\n    print(\"-------------------------------------------------------------------------\")\n\n    for row in results:\n        requested, speed, drivebase_mm, encoder_avg, left_mm, right_mm, err_mm, err_pct = row\n        print(\n            \"{:<9} | {:<5} | {:<8} | {:<11} | {:<4} | {:<5} | {:+6} | {:+5.1f}\".format(\n                int(requested),\n                int(speed),\n                int(drivebase_mm),\n                int(encoder_avg),\n                int(left_mm),\n                int(right_mm),\n                int(err_mm),\n                err_pct,\n            )\n        )\n\n\ndef run_all_tests():\n    print(\"Starting encoder distance verification tests...\")\n    print(\"Goal: requested distance vs encoder measured distance\")\n\n    all_results = []\n\n    for distance_mm in TEST_DISTANCES_MM:\n        for speed_mm_s in TEST_SPEEDS_MM_S:\n            for _ in range(REPEATS_PER_TEST):\n                result = run_one_distance_test(distance_mm, speed_mm_s)\n                all_results.append(result)\n                wait(PAUSE_BETWEEN_TESTS_MS)\n\n    print_results_table(all_results)\n    print(\"\\nDone. Smaller absolute err_mm and err_% are better.\")\n\n\nrun_all_tests()"
       },
       {
-        "label": "Fix calculator — work out the right wheel diameter",
-        "code": "# FIXING YOUR WHEEL DIAMETER\n#\n# Do the maths, then put the new number into WHEEL_DIAMETER and test again.\n#\n#     new diameter = old diameter x (asked for / actually drove)\n#\n# Example: you used 56 mm, asked for 500 mm, but it only drove 480 mm.\n#\n#     new diameter = 56 x (500 / 480) = 58.3 mm\n#\n# Use the calculator below by editing the three numbers, then run it.\n\nold_diameter = 56\nasked_for = 500\nactually_drove = 480\n\nnew_diameter = old_diameter * (asked_for / actually_drove)\nprint(\"Put this in WHEEL_DIAMETER:\", round(new_diameter, 1))"
+        "label": "Ruler check — catches wheel slip the encoders cannot see",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.robotics import DriveBase\nfrom pybricks.parameters import Port, Direction, Stop\nfrom pybricks.tools import wait\n\n\n# Robot physical constants.\nWHEEL_DIAMETER_MM = 56\nAXLE_TRACK_MM = 122\n\n\n# Hardware setup.\nhub = PrimeHub()\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.E, Direction.CLOCKWISE)\nRAM = Motor(Port.F)\nLAM = Motor(Port.B)\n\nrobot = DriveBase(left_motor, right_motor, WHEEL_DIAMETER_MM, AXLE_TRACK_MM)\nrobot.use_gyro(True)\n\n\n# RULER CHECK - the one thing the encoders CANNOT tell you.\n#\n# The encoder lab measures how far the WHEELS TURNED. If a wheel spins\n# without gripping, the encoder still counts it - so slip is invisible.\n# The only way to catch it is a tape measure on the floor.\n#\n# 1. Tape a line on the floor. Line the robot's front edge up with it.\n# 2. Run this. It drives 1000 mm.\n# 3. Measure the REAL distance with a tape measure.\n# 4. If the ruler says less than the encoder did, your wheels are slipping.\n\nrobot.settings(straight_speed=500, straight_acceleration=400)\nrobot.reset()\n\nrobot.straight(1000, then=Stop.HOLD)\n\nprint(\"Asked for:      1000 mm\")\nprint(\"Encoder says:  \", int(robot.distance()), \"mm\")\nprint(\"Now measure it with a tape measure and compare.\")"
       }
     ],
     "questions": [
@@ -3328,43 +3328,67 @@
         "id": "dist-table",
         "type": "table",
         "editableColumns": true,
-        "label": "Distance calibration log — one row per test run:",
+        "label": "Copy the printed results table here — one row per run:",
+        "columns": [
+          "Requested (mm)",
+          "Speed (mm/s)",
+          "DriveBase (mm)",
+          "Encoder avg (mm)",
+          "Left (mm)",
+          "Right (mm)",
+          "Err (mm)",
+          "Err (%)"
+        ],
+        "minRows": 6,
+        "maxRows": 25
+      },
+      {
+        "id": "ruler-table",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Ruler check — the encoders cannot see slip, so measure it for real:",
         "columns": [
           "Try #",
-          "Wheel diameter used (mm)",
-          "Asked for (mm)",
-          "Actually drove (mm)",
-          "Error (mm)",
-          "New diameter to try"
+          "Asked (mm)",
+          "Encoder said (mm)",
+          "Tape measure said (mm)",
+          "Slip (mm)"
         ],
-        "minRows": 3,
-        "maxRows": 15
+        "minRows": 2,
+        "maxRows": 10
       },
       {
         "id": "q1",
         "type": "text",
         "allowAttach": true,
-        "label": "What wheel diameter did your team end up with?",
-        "placeholder": "e.g. 57.6 mm — three runs in a row within 3 mm of 500"
+        "label": "What was your worst err_% in the whole table, and at which distance and speed?",
+        "placeholder": "e.g. 1.8% at 700 mm / 700 mm/s"
       },
       {
         "id": "q2",
         "type": "textarea",
         "allowAttach": true,
-        "label": "Were your three runs consistent, or all over the place? What did you do about it?",
-        "placeholder": "If they were scattered, what did you find — loose wheels, slipping, a bent axle...?"
+        "label": "Compare your left and right columns. Are the wheels travelling the same distance? What does that tell you?",
+        "placeholder": "A steady difference between left and right means the robot pulls to one side..."
       },
       {
         "id": "q3",
         "type": "textarea",
         "allowAttach": true,
-        "label": "A mission model is 1.2 m from your launch area. With your error, how far off would the robot be?",
-        "placeholder": "Do the maths — if you are 3 mm off over 500 mm, how much is that over 1200 mm?"
+        "label": "Did the tape measure agree with the encoder? If not, how much were you slipping — and why does that matter more than the encoder number?",
+        "placeholder": "The encoder counts wheel spin. The mat only cares how far the robot actually moved..."
+      },
+      {
+        "id": "q4",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "A mission model is 1.2 m from your launch area. Using your worst err_%, how far off would the robot be?",
+        "placeholder": "Do the maths — 1% of 1200 mm is 12 mm. Is that enough to miss?"
       }
     ],
     "createdBy": "coach",
     "createdAt": "2026-08-10T16:42:21.170Z",
-    "updatedAt": "2026-08-10T16:42:21.170Z"
+    "updatedAt": "2026-08-10T19:24:31.933Z"
   },
   {
     "id": "task-speed-calibration",
@@ -3377,15 +3401,11 @@
     "workContext": "lab",
     "status": "todo",
     "dueDate": "2026-08-15",
-    "description": "A fast robot that misses is worth **nothing**. A slow robot that hits every time wins matches. In this assignment you find out where *your* robot stops being reliable.\n\n## ⚡ Why this matters\n\nYou get **2.5 minutes** per match. It is tempting to run everything at full speed — but most robots lose accuracy as they speed up, especially when **turning**. Your job is to find the fastest speed that is still repeatable, and use that everywhere.\n\n## 🏁 Part 1 — Driving straight\n\nRun the straight-line test. It drives 500 mm at **three different speeds** and pauses between each so you can measure. Record every result.\n\n## 🔄 Part 2 — Turning\n\nRun the turn test. It turns 90° at **three different rates**. Turning is usually where accuracy dies first — a robot that turns 90° slowly but 84° quickly will drift further off with every mission it chains together.\n\n## 🎯 What you are looking for\n\nThe point where the error jumps. Something like:\n\n| Speed | Error |\n|---|---|\n| 100 mm/s | 2 mm |\n| 300 mm/s | 4 mm |\n| 500 mm/s | **23 mm** ← too fast |\n\nThat robot's competition speed is **300**, not 500. Write it down and use it in every mission program.",
+    "description": "A fast robot that misses is worth **nothing**. A slow robot that hits every time wins matches. This lesson finds where *your* robot stops being reliable.\n\n## ⚡ Why it matters\n\nYou get **2.5 minutes** per match, so it is tempting to run everything at full speed. Most robots lose accuracy as they speed up — especially **turning**. Your job is to find the fastest setting that is still repeatable, then use it everywhere.\n\n## 🏁 What the program does\n\nOne program runs **both halves** and prints a table for each.\n\n**Part 1 — straight.** Drives 500 mm at 300, 500 and 700 mm/s:\n\n```\nspeed(mm/s) | measured(mm) | error(mm)\n```\n\n**Part 2 — turning.** Turns 90° at 200, 400 and 600 deg/s, reading the real angle off the gyro:\n\n```\nturn_rate(deg/s) | measured(deg) | error(deg)\n```\n\n## 🔧 You can change the settings\n\nNear the top of the file is a **STUDENT SETTINGS** block — safe to edit:\n\n```python\nSTRAIGHT_TEST_DISTANCE_MM = 500\nSTRAIGHT_SPEEDS = [300, 500, 700]\nTURN_TEST_ANGLE_DEG = 90\nTURN_SPEEDS = [200, 400, 600]\n```\n\nFound the error jumping between 500 and 700? Add a middle value like **600** and run it again to find exactly where it breaks.\n\n## 🎯 What you are looking for\n\nThe point where the error jumps:\n\n| Speed | Error |\n|---|---|\n| 300 mm/s | 2 mm |\n| 500 mm/s | 4 mm |\n| 700 mm/s | **23 mm** ← too fast |\n\nThat robot's competition speed is **500**, not 700. Write it down and use it in every mission program.\n\n> **Note:** this program runs `robot.use_gyro(True)`, so turns are already gyro-corrected. If they are *still* drifting at speed, that is the wheels losing grip — no amount of code fixes that.",
     "codeExamples": [
       {
-        "label": "Part 1 — Straight line at 3 speeds",
-        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.parameters import Port, Direction\nfrom pybricks.robotics import DriveBase\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\n\n# ---- CHANGE THESE FOUR LINES TO MATCH YOUR ROBOT ----\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.B)\nWHEEL_DIAMETER = 56    # mm - measure your wheel with a ruler\nAXLE_TRACK = 112       # mm - centre of left wheel to centre of right wheel\n# -----------------------------------------------------\n\ndrive = DriveBase(left_motor, right_motor, WHEEL_DIAMETER, AXLE_TRACK)\n\n# SPEED TEST - does your robot stay accurate when it goes faster?\n#\n# 1. Tape a start line on the floor.\n# 2. Run this program. It drives 500 mm THREE times, each one faster.\n# 3. After each run the robot stops and waits - measure it, then press the\n#    CENTER button to start the next speed.\n# 4. Write every result in your table.\n#\n# Fast is only useful if it is still accurate. Most teams find one speed\n# where the robot is quick AND repeatable - that is your competition speed.\n\nfrom pybricks.parameters import Button\n\nfor speed in [100, 300, 500]:      # mm per second\n    drive.settings(straight_speed=speed)\n\n    print(\"---\")\n    print(\"Speed:\", speed, \"mm/s - line the robot up, then press CENTER\")\n    while Button.CENTER not in hub.buttons.pressed():\n        wait(50)\n    wait(600)\n\n    drive.straight(500)\n    wait(500)\n    print(\"Asked for 500 mm at\", speed, \"mm/s. Measure it now.\")\n\nprint(\"--- done, now do the turn half ---\")"
-      },
-      {
-        "label": "Part 2 — Turning at 3 speeds",
-        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.parameters import Port, Direction\nfrom pybricks.robotics import DriveBase\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\n\n# ---- CHANGE THESE FOUR LINES TO MATCH YOUR ROBOT ----\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.B)\nWHEEL_DIAMETER = 56    # mm - measure your wheel with a ruler\nAXLE_TRACK = 112       # mm - centre of left wheel to centre of right wheel\n# -----------------------------------------------------\n\ndrive = DriveBase(left_motor, right_motor, WHEEL_DIAMETER, AXLE_TRACK)\n\n# TURN SPEED TEST - does your robot turn accurately when it turns faster?\n#\n# 1. Line the robot up against a straight edge (tape works well).\n# 2. Run this program. It turns 90 degrees THREE times, each one faster.\n# 3. After each turn, measure the real angle - a paper square or the table\n#    corner is a good guide. Press CENTER for the next speed.\n# 4. Write every result in your table.\n#\n# Turning is usually where accuracy dies first. A robot that turns 90 at\n# slow speed but 84 at fast speed will drift further off with every mission.\n\nfrom pybricks.parameters import Button\n\nfor rate in [45, 90, 180]:         # degrees per second\n    drive.settings(turn_rate=rate)\n\n    print(\"---\")\n    print(\"Turn rate:\", rate, \"deg/s - line the robot up, then press CENTER\")\n    while Button.CENTER not in hub.buttons.pressed():\n        wait(50)\n    wait(600)\n\n    drive.turn(90)\n    wait(500)\n    print(\"Asked for 90 degrees at\", rate, \"deg/s. Measure it now.\")\n\nprint(\"--- done ---\")"
+        "label": "Speed test lab — straight and turning, prints both tables",
+        "code": "\"\"\"\nStudent Speed Test Lab\n\nOne file for testing:\n1) Straight driving at different straight speeds.\n2) Turning at different turn rates.\n\nStudents can edit the values in the STUDENT SETTINGS section.\n\"\"\"\n\nfrom pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.robotics import DriveBase\nfrom pybricks.parameters import Port, Direction, Stop\nfrom pybricks.tools import wait\n\n\n# Robot physical constants.\nWHEEL_DIAMETER_MM = 56\nAXLE_TRACK_MM = 122\n\n\n# Hardware setup.\nhub = PrimeHub()\n\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.E, Direction.CLOCKWISE)\nRAM = Motor(Port.F)\nLAM = Motor(Port.B)\n\nrobot = DriveBase(left_motor, right_motor, WHEEL_DIAMETER_MM, AXLE_TRACK_MM)\n\n\n# Drive settings.\nrobot.settings(\n    straight_speed=600,\n    straight_acceleration=400,\n    turn_rate=400,\n    turn_acceleration=300,\n)\n\n\n# Use gyro for better turn accuracy.\nrobot.use_gyro(True)\n\n\n# Helper functions.\ndef reset():\n    robot.reset()\n\n\ndef straight(distance_mm, then=Stop.HOLD):\n    robot.straight(distance_mm, then=then)\n\n\ndef turn(angle_deg, then=Stop.HOLD):\n    robot.turn(angle_deg, then=then)\n\n\n# STUDENT SETTINGS (safe to edit)\nSTRAIGHT_TEST_DISTANCE_MM = 500\nSTRAIGHT_SPEEDS = [300, 500, 700]\n\nTURN_TEST_ANGLE_DEG = 90\nTURN_SPEEDS = [200, 400, 600]\n\nPAUSE_BETWEEN_TESTS_MS = 1000\n\n\ndef run_straight_speed_tests():\n    results = []\n    print(\"\\n=== STRAIGHT SPEED TESTS ===\")\n    print(\"Target distance:\", STRAIGHT_TEST_DISTANCE_MM, \"mm\")\n\n    for speed in STRAIGHT_SPEEDS:\n        reset()\n        robot.settings(\n            straight_speed=speed,\n            straight_acceleration=400,\n            turn_rate=400,\n            turn_acceleration=300,\n        )\n\n        straight(STRAIGHT_TEST_DISTANCE_MM)\n        measured_distance = robot.distance()\n        distance_error = measured_distance - STRAIGHT_TEST_DISTANCE_MM\n\n        results.append((speed, measured_distance, distance_error))\n        wait(PAUSE_BETWEEN_TESTS_MS)\n\n    print(\"speed(mm/s) | measured(mm) | error(mm)\")\n    print(\"--------------------------------------\")\n    for speed, measured, error in results:\n        print(\"{:<11} | {:<12} | {:+}\".format(speed, int(measured), int(error)))\n\n\ndef run_turn_speed_tests():\n    results = []\n    print(\"\\n=== TURN SPEED TESTS ===\")\n    print(\"Target angle:\", TURN_TEST_ANGLE_DEG, \"deg\")\n\n    for turn_rate in TURN_SPEEDS:\n        reset()\n        robot.settings(\n            straight_speed=600,\n            straight_acceleration=400,\n            turn_rate=turn_rate,\n            turn_acceleration=300,\n        )\n\n        turn(TURN_TEST_ANGLE_DEG)\n        measured_heading = hub.imu.heading()\n        angle_error = measured_heading - TURN_TEST_ANGLE_DEG\n\n        results.append((turn_rate, measured_heading, angle_error))\n        wait(PAUSE_BETWEEN_TESTS_MS)\n\n    print(\"turn_rate(deg/s) | measured(deg) | error(deg)\")\n    print(\"----------------------------------------------\")\n    for turn_rate, measured, error in results:\n        print(\"{:<16} | {:<13} | {:+}\".format(turn_rate, int(measured), int(error)))\n\n\ndef run_all_tests():\n    print(\"Starting speed tests...\")\n    run_straight_speed_tests()\n    run_turn_speed_tests()\n    print(\"\\nDone. Smaller error values are better.\")\n\n\nrun_all_tests()"
       }
     ],
     "questions": [
@@ -3393,57 +3413,63 @@
         "id": "speed-table",
         "type": "table",
         "editableColumns": true,
-        "label": "Straight-line results — one row per speed:",
+        "label": "Straight speed results — copy the printed table:",
         "columns": [
           "Speed (mm/s)",
-          "Asked for (mm)",
-          "Actually drove (mm)",
+          "Measured (mm)",
           "Error (mm)",
+          "Tape measure (mm)",
           "Still accurate? (Y/N)"
         ],
         "minRows": 3,
-        "maxRows": 10
+        "maxRows": 12
       },
       {
         "id": "turn-table",
         "type": "table",
         "editableColumns": true,
-        "label": "Turning results — one row per turn rate:",
+        "label": "Turn speed results — copy the printed table:",
         "columns": [
           "Turn rate (deg/s)",
-          "Asked for (deg)",
-          "Actually turned (deg)",
+          "Measured (deg)",
           "Error (deg)",
           "Still accurate? (Y/N)"
         ],
         "minRows": 3,
-        "maxRows": 10
+        "maxRows": 12
       },
       {
         "id": "q1",
         "type": "text",
         "allowAttach": true,
-        "label": "What driving speed and turn rate is your team using for competition?",
-        "placeholder": "e.g. 300 mm/s straight, 90 deg/s turning"
+        "label": "What straight_speed and turn_rate is your team using for competition?",
+        "placeholder": "e.g. straight_speed=500, turn_rate=200"
       },
       {
         "id": "q2",
         "type": "textarea",
         "allowAttach": true,
-        "label": "At what speed did your robot stop being accurate — and what do you think causes that?",
-        "placeholder": "Think about wheel slip, weight, how suddenly it stops, where the battery sits..."
+        "label": "At what speed did the error jump — and did you add extra speeds to STUDENT SETTINGS to narrow it down?",
+        "placeholder": "e.g. it was fine at 500 but bad at 700, so we added 600 and found it broke at 650..."
       },
       {
         "id": "q3",
         "type": "textarea",
         "allowAttach": true,
-        "label": "Was straight driving or turning worse? Why does that matter in a real match?",
-        "placeholder": "Think about a run where you turn 6 times before reaching the last mission..."
+        "label": "Was straight driving or turning worse? Remember the gyro is already on — so what is left to blame?",
+        "placeholder": "If gyro-corrected turns still drift at speed, what is physically happening at the wheels?"
+      },
+      {
+        "id": "q4",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Think about a run that turns 6 times before the last mission. Using your worst turn error, how far off would you be by the end?",
+        "placeholder": "Multiply it out — small errors add up fast across a full run..."
       }
     ],
     "createdBy": "coach",
     "createdAt": "2026-08-10T16:42:21.170Z",
-    "updatedAt": "2026-08-10T16:42:21.170Z"
+    "updatedAt": "2026-08-10T19:24:31.933Z"
   },
   {
     "id": "task-square-test",
@@ -3459,8 +3485,8 @@
     "description": "This is the test that catches everything. Your robot drives a square and should finish **exactly where it started, pointing the same way**. Any error in distance or turning shows up here — because it happens **four times**.\n\n## 🔲 Why the square is the classic test\n\nOne turn being 2° off is easy to miss. Do it four times and you are 8° off, and the robot ends up somewhere completely different. The square multiplies your errors until you can see them with your own eyes.\n\n## 📐 What to do\n\n1. Put the robot on tape. **Draw round its base** or mark two corners so you know exactly where it started.\n2. Run the program. It drives a **200 mm**, then **400 mm**, then **600 mm** square, pausing between each.\n3. After each one, measure:\n   - the **gap** between where it started and where it finished\n   - how far round it is **pointing** compared to the start\n4. Record all three in your table.\n\n## 🎯 How good is good?\n\n| Gap on a 400 mm square | Verdict |\n|---|---|\n| Under 20 mm | Competition ready 🏆 |\n| 20–50 mm | Usable, keep tuning |\n| Over 50 mm | Go back to Calibration 1 |\n\n## 🧠 Reading your results\n\n- **Ends up short or long, but pointing the right way** → distance is off, redo Calibration 1\n- **Right place-ish but pointing wrong** → turning is off, redo Calibration 2\n- **Small square fine, big square bad** → your error is a *percentage*, so it grows with distance\n- **Different every time** → something is loose, or your battery is low\n\nFix what the pattern tells you, then run it again.",
     "codeExamples": [
       {
-        "label": "Square test — 200 mm, 400 mm and 600 mm squares",
-        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.parameters import Port, Direction\nfrom pybricks.robotics import DriveBase\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\n\n# ---- CHANGE THESE FOUR LINES TO MATCH YOUR ROBOT ----\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.B)\nWHEEL_DIAMETER = 56    # mm - measure your wheel with a ruler\nAXLE_TRACK = 112       # mm - centre of left wheel to centre of right wheel\n# -----------------------------------------------------\n\ndrive = DriveBase(left_motor, right_motor, WHEEL_DIAMETER, AXLE_TRACK)\n\n# THE SQUARE TEST - the real test of whether your robot drives true.\n#\n# The robot drives a square and should finish EXACTLY where it started,\n# pointing the same way. Any error in distance or turning shows up here,\n# because it gets multiplied four times.\n#\n# 1. Put the robot on tape. Draw around its base, or mark two corners.\n# 2. Run this program.\n# 3. When it stops, measure the GAP between where it started and where it\n#    finished, and how far round it is pointing.\n# 4. Press CENTER to run the next size square.\n#\n# A great robot finishes within 2 cm on a 30 cm square. Under 5 cm is fine\n# to start with. If it is way off, go back and redo the distance test.\n\nfrom pybricks.parameters import Button\n\nfor side in [200, 400, 600]:       # mm - small, medium, big square\n    print(\"---\")\n    print(\"Square with\", side, \"mm sides - line up on your mark, press CENTER\")\n    while Button.CENTER not in hub.buttons.pressed():\n        wait(50)\n    wait(600)\n\n    for corner in range(4):\n        drive.straight(side)\n        drive.turn(90)\n\n    wait(500)\n    print(\"Finished the\", side, \"mm square. Measure the gap now.\")\n\nprint(\"--- all three squares done ---\")"
+        "label": "Square test — 200 / 400 / 600 mm squares, prints heading error",
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.robotics import DriveBase\nfrom pybricks.parameters import Port, Direction, Stop\nfrom pybricks.tools import wait\n\n\n# Robot physical constants.\nWHEEL_DIAMETER_MM = 56\nAXLE_TRACK_MM = 122\n\n\n# Hardware setup.\nhub = PrimeHub()\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.E, Direction.CLOCKWISE)\nRAM = Motor(Port.F)\nLAM = Motor(Port.B)\n\nrobot = DriveBase(left_motor, right_motor, WHEEL_DIAMETER_MM, AXLE_TRACK_MM)\nrobot.use_gyro(True)\n\n\n# THE SQUARE TEST - the real test of whether your robot drives true.\n#\n# The robot drives a square and should finish EXACTLY where it started,\n# pointing the same way. Any error in distance or turning shows up here,\n# because it gets multiplied four times.\n#\n# 1. Put the robot on tape. Draw around its base, or mark two corners.\n# 2. Run this program. It does a small, a medium and a big square.\n# 3. After each one, measure the GAP back to your mark, and read the\n#    heading the program prints - that is how far round it finished.\n\nSQUARE_SIDES_MM = [200, 400, 600]\nSQUARE_SPEED_MM_S = 400\nPAUSE_BETWEEN_TESTS_MS = 2000\n\nrobot.settings(\n    straight_speed=SQUARE_SPEED_MM_S,\n    straight_acceleration=400,\n    turn_rate=200,\n    turn_acceleration=300,\n)\n\nprint(\"\\n=== SQUARE TEST ===\")\nprint(\"side(mm) | heading_error(deg)\")\nprint(\"------------------------------\")\n\nfor side in SQUARE_SIDES_MM:\n    robot.reset()\n    hub.imu.reset_heading(0)\n\n    for corner in range(4):\n        robot.straight(side, then=Stop.HOLD)\n        robot.turn(90, then=Stop.HOLD)\n\n    heading_error = hub.imu.heading()\n    print(\"{:<8} | {:+}\".format(side, int(heading_error)))\n    print(\"   ^ measure the GAP back to your mark now\")\n    wait(PAUSE_BETWEEN_TESTS_MS)\n\nprint(\"\\nDone. A great robot finishes within 20 mm on the 400 mm square.\")"
       }
     ],
     "questions": [
@@ -3473,7 +3499,7 @@
           "Square side (mm)",
           "Speed used",
           "Gap from start (mm)",
-          "Pointing off by (deg)",
+          "Heading error (deg)",
           "Verdict"
         ],
         "minRows": 3,
@@ -3510,7 +3536,7 @@
     ],
     "createdBy": "coach",
     "createdAt": "2026-08-10T16:42:21.170Z",
-    "updatedAt": "2026-08-10T16:42:21.170Z"
+    "updatedAt": "2026-08-10T19:24:31.933Z"
   },
   {
     "id": "task-simulator-tuning",
@@ -3527,7 +3553,7 @@
     "codeExamples": [
       {
         "label": "Matching run — 1000 mm straight, then a full 360° turn",
-        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.parameters import Port, Direction, Button\nfrom pybricks.robotics import DriveBase\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\n\n# ---- USE THE SAME NUMBERS AS YOUR SIMULATOR ----\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.B)\nWHEEL_DIAMETER = 56\nAXLE_TRACK = 112\n# ------------------------------------------------\n\ndrive = DriveBase(left_motor, right_motor, WHEEL_DIAMETER, AXLE_TRACK)\n\n# MATCHING RUN - run this EXACT program on the real robot, then run the\n# same moves in the simulator, and compare where the two end up.\n#\n# 1. Mark your start position with tape.\n# 2. Press CENTER to run.\n# 3. Measure how far it really went and how far round it really turned.\n# 4. Type those numbers into the simulator's \"Tune to your real robot\" box.\n\nprint(\"Line up on your mark, then press CENTER\")\nwhile Button.CENTER not in hub.buttons.pressed():\n    wait(50)\nwait(600)\n\ndrive.straight(1000)          # a long run makes the error easy to see\nwait(400)\nprint(\"Measure the distance now, then press CENTER for the turn\")\n\nwhile Button.CENTER not in hub.buttons.pressed():\n    wait(50)\nwait(600)\n\ndrive.turn(360)               # a full circle multiplies the turn error\nwait(400)\nprint(\"Measure how far past (or short of) a full circle it finished.\")"
+        "code": "from pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.robotics import DriveBase\nfrom pybricks.parameters import Port, Direction, Stop\nfrom pybricks.tools import wait\n\n\n# Robot physical constants.\nWHEEL_DIAMETER_MM = 56\nAXLE_TRACK_MM = 122\n\n\n# Hardware setup.\nhub = PrimeHub()\nleft_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)\nright_motor = Motor(Port.E, Direction.CLOCKWISE)\nRAM = Motor(Port.F)\nLAM = Motor(Port.B)\n\nrobot = DriveBase(left_motor, right_motor, WHEEL_DIAMETER_MM, AXLE_TRACK_MM)\nrobot.use_gyro(True)\n\n\n# MATCHING RUN - teach the simulator how your real robot moves.\n#\n# Long moves on purpose: a 2% error over 500 mm is only 10 mm and easy to\n# miss, but over 1000 mm it is 20 mm and obvious. The full circle does the\n# same thing for turning.\n#\n# 1. Mark your start position with tape.\n# 2. Run this program.\n# 3. Measure the REAL distance with a tape measure, and read the heading\n#    it prints for the turn.\n# 4. Type those numbers into the simulator's \"Tune to your real robot\" box.\n\nrobot.settings(\n    straight_speed=500,\n    straight_acceleration=400,\n    turn_rate=200,\n    turn_acceleration=300,\n)\n\nrobot.reset()\nhub.imu.reset_heading(0)\n\nrobot.straight(1000, then=Stop.HOLD)\nprint(\"Asked for:     1000 mm\")\nprint(\"Encoder says: \", int(robot.distance()), \"mm\")\nprint(\"Measure the REAL distance with a tape measure now.\")\n\nwait(3000)\n\nhub.imu.reset_heading(0)\nrobot.turn(360, then=Stop.HOLD)\nprint(\"Asked for:     360 deg\")\nprint(\"Gyro says:    \", int(hub.imu.heading()), \"deg\")"
       }
     ],
     "questions": [
@@ -3572,6 +3598,6 @@
     ],
     "createdBy": "coach",
     "createdAt": "2026-08-10T16:58:39.674Z",
-    "updatedAt": "2026-08-10T16:58:39.674Z"
+    "updatedAt": "2026-08-10T19:24:31.933Z"
   }
 ]
