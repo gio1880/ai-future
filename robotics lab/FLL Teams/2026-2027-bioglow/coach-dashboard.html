@@ -2184,6 +2184,7 @@
           if (result.lessonsUpdated) bits.push(`${result.lessonsUpdated} lesson(s) ${dryRun ? 'would be updated' : 'updated'}`);
           if (result.lessonsAdded) bits.push(`${result.lessonsAdded} new lesson(s) ${dryRun ? 'would be added' : 'added'}`);
           if (result.seasonSynced) bits.push(`season info ${dryRun ? 'would be refreshed' : 'refreshed'}`);
+          if (result.reopenedCount) bits.push(`${result.reopenedCount} already-submitted ${result.reopenedCount === 1 ? 'copy' : 'copies'} ${dryRun ? 'would be reopened' : 'reopened automatically'}`);
           message.textContent = (dryRun ? 'Preview: ' : '✅ Done — ') + bits.join(', ') +
             (dryRun ? '. Nothing has changed yet.' : '. Students see it on their next refresh.');
           message.className = 'form-msg success';

@@ -4131,7 +4131,12 @@ async function ensureFllCurriculumTasksForUser(user) {
 // Student answers live in task-submissions.json and are never touched here.
 // Nothing is ever deleted.
 const FLL_CONTENT_FIELDS = ['title', 'description', 'questions', 'category', 'type', 'workContext'];
-const FLL_OPTIONAL_CONTENT_FIELDS = ['videoId', 'trackerConfig'];
+// Optional because a lesson may not have them, and if the seed drops one it
+// should disappear live too. Must cover every authored field or edits to it
+// silently never reach students — that is what happened to codeExamples.
+const FLL_OPTIONAL_CONTENT_FIELDS = [
+	'videoId', 'trackerConfig', 'codeExample', 'codeExamples', 'allowPhoto', 'photoPrompt', 'allowFile'
+];
 
 async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 	const seedTasks = await readJsonFile(path.join(fllSeedDataDir, 'tasks.json'), []);
@@ -4145,6 +4150,7 @@ async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 	const now = new Date().toISOString();
 	const updatedTitles = new Set();
 	const addedTitles = [];
+	const changedTaskIds = new Set();
 	let updatedCount = 0;
 
 	for (const template of templates) {
@@ -4179,6 +4185,7 @@ async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 				if (!dryRun) task.updatedAt = now;
 				updatedCount += 1;
 				updatedTitles.add(template.title);
+				changedTaskIds.add(task.id);
 			}
 		}
 	}
@@ -4194,6 +4201,32 @@ async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 		}
 	}
 
+	// If a lesson changed and a student had already turned it in, their work
+	// answers questions that no longer exist. Reopen it automatically so they
+	// can redo it against the new version — no coach action, no manual step.
+	// Trackers/journal are never locked, so they need nothing here.
+	const reopenedStudents = [];
+	if (changedTaskIds.size) {
+		const stored = await readJsonFile(fllTaskSubmissionsFile, []);
+		const submissions = Array.isArray(stored) ? stored : [];
+		let submissionsChanged = false;
+		for (const submission of submissions) {
+			if (!changedTaskIds.has(submission.taskId)) continue;
+			if (submission.reopened) continue;              // already open
+			reopenedStudents.push(submission.studentName || submission.studentId);
+			if (dryRun) continue;
+			submission.reopened = {
+				at: now,
+				by: 'Lesson update',
+				note: 'This lesson was updated after you turned it in, so it has been reopened for you. Check the new questions and send it again.'
+			};
+			// the coach read the old version — flag their note as out of date
+			if (submission.review) submission.review = { ...submission.review, stale: true };
+			submissionsChanged = true;
+		}
+		if (!dryRun && submissionsChanged) await writeJsonFile(fllTaskSubmissionsFile, submissions);
+	}
+
 	if (!dryRun && (updatedCount || addedTitles.length)) {
 		await writeJsonFile(fllTasksFile, liveTasks);
 	}
@@ -4204,6 +4237,8 @@ async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 		taskCopiesUpdated: updatedCount,
 		lessonsAdded: addedTitles.length,
 		addedTitles,
+		reopenedCount: reopenedStudents.length,
+		reopenedStudents: [...new Set(reopenedStudents)],
 		updatedTitles: [...updatedTitles],
 		seasonSynced
 	};
