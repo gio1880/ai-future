@@ -5215,6 +5215,19 @@ app.get(['/fll-hub/simulator', '/fll-hub/simulator/'], requireFllAuth, requireFl
 	res.sendFile(path.join(fllHubDir, 'simulator.html'));
 });
 
+// Mission model building instructions. These are LEGO's copyrighted PDFs, so
+// they sit behind the hub login rather than being served publicly. The model
+// number is the only thing taken from the URL, which keeps the filename's
+// space out of the request path.
+const FLL_BUILD_MODEL_COUNT = 13;
+app.get('/fll-hub/building-instructions/:model', requireFllAuth, (req, res) => {
+	const model = Number.parseInt(req.params.model, 10);
+	if (!Number.isInteger(model) || model < 1 || model > FLL_BUILD_MODEL_COUNT) {
+		return res.status(404).send('Unknown model');
+	}
+	return res.sendFile(path.join(fllHubDir, 'building-instructions', `model ${model}.pdf`));
+});
+
 // ── Robot profiles: tuning the simulator to match the real robot ────────────
 // A real robot never drives exactly what the maths says — wheels slip, weight
 // shifts, the mat has grip. Students measure the difference in the calibration
@@ -7918,8 +7931,33 @@ function encodePathForUrl(filePath) {
 		.join('/');
 }
 
+// The catch-all express.static below serves the whole project directory, which
+// otherwise hands out the live data dir (rosters, user records, password
+// hashes) and the server source to anyone who asks. Deny those first.
+const BLOCKED_STATIC_PREFIXES = [
+	'/data/',                 // live runtime data: rosters, users, submissions
+	'/node_modules/',
+	'/.git/',
+	'/.claude/'
+];
+const BLOCKED_STATIC_FILES = new Set([
+	'/server.js',
+	'/package.json',
+	'/package-lock.json',
+	'/render.yaml',
+	'/.env',
+	'/.env.example'
+]);
+
 app.use((req, res, next) => {
 	const requestPath = decodeURIComponent(req.path || '');
+	const lower = requestPath.toLowerCase();
+	if (BLOCKED_STATIC_FILES.has(lower)
+		|| BLOCKED_STATIC_PREFIXES.some((prefix) => lower.startsWith(prefix))
+		|| lower === '/data'
+		|| /^\/\.env/.test(lower)) {
+		return res.status(404).send('Not found');
+	}
 	const fllStaticRoot = '/robotics lab/FLL Teams/2026-2027-bioglow';
 	const campStaticRoot = '/robotics lab/Summer Camp/2026-summer-camp';
 	if (requestPath === '/Lesson Building' || requestPath.startsWith('/Lesson Building/')) {
@@ -7954,6 +7992,11 @@ app.use((req, res, next) => {
 		return res.redirect(302, '/camp-hub/login');
 	}
 	if (requestPath.startsWith(`${fllStaticRoot}/data/`)) {
+		return res.status(404).send('Not found');
+	}
+	// building instructions are only served through the authenticated route,
+	// otherwise express.static below would hand out the PDFs to anyone
+	if (requestPath.startsWith(`${fllStaticRoot}/building-instructions/`)) {
 		return res.status(404).send('Not found');
 	}
 	if (requestPath === `${fllStaticRoot}/hub.html`) {

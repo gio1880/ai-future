@@ -2131,6 +2131,48 @@
     }
 
     /* ── Cat grid title ── */
+    /* ── mission model building instructions ── */
+    .bi-note {
+      font-size: 13px;
+      color: var(--t-muted);
+      margin: -4px 0 12px;
+      line-height: 1.5;
+    }
+    .bi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+      gap: 10px;
+      margin-bottom: 26px;
+    }
+    .bi-card {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      background: var(--s-card);
+      border: 1.5px solid var(--s-line);
+      border-radius: 12px;
+      padding: 13px 14px;
+      text-decoration: none;
+      color: var(--t-ink);
+      font-weight: 700;
+      font-size: 13.5px;
+      transition: border-color .15s, transform .15s;
+    }
+    .bi-card:hover {
+      border-color: #1a73e8;
+      transform: translateY(-1px);
+    }
+    .bi-icon { font-size: 18px; flex-shrink: 0; }
+    .bi-label { flex: 1; min-width: 0; }
+    .bi-type {
+      font-size: 10.5px;
+      font-weight: 800;
+      color: var(--t-faint);
+      background: var(--s-subtle);
+      border-radius: 50px;
+      padding: 2px 7px;
+    }
+
     .cat-grid-title {
       font-size: 15px;
       font-weight: 800;
@@ -5641,6 +5683,7 @@
         ${preSeasonSection}
         <div class="cat-grid-title">📂 Your FLL Areas</div>
         <div class="cat-grid">${cards}</div>
+        ${renderBuildingInstructions(data)}
         <div class="cat-grid-title">📅 Season Calendar</div>
         <div id="seasonCalendar">${renderCalendar(data)}</div>
       `;
@@ -5670,6 +5713,27 @@
         push(region.predictedChampionship, { label: `🏆 Championship (predicted) — ${region.name}`, type: 'competition' });
       }
       return events;
+    }
+
+    // ── Mission model building instructions ───────────────────────────────
+    // The only resource in the hub, so it gets its own section rather than a
+    // filtered library. Sorted by model number, not the string order.
+    function renderBuildingInstructions(data) {
+      const models = (data.resources || [])
+        .filter(r => r.category === 'Building Instructions')
+        .sort((a, b) => (parseInt(a.label.replace(/\D/g, ''), 10) || 0) - (parseInt(b.label.replace(/\D/g, ''), 10) || 0));
+      if (!models.length) return '';
+      return `
+        <div class="cat-grid-title">📐 Mission Model Building Instructions</div>
+        <div class="bi-note">Building the mission models for the table. Open one, follow the steps, and check it works before you attach it to the mat.</div>
+        <div class="bi-grid">
+          ${models.map(m => `
+            <a class="bi-card" href="${escapeHtml(m.url)}" target="_blank" rel="noreferrer">
+              <span class="bi-icon">📄</span>
+              <span class="bi-label">${escapeHtml(m.label)}</span>
+              <span class="bi-type">PDF</span>
+            </a>`).join('')}
+        </div>`;
     }
 
     function renderCalendar(data) {
