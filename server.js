@@ -4214,6 +4214,18 @@ async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 		}
 	}
 
+	// resources.json is pure content too — which resources are switched OFF is
+	// coach state and lives in fll-settings.json, so replacing this is safe.
+	let resourcesSynced = 0;
+	const seedResources = await readJsonFile(path.join(fllSeedDataDir, 'resources.json'), null);
+	if (Array.isArray(seedResources)) {
+		const liveResources = await readJsonFile(path.join(fllHubDataDir, 'resources.json'), null);
+		if (JSON.stringify(seedResources) !== JSON.stringify(liveResources)) {
+			resourcesSynced = seedResources.length;
+			if (!dryRun) await writeJsonFile(path.join(fllHubDataDir, 'resources.json'), seedResources);
+		}
+	}
+
 	// If a lesson changed and a student had already turned it in, their work
 	// answers questions that no longer exist. Reopen it automatically so they
 	// can redo it against the new version — no coach action, no manual step.
@@ -4253,7 +4265,8 @@ async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 		reopenedCount: reopenedStudents.length,
 		reopenedStudents: [...new Set(reopenedStudents)],
 		updatedTitles: [...updatedTitles],
-		seasonSynced
+		seasonSynced,
+		resourcesSynced
 	};
 }
 
