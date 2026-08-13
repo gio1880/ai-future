@@ -1150,6 +1150,10 @@ function normalizeFllSettings(data) {
 	const hiddenAssignments = Array.isArray(source.hiddenAssignments)
 		? [...new Set(source.hiddenAssignments.map((t) => cleanMetaString(t, 160)).filter(Boolean))]
 		: [];
+	// resources a coach has switched off, by resource id
+	const hiddenResources = Array.isArray(source.hiddenResources)
+		? [...new Set(source.hiddenResources.map((id) => cleanMetaString(id, 160)).filter(Boolean))]
+		: [];
 	const teamSettings = {};
 	for (const [teamId, teamValue] of Object.entries(source.teamSettings || {})) {
 		const cleanTeamId = cleanMetaString(teamId, 100);
@@ -1159,6 +1163,9 @@ function normalizeFllSettings(data) {
 			simulatorEnabled: teamValue.simulatorEnabled !== false,
 			hiddenAssignments: Array.isArray(teamValue.hiddenAssignments)
 				? [...new Set(teamValue.hiddenAssignments.map((title) => cleanMetaString(title, 160)).filter(Boolean))]
+				: [],
+			hiddenResources: Array.isArray(teamValue.hiddenResources)
+				? [...new Set(teamValue.hiddenResources.map((id) => cleanMetaString(id, 160)).filter(Boolean))]
 				: []
 		};
 	}
@@ -1166,6 +1173,7 @@ function normalizeFllSettings(data) {
 		disabledAreas: [...new Set(disabledAreas)],
 		simulatorEnabled: source.simulatorEnabled !== false, // default on
 		hiddenAssignments,
+		hiddenResources,
 		teamSettings
 	};
 }
@@ -1176,11 +1184,13 @@ function effectiveFllSettings(settings, teamId) {
 	return team ? {
 		disabledAreas: team.disabledAreas,
 		simulatorEnabled: team.simulatorEnabled,
-		hiddenAssignments: team.hiddenAssignments
+		hiddenAssignments: team.hiddenAssignments,
+		hiddenResources: team.hiddenResources || []
 	} : {
 		disabledAreas: normalized.disabledAreas,
 		simulatorEnabled: normalized.simulatorEnabled,
-		hiddenAssignments: normalized.hiddenAssignments
+		hiddenAssignments: normalized.hiddenAssignments,
+		hiddenResources: normalized.hiddenResources
 	};
 }
 async function readFllSettings() {
@@ -4251,8 +4261,10 @@ function isGeneratedFllCodingTaskId(taskId, user) {
 	return taskId === `task-coding-foundations-${user?.id || ''}`;
 }
 
-function visibleFllResources(resources, user) {
+function visibleFllResources(resources, user, hiddenResourceIds) {
+	const hidden = new Set(hiddenResourceIds || []);
 	return (Array.isArray(resources) ? resources : []).filter((resource) => {
+		if (hidden.has(resource.id)) return false;   // coach switched this one off
 		const roles = Array.isArray(resource.roles) ? resource.roles : [];
 		const roleAllowed = !roles.length || roles.includes(user.role);
 		const teamAllowed = !resource.teamId || resource.teamId === user.teamId;
@@ -4330,7 +4342,7 @@ async function getFllStudentDashboardFor(user) {
 		.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 	const currentPhase = (Array.isArray(timeline) ? timeline : []).find((phase) => phase.status === 'current') || (Array.isArray(timeline) ? timeline[0] : null);
 	const teamMembers = (Array.isArray(members) ? members : []).filter((member) => member.teamId === user.teamId);
-	const visibleResources = visibleFllResources(resources, user);
+	const visibleResources = visibleFllResources(resources, user, studentSettings.hiddenResources);
 	const teamMissionAnalysis = (Array.isArray(missionAnalysis) ? missionAnalysis : []).filter((mission) => mission.teamId === user.teamId);
 	// this student's own coach feedback — never anyone else's
 	const allSubmissions = await readJsonFile(fllTaskSubmissionsFile, []);
@@ -5220,10 +5232,18 @@ app.get(['/fll-hub/simulator', '/fll-hub/simulator/'], requireFllAuth, requireFl
 // number is the only thing taken from the URL, which keeps the filename's
 // space out of the request path.
 const FLL_BUILD_MODEL_COUNT = 13;
-app.get('/fll-hub/building-instructions/:model', requireFllAuth, (req, res) => {
+app.get('/fll-hub/building-instructions/:model', requireFllAuth, async (req, res) => {
 	const model = Number.parseInt(req.params.model, 10);
 	if (!Number.isInteger(model) || model < 1 || model > FLL_BUILD_MODEL_COUNT) {
 		return res.status(404).send('Unknown model');
+	}
+	// a resource the coach switched off is refused, not just hidden from the
+	// list — otherwise a remembered URL walks straight past the setting
+	if (req.fllUser.role === 'student') {
+		const settings = effectiveFllSettings(await readFllSettings(), req.fllUser.teamId);
+		if ((settings.hiddenResources || []).includes(`building-instructions-model-${model}`)) {
+			return res.status(403).send('Your coach has turned this resource off for now.');
+		}
 	}
 	return res.sendFile(path.join(fllHubDir, 'building-instructions', `model ${model}.pdf`));
 });
@@ -5442,14 +5462,15 @@ app.post('/api/fll/simulator/progress', requireFllAuth, requireFllStudent, requi
 
 app.get('/api/fll/coach/roster', requireFllAuth, requireFllCoach, async (req, res) => {
 	try {
-		const [teams, members, users, tasks, season, masterRoster, fllSettings] = await Promise.all([
+		const [teams, members, users, tasks, season, masterRoster, fllSettings, resources] = await Promise.all([
 			readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
 			readJsonFile(fllTeamMembersFile, []),
 			readFllUsers(),
 			readJsonFile(fllTasksFile, []),
 			readJsonFile(path.join(fllHubDataDir, 'season.json'), {}),
 			readMasterRoster(),
-			readFllSettings()
+			readFllSettings(),
+			readJsonFile(path.join(fllHubDataDir, 'resources.json'), [])
 		]);
 		const students = users
 			.filter((user) => user.role === 'student' && user.demoAccount !== true)
@@ -5474,7 +5495,8 @@ app.get('/api/fll/coach/roster', requireFllAuth, requireFllCoach, async (req, re
 				enrolledMasterStudents,
 				tasks: Array.isArray(tasks) ? tasks : [],
 				season,
-				fllSettings
+				fllSettings,
+				resources: Array.isArray(resources) ? resources : []
 			}
 		});
 	} catch (err) {
@@ -5522,6 +5544,9 @@ app.patch('/api/fll/coach/settings', requireFllAuth, requireFllCoach, async (req
 		if (Array.isArray(req.body.hiddenAssignments)) {
 			// full replacement of the hidden list (supports bulk show/hide)
 			target.hiddenAssignments = req.body.hiddenAssignments.map((t) => cleanMetaString(t, 160)).filter(Boolean);
+		}
+		if (Array.isArray(req.body.hiddenResources)) {
+			target.hiddenResources = req.body.hiddenResources.map((id) => cleanMetaString(id, 160)).filter(Boolean);
 		}
 		// convenience toggles for a single area / a bulk set of lessons
 		if (typeof req.body.toggleArea === 'string' && FLL_AREA_IDS.includes(req.body.toggleArea)) {

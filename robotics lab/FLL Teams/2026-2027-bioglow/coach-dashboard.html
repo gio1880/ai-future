@@ -819,6 +819,24 @@
         <div class="visibility-lessons" id="visibilityLessons"></div>
         <div class="visibility-actions"><button class="submit-btn" id="visibilitySave" onclick="saveVisibility()">Save visibility</button><button class="visibility-bulk-btn hidden" id="visibilityReset" onclick="resetTeamVisibility()">Reset team to defaults</button><span class="form-msg" id="visibilityMessage"></span></div>
       </div>
+      <div class="visibility-card">
+        <div class="visibility-head">
+          <div>
+            <h2 class="form-title">Resources</h2>
+            <p class="form-sub">Building instructions and videos students can open. Untick one to hide it once the team no longer needs it — nothing is deleted, so you can bring it back any time.</p>
+          </div>
+        </div>
+        <div class="visibility-controls">
+          <button class="visibility-bulk-btn" onclick="bulkSetResources(true)">Show all</button>
+          <button class="visibility-bulk-btn" onclick="bulkSetResources(false)">Hide all</button>
+        </div>
+        <div class="visibility-lessons" id="visibilityResources"></div>
+        <div class="visibility-actions">
+          <button class="submit-btn" id="resourcesSave" onclick="saveVisibility()">Save resources</button>
+          <span class="form-msg" id="resourcesMessage"></span>
+        </div>
+      </div>
+
       <div class="card">
         <h3 class="card-title">📥 Update lesson content</h3>
         <p class="card-sub">Pulls the newest lesson wording, questions, and videos from the latest deployment onto the live hub. Student progress, submitted answers, and any due dates you set are kept as they are. Nothing is deleted.</p>
@@ -2231,7 +2249,8 @@
         teamId,
         disabledAreas: [...(source.disabledAreas || [])],
         simulatorEnabled: source.simulatorEnabled !== false,
-        hiddenAssignments: [...(source.hiddenAssignments || [])]
+        hiddenAssignments: [...(source.hiddenAssignments || [])],
+        hiddenResources: [...(source.hiddenResources || [])]
       };
       const areas = [
         ['robot-design', '🤖 Robot Design'], ['robot-game', '🎯 Robot Game'],
@@ -2241,6 +2260,7 @@
         <label class="visibility-toggle"><input type="checkbox" ${visibilityDraft.disabledAreas.includes(id) ? '' : 'checked'} onchange="setVisibilityArea('${id}',this.checked)"><span>${label}</span></label>
       `).join('') + `<label class="visibility-toggle"><input id="visibilitySimulator" type="checkbox" ${visibilityDraft.simulatorEnabled ? 'checked' : ''} onchange="visibilityDraft.simulatorEnabled=this.checked"><span>🕹️ Simulator</span></label>`;
       renderVisibilityLessons();
+      renderVisibilityResources();
       const message = document.getElementById('visibilityMessage');
       document.getElementById('visibilityReset').classList.toggle('hidden', !teamId);
       message.textContent = teamId && !(roster.fllSettings?.teamSettings || {})[teamId]
@@ -2290,6 +2310,45 @@
       return visibilityLessons().filter(lesson =>
         (area === 'all' || lesson.category === area) && (!search || lesson.title.toLowerCase().includes(search))
       );
+    }
+
+    // ── Resource visibility ───────────────────────────────────────────────
+    // Same model as lessons: nothing is deleted, ids just go on a hidden list.
+    function renderVisibilityResources() {
+      if (!visibilityDraft) return;
+      const wrap = document.getElementById('visibilityResources');
+      if (!wrap) return;
+      const hidden = new Set(visibilityDraft.hiddenResources);
+      const resources = [...(roster.resources || [])].sort((a, b) => {
+        // featured first, then models by NUMBER so 2 comes before 10
+        if (!!b.featured - !!a.featured) return !!b.featured - !!a.featured;
+        return (parseInt(String(a.label).replace(/\D/g, ''), 10) || 0)
+             - (parseInt(String(b.label).replace(/\D/g, ''), 10) || 0);
+      });
+      if (!resources.length) {
+        wrap.innerHTML = '<div class="empty" style="padding:20px">No resources yet.</div>';
+        return;
+      }
+      wrap.innerHTML = resources.map(r => `
+        <div class="visibility-row">
+          <label class="visibility-row-toggle">
+            <input class="visibility-resource-check" type="checkbox" data-rid="${escapeHtml(r.id)}" ${hidden.has(r.id) ? '' : 'checked'} onchange="setVisibilityResource(this.dataset.rid,this.checked)">
+            <span class="visibility-row-title">${escapeHtml(r.label)}</span>
+          </label>
+          <span class="visibility-row-meta">${escapeHtml(r.type || 'Link')}</span>
+        </div>`).join('');
+    }
+
+    function setVisibilityResource(id, visible) {
+      const set = new Set(visibilityDraft.hiddenResources);
+      if (visible) set.delete(id); else set.add(id);
+      visibilityDraft.hiddenResources = [...set];
+    }
+
+    function bulkSetResources(visible) {
+      const ids = (roster.resources || []).map(r => r.id);
+      visibilityDraft.hiddenResources = visible ? [] : [...ids];
+      renderVisibilityResources();
     }
 
     function renderVisibilityLessons() {
@@ -2354,6 +2413,16 @@
         roster.fllSettings = result.settings;
         message.textContent = 'Visibility saved. Students on the selected team will see the update when their dashboard refreshes.';
         message.className = 'form-msg success';
+        // the resources card has its own Save button, so echo the result there too
+        const resourcesMsg = document.getElementById('resourcesMessage');
+        if (resourcesMsg) {
+          const hiddenCount = (visibilityDraft.hiddenResources || []).length;
+          const total = (roster.resources || []).length;
+          resourcesMsg.textContent = hiddenCount
+            ? `Saved — ${total - hiddenCount} of ${total} resources visible.`
+            : `Saved — all ${total} resources visible.`;
+          resourcesMsg.className = 'form-msg success';
+        }
         showToast('Student Hub visibility saved');
       } catch (err) {
         message.textContent = err.message;
