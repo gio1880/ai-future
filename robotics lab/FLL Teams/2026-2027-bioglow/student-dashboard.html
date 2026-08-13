@@ -2138,6 +2138,32 @@
       margin: -4px 0 12px;
       line-height: 1.5;
     }
+    .bi-featured {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      background: var(--tint-blue);
+      border: 1.5px solid #b9d4f5;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      text-decoration: none;
+      color: var(--t-ink);
+      transition: border-color .15s, transform .15s;
+    }
+    .bi-featured:hover { border-color: #1a73e8; transform: translateY(-1px); }
+    .bi-featured-icon { font-size: 22px; flex-shrink: 0; }
+    .bi-featured-text { flex: 1; min-width: 0; }
+    .bi-featured-label { display: block; font-weight: 800; font-size: 14px; }
+    .bi-featured-desc {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--t-muted);
+      line-height: 1.45;
+      margin-top: 3px;
+    }
+
     .bi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
@@ -5719,13 +5745,28 @@
     // The only resource in the hub, so it gets its own section rather than a
     // filtered library. Sorted by model number, not the string order.
     function renderBuildingInstructions(data) {
-      const models = (data.resources || [])
-        .filter(r => r.category === 'Building Instructions')
+      const all = (data.resources || []).filter(r => r.category === 'Building Instructions');
+      if (!all.length) return '';
+      // the setup video is featured above the PDFs; models sort by NUMBER so
+      // Model 2 comes before Model 10
+      const featured = all.filter(r => r.featured);
+      const models = all.filter(r => !r.featured)
         .sort((a, b) => (parseInt(a.label.replace(/\D/g, ''), 10) || 0) - (parseInt(b.label.replace(/\D/g, ''), 10) || 0));
-      if (!models.length) return '';
+
+      const featuredHtml = featured.map(f => `
+        <a class="bi-featured" href="${escapeHtml(f.url)}" target="_blank" rel="noreferrer">
+          <span class="bi-featured-icon">▶️</span>
+          <span class="bi-featured-text">
+            <span class="bi-featured-label">${escapeHtml(f.label)}</span>
+            <span class="bi-featured-desc">${escapeHtml(f.description || '')}</span>
+          </span>
+          <span class="bi-type">Video</span>
+        </a>`).join('');
+
       return `
-        <div class="cat-grid-title">📐 Mission Model Building Instructions</div>
-        <div class="bi-note">Building the mission models for the table. Open one, follow the steps, and check it works before you attach it to the mat.</div>
+        <div class="cat-grid-title">📐 Mission Models: Build &amp; Set Up</div>
+        <div class="bi-note">Build each model from its instructions, then use the setup video to check it is correct and in the right place on the mat.</div>
+        ${featuredHtml}
         <div class="bi-grid">
           ${models.map(m => `
             <a class="bi-card" href="${escapeHtml(m.url)}" target="_blank" rel="noreferrer">

@@ -1,5 +1,20 @@
 [
   {
+    "id": "building-instructions-field-setup",
+    "category": "Building Instructions",
+    "label": "Field Setup & Build Check",
+    "description": "Watch this before your first match practice. It shows where every mission model goes on the mat and how to check you built each one correctly.",
+    "type": "Video",
+    "source": "FIRST LEGO League — BIOGLOW",
+    "url": "https://www.youtube.com/watch?v=wDan0826cn0",
+    "videoId": "wDan0826cn0",
+    "featured": true,
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
     "id": "building-instructions-model-1",
     "category": "Building Instructions",
     "label": "Model 1",
