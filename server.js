@@ -39,6 +39,7 @@ const fllMissionAnalysisFile = path.join(fllHubDataDir, 'mission-analysis.json')
 const fllLiveLessonFile = path.join(fllHubDataDir, 'live-lesson.json');
 const fllSimulatorProgressFile = path.join(fllHubDataDir, 'simulator-progress.json');
 const fllRobotProfilesFile = path.join(fllHubDataDir, 'robot-profiles.json');
+const fllTaskDraftsFile = path.join(fllHubDataDir, 'task-drafts.json');
 const fllCoachRankingsFile = path.join(fllHubDataDir, 'coach-rankings.json');
 const fllSettingsFile = path.join(fllHubDataDir, 'fll-settings.json');
 const codeLabStudentsFile = path.join(__dirname, 'code-lab', 'data', 'students.json');
@@ -64,6 +65,7 @@ const fllDataFileNames = [
 	'live-lesson.json',
 	'simulator-progress.json',
 	'robot-profiles.json',
+	'task-drafts.json',
 	'coach-rankings.json',
 	'fll-settings.json'
 ];
@@ -1049,6 +1051,7 @@ async function buildDataHealthReport() {
 		'live-lesson.json': 'runtime-live-state',
 		'simulator-progress.json': 'runtime-student-work',
 		'robot-profiles.json': 'runtime-student-work',
+		'task-drafts.json': 'runtime-student-work',
 		'fll-settings.json': 'runtime-coach-configuration',
 		'coach-rankings.json': 'runtime-coach-assessment'
 	};
@@ -6310,6 +6313,58 @@ app.patch('/api/fll/coach/task-submissions/:id', requireFllAuth, requireFllCoach
 	} catch (err) {
 		console.error('FLL submission review error:', err);
 		return res.status(500).json({ success: false, message: 'Server error saving your review' });
+	}
+});
+
+// Drafts live on the server, not just in the browser. A student who types
+// answers on a school iPad and opens the hub at home should find their work,
+// rather than an empty box.
+app.put('/api/fll/tasks/:id/draft', requireFllAuth, requireFllStudent, async (req, res) => {
+	try {
+		const tasks = await readJsonFile(fllTasksFile, []);
+		const task = (Array.isArray(tasks) ? tasks : []).find((t) => t.id === req.params.id);
+		if (!task || task.assignedTo !== req.fllUser.id) {
+			return res.status(403).json({ success: false, message: 'You can only save your own work' });
+		}
+		const stored = await readJsonFile(fllTaskDraftsFile, []);
+		const drafts = Array.isArray(stored) ? stored : [];
+
+		const answers = {};
+		for (const [questionId, answer] of Object.entries(req.body.answers || {})) {
+			answers[cleanMetaString(questionId, 120)] = cleanMetaString(answer || '', 8000);
+		}
+		const photos = (Array.isArray(req.body.photos) ? req.body.photos : [])
+			.filter((photo) => typeof photo === 'string' && /^data:image\//.test(photo))
+			.slice(0, 20);
+
+		const payload = {
+			id: `draft-${req.fllUser.id}-${task.id}`,
+			taskId: task.id,
+			studentId: req.fllUser.id,
+			teamId: req.fllUser.teamId,
+			answers,
+			photos,
+			savedAt: new Date().toISOString()
+		};
+		const index = drafts.findIndex((d) => d.taskId === task.id && d.studentId === req.fllUser.id);
+		if (index >= 0) drafts[index] = payload; else drafts.push(payload);
+		await writeJsonFile(fllTaskDraftsFile, drafts);
+		return res.json({ success: true, savedAt: payload.savedAt });
+	} catch (err) {
+		console.error('FLL draft save error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving your draft' });
+	}
+});
+
+app.get('/api/fll/tasks/:id/draft', requireFllAuth, requireFllStudent, async (req, res) => {
+	try {
+		const stored = await readJsonFile(fllTaskDraftsFile, []);
+		const drafts = Array.isArray(stored) ? stored : [];
+		const draft = drafts.find((d) => d.taskId === req.params.id && d.studentId === req.fllUser.id);
+		return res.json({ success: true, draft: draft || null });
+	} catch (err) {
+		console.error('FLL draft load error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading your draft' });
 	}
 });
 

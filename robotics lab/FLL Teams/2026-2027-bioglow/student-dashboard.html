@@ -2223,6 +2223,89 @@
       margin: -4px 0 12px;
       line-height: 1.5;
     }
+    /* ── what to do next ── */
+    .next-up {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--s-card);
+      border: 1.5px solid var(--s-line);
+      border-left: 5px solid #1a73e8;
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      cursor: pointer;
+      transition: border-color .18s, transform .18s, box-shadow .18s;
+    }
+    .next-up:hover { transform: translateY(-1px); border-color: #1a73e8; }
+    .next-up.is-late   { border-left-color: #f9ab00; }
+    .next-up.is-urgent { border-left-color: #d93025; }
+    .next-up-clear     { border-left-color: #1e8e5a; cursor: default; }
+    .next-up-clear:hover { transform: none; }
+    .next-up-icon { font-size: 26px; flex-shrink: 0; }
+    .next-up-body { flex: 1; min-width: 0; }
+    .next-up-tag {
+      font-size: 10.5px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .06em; color: var(--t-muted);
+    }
+    .next-up-title { font-size: 16px; font-weight: 800; color: var(--t-ink); margin-top: 3px; line-height: 1.3; }
+    .next-up-sub { font-size: 12.5px; color: var(--t-muted); margin-top: 4px; }
+    .next-up-go {
+      font-size: 13px; font-weight: 800; color: #1a73e8;
+      white-space: nowrap; flex-shrink: 0;
+    }
+
+    /* ── grade celebration ── */
+    .grade-pop {
+      position: fixed; left: 50%; bottom: 26px;
+      transform: translate(-50%, 130%);
+      width: min(420px, calc(100vw - 32px));
+      background: var(--s-card);
+      border: 1.5px solid var(--s-line-2);
+      border-radius: 18px;
+      padding: 20px 22px 18px;
+      box-shadow: 0 18px 50px rgba(16,35,63,.24);
+      z-index: 200; text-align: center;
+      transition: transform .42s cubic-bezier(.16,1,.3,1);
+    }
+    .grade-pop.is-in { transform: translate(-50%, 0); }
+    .grade-pop.is-great { border-color: #1e8e5a; }
+    .grade-pop-close {
+      position: absolute; top: 10px; right: 10px;
+      background: none !important; border: none !important;
+      color: var(--t-faint) !important; font-size: 13px;
+      cursor: pointer; padding: 4px 7px !important;
+      min-height: 0 !important; box-shadow: none !important;
+    }
+    .grade-pop-emoji { font-size: 34px; line-height: 1; }
+    .grade-pop-head { font-size: 15px; font-weight: 800; color: var(--t-ink); margin-top: 8px; }
+    .grade-pop-task { font-size: 13px; color: var(--t-muted); margin-top: 4px; }
+    .grade-pop-level {
+      display: inline-block; margin-top: 10px;
+      background: var(--tint-green); color: #1e8e5a;
+      border-radius: 50px; padding: 5px 16px;
+      font-size: 14px; font-weight: 800;
+    }
+    .grade-pop-note {
+      font-size: 13.5px; font-style: italic; color: var(--t-body);
+      line-height: 1.5; margin-top: 12px;
+    }
+    .grade-pop-by { font-size: 11.5px; color: var(--t-faint); margin-top: 9px; }
+
+    .confetti-wrap {
+      position: fixed; inset: 0; pointer-events: none; z-index: 199; overflow: hidden;
+    }
+    .confetti-wrap i {
+      position: absolute; top: -14px;
+      width: 9px; height: 14px; border-radius: 2px;
+      animation: confettiFall linear forwards;
+    }
+    @keyframes confettiFall {
+      to { transform: translateY(105vh) rotate(680deg); opacity: .15; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .confetti-wrap { display: none; }
+      .grade-pop { transition: none; }
+    }
+
     /* ── mission videos by channel ── */
     .mv-list { margin-bottom: 26px; }
     .mv-channel {
@@ -4393,6 +4476,8 @@
       wireListeners();
       // teammates' answers + what this student wrote in earlier lessons
       loadTaskContext(taskId);
+      // and any draft they started on another device
+      loadServerDraft((latestData.user || {}).id || (latestData.user || {}).name, taskId);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -5368,6 +5453,136 @@
         </div>`;
     }
 
+    // ── "What should I do next?" ──────────────────────────────────────────
+    // Students open the hub and see 40+ lessons. This picks the ONE that
+    // matters most right now: anything a coach sent back, then overdue,
+    // then whatever is due soonest.
+    function pickNextTask(data) {
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const submitted = data.submittedTasks || {};
+      const state = data.submissionState || {};
+
+      const candidates = (data.tasks || []).filter(t => {
+        const st = state[t.id] || {};
+        if (st.reopened || st.flag) return true;          // coach needs something back
+        if (submitted[t.id]) return false;                // already handed in
+        return t.status !== 'done';
+      });
+      if (!candidates.length) return null;
+
+      const score = (t) => {
+        const st = state[t.id] || {};
+        if (st.flag) return 0;                            // talk to your coach first
+        if (st.reopened) return 1;                        // then fix what was sent back
+        const due = t.dueDate ? new Date(t.dueDate + 'T00:00:00') : null;
+        if (due && due < today) return 2;                 // then overdue
+        return 3;                                         // then upcoming
+      };
+      candidates.sort((a, b) => {
+        const s = score(a) - score(b);
+        if (s) return s;
+        return String(a.dueDate || '9999').localeCompare(String(b.dueDate || '9999'));
+      });
+      return candidates[0];
+    }
+
+    function renderNextUp(data) {
+      const task = pickNextTask(data);
+      if (!task) {
+        return `
+          <div class="next-up next-up-clear">
+            <div class="next-up-icon">🎉</div>
+            <div class="next-up-body">
+              <div class="next-up-tag">All caught up</div>
+              <div class="next-up-title">Nothing is waiting on you right now</div>
+              <div class="next-up-sub">Everything assigned is turned in. Nice work.</div>
+            </div>
+          </div>`;
+      }
+      const st = (data.submissionState || {})[task.id] || {};
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const due = task.dueDate ? new Date(task.dueDate + 'T00:00:00') : null;
+      const overdue = due && due < today;
+      const days = due ? Math.round((due - today) / 86400000) : null;
+
+      let tag = 'Start here', why = '', tone = '';
+      if (st.flag)          { tag = 'Talk to your coach'; why = 'Your coach raised something about this one.'; tone = ' is-urgent'; }
+      else if (st.reopened) { tag = 'Sent back to you';   why = 'Your coach reopened this so you can change it.'; tone = ' is-urgent'; }
+      else if (overdue)     { tag = 'Overdue';            why = `This was due ${Math.abs(days)} day${Math.abs(days) !== 1 ? 's' : ''} ago — start with this one.`; tone = ' is-late'; }
+      else if (days === 0)  { tag = 'Due today';          why = 'This one is due today.'; tone = ' is-late'; }
+      else if (days !== null) { tag = 'Up next';          why = `Due in ${days} day${days !== 1 ? 's' : ''}.`; }
+
+      return `
+        <div class="next-up${tone}" onclick="openTask('${escapeHtml(task.id)}')">
+          <div class="next-up-icon">${st.flag ? '⚠️' : st.reopened ? '🔓' : overdue ? '⏰' : '👉'}</div>
+          <div class="next-up-body">
+            <div class="next-up-tag">${escapeHtml(tag)}</div>
+            <div class="next-up-title">${escapeHtml(task.title)}</div>
+            <div class="next-up-sub">${escapeHtml(why)}</div>
+          </div>
+          <div class="next-up-go">Open →</div>
+        </div>`;
+    }
+
+    // ── Celebrating a good grade ──────────────────────────────────────────
+    // Fires once per graded submission, the first time the student sees it.
+    const SEEN_GRADES_KEY = 'bioglow-seen-grades';
+
+    function seenGrades() {
+      try { return JSON.parse(localStorage.getItem(SEEN_GRADES_KEY) || '{}'); }
+      catch { return {}; }
+    }
+
+    function checkForNewGrades() {
+      const reviews = latestData.submissionReviews || {};
+      const seen = seenGrades();
+      for (const [taskId, review] of Object.entries(reviews)) {
+        if (!review || review.stale) continue;
+        if (seen[taskId] === review.reviewedAt) continue;      // already celebrated
+        seen[taskId] = review.reviewedAt;
+        try { localStorage.setItem(SEEN_GRADES_KEY, JSON.stringify(seen)); } catch {}
+        const task = (latestData.tasks || []).find(t => t.id === taskId);
+        showGradeCelebration(task ? task.title : 'your assignment', review);
+        return;   // one at a time, so it never stacks up
+      }
+    }
+
+    function showGradeCelebration(title, review) {
+      const level = REVIEW_LEVEL_LABELS[review.level] || '';
+      const great = review.level === 'exceeds' || review.level === 'accomplished';
+      const el = document.createElement('div');
+      el.className = 'grade-pop' + (great ? ' is-great' : '');
+      el.innerHTML = `
+        <button class="grade-pop-close" onclick="this.closest('.grade-pop').remove()" aria-label="Close">✕</button>
+        <div class="grade-pop-emoji">${great ? '🎉' : '👀'}</div>
+        <div class="grade-pop-head">${great ? 'Your coach graded your work!' : 'Your coach read your work'}</div>
+        <div class="grade-pop-task">${escapeHtml(title)}</div>
+        ${level ? `<div class="grade-pop-level">${escapeHtml(level)}</div>` : ''}
+        ${review.feedback ? `<div class="grade-pop-note">“${escapeHtml(review.feedback)}”</div>` : ''}
+        <div class="grade-pop-by">— ${escapeHtml(review.reviewedBy || 'your coach')}</div>`;
+      document.body.appendChild(el);
+      if (great) launchConfetti();
+      setTimeout(() => el.classList.add('is-in'), 20);
+      setTimeout(() => { el.classList.remove('is-in'); setTimeout(() => el.remove(), 400); }, 9000);
+    }
+
+    function launchConfetti() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const colors = ['#1a73e8', '#1e8e5a', '#f9ab00', '#6f42c1', '#e8583a'];
+      const wrap = document.createElement('div');
+      wrap.className = 'confetti-wrap';
+      for (let i = 0; i < 40; i++) {
+        const bit = document.createElement('i');
+        bit.style.left = Math.random() * 100 + '%';
+        bit.style.background = colors[i % colors.length];
+        bit.style.animationDelay = (Math.random() * 0.5) + 's';
+        bit.style.animationDuration = (1.6 + Math.random() * 1.2) + 's';
+        wrap.appendChild(bit);
+      }
+      document.body.appendChild(wrap);
+      setTimeout(() => wrap.remove(), 3600);
+    }
+
     // ── Grade / submission state, shown on the assignment ROW ─────────────
     // So a student can see they have been graded without opening the lesson
     // and scrolling to the bottom of it.
@@ -5669,11 +5884,47 @@
     }
 
     // ── Save draft ────────────────────────────────────────────────────────
-    function saveTaskDraft(userId, taskId) {
+    async function saveTaskDraft(userId, taskId) {
       const answers = collectAnswers(taskId);
-      saveTaskSubmission(userId, taskId, answers, undefined);
+      const saved = saveTaskSubmission(userId, taskId, answers, undefined);
       const msg = document.getElementById('ta-submit-msg');
-      if (msg) { msg.textContent = '✓ Draft saved!'; msg.className = 'ta-submit-hint success'; setTimeout(() => { if (msg) msg.textContent = ''; }, 2500); }
+      if (msg) { msg.textContent = 'Saving…'; msg.className = 'ta-submit-hint'; }
+      // also push it to the server so it follows the student to another device
+      try {
+        const r = await fetch(`/api/fll/tasks/${encodeURIComponent(taskId)}/draft`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ answers, photos: getTaskPhotos(saved) })
+        });
+        const j = await r.json();
+        if (!r.ok || !j.success) throw new Error(j.message || 'Could not save');
+        if (msg) { msg.textContent = '✓ Draft saved — you can carry on from any device.'; msg.className = 'ta-submit-hint success'; }
+      } catch (e) {
+        if (msg) { msg.textContent = '✓ Saved on this device (could not reach the server).'; msg.className = 'ta-submit-hint'; }
+      }
+      if (msg) setTimeout(() => { if (msg) msg.textContent = ''; }, 3500);
+    }
+
+    // Pull a server draft when a lesson opens. The newer of the two copies
+    // wins, so working offline then coming back online does not lose work.
+    async function loadServerDraft(userId, taskId) {
+      try {
+        const r = await fetch(`/api/fll/tasks/${encodeURIComponent(taskId)}/draft`);
+        const j = await r.json();
+        if (!j.success || !j.draft) return;
+        const local = getTaskSubmission(userId, taskId);
+        if (local && local.submittedAt) return;           // already turned in
+        const localTime = local && local.savedAt ? new Date(local.savedAt).getTime() : 0;
+        const serverTime = new Date(j.draft.savedAt).getTime();
+        if (serverTime <= localTime) return;              // this device is newer
+        saveTaskSubmission(userId, taskId, j.draft.answers || {}, j.draft.photos || []);
+        if (activeTask === taskId) {
+          app.innerHTML = renderTaskDetail(latestData, taskId);
+          wireListeners();
+          loadTaskContext(taskId);
+          showToast('Picked up your draft from another device 📄');
+        }
+      } catch (e) { /* offline — the local copy stands */ }
     }
 
     // ── Submit assignment ─────────────────────────────────────────────────
@@ -5941,6 +6192,7 @@
       return `
         ${renderSimSpotlight(data)}
         ${renderWelcomeBanner(user, currentPhase, tasks, bioglowCountdown)}
+        ${renderNextUp(data)}
         ${infoRow}
         ${preSeasonSection}
         <div class="cat-grid-title">📂 Your FLL Areas</div>
@@ -6258,6 +6510,7 @@
       const { user, team } = data;
       userLine.textContent = `${user.name} – ${team ? team.name : 'No team assigned'}`;
       maybeShowWelcomeScreen(user);
+      setTimeout(checkForNewGrades, 900);   // after the page settles
 
       app.innerHTML = activeTask
         ? renderTaskDetail(data, activeTask)
