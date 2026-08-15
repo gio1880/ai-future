@@ -4166,10 +4166,21 @@ async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 	const now = new Date().toISOString();
 	const updatedTitles = new Set();
 	const addedTitles = [];
+	const restoredTemplates = [];
 	const changedTaskIds = new Set();
 	let updatedCount = 0;
 
 	for (const template of templates) {
+		// The team-01 TEMPLATE row is what distribution copies from, so its
+		// presence is checked on its own. Looking at students' `--copies` here
+		// instead reported "already up to date" while the template was missing,
+		// leaving every newly created team with no curriculum at all.
+		const hasTemplate = liveTasks.some((task) => task.id === template.id);
+		if (!hasTemplate) {
+			restoredTemplates.push(template.title);
+			if (!dryRun) liveTasks.push({ ...template, createdAt: now, updatedAt: now });
+		}
+
 		const matches = liveTasks.filter(
 			(task) => task.id === template.id || task.id.startsWith(template.id + '--')
 		);
@@ -4264,7 +4275,7 @@ async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 		if (!dryRun && submissionsChanged) await writeJsonFile(fllTaskSubmissionsFile, submissions);
 	}
 
-	if (!dryRun && (updatedCount || addedTitles.length)) {
+	if (!dryRun && (updatedCount || addedTitles.length || restoredTemplates.length)) {
 		await writeJsonFile(fllTasksFile, liveTasks);
 	}
 	return {
@@ -4274,6 +4285,8 @@ async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 		taskCopiesUpdated: updatedCount,
 		lessonsAdded: addedTitles.length,
 		addedTitles,
+		templatesRestored: restoredTemplates.length,
+		restoredTemplates,
 		reopenedCount: reopenedStudents.length,
 		reopenedStudents: [...new Set(reopenedStudents)],
 		updatedTitles: [...updatedTitles],

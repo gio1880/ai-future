@@ -2589,7 +2589,7 @@
           method: 'POST',
           body: JSON.stringify({ dryRun: !!dryRun })
         });
-        const nothing = !result.lessonsUpdated && !result.lessonsAdded && !result.seasonSynced && !result.resourcesSynced;
+        const nothing = !result.lessonsUpdated && !result.lessonsAdded && !result.seasonSynced && !result.resourcesSynced && !result.templatesRestored;
         if (nothing) {
           message.textContent = 'Already up to date — no changes needed.';
           message.className = 'form-msg success';
@@ -2598,6 +2598,7 @@
           const bits = [];
           if (result.lessonsUpdated) bits.push(`${result.lessonsUpdated} lesson(s) ${dryRun ? 'would be updated' : 'updated'}`);
           if (result.lessonsAdded) bits.push(`${result.lessonsAdded} new lesson(s) ${dryRun ? 'would be added' : 'added'}`);
+          if (result.templatesRestored) bits.push(`${result.templatesRestored} lesson template(s) ${dryRun ? 'would be restored' : 'restored'} — new teams need these`);
           if (result.seasonSynced) bits.push(`season info ${dryRun ? 'would be refreshed' : 'refreshed'}`);
           if (result.resourcesSynced) bits.push(`${result.resourcesSynced} resource(s) ${dryRun ? 'would be updated' : 'updated'}`);
           if (result.reopenedCount) bits.push(`${result.reopenedCount} already-submitted ${result.reopenedCount === 1 ? 'copy' : 'copies'} ${dryRun ? 'would be reopened' : 'reopened automatically'}`);
