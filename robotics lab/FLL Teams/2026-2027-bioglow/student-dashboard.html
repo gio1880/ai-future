@@ -905,6 +905,19 @@
       text-decoration: line-through;
     }
 
+    .row-badge {
+      display: inline-flex; align-items: center;
+      font-size: 11px; font-weight: 800;
+      border-radius: 50px; padding: 3px 10px;
+      white-space: nowrap;
+    }
+    .rb-graded  { background: var(--tint-green); color: #1e8e5a; }
+    .rb-sent    { background: var(--tint-blue);  color: #1a73e8; }
+    .rb-open    { background: var(--tint-blue);  color: #1a73e8; }
+    .rb-waiting { background: var(--tint-amber); color: #b06000; }
+    .rb-recheck { background: var(--tint-amber); color: #b06000; }
+    .rb-flag    { background: var(--tint-red);   color: #d93025; }
+
     .preseason-task-meta {
       display: flex;
       flex-wrap: wrap;
@@ -5355,6 +5368,36 @@
         </div>`;
     }
 
+    // ── Grade / submission state, shown on the assignment ROW ─────────────
+    // So a student can see they have been graded without opening the lesson
+    // and scrolling to the bottom of it.
+    function taskRowBadge(taskId) {
+      const review = (latestData.submissionReviews || {})[taskId];
+      const state = (latestData.submissionState || {})[taskId] || {};
+      const submittedAt = (latestData.submittedTasks || {})[taskId];
+
+      if (state.flag) {
+        return '<span class="row-badge rb-flag">⚠️ Coach wants to talk</span>';
+      }
+      if (review && !review.stale) {
+        const level = REVIEW_LEVEL_LABELS[review.level];
+        return `<span class="row-badge rb-graded">✅ Graded${level ? ' · ' + escapeHtml(level) : ''}</span>`;
+      }
+      if (review && review.stale) {
+        return '<span class="row-badge rb-recheck">🔄 Coach is re-checking</span>';
+      }
+      if (state.reopened) {
+        return '<span class="row-badge rb-open">🔓 Reopened — redo it</span>';
+      }
+      if (state.reopenRequest && !state.reopenRequest.declinedAt) {
+        return '<span class="row-badge rb-waiting">⏳ Waiting on coach</span>';
+      }
+      if (submittedAt) {
+        return '<span class="row-badge rb-sent">📤 Turned in</span>';
+      }
+      return '';
+    }
+
     // ── The season prompt, shown on every Innovation lesson ───────────────
     function innovationPromptBanner(task) {
       const prompt = (latestData.season || {}).innovationPrompt;
@@ -5836,6 +5879,7 @@
                       <span class="preseason-tag">${escapeHtml(task.category || 'General')}</span>
                       <span class="preseason-tag">${ctx} ${escapeHtml(task.workContext === 'lab' ? 'Lab' : task.workContext === 'home' ? 'Home' : task.workContext === 'class' ? 'Class' : 'Any')}</span>
                       ${task.dueDate ? `<span class="preseason-tag ${dc}">📅 Due ${escapeHtml(formatDate(task.dueDate))}</span>` : ''}
+                      ${taskRowBadge(task.id)}
                     </div>
                   </div>
                   <div class="preseason-task-right" onclick="event.stopPropagation()">
@@ -6145,6 +6189,7 @@
                     <div class="preseason-task-meta">
                       <span class="preseason-tag">${ctx} ${escapeHtml(task.workContext === 'lab' ? 'Lab' : task.workContext === 'home' ? 'Home' : task.workContext === 'class' ? 'Class' : 'Any')}</span>
                       ${task.dueDate ? `<span class="preseason-tag">📅 Due ${escapeHtml(formatDate(task.dueDate))}</span>` : ''}
+                      ${taskRowBadge(task.id)}
                     </div>
                   </div>
                   <div class="preseason-task-right" onclick="event.stopPropagation()">
