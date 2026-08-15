@@ -192,6 +192,37 @@
     .sh-chip.is-on { border-color: #1a73e8; background: var(--tint-blue); color: #1a73e8; font-weight: 700; }
     .sh-chip input { margin: 0; }
 
+    /* ── student logins ── */
+    .lg-team { margin-bottom: 18px; }
+    .lg-team-head {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      font-size: 13px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .04em; color: var(--t-muted); margin-bottom: 8px;
+    }
+    .lg-code {
+      text-transform: none; letter-spacing: 0; font-weight: 600;
+      font-size: 12.5px; color: var(--t-body);
+      background: var(--tint-blue); border-radius: 50px; padding: 3px 12px;
+    }
+    .lg-code strong { font-size: 14px; letter-spacing: .06em; color: #1a73e8; }
+    .lg-code-missing { background: var(--tint-red); color: #d93025; }
+    .lg-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      border: 1.5px solid var(--s-line); border-radius: 12px;
+      padding: 11px 14px; margin-bottom: 8px; background: var(--s-card);
+    }
+    .lg-row.is-broken { border-color: #f3b7b0; background: var(--tint-red); }
+    .lg-main { min-width: 0; }
+    .lg-name { font-weight: 800; font-size: 13.5px; color: var(--t-ink); }
+    .lg-creds { font-size: 12.5px; color: var(--t-muted); margin-top: 3px; }
+    .lg-creds code {
+      background: var(--s-subtle); border-radius: 5px; padding: 2px 7px;
+      font-size: 12.5px; font-weight: 700; color: var(--t-ink);
+    }
+    .lg-problem { font-size: 12px; color: #d93025; margin-top: 5px; font-weight: 700; }
+    .lg-status { font-size: 11.5px; font-weight: 800; white-space: nowrap; color: #1e8e5a; }
+    .lg-row.is-broken .lg-status { color: #d93025; }
+
     /* ── Robot tuning profiles ── */
     .rp-team { margin-bottom: 18px; }
     .rp-team-head { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--t-muted); margin-bottom: 8px; }
@@ -580,6 +611,7 @@
       <button class="tab-btn" data-tab="newteam" onclick="showTab('newteam')">🆕 Create Team</button>
       <button class="tab-btn" data-tab="calendar" onclick="showTab('calendar')">📅 Calendar</button>
       <button class="tab-btn" data-tab="curriculum" onclick="showTab('curriculum')">📚 Curriculum</button>
+      <button class="tab-btn" data-tab="logins" onclick="showTab('logins')">🔑 Student Logins</button>
       <button class="tab-btn" data-tab="online" onclick="showTab('online')">🟢 Who's Online</button>
       <button class="tab-btn" data-tab="robots" onclick="showTab('robots')">🎯 Robot Tuning</button>
       <button class="tab-btn" data-tab="submissions" onclick="showTab('submissions')">📬 Submitted Work</button>
@@ -724,6 +756,27 @@
           <a class="submit-btn" href="/fll-hub/curriculum" style="text-decoration:none;display:inline-block;">Open curriculum overview</a>
           <button class="visibility-bulk-btn" onclick="showTab('visibility')">Manage student visibility</button>
         </div>
+      </div>
+    </div>
+    <div class="panel" id="panel-logins">
+      <div class="visibility-card">
+        <div class="visibility-head">
+          <div>
+            <h2 class="form-title">Student logins</h2>
+            <p class="form-sub">Students sign in with their team's <strong>class code</strong> and their <strong>username</strong> — no password. This shows exactly what each student types, and flags anyone who cannot get in.</p>
+          </div>
+        </div>
+        <div class="visibility-controls">
+          <div class="visibility-filter">
+            <label for="loginSearch">Search</label>
+            <input id="loginSearch" type="text" placeholder="Name or username" oninput="renderLoginStatus()">
+          </div>
+          <button class="visibility-bulk-btn" onclick="loadLoginStatus(true)">↻ Refresh</button>
+          <button class="submit-btn" id="loginRepairBtn" onclick="repairLogins()">🔧 Fix broken logins</button>
+          <span class="form-msg" id="loginMessage"></span>
+        </div>
+        <div id="loginSummary" class="form-msg"></div>
+        <div id="loginWrap">Loading&hellip;</div>
       </div>
     </div>
     <div class="panel" id="panel-robots">
@@ -905,8 +958,98 @@
       if (id === 'visibility') renderVisibility();
       if (id === 'submissions') loadSubmissions();
       if (id === 'robots') loadRobotProfiles();
+      if (id === 'logins') loadLoginStatus();
       // only poll while the tab is actually being looked at
       if (id === 'online') startOnlinePolling(); else stopOnlinePolling();
+    }
+
+    // ── Student logins ────────────────────────────────────────────────────
+    // Class code + username, no password. Several things have to line up, so
+    // this shows what each student types and names the reason when they cannot.
+    let loginStatusCache = null;
+
+    async function loadLoginStatus(force) {
+      const wrap = document.getElementById('loginWrap');
+      if (loginStatusCache && !force) { renderLoginStatus(); return; }
+      wrap.textContent = 'Loading…';
+      try {
+        loginStatusCache = await api('/api/fll/coach/login-status');
+        renderLoginStatus();
+      } catch (err) {
+        wrap.innerHTML = `<div class="form-msg error">${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderLoginStatus() {
+      if (!loginStatusCache) return;
+      const wrap = document.getElementById('loginWrap');
+      const summary = document.getElementById('loginSummary');
+      const q = (document.getElementById('loginSearch').value || '').trim().toLowerCase();
+
+      const rows = loginStatusCache.students.filter(s =>
+        !q || s.name.toLowerCase().includes(q) || String(s.username).toLowerCase().includes(q));
+
+      summary.textContent = loginStatusCache.brokenCount
+        ? `${loginStatusCache.readyCount} students can log in · ${loginStatusCache.brokenCount} cannot`
+        : `All ${loginStatusCache.readyCount} students can log in ✓`;
+      summary.className = loginStatusCache.brokenCount ? 'form-msg error' : 'form-msg success';
+
+      if (!rows.length) { wrap.innerHTML = '<div class="sub-empty">No students match.</div>'; return; }
+
+      // group by team so a coach can read a whole team's codes at once
+      const byTeam = {};
+      for (const s of rows) (byTeam[s.teamName || 'No team'] = byTeam[s.teamName || 'No team'] || []).push(s);
+
+      wrap.innerHTML = Object.entries(byTeam).map(([team, list]) => `
+        <div class="lg-team">
+          <div class="lg-team-head">
+            ${escapeHtml(team)}
+            ${list[0].classCode ? `<span class="lg-code">Class code: <strong>${escapeHtml(list[0].classCode)}</strong></span>` : '<span class="lg-code lg-code-missing">no class code</span>'}
+          </div>
+          ${list.map(s => `
+            <div class="lg-row${s.ready ? '' : ' is-broken'}">
+              <div class="lg-main">
+                <div class="lg-name">${escapeHtml(s.name)}</div>
+                <div class="lg-creds">
+                  types <code>${escapeHtml(s.classCode || '—')}</code> + <code>${escapeHtml(s.username)}</code>
+                </div>
+                ${s.ready ? '' : `<div class="lg-problem">⚠️ ${escapeHtml(s.problem)}</div>`}
+              </div>
+              <span class="lg-status">${s.ready ? '✓ Can log in' : 'Cannot log in'}</span>
+            </div>`).join('')}
+        </div>`).join('');
+    }
+
+    async function repairLogins() {
+      const msg = document.getElementById('loginMessage');
+      const btn = document.getElementById('loginRepairBtn');
+      btn.disabled = true;
+      msg.textContent = 'Checking every student…';
+      msg.className = 'form-msg';
+      try {
+        const result = await api('/api/fll/coach/login-status/repair', { method: 'POST', body: '{}' });
+        loginStatusCache = {
+          students: result.students,
+          readyCount: result.students.filter(s => s.ready).length,
+          brokenCount: result.students.filter(s => !s.ready).length
+        };
+        renderLoginStatus();
+        msg.textContent = result.fixed
+          ? `Fixed ${result.fixed} student login${result.fixed !== 1 ? 's' : ''}.`
+          : 'Nothing needed fixing.';
+        if (result.stillBroken.length) {
+          msg.textContent += ` ${result.stillBroken.length} still need a team — assign one and they will work.`;
+          msg.className = 'form-msg error';
+        } else {
+          msg.className = 'form-msg success';
+        }
+        showToast('Student logins checked 🔑');
+      } catch (err) {
+        msg.textContent = err.message;
+        msg.className = 'form-msg error';
+      } finally {
+        btn.disabled = false;
+      }
     }
 
     // ── Robot tuning profiles ─────────────────────────────────────────────

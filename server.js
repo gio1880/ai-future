@@ -5982,6 +5982,15 @@ app.post('/api/fll/coach/students', requireFllAuth, requireFllCoach, async (req,
 				}
 			});
 		}
+		// Students sign in with their TEAM's class code, so a student without a
+		// team can never log in. Refuse rather than handing back credentials
+		// that silently do not work.
+		if (!teamId) {
+			return res.status(400).json({
+				success: false,
+				message: 'Pick a team for this student. Students sign in with their team’s class code, so a student with no team cannot log in.'
+			});
+		}
 		const existingUsernames = new Set(users.map((user) => user.username.toLowerCase()));
 		if (username && existingUsernames.has(username)) {
 			return res.status(409).json({ success: false, message: 'That username is already taken' });
@@ -6127,6 +6136,104 @@ app.patch('/api/fll/coach/students/:id', requireFllAuth, requireFllCoach, async 
 	} catch (err) {
 		console.error('FLL coach update student error:', err);
 		return res.status(500).json({ success: false, message: 'Server error updating student' });
+	}
+});
+
+// ── Coach: who can actually log in ─────────────────────────────────────────
+// Students sign in with their team's CLASS CODE plus their USERNAME. Several
+// things have to line up for that to work, and when one is missing the login
+// screen can only say "check your details". This reports the real reason.
+async function buildFllLoginStatus() {
+	const [users, teams, masterRoster] = await Promise.all([
+		readFllUsers(),
+		readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
+		readMasterRoster()
+	]);
+	const roster = normalizeMasterRoster(masterRoster);
+	const teamById = new Map((Array.isArray(teams) ? teams : []).map((t) => [t.id, t]));
+	const classByTeam = new Map(roster.classes.map((c) => [c.id, c]));
+
+	return users
+		.filter((u) => u.role === 'student' && u.active !== false)
+		.map((user) => {
+			const team = user.teamId ? teamById.get(user.teamId) : null;
+			const classItem = user.teamId ? classByTeam.get(`fll-${user.teamId}`) : null;
+			const classCode = classItem?.classCode || '';
+			const rosterStudent = roster.students.find((s) =>
+				s.fllUserId === user.id
+				|| String(s.portalUsername || '').toLowerCase() === String(user.username || '').toLowerCase());
+
+			let problem = '';
+			if (!user.teamId)              problem = 'No team — students log in with a team class code.';
+			else if (!team)                problem = 'Their team no longer exists.';
+			else if (!classItem)           problem = 'That team has no class yet.';
+			else if (!classCode)           problem = 'That team has no class code yet.';
+			else if (!rosterStudent)       problem = 'Not on the master roster, so the login cannot find them.';
+			else if (!String(rosterStudent.portalUsername || '').trim())
+				problem = 'No portal username on the roster.';
+			else if (!studentPortalHubIds(rosterStudent, roster).includes('fll-hub'))
+				problem = 'Roster record is missing FLL hub access.';
+			else if (!(rosterStudent.enrollments || []).some((e) => e.classId === `fll-${user.teamId}`))
+				problem = 'Not enrolled in their team’s class.';
+
+			return {
+				id: user.id,
+				name: user.name,
+				username: user.username,
+				teamId: user.teamId || '',
+				teamName: team ? (team.nickname || team.name) : '',
+				classCode,
+				ready: !problem,
+				problem
+			};
+		})
+		.sort((a, b) => Number(a.ready) - Number(b.ready) || String(a.teamName).localeCompare(String(b.teamName)) || a.name.localeCompare(b.name));
+}
+
+app.get('/api/fll/coach/login-status', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const students = await buildFllLoginStatus();
+		return res.json({
+			success: true,
+			students,
+			readyCount: students.filter((s) => s.ready).length,
+			brokenCount: students.filter((s) => !s.ready).length
+		});
+	} catch (err) {
+		console.error('FLL login status error:', err);
+		return res.status(500).json({ success: false, message: 'Server error checking student logins' });
+	}
+});
+
+// Re-links every FLL student into the master roster: makes sure their team has
+// a class and a code, and that they are enrolled in it with hub access.
+app.post('/api/fll/coach/login-status/repair', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const [users, teams, masterRoster] = await Promise.all([
+			readFllUsers(),
+			readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
+			readMasterRoster()
+		]);
+		const before = await buildFllLoginStatus();
+		const ensured = ensureFllTeamClasses(teams, masterRoster);
+		const linkable = users
+			.filter((u) => u.role === 'student' && u.active !== false && u.teamId && u.username)
+			.map((u) => ({ id: u.id, name: u.name, username: u.username, teamId: u.teamId }));
+		const linkedRoster = linkFllStudentsToMasterRoster(linkable, ensured.roster);
+		await Promise.all([
+			writeJsonFile(path.join(fllHubDataDir, 'teams.json'), ensured.teams),
+			writeMasterRoster(linkedRoster)
+		]);
+		const after = await buildFllLoginStatus();
+		return res.json({
+			success: true,
+			fixed: before.filter((s) => !s.ready).length - after.filter((s) => !s.ready).length,
+			stillBroken: after.filter((s) => !s.ready),
+			students: after
+		});
+	} catch (err) {
+		console.error('FLL login repair error:', err);
+		return res.status(500).json({ success: false, message: 'Server error repairing student logins' });
 	}
 });
 
