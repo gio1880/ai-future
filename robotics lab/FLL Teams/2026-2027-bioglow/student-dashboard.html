@@ -2210,6 +2210,48 @@
       margin: -4px 0 12px;
       line-height: 1.5;
     }
+    /* ── mission videos by channel ── */
+    .mv-list { margin-bottom: 26px; }
+    .mv-channel {
+      border: 1.5px solid var(--s-line);
+      border-radius: 14px;
+      background: var(--s-card);
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    .mv-channel.is-open { border-color: #1a73e8; }
+    .mv-head {
+      display: flex; align-items: center; gap: 12px; width: 100%;
+      padding: 14px 16px; background: none !important; border: none !important;
+      cursor: pointer; text-align: left; font-family: inherit;
+      color: var(--t-ink) !important; box-shadow: none !important;
+    }
+    .mv-head:hover { background: var(--s-raised) !important; }
+    .mv-avatar { font-size: 20px; flex-shrink: 0; }
+    .mv-head-text { flex: 1; min-width: 0; }
+    .mv-name { display: block; font-weight: 800; font-size: 14.5px; }
+    .mv-official {
+      display: inline-block; background: var(--tint-green); color: #1e8e5a;
+      border-radius: 50px; padding: 1px 8px; font-size: 10.5px; margin-left: 7px;
+      vertical-align: middle;
+    }
+    .mv-note {
+      display: block; font-size: 12.5px; font-weight: 500;
+      color: var(--t-muted); line-height: 1.45; margin-top: 3px;
+    }
+    .mv-count { font-size: 11.5px; color: var(--t-faint); white-space: nowrap; flex-shrink: 0; }
+    .mv-caret { color: var(--t-faint); font-size: 12px; flex-shrink: 0; }
+    .mv-videos { padding: 0 16px 16px; border-top: 1px solid var(--s-line); }
+    .mv-video { margin-top: 14px; }
+    .mv-video-title { font-size: 13.5px; font-weight: 700; margin-bottom: 7px; color: var(--t-body); }
+    .mv-frame {
+      position: relative; width: 100%; padding-top: 56.25%;
+      border-radius: 12px; overflow: hidden; background: #000;
+    }
+    .mv-frame iframe {
+      position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
+    }
+
     .bi-featured {
       display: flex;
       align-items: center;
@@ -5860,6 +5902,7 @@
         <div class="cat-grid-title">📂 Your FLL Areas</div>
         <div class="cat-grid">${cards}</div>
         ${renderBuildingInstructions(data)}
+        ${renderMissionVideos(data)}
         <div class="cat-grid-title">📅 Season Calendar</div>
         <div id="seasonCalendar">${renderCalendar(data)}</div>
       `;
@@ -5925,6 +5968,67 @@
               <span class="bi-type">PDF</span>
             </a>`).join('')}
         </div>`;
+    }
+
+    // ── Mission videos, grouped by channel ────────────────────────────────
+    // Click a channel to open it; the iframe src is only set on open, so the
+    // page does not load five YouTube players it may never show.
+    let openVideoChannel = null;
+
+    function renderMissionVideos(data) {
+      const vids = (data.resources || []).filter(r => r.category === 'Mission Videos');
+      if (!vids.length) return '';
+
+      const channels = [];
+      for (const v of vids) {
+        let group = channels.find(c => c.channel === v.channel);
+        if (!group) {
+          group = { channel: v.channel, note: v.channelNote || '', official: !!v.official, videos: [] };
+          channels.push(group);
+        }
+        group.videos.push(v);
+      }
+      channels.sort((a, b) => (b.official - a.official) || a.channel.localeCompare(b.channel));
+
+      return `
+        <div class="cat-grid-title">🎥 Mission Videos by Channel</div>
+        <div class="bi-note">Watch other people solve this year's missions. Tap a channel to open its videos.</div>
+        <div class="mv-list">
+          ${channels.map(c => {
+            const open = openVideoChannel === c.channel;
+            return `
+            <div class="mv-channel${open ? ' is-open' : ''}">
+              <button class="mv-head" type="button" onclick="toggleVideoChannel('${escapeHtml(c.channel)}')" aria-expanded="${open}">
+                <span class="mv-avatar">${c.official ? '⭐' : '▶️'}</span>
+                <span class="mv-head-text">
+                  <span class="mv-name">${escapeHtml(c.channel)}${c.official ? '<span class="mv-official">Official</span>' : ''}</span>
+                  <span class="mv-note">${escapeHtml(c.note)}</span>
+                </span>
+                <span class="mv-count">${c.videos.length} video${c.videos.length !== 1 ? 's' : ''}</span>
+                <span class="mv-caret">${open ? '▴' : '▾'}</span>
+              </button>
+              ${open ? `
+                <div class="mv-videos">
+                  ${c.videos.map(v => `
+                    <div class="mv-video">
+                      <div class="mv-video-title">${escapeHtml(v.label)}</div>
+                      <div class="mv-frame">
+                        <iframe src="https://www.youtube.com/embed/${escapeHtml(v.videoId)}?rel=0&modestbranding=1"
+                          title="${escapeHtml(v.label)}" loading="lazy" allowfullscreen></iframe>
+                      </div>
+                    </div>`).join('')}
+                </div>` : ''}
+            </div>`;
+          }).join('')}
+        </div>`;
+    }
+
+    function toggleVideoChannel(channel) {
+      openVideoChannel = (openVideoChannel === channel) ? null : channel;
+      app.innerHTML = renderLanding(latestData);
+      wireListeners();
+      const el = document.querySelector('.mv-channel.is-open');
+      if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
 
     function renderCalendar(data) {

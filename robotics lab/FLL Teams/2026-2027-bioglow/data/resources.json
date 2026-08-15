@@ -182,5 +182,141 @@
       "student",
       "coach"
     ]
+  },
+  {
+    "id": "yt-uhZZ8O1StiQ",
+    "category": "Mission Videos",
+    "channel": "FIRST LEGO League",
+    "channelNote": "The official season channel. Start here — this is what the missions and field actually are.",
+    "official": true,
+    "label": "BIOGLOW Robot Game Missions — Founders Edition",
+    "description": "",
+    "type": "Video",
+    "source": "FIRST LEGO League",
+    "videoId": "uhZZ8O1StiQ",
+    "url": "https://www.youtube.com/watch?v=uhZZ8O1StiQ",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "yt-JDJch3tYZok",
+    "category": "Mission Videos",
+    "channel": "FIRST LEGO League",
+    "channelNote": "The official season channel. Start here — this is what the missions and field actually are.",
+    "official": true,
+    "label": "BIOGLOW Game Missions — Future Edition",
+    "description": "",
+    "type": "Video",
+    "source": "FIRST LEGO League",
+    "videoId": "JDJch3tYZok",
+    "url": "https://www.youtube.com/watch?v=JDJch3tYZok",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "yt-wDan0826cn0",
+    "category": "Mission Videos",
+    "channel": "FIRST LEGO League",
+    "channelNote": "The official season channel. Start here — this is what the missions and field actually are.",
+    "official": true,
+    "label": "BIOGLOW Field Setup — Founders Edition",
+    "description": "",
+    "type": "Video",
+    "source": "FIRST LEGO League",
+    "videoId": "wDan0826cn0",
+    "url": "https://www.youtube.com/watch?v=wDan0826cn0",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "yt-4e1f6WESohE",
+    "category": "Mission Videos",
+    "channel": "HANDS on TECHNOLOGY",
+    "channelNote": "The European FLL partner. Their mission walkthrough is a good second look at the same field.",
+    "official": false,
+    "label": "BIOGLOW Robot Game Missions (2026/27)",
+    "description": "",
+    "type": "Video",
+    "source": "HANDS on TECHNOLOGY",
+    "videoId": "4e1f6WESohE",
+    "url": "https://www.youtube.com/watch?v=4e1f6WESohE",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "yt-6oPqt5IQbPI",
+    "category": "Mission Videos",
+    "channel": "HANDS on TECHNOLOGY",
+    "channelNote": "The European FLL partner. Their mission walkthrough is a good second look at the same field.",
+    "official": false,
+    "label": "BIOGLOW Season Presentation",
+    "description": "",
+    "type": "Video",
+    "source": "HANDS on TECHNOLOGY",
+    "videoId": "6oPqt5IQbPI",
+    "url": "https://www.youtube.com/watch?v=6oPqt5IQbPI",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "yt-rsxOYDK8ZRw",
+    "category": "Mission Videos",
+    "channel": "Giraffes#3388",
+    "channelNote": "A competing FLL team. They rebuilt the missions and talk through what each one asks of the robot.",
+    "official": false,
+    "label": "BIOGLOW Missions Reverse Engineered",
+    "description": "",
+    "type": "Video",
+    "source": "Giraffes#3388",
+    "videoId": "rsxOYDK8ZRw",
+    "url": "https://www.youtube.com/watch?v=rsxOYDK8ZRw",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "yt-n1O12Id58tI",
+    "category": "Mission Videos",
+    "channel": "FEEL FLL",
+    "channelNote": "Close-up looks at individual mission models.",
+    "official": false,
+    "label": "Mission Model: Bio Habitat",
+    "description": "",
+    "type": "Video",
+    "source": "FEEL FLL",
+    "videoId": "n1O12Id58tI",
+    "url": "https://www.youtube.com/watch?v=n1O12Id58tI",
+    "roles": [
+      "student",
+      "coach"
+    ]
+  },
+  {
+    "id": "yt-LNo0lyXJ1_U",
+    "category": "Mission Videos",
+    "channel": "6006 Tech Warriors",
+    "channelNote": "Another team, breaking down the season teaser and predicting the missions.",
+    "official": false,
+    "label": "BIOGLOW Teaser Breakdown & Predictions",
+    "description": "",
+    "type": "Video",
+    "source": "6006 Tech Warriors",
+    "videoId": "LNo0lyXJ1_U",
+    "url": "https://www.youtube.com/watch?v=LNo0lyXJ1_U",
+    "roles": [
+      "student",
+      "coach"
+    ]
   }
 ]
