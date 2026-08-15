@@ -1410,6 +1410,78 @@
     .ta-submit-hint.error { color: #d93025; }
     .ta-submit-hint.success { color: #1e8e5a; }
 
+    /* ── the season prompt, on every Innovation lesson ── */
+    .ta-prompt-banner {
+      background: linear-gradient(135deg, #1a73e8 0%, #6f42c1 100%);
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin: 0 28px 16px;
+      color: #fff;
+    }
+    .ta-prompt-tag {
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      opacity: .9;
+    }
+    .ta-prompt-text {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.4;
+      margin-top: 6px;
+    }
+    .ta-prompt-hint { font-size: 12px; opacity: .85; margin-top: 7px; }
+
+    /* ── prior lesson answers + teammate answers ── */
+    .ta-context-slot { margin: 0 28px; }
+    .ta-prior, .ta-team {
+      border: 1.5px solid var(--s-line-2);
+      border-radius: 14px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      background: var(--s-raised);
+    }
+    .ta-team { border-color: #b9d4f5; background: var(--tint-blue); }
+    .ta-prior-head, .ta-team-head {
+      padding: 12px 15px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 13.5px;
+      color: var(--t-ink);
+      list-style: none;
+    }
+    .ta-prior-head::-webkit-details-marker,
+    .ta-team-head::-webkit-details-marker { display: none; }
+    .ta-prior-body, .ta-team-body { padding: 0 15px 14px; }
+    .ta-prior-item { margin-bottom: 11px; }
+    .ta-prior-q {
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .03em; color: var(--t-faint); margin-bottom: 3px;
+    }
+    .ta-prior-a { font-size: 13.5px; line-height: 1.55; color: var(--t-body); white-space: pre-wrap; }
+    .ta-team-hint { font-size: 12.5px; color: var(--t-muted); margin-bottom: 10px; }
+    .ta-team-card {
+      background: var(--s-card);
+      border-radius: 10px;
+      padding: 11px 13px;
+      margin-bottom: 8px;
+    }
+    .ta-team-name { font-weight: 800; font-size: 13px; color: #1a73e8; margin-bottom: 5px; }
+    .ta-team-from { font-weight: 600; font-size: 11px; color: var(--t-faint); margin-left: 7px; }
+    .ta-team-answer {
+      font-size: 13px; line-height: 1.55; color: var(--t-body);
+      white-space: pre-wrap; margin-bottom: 6px;
+    }
+    .ta-team-empty {
+      font-size: 13px; color: var(--t-muted);
+      background: var(--s-subtle); border-radius: 12px;
+      padding: 12px 15px; margin-bottom: 12px;
+    }
+    @media (max-width: 600px) {
+      .ta-prompt-banner, .ta-context-slot { margin-left: 18px; margin-right: 18px; }
+    }
+
     /* ── academic integrity notice ── */
     .ta-integrity {
       border: 1.5px solid var(--s-line-2);
@@ -4263,6 +4335,8 @@
       activeCategory = null;
       app.innerHTML = renderTaskDetail(latestData, taskId);
       wireListeners();
+      // teammates' answers + what this student wrote in earlier lessons
+      loadTaskContext(taskId);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -4321,9 +4395,11 @@
 
       // ── lesson body ──
       const lessonHtml = task.description ? `
+        ${innovationPromptBanner(task)}
         <div class="ta-lesson-body">
           ${renderMarkdownish(task.description)}
         </div>
+        ${taskContextSlot(taskId)}
       ` : '';
 
       // ── example code block ──
@@ -5234,6 +5310,79 @@
             </div>
           </div>
         </div>`;
+    }
+
+    // ── The season prompt, shown on every Innovation lesson ───────────────
+    function innovationPromptBanner(task) {
+      const prompt = (latestData.season || {}).innovationPrompt;
+      if (!prompt) return '';
+      if (task.category !== 'Innovation Project' && task.category !== 'Pre-Season') return '';
+      return `
+        <div class="ta-prompt-banner">
+          <div class="ta-prompt-tag">🌍 This season's Innovation Project challenge</div>
+          <div class="ta-prompt-text">${escapeHtml(prompt)}</div>
+          <div class="ta-prompt-hint">Everything in this lesson should point back at this.</div>
+        </div>`;
+    }
+
+    // ── What you need from earlier work ───────────────────────────────────
+    // Filled in by loadTaskContext() once the lesson is on screen.
+    let taskContextCache = {};
+
+    function taskContextSlot(taskId) {
+      return `<div id="ta-context-${escapeHtml(taskId)}" class="ta-context-slot"></div>`;
+    }
+
+    async function loadTaskContext(taskId) {
+      const slot = document.getElementById(`ta-context-${taskId}`);
+      if (!slot) return;
+      let ctx = taskContextCache[taskId];
+      if (!ctx) {
+        try {
+          const r = await fetch(`/api/fll/tasks/${encodeURIComponent(taskId)}/context`);
+          ctx = await r.json();
+          if (!ctx.success) return;
+          taskContextCache[taskId] = ctx;
+        } catch (e) { return; }
+      }
+      slot.innerHTML = renderTaskContext(ctx);
+    }
+
+    function renderTaskContext(ctx) {
+      let html = '';
+
+      for (const prior of (ctx.priorAnswers || [])) {
+        html += `
+          <details class="ta-prior" open>
+            <summary class="ta-prior-head">📋 What you wrote in “${escapeHtml(prior.title)}”</summary>
+            <div class="ta-prior-body">
+              ${prior.answers.map(a => `
+                <div class="ta-prior-item">
+                  <div class="ta-prior-q">${escapeHtml(a.label)}</div>
+                  <div class="ta-prior-a">${escapeHtml(a.value).replace(/\n/g, '<br>')}</div>
+                </div>`).join('')}
+            </div>
+          </details>`;
+      }
+
+      if ((ctx.teamAnswers || []).length) {
+        html += `
+          <details class="ta-team" open>
+            <summary class="ta-team-head">👥 What your teammates put down (${ctx.teamAnswers.length})</summary>
+            <div class="ta-team-body">
+              <div class="ta-team-hint">Read these before you narrow down — you are picking the team's best ideas, not just your own.</div>
+              ${ctx.teamAnswers.map(t => `
+                <div class="ta-team-card">
+                  <div class="ta-team-name">${escapeHtml(t.studentName)}${t.fromLesson && !t.sameLesson ? `<span class="ta-team-from">from “${escapeHtml(t.fromLesson)}”</span>` : ''}</div>
+                  ${Object.entries(t.answers).map(([, v]) => `
+                    <div class="ta-team-answer">${escapeHtml(String(v)).replace(/\n/g, '<br>')}</div>`).join('')}
+                </div>`).join('')}
+            </div>
+          </details>`;
+      } else if (ctx.teamAnswersExpected) {
+        html += '<div class="ta-team-empty">👥 None of your teammates have turned this in yet — check back once they have.</div>';
+      }
+      return html;
     }
 
     // ── Academic integrity ────────────────────────────────────────────────

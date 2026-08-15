@@ -6303,6 +6303,84 @@ app.patch('/api/fll/coach/task-submissions/:id', requireFllAuth, requireFllCoach
 	}
 });
 
+// What a student needs from OTHER work in order to do this lesson:
+//   teamAnswers  - teammates' answers, when the lesson sets shareAnswersWithTeam
+//                  (so a team can narrow a brainstorm together)
+//   priorAnswers - this student's own answers to the lessons listed in
+//                  priorLessons, so they are not asked to remember them
+app.get('/api/fll/tasks/:id/context', requireFllAuth, requireFllStudent, async (req, res) => {
+	try {
+		const [tasks, stored, users] = await Promise.all([
+			readJsonFile(fllTasksFile, []),
+			readJsonFile(fllTaskSubmissionsFile, []),
+			readFllUsers()
+		]);
+		const allTasks = Array.isArray(tasks) ? tasks : [];
+		const submissions = Array.isArray(stored) ? stored : [];
+		const task = allTasks.find((t) => t.id === req.params.id);
+		if (!task || task.assignedTo !== req.fllUser.id) {
+			return res.status(404).json({ success: false, message: 'Assignment not found' });
+		}
+		const nameById = new Map(users.map((u) => [u.id, u.name]));
+		const baseOf = (id) => String(id).split('--')[0];
+
+		// Teammates' answers, same team only. Two sources:
+		//   - this lesson itself, when it is marked shareAnswersWithTeam
+		//   - any earlier lesson in priorLessons that is marked shareable, which
+		//     is the case that matters: narrowing a brainstorm needs to show
+		//     what everyone put in the BRAINSTORM, not in the narrowing step
+		const shareableBases = new Set();
+		if (task.shareAnswersWithTeam) shareableBases.add(baseOf(task.id));
+		for (const priorBase of (Array.isArray(task.priorLessons) ? task.priorLessons : [])) {
+			const priorTask = allTasks.find((t) => baseOf(t.id) === priorBase);
+			if (priorTask && priorTask.shareAnswersWithTeam) shareableBases.add(priorBase);
+		}
+
+		const teamAnswers = [];
+		for (const submission of submissions) {
+			if (submission.studentId === req.fllUser.id) continue;
+			if (submission.teamId !== req.fllUser.teamId) continue;
+			const base = baseOf(submission.taskId);
+			if (!shareableBases.has(base)) continue;
+			const sourceTask = allTasks.find((t) => baseOf(t.id) === base);
+			const answers = {};
+			for (const [key, value] of Object.entries(submission.answers || {})) {
+				if (key.endsWith('__photo') || key.endsWith('__cols')) continue;
+				if (value && String(value).trim()) answers[key] = value;
+			}
+			if (!Object.keys(answers).length) continue;
+			teamAnswers.push({
+				studentName: nameById.get(submission.studentId) || submission.studentName || 'A teammate',
+				fromLesson: sourceTask ? sourceTask.title : '',
+				sameLesson: base === baseOf(task.id),
+				submittedAt: submission.submittedAt,
+				answers
+			});
+		}
+		teamAnswers.sort((a, b) => String(a.studentName).localeCompare(String(b.studentName)));
+
+		// this student's own answers to the named earlier lessons
+		const priorAnswers = [];
+		for (const priorBase of (Array.isArray(task.priorLessons) ? task.priorLessons : [])) {
+			const mine = submissions.find((s) => s.studentId === req.fllUser.id && baseOf(s.taskId) === priorBase);
+			const priorTask = allTasks.find((t) => baseOf(t.id) === priorBase);
+			if (!mine || !priorTask) continue;
+			const labels = {};
+			for (const q of (priorTask.questions || [])) if (q.id) labels[q.id] = q.label || q.id;
+			const answers = Object.entries(mine.answers || {})
+				.filter(([k, v]) => v && String(v).trim() && !k.endsWith('__photo') && !k.endsWith('__cols') && !k.endsWith('__link'))
+				.map(([k, v]) => ({ label: labels[k] || k, value: v }));
+			if (!answers.length) continue;
+			priorAnswers.push({ title: priorTask.title, answers });
+		}
+
+		return res.json({ success: true, teamAnswers, priorAnswers });
+	} catch (err) {
+		console.error('FLL task context error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading what you need for this lesson' });
+	}
+});
+
 // Once turned in, an assignment is locked. A student asks their coach to
 // reopen it; the coach grants or declines. Coaches can also reopen without
 // being asked.

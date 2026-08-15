@@ -275,7 +275,8 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-08T00:00:00.000Z",
-    "updatedAt": "2026-08-04T17:53:06.979Z"
+    "updatedAt": "2026-08-15T00:22:32.982Z",
+    "videoId": "wDan0826cn0"
   },
   {
     "id": "task-robot-game-analysis",
@@ -502,7 +503,10 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-10T00:00:00.000Z",
-    "updatedAt": "2026-06-10T00:00:00.000Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-bench-test-motors"
+    ]
   },
   {
     "id": "task-starter-attachments",
@@ -706,7 +710,12 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-08-04T17:53:06.979Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-innovation-narrow",
+      "task-innovation-brainstorm"
+    ],
+    "shareAnswersWithTeam": true
   },
   {
     "id": "task-innovation-existing-solutions",
@@ -744,7 +753,10 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-innovation-problem"
+    ]
   },
   {
     "id": "task-innovation-solution",
@@ -785,7 +797,10 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-innovation-iteration-plan"
+    ]
   },
   {
     "id": "task-innovation-feedback",
@@ -822,7 +837,10 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-innovation-iteration-2"
+    ]
   },
   {
     "id": "task-innovation-script",
@@ -882,7 +900,11 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-innovation-problem",
+      "task-innovation-final-iteration"
+    ]
   },
   {
     "id": "task-innovation-slides",
@@ -923,7 +945,10 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-innovation-script"
+    ]
   },
   {
     "id": "task-innovation-poster",
@@ -964,7 +989,10 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-innovation-script"
+    ]
   },
   {
     "id": "task-innovation-field-trips",
@@ -1051,7 +1079,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z",
+    "updatedAt": "2026-08-15T00:21:08.331Z",
     "id": "task-memorize-rehearse",
     "title": "Step 13 — Memorize Your Script & Full Rehearsal 🎤",
     "description": "Competition-ready means **no reading from paper**. Judges connect with teams who speak to them, not at a script. Time to memorize and rehearse until your presentation is smooth.\n\n**The memorization ladder:**\n1. Read your part out loud 5 times\n2. Cover the script — say it from memory, peek when stuck\n3. Say it with NO peeking, walking around the room\n4. Present to a family member without the script\n5. Full team run-through WITH slides and a timer\n\n**Rehearsal checklist (do at least 3 full team run-throughs):**\n- Under 5 minutes every time\n- Every member speaks their part from memory\n- Slides advance at the right moments\n- You can answer: 'What was the hardest part?' and 'What would you do next?' — judges always ask follow-ups!",
@@ -1087,6 +1115,9 @@
         "placeholder": "Answer like a judge just asked you this in the room...",
         "allowAttach": true
       }
+    ],
+    "priorLessons": [
+      "task-innovation-script"
     ]
   },
   {
@@ -1144,7 +1175,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-08-04T17:53:06.979Z",
+    "updatedAt": "2026-08-15T00:21:08.331Z",
     "id": "task-innovation-brainstorm",
     "title": "Step 1 — Brainstorm: Problems & Solution Ideas 🧠",
     "type": "submission",
@@ -1173,7 +1204,13 @@
         "placeholder": "Which ones are specific, local, and something you could actually help with?",
         "allowAttach": true
       }
-    ]
+    ],
+    "priorLessons": [
+      "task-ecosystem-questions",
+      "task-glow-hunt",
+      "task-innovation-topic-research"
+    ],
+    "shareAnswersWithTeam": true
   },
   {
     "assignmentId": "assignment-innovation-project",
@@ -1183,7 +1220,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z",
+    "updatedAt": "2026-08-15T00:21:08.331Z",
     "id": "task-innovation-iteration-plan",
     "title": "Step 4 — Choose Your Solution & Plan Your Iterations 🗺️",
     "type": "submission",
@@ -1225,6 +1262,10 @@
         "placeholder": "e.g. GlowGuard won with 18/20 — it fills the gap and the whole team is excited",
         "allowAttach": true
       }
+    ],
+    "priorLessons": [
+      "task-innovation-problem",
+      "task-innovation-existing-solutions"
     ]
   },
   {
@@ -1235,7 +1276,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z",
+    "updatedAt": "2026-08-15T00:21:08.331Z",
     "id": "task-innovation-iteration-2",
     "title": "Step 6 — Iteration 2: Improve Your Design 🔄",
     "type": "submission",
@@ -1271,6 +1312,9 @@
         "placeholder": "Yes — the goal was ___ and we got there / Partly — we still need to...",
         "allowAttach": true
       }
+    ],
+    "priorLessons": [
+      "task-innovation-solution"
     ]
   },
   {
@@ -1281,7 +1325,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-06-11T00:00:00.000Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z",
+    "updatedAt": "2026-08-15T00:21:08.331Z",
     "id": "task-innovation-final-iteration",
     "title": "Step 8 — Final Iteration: Lock In Your Design ✅",
     "type": "submission",
@@ -1317,6 +1361,9 @@
         "placeholder": "When ___ told us ___, we changed ___ because...",
         "allowAttach": true
       }
+    ],
+    "priorLessons": [
+      "task-innovation-feedback"
     ]
   },
   {
@@ -1371,7 +1418,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-16T00:00:00.000Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z",
+    "updatedAt": "2026-08-15T00:21:08.331Z",
     "id": "task-innovation-define-problem-solution",
     "title": "Define It: Your Problem & Your Solution",
     "type": "submission",
@@ -1400,6 +1447,9 @@
         "placeholder": "e.g. Yes! My little brother got it — he asked a great question about...",
         "allowAttach": true
       }
+    ],
+    "priorLessons": [
+      "task-innovation-problem"
     ]
   },
   {
@@ -1410,7 +1460,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-16T00:00:00.000Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z",
+    "updatedAt": "2026-08-15T00:21:08.331Z",
     "id": "task-innovation-first-prototype",
     "title": "First Prototype: Build It & Photograph It",
     "type": "submission",
@@ -1441,6 +1491,9 @@
         "placeholder": "Building it always reveals something — what did you discover?",
         "allowAttach": true
       }
+    ],
+    "priorLessons": [
+      "task-innovation-iteration-plan"
     ]
   },
   {
@@ -1922,7 +1975,10 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-23T17:51:18.496Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-bench-test-motors"
+    ]
   },
   {
     "id": "task-starter-attachments--fll-demo-student",
@@ -2069,7 +2125,12 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-08-04T17:53:06.979Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-innovation-narrow",
+      "task-innovation-brainstorm"
+    ],
+    "shareAnswersWithTeam": true
   },
   {
     "id": "task-innovation-existing-solutions--fll-demo-student",
@@ -2107,7 +2168,10 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-innovation-problem"
+    ]
   },
   {
     "id": "task-innovation-solution--fll-demo-student",
@@ -2148,7 +2212,10 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-innovation-iteration-plan"
+    ]
   },
   {
     "id": "task-innovation-feedback--fll-demo-student",
@@ -2185,7 +2252,10 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-innovation-iteration-2"
+    ]
   },
   {
     "id": "task-innovation-script--fll-demo-student",
@@ -2245,7 +2315,11 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-innovation-problem",
+      "task-innovation-final-iteration"
+    ]
   },
   {
     "id": "task-innovation-slides--fll-demo-student",
@@ -2286,7 +2360,10 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-innovation-script"
+    ]
   },
   {
     "id": "task-innovation-poster--fll-demo-student",
@@ -2327,7 +2404,10 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-innovation-script"
+    ]
   },
   {
     "id": "task-innovation-field-trips--fll-demo-student",
@@ -2414,7 +2494,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z",
+    "updatedAt": "2026-08-15T00:21:08.331Z",
     "id": "task-memorize-rehearse--fll-demo-student",
     "title": "Step 13 — Memorize Your Script & Full Rehearsal 🎤",
     "description": "Competition-ready means **no reading from paper**. Judges connect with teams who speak to them, not at a script. Time to memorize and rehearse until your presentation is smooth.\n\n**The memorization ladder:**\n1. Read your part out loud 5 times\n2. Cover the script — say it from memory, peek when stuck\n3. Say it with NO peeking, walking around the room\n4. Present to a family member without the script\n5. Full team run-through WITH slides and a timer\n\n**Rehearsal checklist (do at least 3 full team run-throughs):**\n- Under 5 minutes every time\n- Every member speaks their part from memory\n- Slides advance at the right moments\n- You can answer: 'What was the hardest part?' and 'What would you do next?' — judges always ask follow-ups!",
@@ -2450,6 +2530,9 @@
         "placeholder": "Answer like a judge just asked you this in the room...",
         "allowAttach": true
       }
+    ],
+    "priorLessons": [
+      "task-innovation-script"
     ]
   },
   {
@@ -2460,7 +2543,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-08-04T17:53:06.979Z",
+    "updatedAt": "2026-08-15T00:21:08.331Z",
     "id": "task-innovation-brainstorm--fll-demo-student",
     "title": "Step 1 — Brainstorm: Problems & Solution Ideas 🧠",
     "type": "submission",
@@ -2489,7 +2572,13 @@
         "placeholder": "Which ones are specific, local, and something you could actually help with?",
         "allowAttach": true
       }
-    ]
+    ],
+    "priorLessons": [
+      "task-ecosystem-questions",
+      "task-glow-hunt",
+      "task-innovation-topic-research"
+    ],
+    "shareAnswersWithTeam": true
   },
   {
     "assignmentId": "assignment-innovation-project",
@@ -2499,7 +2588,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z",
+    "updatedAt": "2026-08-15T00:21:08.331Z",
     "id": "task-innovation-iteration-plan--fll-demo-student",
     "title": "Step 4 — Choose Your Solution & Plan Your Iterations 🗺️",
     "type": "submission",
@@ -2541,6 +2630,10 @@
         "placeholder": "e.g. GlowGuard won with 18/20 — it fills the gap and the whole team is excited",
         "allowAttach": true
       }
+    ],
+    "priorLessons": [
+      "task-innovation-problem",
+      "task-innovation-existing-solutions"
     ]
   },
   {
@@ -2551,7 +2644,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z",
+    "updatedAt": "2026-08-15T00:21:08.331Z",
     "id": "task-innovation-iteration-2--fll-demo-student",
     "title": "Step 6 — Iteration 2: Improve Your Design 🔄",
     "type": "submission",
@@ -2587,6 +2680,9 @@
         "placeholder": "Yes — the goal was ___ and we got there / Partly — we still need to...",
         "allowAttach": true
       }
+    ],
+    "priorLessons": [
+      "task-innovation-solution"
     ]
   },
   {
@@ -2597,7 +2693,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z",
+    "updatedAt": "2026-08-15T00:21:08.331Z",
     "id": "task-innovation-final-iteration--fll-demo-student",
     "title": "Step 8 — Final Iteration: Lock In Your Design ✅",
     "type": "submission",
@@ -2633,6 +2729,9 @@
         "placeholder": "When ___ told us ___, we changed ___ because...",
         "allowAttach": true
       }
+    ],
+    "priorLessons": [
+      "task-innovation-feedback"
     ]
   },
   {
@@ -2687,7 +2786,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z",
+    "updatedAt": "2026-08-15T00:21:08.331Z",
     "id": "task-innovation-define-problem-solution--fll-demo-student",
     "title": "Define It: Your Problem & Your Solution",
     "type": "submission",
@@ -2716,6 +2815,9 @@
         "placeholder": "e.g. Yes! My little brother got it — he asked a great question about...",
         "allowAttach": true
       }
+    ],
+    "priorLessons": [
+      "task-innovation-problem"
     ]
   },
   {
@@ -2726,7 +2828,7 @@
     "status": "todo",
     "createdBy": "coach-default",
     "createdAt": "2026-07-23T17:51:18.496Z",
-    "updatedAt": "2026-07-27T00:00:00.000Z",
+    "updatedAt": "2026-08-15T00:21:08.331Z",
     "id": "task-innovation-first-prototype--fll-demo-student",
     "title": "First Prototype: Build It & Photograph It",
     "type": "submission",
@@ -2757,6 +2859,9 @@
         "placeholder": "Building it always reveals something — what did you discover?",
         "allowAttach": true
       }
+    ],
+    "priorLessons": [
+      "task-innovation-iteration-plan"
     ]
   },
   {
@@ -3024,7 +3129,8 @@
     ],
     "createdBy": "coach-default",
     "createdAt": "2026-07-29T18:37:02.197Z",
-    "updatedAt": "2026-08-04T17:53:06.979Z"
+    "updatedAt": "2026-08-15T00:22:32.982Z",
+    "videoId": "wDan0826cn0"
   },
   {
     "id": "task-robot-game-analysis--fll-demo-student",
@@ -3388,7 +3494,10 @@
     ],
     "createdBy": "coach",
     "createdAt": "2026-08-10T16:42:21.170Z",
-    "updatedAt": "2026-08-10T19:24:31.933Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-bench-test-motors"
+    ]
   },
   {
     "id": "task-speed-calibration",
@@ -3469,7 +3578,10 @@
     ],
     "createdBy": "coach",
     "createdAt": "2026-08-10T16:42:21.170Z",
-    "updatedAt": "2026-08-10T19:24:31.933Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-distance-calibration"
+    ]
   },
   {
     "id": "task-square-test",
@@ -3536,7 +3648,11 @@
     ],
     "createdBy": "coach",
     "createdAt": "2026-08-10T16:42:21.170Z",
-    "updatedAt": "2026-08-10T19:24:31.933Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-distance-calibration",
+      "task-speed-calibration"
+    ]
   },
   {
     "id": "task-simulator-tuning",
@@ -3598,6 +3714,168 @@
     ],
     "createdBy": "coach",
     "createdAt": "2026-08-10T16:58:39.674Z",
-    "updatedAt": "2026-08-10T19:24:31.933Z"
+    "updatedAt": "2026-08-15T00:21:08.331Z",
+    "priorLessons": [
+      "task-distance-calibration",
+      "task-square-test"
+    ]
+  },
+  {
+    "id": "task-innovation-narrow",
+    "assignmentId": "assignment-kickoff-prep",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "Step 1b — Narrow It Down: Your Team’s Best 5 🎯",
+    "category": "Innovation Project",
+    "type": "submission",
+    "workContext": "class",
+    "status": "todo",
+    "dueDate": "2026-08-12",
+    "shareAnswersWithTeam": true,
+    "priorLessons": [
+      "task-innovation-brainstorm"
+    ],
+    "description": "You each came to this with your own list. Now you turn all of those into **one team list of five**.\n\n## 👥 Read your teammates first\n\nEverything your team wrote in Step 1 is shown above this lesson. **Read all of it before you write anything.** You are picking the *team's* best five, not defending your own.\n\nYou will probably notice:\n- The **same problem** written two or three different ways — merge those, they are one idea\n- Someone spotted something you missed — that is exactly why this step exists\n- One idea nobody can explain clearly — that is usually a sign it needs more research, not that it is bad\n\n## 🎯 How to get from everything down to five\n\nScore every idea out of 3 on each of these, then keep the top five:\n\n| Test | Ask yourselves |\n|---|---|\n| **Real** | Can we name someone actually affected by this? |\n| **Local** | Could we go and see it, or talk to someone about it here? |\n| **Biodiversity** | Is the link to species or ecosystems obvious, not a stretch? |\n| **Doable** | Could a team our size build something that helps, in our season? |\n| **Interesting** | Do we actually want to spend four months on it? |\n\nAn idea that scores 15 is a strong candidate. One that scores 6 is not — even if someone loves it.\n\n## ⚠️ Cutting an idea is not rejecting a person\n\nThe idea you have to be most honest about is your own. If yours does not make the five, say so out loud — that is Gracious Professionalism, and judges genuinely ask about how your team makes decisions.\n\n## ➡️ Next\n\nIn **Step 2** you take these five down to one and write your problem statement. Choose carefully — this is the problem you present at competition.",
+    "questions": [
+      {
+        "id": "narrow-table",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Score your team’s ideas — one row per idea, keep the top five:",
+        "columns": [
+          "Idea (in your own words)",
+          "Whose idea",
+          "Real",
+          "Local",
+          "Biodiversity",
+          "Doable",
+          "Interesting",
+          "Total /15"
+        ],
+        "minRows": 5,
+        "maxRows": 20
+      },
+      {
+        "id": "q1",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Write out your team’s final FIVE, best first:",
+        "placeholder": "1. ...\n2. ...\n3. ...\n4. ...\n5. ..."
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Which idea came from a teammate rather than you, and what made you back it?",
+        "placeholder": "Name them — judges love hearing that a team listened to each other..."
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Which idea was hardest to cut, and why did you cut it anyway?",
+        "placeholder": "Be honest — which test did it fail?"
+      },
+      {
+        "id": "q4",
+        "type": "text",
+        "allowAttach": true,
+        "label": "How did your team decide — vote, discussion, scores?",
+        "placeholder": "e.g. we scored them all, then talked through the top three"
+      }
+    ],
+    "createdBy": "coach",
+    "createdAt": "2026-08-15T00:21:08.331Z",
+    "updatedAt": "2026-08-15T00:21:08.331Z"
+  },
+  {
+    "id": "task-bench-test-motors",
+    "assignmentId": "assignment-kickoff-prep",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "Bench Test: Pick Your Hub & Motors BEFORE You Build 🔌",
+    "category": "Robot Design",
+    "type": "submission",
+    "workContext": "lab",
+    "status": "todo",
+    "dueDate": "2026-07-18",
+    "description": "Do this **before you build anything**. Every part you are about to bolt together has a personality, and two of them decide whether your robot can drive straight at all.\n\n## 🤔 Why bench test first?\n\nIf you build the robot and *then* discover the gyro drifts or one motor is faster than the other, you have to **take it apart again**. Ten minutes on the bench now saves a rebuild later.\n\nPlug things straight into the hub. No chassis, no wheels, nothing built.\n\n## 🧭 Test 1 — The hub and its gyro\n\nTwo things matter:\n\n1. **Drift** — does the heading stay at 0 when nothing is moving? A drifting gyro slowly poisons every turn you make.\n2. **Response** — when you turn it 90°, does it *say* 90°? A gyro that reads 84° will be wrong on every single turn.\n\nTest **every hub your team has** and keep the best one. Hubs genuinely differ.\n\n## ⚙️ Test 2 — The motors\n\nYou are hunting for **two motors that behave the same**. Two things:\n\n1. **Speed** — run both at the same speed for the same time. Did they travel the same angle? If one is faster, the robot curves.\n2. **Encoders** — ask both for exactly 720°. Do they both *report* 720°, and do they agree with each other?\n\nA pair whose encoders disagree by more than about 5° will fight each other every time you drive.\n\n## 🎯 What you are looking for\n\n| Test | Good | Usable | Reject |\n|---|---|---|---|\n| Gyro drift over 60s | 0–1° | up to 3° | over 3° |\n| Gyro 90° response | within 2° | within 3° | over 3° |\n| Motor speed difference | under 1% | under 2% | over 2% |\n| Encoder difference | under 5° | under 10° | over 10° |\n\n## 🏷️ Label everything\n\nPut tape on the hub and both motors as soon as you pick them — **\"DRIVE L\"**, **\"DRIVE R\"**, **\"HUB 1\"**. In three weeks nobody remembers which motors were the good pair, and you do not want to run these tests twice.\n\n## ➡️ Next\n\nOnce you have a good hub and a matched pair, go to **Design Your Base Bot** and build with the parts you just proved.",
+    "codeExamples": [
+      {
+        "label": "Bench Test 1 — Gyro drift and response",
+        "code": "\"\"\"\nBench Test 1 - Hub and Gyro\n\nPlug the hub in. Do NOT build anything yet.\nThis checks the gyro drifts as little as possible and responds accurately.\n\"\"\"\n\nfrom pybricks.hubs import PrimeHub\nfrom pybricks.parameters import Button\nfrom pybricks.tools import wait, StopWatch\n\nhub = PrimeHub()\n\n# STUDENT SETTINGS (safe to edit)\nDRIFT_SECONDS = 60\nTURN_TEST_ANGLE = 90\n\n\ndef drift_test():\n    \"\"\"Hub sits still. A good gyro stays near 0.\"\"\"\n    print(\"\\n=== GYRO DRIFT TEST ===\")\n    print(\"Put the hub flat on the table and do NOT touch it.\")\n    print(\"Press CENTER to start\", DRIFT_SECONDS, \"seconds.\")\n    while Button.CENTER not in hub.buttons.pressed():\n        wait(50)\n    wait(600)\n\n    hub.imu.reset_heading(0)\n    timer = StopWatch()\n\n    while timer.time() < DRIFT_SECONDS * 1000:\n        heading = hub.imu.heading()\n        if -99 < heading < 99:\n            hub.display.number(int(heading))\n        wait(200)\n\n    drift = hub.imu.heading()\n    print(\"Drift after\", DRIFT_SECONDS, \"s:\", round(drift, 1), \"deg\")\n    if abs(drift) <= 1:\n        print(\"  -> GOOD hub\")\n    elif abs(drift) <= 3:\n        print(\"  -> OK, usable\")\n    else:\n        print(\"  -> BAD, try another hub\")\n    return drift\n\n\ndef response_test():\n    \"\"\"Turn the hub by hand. A good gyro reads what you actually turned.\"\"\"\n    print(\"\\n=== GYRO RESPONSE TEST ===\")\n    print(\"Line the hub up on a straight edge. Press CENTER, then turn it\",\n          TURN_TEST_ANGLE, \"degrees.\")\n    while Button.CENTER not in hub.buttons.pressed():\n        wait(50)\n    wait(600)\n\n    hub.imu.reset_heading(0)\n    print(\"Turn it now. Press CENTER again when you have finished.\")\n\n    while Button.CENTER not in hub.buttons.pressed():\n        heading = hub.imu.heading()\n        if -99 < heading < 99:\n            hub.display.number(int(heading))\n        wait(100)\n\n    measured = hub.imu.heading()\n    error = measured - TURN_TEST_ANGLE\n    print(\"You asked for:\", TURN_TEST_ANGLE, \"deg\")\n    print(\"Gyro measured:\", round(measured, 1), \"deg  (error\", round(error, 1), \")\")\n    if abs(error) <= 2:\n        print(\"  -> GOOD hub\")\n    else:\n        print(\"  -> off by more than 2 deg, try another hub\")\n    return measured\n\n\ndrift_test()\nwait(1000)\nresponse_test()\nprint(\"\\nWrite both numbers in your table, then test your next hub.\")"
+      },
+      {
+        "label": "Bench Test 2 — Motor speed and encoder match",
+        "code": "\"\"\"\nBench Test 2 - Motor Speed and Encoder Match\n\nPlug TWO motors in. Do NOT build anything yet.\nThe goal is to find two motors that spin at the same speed AND report\nthe same encoder angle - those two become your drive pair.\n\"\"\"\n\nfrom pybricks.hubs import PrimeHub\nfrom pybricks.pupdevices import Motor\nfrom pybricks.parameters import Port, Direction, Button, Stop\nfrom pybricks.tools import wait\n\nhub = PrimeHub()\n\n# STUDENT SETTINGS (safe to edit)\nMOTOR_A = Motor(Port.A, Direction.CLOCKWISE)\nMOTOR_B = Motor(Port.E, Direction.CLOCKWISE)\n\nTEST_SPEEDS = [200, 500, 800]   # deg/s\nRUN_TIME_MS = 3000\nTEST_ANGLE = 720                # two full turns\n\n\ndef speed_test():\n    \"\"\"Run both motors at the same speed and compare how far each got.\"\"\"\n    print(\"\\n=== MOTOR SPEED TEST ===\")\n    print(\"speed | motor A | motor B | difference\")\n    print(\"----------------------------------------\")\n\n    for speed in TEST_SPEEDS:\n        MOTOR_A.reset_angle(0)\n        MOTOR_B.reset_angle(0)\n\n        MOTOR_A.run(speed)\n        MOTOR_B.run(speed)\n        wait(RUN_TIME_MS)\n        MOTOR_A.stop()\n        MOTOR_B.stop()\n        wait(500)\n\n        a = MOTOR_A.angle()\n        b = MOTOR_B.angle()\n        print(\"{:<5} | {:<7} | {:<7} | {:+}\".format(speed, a, b, a - b))\n\n    print(\"A difference under 1% of the angle is a good pair.\")\n\n\ndef encoder_test():\n    \"\"\"Ask both motors for the SAME angle and see what they report back.\"\"\"\n    print(\"\\n=== ENCODER ACCURACY TEST ===\")\n    print(\"Asking both motors for\", TEST_ANGLE, \"degrees\")\n\n    MOTOR_A.reset_angle(0)\n    MOTOR_B.reset_angle(0)\n\n    MOTOR_A.run_angle(400, TEST_ANGLE, then=Stop.HOLD, wait=False)\n    MOTOR_B.run_angle(400, TEST_ANGLE, then=Stop.HOLD)\n    wait(800)\n\n    a = MOTOR_A.angle()\n    b = MOTOR_B.angle()\n    print(\"motor A reported:\", a, \" error:\", a - TEST_ANGLE)\n    print(\"motor B reported:\", b, \" error:\", b - TEST_ANGLE)\n    print(\"difference between the two:\", a - b)\n\n    if abs(a - b) <= 5:\n        print(\"  -> MATCHED PAIR, use these two for driving\")\n    else:\n        print(\"  -> not matched, try a different motor\")\n\n\nprint(\"Press CENTER to start the motor tests\")\nwhile Button.CENTER not in hub.buttons.pressed():\n    wait(50)\nwait(600)\n\nspeed_test()\nwait(1000)\nencoder_test()\nprint(\"\\nWrite the numbers in your table, then swap in the next motor.\")"
+      }
+    ],
+    "questions": [
+      {
+        "id": "hub-table",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Hub results — one row per hub you tested:",
+        "columns": [
+          "Hub label",
+          "Drift after 60s (deg)",
+          "Asked turn (deg)",
+          "Gyro measured (deg)",
+          "Error (deg)",
+          "Verdict"
+        ],
+        "minRows": 2,
+        "maxRows": 8
+      },
+      {
+        "id": "motor-table",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Motor results — one row per motor pair you tested:",
+        "columns": [
+          "Motor pair",
+          "Speed",
+          "Motor A angle",
+          "Motor B angle",
+          "Difference",
+          "Encoder A",
+          "Encoder B",
+          "Matched? (Y/N)"
+        ],
+        "minRows": 3,
+        "maxRows": 15
+      },
+      {
+        "id": "q1",
+        "type": "text",
+        "allowAttach": true,
+        "label": "Which hub did you pick, and what were its drift and response numbers?",
+        "placeholder": "e.g. Hub 2 — drift 0.4 deg, read 89.5 on a 90 turn"
+      },
+      {
+        "id": "q2",
+        "type": "text",
+        "allowAttach": true,
+        "label": "Which two motors are your drive pair? Add a photo of them labelled with tape.",
+        "placeholder": "e.g. M1 and M4 — encoders agreed within 2 deg"
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Did any hub or motor fail the test? What was wrong with it, and what did you do?",
+        "placeholder": "e.g. Hub 1 drifted 6 deg in a minute so we set it aside for the practice bot..."
+      },
+      {
+        "id": "q4",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Why is it better to find this out now than after the robot is built?",
+        "placeholder": "Think about what you would have had to undo..."
+      }
+    ],
+    "createdBy": "coach",
+    "createdAt": "2026-08-15T00:22:13.555Z",
+    "updatedAt": "2026-08-15T00:22:13.555Z"
   }
 ]
