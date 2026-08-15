@@ -4214,15 +4214,24 @@ async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 		}
 	}
 
-	// resources.json is pure content too — which resources are switched OFF is
-	// coach state and lives in fll-settings.json, so replacing this is safe.
+	// Resources are a MIX: the ones shipped with the season, plus any a coach
+	// added through the hub. So merge rather than replace — overwriting would
+	// silently delete a coach's own links. Which resources are switched off is
+	// separate state in fll-settings.json and is untouched either way.
 	let resourcesSynced = 0;
+	let coachResourcesKept = 0;
 	const seedResources = await readJsonFile(path.join(fllSeedDataDir, 'resources.json'), null);
 	if (Array.isArray(seedResources)) {
-		const liveResources = await readJsonFile(path.join(fllHubDataDir, 'resources.json'), null);
-		if (JSON.stringify(seedResources) !== JSON.stringify(liveResources)) {
+		const liveResources = await readJsonFile(path.join(fllHubDataDir, 'resources.json'), []);
+		const live = Array.isArray(liveResources) ? liveResources : [];
+		const seedIds = new Set(seedResources.map((r) => r.id));
+		// anything the coach made, or anything live that the season never shipped
+		const coachAdded = live.filter((r) => r.source === 'Coach-added' || !seedIds.has(r.id));
+		coachResourcesKept = coachAdded.length;
+		const merged = [...seedResources, ...coachAdded];
+		if (JSON.stringify(merged) !== JSON.stringify(live)) {
 			resourcesSynced = seedResources.length;
-			if (!dryRun) await writeJsonFile(path.join(fllHubDataDir, 'resources.json'), seedResources);
+			if (!dryRun) await writeJsonFile(path.join(fllHubDataDir, 'resources.json'), merged);
 		}
 	}
 
@@ -4266,7 +4275,8 @@ async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 		reopenedStudents: [...new Set(reopenedStudents)],
 		updatedTitles: [...updatedTitles],
 		seasonSynced,
-		resourcesSynced
+		resourcesSynced,
+		coachResourcesKept
 	};
 }
 
