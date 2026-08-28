@@ -4178,21 +4178,24 @@ async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 		// presence is checked on its own. Looking at students' `--copies` here
 		// instead reported "already up to date" while the template was missing,
 		// leaving every newly created team with no curriculum at all.
+		// Classify BEFORE touching liveTasks. Restoring the template first and
+		// then asking "does this lesson exist?" always answered yes, so a real
+		// dry run promised "1 lesson will be added" and the real run then
+		// reported 0 — looking, wrongly, like the button had done nothing.
 		const hasTemplate = liveTasks.some((task) => task.id === template.id);
+		const hasAnyCopy = liveTasks.some((task) => task.id.startsWith(template.id + '--'));
 		if (!hasTemplate) {
-			restoredTemplates.push(template.title);
+			// no template and no copies means the lesson is new since this disk
+			// was seeded; copies without a template means the template was lost
+			if (hasAnyCopy) restoredTemplates.push(template.title);
+			else addedTitles.push(template.title);
 			if (!dryRun) liveTasks.push({ ...template, createdAt: now, updatedAt: now });
 		}
 
 		const matches = liveTasks.filter(
 			(task) => task.id === template.id || task.id.startsWith(template.id + '--')
 		);
-		if (!matches.length) {
-			// lesson is new since the live disk was seeded — add the template itself
-			addedTitles.push(template.title);
-			if (!dryRun) liveTasks.push({ ...template, createdAt: now, updatedAt: now });
-			continue;
-		}
+		if (!matches.length) continue;
 		for (const task of matches) {
 			let changed = false;
 			for (const field of FLL_CONTENT_FIELDS) {

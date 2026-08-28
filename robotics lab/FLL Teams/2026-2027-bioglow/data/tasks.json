@@ -718,6 +718,72 @@
     "shareAnswersWithTeam": true
   },
   {
+    "id": "task-innovation-evidence-file",
+    "assignmentId": "assignment-innovation-project",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "Step 2b — Build Your Evidence File 📎",
+    "category": "Innovation Project",
+    "type": "submission",
+    "workContext": "class",
+    "status": "todo",
+    "dueDate": "2026-08-20",
+    "shareAnswersWithTeam": true,
+    "priorLessons": [
+      "task-innovation-narrow",
+      "task-innovation-problem"
+    ],
+    "description": "You picked your problem in Step 2. Right now that is still **your opinion**. This lesson turns it into something you can defend: real numbers, real sources, and a list of real people who could tell you more.\n\nJudges do not expect you to be scientists. They expect you to be able to say *\"we know this because…\"* and point at something.\n\n## 📌 Your problem statement\n\nOne sentence, said in one breath. Use this shape until you can say it without it:\n\n> **[Who or what]** in **[where]** is affected by **[what is happening]**, and right now **[what is missing or going wrong]**.\n\nExample: *Fireflies in our neighborhood parks are disappearing because outdoor lighting stays on all night, and nobody in our city tracks where it is worst.*\n\nWeak version: *Light pollution is bad for bugs.* — no who, no where, nothing you could go and check.\n\n## 🔎 Evidence: facts with a link attached\n\nA fact with no source is a guess. Every row in your evidence table needs somewhere it came from that a judge could open.\n\n**Where to look:**\n\n| Source | Good for |\n|---|---|\n| Government and city sites (`.gov`) | Local data, maps, regulations |\n| University and museum sites (`.edu`) | Research explained for the public |\n| Conservation groups (Xerces Society, Audubon, local land trusts) | Species-specific facts |\n| News from your own area | What is happening *here*, and who is already working on it |\n| Something your team measured or counted | Judges love this one — it is yours |\n\n**Two rules:**\n1. **Paste the actual link.** \"I read it somewhere\" is not evidence.\n2. **Prefer a number.** \"Firefly populations dropped\" is weaker than \"firefly counts fell by about a third in monitored sites since 2000.\"\n\n## 👤 Experts you want to reach\n\nYou are not emailing anyone yet — you are building the list. Think about who would actually know:\n\n- A professor or grad student at a nearby university\n- Someone at a park, nature center, zoo, aquarium, or botanical garden\n- A city employee — parks, water, sustainability, public works\n- Someone at a local conservation or volunteer group\n- A person directly affected by the problem — a gardener, a farmer, a neighbor\n\nFor each one, write **the actual question you would ask them.** \"Tell me about fireflies\" gets no reply. \"We are mapping light pollution in our parks — does the city track outdoor lighting anywhere?\" gets one.\n\n## ✅ You are done when\n\n- Your problem statement is one sentence and every word earns its place\n- You have **at least five** facts, each with a link\n- You have **at least three** experts with a real question written for each\n- You have written down what you still do not know\n\n## ➡️ Next\n\n**Step 3** asks how your solution differs from what already exists. The evidence you gather here is what you will search against — so make it good now and Step 3 gets much easier.\n\nKeep adding to this all season on your **team idea map** — it has a \"What we found out\" section that never closes.",
+    "questions": [
+      {
+        "id": "q1",
+        "type": "textarea",
+        "label": "Your problem statement — one sentence, one breath:",
+        "placeholder": "[Who or what] in [where] is affected by [what is happening], and right now [what is missing]."
+      },
+      {
+        "id": "evidence-table",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Your evidence — one row per fact, and every row needs a link:",
+        "columns": [
+          "Fact or number we found",
+          "Paste the link it came from",
+          "Why this matters to our problem"
+        ],
+        "minRows": 5,
+        "maxRows": 15
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Your single strongest piece of evidence — which one, and why would it convince a judge?",
+        "placeholder": "Name the fact, then say what makes it strong: it is local, it is a number, it is recent, we measured it ourselves…"
+      },
+      {
+        "id": "experts-table",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Experts you want to reach out to — and the real question you would ask each one:",
+        "columns": [
+          "Name or role",
+          "Where they work",
+          "How we could reach them (email, website, phone)",
+          "The question we would actually ask"
+        ],
+        "minRows": 3,
+        "maxRows": 12
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
+        "label": "What do you still NOT know? List the gaps in your evidence.",
+        "placeholder": "Judges respect a team that knows what it is missing. \"We could not find local numbers, only national ones\" is a great answer."
+      }
+    ]
+  },
+  {
     "id": "task-innovation-existing-solutions",
     "assignmentId": "assignment-innovation-project",
     "teamId": "team-01",
