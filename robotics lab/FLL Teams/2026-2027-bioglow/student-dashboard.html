@@ -2306,6 +2306,58 @@
       .grade-pop { transition: none; }
     }
 
+    /* ── team idea map ── */
+    .im-entry { display:flex; align-items:center; gap:14px; background:var(--tint-green);
+      border:1.5px solid #b7dfca; border-radius:16px; padding:16px 18px; margin-bottom:16px; cursor:pointer;
+      transition:transform .18s, border-color .18s; }
+    .im-entry:hover { transform:translateY(-1px); border-color:#1e8e5a; }
+    .im-entry-icon { font-size:26px; flex-shrink:0; }
+    .im-entry-body { flex:1; min-width:0; }
+    .im-entry-title { display:block; font-weight:800; font-size:15px; color:var(--t-ink); }
+    .im-entry-sub { display:block; font-size:12.5px; color:var(--t-muted); margin-top:3px; line-height:1.45; }
+    .im-entry-go { font-size:13px; font-weight:800; color:#1e8e5a; white-space:nowrap; }
+
+    .im-loading { padding:40px 28px; color:var(--t-muted); font-size:14px; }
+    .im-wrap { padding:0 28px 40px; }
+    .im-title { font-size:22px; font-weight:800; color:var(--t-ink); }
+    .im-sub { font-size:13.5px; color:var(--t-muted); line-height:1.6; margin-top:6px; max-width:70ch; }
+    .im-tier { background:var(--s-card); border:1.5px solid var(--s-line); border-radius:16px; padding:16px 18px; margin-top:14px; }
+    .im-tier.im-final { border-color:#b7dfca; background:var(--tint-green); }
+    .im-tier-head { display:flex; align-items:center; gap:9px; font-weight:800; font-size:14px; color:var(--t-ink); margin-bottom:12px; }
+    .im-tier-tag { background:var(--s-subtle); color:var(--t-muted); border-radius:50px; padding:3px 10px; font-size:11px; }
+    .im-tier-count { margin-left:auto; font-size:12px; color:var(--t-faint); font-weight:700; }
+    .im-members { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; }
+    .im-member { background:var(--s-raised); border:1.5px solid var(--s-line); border-radius:12px; padding:11px 12px; }
+    .im-member-head { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+    .im-member-name { font-weight:800; font-size:13px; color:#1a73e8; }
+    .im-member-count { margin-left:auto; font-size:11px; font-weight:800; background:var(--tint-blue); color:#1a73e8; border-radius:50px; padding:2px 8px; }
+    .im-node, .im-pick { display:flex; align-items:flex-start; gap:6px; margin-bottom:7px; }
+    .im-pick { background:var(--s-raised); border:1.5px solid var(--s-line); border-radius:12px; padding:9px 10px; flex-wrap:wrap; }
+    .im-input { flex:1; min-width:120px; border:1.5px solid var(--s-line); border-radius:8px; background:var(--s-card);
+      padding:7px 9px; font:inherit; font-size:13px; color:var(--t-ink); resize:vertical; }
+    .im-input:hover { border-color:var(--s-line-2); }
+    .im-input:focus { outline:none; border-color:#1a73e8; }
+    .im-owner { width:110px; border:1.5px solid var(--s-line-2); border-radius:8px; padding:7px 9px;
+      font:inherit; font-size:12px; background:var(--s-card); color:var(--t-muted); }
+    .im-del { border:none !important; background:transparent !important; color:var(--t-faint) !important;
+      cursor:pointer; font-size:12px !important; padding:6px !important; min-height:0 !important; box-shadow:none !important; }
+    .im-del:hover { color:#d93025 !important; background:var(--tint-red) !important; border-radius:6px; }
+    .im-add { border:1.5px dashed var(--s-line-2) !important; background:transparent !important; color:var(--t-muted) !important;
+      border-radius:50px !important; padding:7px 14px !important; font-size:12.5px; font-weight:700; cursor:pointer;
+      box-shadow:none !important; margin-top:4px; }
+    .im-add:hover { border-color:#1a73e8 !important; color:#1a73e8 !important; }
+    /* iPad: 16px stops Safari zooming in on focus, and taps need real targets */
+    @media (pointer: coarse) {
+      .im-input, .im-owner { font-size:16px !important; }
+      .im-del { min-width:44px !important; min-height:44px !important; font-size:15px !important; }
+      .im-add { min-height:44px !important; padding:10px 18px !important; font-size:14px !important; }
+    }
+    .im-arrow { text-align:center; font-size:13px; font-weight:800; color:var(--t-muted); margin:14px 0 2px; }
+    .im-empty { font-size:13px; color:var(--t-muted); padding:14px 4px; }
+    .im-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:18px; }
+    .im-foot { font-size:11.5px; color:var(--t-faint); margin-top:10px; }
+    @media (max-width:600px) { .im-wrap { padding:0 18px 32px; } }
+
     /* ── mission videos by channel ── */
     .mv-list { margin-bottom: 26px; }
     .mv-channel {
@@ -6327,6 +6379,167 @@
       if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
 
+
+    // ── Team idea map ─────────────────────────────────────────────────────
+    // Seeded from the team's submitted work, then editable: students shorten
+    // wording, merge duplicates, or add an idea they only said out loud.
+    // One shared team document, so the last save wins — the footer always
+    // names who touched it last.
+    let ideaMap = null;
+    let ideaMapDirty = false;
+
+    async function openIdeaMap() {
+      activeCategory = null; activeTask = null;
+      app.innerHTML = '<div class="im-loading">Loading your team idea map…</div>';
+      try {
+        const r = await fetch('/api/fll/idea-map');
+        const j = await r.json();
+        if (!j.success) throw new Error(j.message);
+        ideaMap = j.map; ideaMapDirty = false;
+        showIdeaMap();
+      } catch (e) {
+        app.innerHTML = '<div class="im-loading">Could not load the idea map: ' + escapeHtml(e.message) + '</div>';
+      }
+    }
+
+    function showIdeaMap() {
+      app.innerHTML = renderIdeaMap();
+      wireListeners();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function imField(value, ph, onInput) {
+      return '<textarea class="im-input" rows="2" placeholder="' + escapeHtml(ph) +
+        '" oninput="' + onInput + '">' + escapeHtml(value || '') + '</textarea>';
+    }
+
+    function renderIdeaMap() {
+      const m = ideaMap;
+      const totalIdeas = m.members.reduce((n, x) => n + x.ideas.length, 0);
+
+      const memberCols = m.members.length ? m.members.map((mem, mi) => `
+        <div class="im-member">
+          <div class="im-member-head">
+            <span class="im-member-name">${escapeHtml(mem.name)}</span>
+            <span class="im-member-count">${mem.ideas.length}</span>
+          </div>
+          ${mem.ideas.map((idea, ii) => `
+            <div class="im-node">
+              ${imField(idea.text, 'Idea', 'updateIdea(' + mi + ',' + ii + ',this.value)')}
+              <button class="im-del" onclick="removeIdea(${mi},${ii})" aria-label="Remove idea">✕</button>
+            </div>`).join('')}
+          <button class="im-add" onclick="addIdea(${mi})">＋ Add idea</button>
+        </div>`).join('')
+        : '<div class="im-empty">Nobody has turned in Step 1 yet. Once your team brainstorms, their ideas appear here.</div>';
+
+      const shortlist = m.shortlist.length ? m.shortlist.map((p, i) => `
+        <div class="im-pick">
+          ${imField(p.text, 'Idea we kept', 'updatePick(' + i + ',\'text\',this.value)')}
+          <input class="im-owner" type="text" value="${escapeHtml(p.owner || '')}" placeholder="whose idea"
+            oninput="updatePick(${i},'owner',this.value)">
+          <button class="im-del" onclick="removePick(${i})" aria-label="Remove">✕</button>
+        </div>`).join('')
+        : '<div class="im-empty">Nothing narrowed down yet — finish Step 1b and your five appear here.</div>';
+
+      return `
+        <div class="ta-back-row"><button class="ta-back-btn" onclick="closeIdeaMap()">← Back</button></div>
+        <div class="im-wrap">
+          <div class="im-header">
+            <h1 class="im-title">Your team's idea map</h1>
+            <p class="im-sub">Everything your team brainstormed, what you narrowed it to, and the problem you chose. You can edit any box — shorten it, fix the wording, or add an idea you talked about but never wrote down.</p>
+          </div>
+
+          <div class="im-tier">
+            <div class="im-tier-head"><span class="im-tier-tag">Step 1</span> Everyone's ideas <span class="im-tier-count">${totalIdeas}</span></div>
+            <div class="im-members">${memberCols}</div>
+          </div>
+
+          <div class="im-arrow">↓ narrowed down to</div>
+
+          <div class="im-tier">
+            <div class="im-tier-head"><span class="im-tier-tag">Step 1b</span> The team's best five <span class="im-tier-count">${m.shortlist.length}</span></div>
+            <div class="im-picks">${shortlist}</div>
+            ${m.shortlist.length < 8 ? '<button class="im-add" onclick="addPick()">＋ Add one</button>' : ''}
+          </div>
+
+          <div class="im-arrow">↓ and we chose</div>
+
+          <div class="im-tier im-final">
+            <div class="im-tier-head"><span class="im-tier-tag">Step 2</span> The problem we are solving</div>
+            ${imField(m.chosen.text, 'The one problem your team picked', 'updateChosen(\'text\',this.value)')}
+            ${imField(m.chosen.note, 'Why this one? (optional)', 'updateChosen(\'note\',this.value)')}
+          </div>
+
+          <div class="im-actions">
+            <button class="ta-submit-btn" onclick="saveIdeaMap()">💾 Save the map</button>
+            <button class="ta-save-btn" onclick="refreshIdeaMap()">↻ Pull in new work</button>
+            <span class="ta-submit-hint" id="im-msg"></span>
+          </div>
+          <div class="im-foot">${m.updatedBy
+            ? 'Last edited by ' + escapeHtml(m.updatedBy) + ' · ' + escapeHtml(formatTimestamp(m.updatedAt))
+            : 'Built from what your team has turned in. Nothing saved yet.'}</div>
+        </div>`;
+    }
+
+    function imTouch() {
+      ideaMapDirty = true;
+      const msg = document.getElementById('im-msg');
+      if (msg) { msg.textContent = 'Unsaved changes'; msg.className = 'ta-submit-hint'; }
+    }
+    function updateIdea(mi, ii, v) { ideaMap.members[mi].ideas[ii].text = v; imTouch(); }
+    function removeIdea(mi, ii) { ideaMap.members[mi].ideas.splice(ii, 1); imTouch(); showIdeaMap(); }
+    function addIdea(mi) { ideaMap.members[mi].ideas.push({ id: 'new-' + Date.now(), text: '' }); imTouch(); showIdeaMap(); }
+    function updatePick(i, field, v) { ideaMap.shortlist[i][field] = v; imTouch(); }
+    function removePick(i) { ideaMap.shortlist.splice(i, 1); imTouch(); showIdeaMap(); }
+    function addPick() { ideaMap.shortlist.push({ id: 'new-' + Date.now(), text: '', owner: '' }); imTouch(); showIdeaMap(); }
+    function updateChosen(field, v) { ideaMap.chosen[field] = v; imTouch(); }
+
+    function closeIdeaMap() {
+      if (ideaMapDirty && !confirm('You have unsaved changes to the idea map. Leave without saving?')) return;
+      ideaMap = null; ideaMapDirty = false;
+      app.innerHTML = renderLanding(latestData);
+      wireListeners();
+    }
+
+    async function saveIdeaMap() {
+      const msg = document.getElementById('im-msg');
+      msg.textContent = 'Saving…'; msg.className = 'ta-submit-hint';
+      try {
+        const r = await fetch('/api/fll/idea-map', {
+          method: 'PUT', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ map: ideaMap })
+        });
+        const j = await r.json();
+        if (!j.success) throw new Error(j.message);
+        ideaMap = j.map; ideaMapDirty = false;
+        showIdeaMap();
+        const m2 = document.getElementById('im-msg');
+        if (m2) { m2.textContent = '✓ Saved for your whole team'; m2.className = 'ta-submit-hint success'; }
+        showToast('Idea map saved 🌳');
+      } catch (e) {
+        msg.textContent = e.message; msg.className = 'ta-submit-hint error';
+      }
+    }
+
+    async function refreshIdeaMap() {
+      const msg = document.getElementById('im-msg');
+      msg.textContent = 'Checking for new work…'; msg.className = 'ta-submit-hint';
+      try {
+        const r = await fetch('/api/fll/idea-map/refresh', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+        const j = await r.json();
+        if (!j.success) throw new Error(j.message);
+        ideaMap = j.map; ideaMapDirty = false;
+        showIdeaMap();
+        const m2 = document.getElementById('im-msg');
+        if (m2) {
+          m2.textContent = j.added ? 'Added ' + j.added + ' new item' + (j.added !== 1 ? 's' : '') + ' your team turned in.' : 'Nothing new since last time.';
+          m2.className = 'ta-submit-hint success';
+        }
+      } catch (e) {
+        msg.textContent = e.message; msg.className = 'ta-submit-hint error';
+      }
+    }
+
     function renderCalendar(data) {
       if (!calMonth) { const n = new Date(); calMonth = new Date(n.getFullYear(), n.getMonth(), 1); }
       const events = calendarEvents(data);
@@ -6426,6 +6639,16 @@
 
       const sortedCatTasks = catTasks.slice().sort((a,b) => String(a.dueDate||'').localeCompare(String(b.dueDate||'')));
       const ctxIcon = { lab:'🔬', home:'🏠', class:'📋' };
+      const ideaMapCard = categoryId === 'innovation' ? `
+        <div class="im-entry" onclick="openIdeaMap()">
+          <span class="im-entry-icon">🌳</span>
+          <span class="im-entry-body">
+            <span class="im-entry-title">Your team's idea map</span>
+            <span class="im-entry-sub">See every idea your team brainstormed, the five you kept, and the one you chose — and edit any of it.</span>
+          </span>
+          <span class="im-entry-go">Open →</span>
+        </div>` : '';
+
       const taskCards = sortedCatTasks.length
         ? `<div class="preseason-list">${sortedCatTasks.map(task => {
             const ctx = ctxIcon[task.workContext] || '📌';
@@ -6469,6 +6692,7 @@
           </div>
         </div>
 
+        ${ideaMapCard}
         <div class="cat-grid-title">📋 Pre-Season Assignments — ${escapeHtml(cat.label)}</div>
         <div class="detail-task-list">${taskCards}</div>
 

@@ -40,6 +40,7 @@ const fllLiveLessonFile = path.join(fllHubDataDir, 'live-lesson.json');
 const fllSimulatorProgressFile = path.join(fllHubDataDir, 'simulator-progress.json');
 const fllRobotProfilesFile = path.join(fllHubDataDir, 'robot-profiles.json');
 const fllTaskDraftsFile = path.join(fllHubDataDir, 'task-drafts.json');
+const fllIdeaMapsFile = path.join(fllHubDataDir, 'idea-maps.json');
 const fllCoachRankingsFile = path.join(fllHubDataDir, 'coach-rankings.json');
 const fllSettingsFile = path.join(fllHubDataDir, 'fll-settings.json');
 const codeLabStudentsFile = path.join(__dirname, 'code-lab', 'data', 'students.json');
@@ -66,6 +67,7 @@ const fllDataFileNames = [
 	'simulator-progress.json',
 	'robot-profiles.json',
 	'task-drafts.json',
+	'idea-maps.json',
 	'coach-rankings.json',
 	'fll-settings.json'
 ];
@@ -1052,6 +1054,7 @@ async function buildDataHealthReport() {
 		'simulator-progress.json': 'runtime-student-work',
 		'robot-profiles.json': 'runtime-student-work',
 		'task-drafts.json': 'runtime-student-work',
+		'idea-maps.json': 'runtime-student-work',
 		'fll-settings.json': 'runtime-coach-configuration',
 		'coach-rankings.json': 'runtime-coach-assessment'
 	};
@@ -6493,6 +6496,177 @@ app.get('/api/fll/tasks/:id/draft', requireFllAuth, requireFllStudent, async (re
 //                  (so a team can narrow a brainstorm together)
 //   priorAnswers - this student's own answers to the lessons listed in
 //                  priorLessons, so they are not asked to remember them
+
+// ── Team idea map ───────────────────────────────────────────────────────────
+// A picture of how the team got from everyone's brainstorm to one problem.
+// It SEEDS from their submitted work, then becomes an editable team document:
+// students shorten wording, merge duplicates, or add an idea they said out
+// loud but never typed. Edits live here, never written back into submissions,
+// which are locked once turned in.
+const IDEA_MAP_SOURCES = {
+	brainstorm: 'task-innovation-brainstorm',
+	narrow: 'task-innovation-narrow',
+	chosen: 'task-innovation-problem'
+};
+
+function splitIdeaLines(value) {
+	return String(value || '')
+		.split('\n')
+		.map((line) => line.replace(/^\s*(?:\d+[.)]|[-*•])\s*/, '').trim())
+		.filter((line) => line.length > 1)
+		.slice(0, 12);
+}
+
+function ideaId(prefix, n) { return prefix + '-' + n + '-' + crypto.randomBytes(2).toString('hex'); }
+
+async function seedIdeaMapForTeam(teamId) {
+	const [users, stored] = await Promise.all([
+		readFllUsers(),
+		readJsonFile(fllTaskSubmissionsFile, [])
+	]);
+	const submissions = Array.isArray(stored) ? stored : [];
+	const baseOf = (id) => String(id).split('--')[0];
+	const teamStudents = users.filter((u) => u.role === 'student' && u.active !== false && u.teamId === teamId);
+	const subFor = (studentId, base) =>
+		submissions.find((s) => s.studentId === studentId && baseOf(s.taskId) === base);
+
+	const members = teamStudents.map((student) => {
+		const sub = subFor(student.id, IDEA_MAP_SOURCES.brainstorm);
+		const raw = sub && sub.answers ? (sub.answers.q1 || '') : '';
+		return {
+			studentId: student.id,
+			name: student.name,
+			// stable id: a refresh must recognise an idea even after a student
+			// rewords it, otherwise the original comes back as a duplicate
+			ideas: splitIdeaLines(raw).map((text, i) => ({ id: 'seed-' + student.id + '-' + i, text }))
+		};
+	});
+
+	let shortlist = [];
+	for (const student of teamStudents) {
+		const sub = subFor(student.id, IDEA_MAP_SOURCES.narrow);
+		if (!sub || !sub.answers) continue;
+		const picks = splitIdeaLines(sub.answers.q1 || '');
+		if (!picks.length) continue;
+		let owners = [];
+		try {
+			const rows = JSON.parse(sub.answers['narrow-table'] || '[]');
+			if (Array.isArray(rows)) owners = rows.map((r) => (Array.isArray(r) ? String(r[1] || '').trim() : ''));
+		} catch (e) { owners = []; }
+		shortlist = picks.map((text, i) => ({ id: 'seed-pick-' + i, text, owner: owners[i] || '' }));
+		break;
+	}
+
+	let chosen = { text: '', note: '' };
+	for (const student of teamStudents) {
+		const sub = subFor(student.id, IDEA_MAP_SOURCES.chosen);
+		const statement = sub && sub.answers ? String(sub.answers.q1 || '').trim() : '';
+		if (statement) { chosen = { text: statement.split('\n')[0].slice(0, 160), note: '' }; break; }
+	}
+
+	return { teamId, members, shortlist, chosen, seededAt: new Date().toISOString(), updatedBy: '', updatedAt: '' };
+}
+
+function normalizeIdeaMap(raw, teamId) {
+	const src = raw && typeof raw === 'object' ? raw : {};
+	const text = (v, n) => cleanMetaString(v || '', n);
+	const chosen = src.chosen && typeof src.chosen === 'object' ? src.chosen : {};
+	return {
+		teamId,
+		members: (Array.isArray(src.members) ? src.members : []).slice(0, 12).map((m, mi) => ({
+			studentId: text(m.studentId, 160),
+			name: text(m.name, 80) || 'Team member',
+			ideas: (Array.isArray(m.ideas) ? m.ideas : []).slice(0, 12)
+				.map((idea, i) => ({ id: text(idea.id, 60) || ideaId('idea', String(mi) + String(i)), text: text(idea.text, 200) }))
+				.filter((idea) => idea.text)
+		})),
+		shortlist: (Array.isArray(src.shortlist) ? src.shortlist : []).slice(0, 8)
+			.map((p, i) => ({ id: text(p.id, 60) || ideaId('pick', i), text: text(p.text, 200), owner: text(p.owner, 80) }))
+			.filter((p) => p.text),
+		chosen: { text: text(chosen.text, 200), note: text(chosen.note, 400) },
+		seededAt: text(src.seededAt, 40),
+		updatedBy: text(src.updatedBy, 80),
+		updatedAt: text(src.updatedAt, 40)
+	};
+}
+
+async function readIdeaMaps() {
+	const data = await readJsonFile(fllIdeaMapsFile, {});
+	return data && typeof data === 'object' && !Array.isArray(data) ? data : {};
+}
+
+app.get('/api/fll/idea-map', requireFllAuth, async (req, res) => {
+	try {
+		const teamId = cleanMetaString(req.query.teamId || req.fllUser.teamId || '', 100);
+		if (!teamId) return res.status(400).json({ success: false, message: 'No team' });
+		if (req.fllUser.role === 'student' && teamId !== req.fllUser.teamId) {
+			return res.status(403).json({ success: false, message: 'You can only see your own team map' });
+		}
+		const store = await readIdeaMaps();
+		const saved = store[teamId];
+		if (saved) return res.json({ success: true, map: normalizeIdeaMap(saved, teamId), edited: true });
+		const seeded = await seedIdeaMapForTeam(teamId);
+		return res.json({ success: true, map: normalizeIdeaMap(seeded, teamId), edited: false });
+	} catch (err) {
+		console.error('FLL idea map load error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading the idea map' });
+	}
+});
+
+app.put('/api/fll/idea-map', requireFllAuth, requireFllStudent, async (req, res) => {
+	try {
+		const teamId = req.fllUser.teamId;
+		if (!teamId) return res.status(400).json({ success: false, message: 'You are not on a team yet' });
+		const store = await readIdeaMaps();
+		const map = normalizeIdeaMap(req.body.map, teamId);
+		map.updatedBy = req.fllUser.name || '';
+		map.updatedAt = new Date().toISOString();
+		if (!map.seededAt) map.seededAt = new Date().toISOString();
+		store[teamId] = map;
+		await writeJsonFile(fllIdeaMapsFile, store);
+		return res.json({ success: true, map });
+	} catch (err) {
+		console.error('FLL idea map save error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving the idea map' });
+	}
+});
+
+app.post('/api/fll/idea-map/refresh', requireFllAuth, requireFllStudent, async (req, res) => {
+	try {
+		const teamId = req.fllUser.teamId;
+		const store = await readIdeaMaps();
+		const fresh = await seedIdeaMapForTeam(teamId);
+		const current = store[teamId] ? normalizeIdeaMap(store[teamId], teamId) : null;
+		if (!current) {
+			store[teamId] = normalizeIdeaMap(fresh, teamId);
+			await writeJsonFile(fllIdeaMapsFile, store);
+			return res.json({ success: true, map: store[teamId], added: 0 });
+		}
+		let added = 0;
+		for (const freshMember of fresh.members) {
+			const member = current.members.find((m) => m.studentId === freshMember.studentId);
+			if (!member) { current.members.push(freshMember); added += freshMember.ideas.length; continue; }
+			const haveIds = new Set(member.ideas.map((i) => i.id));
+			const haveText = new Set(member.ideas.map((i) => i.text.toLowerCase()));
+			for (const idea of freshMember.ideas) {
+				// id match means "already here, possibly reworded" — leave the edit alone
+				if (haveIds.has(idea.id) || haveText.has(idea.text.toLowerCase())) continue;
+				member.ideas.push(idea); added++;
+			}
+		}
+		if (!current.shortlist.length && fresh.shortlist.length) { current.shortlist = fresh.shortlist; added += fresh.shortlist.length; }
+		if (!current.chosen.text && fresh.chosen.text) { current.chosen.text = fresh.chosen.text; added++; }
+		current.updatedBy = req.fllUser.name || '';
+		current.updatedAt = new Date().toISOString();
+		store[teamId] = current;
+		await writeJsonFile(fllIdeaMapsFile, store);
+		return res.json({ success: true, map: current, added });
+	} catch (err) {
+		console.error('FLL idea map refresh error:', err);
+		return res.status(500).json({ success: false, message: 'Server error refreshing the idea map' });
+	}
+});
+
 app.get('/api/fll/tasks/:id/context', requireFllAuth, requireFllStudent, async (req, res) => {
 	try {
 		const [tasks, stored, users] = await Promise.all([
