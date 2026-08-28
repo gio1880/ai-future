@@ -6509,6 +6509,32 @@ const IDEA_MAP_SOURCES = {
 	chosen: 'task-innovation-problem'
 };
 
+// The idea map is a living team document, not an assignment: it is never
+// submitted, never graded, and never locks. Teams keep editing it all season.
+//
+// Adding a section later must not wipe what teams have already written, so
+// every new field goes in IDEA_MAP_DEFAULTS with the version that introduced
+// it. upgradeIdeaMap() fills in anything a saved map predates, which means an
+// old map gains new sections the next time it is opened — no migration pass,
+// no coach action, nothing for students to redo.
+const IDEA_MAP_VERSION = 2;
+const IDEA_MAP_DEFAULTS = {
+	// since v2 — room for a team to say who it is solving for and what they
+	// have learned, the two things coaches kept asking students in meetings
+	audience: { since: 2, blank: () => ({ text: '', note: '' }) },
+	research: { since: 2, blank: () => [] },
+	version: { since: 2, blank: () => IDEA_MAP_VERSION }
+};
+
+function upgradeIdeaMap(map) {
+	const from = Number(map.version) || 1;
+	for (const [key, spec] of Object.entries(IDEA_MAP_DEFAULTS)) {
+		if (from < spec.since || map[key] === undefined) map[key] = map[key] === undefined ? spec.blank() : map[key];
+	}
+	map.version = IDEA_MAP_VERSION;
+	return map;
+}
+
 function splitIdeaLines(value) {
 	return String(value || '')
 		.split('\n')
@@ -6564,7 +6590,7 @@ async function seedIdeaMapForTeam(teamId) {
 		if (statement) { chosen = { text: statement.split('\n')[0].slice(0, 160), note: '' }; break; }
 	}
 
-	return { teamId, members, shortlist, chosen, seededAt: new Date().toISOString(), updatedBy: '', updatedAt: '' };
+	return upgradeIdeaMap({ teamId, members, shortlist, chosen, seededAt: new Date().toISOString(), updatedBy: '', updatedAt: '' });
 }
 
 function normalizeIdeaMap(raw, teamId) {
@@ -6584,10 +6610,49 @@ function normalizeIdeaMap(raw, teamId) {
 			.map((p, i) => ({ id: text(p.id, 60) || ideaId('pick', i), text: text(p.text, 200), owner: text(p.owner, 80) }))
 			.filter((p) => p.text),
 		chosen: { text: text(chosen.text, 200), note: text(chosen.note, 400) },
+		audience: {
+			text: text((src.audience || {}).text, 200),
+			note: text((src.audience || {}).note, 400)
+		},
+		research: (Array.isArray(src.research) ? src.research : []).slice(0, 12)
+			.map((r, i) => ({
+				id: text(r.id, 60) || ideaId('note', i),
+				text: text(r.text, 300),
+				source: text(r.source, 160)
+			}))
+			.filter((r) => r.text),
+		version: Number(src.version) || IDEA_MAP_VERSION,
 		seededAt: text(src.seededAt, 40),
 		updatedBy: text(src.updatedBy, 80),
 		updatedAt: text(src.updatedAt, 40)
 	};
+}
+
+// Fold anything new the team has turned in into the map they have been
+// editing. Ideas match on stable id first, so a reworded idea is recognised
+// as the one already there instead of coming back as a duplicate.
+function mergeIdeaMap(current, fresh) {
+	let added = 0;
+	for (const freshMember of fresh.members) {
+		const member = current.members.find((m) => m.studentId === freshMember.studentId);
+		if (!member) { current.members.push(freshMember); added += freshMember.ideas.length; continue; }
+		const haveIds = new Set(member.ideas.map((i) => i.id));
+		const haveText = new Set(member.ideas.map((i) => i.text.toLowerCase()));
+		for (const idea of freshMember.ideas) {
+			if (haveIds.has(idea.id) || haveText.has(idea.text.toLowerCase())) continue;
+			member.ideas.push(idea); added++;
+		}
+	}
+	// A teammate added to the team mid-season needs a column even with no work
+	// in yet, otherwise they have nowhere to type.
+	for (const freshMember of fresh.members) {
+		if (!current.members.some((m) => m.studentId === freshMember.studentId)) {
+			current.members.push({ ...freshMember, ideas: [] });
+		}
+	}
+	if (!current.shortlist.length && fresh.shortlist.length) { current.shortlist = fresh.shortlist; added += fresh.shortlist.length; }
+	if (!current.chosen.text && fresh.chosen.text) { current.chosen.text = fresh.chosen.text; added++; }
+	return added;
 }
 
 async function readIdeaMaps() {
@@ -6604,9 +6669,19 @@ app.get('/api/fll/idea-map', requireFllAuth, async (req, res) => {
 		}
 		const store = await readIdeaMaps();
 		const saved = store[teamId];
-		if (saved) return res.json({ success: true, map: normalizeIdeaMap(saved, teamId), edited: true });
-		const seeded = await seedIdeaMapForTeam(teamId);
-		return res.json({ success: true, map: normalizeIdeaMap(seeded, teamId), edited: false });
+		const fresh = await seedIdeaMapForTeam(teamId);
+		if (!saved) {
+			return res.json({ success: true, map: normalizeIdeaMap(fresh, teamId), edited: false, added: 0 });
+		}
+		// Pull in new work and any newly added section on open, so the team
+		// never has to press a button to see the map catch up.
+		const current = upgradeIdeaMap(normalizeIdeaMap(saved, teamId));
+		const added = mergeIdeaMap(current, fresh);
+		if (added || Number(saved.version || 1) < IDEA_MAP_VERSION) {
+			store[teamId] = current;
+			await writeJsonFile(fllIdeaMapsFile, store);
+		}
+		return res.json({ success: true, map: current, edited: true, added });
 	} catch (err) {
 		console.error('FLL idea map load error:', err);
 		return res.status(500).json({ success: false, message: 'Server error loading the idea map' });
@@ -6636,26 +6711,13 @@ app.post('/api/fll/idea-map/refresh', requireFllAuth, requireFllStudent, async (
 		const teamId = req.fllUser.teamId;
 		const store = await readIdeaMaps();
 		const fresh = await seedIdeaMapForTeam(teamId);
-		const current = store[teamId] ? normalizeIdeaMap(store[teamId], teamId) : null;
+		const current = store[teamId] ? upgradeIdeaMap(normalizeIdeaMap(store[teamId], teamId)) : null;
 		if (!current) {
 			store[teamId] = normalizeIdeaMap(fresh, teamId);
 			await writeJsonFile(fllIdeaMapsFile, store);
 			return res.json({ success: true, map: store[teamId], added: 0 });
 		}
-		let added = 0;
-		for (const freshMember of fresh.members) {
-			const member = current.members.find((m) => m.studentId === freshMember.studentId);
-			if (!member) { current.members.push(freshMember); added += freshMember.ideas.length; continue; }
-			const haveIds = new Set(member.ideas.map((i) => i.id));
-			const haveText = new Set(member.ideas.map((i) => i.text.toLowerCase()));
-			for (const idea of freshMember.ideas) {
-				// id match means "already here, possibly reworded" — leave the edit alone
-				if (haveIds.has(idea.id) || haveText.has(idea.text.toLowerCase())) continue;
-				member.ideas.push(idea); added++;
-			}
-		}
-		if (!current.shortlist.length && fresh.shortlist.length) { current.shortlist = fresh.shortlist; added += fresh.shortlist.length; }
-		if (!current.chosen.text && fresh.chosen.text) { current.chosen.text = fresh.chosen.text; added++; }
+		const added = mergeIdeaMap(current, fresh);
 		current.updatedBy = req.fllUser.name || '';
 		current.updatedAt = new Date().toISOString();
 		store[teamId] = current;
@@ -6664,6 +6726,42 @@ app.post('/api/fll/idea-map/refresh', requireFllAuth, requireFllStudent, async (
 	} catch (err) {
 		console.error('FLL idea map refresh error:', err);
 		return res.status(500).json({ success: false, message: 'Server error refreshing the idea map' });
+	}
+});
+
+// Coaches see every team's map in one place, read-only: the document belongs
+// to the team, and a coach quietly rewriting it would undo the point of it.
+app.get('/api/fll/coach/idea-maps', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const [teams, store] = await Promise.all([
+			readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
+			readIdeaMaps()
+		]);
+		const teamList = Array.isArray(teams) ? teams : [];
+		const maps = [];
+		for (const team of teamList) {
+			const saved = store[team.id];
+			const map = saved
+				? upgradeIdeaMap(normalizeIdeaMap(saved, team.id))
+				: normalizeIdeaMap(await seedIdeaMapForTeam(team.id), team.id);
+			const ideaCount = map.members.reduce((n, m) => n + m.ideas.length, 0);
+			maps.push({
+				teamId: team.id,
+				teamName: team.name || team.id,
+				started: Boolean(saved),
+				ideaCount,
+				memberCount: map.members.length,
+				shortlistCount: map.shortlist.length,
+				hasChosen: Boolean(map.chosen.text),
+				updatedBy: map.updatedBy,
+				updatedAt: map.updatedAt,
+				map
+			});
+		}
+		return res.json({ success: true, maps });
+	} catch (err) {
+		console.error('FLL coach idea maps error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading idea maps' });
 	}
 });
 

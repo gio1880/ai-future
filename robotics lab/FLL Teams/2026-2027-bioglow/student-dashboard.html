@@ -2346,6 +2346,19 @@
       border-radius:50px !important; padding:7px 14px !important; font-size:12.5px; font-weight:700; cursor:pointer;
       box-shadow:none !important; margin-top:4px; }
     .im-add:hover { border-color:#1a73e8 !important; color:#1a73e8 !important; }
+    .im-added { margin-top:10px; padding:9px 13px; border-radius:10px; background:var(--tint-blue);
+      border:1px solid #bcd7f7; color:#174ea6; font-size:13px; font-weight:650; }
+    .im-tile { display:flex; align-items:center; gap:14px; margin:16px 0 4px; padding:16px 18px; cursor:pointer;
+      border:1.5px solid var(--s-line-2); border-radius:16px; background:var(--s-card);
+      transition:border-color .15s, transform .15s, box-shadow .15s; }
+    .im-tile:hover { border-color:#1a73e8; transform:translateY(-1px); box-shadow:0 6px 20px rgba(26,115,232,.14); }
+    .im-tile:focus-visible { outline:3px solid #1a73e8; outline-offset:2px; }
+    .im-tile-icon { font-size:30px; line-height:1; flex:none; }
+    .im-tile-body { flex:1; min-width:0; }
+    .im-tile-title { font-size:16px; font-weight:800; color:var(--t-strong); }
+    .im-tile-sub { font-size:13px; color:var(--t-muted); margin-top:3px; line-height:1.45; }
+    .im-tile-go { flex:none; font-size:13px; font-weight:750; color:#1a73e8; }
+    @media (max-width:560px) { .im-tile-go { display:none; } }
     /* iPad: 16px stops Safari zooming in on focus, and taps need real targets */
     @media (pointer: coarse) {
       .im-input, .im-owner { font-size:16px !important; }
@@ -6246,6 +6259,7 @@
         ${renderWelcomeBanner(user, currentPhase, tasks, bioglowCountdown)}
         ${renderNextUp(data)}
         ${infoRow}
+        ${renderIdeaMapTile(data)}
         ${preSeasonSection}
         <div class="cat-grid-title">📂 Your FLL Areas</div>
         <div class="cat-grid">${cards}</div>
@@ -6254,6 +6268,22 @@
         <div class="cat-grid-title">📅 Season Calendar</div>
         <div id="seasonCalendar">${renderCalendar(data)}</div>
       `;
+    }
+
+    // The idea map is a living team document — never submitted, never graded —
+    // so it sits on the home page instead of in the assignment list.
+    function renderIdeaMapTile(data) {
+      if (!data.team) return '';
+      return `
+        <div class="im-tile" onclick="openIdeaMap()" role="button" tabindex="0"
+             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openIdeaMap();}">
+          <div class="im-tile-icon">🌳</div>
+          <div class="im-tile-body">
+            <div class="im-tile-title">Your team's idea map</div>
+            <div class="im-tile-sub">Every idea your team brainstormed, the five you kept, the problem you chose, and what you are learning — yours to edit any time. Nothing to turn in.</div>
+          </div>
+          <div class="im-tile-go">Open →</div>
+        </div>`;
     }
 
     // ── Season calendar ───────────────────────────────────────────────────
@@ -6387,6 +6417,7 @@
     // names who touched it last.
     let ideaMap = null;
     let ideaMapDirty = false;
+    let ideaMapAdded = 0;
 
     async function openIdeaMap() {
       activeCategory = null; activeTask = null;
@@ -6395,7 +6426,7 @@
         const r = await fetch('/api/fll/idea-map');
         const j = await r.json();
         if (!j.success) throw new Error(j.message);
-        ideaMap = j.map; ideaMapDirty = false;
+        ideaMap = j.map; ideaMapDirty = false; ideaMapAdded = j.added || 0;
         showIdeaMap();
       } catch (e) {
         app.innerHTML = '<div class="im-loading">Could not load the idea map: ' + escapeHtml(e.message) + '</div>';
@@ -6470,11 +6501,30 @@
             ${imField(m.chosen.note, 'Why this one? (optional)', 'updateChosen(\'note\',this.value)')}
           </div>
 
+          <div class="im-tier">
+            <div class="im-tier-head"><span class="im-tier-tag">Who</span> Who we are solving this for</div>
+            ${imField(m.audience.text, 'Who has this problem? Be specific — "kids at Lincoln Park" beats "people"', 'updateAudience(\'text\',this.value)')}
+            ${imField(m.audience.note, 'How do you know it is a real problem for them? (optional)', 'updateAudience(\'note\',this.value)')}
+          </div>
+
+          <div class="im-tier">
+            <div class="im-tier-head"><span class="im-tier-tag">Research</span> What we found out <span class="im-tier-count">${m.research.length}</span></div>
+            ${m.research.length ? m.research.map((r, i) => `
+              <div class="im-pick">
+                ${imField(r.text, 'Something you learned', 'updateResearch(' + i + ',\'text\',this.value)')}
+                <input class="im-owner" type="text" value="${escapeHtml(r.source || '')}" placeholder="where from"
+                  oninput="updateResearch(${i},'source',this.value)">
+                <button class="im-del" onclick="removeResearch(${i})" aria-label="Remove">✕</button>
+              </div>`).join('')
+              : '<div class="im-empty">Add what you learn as you go — an expert you talked to, an article, something you measured.</div>'}
+            ${m.research.length < 12 ? '<button class="im-add" onclick="addResearch()">＋ Add what you learned</button>' : ''}
+          </div>
+
           <div class="im-actions">
             <button class="ta-submit-btn" onclick="saveIdeaMap()">💾 Save the map</button>
-            <button class="ta-save-btn" onclick="refreshIdeaMap()">↻ Pull in new work</button>
             <span class="ta-submit-hint" id="im-msg"></span>
           </div>
+          ${ideaMapAdded ? '<div class="im-added">↻ Added ' + ideaMapAdded + ' new item' + (ideaMapAdded !== 1 ? 's' : '') + ' your team turned in since you last looked.</div>' : ''}
           <div class="im-foot">${m.updatedBy
             ? 'Last edited by ' + escapeHtml(m.updatedBy) + ' · ' + escapeHtml(formatTimestamp(m.updatedAt))
             : 'Built from what your team has turned in. Nothing saved yet.'}</div>
@@ -6493,6 +6543,10 @@
     function removePick(i) { ideaMap.shortlist.splice(i, 1); imTouch(); showIdeaMap(); }
     function addPick() { ideaMap.shortlist.push({ id: 'new-' + Date.now(), text: '', owner: '' }); imTouch(); showIdeaMap(); }
     function updateChosen(field, v) { ideaMap.chosen[field] = v; imTouch(); }
+    function updateAudience(field, v) { ideaMap.audience[field] = v; imTouch(); }
+    function updateResearch(i, field, v) { ideaMap.research[i][field] = v; imTouch(); }
+    function removeResearch(i) { ideaMap.research.splice(i, 1); imTouch(); showIdeaMap(); }
+    function addResearch() { ideaMap.research.push({ id: 'new-' + Date.now(), text: '', source: '' }); imTouch(); showIdeaMap(); }
 
     function closeIdeaMap() {
       if (ideaMapDirty && !confirm('You have unsaved changes to the idea map. Leave without saving?')) return;
@@ -6511,7 +6565,7 @@
         });
         const j = await r.json();
         if (!j.success) throw new Error(j.message);
-        ideaMap = j.map; ideaMapDirty = false;
+        ideaMap = j.map; ideaMapDirty = false; ideaMapAdded = 0;
         showIdeaMap();
         const m2 = document.getElementById('im-msg');
         if (m2) { m2.textContent = '✓ Saved for your whole team'; m2.className = 'ta-submit-hint success'; }
@@ -6521,24 +6575,6 @@
       }
     }
 
-    async function refreshIdeaMap() {
-      const msg = document.getElementById('im-msg');
-      msg.textContent = 'Checking for new work…'; msg.className = 'ta-submit-hint';
-      try {
-        const r = await fetch('/api/fll/idea-map/refresh', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
-        const j = await r.json();
-        if (!j.success) throw new Error(j.message);
-        ideaMap = j.map; ideaMapDirty = false;
-        showIdeaMap();
-        const m2 = document.getElementById('im-msg');
-        if (m2) {
-          m2.textContent = j.added ? 'Added ' + j.added + ' new item' + (j.added !== 1 ? 's' : '') + ' your team turned in.' : 'Nothing new since last time.';
-          m2.className = 'ta-submit-hint success';
-        }
-      } catch (e) {
-        msg.textContent = e.message; msg.className = 'ta-submit-hint error';
-      }
-    }
 
     function renderCalendar(data) {
       if (!calMonth) { const n = new Date(); calMonth = new Date(n.getFullYear(), n.getMonth(), 1); }

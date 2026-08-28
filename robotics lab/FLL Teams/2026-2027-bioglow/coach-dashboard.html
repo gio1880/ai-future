@@ -581,7 +581,29 @@
       .wrap { padding: 18px 12px 50px; }
       .students-table-wrap { overflow-x: auto; }
     }
-  </style>
+      .im-c-card { border:1px solid var(--s-line-2); border-radius:14px; margin-bottom:10px; background:var(--s-card); overflow:hidden; }
+    .im-c-head { padding:13px 16px; cursor:pointer; }
+    .im-c-head:hover { background:var(--s-hover); }
+    .im-c-title { display:flex; align-items:center; gap:9px; font-size:15px; font-weight:750; color:var(--t-strong); }
+    .im-c-caret { color:var(--t-faint); font-size:12px; }
+    .im-c-pill { font-size:11px; font-weight:750; padding:3px 9px; border-radius:50px; }
+    .im-c-good { background:var(--tint-green); color:#146c43; }
+    .im-c-warn { background:var(--tint-amber); color:#8a5a00; }
+    .im-c-idle { background:var(--s-hover); color:var(--t-faint); }
+    .im-c-meta { font-size:12px; color:var(--t-muted); margin-top:4px; }
+    .im-c-body { padding:4px 16px 16px; border-top:1px solid var(--s-line); }
+    .im-c-sec { font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+      color:var(--t-faint); margin:14px 0 6px; }
+    .im-c-member { margin-bottom:8px; }
+    .im-c-name { font-size:13px; font-weight:700; color:var(--t-strong); }
+    .im-c-num { font-size:11px; color:var(--t-faint); font-weight:600; }
+    .im-c-list { margin:4px 0 0; padding-left:20px; font-size:13px; color:var(--t-body); line-height:1.6; }
+    .im-c-owner { color:var(--t-faint); font-size:12px; }
+    .im-c-none { font-size:12.5px; color:var(--t-faint); font-style:italic; }
+    .im-c-chosen { font-size:14px; font-weight:650; color:var(--t-strong); padding:10px 13px;
+      background:var(--tint-green); border-radius:10px; }
+    .im-c-note { font-size:12.5px; font-weight:500; color:var(--t-muted); margin-top:5px; }
+</style>
   <link rel="stylesheet" href="/assets/css/theme.css">
   <script>(function(){try{var t=localStorage.getItem("af-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
   <link rel="stylesheet" href="/assets/css/fll-premium.css">
@@ -615,6 +637,7 @@
       <button class="tab-btn" data-tab="online" onclick="showTab('online')">🟢 Who's Online</button>
       <button class="tab-btn" data-tab="robots" onclick="showTab('robots')">🎯 Robot Tuning</button>
       <button class="tab-btn" data-tab="submissions" onclick="showTab('submissions')">📬 Submitted Work</button>
+      <button class="tab-btn" data-tab="ideamaps" onclick="showTab('ideamaps')">🌳 Idea Maps</button>
       <button class="tab-btn" data-tab="visibility" onclick="showTab('visibility')">🎛️ Areas &amp; Lessons</button>
       <button class="tab-btn" data-tab="live" onclick="showTab('live')">Live Slides</button>
     </div>
@@ -779,6 +802,19 @@
         <div id="loginWrap">Loading&hellip;</div>
       </div>
     </div>
+    <div class="panel" id="panel-ideamaps">
+      <div class="visibility-card">
+        <div class="visibility-head">
+          <div>
+            <h2 class="form-title">Team idea maps</h2>
+            <p class="form-sub">A living document each team keeps all season — never submitted, never graded. It starts from their innovation work and they keep editing it. Read-only here on purpose: the map belongs to the team.</p>
+          </div>
+          <button class="btn-ghost" onclick="loadIdeaMaps(true)">↻ Refresh</button>
+        </div>
+        <div id="ideaMapsWrap">Loading&hellip;</div>
+      </div>
+    </div>
+
     <div class="panel" id="panel-robots">
       <div class="visibility-card">
         <div class="visibility-head">
@@ -958,9 +994,110 @@
       if (id === 'visibility') renderVisibility();
       if (id === 'submissions') loadSubmissions();
       if (id === 'robots') loadRobotProfiles();
+      if (id === 'ideamaps') loadIdeaMaps();
       if (id === 'logins') loadLoginStatus();
       // only poll while the tab is actually being looked at
       if (id === 'online') startOnlinePolling(); else stopOnlinePolling();
+    }
+
+
+    // ── Team idea maps ────────────────────────────────────────────────────
+    // Read-only on purpose. The map is the team's own living document; a coach
+    // silently rewriting it would defeat the point. Coaches come here to see
+    // who has ideas in, whether a team has actually narrowed down, and whether
+    // anyone has touched it lately.
+    let ideaMapsCache = null;
+    const ideaMapOpen = new Set();
+
+    async function loadIdeaMaps(force) {
+      const wrap = document.getElementById('ideaMapsWrap');
+      if (ideaMapsCache && !force) { renderIdeaMaps(); return; }
+      wrap.textContent = 'Loading…';
+      try {
+        const r = await fetch('/api/fll/coach/idea-maps');
+        const j = await r.json();
+        if (!j.success) throw new Error(j.message);
+        ideaMapsCache = j.maps;
+        renderIdeaMaps();
+      } catch (e) {
+        wrap.innerHTML = '<div class="empty-note">Could not load idea maps: ' + escapeHtml(e.message) + '</div>';
+      }
+    }
+
+    function imWhen(value) {
+      if (!value) return 'never';
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return 'never';
+      return d.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    }
+
+    function toggleIdeaMap(teamId) {
+      if (ideaMapOpen.has(teamId)) ideaMapOpen.delete(teamId); else ideaMapOpen.add(teamId);
+      renderIdeaMaps();
+    }
+
+    function renderIdeaMaps() {
+      const wrap = document.getElementById('ideaMapsWrap');
+      const maps = ideaMapsCache || [];
+      if (!maps.length) { wrap.innerHTML = '<div class="empty-note">No teams yet.</div>'; return; }
+
+      wrap.innerHTML = maps.map((row) => {
+        const open = ideaMapOpen.has(row.teamId);
+        const m = row.map;
+        const stage = row.hasChosen ? 'Problem chosen'
+          : row.shortlistCount ? 'Narrowed to ' + row.shortlistCount
+          : row.ideaCount ? 'Brainstorming'
+          : 'Not started';
+        const stageClass = row.hasChosen ? 'im-c-good' : row.ideaCount ? 'im-c-warn' : 'im-c-idle';
+
+        const body = !open ? '' : `
+          <div class="im-c-body">
+            <div class="im-c-sec">Everyone's ideas</div>
+            ${m.members.length ? m.members.map((mem) => `
+              <div class="im-c-member">
+                <div class="im-c-name">${escapeHtml(mem.name)} <span class="im-c-num">${mem.ideas.length}</span></div>
+                ${mem.ideas.length
+                  ? '<ul class="im-c-list">' + mem.ideas.map((i) => '<li>' + escapeHtml(i.text) + '</li>').join('') + '</ul>'
+                  : '<div class="im-c-none">nothing yet</div>'}
+              </div>`).join('') : '<div class="im-c-none">no members</div>'}
+
+            <div class="im-c-sec">The team's best five</div>
+            ${m.shortlist.length
+              ? '<ul class="im-c-list">' + m.shortlist.map((p) => '<li>' + escapeHtml(p.text) + (p.owner ? ' <span class="im-c-owner">— ' + escapeHtml(p.owner) + '</span>' : '') + '</li>').join('') + '</ul>'
+              : '<div class="im-c-none">not narrowed down yet</div>'}
+
+            <div class="im-c-sec">The problem they are solving</div>
+            ${m.chosen.text
+              ? '<div class="im-c-chosen">' + escapeHtml(m.chosen.text) + (m.chosen.note ? '<div class="im-c-note">' + escapeHtml(m.chosen.note) + '</div>' : '') + '</div>'
+              : '<div class="im-c-none">not chosen yet</div>'}
+
+            <div class="im-c-sec">Who they are solving it for</div>
+            ${m.audience && m.audience.text
+              ? '<div class="im-c-chosen">' + escapeHtml(m.audience.text) + (m.audience.note ? '<div class="im-c-note">' + escapeHtml(m.audience.note) + '</div>' : '') + '</div>'
+              : '<div class="im-c-none">not filled in yet</div>'}
+
+            <div class="im-c-sec">What they found out</div>
+            ${(m.research && m.research.length)
+              ? '<ul class="im-c-list">' + m.research.map((r) => '<li>' + escapeHtml(r.text) + (r.source ? ' <span class="im-c-owner">— ' + escapeHtml(r.source) + '</span>' : '') + '</li>').join('') + '</ul>'
+              : '<div class="im-c-none">nothing recorded yet</div>'}
+          </div>`;
+
+        return `
+          <div class="im-c-card">
+            <div class="im-c-head" onclick="toggleIdeaMap('${escapeHtml(row.teamId)}')">
+              <div class="im-c-title">
+                <span class="im-c-caret">${open ? '▾' : '▸'}</span>
+                ${escapeHtml(row.teamName)}
+                <span class="im-c-pill ${stageClass}">${escapeHtml(stage)}</span>
+              </div>
+              <div class="im-c-meta">
+                ${row.ideaCount} idea${row.ideaCount !== 1 ? 's' : ''} · ${row.memberCount} member${row.memberCount !== 1 ? 's' : ''}
+                · ${row.updatedBy ? 'last edited by ' + escapeHtml(row.updatedBy) + ' ' + escapeHtml(imWhen(row.updatedAt)) : 'never edited by the team'}
+              </div>
+            </div>
+            ${body}
+          </div>`;
+      }).join('');
     }
 
     // ── Student logins ────────────────────────────────────────────────────
