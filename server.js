@@ -6769,14 +6769,33 @@ function brainstormTaskBaseIds(allTasks, explicitSources = []) {
 // these — the topics table on the prompt lesson is one — so refusing to read
 // them left whole teams with an empty map. Every row is data; the column names
 // live separately and are not part of the answer.
-function ideasFromTableAnswer(value) {
-	let rows;
-	try { rows = JSON.parse(value); } catch (e) { return []; }
-	if (!Array.isArray(rows)) return [];
+// Ideas out of a table. Which columns hold ideas cannot be guessed reliably —
+// a brainstorm table is often "topic, why it fits, why we like it", where only
+// the first column is an idea and the rest is reasoning; another is a plain
+// grid of topics across every column. No length or word rule separates
+// "Ecosystem collapse" from "food chain", so the columns are chosen, not
+// inferred. The default is the first column alone once a table is wide enough
+// to be carrying reasoning.
+function tableRows(value) {
+	try {
+		const rows = JSON.parse(value);
+		return Array.isArray(rows) ? rows.filter((r) => Array.isArray(r)) : [];
+	} catch (e) { return []; }
+}
+
+function defaultIdeaColumns(rows) {
+	const width = Math.max(0, ...rows.map((r) => r.length));
+	return width > 2 ? [0] : Array.from({ length: width }, (_, i) => i);
+}
+
+function ideasFromTableAnswer(value, columns = null) {
+	const rows = tableRows(value);
+	if (!rows.length) return [];
+	const cols = Array.isArray(columns) && columns.length ? columns : defaultIdeaColumns(rows);
 	const out = [];
 	for (const row of rows) {
-		for (const cell of (Array.isArray(row) ? row : [])) {
-			const text = String(cell || '').trim();
+		for (const index of cols) {
+			const text = String(row[index] || '').trim();
 			if (text.length < 2) continue;                     // blank or a stray character
 			if (/^https?:\/\//i.test(text)) continue;          // a source link, not an idea
 			if (text.length > 200) continue;                   // a paragraph, not an idea
@@ -6799,7 +6818,7 @@ function ideaLinesFromAnswer(value) {
 	return lines.length >= 2 ? lines : [];    // a single line is prose, not a list
 }
 
-function ideasFromBrainstormAnswers(answers, isCanonical, onlyQuestionIds = null) {
+function ideasFromBrainstormAnswers(answers, isCanonical, onlyQuestionIds = null, columnsByQuestion = null) {
 	if (!answers || typeof answers !== 'object') return [];
 	// An explicit question list wins: importing Step 1 should be able to bring
 	// across Round 1 alone, or Round 1 and Round 2, as the coach decides.
@@ -6809,7 +6828,8 @@ function ideasFromBrainstormAnswers(answers, isCanonical, onlyQuestionIds = null
 		for (const key of wanted) {
 			// an explicitly chosen answer is taken whatever shape it is
 			const text = String(answers[key] || '');
-			picked.push(...(looksLikeTableAnswer(text) ? ideasFromTableAnswer(text) : splitIdeaLines(text)));
+			const cols = columnsByQuestion && Array.isArray(columnsByQuestion[key]) ? columnsByQuestion[key] : null;
+			picked.push(...(looksLikeTableAnswer(text) ? ideasFromTableAnswer(text, cols) : splitIdeaLines(text)));
 		}
 		return picked;
 	}
@@ -7046,19 +7066,38 @@ async function readIdeaMaps() {
 // A student pulling their own answers onto the map. The coach has the same
 // power from Submitted Work; this is the student doing it for themselves,
 // which matters because the map is their document, not the coach's.
-function listShapedQuestions(answers, labels) {
+function listShapedQuestions(answers, labels, columnNames = {}) {
 	const out = [];
 	for (const [key, value] of Object.entries(answers || {})) {
 		if (/__(link|photo|cols)$/.test(key)) continue;
+		const isTable = looksLikeTableAnswer(value);
 		const lines = ideaLinesFromAnswer(value);
 		if (!lines.length) continue;
-		out.push({
+		const row = {
 			id: key,
 			label: labels[key] || key,
 			count: lines.length,
 			// say which it is, so a robot tracker is recognisable before ticking
-			shape: looksLikeTableAnswer(value) ? 'table' : 'list'
-		});
+			shape: isTable ? 'table' : 'list'
+		};
+		if (isTable) {
+			// name each column and show what is in it, so the choice is obvious
+			const rows = tableRows(value);
+			const width = Math.max(0, ...rows.map((r) => r.length));
+			const names = columnNames[key] || [];
+			const defaults = new Set(defaultIdeaColumns(rows));
+			row.columns = Array.from({ length: width }, (_, i) => {
+				const sample = rows.map((r) => String(r[i] || '').trim()).filter(Boolean)[0] || '';
+				return {
+					index: i,
+					name: cleanMetaString(names[i] || `Column ${i + 1}`, 80),
+					sample: cleanMetaString(sample, 60),
+					filled: rows.filter((r) => String(r[i] || '').trim()).length,
+					on: defaults.has(i)
+				};
+			}).filter((c) => c.filled > 0);
+		}
+		out.push(row);
 	}
 	return out;
 }
@@ -7077,8 +7116,16 @@ app.get('/api/fll/idea-map/my-lessons', requireFllAuth, requireFllStudent, async
 			const task = allTasks.find((t) => t.id === sub.taskId)
 				|| allTasks.find((t) => baseOf(t.id) === baseOf(sub.taskId));
 			const labels = {};
-			for (const q of (task?.questions || [])) if (q.id) labels[q.id] = q.label || q.id;
-			const questions = listShapedQuestions(sub.answers, labels);
+			const columnNames = {};
+			for (const q of (task?.questions || [])) {
+				if (!q.id) continue;
+				labels[q.id] = q.label || q.id;
+				const renamed = sub.answers[`${q.id}__cols`];
+				let cols = Array.isArray(q.columns) ? q.columns : [];
+				if (renamed) { try { const c = JSON.parse(renamed); if (Array.isArray(c) && c.length) cols = c; } catch (e) { /* keep */ } }
+				columnNames[q.id] = cols;
+			}
+			const questions = listShapedQuestions(sub.answers, labels, columnNames);
 			if (!questions.length) continue;                  // nothing worth pulling
 			lessons.push({
 				submissionId: sub.id,
@@ -7111,7 +7158,8 @@ app.post('/api/fll/idea-map/extract', requireFllAuth, requireFllStudent, async (
 		// student has since reworded instead of re-adding the original next to
 		// it. Hashed because the id field is short and submission ids are not.
 		const tag = crypto.createHash('sha1').update(String(sub.id)).digest('hex').slice(0, 8);
-		const ideas = ideasFromBrainstormAnswers(sub.answers, false, questionIds)
+		const columns = req.body.columns && typeof req.body.columns === 'object' ? req.body.columns : null;
+		const ideas = ideasFromBrainstormAnswers(sub.answers, false, questionIds, columns)
 			.map((text, i) => ({ id: 'pull-' + tag + '-' + i, text }));
 		return res.json({ success: true, ideas });
 	} catch (err) {
@@ -7210,7 +7258,8 @@ app.post('/api/fll/coach/idea-map/import', requireFllAuth, requireFllCoach, asyn
 		// lesson does not have the shape the seeding knows about
 		const questionIds = (Array.isArray(req.body.questionIds) ? req.body.questionIds : [])
 			.map((id) => cleanMetaString(id, 120)).filter(Boolean).slice(0, 20);
-		const found = ideasFromBrainstormAnswers(submission.answers, false, questionIds);
+		const columns = req.body.columns && typeof req.body.columns === 'object' ? req.body.columns : null;
+		const found = ideasFromBrainstormAnswers(submission.answers, false, questionIds, columns);
 		if (!found.length) {
 			return res.json({ success: true, added: 0, skipped: 0, message: 'Nothing in that submission reads as a list of ideas.' });
 		}
@@ -7267,26 +7316,46 @@ app.get('/api/fll/coach/idea-map-sources', requireFllAuth, requireFllCoach, asyn
 		const baseOf = (id) => String(id).split('--')[0];
 		const chosen = new Set(settings.ideaMapSources || []);
 		const auto = brainstormTaskBaseIds(tasks, []);
+		const allTasks = Array.isArray(tasks) ? tasks : [];
+
+		// Group by TITLE, not by id. A lesson written by a coach can be minted
+		// with a separate id per student, which listed the same lesson once per
+		// copy and split its submission count across rows that each read zero.
+		const taskById = new Map(allTasks.map((t) => [t.id, t]));
+		const titleOf = (task) => String(task.title || task.id).trim();
+
 		const counts = new Map();
 		for (const sub of (Array.isArray(subs) ? subs : [])) {
-			const base = baseOf(sub.taskId);
-			counts.set(base, (counts.get(base) || 0) + 1);
+			const task = taskById.get(sub.taskId)
+				|| allTasks.find((t) => baseOf(t.id) === baseOf(sub.taskId));
+			const key = task ? titleOf(task) : baseOf(sub.taskId);
+			counts.set(key, (counts.get(key) || 0) + 1);
 		}
-		const byBase = new Map();
-		for (const task of (Array.isArray(tasks) ? tasks : [])) {
+
+		const byTitle = new Map();
+		for (const task of allTasks) {
+			const key = titleOf(task);
 			const base = baseOf(task.id);
-			if (!byBase.has(base)) {
-				byBase.set(base, {
+			let row = byTitle.get(key);
+			if (!row) {
+				row = {
 					id: base,
-					title: task.title || base,
+					ids: [],
+					title: key,
 					category: task.category || '',
-					autoDetected: auto.has(base),
-					chosen: chosen.has(base),
-					submissions: counts.get(base) || 0
-				});
+					autoDetected: false,
+					chosen: false,
+					submissions: counts.get(key) || 0
+				};
+				byTitle.set(key, row);
 			}
+			if (!row.ids.includes(base)) row.ids.push(base);
+			if (auto.has(base)) row.autoDetected = true;
+			if (chosen.has(base)) row.chosen = true;
+			if (!row.category && task.category) row.category = task.category;
 		}
-		const lessons = [...byBase.values()]
+
+		const lessons = [...byTitle.values()]
 			.sort((a, b) => Number(b.autoDetected) - Number(a.autoDetected)
 				|| b.submissions - a.submissions
 				|| String(a.title).localeCompare(String(b.title)));
