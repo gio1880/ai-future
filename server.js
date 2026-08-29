@@ -6627,36 +6627,82 @@ function splitIdeaLines(value) {
 
 function ideaId(prefix, n) { return prefix + '-' + n + '-' + crypto.randomBytes(2).toString('hex'); }
 
+// Which lessons count as brainstorming. Reading only the one canonical Step 1
+// lesson meant a team split across two brainstorm assignments — a coach-made
+// one and Step 1 — showed only half its ideas, and the students who did the
+// other lesson appeared to have done nothing at all. Any Innovation Project
+// lesson whose title says brainstorm is treated as a source.
+function brainstormTaskBaseIds(allTasks) {
+	const ids = new Set([IDEA_MAP_SOURCES.brainstorm]);
+	for (const task of (Array.isArray(allTasks) ? allTasks : [])) {
+		if (!/brainstorm/i.test(String(task.title || ''))) continue;
+		if (task.category && task.category !== 'Innovation Project') continue;
+		ids.add(String(task.id).split('--')[0]);
+	}
+	return ids;
+}
+
+// Pull the idea lists out of a brainstorm submission. The canonical lesson
+// keeps them in q1 (Round 1); a coach-made one can use any field, so anything
+// that reads as a list is taken and the rest left alone.
+function ideasFromBrainstormAnswers(answers, isCanonical) {
+	if (!answers || typeof answers !== 'object') return [];
+	if (isCanonical) return splitIdeaLines(answers.q1 || '');
+	const out = [];
+	for (const [key, value] of Object.entries(answers)) {
+		if (/__(link|photo|cols)$/.test(key)) continue;
+		const text = String(value || '');
+		if (text.trim().startsWith('[')) continue;      // a table answer, not a list
+		const lines = splitIdeaLines(text);
+		if (lines.length >= 2) out.push(...lines);       // one-line answers are prose
+	}
+	return out;
+}
+
 async function seedIdeaMapForTeam(teamId) {
-	const [users, stored, storedDrafts] = await Promise.all([
+	const [users, stored, storedDrafts, storedTasks] = await Promise.all([
 		readFllUsers(),
 		readJsonFile(fllTaskSubmissionsFile, []),
-		readJsonFile(fllTaskDraftsFile, [])
+		readJsonFile(fllTaskDraftsFile, []),
+		readJsonFile(fllTasksFile, [])
 	]);
 	const submissions = Array.isArray(stored) ? stored : [];
 	const drafts = Array.isArray(storedDrafts) ? storedDrafts : [];
 	const baseOf = (id) => String(id).split('--')[0];
+	const brainstormIds = brainstormTaskBaseIds(storedTasks);
 	const teamStudents = users.filter((u) => u.role === 'student' && u.active !== false && u.teamId === teamId);
 	const subFor = (studentId, base) =>
 		submissions.find((s) => s.studentId === studentId && baseOf(s.taskId) === base);
 
 	const members = teamStudents.map((student) => {
-		const sub = subFor(student.id, IDEA_MAP_SOURCES.brainstorm);
-		const raw = sub && sub.answers ? (sub.answers.q1 || '') : '';
+		const mySubs = submissions.filter((s) =>
+			s.studentId === student.id && brainstormIds.has(baseOf(s.taskId)));
 		// An empty column is the single most confusing thing on this map. Say
-		// whether the person has turned Step 1 in, started it, or not opened
-		// it — otherwise the map just looks broken. Only the fact that a draft
-		// exists is used; its contents stay private until they turn it in.
+		// whether the person has turned a brainstorm in, started one, or not
+		// opened it — otherwise the map just looks broken. Only the fact that a
+		// draft exists is used; its contents stay private until they turn it in.
 		const hasDraft = drafts.some((d) =>
-			d.studentId === student.id && baseOf(d.taskId) === IDEA_MAP_SOURCES.brainstorm
+			d.studentId === student.id && brainstormIds.has(baseOf(d.taskId))
 			&& Object.values(d.answers || {}).some((v) => String(v || '').trim()));
+
+		const seen = new Set();
+		const ideas = [];
+		for (const sub of mySubs) {
+			const base = baseOf(sub.taskId);
+			for (const text of ideasFromBrainstormAnswers(sub.answers, base === IDEA_MAP_SOURCES.brainstorm)) {
+				const key = text.toLowerCase();
+				if (seen.has(key)) continue;             // the same idea in both lessons
+				seen.add(key);
+				// stable id keyed to its source, so a refresh recognises an idea
+				// even after a student rewords it
+				ideas.push({ id: 'seed-' + student.id + '-' + base + '-' + ideas.length, text });
+			}
+		}
 		return {
 			studentId: student.id,
 			name: student.name,
-			step1: sub ? 'turned-in' : hasDraft ? 'started' : 'not-started',
-			// stable id: a refresh must recognise an idea even after a student
-			// rewords it, otherwise the original comes back as a duplicate
-			ideas: splitIdeaLines(raw).map((text, i) => ({ id: 'seed-' + student.id + '-' + i, text }))
+			step1: mySubs.length ? 'turned-in' : hasDraft ? 'started' : 'not-started',
+			ideas: ideas.slice(0, 20)
 		};
 	});
 

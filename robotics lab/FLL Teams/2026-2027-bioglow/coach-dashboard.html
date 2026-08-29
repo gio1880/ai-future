@@ -1059,9 +1059,9 @@
                 ${mem.ideas.length
                   ? '<ul class="im-c-list">' + mem.ideas.map((i) => '<li>' + escapeHtml(i.text) + '</li>').join('') + '</ul>'
                   : '<div class="im-c-none">' + (
-                      mem.step1 === 'turned-in' ? 'turned Step 1 in, but listed nothing in Round 1'
-                      : mem.step1 === 'started' ? 'started Step 1 — not turned in yet'
-                      : 'has not turned in Step 1') + '</div>'}
+                      mem.step1 === 'turned-in' ? 'turned a brainstorm in, but listed no ideas in it'
+                      : mem.step1 === 'started' ? 'started a brainstorm — not turned in yet'
+                      : 'has not turned in a brainstorm') + '</div>'}
               </div>`).join('') : '<div class="im-c-none">no members</div>'}
 
             <div class="im-c-sec">The team's best five</div>

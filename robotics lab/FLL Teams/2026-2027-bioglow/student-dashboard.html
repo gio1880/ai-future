@@ -6443,9 +6443,9 @@
     }
 
     function imWhyEmpty(mem) {
-      if (mem.step1 === 'turned-in') return 'Turned Step 1 in, but listed no problems in Round 1.';
-      if (mem.step1 === 'started') return 'Started Step 1 but has not turned it in yet.';
-      return 'Has not turned in Step 1 yet.';
+      if (mem.step1 === 'turned-in') return 'Turned a brainstorm in, but did not list any ideas in it.';
+      if (mem.step1 === 'started') return 'Started a brainstorm but has not turned it in yet.';
+      return 'Has not turned in a brainstorm yet.';
     }
 
     function imField(value, ph, onInput) {
@@ -6471,7 +6471,7 @@
           ${mem.ideas.length ? '' : `<div class="im-why">${imWhyEmpty(mem)}</div>`}
           <button class="im-add" onclick="addIdea(${mi})">＋ Add idea</button>
         </div>`).join('')
-        : '<div class="im-empty">Nobody has turned in Step 1 yet. Once your team brainstorms, their ideas appear here.</div>';
+        : '<div class="im-empty">Nobody has turned in a brainstorm yet. Once your team does, their ideas appear here.</div>';
 
       // the map fills itself from turned-in work, so an empty map almost always
       // means Step 1 is still sitting unsubmitted — say so instead of showing
@@ -6480,7 +6480,7 @@
       const nothingYet = totalIdeas === 0 && m.members.length;
       const step1Note = !waiting.length ? '' : `
         <div class="im-note">
-          ${nothingYet ? '<strong>Nothing here yet — and that is expected.</strong> This map fills in from <em>turned-in</em> Step 1 work. ' : ''}
+          ${nothingYet ? '<strong>Nothing here yet — and that is expected.</strong> This map fills in from <em>turned-in</em> brainstorm work. ' : ''}
           Still waiting on ${waiting.map((x) => escapeHtml(x.name) + (x.step1 === 'started' ? ' (started, not turned in)' : '')).join(', ')}.
           You can always type ideas straight in with <strong>＋ Add idea</strong>.
         </div>`;
