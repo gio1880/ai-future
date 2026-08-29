@@ -6744,6 +6744,20 @@ function ideaId(prefix, n) { return prefix + '-' + n + '-' + crypto.randomBytes(
 // other lesson appeared to have done nothing at all. Any Innovation Project
 // lesson whose title says brainstorm is treated as a source.
 const IDEA_MAP_TITLE_HINT = /brainstorm|idea|topic|problems? to solve/i;
+// The narrowing and problem-choosing lessons had the same blind spot the
+// brainstorm one did: they matched a single built-in id, so a coach-written
+// version of either was invisible and those tiers stayed empty however much
+// work a team turned in.
+const IDEA_MAP_NARROW_HINT = /narrow|best\s*(five|5)|top[-\s]*(five|5)|shortlist/i;
+const IDEA_MAP_CHOSEN_HINT = /pick your problem|choose your problem|problem statement|define it/i;
+
+function tasksMatchingTitle(allTasks, hint) {
+	const ids = new Set();
+	for (const task of (Array.isArray(allTasks) ? allTasks : [])) {
+		if (hint.test(String(task.title || ''))) ids.add(String(task.id).split('--')[0]);
+	}
+	return ids;
+}
 
 function brainstormTaskBaseIds(allTasks, explicitSources = []) {
 	const ids = new Set([IDEA_MAP_SOURCES.brainstorm]);
@@ -6769,7 +6783,12 @@ function brainstormTaskBaseIds(allTasks, explicitSources = []) {
 	// coach-written brainstorm lesson can be filed anywhere, and excluding it
 	// on category silently dropped every student who did that lesson.
 	for (const task of tasks) {
-		if (!IDEA_MAP_TITLE_HINT.test(String(task.title || ''))) continue;
+		const title = String(task.title || '');
+		if (!IDEA_MAP_TITLE_HINT.test(title)) continue;
+		// "Narrow the Brainstorm to the Best Five" reads as a brainstorm by
+		// title, but its answers are the narrowed five — they belong in the
+		// shortlist tier, not mixed into everyone's raw ideas.
+		if (IDEA_MAP_NARROW_HINT.test(title)) continue;
 		ids.add(String(task.id).split('--')[0]);
 	}
 	return ids;
@@ -6872,6 +6891,15 @@ async function seedIdeaMapForTeam(teamId) {
 	const subFor = (studentId, base) =>
 		submissions.find((s) => s.studentId === studentId && baseOf(s.taskId) === base);
 
+	// lessons whose answers belong to a later tier, so the fallback does not
+	// drag the narrowed five or the chosen problem back into raw ideas
+	const laterStageIds = new Set([
+		...tasksMatchingTitle(storedTasks, IDEA_MAP_NARROW_HINT),
+		...tasksMatchingTitle(storedTasks, IDEA_MAP_CHOSEN_HINT),
+		IDEA_MAP_SOURCES.narrow,
+		IDEA_MAP_SOURCES.chosen
+	]);
+
 	// title -> lesson, so a fallback can tell innovation work from robot work
 	const taskByBase = new Map();
 	for (const task of (Array.isArray(storedTasks) ? storedTasks : [])) {
@@ -6891,7 +6919,12 @@ async function seedIdeaMapForTeam(teamId) {
 		if (!mySubs.length) {
 			const innovation = submissions.filter((s) => {
 				if (s.studentId !== student.id) return false;
-				const task = taskByBase.get(baseOf(s.taskId));
+				// the narrowed five and the chosen problem have their own tiers;
+				// sweeping them in here put the team's final five back into
+				// everyone's raw ideas, which is the opposite of the story
+				const base = baseOf(s.taskId);
+				if (laterStageIds.has(base)) return false;
+				const task = taskByBase.get(base);
 				return task && task.category === 'Innovation Project';
 			});
 			if (innovation.length) { mySubs = innovation; fromFallback = true; }
@@ -6942,19 +6975,41 @@ async function seedIdeaMapForTeam(teamId) {
 		};
 	});
 
+	// The team's best five. Read from any narrowing lesson the team did, not
+	// just the built-in one, and out of a table as readily as a typed list —
+	// most teams record their five in a table with the reasoning beside it.
+	const narrowIds = tasksMatchingTitle(storedTasks, IDEA_MAP_NARROW_HINT);
+	narrowIds.add(IDEA_MAP_SOURCES.narrow);
 	let shortlist = [];
 	for (const student of teamStudents) {
-		const sub = subFor(student.id, IDEA_MAP_SOURCES.narrow);
-		if (!sub || !sub.answers) continue;
-		const picks = splitIdeaLines(sub.answers.q1 || '');
-		if (!picks.length) continue;
-		let owners = [];
-		try {
-			const rows = JSON.parse(sub.answers['narrow-table'] || '[]');
-			if (Array.isArray(rows)) owners = rows.map((r) => (Array.isArray(r) ? String(r[1] || '').trim() : ''));
-		} catch (e) { owners = []; }
-		shortlist = picks.map((text, i) => ({ id: 'seed-pick-' + i, text, owner: owners[i] || '' }));
-		break;
+		const subs = submissions.filter((x) =>
+			x.studentId === student.id && narrowIds.has(baseOf(x.taskId)));
+		for (const sub of subs) {
+			if (!sub.answers) continue;
+			// Take the first answer that actually reads as a list. The built-in
+			// lesson keeps the five in q1; a coach-written one puts prose there
+			// ("we knew those were the biggest problems") and the five in a
+			// table, so preferring q1 outright imported the explanation.
+			let picks = [];
+			for (const key of ['q1', ...Object.keys(sub.answers)]) {
+				if (/__(link|photo|cols)$/.test(key)) continue;
+				const lines = ideaLinesFromAnswer(sub.answers[key]);
+				if (lines.length >= 2) { picks = lines; break; }
+			}
+			if (!picks.length) continue;
+			let owners = [];
+			try {
+				const rows = JSON.parse(sub.answers['narrow-table'] || '[]');
+				if (Array.isArray(rows)) owners = rows.map((r) => (Array.isArray(r) ? String(r[1] || '').trim() : ''));
+			} catch (e) { owners = []; }
+			shortlist = picks.slice(0, 8).map((text, i) => ({
+				id: 'seed-pick-' + i,
+				text,
+				owner: owners[i] || student.name || ''
+			}));
+			break;
+		}
+		if (shortlist.length) break;
 	}
 
 	// Step 1 Round 2 asks for solution ideas. Mixing those into the problems
@@ -6977,11 +7032,32 @@ async function seedIdeaMapForTeam(teamId) {
 		}
 	}
 
+	// The chosen problem, from any lesson that asks a team to pick or state one.
+	const chosenIds = tasksMatchingTitle(storedTasks, IDEA_MAP_CHOSEN_HINT);
+	chosenIds.add(IDEA_MAP_SOURCES.chosen);
 	let chosen = { text: '', note: '' };
 	for (const student of teamStudents) {
-		const sub = subFor(student.id, IDEA_MAP_SOURCES.chosen);
-		const statement = sub && sub.answers ? String(sub.answers.q1 || '').trim() : '';
-		if (statement) { chosen = { text: statement.split('\n')[0].slice(0, 160), note: '' }; break; }
+		const subs = submissions.filter((x) =>
+			x.studentId === student.id && chosenIds.has(baseOf(x.taskId)));
+		for (const sub of subs) {
+			if (!sub.answers) continue;
+			// a problem statement is prose, so take the first written answer
+			// rather than anything that reads as a list
+			let statement = String(sub.answers.q1 || '').trim();
+			if (!statement) {
+				for (const [key, value] of Object.entries(sub.answers)) {
+					if (/__(link|photo|cols)$/.test(key)) continue;
+					const text = String(value || '').trim();
+					if (!text || text.startsWith('[')) continue;
+					statement = text;
+					break;
+				}
+			}
+			if (!statement) continue;
+			chosen = { text: statement.split('\n')[0].slice(0, 160), note: '' };
+			break;
+		}
+		if (chosen.text) break;
 	}
 
 	return upgradeIdeaMap({ teamId, members, shortlist, chosen, solutions, seededAt: new Date().toISOString(), updatedBy: '', updatedAt: '' });
