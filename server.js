@@ -6661,8 +6661,20 @@ function brainstormTaskBaseIds(allTasks, explicitSources = []) {
 // Pull the idea lists out of a brainstorm submission. The canonical lesson
 // keeps them in q1 (Round 1); a coach-made one can use any field, so anything
 // that reads as a list is taken and the rest left alone.
-function ideasFromBrainstormAnswers(answers, isCanonical) {
+function ideasFromBrainstormAnswers(answers, isCanonical, onlyQuestionIds = null) {
 	if (!answers || typeof answers !== 'object') return [];
+	// An explicit question list wins: importing Step 1 should be able to bring
+	// across Round 1 alone, or Round 1 and Round 2, as the coach decides.
+	if (Array.isArray(onlyQuestionIds) && onlyQuestionIds.length) {
+		const wanted = new Set(onlyQuestionIds);
+		const picked = [];
+		for (const key of wanted) {
+			const text = String(answers[key] || '');
+			if (text.trim().startsWith('[')) continue;
+			picked.push(...splitIdeaLines(text));
+		}
+		return picked;
+	}
 	if (isCanonical) return splitIdeaLines(answers.q1 || '');
 	const out = [];
 	for (const [key, value] of Object.entries(answers)) {
@@ -6931,7 +6943,9 @@ app.post('/api/fll/coach/idea-map/import', requireFllAuth, requireFllCoach, asyn
 
 		// read it the generic way — a coach reaching for this button means the
 		// lesson does not have the shape the seeding knows about
-		const found = ideasFromBrainstormAnswers(submission.answers, false);
+		const questionIds = (Array.isArray(req.body.questionIds) ? req.body.questionIds : [])
+			.map((id) => cleanMetaString(id, 120)).filter(Boolean).slice(0, 20);
+		const found = ideasFromBrainstormAnswers(submission.answers, false, questionIds);
 		if (!found.length) {
 			return res.json({ success: true, added: 0, skipped: 0, message: 'Nothing in that submission reads as a list of ideas.' });
 		}
