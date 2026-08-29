@@ -5407,6 +5407,12 @@ app.get(['/fll-hub/simulator', '/fll-hub/simulator/'], requireFllAuth, requireFl
 	res.sendFile(path.join(fllHubDir, 'simulator.html'));
 });
 
+// Gear calculator. Not gated behind the simulator switch — it is a reference
+// tool, useful to a team whether or not the simulator is on.
+app.get(['/fll-hub/gears', '/fll-hub/gears/'], requireFllAuth, (req, res) => {
+	res.sendFile(path.join(fllHubDir, 'gear-calculator.html'));
+});
+
 // Mission model building instructions. These are LEGO's copyrighted PDFs, so
 // they sit behind the hub login rather than being served publicly. The model
 // number is the only thing taken from the URL, which keeps the filename's

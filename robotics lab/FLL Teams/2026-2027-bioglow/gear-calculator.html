@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gear Calculator | AI Future FLL</title>
+<link rel="stylesheet" href="/assets/css/theme.css">
+<link rel="stylesheet" href="/assets/css/fll-premium.css">
+<style>
+  body { margin:0; background:var(--s-page); color:var(--t-body);
+    font-family:system-ui,-apple-system,"Segoe UI",sans-serif; }
+  .wrap { max-width:1020px; margin:0 auto; padding:22px 18px 60px; }
+
+  .top { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:18px; }
+  .back { text-decoration:none; font-size:13px; font-weight:700; color:#1a73e8;
+    padding:8px 13px; border-radius:9px; border:1.5px solid var(--s-line-2); background:var(--s-card); }
+  .back:hover { border-color:#1a73e8; }
+  h1 { margin:0; font-size:24px; color:var(--t-strong); }
+  .sub { font-size:14px; color:var(--t-muted); line-height:1.55; margin:6px 0 20px; }
+
+  .card { background:var(--s-card); border:1px solid var(--s-line-2); border-radius:16px;
+    padding:18px 20px; margin-bottom:16px; }
+  .card h2 { margin:0 0 4px; font-size:15px; color:var(--t-strong); }
+  .card p.hint { margin:0 0 14px; font-size:12.5px; color:var(--t-muted); line-height:1.5; }
+
+  /* motor picker */
+  .motors { display:flex; gap:10px; flex-wrap:wrap; }
+  .motor { flex:1; min-width:210px; text-align:left; cursor:pointer; padding:13px 15px;
+    border:2px solid var(--s-line-2); border-radius:13px; background:var(--s-card); font-family:inherit; }
+  .motor:hover { border-color:#1a73e8; }
+  .motor.on { border-color:#1a73e8; background:var(--tint-blue); }
+  .motor-name { font-size:14px; font-weight:800; color:var(--t-strong); }
+  .motor-spec { font-size:12px; color:var(--t-muted); margin-top:4px; line-height:1.5; }
+
+  /* gear stages */
+  .stage { display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:12px 0;
+    border-bottom:1px solid var(--s-line); }
+  .stage:last-of-type { border-bottom:none; }
+  .stage-n { font-size:11px; font-weight:800; color:var(--t-faint); width:58px; flex:none;
+    text-transform:uppercase; letter-spacing:.05em; }
+  .pick { display:flex; flex-direction:column; gap:3px; }
+  .pick label { font-size:10.5px; font-weight:750; color:var(--t-faint);
+    text-transform:uppercase; letter-spacing:.05em; }
+  select { padding:9px 11px; border:1.5px solid var(--s-line-2); border-radius:9px;
+    background:var(--s-card); color:var(--t-strong); font-size:14px; font-family:inherit; min-width:140px; }
+  select:focus { outline:none; border-color:#1a73e8; }
+  .arrow { font-size:17px; color:var(--t-faint); padding-top:16px; }
+  .stage-note { font-size:12px; font-weight:700; padding-top:16px; margin-left:auto; white-space:nowrap; }
+  .up { color:#8a5a00; } .down { color:#146c43; } .same { color:var(--t-faint); }
+  .del { border:none !important; background:transparent !important; color:var(--t-faint) !important;
+    font-size:15px; cursor:pointer; padding:6px 9px; margin-top:12px; box-shadow:none !important; }
+  .del:hover { color:#d93025 !important; }
+  .add { border:1.5px dashed var(--s-line-2) !important; background:transparent !important;
+    color:var(--t-muted) !important; border-radius:50px !important; padding:9px 16px !important;
+    font-size:13px; font-weight:700; cursor:pointer; margin-top:12px; box-shadow:none !important; }
+  .add:hover { border-color:#1a73e8 !important; color:#1a73e8 !important; }
+
+  /* result */
+  .result { background:linear-gradient(135deg,#0d2545,#123a63); color:#fff; border:none; }
+  .ratio { font-size:40px; font-weight:850; letter-spacing:-.5px; line-height:1.1; }
+  .verdict { font-size:16px; font-weight:700; margin-top:6px; }
+  .verdict.sp { color:#ffd479; } .verdict.st { color:#8ff0b8; } .verdict.eq { color:#cbd8ea; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-top:18px; }
+  .cell { background:rgba(255,255,255,.09); border-radius:12px; padding:12px 14px; }
+  .cell-l { font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.06em;
+    color:#9fc0e8; margin-bottom:4px; }
+  .cell-v { font-size:19px; font-weight:800; }
+  .cell-s { font-size:11.5px; color:#b9cde6; margin-top:2px; }
+  .why { margin-top:16px; font-size:13px; line-height:1.6; color:#cddcef;
+    border-top:1px solid rgba(255,255,255,.16); padding-top:14px; }
+
+  .rules { font-size:13px; line-height:1.7; color:var(--t-body); margin:0; padding-left:20px; }
+  .rules strong { color:var(--t-strong); }
+  .foot { font-size:11.5px; color:var(--t-faint); line-height:1.55; margin-top:6px; }
+
+  @media (pointer: coarse) {
+    select { font-size:16px; min-height:44px; }
+    .del, .add { min-height:44px; }
+  }
+  @media (max-width:560px) {
+    .stage-note { margin-left:0; padding-top:4px; width:100%; }
+    .ratio { font-size:32px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="back" href="/fll-hub">← Back to the hub</a>
+    <h1>⚙️ Gear Calculator</h1>
+  </div>
+  <p class="sub">Work out what a gear train does to your motor <strong>before you build it</strong>. Pick your motor, add the gears in the order they mesh, and see whether you end up faster or stronger — and by how much.</p>
+
+  <div class="card">
+    <h2>1. Which motor?</h2>
+    <p class="hint">The two SPIKE Prime motors your team has.</p>
+    <div class="motors" id="motors"></div>
+  </div>
+
+  <div class="card">
+    <h2>2. Your gear train</h2>
+    <p class="hint">One row per pair of meshing gears. The <strong>driver</strong> is the gear the power comes from, the <strong>follower</strong> is the one it turns. If you have a second pair after that, add another stage.</p>
+    <div id="stages"></div>
+    <button class="add" onclick="addStage()">＋ Add another stage</button>
+  </div>
+
+  <div class="card result" id="result"></div>
+
+  <div class="card">
+    <h2>How to read this</h2>
+    <ul class="rules">
+      <li><strong>Small gear driving a big gear</strong> = geared <strong>down</strong>. Slower, stronger. Use it for lifting and pushing.</li>
+      <li><strong>Big gear driving a small gear</strong> = geared <strong>up</strong>. Faster, weaker. Use it for spinning and sweeping.</li>
+      <li>You never get both. Every gear train is you choosing one.</li>
+      <li>Each extra pair of gears costs a little to friction, so use the fewest that get you the ratio you need.</li>
+    </ul>
+    <p class="foot" id="specnote"></p>
+  </div>
+</div>
+
+<script>
+  // LEGO Technic gears, by tooth count. These are the ones in the SPIKE Prime
+  // set and the usual expansion pieces.
+  const GEARS = [
+    { t: 8,  name: '8 tooth' },
+    { t: 12, name: '12 tooth (double bevel)' },
+    { t: 16, name: '16 tooth' },
+    { t: 20, name: '20 tooth (double bevel)' },
+    { t: 24, name: '24 tooth' },
+    { t: 28, name: '28 tooth (double bevel)' },
+    { t: 36, name: '36 tooth (double bevel)' },
+    { t: 40, name: '40 tooth' }
+  ];
+
+  // Approximate published figures for the two SPIKE Prime angular motors. They
+  // are here to turn a ratio into numbers a student can picture; treat them as
+  // ballpark, not a datasheet.
+  const MOTORS = {
+    medium: { key: 'medium', name: 'Medium Angular Motor', part: '45603',
+              rpm: 135, stall: 0.25 },
+    large:  { key: 'large',  name: 'Large Angular Motor',  part: '45602',
+              rpm: 135, stall: 0.40 }
+  };
+
+  let motor = 'large';
+  let stages = [{ driver: 8, follower: 24 }];
+
+  function renderMotors() {
+    document.getElementById('motors').innerHTML = Object.values(MOTORS).map(m => `
+      <button class="motor ${motor === m.key ? 'on' : ''}" onclick="pickMotor('${m.key}')">
+        <div class="motor-name">${m.name}</div>
+        <div class="motor-spec">Part ${m.part} · about ${m.rpm} rpm with nothing attached · about ${m.stall} N·m at stall</div>
+      </button>`).join('');
+  }
+
+  function pickMotor(k) { motor = k; renderMotors(); renderResult(); }
+
+  function gearOptions(sel) {
+    return GEARS.map(g => `<option value="${g.t}" ${g.t === sel ? 'selected' : ''}>${g.name}</option>`).join('');
+  }
+
+  function stageNote(s) {
+    const r = s.follower / s.driver;
+    if (r > 1) return `<span class="stage-note down">${round(r)}× stronger</span>`;
+    if (r < 1) return `<span class="stage-note up">${round(1 / r)}× faster</span>`;
+    return '<span class="stage-note same">no change</span>';
+  }
+
+  function renderStages() {
+    document.getElementById('stages').innerHTML = stages.map((s, i) => `
+      <div class="stage">
+        <span class="stage-n">Stage ${i + 1}</span>
+        <div class="pick">
+          <label>Driver (power in)</label>
+          <select onchange="setGear(${i},'driver',this.value)">${gearOptions(s.driver)}</select>
+        </div>
+        <span class="arrow">→</span>
+        <div class="pick">
+          <label>Follower (turned by it)</label>
+          <select onchange="setGear(${i},'follower',this.value)">${gearOptions(s.follower)}</select>
+        </div>
+        ${stages.length > 1 ? `<button class="del" onclick="removeStage(${i})" aria-label="Remove stage">✕</button>` : ''}
+        ${stageNote(s)}
+      </div>`).join('');
+  }
+
+  function setGear(i, which, value) { stages[i][which] = Number(value); render(); }
+  function addStage() { if (stages.length < 5) stages.push({ driver: 8, follower: 24 }); render(); }
+  function removeStage(i) { stages.splice(i, 1); render(); }
+
+  function round(n) { return Math.round(n * 100) / 100; }
+
+  // A ratio like 3 is nicer read as 1:3. Reduce it so the numbers stay small.
+  function gcd(a, b) { return b ? gcd(b, a % b) : a; }
+  function asFraction() {
+    let driven = 1, driving = 1;
+    for (const s of stages) { driven *= s.follower; driving *= s.driver; }
+    const d = gcd(driven, driving);
+    return { driving: driving / d, driven: driven / d, ratio: driven / driving };
+  }
+
+  function renderResult() {
+    const { driving, driven, ratio } = asFraction();
+    const m = MOTORS[motor];
+    const outRpm = m.rpm / ratio;
+    const outTorque = m.stall * ratio;
+
+    let verdict, cls, why;
+    if (ratio > 1) {
+      verdict = `${round(ratio)}× stronger, ${round(ratio)}× slower`;
+      cls = 'st';
+      why = 'You have geared <strong>down</strong>. Good for lifting, pushing a stiff mission model, or anything that stalls.';
+    } else if (ratio < 1) {
+      const up = 1 / ratio;
+      verdict = `${round(up)}× faster, ${round(up)}× weaker`;
+      cls = 'sp';
+      why = 'You have geared <strong>up</strong>. Good for spinning and fast sweeps — but it will stall more easily under load.';
+    } else {
+      verdict = 'Same speed, same strength';
+      cls = 'eq';
+      why = 'Driver and follower have the same tooth count, so this train only changes direction and position, not speed or force.';
+    }
+
+    document.getElementById('result').innerHTML = `
+      <div class="ratio">${driving} : ${driven}</div>
+      <div class="verdict ${cls}">${verdict}</div>
+      <div class="grid">
+        <div class="cell">
+          <div class="cell-l">Output speed</div>
+          <div class="cell-v">${Math.round(outRpm)} rpm</div>
+          <div class="cell-s">${Math.round(outRpm * 6)}°/s · motor alone is ${m.rpm} rpm</div>
+        </div>
+        <div class="cell">
+          <div class="cell-l">Turning force</div>
+          <div class="cell-v">${round(outTorque)} N·m</div>
+          <div class="cell-s">motor alone is about ${m.stall} N·m</div>
+        </div>
+        <div class="cell">
+          <div class="cell-l">Motor turns</div>
+          <div class="cell-v">${round(ratio)}×</div>
+          <div class="cell-s">for every 1 turn of the output</div>
+        </div>
+      </div>
+      <div class="why">${why}</div>`;
+
+    document.getElementById('specnote').textContent =
+      `Speeds and forces use approximate published figures for the ${m.name} (${m.rpm} rpm, ${m.stall} N·m at stall) ` +
+      'and ignore friction, so treat them as a guide for comparing options rather than a measurement. The ratio itself is exact.';
+  }
+
+  function render() { renderStages(); renderResult(); }
+
+  renderMotors();
+  render();
+</script>
+</body>
+</html>
