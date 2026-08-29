@@ -6747,15 +6747,28 @@ const IDEA_MAP_TITLE_HINT = /brainstorm|idea|topic|problems? to solve/i;
 
 function brainstormTaskBaseIds(allTasks, explicitSources = []) {
 	const ids = new Set([IDEA_MAP_SOURCES.brainstorm]);
+	const tasks = Array.isArray(allTasks) ? allTasks : [];
 	// An explicit list from the coach wins outright — no guessing at all.
 	if (explicitSources.length) {
 		for (const id of explicitSources) ids.add(String(id).split('--')[0]);
+		// A tick means "this lesson", not "this copy of it". A lesson written by
+		// a coach can carry a separate id per student, so ticking it saved one
+		// id and the map then read one student's work and ignored everyone
+		// else's. Expand to every copy that shares a chosen lesson's title.
+		const chosenTitles = new Set();
+		for (const task of tasks) {
+			if (ids.has(String(task.id).split('--')[0])) chosenTitles.add(String(task.title || '').trim());
+		}
+		chosenTitles.delete('');
+		for (const task of tasks) {
+			if (chosenTitles.has(String(task.title || '').trim())) ids.add(String(task.id).split('--')[0]);
+		}
 		return ids;
 	}
 	// Otherwise match on the title. Category is deliberately NOT checked: a
 	// coach-written brainstorm lesson can be filed anywhere, and excluding it
 	// on category silently dropped every student who did that lesson.
-	for (const task of (Array.isArray(allTasks) ? allTasks : [])) {
+	for (const task of tasks) {
 		if (!IDEA_MAP_TITLE_HINT.test(String(task.title || ''))) continue;
 		ids.add(String(task.id).split('--')[0]);
 	}
