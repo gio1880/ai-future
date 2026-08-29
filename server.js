@@ -3032,8 +3032,19 @@ async function syncMasterStudentHubAccess(student, roster = null) {
 		readJsonFile(path.join(fllHubDataDir, 'teams.json'), [])
 	]);
 	const validTeamIds = new Set((Array.isArray(teams) ? teams : []).map((team) => team.id));
-	const requestedTeamId = validTeamIds.has(student.fllTeamId) ? student.fllTeamId : null;
 	let fllAccount = findStudentAccount(fllUsers, student, 'fllUserId');
+
+	// The roster may put a student ON a team; it must never silently take them
+	// off one. A team id that does not resolve — the team exists only on the
+	// roster and not in the hub yet, or an edit submitted a blank team — used
+	// to null the account's teamId, and a student with no team cannot log in
+	// at all. That failed silently, so the student simply found no work.
+	// Keep whatever working team the account already has, and remember the
+	// unresolved id so creating the team later can adopt them.
+	const resolvedTeamId = validTeamIds.has(student.fllTeamId) ? student.fllTeamId : null;
+	const heldTeamId = fllAccount && validTeamIds.has(fllAccount.teamId) ? fllAccount.teamId : null;
+	const requestedTeamId = resolvedTeamId || heldTeamId;
+	const pendingTeamId = !resolvedTeamId ? cleanMetaString(student.fllTeamId || '', 120) : '';
 
 	if (access.has('fll-hub')) {
 		if (!fllAccount) {
@@ -3056,7 +3067,24 @@ async function syncMasterStudentHubAccess(student, roster = null) {
 		fllAccount.teamId = requestedTeamId;
 		fllAccount.active = true;
 		student.fllUserId = fllAccount.id;
-		student.fllTeamId = requestedTeamId || '';
+		// keep the unresolved id on the roster so the team, once created, finds them
+		student.fllTeamId = requestedTeamId || pendingTeamId;
+
+		// Class-code login checks the roster enrollment, not just the team on
+		// the account. An edit that blanked the team stripped the enrollment
+		// too, so keeping the team alone still left the student unable to log
+		// in. Put the enrollment back to match the team we kept.
+		if (requestedTeamId && Array.isArray(roster?.classes)) {
+			const classId = `fll-${requestedTeamId}`;
+			const classExists = roster.classes.some((item) => item.id === classId);
+			const enrolled = (Array.isArray(student.enrollments) ? student.enrollments : [])
+				.some((item) => item.classId === classId);
+			if (classExists && !enrolled) {
+				student.enrollments = (Array.isArray(student.enrollments) ? student.enrollments : [])
+					.filter((item) => !String(item.classId || '').startsWith('fll-team-'));
+				student.enrollments.push({ classId, weeks: [] });
+			}
+		}
 	} else if (fllAccount) {
 		fllAccount.active = false;
 		fllAccount.teamId = null;
@@ -5783,7 +5811,26 @@ app.post('/api/fll/coach/teams', requireFllAuth, requireFllCoach, async (req, re
 			rosterForSync.updatedAt = new Date().toISOString();
 			await writeMasterRoster(rosterForSync);
 		}
-		return res.status(201).json({ success: true, team, classCode: team.classCode, addedStudents });
+
+		// Students already put on this team from the master roster have been
+		// waiting for it to exist in the hub. Until now nothing ever came back
+		// for them: their account was left with no team, so they could not log
+		// in, and creating the team did not change that.
+		const adoptedStudents = [];
+		const rosterForAdopt = normalizeMasterRoster(await readMasterRoster());
+		for (const student of rosterForAdopt.students) {
+			if (student.active === false || addedStudents.includes(student.id)) continue;
+			if (inferMasterFllTeamId(student) !== id) continue;
+			setMasterStudentFllTeamEnrollment(student, id, rosterForAdopt);
+			await syncMasterStudentHubAccess(student, rosterForAdopt);
+			adoptedStudents.push(student.name || student.id);
+		}
+		if (adoptedStudents.length) {
+			rosterForAdopt.updatedAt = new Date().toISOString();
+			await writeMasterRoster(rosterForAdopt);
+		}
+
+		return res.status(201).json({ success: true, team, classCode: team.classCode, addedStudents, adoptedStudents });
 	} catch (err) {
 		console.error('FLL coach create team error:', err);
 		return res.status(500).json({ success: false, message: 'Server error creating team' });
@@ -6183,7 +6230,16 @@ async function buildFllLoginStatus() {
 				|| String(s.portalUsername || '').toLowerCase() === String(user.username || '').toLowerCase());
 
 			let problem = '';
-			if (!user.teamId)              problem = 'No team — students log in with a team class code.';
+			if (!user.teamId) {
+				// naming the team they were meant to be on is the difference
+				// between a fixable message and a mystery
+				const wanted = rosterStudent ? inferMasterFllTeamId(rosterStudent) : '';
+				problem = wanted && !teamById.has(wanted)
+					? `Their team (${wanted}) is on the master roster but has not been created in the hub yet.`
+					: wanted
+						? 'No team on their hub account, but the roster says they belong to one — press Fix broken logins.'
+						: 'No team — students log in with a team class code.';
+			}
 			else if (!team)                problem = 'Their team no longer exists.';
 			else if (!classItem)           problem = 'That team has no class yet.';
 			else if (!classCode)           problem = 'That team has no class code yet.';
@@ -6235,6 +6291,28 @@ app.post('/api/fll/coach/login-status/repair', requireFllAuth, requireFllCoach, 
 		]);
 		const before = await buildFllLoginStatus();
 		const ensured = ensureFllTeamClasses(teams, masterRoster);
+
+		// Students with no team were the ones this could never fix: the link
+		// pass below skips them, so a student stranded by a roster edit stayed
+		// stranded. If the roster still says which team they belong to and
+		// that team exists, put them back on it.
+		const validTeamIds = new Set((Array.isArray(ensured.teams) ? ensured.teams : []).map((t) => t.id));
+		const reattached = [];
+		for (const user of users) {
+			if (user.role !== 'student' || user.active === false || user.teamId) continue;
+			const rosterStudent = ensured.roster.students.find((st) =>
+				st.fllUserId === user.id
+				|| String(st.portalUsername || '').toLowerCase() === String(user.username || '').toLowerCase());
+			if (!rosterStudent) continue;
+			const wantedTeamId = inferMasterFllTeamId(rosterStudent);
+			if (!wantedTeamId || !validTeamIds.has(wantedTeamId)) continue;
+			user.teamId = wantedTeamId;
+			setMasterStudentFllTeamEnrollment(rosterStudent, wantedTeamId, ensured.roster);
+			await syncMasterStudentHubAccess(rosterStudent, ensured.roster);
+			reattached.push(user.name || user.username);
+		}
+		if (reattached.length) await writeJsonFile(fllUsersFile, users);
+
 		const linkable = users
 			.filter((u) => u.role === 'student' && u.active !== false && u.teamId && u.username)
 			.map((u) => ({ id: u.id, name: u.name, username: u.username, teamId: u.teamId }));
@@ -6247,6 +6325,7 @@ app.post('/api/fll/coach/login-status/repair', requireFllAuth, requireFllCoach, 
 		return res.json({
 			success: true,
 			fixed: before.filter((s) => !s.ready).length - after.filter((s) => !s.ready).length,
+			reattached,
 			stillBroken: after.filter((s) => !s.ready),
 			students: after
 		});

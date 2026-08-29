@@ -1174,6 +1174,10 @@
         msg.textContent = result.fixed
           ? `Fixed ${result.fixed} student login${result.fixed !== 1 ? 's' : ''}.`
           : 'Nothing needed fixing.';
+        // name them — "put back on their team" is the fix coaches most want to see
+        if ((result.reattached || []).length) {
+          msg.textContent += ` Put back on their team: ${result.reattached.join(', ')}.`;
+        }
         if (result.stillBroken.length) {
           msg.textContent += ` ${result.stillBroken.length} still need a team — assign one and they will work.`;
           msg.className = 'form-msg error';
