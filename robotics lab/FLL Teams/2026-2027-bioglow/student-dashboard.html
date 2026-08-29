@@ -2347,6 +2347,17 @@
       box-shadow:none !important; margin-top:4px; }
     .im-add:hover { border-color:#1a73e8 !important; color:#1a73e8 !important; }
     .im-why { font-size:11.5px; color:var(--t-faint); font-style:italic; line-height:1.45; margin:2px 0 6px; }
+    .im-pull-btn { border-style:solid !important; }
+    .im-pull { margin-top:8px; padding:9px 10px; border-radius:10px; background:var(--s-hover);
+      border:1px solid var(--s-line-2); }
+    .im-pull-lesson { padding:6px 0; border-bottom:1px solid var(--s-line); }
+    .im-pull-lesson:last-child { border-bottom:none; }
+    .im-pull-title { font-size:12px; font-weight:750; color:var(--t-strong); margin-bottom:4px; }
+    .im-pull-q { display:flex; align-items:center; gap:7px; font-size:11.5px; color:var(--t-body); padding:2px 0; }
+    .im-pull-q span:first-of-type { flex:1; min-width:0; }
+    .im-pull-count { color:var(--t-faint); font-size:10.5px; }
+    .im-pull-note { font-size:11.5px; color:var(--t-muted); line-height:1.45; }
+    .im-pull-note.error { color:#d93025; font-weight:650; }
     .im-note { margin-top:12px; padding:11px 14px; border-radius:10px; background:var(--tint-amber);
       border:1px solid #f2d798; color:#7a5300; font-size:13px; line-height:1.55; }
     .im-added { margin-top:10px; padding:9px 13px; border-radius:10px; background:var(--tint-blue);
@@ -6448,6 +6459,83 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // ── Pulling your own answers onto the map ─────────────────────────────
+    // The map seeds itself from turned-in work, but only from lessons it
+    // recognises as brainstorming. This is the student's own way in: pick a
+    // lesson you turned in, pick which answers, and they land in your column
+    // as normal editable ideas — nothing is saved until you press Save.
+    let myLessonsCache = null;
+
+    async function togglePull(mi) {
+      const box = document.getElementById(`im-pull-${mi}`);
+      if (!box.hidden) { box.hidden = true; return; }
+      box.hidden = false;
+      box.innerHTML = '<div class="im-pull-note">Looking at what you have turned in…</div>';
+      try {
+        if (!myLessonsCache) {
+          const r = await fetch('/api/fll/idea-map/my-lessons');
+          const j = await r.json();
+          if (!j.success) throw new Error(j.message);
+          myLessonsCache = j.lessons;
+        }
+        if (!myLessonsCache.length) {
+          box.innerHTML = '<div class="im-pull-note">Nothing to pull in yet. Turn in a lesson where you listed ideas, then come back.</div>';
+          return;
+        }
+        box.innerHTML = myLessonsCache.map((les, li) => `
+          <div class="im-pull-lesson">
+            <div class="im-pull-title">${escapeHtml(les.title)}</div>
+            ${les.questions.map((q) => `
+              <label class="im-pull-q">
+                <input type="checkbox" data-pull="${mi}" data-les="${li}" value="${escapeHtml(q.id)}" checked>
+                <span>${escapeHtml(q.label)}</span>
+                <span class="im-pull-count">${q.count}</span>
+              </label>`).join('')}
+            <button class="im-add" onclick="pullFromLesson(${mi},${li})">Add these to my column</button>
+          </div>`).join('');
+      } catch (e) {
+        box.innerHTML = `<div class="im-pull-note error">${escapeHtml(e.message)}</div>`;
+      }
+    }
+
+    async function pullFromLesson(mi, li) {
+      const lesson = myLessonsCache[li];
+      const questionIds = [...document.querySelectorAll(`input[data-pull="${mi}"][data-les="${li}"]:checked`)]
+        .map((el) => el.value);
+      const box = document.getElementById(`im-pull-${mi}`);
+      if (!questionIds.length) {
+        box.insertAdjacentHTML('beforeend', '<div class="im-pull-note error">Tick at least one answer.</div>');
+        return;
+      }
+      try {
+        const r = await fetch('/api/fll/idea-map/extract', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ submissionId: lesson.submissionId, questionIds })
+        });
+        const j = await r.json();
+        if (!j.success) throw new Error(j.message);
+        const member = ideaMap.members[mi];
+        // match on id first: an idea you have since reworded is still that
+        // idea, and must not come back alongside your edit
+        const haveIds = new Set(member.ideas.map((i) => i.id));
+        const haveText = new Set(member.ideas.map((i) => i.text.toLowerCase()));
+        let added = 0;
+        for (const idea of j.ideas) {
+          if (haveIds.has(idea.id) || haveText.has(idea.text.toLowerCase())) continue;
+          haveIds.add(idea.id); haveText.add(idea.text.toLowerCase());
+          member.ideas.push({ id: idea.id, text: idea.text });
+          added++;
+        }
+        imTouch();
+        showIdeaMap();
+        showToast(added
+          ? `Added ${added} idea${added !== 1 ? 's' : ''} — press Save the map to keep them`
+          : 'Those are already on your map');
+      } catch (e) {
+        box.insertAdjacentHTML('beforeend', `<div class="im-pull-note error">${escapeHtml(e.message)}</div>`);
+      }
+    }
+
     function imWhyEmpty(mem) {
       if (mem.step1 === 'turned-in') return 'Turned a brainstorm in, but did not list any ideas in it.';
       if (mem.step1 === 'started') return 'Started a brainstorm but has not turned it in yet.';
@@ -6476,6 +6564,9 @@
             </div>`).join('')}
           ${mem.ideas.length ? '' : `<div class="im-why">${imWhyEmpty(mem)}</div>`}
           <button class="im-add" onclick="addIdea(${mi})">＋ Add idea</button>
+          ${mem.studentId === (latestData.user && latestData.user.id) ? `
+            <button class="im-add im-pull-btn" onclick="togglePull(${mi})">⬇ Pull in my answers</button>
+            <div class="im-pull" id="im-pull-${mi}" hidden></div>` : ''}
         </div>`).join('')
         : '<div class="im-empty">Nobody has turned in a brainstorm yet. Once your team does, their ideas appear here.</div>';
 

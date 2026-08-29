@@ -6855,6 +6855,79 @@ async function readIdeaMaps() {
 	return data && typeof data === 'object' && !Array.isArray(data) ? data : {};
 }
 
+// A student pulling their own answers onto the map. The coach has the same
+// power from Submitted Work; this is the student doing it for themselves,
+// which matters because the map is their document, not the coach's.
+function listShapedQuestions(answers, labels) {
+	const out = [];
+	for (const [key, value] of Object.entries(answers || {})) {
+		if (/__(link|photo|cols)$/.test(key)) continue;
+		const text = String(value || '');
+		if (text.trim().startsWith('[')) continue;          // a table answer
+		const lines = splitIdeaLines(text);
+		if (lines.length < 2) continue;                      // one line is prose
+		out.push({ id: key, label: labels[key] || key, count: lines.length });
+	}
+	return out;
+}
+
+app.get('/api/fll/idea-map/my-lessons', requireFllAuth, requireFllStudent, async (req, res) => {
+	try {
+		const [stored, tasks] = await Promise.all([
+			readJsonFile(fllTaskSubmissionsFile, []),
+			readJsonFile(fllTasksFile, [])
+		]);
+		const allTasks = Array.isArray(tasks) ? tasks : [];
+		const baseOf = (id) => String(id).split('--')[0];
+		const lessons = [];
+		for (const sub of (Array.isArray(stored) ? stored : [])) {
+			if (sub.studentId !== req.fllUser.id) continue;
+			const task = allTasks.find((t) => t.id === sub.taskId)
+				|| allTasks.find((t) => baseOf(t.id) === baseOf(sub.taskId));
+			const labels = {};
+			for (const q of (task?.questions || [])) if (q.id) labels[q.id] = q.label || q.id;
+			const questions = listShapedQuestions(sub.answers, labels);
+			if (!questions.length) continue;                  // nothing worth pulling
+			lessons.push({
+				submissionId: sub.id,
+				title: (task && task.title) || baseOf(sub.taskId),
+				questions
+			});
+		}
+		return res.json({ success: true, lessons });
+	} catch (err) {
+		console.error('FLL my-lessons error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading your lessons' });
+	}
+});
+
+// Returns the lines without writing anything. The student then sees them in
+// their column and can reword or drop any before saving, which is how every
+// other edit on this map already works.
+app.post('/api/fll/idea-map/extract', requireFllAuth, requireFllStudent, async (req, res) => {
+	try {
+		const submissionId = cleanMetaString(req.body.submissionId || '', 200);
+		const stored = await readJsonFile(fllTaskSubmissionsFile, []);
+		const sub = (Array.isArray(stored) ? stored : []).find((s) => s.id === submissionId);
+		if (!sub) return res.status(404).json({ success: false, message: 'Lesson not found' });
+		if (sub.studentId !== req.fllUser.id) {
+			return res.status(403).json({ success: false, message: 'You can only pull in your own answers' });
+		}
+		const questionIds = (Array.isArray(req.body.questionIds) ? req.body.questionIds : [])
+			.map((id) => cleanMetaString(id, 120)).filter(Boolean).slice(0, 20);
+		// Stable ids, so pulling the same lesson twice recognises an idea the
+		// student has since reworded instead of re-adding the original next to
+		// it. Hashed because the id field is short and submission ids are not.
+		const tag = crypto.createHash('sha1').update(String(sub.id)).digest('hex').slice(0, 8);
+		const ideas = ideasFromBrainstormAnswers(sub.answers, false, questionIds)
+			.map((text, i) => ({ id: 'pull-' + tag + '-' + i, text }));
+		return res.json({ success: true, ideas });
+	} catch (err) {
+		console.error('FLL idea extract error:', err);
+		return res.status(500).json({ success: false, message: 'Server error reading that lesson' });
+	}
+});
+
 app.get('/api/fll/idea-map', requireFllAuth, async (req, res) => {
 	try {
 		const teamId = cleanMetaString(req.query.teamId || req.fllUser.teamId || '', 100);
