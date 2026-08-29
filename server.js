@@ -6912,6 +6912,70 @@ app.post('/api/fll/idea-map/refresh', requireFllAuth, requireFllStudent, async (
 	}
 });
 
+// Pull one student's answers off a submission and onto the team's idea map.
+// The automatic seeding covers the common shapes; this is the coach's direct
+// route when a lesson is written in a way nothing could have guessed.
+app.post('/api/fll/coach/idea-map/import', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const submissionId = cleanMetaString(req.body.submissionId || '', 200);
+		const stored = await readJsonFile(fllTaskSubmissionsFile, []);
+		const submission = (Array.isArray(stored) ? stored : []).find((s) => s.id === submissionId);
+		if (!submission) return res.status(404).json({ success: false, message: 'Submission not found' });
+
+		const users = await readFllUsers();
+		const student = users.find((u) => u.id === submission.studentId);
+		const teamId = (student && student.teamId) || submission.teamId;
+		if (!teamId) {
+			return res.status(400).json({ success: false, message: 'That student is not on a team, so there is no map to import into.' });
+		}
+
+		// read it the generic way — a coach reaching for this button means the
+		// lesson does not have the shape the seeding knows about
+		const found = ideasFromBrainstormAnswers(submission.answers, false);
+		if (!found.length) {
+			return res.json({ success: true, added: 0, skipped: 0, message: 'Nothing in that submission reads as a list of ideas.' });
+		}
+
+		const store = await readIdeaMaps();
+		const map = store[teamId]
+			? upgradeIdeaMap(normalizeIdeaMap(store[teamId], teamId))
+			: normalizeIdeaMap(await seedIdeaMapForTeam(teamId), teamId);
+
+		let member = map.members.find((m) => m.studentId === submission.studentId);
+		if (!member) {
+			member = {
+				studentId: submission.studentId,
+				name: (student && student.name) || submission.studentName || 'Team member',
+				step1: 'turned-in',
+				source: '',
+				ideas: []
+			};
+			map.members.push(member);
+		}
+
+		const have = new Set(member.ideas.map((i) => i.text.toLowerCase()));
+		let added = 0;
+		let skipped = 0;
+		for (const text of found) {
+			if (have.has(text.toLowerCase())) { skipped++; continue; }
+			have.add(text.toLowerCase());
+			member.ideas.push({ id: 'import-' + submission.id + '-' + member.ideas.length, text });
+			added++;
+		}
+		member.ideas = member.ideas.slice(0, 20);
+		map.updatedBy = req.fllUser.name || 'Coach';
+		map.updatedAt = new Date().toISOString();
+		if (!map.seededAt) map.seededAt = map.updatedAt;
+		store[teamId] = map;
+		await writeJsonFile(fllIdeaMapsFile, store);
+
+		return res.json({ success: true, added, skipped, memberName: member.name, teamId });
+	} catch (err) {
+		console.error('FLL idea map import error:', err);
+		return res.status(500).json({ success: false, message: 'Server error importing to the idea map' });
+	}
+});
+
 // Which lessons feed the idea map. Auto-detection covers the usual cases but
 // cannot know every lesson a coach writes, so this makes it explicit.
 app.get('/api/fll/coach/idea-map-sources', requireFllAuth, requireFllCoach, async (req, res) => {

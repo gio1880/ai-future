@@ -581,7 +581,13 @@
       .wrap { padding: 18px 12px 50px; }
       .students-table-wrap { overflow-x: auto; }
     }
-      .im-src { border:1px solid var(--s-line-2); border-radius:12px; padding:12px 14px; margin-bottom:14px;
+      .imp-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:12px;
+      padding:11px 13px; border:1px dashed var(--s-line-2); border-radius:11px; }
+    .imp-btn { white-space:nowrap; }
+    .imp-hint { font-size:12px; color:var(--t-muted); flex:1; min-width:180px; line-height:1.45; }
+    .imp-hint.success { color:#146c43; font-weight:650; }
+    .imp-hint.error { color:#d93025; font-weight:650; }
+    .im-src { border:1px solid var(--s-line-2); border-radius:12px; padding:12px 14px; margin-bottom:14px;
       background:var(--s-hover); }
     .im-src-sum { font-size:13.5px; font-weight:750; color:var(--t-strong); cursor:pointer; }
     .im-src-row { display:flex; align-items:center; gap:9px; padding:6px 4px; font-size:13px;
@@ -1627,12 +1633,63 @@
               ${answers || '<div class="sub-empty-inline">No written answers.</div>'}
               ${photoHtml}
               ${files ? `<div class="sub-files">${files}</div>` : ''}
+              ${importToMapRow(sub, i)}
               ${shareEditor(sub, i)}
               ${reviewEditor(sub, i)}
               ${accessEditor(sub, i)}
             </div>
           </div>`;
       }).join('');
+    }
+
+    // ── Import a submission onto the team idea map ────────────────────────
+    // Only offered where it makes sense: Innovation Project work, and only
+    // when the submission actually contains something list-shaped. Showing it
+    // on a robot tracker or a one-line answer would just be noise.
+
+    function submissionLooksImportable(sub) {
+      return Object.entries(sub.answers || {}).some(([k, v]) => {
+        if (/__(link|photo|cols)$/.test(k)) return false;
+        const text = String(v || '');
+        if (text.trim().startsWith('[')) return false;              // a table
+        return text.split('\n').filter(l => l.trim().length > 1).length >= 2;
+      });
+    }
+
+    function importToMapRow(sub, i) {
+      // Deliberately not restricted by category. The reason this button exists
+      // is that lessons turn up in places nothing predicted, so the only test
+      // is whether the submission actually contains a list worth importing.
+      if (!submissionLooksImportable(sub)) return '';
+      return `
+        <div class="imp-row">
+          <button class="btn-ghost imp-btn" id="imp-btn-${i}"
+            onclick="importSubmissionToMap('${escapeHtml(sub.id)}', ${i})">🌳 Import to idea map</button>
+          <span class="imp-hint" id="imp-msg-${i}">Adds this student's list to their team's idea map. Nothing is overwritten — anything already on the map is skipped.</span>
+        </div>`;
+    }
+
+    async function importSubmissionToMap(submissionId, i) {
+      const btn = document.getElementById(`imp-btn-${i}`);
+      const msg = document.getElementById(`imp-msg-${i}`);
+      btn.disabled = true;
+      msg.textContent = 'Importing…'; msg.className = 'imp-hint';
+      try {
+        const r = await api('/api/fll/coach/idea-map/import', {
+          method: 'POST', body: JSON.stringify({ submissionId })
+        });
+        msg.className = 'imp-hint success';
+        msg.textContent = r.added
+          ? `Added ${r.added} idea${r.added !== 1 ? 's' : ''} to ${r.memberName}'s column${r.skipped ? ` (${r.skipped} already there)` : ''}.`
+          : (r.message || `Nothing new — all ${r.skipped} already on the map.`);
+        ideaMapsCache = null;      // the Idea Maps tab must not show stale data
+        showToast('Imported to the idea map');
+      } catch (e) {
+        msg.className = 'imp-hint error';
+        msg.textContent = e.message;
+      } finally {
+        btn.disabled = false;
+      }
     }
 
     // ── Counting one submission for the whole team ────────────────────────
