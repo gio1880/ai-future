@@ -784,6 +784,52 @@
     ]
   },
   {
+    "id": "task-innovation-journey-script",
+    "assignmentId": "assignment-innovation-project",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "Step 2c — Tell the Story So Far 🎤",
+    "category": "Innovation Project",
+    "type": "submission",
+    "workContext": "class",
+    "status": "todo",
+    "dueDate": "2026-08-22",
+    "shareAnswersWithTeam": true,
+    "priorLessons": [
+      "task-innovation-brainstorm",
+      "task-innovation-narrow",
+      "task-innovation-problem"
+    ],
+    "description": "You have done a lot already: everyone brainstormed, your team narrowed it to five, and you chose one problem. Judges will ask you to walk them through exactly that — **and they care as much about how you decided as what you decided.**\n\nThis is the first time you say it out loud, start to finish. It is short on purpose: about **60 to 90 seconds**, roughly one minute of your five-minute presentation.\n\n## 🗺️ Look at your idea map first\n\nOpen your team’s **idea map** before you write. Everything you need is on it — every idea your team had, the five you kept, and the problem you chose. You are turning that picture into sentences.\n\n## 🎤 The script — fill in every blank\n\nCopy this into the box below and replace everything in brackets. Keep the wording that is already there; it is doing work.\n\n> Our team is **[team name]**, and we are solving a problem about **[your topic in three words]**.\n>\n> We started with **[number]** ideas. Everyone on the team brought their own — mine were **[one or two of your own ideas]**.\n>\n> We narrowed those down to five: **[list your five, quickly]**. We chose those five because **[what made an idea survive — real, local, doable, interesting]**.\n>\n> Then we picked one. We chose **[your problem]** because **[the honest reason — what made it win]**.\n>\n> The idea we argued about most was **[idea]**, and we let it go because **[reason]**.\n>\n> So the problem we are solving is: **[your problem statement from Step 2, word for word]**.\n\n## ✅ What makes this good\n\n| Judges like | Judges do not like |\n|---|---|\n| \"We had 27 ideas and cut 22\" — real numbers | \"We brainstormed a lot\" |\n| Naming a teammate’s idea you backed | Only talking about your own idea |\n| Saying what you gave up and why | Pretending everyone agreed instantly |\n| One clear problem statement | A list of three problems you might do |\n| Saying it in your own words | Reading it off the page |\n\n## ⏱️ Say it out loud and time it\n\nReading in your head does not count. Read it aloud, time it, and write down what happened.\n\n- **Over 90 seconds?** Cut the list of five down to three, and shorten your reasons.\n- **Under 45 seconds?** You are missing the *why*. Judges want the reasoning, not just the result.\n- **Tripping over a sentence?** That sentence is written the way you write, not the way you talk. Rewrite it the way you would say it to a friend.\n\n## ➡️ Where this goes\n\nThis is a rough draft on purpose, and it is not wasted. In **Step 9** you write the full presentation script — this becomes the opening of it. Get it right now and Step 9 gets much shorter.",
+    "questions": [
+      {
+        "id": "q1",
+        "type": "textarea",
+        "label": "Your filled-in script — every blank replaced, in your own words:",
+        "placeholder": "Our team is ______, and we are solving a problem about ______.\n\nWe started with ___ ideas. Mine were ______.\n\nWe narrowed those to five: ______. We chose those because ______.\n\nWe picked ______ because ______.\n\nThe idea we argued about most was ______, and we let it go because ______.\n\nSo the problem we are solving is: ______."
+      },
+      {
+        "id": "q2",
+        "type": "text",
+        "label": "How long did it take when you read it out loud? (aim for 60–90 seconds)",
+        "placeholder": "e.g. 1 minute 12 seconds"
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
+        "label": "What did you change after reading it out loud?",
+        "placeholder": "Name the sentence that did not work and what you did about it. \"Nothing\" is only true if you actually read it aloud."
+      },
+      {
+        "id": "q4",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Whose idea from your team do you mention, and why does it belong in the story?",
+        "placeholder": "Judges ask how the team decided together. Name a real teammate and a real idea."
+      }
+    ]
+  },
+  {
     "id": "task-innovation-existing-solutions",
     "assignmentId": "assignment-innovation-project",
     "teamId": "team-01",

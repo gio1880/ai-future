@@ -5361,8 +5361,14 @@
 
           // blockquote (escaped '>' is '&gt;')
           if (lines.every(l => l.startsWith('&gt;'))) {
-            const inner = lines.map(l => l.replace(/^&gt;\s?/,'')).join(' ');
-            return `<blockquote class="md-quote">${inline(inner)}</blockquote>`;
+            // Keep the line breaks. Joining on a space turned a fill-in script
+            // — one blank per line — into a single run-on paragraph, which is
+            // exactly what such a block must not be. A quoted blank line stays
+            // a gap between stanzas.
+            const inner = inline(lines.map(l => l.replace(/^&gt;\s?/, '')).join('\n'))
+              .split('\n').map(l => l.trim()).join('<br>')
+              .replace(/(?:<br>){3,}/g, '<br><br>');
+            return `<blockquote class="md-quote">${inner}</blockquote>`;
           }
 
           // headings — a block that is only a heading line
