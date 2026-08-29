@@ -6628,11 +6628,13 @@ function splitIdeaLines(value) {
 function ideaId(prefix, n) { return prefix + '-' + n + '-' + crypto.randomBytes(2).toString('hex'); }
 
 async function seedIdeaMapForTeam(teamId) {
-	const [users, stored] = await Promise.all([
+	const [users, stored, storedDrafts] = await Promise.all([
 		readFllUsers(),
-		readJsonFile(fllTaskSubmissionsFile, [])
+		readJsonFile(fllTaskSubmissionsFile, []),
+		readJsonFile(fllTaskDraftsFile, [])
 	]);
 	const submissions = Array.isArray(stored) ? stored : [];
+	const drafts = Array.isArray(storedDrafts) ? storedDrafts : [];
 	const baseOf = (id) => String(id).split('--')[0];
 	const teamStudents = users.filter((u) => u.role === 'student' && u.active !== false && u.teamId === teamId);
 	const subFor = (studentId, base) =>
@@ -6641,9 +6643,17 @@ async function seedIdeaMapForTeam(teamId) {
 	const members = teamStudents.map((student) => {
 		const sub = subFor(student.id, IDEA_MAP_SOURCES.brainstorm);
 		const raw = sub && sub.answers ? (sub.answers.q1 || '') : '';
+		// An empty column is the single most confusing thing on this map. Say
+		// whether the person has turned Step 1 in, started it, or not opened
+		// it — otherwise the map just looks broken. Only the fact that a draft
+		// exists is used; its contents stay private until they turn it in.
+		const hasDraft = drafts.some((d) =>
+			d.studentId === student.id && baseOf(d.taskId) === IDEA_MAP_SOURCES.brainstorm
+			&& Object.values(d.answers || {}).some((v) => String(v || '').trim()));
 		return {
 			studentId: student.id,
 			name: student.name,
+			step1: sub ? 'turned-in' : hasDraft ? 'started' : 'not-started',
 			// stable id: a refresh must recognise an idea even after a student
 			// rewords it, otherwise the original comes back as a duplicate
 			ideas: splitIdeaLines(raw).map((text, i) => ({ id: 'seed-' + student.id + '-' + i, text }))
@@ -6684,6 +6694,7 @@ function normalizeIdeaMap(raw, teamId) {
 		members: (Array.isArray(src.members) ? src.members : []).slice(0, 12).map((m, mi) => ({
 			studentId: text(m.studentId, 160),
 			name: text(m.name, 80) || 'Team member',
+			step1: ['turned-in', 'started', 'not-started'].includes(m.step1) ? m.step1 : 'not-started',
 			ideas: (Array.isArray(m.ideas) ? m.ideas : []).slice(0, 12)
 				.map((idea, i) => ({ id: text(idea.id, 60) || ideaId('idea', String(mi) + String(i)), text: text(idea.text, 200) }))
 				.filter((idea) => idea.text)
@@ -6718,6 +6729,7 @@ function mergeIdeaMap(current, fresh) {
 	for (const freshMember of fresh.members) {
 		const member = current.members.find((m) => m.studentId === freshMember.studentId);
 		if (!member) { current.members.push(freshMember); added += freshMember.ideas.length; continue; }
+		member.step1 = freshMember.step1;
 		const haveIds = new Set(member.ideas.map((i) => i.id));
 		const haveText = new Set(member.ideas.map((i) => i.text.toLowerCase()));
 		for (const idea of freshMember.ideas) {

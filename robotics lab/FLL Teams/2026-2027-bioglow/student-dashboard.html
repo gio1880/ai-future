@@ -2346,6 +2346,9 @@
       border-radius:50px !important; padding:7px 14px !important; font-size:12.5px; font-weight:700; cursor:pointer;
       box-shadow:none !important; margin-top:4px; }
     .im-add:hover { border-color:#1a73e8 !important; color:#1a73e8 !important; }
+    .im-why { font-size:11.5px; color:var(--t-faint); font-style:italic; line-height:1.45; margin:2px 0 6px; }
+    .im-note { margin-top:12px; padding:11px 14px; border-radius:10px; background:var(--tint-amber);
+      border:1px solid #f2d798; color:#7a5300; font-size:13px; line-height:1.55; }
     .im-added { margin-top:10px; padding:9px 13px; border-radius:10px; background:var(--tint-blue);
       border:1px solid #bcd7f7; color:#174ea6; font-size:13px; font-weight:650; }
     .im-tile { display:flex; align-items:center; gap:14px; margin:16px 0 4px; padding:16px 18px; cursor:pointer;
@@ -6439,6 +6442,12 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    function imWhyEmpty(mem) {
+      if (mem.step1 === 'turned-in') return 'Turned Step 1 in, but listed no problems in Round 1.';
+      if (mem.step1 === 'started') return 'Started Step 1 but has not turned it in yet.';
+      return 'Has not turned in Step 1 yet.';
+    }
+
     function imField(value, ph, onInput) {
       return '<textarea class="im-input" rows="2" placeholder="' + escapeHtml(ph) +
         '" oninput="' + onInput + '">' + escapeHtml(value || '') + '</textarea>';
@@ -6459,9 +6468,22 @@
               ${imField(idea.text, 'Idea', 'updateIdea(' + mi + ',' + ii + ',this.value)')}
               <button class="im-del" onclick="removeIdea(${mi},${ii})" aria-label="Remove idea">✕</button>
             </div>`).join('')}
+          ${mem.ideas.length ? '' : `<div class="im-why">${imWhyEmpty(mem)}</div>`}
           <button class="im-add" onclick="addIdea(${mi})">＋ Add idea</button>
         </div>`).join('')
         : '<div class="im-empty">Nobody has turned in Step 1 yet. Once your team brainstorms, their ideas appear here.</div>';
+
+      // the map fills itself from turned-in work, so an empty map almost always
+      // means Step 1 is still sitting unsubmitted — say so instead of showing
+      // blank columns nobody can explain
+      const waiting = m.members.filter((x) => !x.ideas.length && x.step1 !== 'turned-in');
+      const nothingYet = totalIdeas === 0 && m.members.length;
+      const step1Note = !waiting.length ? '' : `
+        <div class="im-note">
+          ${nothingYet ? '<strong>Nothing here yet — and that is expected.</strong> This map fills in from <em>turned-in</em> Step 1 work. ' : ''}
+          Still waiting on ${waiting.map((x) => escapeHtml(x.name) + (x.step1 === 'started' ? ' (started, not turned in)' : '')).join(', ')}.
+          You can always type ideas straight in with <strong>＋ Add idea</strong>.
+        </div>`;
 
       const shortlist = m.shortlist.length ? m.shortlist.map((p, i) => `
         <div class="im-pick">
@@ -6483,6 +6505,7 @@
           <div class="im-tier">
             <div class="im-tier-head"><span class="im-tier-tag">Step 1</span> Everyone's ideas <span class="im-tier-count">${totalIdeas}</span></div>
             <div class="im-members">${memberCols}</div>
+            ${step1Note}
           </div>
 
           <div class="im-arrow">↓ narrowed down to</div>

@@ -1058,7 +1058,10 @@
                 <div class="im-c-name">${escapeHtml(mem.name)} <span class="im-c-num">${mem.ideas.length}</span></div>
                 ${mem.ideas.length
                   ? '<ul class="im-c-list">' + mem.ideas.map((i) => '<li>' + escapeHtml(i.text) + '</li>').join('') + '</ul>'
-                  : '<div class="im-c-none">nothing yet</div>'}
+                  : '<div class="im-c-none">' + (
+                      mem.step1 === 'turned-in' ? 'turned Step 1 in, but listed nothing in Round 1'
+                      : mem.step1 === 'started' ? 'started Step 1 — not turned in yet'
+                      : 'has not turned in Step 1') + '</div>'}
               </div>`).join('') : '<div class="im-c-none">no members</div>'}
 
             <div class="im-c-sec">The team's best five</div>
