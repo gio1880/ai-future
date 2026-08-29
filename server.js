@@ -4153,6 +4153,10 @@ async function ensureFllCurriculumTasksForUser(user) {
 	const now = new Date().toISOString();
 	let changed = false;
 	for (const template of templates) {
+		// A lesson superseded by a newer one is marked retired rather than
+		// deleted: students who already did it keep their work and their grade,
+		// and nobody new is handed a duplicate of a lesson they will also get.
+		if (template.retired) continue;
 		const distributedId = `${template.id}--${user.id}`;
 		if (mineIds.has(distributedId) || mineTitles.has(template.title)) continue;
 		const copy = {
@@ -4189,6 +4193,8 @@ const FLL_CONTENT_FIELDS = ['title', 'description', 'questions', 'category', 'ty
 // should disappear live too. Must cover every authored field or edits to it
 // silently never reach students — that is what happened to codeExamples.
 const FLL_OPTIONAL_CONTENT_FIELDS = [
+	// so retiring a lesson reaches the copies students already hold
+	'retired', 'retiredNote',
 	'videoId', 'trackerConfig', 'codeExample', 'codeExamples', 'allowPhoto', 'photoPrompt', 'allowFile'
 ];
 

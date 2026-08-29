@@ -2346,6 +2346,9 @@
       border-radius:50px !important; padding:7px 14px !important; font-size:12.5px; font-weight:700; cursor:pointer;
       box-shadow:none !important; margin-top:4px; }
     .im-add:hover { border-color:#1a73e8 !important; color:#1a73e8 !important; }
+    .ta-retired { margin-bottom:14px; padding:12px 15px; border-radius:11px; background:var(--s-hover);
+      border:1px solid var(--s-line-2); color:var(--t-muted); font-size:13.5px; line-height:1.55; }
+    .ta-retired strong { color:var(--t-strong); }
     .im-why { font-size:11.5px; color:var(--t-faint); font-style:italic; line-height:1.45; margin:2px 0 6px; }
     .im-pull-btn { border-style:solid !important; }
     .im-pull { margin-top:8px; padding:9px 10px; border-radius:10px; background:var(--s-hover);
@@ -4615,6 +4618,7 @@
 
       // ── lesson body ──
       const lessonHtml = task.description ? `
+        ${retiredBanner(task)}
         ${innovationPromptBanner(task)}
         <div class="ta-lesson-body">
           ${renderMarkdownish(task.description)}
@@ -5699,6 +5703,18 @@
     }
 
     // ── The season prompt, shown on every Innovation lesson ───────────────
+    // A lesson replaced by a newer one is never deleted — work already turned
+    // in keeps its grade. Say plainly that it is no longer required, so nobody
+    // does it twice or worries about a blank they were never assigned.
+    function retiredBanner(task) {
+      if (!task.retired) return '';
+      return `
+        <div class="ta-retired">
+          <strong>This lesson has been replaced.</strong>
+          ${escapeHtml(task.retiredNote || 'You do not need to do it — anything you already turned in still counts.')}
+        </div>`;
+    }
+
     function innovationPromptBanner(task) {
       const prompt = (latestData.season || {}).innovationPrompt;
       if (!prompt) return '';

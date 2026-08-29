@@ -1520,7 +1520,9 @@
         "placeholder": "e.g. How much does the current solution cost? Who is already working on this?",
         "allowAttach": true
       }
-    ]
+    ],
+    "retired": true,
+    "retiredNote": "Step 2b — Build Your Evidence File covers this, and it comes after you have picked your problem, so you research the thing you actually chose."
   },
   {
     "assignmentId": "assignment-innovation-project",
@@ -1606,7 +1608,9 @@
     ],
     "priorLessons": [
       "task-innovation-iteration-plan"
-    ]
+    ],
+    "retired": true,
+    "retiredNote": "Step 5 — Iteration 1: First Design covers this, and it fits the iteration sequence you are already following."
   },
   {
     "assignmentId": "assignment-robot-prep",
@@ -2888,7 +2892,9 @@
         "placeholder": "e.g. How much does the current solution cost? Who is already working on this?",
         "allowAttach": true
       }
-    ]
+    ],
+    "retired": true,
+    "retiredNote": "Step 2b — Build Your Evidence File covers this, and it comes after you have picked your problem, so you research the thing you actually chose."
   },
   {
     "assignmentId": "assignment-innovation-project",
@@ -2974,7 +2980,9 @@
     ],
     "priorLessons": [
       "task-innovation-iteration-plan"
-    ]
+    ],
+    "retired": true,
+    "retiredNote": "Step 5 — Iteration 1: First Design covers this, and it fits the iteration sequence you are already following."
   },
   {
     "assignmentId": "assignment-robot-prep",
