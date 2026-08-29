@@ -6538,6 +6538,10 @@
 
     function imWhyEmpty(mem) {
       if (mem.step1 === 'turned-in') return 'Turned a brainstorm in, but did not list any ideas in it.';
+      if (mem.step1 === 'credited') {
+        return 'Counted for ' + (mem.creditedFrom ? escapeHtml(mem.creditedFrom) + "'s" : "a teammate's")
+          + ' brainstorm. Add your own ideas here.';
+      }
       if (mem.step1 === 'started') return 'Started a brainstorm but has not turned it in yet.';
       return 'Has not turned in a brainstorm yet.';
     }
@@ -6573,7 +6577,8 @@
       // the map fills itself from turned-in work, so an empty map almost always
       // means Step 1 is still sitting unsubmitted — say so instead of showing
       // blank columns nobody can explain
-      const waiting = m.members.filter((x) => !x.ideas.length && x.step1 !== 'turned-in');
+      const waiting = m.members.filter((x) => !x.ideas.length
+        && x.step1 !== 'turned-in' && x.step1 !== 'credited');
       const nothingYet = totalIdeas === 0 && m.members.length;
       const step1Note = !waiting.length ? '' : `
         <div class="im-note">
@@ -6622,6 +6627,19 @@
           </div>
 
           <div class="im-tier">
+            <div class="im-tier-head"><span class="im-tier-tag">Ideas</span> Solutions we thought of <span class="im-tier-count">${(m.solutions || []).length}</span></div>
+            ${(m.solutions || []).length ? m.solutions.map((sol, i) => `
+              <div class="im-pick">
+                ${imField(sol.text, 'A solution idea', 'updateSolution(' + i + ',\'text\',this.value)')}
+                <input class="im-owner" type="text" value="${escapeHtml(sol.owner || '')}" placeholder="whose idea"
+                  oninput="updateSolution(${i},'owner',this.value)">
+                <button class="im-del" onclick="removeSolution(${i})" aria-label="Remove">✕</button>
+              </div>`).join('')
+              : '<div class="im-empty">Solution ideas from Step 1 Round 2 land here. You can add more any time — you pick one for real in Step 4.</div>'}
+            ${(m.solutions || []).length < 30 ? '<button class="im-add" onclick="addSolution()">＋ Add a solution idea</button>' : ''}
+          </div>
+
+          <div class="im-tier">
             <div class="im-tier-head"><span class="im-tier-tag">Who</span> Who we are solving this for</div>
             ${imField(m.audience.text, 'Who has this problem? Be specific — "kids at Lincoln Park" beats "people"', 'updateAudience(\'text\',this.value)')}
             ${imField(m.audience.note, 'How do you know it is a real problem for them? (optional)', 'updateAudience(\'note\',this.value)')}
@@ -6664,6 +6682,12 @@
     function addPick() { ideaMap.shortlist.push({ id: 'new-' + Date.now(), text: '', owner: '' }); imTouch(); showIdeaMap(); }
     function updateChosen(field, v) { ideaMap.chosen[field] = v; imTouch(); }
     function updateAudience(field, v) { ideaMap.audience[field] = v; imTouch(); }
+    function updateSolution(i, field, v) { ideaMap.solutions[i][field] = v; imTouch(); }
+    function removeSolution(i) { ideaMap.solutions.splice(i, 1); imTouch(); showIdeaMap(); }
+    function addSolution() {
+      (ideaMap.solutions = ideaMap.solutions || []).push({ id: 'new-' + Date.now(), text: '', owner: '' });
+      imTouch(); showIdeaMap();
+    }
     function updateResearch(i, field, v) { ideaMap.research[i][field] = v; imTouch(); }
     function removeResearch(i) { ideaMap.research.splice(i, 1); imTouch(); showIdeaMap(); }
     function addResearch() { ideaMap.research.push({ id: 'new-' + Date.now(), text: '', source: '' }); imTouch(); showIdeaMap(); }

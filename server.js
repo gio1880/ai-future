@@ -6606,12 +6606,15 @@ const IDEA_MAP_SOURCES = {
 // it. upgradeIdeaMap() fills in anything a saved map predates, which means an
 // old map gains new sections the next time it is opened — no migration pass,
 // no coach action, nothing for students to redo.
-const IDEA_MAP_VERSION = 2;
+const IDEA_MAP_VERSION = 3;
 const IDEA_MAP_DEFAULTS = {
 	// since v2 — room for a team to say who it is solving for and what they
 	// have learned, the two things coaches kept asking students in meetings
 	audience: { since: 2, blank: () => ({ text: '', note: '' }) },
 	research: { since: 2, blank: () => [] },
+	// since v3 — the solution ideas from Step 1 Round 2, which used to be read
+	// and thrown away
+	solutions: { since: 3, blank: () => [] },
 	version: { since: 2, blank: () => IDEA_MAP_VERSION }
 };
 
@@ -6768,6 +6771,19 @@ async function seedIdeaMapForTeam(teamId) {
 			d.studentId === student.id && brainstormIds.has(baseOf(d.taskId))
 			&& Object.values(d.answers || {}).some((v) => String(v || '').trim()));
 
+		// A coach can mark one submission as counting for teammates. Their
+		// ideas are not copied across — the map exists to show who had which
+		// idea — but telling someone they never turned a brainstorm in when
+		// the coach has credited them for one is simply wrong.
+		const creditedFrom = mySubs.length ? null : (() => {
+			const shared = submissions.find((s) =>
+				Array.isArray(s.sharedWith) && s.sharedWith.includes(student.id)
+				&& brainstormIds.has(baseOf(s.taskId)));
+			if (!shared) return null;
+			const author = users.find((u) => u.id === shared.studentId);
+			return (author && author.name) || shared.studentName || 'a teammate';
+		})();
+
 		const seen = new Set();
 		const ideas = [];
 		for (const sub of mySubs) {
@@ -6785,7 +6801,8 @@ async function seedIdeaMapForTeam(teamId) {
 		return {
 			studentId: student.id,
 			name: student.name,
-			step1: mySubs.length ? 'turned-in' : hasDraft ? 'started' : 'not-started',
+			step1: mySubs.length ? 'turned-in' : creditedFrom ? 'credited' : hasDraft ? 'started' : 'not-started',
+			creditedFrom: creditedFrom || '',
 			// say so, so nobody wonders where a line came from
 			source: fromFallback && ideas.length ? 'other-lesson' : '',
 			ideas: ideas.slice(0, 40)
@@ -6807,6 +6824,26 @@ async function seedIdeaMapForTeam(teamId) {
 		break;
 	}
 
+	// Step 1 Round 2 asks for solution ideas. Mixing those into the problems
+	// tier would muddle the narrowing story, and dropping them lost real work,
+	// so they get a tier of their own that feeds Step 4.
+	const solutions = [];
+	const seenSolution = new Set();
+	for (const student of teamStudents) {
+		const sub = subFor(student.id, IDEA_MAP_SOURCES.brainstorm);
+		if (!sub || !sub.answers) continue;
+		for (const text of splitIdeaLines(sub.answers.q2 || '')) {
+			const key = text.toLowerCase();
+			if (seenSolution.has(key)) continue;
+			seenSolution.add(key);
+			solutions.push({
+				id: 'sol-' + student.id + '-' + solutions.length,
+				text,
+				owner: student.name || ''
+			});
+		}
+	}
+
 	let chosen = { text: '', note: '' };
 	for (const student of teamStudents) {
 		const sub = subFor(student.id, IDEA_MAP_SOURCES.chosen);
@@ -6814,7 +6851,7 @@ async function seedIdeaMapForTeam(teamId) {
 		if (statement) { chosen = { text: statement.split('\n')[0].slice(0, 160), note: '' }; break; }
 	}
 
-	return upgradeIdeaMap({ teamId, members, shortlist, chosen, seededAt: new Date().toISOString(), updatedBy: '', updatedAt: '' });
+	return upgradeIdeaMap({ teamId, members, shortlist, chosen, solutions, seededAt: new Date().toISOString(), updatedBy: '', updatedAt: '' });
 }
 
 function normalizeIdeaMap(raw, teamId) {
@@ -6826,7 +6863,8 @@ function normalizeIdeaMap(raw, teamId) {
 		members: (Array.isArray(src.members) ? src.members : []).slice(0, 16).map((m, mi) => ({
 			studentId: text(m.studentId, 160),
 			name: text(m.name, 80) || 'Team member',
-			step1: ['turned-in', 'started', 'not-started'].includes(m.step1) ? m.step1 : 'not-started',
+			step1: ['turned-in', 'started', 'not-started', 'credited'].includes(m.step1) ? m.step1 : 'not-started',
+			creditedFrom: text(m.creditedFrom, 80),
 			source: m.source === 'other-lesson' ? 'other-lesson' : '',
 			ideas: (Array.isArray(m.ideas) ? m.ideas : []).slice(0, 40)
 				.map((idea, i) => ({ id: text(idea.id, 60) || ideaId('idea', String(mi) + String(i)), text: text(idea.text, 200) }))
@@ -6840,6 +6878,13 @@ function normalizeIdeaMap(raw, teamId) {
 			text: text((src.audience || {}).text, 200),
 			note: text((src.audience || {}).note, 400)
 		},
+		solutions: (Array.isArray(src.solutions) ? src.solutions : []).slice(0, 30)
+			.map((x, i) => ({
+				id: text(x.id, 60) || ideaId('sol', i),
+				text: text(x.text, 200),
+				owner: text(x.owner, 80)
+			}))
+			.filter((x) => x.text),
 		research: (Array.isArray(src.research) ? src.research : []).slice(0, 12)
 			.map((r, i) => ({
 				id: text(r.id, 60) || ideaId('note', i),
@@ -6863,6 +6908,7 @@ function mergeIdeaMap(current, fresh) {
 		const member = current.members.find((m) => m.studentId === freshMember.studentId);
 		if (!member) { current.members.push(freshMember); added += freshMember.ideas.length; continue; }
 		member.step1 = freshMember.step1;
+		member.creditedFrom = freshMember.creditedFrom;
 		const haveIds = new Set(member.ideas.map((i) => i.id));
 		const haveText = new Set(member.ideas.map((i) => i.text.toLowerCase()));
 		for (const idea of freshMember.ideas) {
@@ -6876,6 +6922,16 @@ function mergeIdeaMap(current, fresh) {
 		if (!current.members.some((m) => m.studentId === freshMember.studentId)) {
 			current.members.push({ ...freshMember, ideas: [] });
 		}
+	}
+	// id first, then text: a solution the team has reworded is still that
+	// solution and must not come back beside their edit
+	const solutionIds = new Set((current.solutions || []).map((x) => x.id));
+	const solutionText = new Set((current.solutions || []).map((x) => x.text.toLowerCase()));
+	for (const sol of (fresh.solutions || [])) {
+		if (solutionIds.has(sol.id) || solutionText.has(sol.text.toLowerCase())) continue;
+		solutionIds.add(sol.id); solutionText.add(sol.text.toLowerCase());
+		(current.solutions = current.solutions || []).push(sol);
+		added++;
 	}
 	if (!current.shortlist.length && fresh.shortlist.length) { current.shortlist = fresh.shortlist; added += fresh.shortlist.length; }
 	if (!current.chosen.text && fresh.chosen.text) { current.chosen.text = fresh.chosen.text; added++; }

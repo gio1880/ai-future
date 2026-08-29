@@ -1139,6 +1139,7 @@
                   ? '<ul class="im-c-list">' + mem.ideas.map((i) => '<li>' + escapeHtml(i.text) + '</li>').join('') + '</ul>'
                   : '<div class="im-c-none">' + (
                       mem.step1 === 'turned-in' ? 'turned a brainstorm in, but listed no ideas in it'
+                      : mem.step1 === 'credited' ? 'counted for ' + escapeHtml(mem.creditedFrom || 'a teammate') + '’s brainstorm'
                       : mem.step1 === 'started' ? 'started a brainstorm — not turned in yet'
                       : 'has not turned in a brainstorm') + '</div>'}
               </div>`).join('') : '<div class="im-c-none">no members</div>'}
@@ -1152,6 +1153,11 @@
             ${m.chosen.text
               ? '<div class="im-c-chosen">' + escapeHtml(m.chosen.text) + (m.chosen.note ? '<div class="im-c-note">' + escapeHtml(m.chosen.note) + '</div>' : '') + '</div>'
               : '<div class="im-c-none">not chosen yet</div>'}
+
+            <div class="im-c-sec">Solutions they thought of</div>
+            ${(m.solutions && m.solutions.length)
+              ? '<ul class="im-c-list">' + m.solutions.map((x) => '<li>' + escapeHtml(x.text) + (x.owner ? ' <span class="im-c-owner">— ' + escapeHtml(x.owner) + '</span>' : '') + '</li>').join('') + '</ul>'
+              : '<div class="im-c-none">nothing yet</div>'}
 
             <div class="im-c-sec">Who they are solving it for</div>
             ${m.audience && m.audience.text
