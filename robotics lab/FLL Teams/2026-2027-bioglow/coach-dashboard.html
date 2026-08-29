@@ -581,7 +581,18 @@
       .wrap { padding: 18px 12px 50px; }
       .students-table-wrap { overflow-x: auto; }
     }
-      .im-c-card { border:1px solid var(--s-line-2); border-radius:14px; margin-bottom:10px; background:var(--s-card); overflow:hidden; }
+      .im-src { border:1px solid var(--s-line-2); border-radius:12px; padding:12px 14px; margin-bottom:14px;
+      background:var(--s-hover); }
+    .im-src-sum { font-size:13.5px; font-weight:750; color:var(--t-strong); cursor:pointer; }
+    .im-src-row { display:flex; align-items:center; gap:9px; padding:6px 4px; font-size:13px;
+      border-bottom:1px solid var(--s-line); }
+    .im-src-row:last-child { border-bottom:none; }
+    .im-src-title { font-weight:650; color:var(--t-strong); flex:1; min-width:0; }
+    .im-src-tag { font-size:10.5px; font-weight:750; padding:2px 7px; border-radius:50px;
+      background:var(--tint-green); color:#146c43; white-space:nowrap; }
+    .im-src-meta { font-size:11.5px; color:var(--t-faint); white-space:nowrap; }
+    .im-src-actions { display:flex; align-items:center; gap:9px; margin-top:11px; flex-wrap:wrap; }
+    .im-c-card { border:1px solid var(--s-line-2); border-radius:14px; margin-bottom:10px; background:var(--s-card); overflow:hidden; }
     .im-c-head { padding:13px 16px; cursor:pointer; }
     .im-c-head:hover { background:var(--s-hover); }
     .im-c-title { display:flex; align-items:center; gap:9px; font-size:15px; font-weight:750; color:var(--t-strong); }
@@ -811,6 +822,16 @@
           </div>
           <button class="btn-ghost" onclick="loadIdeaMaps(true)">↻ Refresh</button>
         </div>
+        <details class="im-src">
+          <summary class="im-src-sum">⚙️ Which lessons feed the map?</summary>
+          <p class="form-sub">The map finds brainstorm lessons automatically from their titles. If a lesson your students actually did is not showing up, tick it here — anything you tick is used instead of the automatic guess.</p>
+          <div id="ideaMapSrcWrap">Loading&hellip;</div>
+          <div class="im-src-actions">
+            <button class="btn-primary" onclick="saveIdeaMapSources()">Save</button>
+            <button class="btn-ghost" onclick="clearIdeaMapSources()">Go back to automatic</button>
+            <span class="form-msg" id="ideaMapSrcMsg"></span>
+          </div>
+        </details>
         <div id="ideaMapsWrap">Loading&hellip;</div>
       </div>
     </div>
@@ -994,7 +1015,7 @@
       if (id === 'visibility') renderVisibility();
       if (id === 'submissions') loadSubmissions();
       if (id === 'robots') loadRobotProfiles();
-      if (id === 'ideamaps') loadIdeaMaps();
+      if (id === 'ideamaps') { loadIdeaMaps(); loadIdeaMapSources(); }
       if (id === 'logins') loadLoginStatus();
       // only poll while the tab is actually being looked at
       if (id === 'online') startOnlinePolling(); else stopOnlinePolling();
@@ -1008,6 +1029,52 @@
     // anyone has touched it lately.
     let ideaMapsCache = null;
     const ideaMapOpen = new Set();
+
+    // Auto-detection reads lesson titles, which cannot cover every lesson a
+    // coach writes. Ticking lessons here replaces the guess outright.
+    async function loadIdeaMapSources() {
+      const wrap = document.getElementById('ideaMapSrcWrap');
+      try {
+        const r = await api('/api/fll/coach/idea-map-sources');
+        wrap.innerHTML = r.lessons.map((l) => `
+          <label class="im-src-row">
+            <input type="checkbox" value="${escapeHtml(l.id)}" ${l.chosen ? 'checked' : ''}>
+            <span class="im-src-title">${escapeHtml(l.title)}</span>
+            ${l.autoDetected ? '<span class="im-src-tag">found automatically</span>' : ''}
+            <span class="im-src-meta">${l.submissions} turned in${l.category ? ' · ' + escapeHtml(l.category) : ''}</span>
+          </label>`).join('');
+        const msg = document.getElementById('ideaMapSrcMsg');
+        msg.className = 'form-msg';
+        msg.textContent = r.usingExplicit
+          ? 'Using the lessons you ticked.'
+          : 'Working it out automatically from lesson titles.';
+      } catch (e) {
+        wrap.innerHTML = `<div class="form-msg error">${escapeHtml(e.message)}</div>`;
+      }
+    }
+
+    async function putIdeaMapSources(lessonIds, note) {
+      const msg = document.getElementById('ideaMapSrcMsg');
+      msg.textContent = 'Saving…'; msg.className = 'form-msg';
+      try {
+        await api('/api/fll/coach/idea-map-sources', { method: 'PUT', body: JSON.stringify({ lessonIds }) });
+        msg.textContent = note; msg.className = 'form-msg success';
+        await loadIdeaMapSources();
+        await loadIdeaMaps(true);        // every map changes, so re-read them
+        showToast('Idea map sources updated');
+      } catch (e) {
+        msg.textContent = e.message; msg.className = 'form-msg error';
+      }
+    }
+
+    function saveIdeaMapSources() {
+      const ids = [...document.querySelectorAll('#ideaMapSrcWrap input:checked')].map((i) => i.value);
+      putIdeaMapSources(ids, ids.length
+        ? `Reading ${ids.length} lesson${ids.length !== 1 ? 's' : ''}.`
+        : 'Back to automatic.');
+    }
+
+    function clearIdeaMapSources() { putIdeaMapSources([], 'Back to automatic.'); }
 
     async function loadIdeaMaps(force) {
       const wrap = document.getElementById('ideaMapsWrap');

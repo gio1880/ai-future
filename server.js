@@ -1175,9 +1175,16 @@ function normalizeFllSettings(data) {
 				: []
 		};
 	}
+	// Lessons the coach has explicitly told the idea map to read. Empty means
+	// "work it out from the titles" — this exists because guessing cannot cover
+	// every lesson a coach writes.
+	const ideaMapSources = Array.isArray(source.ideaMapSources)
+		? [...new Set(source.ideaMapSources.map((id) => cleanMetaString(id, 160)).filter(Boolean))]
+		: [];
 	return {
 		disabledAreas: [...new Set(disabledAreas)],
 		simulatorEnabled: source.simulatorEnabled !== false, // default on
+		ideaMapSources,
 		hiddenAssignments,
 		hiddenResources,
 		teamSettings
@@ -6632,11 +6639,20 @@ function ideaId(prefix, n) { return prefix + '-' + n + '-' + crypto.randomBytes(
 // one and Step 1 — showed only half its ideas, and the students who did the
 // other lesson appeared to have done nothing at all. Any Innovation Project
 // lesson whose title says brainstorm is treated as a source.
-function brainstormTaskBaseIds(allTasks) {
+const IDEA_MAP_TITLE_HINT = /brainstorm|idea|topic|problems? to solve/i;
+
+function brainstormTaskBaseIds(allTasks, explicitSources = []) {
 	const ids = new Set([IDEA_MAP_SOURCES.brainstorm]);
+	// An explicit list from the coach wins outright — no guessing at all.
+	if (explicitSources.length) {
+		for (const id of explicitSources) ids.add(String(id).split('--')[0]);
+		return ids;
+	}
+	// Otherwise match on the title. Category is deliberately NOT checked: a
+	// coach-written brainstorm lesson can be filed anywhere, and excluding it
+	// on category silently dropped every student who did that lesson.
 	for (const task of (Array.isArray(allTasks) ? allTasks : [])) {
-		if (!/brainstorm/i.test(String(task.title || ''))) continue;
-		if (task.category && task.category !== 'Innovation Project') continue;
+		if (!IDEA_MAP_TITLE_HINT.test(String(task.title || ''))) continue;
 		ids.add(String(task.id).split('--')[0]);
 	}
 	return ids;
@@ -6660,23 +6676,46 @@ function ideasFromBrainstormAnswers(answers, isCanonical) {
 }
 
 async function seedIdeaMapForTeam(teamId) {
-	const [users, stored, storedDrafts, storedTasks] = await Promise.all([
+	const [users, stored, storedDrafts, storedTasks, settings] = await Promise.all([
 		readFllUsers(),
 		readJsonFile(fllTaskSubmissionsFile, []),
 		readJsonFile(fllTaskDraftsFile, []),
-		readJsonFile(fllTasksFile, [])
+		readJsonFile(fllTasksFile, []),
+		readFllSettings()
 	]);
 	const submissions = Array.isArray(stored) ? stored : [];
 	const drafts = Array.isArray(storedDrafts) ? storedDrafts : [];
 	const baseOf = (id) => String(id).split('--')[0];
-	const brainstormIds = brainstormTaskBaseIds(storedTasks);
+	const brainstormIds = brainstormTaskBaseIds(storedTasks, settings.ideaMapSources || []);
+	const explicit = (settings.ideaMapSources || []).length > 0;
 	const teamStudents = users.filter((u) => u.role === 'student' && u.active !== false && u.teamId === teamId);
 	const subFor = (studentId, base) =>
 		submissions.find((s) => s.studentId === studentId && baseOf(s.taskId) === base);
 
+	// title -> lesson, so a fallback can tell innovation work from robot work
+	const taskByBase = new Map();
+	for (const task of (Array.isArray(storedTasks) ? storedTasks : [])) {
+		const base = baseOf(task.id);
+		if (!taskByBase.has(base)) taskByBase.set(base, task);
+	}
+
 	const members = teamStudents.map((student) => {
-		const mySubs = submissions.filter((s) =>
+		let mySubs = submissions.filter((s) =>
 			s.studentId === student.id && brainstormIds.has(baseOf(s.taskId)));
+		// Last resort. If nothing we recognise as a brainstorm turned up for
+		// this student, fall back to whatever Innovation Project work they did
+		// turn in and take anything list-shaped out of it. A student who did
+		// some other lesson still lands on the map with their ideas, instead of
+		// looking like they did nothing — which is the whole point of the map.
+		let fromFallback = false;
+		if (!mySubs.length) {
+			const innovation = submissions.filter((s) => {
+				if (s.studentId !== student.id) return false;
+				const task = taskByBase.get(baseOf(s.taskId));
+				return task && task.category === 'Innovation Project';
+			});
+			if (innovation.length) { mySubs = innovation; fromFallback = true; }
+		}
 		// An empty column is the single most confusing thing on this map. Say
 		// whether the person has turned a brainstorm in, started one, or not
 		// opened it — otherwise the map just looks broken. Only the fact that a
@@ -6689,7 +6728,8 @@ async function seedIdeaMapForTeam(teamId) {
 		const ideas = [];
 		for (const sub of mySubs) {
 			const base = baseOf(sub.taskId);
-			for (const text of ideasFromBrainstormAnswers(sub.answers, base === IDEA_MAP_SOURCES.brainstorm)) {
+			const canonical = !explicit && !fromFallback && base === IDEA_MAP_SOURCES.brainstorm;
+			for (const text of ideasFromBrainstormAnswers(sub.answers, canonical)) {
 				const key = text.toLowerCase();
 				if (seen.has(key)) continue;             // the same idea in both lessons
 				seen.add(key);
@@ -6702,6 +6742,8 @@ async function seedIdeaMapForTeam(teamId) {
 			studentId: student.id,
 			name: student.name,
 			step1: mySubs.length ? 'turned-in' : hasDraft ? 'started' : 'not-started',
+			// say so, so nobody wonders where a line came from
+			source: fromFallback && ideas.length ? 'other-lesson' : '',
 			ideas: ideas.slice(0, 20)
 		};
 	});
@@ -6741,6 +6783,7 @@ function normalizeIdeaMap(raw, teamId) {
 			studentId: text(m.studentId, 160),
 			name: text(m.name, 80) || 'Team member',
 			step1: ['turned-in', 'started', 'not-started'].includes(m.step1) ? m.step1 : 'not-started',
+			source: m.source === 'other-lesson' ? 'other-lesson' : '',
 			ideas: (Array.isArray(m.ideas) ? m.ideas : []).slice(0, 12)
 				.map((idea, i) => ({ id: text(idea.id, 60) || ideaId('idea', String(mi) + String(i)), text: text(idea.text, 200) }))
 				.filter((idea) => idea.text)
@@ -6866,6 +6909,61 @@ app.post('/api/fll/idea-map/refresh', requireFllAuth, requireFllStudent, async (
 	} catch (err) {
 		console.error('FLL idea map refresh error:', err);
 		return res.status(500).json({ success: false, message: 'Server error refreshing the idea map' });
+	}
+});
+
+// Which lessons feed the idea map. Auto-detection covers the usual cases but
+// cannot know every lesson a coach writes, so this makes it explicit.
+app.get('/api/fll/coach/idea-map-sources', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const [tasks, settings, subs] = await Promise.all([
+			readJsonFile(fllTasksFile, []),
+			readFllSettings(),
+			readJsonFile(fllTaskSubmissionsFile, [])
+		]);
+		const baseOf = (id) => String(id).split('--')[0];
+		const chosen = new Set(settings.ideaMapSources || []);
+		const auto = brainstormTaskBaseIds(tasks, []);
+		const counts = new Map();
+		for (const sub of (Array.isArray(subs) ? subs : [])) {
+			const base = baseOf(sub.taskId);
+			counts.set(base, (counts.get(base) || 0) + 1);
+		}
+		const byBase = new Map();
+		for (const task of (Array.isArray(tasks) ? tasks : [])) {
+			const base = baseOf(task.id);
+			if (!byBase.has(base)) {
+				byBase.set(base, {
+					id: base,
+					title: task.title || base,
+					category: task.category || '',
+					autoDetected: auto.has(base),
+					chosen: chosen.has(base),
+					submissions: counts.get(base) || 0
+				});
+			}
+		}
+		const lessons = [...byBase.values()]
+			.sort((a, b) => Number(b.autoDetected) - Number(a.autoDetected)
+				|| b.submissions - a.submissions
+				|| String(a.title).localeCompare(String(b.title)));
+		return res.json({ success: true, lessons, usingExplicit: chosen.size > 0 });
+	} catch (err) {
+		console.error('FLL idea map sources load error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading lessons' });
+	}
+});
+
+app.put('/api/fll/coach/idea-map-sources', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const settings = await readFllSettings();
+		settings.ideaMapSources = (Array.isArray(req.body.lessonIds) ? req.body.lessonIds : [])
+			.map((id) => cleanMetaString(id, 160)).filter(Boolean).slice(0, 40);
+		await writeFllSettings(settings);
+		return res.json({ success: true, ideaMapSources: settings.ideaMapSources });
+	} catch (err) {
+		console.error('FLL idea map sources save error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving which lessons feed the map' });
 	}
 });
 
