@@ -113,6 +113,7 @@
       <li><strong>Big gear driving a small gear</strong> = geared <strong>up</strong>. Faster, weaker. Use it for spinning and sweeping.</li>
       <li>You never get both. Every gear train is you choosing one.</li>
       <li>Each extra pair of gears costs a little to friction, so use the fewest that get you the ratio you need.</li>
+      <li><strong>The Medium motor is the faster one</strong> — 185 rpm against the Large's 175. The Large is the stronger one: it stalls at 25 N·cm where the Medium gives up at 18. Switch between them above and watch the numbers change.</li>
     </ul>
     <p class="foot" id="specnote"></p>
   </div>
@@ -132,14 +133,20 @@
     { t: 40, name: '40 tooth' }
   ];
 
-  // Approximate published figures for the two SPIKE Prime angular motors. They
-  // are here to turn a ratio into numbers a student can picture; treat them as
-  // ballpark, not a datasheet.
+  // Straight from LEGO Education's technical specification sheets for each
+  // motor, at a 7.2V supply. LEGO publishes three operating points, and they
+  // tell different parts of the story: a motor spins at its no-load speed with
+  // nothing attached, does its most useful work at maximum efficiency, and
+  // stops altogether at its stall torque. Speeds carry LEGO's own +/-15%.
   const MOTORS = {
-    medium: { key: 'medium', name: 'Medium Angular Motor', part: '45603',
-              rpm: 135, stall: 0.25 },
-    large:  { key: 'large',  name: 'Large Angular Motor',  part: '45602',
-              rpm: 135, stall: 0.40 }
+    medium: {
+      key: 'medium', name: 'Medium Angular Motor', part: '45603',
+      noLoadRpm: 185, effRpm: 135, effTorque: 3.5, stallTorque: 18
+    },
+    large: {
+      key: 'large', name: 'Large Angular Motor', part: '45602',
+      noLoadRpm: 175, effRpm: 135, effTorque: 8, stallTorque: 25
+    }
   };
 
   let motor = 'large';
@@ -149,7 +156,7 @@
     document.getElementById('motors').innerHTML = Object.values(MOTORS).map(m => `
       <button class="motor ${motor === m.key ? 'on' : ''}" onclick="pickMotor('${m.key}')">
         <div class="motor-name">${m.name}</div>
-        <div class="motor-spec">Part ${m.part} · about ${m.rpm} rpm with nothing attached · about ${m.stall} N·m at stall</div>
+        <div class="motor-spec">Part ${m.part} · ${m.noLoadRpm} rpm with nothing attached · ${m.effTorque} N·cm at its best working point · ${m.stallTorque} N·cm at stall</div>
       </button>`).join('');
   }
 
@@ -202,8 +209,10 @@
   function renderResult() {
     const { driving, driven, ratio } = asFraction();
     const m = MOTORS[motor];
-    const outRpm = m.rpm / ratio;
-    const outTorque = m.stall * ratio;
+    const outNoLoad = m.noLoadRpm / ratio;
+    const outWorking = m.effRpm / ratio;
+    const outEffTorque = m.effTorque * ratio;
+    const outStallTorque = m.stallTorque * ratio;
 
     let verdict, cls, why;
     if (ratio > 1) {
@@ -226,14 +235,19 @@
       <div class="verdict ${cls}">${verdict}</div>
       <div class="grid">
         <div class="cell">
-          <div class="cell-l">Output speed</div>
-          <div class="cell-v">${Math.round(outRpm)} rpm</div>
-          <div class="cell-s">${Math.round(outRpm * 6)}°/s · motor alone is ${m.rpm} rpm</div>
+          <div class="cell-l">Top speed, nothing attached</div>
+          <div class="cell-v">${Math.round(outNoLoad)} rpm</div>
+          <div class="cell-s">${Math.round(outNoLoad * 6)}°/s · motor alone is ${m.noLoadRpm} rpm</div>
         </div>
         <div class="cell">
-          <div class="cell-l">Turning force</div>
-          <div class="cell-v">${round(outTorque)} N·m</div>
-          <div class="cell-s">motor alone is about ${m.stall} N·m</div>
+          <div class="cell-l">Speed doing real work</div>
+          <div class="cell-v">${Math.round(outWorking)} rpm</div>
+          <div class="cell-s">pushing ${round(outEffTorque)} N·cm · motor alone is ${m.effRpm} rpm</div>
+        </div>
+        <div class="cell">
+          <div class="cell-l">Force before it stalls</div>
+          <div class="cell-v">${round(outStallTorque)} N·cm</div>
+          <div class="cell-s">motor alone stalls at ${m.stallTorque} N·cm</div>
         </div>
         <div class="cell">
           <div class="cell-l">Motor turns</div>
@@ -244,8 +258,10 @@
       <div class="why">${why}</div>`;
 
     document.getElementById('specnote').textContent =
-      `Speeds and forces use approximate published figures for the ${m.name} (${m.rpm} rpm, ${m.stall} N·m at stall) ` +
-      'and ignore friction, so treat them as a guide for comparing options rather than a measurement. The ratio itself is exact.';
+      `Motor figures are LEGO Education's published specifications for the ${m.name} (${m.part}) at a 7.2V supply: ` +
+      `${m.noLoadRpm} rpm with no load, ${m.effRpm} rpm at ${m.effTorque} N·cm where it works most efficiently, and ` +
+      `${m.stallTorque} N·cm at stall. LEGO quotes speeds to within 15%, and these numbers ignore friction in your own ` +
+      'build, so use them to compare options rather than as a measurement. The gear ratio itself is exact.';
   }
 
   function render() { renderStages(); renderResult(); }
