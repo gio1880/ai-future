@@ -607,6 +607,49 @@
     "videoId": "uhZZ8O1StiQ"
   },
   {
+    "id": "task-mission-model-building",
+    "assignmentId": "assignment-robot-game",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "Build the Mission Models 🧱",
+    "category": "Robot Game",
+    "type": "submission",
+    "workContext": "class",
+    "status": "todo",
+    "dueDate": "2026-08-08",
+    "description": "Before your team can plan a single run, the field has to be right. A mission model built wrong — or set up an inch off — makes every practice run a lie, and you will not find out until competition day.\n\n## 🧱 How to split the build\n\nDo not have one person build everything. Split the models between pairs and set a rule: **the person who did not build it checks it.** A second pair of eyes is the whole reason this works.\n\n| Job | What they do |\n|---|---|\n| Builder | Follows the instructions, no shortcuts |\n| Checker | Compares the finished model to the picture, piece by piece |\n| Setter | Places it on the mat using the official setup |\n\n## ⚠️ The three that go wrong most\n\n1. **Axles pushed in too far** — the model looks right but the mechanism binds. Spin every moving part by hand before you call it done.\n2. **Mirror builds** — built as a mirror image of the picture. Check which way it faces on the mat.\n3. **Missing rubber bands or friction pins** — these are what make a mission trigger properly. If a model resets too easily, or not at all, look here first.\n\n## 📺 Check your setup against the video\n\nThe field setup video is in your **Resources**. Watch it with the built field in front of you and pause at each model. Placement matters as much as the build — a model built right but placed wrong will still fail your runs.\n\n## 📸 Photograph everything\n\nTake a photo of each finished model and one wide shot of the whole field. When something breaks mid-season — and it will — those photos are how you rebuild it correctly in two minutes instead of twenty.\n\n## ➡️ Next\n\nWith the field built and verified, **Mission Analysis** is where you decide which missions are worth your time.",
+    "questions": [
+      {
+        "id": "model-table",
+        "type": "table",
+        "editableColumns": true,
+        "label": "One row per mission model — who built it, who checked it, and whether it works:",
+        "columns": [
+          "Model",
+          "Built by",
+          "Checked by",
+          "Moving parts tested?",
+          "Problems found"
+        ],
+        "minRows": 6,
+        "maxRows": 20
+      },
+      {
+        "id": "q1",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Which model gave you the most trouble, and how did you fix it?",
+        "placeholder": "Be specific — the fix is what you will need again when it breaks in November."
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "label": "What did you find when you checked your field against the setup video?",
+        "placeholder": "Anything placed wrong? Anything you rebuilt? \"Nothing\" only counts if you watched it with the field in front of you."
+      }
+    ]
+  },
+  {
     "id": "task-core-values-journal",
     "assignmentId": "assignment-core-values",
     "teamId": "team-01",
@@ -3528,6 +3571,68 @@
     "updatedAt": "2026-08-05T17:58:07.512Z"
   },
   {
+    "id": "task-mission-run-programming",
+    "assignmentId": "assignment-robot-game",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "Program a Mission Run: Stringing Missions Together 🎯",
+    "category": "Robot Game",
+    "type": "submission",
+    "workContext": "class",
+    "status": "todo",
+    "dueDate": "2026-09-26",
+    "description": "You can drive accurately and you have attachments. A **run** is the next thing: leave base, do several missions in one trip, come back. Two and a half minutes total, and every second in base is a second not scoring.\n\n## 🎯 What makes a run, not a list\n\nA run is a sequence you can repeat identically. That takes three things:\n\n1. **The robot starts in exactly the same place every time.** Use a start jig — a wall of bricks in the corner of base that the robot sits against. Lining up by eye is why runs that worked in practice fail at competition.\n2. **Every mission ends with the robot in a known position**, ready for the next. If you do not know where it ends, you cannot plan what comes next.\n3. **The order minimises travel.** Group missions that sit near each other. Crossing the field twice for two missions is a wasted run.\n\n## 🧩 Build it one mission at a time\n\nDo not write the whole run and then debug it. Write mission 1 and run it ten times. When it works ten out of ten, add mission 2. **Test after every addition** — then you always know exactly which change broke it.\n\n```\n# the shape of a run, not a program to copy\nreset_gyro()\ndo_mission_one()      # proved on its own first\ndo_mission_two()      # added only once mission one was reliable\nreturn_to_base()\n```\n\n## 📐 Reset your heading\n\nGyro drift builds up across a long run. Squaring against a wall mid-run, or resetting the gyro at a known point, stops a small error becoming a missed mission at the end.\n\n## ⏱️ Time it and count it\n\nRun it **ten times** and write down how many scored. A run that works 6 times out of 10 is not ready — and knowing that now is far better than finding out in front of judges.\n\n## ➡️ Next\n\n**Robot Ready Check** puts every run through this same reliability test before competition.",
+    "questions": [
+      {
+        "id": "run-table",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Your run, mission by mission — in the order the robot does them:",
+        "columns": [
+          "Order",
+          "Mission",
+          "Attachment used",
+          "Where the robot ends up",
+          "Points"
+        ],
+        "minRows": 3,
+        "maxRows": 12
+      },
+      {
+        "id": "reliability-table",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Run it ten times and record what happened:",
+        "columns": [
+          "Attempt",
+          "Missions scored",
+          "What went wrong (if anything)"
+        ],
+        "minRows": 10,
+        "maxRows": 10
+      },
+      {
+        "id": "q1",
+        "type": "text",
+        "label": "How long does the run take, and how many of the ten attempts scored everything?",
+        "placeholder": "e.g. 41 seconds, 7 out of 10"
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Describe your start jig — how does the robot line up the same way every time?",
+        "placeholder": "A photo helps here. \"We line it up by eye\" is the answer we are trying to replace."
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
+        "label": "Which failure happened most across your ten runs, and what will you change?",
+        "placeholder": "The most common failure is the one worth fixing first."
+      }
+    ]
+  },
+  {
     "id": "task-distance-calibration",
     "assignmentId": "assignment-kickoff-prep",
     "teamId": "team-01",
@@ -3997,5 +4102,48 @@
     "createdBy": "coach",
     "createdAt": "2026-08-15T00:22:13.555Z",
     "updatedAt": "2026-08-15T00:22:13.555Z"
+  },
+  {
+    "id": "task-gears-mechanisms",
+    "assignmentId": "assignment-robot-design",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "Gears & Mechanisms: Trade Speed for Strength ⚙️",
+    "category": "Robot Design",
+    "type": "submission",
+    "workContext": "class",
+    "status": "todo",
+    "dueDate": "2026-09-10",
+    "description": "Your attachments need to do two different jobs: **move fast** and **push hard**. You cannot have both from one motor — but you can choose which one you get, with gears.\n\n## ⚙️ The one rule that matters\n\n> Gearing **down** (small gear driving a big gear) gives you **more strength, less speed**.\n> Gearing **up** (big gear driving a small gear) gives you **more speed, less strength**.\n\nYou never get both. Every gear train is you choosing.\n\n| Ratio | What it means | Use it for |\n|---|---|---|\n| 1:1 | Same speed, same strength | Simple direct arms |\n| 1:3 down | Three times the strength, a third the speed | Lifting, pushing a stiff model |\n| 3:1 up | Three times the speed, a third the strength | Spinning, flicking, fast sweeps |\n\n## 🔍 Count the teeth, not the size\n\nDivide the driven gear teeth by the driving gear teeth. A 24-tooth gear driven by an 8-tooth gear is **24 ÷ 8 = 3** — three times the torque at a third of the speed.\n\n## 🧪 Build both and feel the difference\n\nBuild one simple arm geared **down** and the same arm geared **up**. Try to stop each with your finger. The geared-down one you will barely hold; the geared-up one stops easily. That is the whole lesson, in your hands.\n\n## ⚠️ What goes wrong\n\n- **Gears skipping** — the beams holding them are flexing apart. Brace them.\n- **Too much friction** — every extra gear costs you. Use the fewest that get the ratio you need.\n- **Backlash** — the wobble between teeth. It makes precise positioning hard, so do not gear a mechanism that must stop exactly.\n\n## ➡️ Next\n\nYou will use this in **Design Starter Attachments**. When an attachment is too weak, the answer is usually gearing, not a bigger motor.",
+    "questions": [
+      {
+        "id": "gear-table",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Record what you built and tested:",
+        "columns": [
+          "What you built",
+          "Driving gear teeth",
+          "Driven gear teeth",
+          "Ratio",
+          "Faster or stronger?"
+        ],
+        "minRows": 3,
+        "maxRows": 12
+      },
+      {
+        "id": "q1",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Describe the difference you FELT between the geared-up and geared-down arm:",
+        "placeholder": "Which one could you stop with your finger? Which one moved quickly?"
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "label": "Name one attachment your team will need, and say whether it needs speed or strength — and why:",
+        "placeholder": "e.g. \"The lever pusher needs strength, because the model is stiff and our arm stalled on it.\""
+      }
+    ]
   }
 ]
