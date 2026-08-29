@@ -626,6 +626,18 @@
     .im-c-chosen { font-size:14px; font-weight:650; color:var(--t-strong); padding:10px 13px;
       background:var(--tint-green); border-radius:10px; }
     .im-c-note { font-size:12.5px; font-weight:500; color:var(--t-muted); margin-top:5px; }
+    .mnt-card { border-color: var(--s-line-2); }
+    .mnt-state { font-size:12.5px; font-weight:750; color:var(--t-faint); white-space:nowrap; }
+    .mnt-state.is-on { color:#d93025; }
+    .mnt-row { display:flex; gap:9px; flex-wrap:wrap; margin-top:12px; }
+    .mnt-input { flex:1; min-width:240px; }
+    .mnt-when { width:190px; }
+    .mnt-input, .mnt-when { padding:9px 12px; border:1.5px solid var(--s-line-2); border-radius:9px;
+      font-size:13px; background:var(--s-card); color:var(--t-strong); font-family:inherit; }
+    .mnt-actions { display:flex; align-items:center; gap:9px; margin-top:11px; flex-wrap:wrap; }
+    .btn-danger { background:#d93025 !important; color:#fff !important; border:none !important;
+      border-radius:9px; padding:9px 16px; font-weight:750; font-size:13px; cursor:pointer; font-family:inherit; }
+    .btn-danger:hover { background:#b3261e !important; }
 </style>
   <link rel="stylesheet" href="/assets/css/theme.css">
   <script>(function(){try{var t=localStorage.getItem("af-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
@@ -921,6 +933,27 @@
       </div>
     </div>
     <div class="panel" id="panel-visibility">
+      <div class="visibility-card mnt-card">
+        <div class="visibility-head">
+          <div>
+            <h2 class="form-title">🛠️ Pause the student hub</h2>
+            <p class="form-sub">Shows students a "we are working on it" screen instead of their hub. You and other coaches keep full access, so you can work while it is on. Turn it on before you start and off when you are done — it does not switch itself off.</p>
+          </div>
+          <span class="mnt-state" id="mntState">…</span>
+        </div>
+        <div class="mnt-row">
+          <input class="mnt-input" id="mntMessage" type="text" maxlength="400"
+            placeholder="What students see (optional) — e.g. We are adding this week's lessons.">
+          <input class="mnt-when" id="mntBackBy" type="text" maxlength="80"
+            placeholder="Back by… e.g. in an hour">
+        </div>
+        <div class="mnt-actions">
+          <button class="btn-primary" id="mntToggle" onclick="toggleMaintenance()">Turn on</button>
+          <button class="btn-ghost" onclick="saveMaintenanceText()">Save the message</button>
+          <span class="form-msg" id="mntMsg"></span>
+        </div>
+      </div>
+
       <div class="visibility-card">
         <div class="visibility-head">
           <div>
@@ -1024,7 +1057,7 @@
       document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === `panel-${id}`));
       if (id === 'live') loadLiveSlides();
       if (id === 'rankings') loadRankings();
-      if (id === 'visibility') renderVisibility();
+      if (id === 'visibility') { renderVisibility(); loadMaintenance(); }
       if (id === 'submissions') loadSubmissions();
       if (id === 'robots') loadRobotProfiles();
       if (id === 'ideamaps') { loadIdeaMaps(); loadIdeaMapSources(); }
@@ -1033,6 +1066,65 @@
       if (id === 'online') startOnlinePolling(); else stopOnlinePolling();
     }
 
+
+
+    // ── Pausing the student hub ───────────────────────────────────────────
+    // Deliberately manual on and off. A timer that expired on its own would
+    // let students back in mid-change, which is the thing this exists to stop.
+    let maintenanceCache = null;
+
+    async function loadMaintenance() {
+      try {
+        const r = await api('/api/fll/coach/maintenance');
+        maintenanceCache = r.maintenance;
+        renderMaintenance();
+      } catch (e) {
+        document.getElementById('mntState').textContent = 'could not load';
+      }
+    }
+
+    function renderMaintenance() {
+      const m = maintenanceCache || { on: false, message: '', backBy: '' };
+      const state = document.getElementById('mntState');
+      const btn = document.getElementById('mntToggle');
+      state.textContent = m.on ? '● Students are held out' : '○ Students have normal access';
+      state.className = 'mnt-state' + (m.on ? ' is-on' : '');
+      btn.textContent = m.on ? 'Turn off — let students back in' : 'Turn on';
+      btn.className = m.on ? 'btn-danger' : 'btn-primary';
+      document.getElementById('mntMessage').value = m.message || '';
+      document.getElementById('mntBackBy').value = m.backBy || '';
+    }
+
+    async function putMaintenance(on, note) {
+      const msg = document.getElementById('mntMsg');
+      msg.textContent = 'Saving…'; msg.className = 'form-msg';
+      try {
+        const r = await api('/api/fll/coach/maintenance', {
+          method: 'PUT',
+          body: JSON.stringify({
+            on,
+            message: document.getElementById('mntMessage').value,
+            backBy: document.getElementById('mntBackBy').value
+          })
+        });
+        maintenanceCache = r.maintenance;
+        renderMaintenance();
+        msg.textContent = note; msg.className = 'form-msg success';
+        showToast(on ? 'Student hub paused' : 'Student hub is open again');
+      } catch (e) {
+        msg.textContent = e.message; msg.className = 'form-msg error';
+      }
+    }
+
+    function toggleMaintenance() {
+      const on = !(maintenanceCache && maintenanceCache.on);
+      if (on && !confirm('Students will not be able to open the hub until you turn this off. Continue?')) return;
+      putMaintenance(on, on ? 'Students now see the hold screen.' : 'Students can get back in.');
+    }
+
+    function saveMaintenanceText() {
+      putMaintenance(!!(maintenanceCache && maintenanceCache.on), 'Message saved.');
+    }
 
     // ── Team idea maps ────────────────────────────────────────────────────
     // Read-only on purpose. The map is the team's own living document; a coach

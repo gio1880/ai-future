@@ -1178,6 +1178,15 @@ function normalizeFllSettings(data) {
 	// Lessons the coach has explicitly told the idea map to read. Empty means
 	// "work it out from the titles" — this exists because guessing cannot cover
 	// every lesson a coach writes.
+	// Planned-work notice. Students get a hold screen; coaches keep working, so
+	// whoever switched it on can still see what they are doing.
+	const maint = source.maintenance && typeof source.maintenance === 'object' ? source.maintenance : {};
+	const maintenance = {
+		on: maint.on === true,
+		message: cleanMetaString(maint.message || '', 400),
+		backBy: cleanMetaString(maint.backBy || '', 80),
+		startedAt: cleanMetaString(maint.startedAt || '', 40)
+	};
 	const ideaMapSources = Array.isArray(source.ideaMapSources)
 		? [...new Set(source.ideaMapSources.map((id) => cleanMetaString(id, 160)).filter(Boolean))]
 		: [];
@@ -1185,6 +1194,7 @@ function normalizeFllSettings(data) {
 		disabledAreas: [...new Set(disabledAreas)],
 		simulatorEnabled: source.simulatorEnabled !== false, // default on
 		ideaMapSources,
+		maintenance,
 		hiddenAssignments,
 		hiddenResources,
 		teamSettings
@@ -1207,7 +1217,15 @@ function effectiveFllSettings(settings, teamId) {
 	};
 }
 async function readFllSettings() {
-	return normalizeFllSettings(await readJsonFile(fllSettingsFile, {}));
+	// Settings are coach preferences, all with sane defaults. An unreadable
+	// file used to throw straight out of the student dashboard, so one bad
+	// write took the hub down for every student. Fall back and carry on.
+	try {
+		return normalizeFllSettings(await readJsonFile(fllSettingsFile, {}));
+	} catch (err) {
+		console.error('FLL settings unreadable, using defaults:', err.message);
+		return normalizeFllSettings({});
+	}
 }
 async function writeFllSettings(settings) {
 	await writeJsonFile(fllSettingsFile, normalizeFllSettings(settings));
@@ -5047,11 +5065,87 @@ app.get('/api/summer-inquiry/export', requireSummerAdmin, async (req, res) => {
 	}
 });
 
+// Students are held out while work is going on; coaches are not, and the
+// login page stays reachable so a coach can get in and switch it off again.
+async function fllMaintenanceGate(req, res, next) {
+	try {
+		const settings = await readFllSettings();
+		if (!settings.maintenance.on) return next();
+		const session = getFllSession(req);
+		if (session) {
+			const users = await readFllUsers();
+			const user = users.find((u) => u.id === session.userId);
+			if (user && user.role !== 'student') return next();      // coaches work through it
+		}
+		if (req.path.startsWith('/api/')) {
+			return res.status(503).json({
+				success: false, maintenance: true,
+				message: settings.maintenance.message || 'The hub is being updated. Please check back shortly.'
+			});
+		}
+		return res.status(503).send(fllMaintenancePage(settings.maintenance));
+	} catch (err) {
+		console.error('FLL maintenance gate error:', err);
+		return next();                                               // never lock people out on a bug
+	}
+}
+
+function fllMaintenancePage(m) {
+	const esc = (v) => String(v || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+	return `<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Back soon | AI Future FLL</title>
+<style>
+ :root { color-scheme: light dark; }
+ body { margin:0; min-height:100vh; display:grid; place-items:center; padding:24px;
+   font-family:system-ui,-apple-system,"Segoe UI",sans-serif; background:#eef2fb; color:#12233f; }
+ .card { max-width:520px; background:#fff; border-radius:20px; padding:38px 34px; text-align:center;
+   box-shadow:0 18px 50px rgba(16,38,73,.14); }
+ h1 { margin:0 0 10px; font-size:26px; }
+ p { margin:0 0 10px; font-size:16px; line-height:1.6; color:#40546f; }
+ .when { margin-top:18px; display:inline-block; padding:9px 16px; border-radius:50px;
+   background:#eaf1ff; color:#174ea6; font-weight:700; font-size:14px; }
+ @media (prefers-color-scheme: dark) {
+   body { background:#0f1724; color:#e9eff7; }
+   .card { background:#18212e; box-shadow:none; border:1px solid #2b3849; }
+   p { color:#9fb0c6; } .when { background:#1d2b3f; color:#8ab4f8; }
+ }
+</style></head><body><div class="card">
+<div style="font-size:44px">&#128736;&#65039;</div>
+<h1>We are working on the hub</h1>
+<p>${esc(m.message || 'Your coach is making updates right now. Nothing you have turned in is affected.')}</p>
+${m.backBy ? `<div class="when">Try again ${esc(m.backBy)}</div>` : '<div class="when">Please check back shortly</div>'}
+</div></body></html>`;
+}
+
+app.get('/api/fll/coach/maintenance', requireFllAuth, requireFllCoach, async (req, res) => {
+	const settings = await readFllSettings();
+	return res.json({ success: true, maintenance: settings.maintenance });
+});
+
+app.put('/api/fll/coach/maintenance', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const settings = await readFllSettings();
+		const on = req.body.on === true;
+		settings.maintenance = {
+			on,
+			message: cleanMetaString(req.body.message || '', 400),
+			backBy: cleanMetaString(req.body.backBy || '', 80),
+			startedAt: on ? (settings.maintenance.startedAt || new Date().toISOString()) : ''
+		};
+		await writeFllSettings(settings);
+		return res.json({ success: true, maintenance: settings.maintenance });
+	} catch (err) {
+		console.error('FLL maintenance save error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving maintenance mode' });
+	}
+});
+
 app.get(['/fll-hub/login', '/fll-hub/login/'], (req, res) => {
 	res.sendFile(path.join(fllHubDir, 'login.html'));
 });
 
-app.get(['/fll-hub', '/fll-hub/'], requireFllAuth, (req, res) => {
+app.get(['/fll-hub', '/fll-hub/'], fllMaintenanceGate, requireFllAuth, (req, res) => {
 	if (req.fllUser.role === 'student') {
 		return res.redirect(302, '/fll-hub/student');
 	}
@@ -5179,7 +5273,7 @@ app.get('/api/fll/hub-data', requireFllAuth, async (req, res) => {
 	}
 });
 
-app.get('/api/fll/student-dashboard', requireFllAuth, requireFllStudent, async (req, res) => {
+app.get('/api/fll/student-dashboard', fllMaintenanceGate, requireFllAuth, requireFllStudent, async (req, res) => {
 	try {
 		const data = await getFllStudentDashboardFor(req.fllUser);
 		return res.json({ success: true, data });

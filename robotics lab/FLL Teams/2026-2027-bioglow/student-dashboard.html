@@ -3692,7 +3692,13 @@
     .lo-waiting { text-align: center; color: var(--muted); margin-top: 12vh; }
     .lo-waiting .big { font-size: 52px; display: block; margin-bottom: 14px; }
     @media (max-width: 520px) { .lo-answers { grid-template-columns: 1fr; } }
-  </style>
+      .mnt-hold { min-height:100vh; display:grid; place-items:center; padding:24px; background:var(--s-bg); }
+    .mnt-hold-card { max-width:520px; text-align:center; background:var(--s-card); border-radius:20px;
+      padding:38px 34px; border:1px solid var(--s-line-2); }
+    .mnt-hold-icon { font-size:44px; }
+    .mnt-hold-card h1 { margin:10px 0; font-size:25px; color:var(--t-strong); }
+    .mnt-hold-card p { font-size:15.5px; line-height:1.6; color:var(--t-muted); margin-bottom:20px; }
+</style>
   <link rel="stylesheet" href="/assets/css/theme.css">
   <script>(function(){try{var t=localStorage.getItem("af-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
   <link rel="stylesheet" href="/assets/css/fll-premium.css">
@@ -6945,11 +6951,26 @@
       try {
         const response = await fetch('/api/fll/student-dashboard');
         const result = await response.json();
+        // A paused hub is not a broken login — bouncing them to the sign-in
+        // page would just make them try again and get nowhere.
+        if (result && result.maintenance) { showMaintenanceHold(result.message); return; }
         if (!response.ok || !result.success) throw new Error(result.message || 'Student login required');
         renderDashboard(result.data);
       } catch (err) {
         window.location.href = '/fll-hub/login';
       }
+    }
+
+    function showMaintenanceHold(message) {
+      document.body.innerHTML = `
+        <div class="mnt-hold">
+          <div class="mnt-hold-card">
+            <div class="mnt-hold-icon">🛠️</div>
+            <h1>We are working on the hub</h1>
+            <p>${escapeHtml(message || 'Your coach is making updates right now. Nothing you have turned in is affected.')}</p>
+            <button class="ta-submit-btn" onclick="location.reload()">Try again</button>
+          </div>
+        </div>`;
     }
 
     async function updateTaskStatus(taskId, status) {
