@@ -6489,7 +6489,7 @@
               <label class="im-pull-q">
                 <input type="checkbox" data-pull="${mi}" data-les="${li}" value="${escapeHtml(q.id)}" checked>
                 <span>${escapeHtml(q.label)}</span>
-                <span class="im-pull-count">${q.count}</span>
+                <span class="im-pull-count">${q.count} ${q.shape === 'table' ? 'cell' : 'line'}${q.count !== 1 ? 's' : ''}</span>
               </label>`).join('')}
             <button class="im-add" onclick="pullFromLesson(${mi},${li})">Add these to my column</button>
           </div>`).join('');

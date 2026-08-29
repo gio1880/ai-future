@@ -6629,7 +6629,8 @@ function splitIdeaLines(value) {
 		.split('\n')
 		.map((line) => line.replace(/^\s*(?:\d+[.)]|[-*•])\s*/, '').trim())
 		.filter((line) => line.length > 1)
-		.slice(0, 12);
+		// a brainstorm is meant to be long; twelve quietly dropped real work
+		.slice(0, 40);
 }
 
 function ideaId(prefix, n) { return prefix + '-' + n + '-' + crypto.randomBytes(2).toString('hex'); }
@@ -6661,6 +6662,40 @@ function brainstormTaskBaseIds(allTasks, explicitSources = []) {
 // Pull the idea lists out of a brainstorm submission. The canonical lesson
 // keeps them in q1 (Round 1); a coach-made one can use any field, so anything
 // that reads as a list is taken and the rest left alone.
+// A table answer is stored as JSON rows. Students brainstorm straight into
+// these — the topics table on the prompt lesson is one — so refusing to read
+// them left whole teams with an empty map. Every row is data; the column names
+// live separately and are not part of the answer.
+function ideasFromTableAnswer(value) {
+	let rows;
+	try { rows = JSON.parse(value); } catch (e) { return []; }
+	if (!Array.isArray(rows)) return [];
+	const out = [];
+	for (const row of rows) {
+		for (const cell of (Array.isArray(row) ? row : [])) {
+			const text = String(cell || '').trim();
+			if (text.length < 2) continue;                     // blank or a stray character
+			if (/^https?:\/\//i.test(text)) continue;          // a source link, not an idea
+			if (text.length > 200) continue;                   // a paragraph, not an idea
+			out.push(text);
+		}
+	}
+	return out.slice(0, 40);
+}
+
+function looksLikeTableAnswer(text) {
+	return String(text || '').trim().startsWith('[');
+}
+
+// How many usable ideas an answer holds, whatever shape it is. Used to decide
+// whether an answer is worth offering as a source at all.
+function ideaLinesFromAnswer(value) {
+	const text = String(value || '');
+	if (looksLikeTableAnswer(text)) return ideasFromTableAnswer(text);
+	const lines = splitIdeaLines(text);
+	return lines.length >= 2 ? lines : [];    // a single line is prose, not a list
+}
+
 function ideasFromBrainstormAnswers(answers, isCanonical, onlyQuestionIds = null) {
 	if (!answers || typeof answers !== 'object') return [];
 	// An explicit question list wins: importing Step 1 should be able to bring
@@ -6669,9 +6704,9 @@ function ideasFromBrainstormAnswers(answers, isCanonical, onlyQuestionIds = null
 		const wanted = new Set(onlyQuestionIds);
 		const picked = [];
 		for (const key of wanted) {
+			// an explicitly chosen answer is taken whatever shape it is
 			const text = String(answers[key] || '');
-			if (text.trim().startsWith('[')) continue;
-			picked.push(...splitIdeaLines(text));
+			picked.push(...(looksLikeTableAnswer(text) ? ideasFromTableAnswer(text) : splitIdeaLines(text)));
 		}
 		return picked;
 	}
@@ -6679,10 +6714,7 @@ function ideasFromBrainstormAnswers(answers, isCanonical, onlyQuestionIds = null
 	const out = [];
 	for (const [key, value] of Object.entries(answers)) {
 		if (/__(link|photo|cols)$/.test(key)) continue;
-		const text = String(value || '');
-		if (text.trim().startsWith('[')) continue;      // a table answer, not a list
-		const lines = splitIdeaLines(text);
-		if (lines.length >= 2) out.push(...lines);       // one-line answers are prose
+		out.push(...ideaLinesFromAnswer(value));
 	}
 	return out;
 }
@@ -6756,7 +6788,7 @@ async function seedIdeaMapForTeam(teamId) {
 			step1: mySubs.length ? 'turned-in' : hasDraft ? 'started' : 'not-started',
 			// say so, so nobody wonders where a line came from
 			source: fromFallback && ideas.length ? 'other-lesson' : '',
-			ideas: ideas.slice(0, 20)
+			ideas: ideas.slice(0, 40)
 		};
 	});
 
@@ -6791,12 +6823,12 @@ function normalizeIdeaMap(raw, teamId) {
 	const chosen = src.chosen && typeof src.chosen === 'object' ? src.chosen : {};
 	return {
 		teamId,
-		members: (Array.isArray(src.members) ? src.members : []).slice(0, 12).map((m, mi) => ({
+		members: (Array.isArray(src.members) ? src.members : []).slice(0, 16).map((m, mi) => ({
 			studentId: text(m.studentId, 160),
 			name: text(m.name, 80) || 'Team member',
 			step1: ['turned-in', 'started', 'not-started'].includes(m.step1) ? m.step1 : 'not-started',
 			source: m.source === 'other-lesson' ? 'other-lesson' : '',
-			ideas: (Array.isArray(m.ideas) ? m.ideas : []).slice(0, 12)
+			ideas: (Array.isArray(m.ideas) ? m.ideas : []).slice(0, 40)
 				.map((idea, i) => ({ id: text(idea.id, 60) || ideaId('idea', String(mi) + String(i)), text: text(idea.text, 200) }))
 				.filter((idea) => idea.text)
 		})),
@@ -6862,11 +6894,15 @@ function listShapedQuestions(answers, labels) {
 	const out = [];
 	for (const [key, value] of Object.entries(answers || {})) {
 		if (/__(link|photo|cols)$/.test(key)) continue;
-		const text = String(value || '');
-		if (text.trim().startsWith('[')) continue;          // a table answer
-		const lines = splitIdeaLines(text);
-		if (lines.length < 2) continue;                      // one line is prose
-		out.push({ id: key, label: labels[key] || key, count: lines.length });
+		const lines = ideaLinesFromAnswer(value);
+		if (!lines.length) continue;
+		out.push({
+			id: key,
+			label: labels[key] || key,
+			count: lines.length,
+			// say which it is, so a robot tracker is recognisable before ticking
+			shape: looksLikeTableAnswer(value) ? 'table' : 'list'
+		});
 	}
 	return out;
 }
@@ -7049,7 +7085,7 @@ app.post('/api/fll/coach/idea-map/import', requireFllAuth, requireFllCoach, asyn
 			member.ideas.push({ id: 'import-' + submission.id + '-' + member.ideas.length, text });
 			added++;
 		}
-		member.ideas = member.ideas.slice(0, 20);
+		member.ideas = member.ideas.slice(0, 40);
 		map.updatedBy = req.fllUser.name || 'Coach';
 		map.updatedAt = new Date().toISOString();
 		if (!map.seededAt) map.seededAt = map.updatedAt;
