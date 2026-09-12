@@ -41,6 +41,10 @@ const fllSimulatorProgressFile = path.join(fllHubDataDir, 'simulator-progress.js
 const fllRobotProfilesFile = path.join(fllHubDataDir, 'robot-profiles.json');
 const fllTaskDraftsFile = path.join(fllHubDataDir, 'task-drafts.json');
 const fllIdeaMapsFile = path.join(fllHubDataDir, 'idea-maps.json');
+const fllCoachFilesFile = path.join(fllHubDataDir, 'coach-files.json');
+// Uploaded files live beside the data on the persistent disk, never in the
+// repo, and are only ever served through an authenticated route.
+const fllUploadsDir = path.join(fllHubDataDir, 'uploads');
 const fllCoachRankingsFile = path.join(fllHubDataDir, 'coach-rankings.json');
 const fllSettingsFile = path.join(fllHubDataDir, 'fll-settings.json');
 const codeLabStudentsFile = path.join(__dirname, 'code-lab', 'data', 'students.json');
@@ -68,6 +72,7 @@ const fllDataFileNames = [
 	'robot-profiles.json',
 	'task-drafts.json',
 	'idea-maps.json',
+	'coach-files.json',
 	'coach-rankings.json',
 	'fll-settings.json'
 ];
@@ -1055,6 +1060,7 @@ async function buildDataHealthReport() {
 		'robot-profiles.json': 'runtime-student-work',
 		'task-drafts.json': 'runtime-student-work',
 		'idea-maps.json': 'runtime-student-work',
+		'coach-files.json': 'runtime-student-work',
 		'fll-settings.json': 'runtime-coach-configuration',
 		'coach-rankings.json': 'runtime-coach-assessment'
 	};
@@ -5411,6 +5417,246 @@ app.get(['/fll-hub/simulator', '/fll-hub/simulator/'], requireFllAuth, requireFl
 // tool, useful to a team whether or not the simulator is on.
 app.get(['/fll-hub/gears', '/fll-hub/gears/'], requireFllAuth, (req, res) => {
 	res.sendFile(path.join(fllHubDir, 'gear-calculator.html'));
+});
+
+// ── Coach file library ─────────────────────────────────────────────────────
+// Coaches upload the things a team needs to open — rubrics, slide decks, build
+// PDFs, photos, sample programs — and students download them from the hub.
+//
+// Three rules shape the implementation. Files go on the persistent disk beside
+// the data, never into the repo. They are served only through an authenticated
+// route, so a guessed URL gets nothing. And anything that a browser could be
+// talked into executing is sent as a download rather than rendered, so an
+// uploaded page can never run on the hub's own origin.
+
+// What may be uploaded, by extension, with the type it is served as. An
+// allowlist rather than a blocklist: a file type nobody recognises is far more
+// likely to be a mistake than something a team needs.
+const FLL_UPLOAD_TYPES = {
+	// documents
+	pdf: 'application/pdf',
+	doc: 'application/msword',
+	docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+	ppt: 'application/vnd.ms-powerpoint',
+	pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+	xls: 'application/vnd.ms-excel',
+	xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+	csv: 'text/csv',
+	txt: 'text/plain',
+	md: 'text/markdown',
+	rtf: 'application/rtf',
+	odt: 'application/vnd.oasis.opendocument.text',
+	odp: 'application/vnd.oasis.opendocument.presentation',
+	ods: 'application/vnd.oasis.opendocument.spreadsheet',
+	// images
+	png: 'image/png',
+	jpg: 'image/jpeg',
+	jpeg: 'image/jpeg',
+	gif: 'image/gif',
+	webp: 'image/webp',
+	heic: 'image/heic',
+	bmp: 'image/bmp',
+	// robotics work
+	llsp: 'application/octet-stream',
+	llsp3: 'application/octet-stream',
+	lms: 'application/octet-stream',
+	lmsp: 'application/octet-stream',
+	ev3: 'application/octet-stream',
+	rbf: 'application/octet-stream',
+	lxf: 'application/octet-stream',
+	io: 'application/octet-stream',
+	py: 'text/plain',
+	json: 'application/json',
+	// media and bundles
+	mp4: 'video/mp4',
+	mov: 'video/quicktime',
+	mp3: 'audio/mpeg',
+	m4a: 'audio/mp4',
+	wav: 'audio/wav',
+	zip: 'application/zip'
+};
+
+// Rendered in the browser rather than downloaded. Everything else — including
+// SVG and anything HTML-ish, which can carry script — is sent as a download.
+const FLL_INLINE_TYPES = new Set(['application/pdf', 'image/png', 'image/jpeg',
+	'image/gif', 'image/webp', 'image/bmp', 'video/mp4', 'audio/mpeg', 'audio/wav']);
+
+const FLL_UPLOAD_MAX_BYTES = 25 * 1024 * 1024;
+
+function uploadExtension(name) {
+	const match = String(name || '').toLowerCase().match(/\.([a-z0-9]{1,8})$/);
+	return match ? match[1] : '';
+}
+
+// The stored name is generated, never taken from the upload, so a crafted
+// filename cannot walk out of the uploads directory.
+function storedFileName(id, ext) {
+	return `${id}${ext ? '.' + ext : ''}`;
+}
+
+async function readCoachFiles() {
+	const data = await readJsonFile(fllCoachFilesFile, []);
+	return Array.isArray(data) ? data : [];
+}
+
+function publicCoachFile(entry) {
+	return {
+		id: entry.id,
+		name: entry.name,
+		description: entry.description || '',
+		ext: entry.ext || '',
+		size: entry.size || 0,
+		teamId: entry.teamId || '',
+		hidden: entry.hidden === true,
+		uploadedBy: entry.uploadedBy || '',
+		uploadedAt: entry.uploadedAt || '',
+		url: `/fll-hub/files/${entry.id}`
+	};
+}
+
+// A student sees files aimed at everyone plus files aimed at their own team,
+// and never one their coach has switched off.
+function coachFilesForStudent(files, teamId) {
+	return files
+		.filter((f) => !f.hidden)
+		.filter((f) => !f.teamId || f.teamId === teamId)
+		.map(publicCoachFile)
+		.sort((a, b) => String(b.uploadedAt).localeCompare(String(a.uploadedAt)));
+}
+
+app.get('/api/fll/files', requireFllAuth, async (req, res) => {
+	try {
+		const files = await readCoachFiles();
+		if (req.fllUser.role !== 'student') {
+			return res.json({ success: true, files: files.map(publicCoachFile) });
+		}
+		return res.json({ success: true, files: coachFilesForStudent(files, req.fllUser.teamId) });
+	} catch (err) {
+		console.error('FLL files list error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading files' });
+	}
+});
+
+// The body is the file itself. Sending it raw rather than base64 keeps a 25MB
+// upload at 25MB instead of inflating it by a third, and needs no new
+// dependency. Everything about the file travels in the query string.
+app.post('/api/fll/coach/files',
+	requireFllAuth, requireFllCoach,
+	express.raw({ type: '*/*', limit: FLL_UPLOAD_MAX_BYTES }),
+	async (req, res) => {
+		try {
+			const name = cleanMetaString(req.query.name || '', 160);
+			if (!name) return res.status(400).json({ success: false, message: 'The file needs a name.' });
+			const ext = uploadExtension(name);
+			const type = FLL_UPLOAD_TYPES[ext];
+			if (!type) {
+				return res.status(400).json({
+					success: false,
+					message: `.${ext || '?'} files are not accepted. Allowed: ${Object.keys(FLL_UPLOAD_TYPES).join(', ')}.`
+				});
+			}
+			if (!Buffer.isBuffer(req.body) || !req.body.length) {
+				return res.status(400).json({ success: false, message: 'That file came through empty.' });
+			}
+			if (req.body.length > FLL_UPLOAD_MAX_BYTES) {
+				return res.status(413).json({ success: false, message: 'That file is over the 25MB limit.' });
+			}
+
+			const id = `file-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`;
+			await fs.mkdir(fllUploadsDir, { recursive: true });
+			await fs.writeFile(path.join(fllUploadsDir, storedFileName(id, ext)), req.body);
+
+			const entry = {
+				id,
+				name,
+				description: cleanMetaString(req.query.description || '', 300),
+				ext,
+				type,
+				size: req.body.length,
+				teamId: cleanMetaString(req.query.teamId || '', 100),
+				hidden: false,
+				uploadedBy: req.fllUser.name || 'Coach',
+				uploadedAt: new Date().toISOString()
+			};
+			const files = await readCoachFiles();
+			files.push(entry);
+			await writeJsonFile(fllCoachFilesFile, files);
+			return res.status(201).json({ success: true, file: publicCoachFile(entry) });
+		} catch (err) {
+			if (err && err.type === 'entity.too.large') {
+				return res.status(413).json({ success: false, message: 'That file is over the 25MB limit.' });
+			}
+			console.error('FLL file upload error:', err);
+			return res.status(500).json({ success: false, message: 'Server error saving that file' });
+		}
+	});
+
+app.patch('/api/fll/coach/files/:id', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const files = await readCoachFiles();
+		const entry = files.find((f) => f.id === req.params.id);
+		if (!entry) return res.status(404).json({ success: false, message: 'File not found' });
+		if (typeof req.body.hidden === 'boolean') entry.hidden = req.body.hidden;
+		if (typeof req.body.description === 'string') entry.description = cleanMetaString(req.body.description, 300);
+		if (typeof req.body.teamId === 'string') entry.teamId = cleanMetaString(req.body.teamId, 100);
+		if (typeof req.body.name === 'string' && req.body.name.trim()) {
+			// the extension decides how the file is served, so it stays put
+			const wanted = cleanMetaString(req.body.name, 160);
+			if (uploadExtension(wanted) === entry.ext) entry.name = wanted;
+		}
+		await writeJsonFile(fllCoachFilesFile, files);
+		return res.json({ success: true, file: publicCoachFile(entry) });
+	} catch (err) {
+		console.error('FLL file update error:', err);
+		return res.status(500).json({ success: false, message: 'Server error updating that file' });
+	}
+});
+
+app.delete('/api/fll/coach/files/:id', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const files = await readCoachFiles();
+		const index = files.findIndex((f) => f.id === req.params.id);
+		if (index < 0) return res.status(404).json({ success: false, message: 'File not found' });
+		const [entry] = files.splice(index, 1);
+		await writeJsonFile(fllCoachFilesFile, files);
+		// the record goes first: a leftover file on disk is harmless, a record
+		// pointing at nothing is a broken download for a student
+		try {
+			await fs.unlink(path.join(fllUploadsDir, storedFileName(entry.id, entry.ext)));
+		} catch (err) { /* already gone */ }
+		return res.json({ success: true, removed: entry.name });
+	} catch (err) {
+		console.error('FLL file delete error:', err);
+		return res.status(500).json({ success: false, message: 'Server error removing that file' });
+	}
+});
+
+app.get('/fll-hub/files/:id', requireFllAuth, async (req, res) => {
+	try {
+		const files = await readCoachFiles();
+		const entry = files.find((f) => f.id === req.params.id);
+		if (!entry) return res.status(404).send('File not found');
+		// a hidden file, or one meant for another team, is refused rather than
+		// merely left off the list — a remembered link must not walk past that
+		if (req.fllUser.role === 'student') {
+			if (entry.hidden) return res.status(403).send('Your coach has turned this file off for now.');
+			if (entry.teamId && entry.teamId !== req.fllUser.teamId) {
+				return res.status(403).send('That file is for another team.');
+			}
+		}
+		const disposition = FLL_INLINE_TYPES.has(entry.type) ? 'inline' : 'attachment';
+		// nosniff stops the browser second-guessing the type we declare
+		res.setHeader('X-Content-Type-Options', 'nosniff');
+		res.setHeader('Content-Type', entry.type);
+		res.setHeader('Content-Disposition',
+			`${disposition}; filename="${entry.name.replace(/["\\]/g, '')}"`);
+		return res.sendFile(path.join(fllUploadsDir, storedFileName(entry.id, entry.ext)), (err) => {
+			if (err && !res.headersSent) res.status(404).send('File not found');
+		});
+	} catch (err) {
+		console.error('FLL file download error:', err);
+		return res.status(500).send('Server error');
+	}
 });
 
 // Mission model building instructions. These are LEGO's copyrighted PDFs, so

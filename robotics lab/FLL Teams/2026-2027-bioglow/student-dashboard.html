@@ -3705,6 +3705,23 @@
     .mnt-hold-icon { font-size:44px; }
     .mnt-hold-card h1 { margin:10px 0; font-size:25px; color:var(--t-strong); }
     .mnt-hold-card p { font-size:15.5px; line-height:1.6; color:var(--t-muted); margin-bottom:20px; }
+    .cf-card { margin:16px 0 4px; padding:16px 18px; border-radius:16px; background:var(--s-card);
+      border:1.5px solid var(--s-line-2); }
+    .cf-head { font-size:15px; font-weight:800; color:var(--t-strong); margin-bottom:10px;
+      display:flex; align-items:center; gap:8px; }
+    .cf-count { font-size:11.5px; font-weight:750; color:var(--t-faint); }
+    .cf-list { display:flex; flex-direction:column; }
+    .cf-row { display:flex; align-items:center; gap:12px; padding:11px 10px; border-radius:11px;
+      text-decoration:none; color:inherit; border:1px solid transparent; }
+    .cf-row:hover { background:var(--s-hover); border-color:var(--s-line-2); }
+    .cf-ico { font-size:21px; flex:none; }
+    .cf-main { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+    .cf-name { font-size:14px; font-weight:750; color:var(--t-strong); }
+    .cf-desc { font-size:12.5px; color:var(--t-muted); line-height:1.45; }
+    .cf-meta { font-size:11.5px; color:var(--t-faint); }
+    .cf-go { flex:none; font-size:13px; font-weight:750; color:#1a73e8; }
+    @media (max-width:560px) { .cf-go { display:none; } }
+    @media (pointer: coarse) { .cf-row { min-height:56px; } }
 </style>
   <link rel="stylesheet" href="/assets/css/theme.css">
   <script>(function(){try{var t=localStorage.getItem("af-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
@@ -6310,6 +6327,7 @@
         ${infoRow}
         ${renderIdeaMapTile(data)}
         ${renderGearTile(data)}
+        <div id="coachFilesSlot"></div>
         ${preSeasonSection}
         <div class="cat-grid-title">📂 Your FLL Areas</div>
         <div class="cat-grid">${cards}</div>
@@ -6348,6 +6366,59 @@
           </div>
           <div class="im-tile-go">Open →</div>
         </a>`;
+    }
+
+    // ── Files your coach uploaded ─────────────────────────────────────────
+    // Fetched after the dashboard rather than with it, so a slow or failed
+    // request here never holds up the page the student actually came for.
+    async function loadCoachFiles() {
+      const slot = document.getElementById('coachFilesSlot');
+      if (!slot) return;
+      try {
+        const r = await fetch('/api/fll/files');
+        const j = await r.json();
+        if (!j.success || !j.files.length) { slot.innerHTML = ''; return; }
+        slot.innerHTML = renderCoachFiles(j.files);
+      } catch (e) {
+        slot.innerHTML = '';   // quiet on failure: this is a bonus, not the page
+      }
+    }
+
+    function fileSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    function fileIcon(ext) {
+      if (['png','jpg','jpeg','gif','webp','heic','bmp'].includes(ext)) return '🖼️';
+      if (['mp4','mov'].includes(ext)) return '🎬';
+      if (['mp3','m4a','wav'].includes(ext)) return '🎵';
+      if (ext === 'pdf') return '📕';
+      if (['doc','docx','odt','rtf','txt','md'].includes(ext)) return '📄';
+      if (['xls','xlsx','csv','ods'].includes(ext)) return '📊';
+      if (['ppt','pptx','odp'].includes(ext)) return '📽️';
+      if (ext === 'zip') return '🗜️';
+      return '🧱';
+    }
+
+    function renderCoachFiles(files) {
+      return `
+        <div class="cf-card">
+          <div class="cf-head">📁 Files from your coach <span class="cf-count">${files.length}</span></div>
+          <div class="cf-list">
+            ${files.map((f) => `
+              <a class="cf-row" href="${escapeHtml(f.url)}" target="_blank" rel="noopener">
+                <span class="cf-ico">${fileIcon(f.ext)}</span>
+                <span class="cf-main">
+                  <span class="cf-name">${escapeHtml(f.name)}</span>
+                  ${f.description ? `<span class="cf-desc">${escapeHtml(f.description)}</span>` : ''}
+                  <span class="cf-meta">${fileSize(f.size)}${f.teamId ? ' · for your team' : ''}</span>
+                </span>
+                <span class="cf-go">Open →</span>
+              </a>`).join('')}
+          </div>
+        </div>`;
     }
 
     // ── Season calendar ───────────────────────────────────────────────────
@@ -6975,6 +7046,7 @@
       userLine.textContent = `${user.name} – ${team ? team.name : 'No team assigned'}`;
       maybeShowWelcomeScreen(user);
       setTimeout(checkForNewGrades, 900);   // after the page settles
+      setTimeout(loadCoachFiles, 0);        // fills its slot once the page is up
 
       app.innerHTML = activeTask
         ? renderTaskDetail(data, activeTask)

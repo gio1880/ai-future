@@ -644,6 +644,32 @@
     .btn-danger { background:#d93025 !important; color:#fff !important; border:none !important;
       border-radius:9px; padding:9px 16px; font-weight:750; font-size:13px; cursor:pointer; font-family:inherit; }
     .btn-danger:hover { background:#b3261e !important; }
+    .fl-drop { border:2px dashed var(--s-line-2); border-radius:14px; padding:26px 18px; text-align:center;
+      background:var(--s-hover); transition:border-color .15s, background .15s; }
+    .fl-drop.over { border-color:#1a73e8; background:var(--tint-blue); }
+    .fl-drop-icon { font-size:30px; }
+    .fl-drop-main { font-size:14px; font-weight:700; color:var(--t-strong); margin-top:6px; }
+    .fl-drop-sub { font-size:11px; color:var(--t-faint); margin-top:7px; line-height:1.5;
+      word-break:break-word; max-width:640px; margin-left:auto; margin-right:auto; }
+    .fl-link { border:none !important; background:none !important; color:#1a73e8 !important;
+      font:inherit; font-weight:800; cursor:pointer; padding:0 !important; text-decoration:underline;
+      box-shadow:none !important; }
+    .fl-opts { display:flex; gap:9px; flex-wrap:wrap; align-items:center; margin-top:12px; }
+    .fl-desc { flex:1; min-width:230px; padding:9px 12px; border:1.5px solid var(--s-line-2);
+      border-radius:9px; background:var(--s-card); color:var(--t-strong); font-size:13px; font-family:inherit; }
+    .fl-team { padding:9px 12px; border:1.5px solid var(--s-line-2); border-radius:9px;
+      background:var(--s-card); color:var(--t-strong); font-size:13px; font-family:inherit; }
+    .fl-row { display:flex; align-items:center; gap:12px; padding:12px 4px;
+      border-bottom:1px solid var(--s-line); flex-wrap:wrap; }
+    .fl-row:last-child { border-bottom:none; }
+    .fl-row.is-off { opacity:.55; }
+    .fl-ico { font-size:22px; flex:none; }
+    .fl-main { flex:1; min-width:180px; }
+    .fl-name { font-size:14px; font-weight:750; color:var(--t-strong); text-decoration:none; }
+    .fl-name:hover { color:#1a73e8; text-decoration:underline; }
+    .fl-desc-txt { font-size:12.5px; color:var(--t-muted); margin-top:2px; }
+    .fl-meta { font-size:11.5px; color:var(--t-faint); margin-top:3px; }
+    .fl-del:hover { color:#d93025 !important; border-color:#d93025 !important; }
 </style>
   <link rel="stylesheet" href="/assets/css/theme.css">
   <script>(function(){try{var t=localStorage.getItem("af-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
@@ -679,6 +705,7 @@
       <button class="tab-btn" data-tab="robots" onclick="showTab('robots')">🎯 Robot Tuning</button>
       <button class="tab-btn" data-tab="submissions" onclick="showTab('submissions')">📬 Submitted Work</button>
       <button class="tab-btn" data-tab="ideamaps" onclick="showTab('ideamaps')">🌳 Idea Maps</button>
+      <button class="tab-btn" data-tab="files" onclick="showTab('files')">📁 Files</button>
       <button class="tab-btn" data-tab="visibility" onclick="showTab('visibility')">🎛️ Areas &amp; Lessons</button>
       <button class="tab-btn" data-tab="live" onclick="showTab('live')">Live Slides</button>
     </div>
@@ -843,6 +870,30 @@
         <div id="loginWrap">Loading&hellip;</div>
       </div>
     </div>
+    <div class="panel" id="panel-files">
+      <div class="visibility-card">
+        <div class="visibility-head">
+          <div>
+            <h2 class="form-title">Files for your students</h2>
+            <p class="form-sub">Upload anything a team needs to open — rubrics, slide decks, build PDFs, photos, sample programs. Students download them from their hub. Up to 25MB each.</p>
+          </div>
+        </div>
+        <div class="fl-drop" id="flDrop">
+          <input type="file" id="flInput" multiple hidden onchange="queueFiles(this.files)">
+          <div class="fl-drop-icon">📁</div>
+          <div class="fl-drop-main">Drop files here, or <button class="fl-link" onclick="document.getElementById('flInput').click()">choose them</button></div>
+          <div class="fl-drop-sub" id="flTypes"></div>
+        </div>
+        <div class="fl-opts">
+          <input class="fl-desc" id="flDesc" type="text" maxlength="300" placeholder="What is this? (optional, shown to students)">
+          <select class="fl-team" id="flTeam"><option value="">Everyone</option></select>
+          <button class="btn-primary" id="flGo" onclick="uploadQueued()" disabled>Upload</button>
+        </div>
+        <div class="form-msg" id="flMsg"></div>
+        <div id="flWrap">Loading&hellip;</div>
+      </div>
+    </div>
+
     <div class="panel" id="panel-ideamaps">
       <div class="visibility-card">
         <div class="visibility-head">
@@ -1067,6 +1118,7 @@
       if (id === 'submissions') loadSubmissions();
       if (id === 'robots') loadRobotProfiles();
       if (id === 'ideamaps') { loadIdeaMaps(); loadIdeaMapSources(); }
+      if (id === 'files') { loadFiles(); wireDrop(); }
       if (id === 'logins') loadLoginStatus();
       // only poll while the tab is actually being looked at
       if (id === 'online') startOnlinePolling(); else stopOnlinePolling();
@@ -1130,6 +1182,175 @@
 
     function saveMaintenanceText() {
       putMaintenance(!!(maintenanceCache && maintenanceCache.on), 'Message saved.');
+    }
+
+
+    // ── Files for students ────────────────────────────────────────────────
+    // Uploads go straight up as the raw file rather than base64, so a 25MB
+    // file stays 25MB, and each one is sent on its own so a single failure
+    // does not take the rest of the batch with it.
+    const FL_TYPES = ['pdf','doc','docx','ppt','pptx','xls','xlsx','csv','txt','md','rtf',
+      'odt','odp','ods','png','jpg','jpeg','gif','webp','heic','bmp',
+      'llsp','llsp3','lms','lmsp','ev3','rbf','lxf','io','py','json',
+      'mp4','mov','mp3','m4a','wav','zip'];
+    const FL_MAX = 25 * 1024 * 1024;
+    let filesCache = null;
+    let queued = [];
+
+    function flSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    function flIcon(ext) {
+      if (['png','jpg','jpeg','gif','webp','heic','bmp'].includes(ext)) return '🖼️';
+      if (['mp4','mov'].includes(ext)) return '🎬';
+      if (['mp3','m4a','wav'].includes(ext)) return '🎵';
+      if (ext === 'pdf') return '📕';
+      if (['doc','docx','odt','rtf','txt','md'].includes(ext)) return '📄';
+      if (['xls','xlsx','csv','ods'].includes(ext)) return '📊';
+      if (['ppt','pptx','odp'].includes(ext)) return '📽️';
+      if (ext === 'zip') return '🗜️';
+      return '🧱';
+    }
+
+
+    // drag-and-drop, wired once the panel exists
+    let dropWired = false;
+    function wireDrop() {
+      if (dropWired) return;
+      const box = document.getElementById('flDrop');
+      if (!box) return;
+      dropWired = true;
+      ['dragenter', 'dragover'].forEach(ev => box.addEventListener(ev, (e) => {
+        e.preventDefault(); box.classList.add('over');
+      }));
+      ['dragleave', 'drop'].forEach(ev => box.addEventListener(ev, (e) => {
+        e.preventDefault(); box.classList.remove('over');
+      }));
+      box.addEventListener('drop', (e) => {
+        if (e.dataTransfer && e.dataTransfer.files.length) queueFiles(e.dataTransfer.files);
+      });
+    }
+
+    function queueFiles(list) {
+      queued = [...list];
+      const msg = document.getElementById('flMsg');
+      const tooBig = queued.filter(f => f.size > FL_MAX);
+      const badType = queued.filter(f => !FL_TYPES.includes((f.name.split('.').pop() || '').toLowerCase()));
+      queued = queued.filter(f => !tooBig.includes(f) && !badType.includes(f));
+      const problems = [];
+      if (tooBig.length) problems.push(`${tooBig.map(f => f.name).join(', ')} — over 25MB`);
+      if (badType.length) problems.push(`${badType.map(f => f.name).join(', ')} — file type not accepted`);
+      msg.className = problems.length ? 'form-msg error' : 'form-msg';
+      msg.textContent = problems.length
+        ? problems.join(' · ')
+        : (queued.length ? `${queued.length} file${queued.length !== 1 ? 's' : ''} ready: ${queued.map(f => f.name).join(', ')}` : '');
+      document.getElementById('flGo').disabled = !queued.length;
+    }
+
+    async function uploadQueued() {
+      if (!queued.length) return;
+      const btn = document.getElementById('flGo');
+      const msg = document.getElementById('flMsg');
+      const description = document.getElementById('flDesc').value;
+      const teamId = document.getElementById('flTeam').value;
+      btn.disabled = true;
+      const done = [];
+      const failed = [];
+      for (const file of queued) {
+        msg.className = 'form-msg';
+        msg.textContent = `Uploading ${file.name}…`;
+        try {
+          const qs = new URLSearchParams({ name: file.name, description, teamId });
+          const r = await fetch(`/api/fll/coach/files?${qs}`, { method: 'POST', body: file });
+          const j = await r.json();
+          if (!r.ok || !j.success) throw new Error(j.message || 'Upload failed');
+          done.push(file.name);
+        } catch (e) {
+          failed.push(`${file.name} (${e.message})`);
+        }
+      }
+      queued = [];
+      document.getElementById('flInput').value = '';
+      document.getElementById('flDesc').value = '';
+      msg.className = failed.length ? 'form-msg error' : 'form-msg success';
+      msg.textContent = [
+        done.length ? `Uploaded ${done.length}: ${done.join(', ')}.` : '',
+        failed.length ? `Could not upload ${failed.join('; ')}.` : ''
+      ].filter(Boolean).join(' ');
+      if (done.length) showToast('Files uploaded');
+      await loadFiles(true);
+    }
+
+    async function loadFiles(force) {
+      const wrap = document.getElementById('flWrap');
+      document.getElementById('flTypes').textContent = 'Accepted: ' + FL_TYPES.join(', ') + ' · up to 25MB each';
+      const teamSel = document.getElementById('flTeam');
+      if (teamSel.options.length <= 1 && roster?.teams) {
+        teamSel.innerHTML = '<option value="">Everyone</option>' +
+          roster.teams.map(t => `<option value="${escapeHtml(t.id)}">${escapeHtml(t.nickname || t.name)} only</option>`).join('');
+      }
+      if (filesCache && !force) { renderFiles(); return; }
+      wrap.textContent = 'Loading…';
+      try {
+        const r = await api('/api/fll/files');
+        filesCache = r.files;
+        renderFiles();
+      } catch (e) {
+        wrap.innerHTML = `<div class="form-msg error">${escapeHtml(e.message)}</div>`;
+      }
+    }
+
+    function renderFiles() {
+      const wrap = document.getElementById('flWrap');
+      const files = filesCache || [];
+      if (!files.length) {
+        wrap.innerHTML = '<div class="sub-empty">Nothing uploaded yet. Anything you add here shows up on every student’s hub.</div>';
+        return;
+      }
+      wrap.innerHTML = files.map(f => `
+        <div class="fl-row${f.hidden ? ' is-off' : ''}">
+          <div class="fl-ico">${flIcon(f.ext)}</div>
+          <div class="fl-main">
+            <a class="fl-name" href="${escapeHtml(f.url)}" target="_blank" rel="noopener">${escapeHtml(f.name)}</a>
+            ${f.description ? `<div class="fl-desc-txt">${escapeHtml(f.description)}</div>` : ''}
+            <div class="fl-meta">${flSize(f.size)} · ${f.teamId ? escapeHtml(teamNameFor(f.teamId)) + ' only' : 'everyone'}
+              · added by ${escapeHtml(f.uploadedBy)} ${escapeHtml(imWhen(f.uploadedAt))}</div>
+          </div>
+          <button class="btn-ghost" onclick="toggleFile('${escapeHtml(f.id)}',${f.hidden})">${f.hidden ? 'Show' : 'Hide'}</button>
+          <button class="btn-ghost fl-del" onclick="deleteFile('${escapeHtml(f.id)}','${escapeHtml(f.name)}')">Delete</button>
+        </div>`).join('');
+    }
+
+    function teamNameFor(id) {
+      const t = (roster?.teams || []).find(x => x.id === id);
+      return t ? (t.nickname || t.name) : id;
+    }
+
+    async function toggleFile(id, hidden) {
+      try {
+        await api(`/api/fll/coach/files/${encodeURIComponent(id)}`,
+          { method: 'PATCH', body: JSON.stringify({ hidden: !hidden }) });
+        await loadFiles(true);
+        showToast(hidden ? 'File is visible again' : 'File hidden from students');
+      } catch (e) {
+        const msg = document.getElementById('flMsg');
+        msg.className = 'form-msg error'; msg.textContent = e.message;
+      }
+    }
+
+    async function deleteFile(id, name) {
+      if (!confirm(`Delete "${name}"? Students will no longer be able to open it.`)) return;
+      try {
+        await api(`/api/fll/coach/files/${encodeURIComponent(id)}`, { method: 'DELETE' });
+        await loadFiles(true);
+        showToast('File deleted');
+      } catch (e) {
+        const msg = document.getElementById('flMsg');
+        msg.className = 'form-msg error'; msg.textContent = e.message;
+      }
     }
 
     // ── Team idea maps ────────────────────────────────────────────────────
