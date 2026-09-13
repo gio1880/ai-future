@@ -4145,5 +4145,546 @@
         "placeholder": "e.g. \"The lever pusher needs strength, because the model is stiff and our arm stalled on it.\""
       }
     ]
+  },
+  {
+    "id": "task-habs-1-invisible-forest",
+    "assignmentId": "assignment-innovation-project",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "HABs 1 — The Invisible Forest 🌊",
+    "category": "Innovation Project",
+    "type": "submission",
+    "workContext": "class",
+    "status": "todo",
+    "dueDate": "2026-09-22",
+    "audience": {
+      "teamNames": [
+        "AI Future 2"
+      ]
+    },
+    "shareAnswersWithTeam": true,
+    "priorLessons": [],
+    "description": "Before your team can build anything, you need to understand the living thing your SpectraFloat is watching. It is almost invisible — and almost everything in the ocean depends on it.\n\n## 🌿 Two kinds of plankton\n\n**Plankton** are living things that drift with the water instead of swimming against it. They come in two main kinds:\n\n| | Phytoplankton | Zooplankton |\n|---|---|---|\n| **What they are** | Tiny plant-like drifters, most too small to see | Tiny animals, from specks to jellyfish |\n| **How they get energy** | Sunlight, like plants on land | By eating other plankton |\n| **Where they sit in the food web** | The very bottom | One step up |\n\nPhytoplankton contain **chlorophyll**, the same green pigment that plants use. Remember that word — in HABs 3 you will learn that scientists use chlorophyll to *find* phytoplankton, and that is exactly what SpectraFloat will do.\n\n## 💨 Why this matters to you, not just to fish\n\n> About **half of Earth's oxygen** comes from the ocean, most of it made by plankton. One tiny kind, *Prochlorococcus*, makes up to 20% of the oxygen in our whole biosphere — more than all the tropical rainforests on land combined.\n\nThat figure comes from NOAA — the link is in **Learn more** below. Every second breath you take, you can thank phytoplankton.\n\n## 🎨 Draw the food web\n\nOn paper or a whiteboard, draw a **marine food web** that starts with phytoplankton and ends with large marine mammals. Arrows point from what gets eaten to what eats it.\n\nTry to include:\n- **Phytoplankton** at the bottom\n- **Zooplankton** (like krill or copepods)\n- **Small fish** that eat zooplankton\n- **Bigger fish, turtles and seabirds**\n- **Whales** — some eat krill directly, skipping steps entirely\n\nPhotograph it and attach the picture to the first question.\n\n## 🤔 Then talk about it as a team\n\nPick one arrow near the bottom of your web and cover it with your hand. What happens to everything above it?\n\n## ➡️ Next\n\nIn **HABs 2** you will learn what happens when phytoplankton do not disappear — but grow out of control instead.",
+    "videos": [
+      {
+        "videoId": "AWfebk0_auY",
+        "title": "Feeding the Sea: Phytoplankton Fuel Ocean Life",
+        "source": "NASA Earth",
+        "note": "Watch for how many different kinds of phytoplankton there are, and why NASA studies them from space."
+      },
+      {
+        "videoId": "69cshaCOBX0",
+        "title": "The Floating Garden: Tiny but Mighty Phytoplankton",
+        "source": "Woods Hole Oceanographic Institution",
+        "note": "A short one. Woods Hole is the same institution that built the underwater microscope you meet in HABs 3."
+      }
+    ],
+    "readings": [
+      {
+        "kind": "article",
+        "title": "What are phytoplankton?",
+        "source": "NOAA National Ocean Service",
+        "url": "https://oceanservice.noaa.gov/facts/phyto.html",
+        "note": "The two main types, diatoms and dinoflagellates, and what eats them."
+      },
+      {
+        "kind": "article",
+        "title": "How much oxygen comes from the ocean?",
+        "source": "NOAA National Ocean Service",
+        "url": "https://oceanservice.noaa.gov/facts/ocean-oxygen.html",
+        "note": "Where the \"half of Earth's oxygen\" figure comes from."
+      }
+    ],
+    "questions": [
+      {
+        "id": "q1",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Attach a photo of your food web, then describe the path from phytoplankton to a whale in your own words:",
+        "placeholder": "Phytoplankton are eaten by … which are eaten by …"
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "label": "If phytoplankton disappeared or changed, what would happen to whales, sea turtles and fish? Follow at least two arrows.",
+        "placeholder": "Start at the bottom of your web and work up."
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
+        "label": "Phytoplankton contain chlorophyll. Why might that make them easier for a machine to find?",
+        "placeholder": "A guess is fine — you will find out the real answer in HABs 3."
+      }
+    ]
+  },
+  {
+    "id": "task-habs-2-dark-side",
+    "assignmentId": "assignment-innovation-project",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "HABs 2 — The Dark Side of Plankton ☠️",
+    "category": "Innovation Project",
+    "type": "submission",
+    "workContext": "class",
+    "status": "todo",
+    "dueDate": "2026-09-29",
+    "audience": {
+      "teamNames": [
+        "AI Future 2"
+      ]
+    },
+    "shareAnswersWithTeam": true,
+    "priorLessons": [
+      "task-habs-1-invisible-forest"
+    ],
+    "description": "In HABs 1 you learned that phytoplankton keep the ocean alive. Now the twist: give them too much of what they need, and some kinds grow out of control and turn toxic.\n\n## 🌊 What a harmful algal bloom is\n\nA **harmful algal bloom (HAB)** happens when algae grow out of control and produce toxic or harmful effects. Most algae are harmless and good for the environment — **only a few kinds cause harm**. That difference matters: SpectraFloat is not trying to stop algae, it is trying to catch the dangerous blooms early.\n\nYou will hear two famous names:\n- **Red tide** — a HAB in the ocean, like the ones caused by *Karenia brevis* along Florida's coast\n- **Blue-green algae** — really **cyanobacteria**, which bloom in lakes and rivers\n\n## 🚜 Where the extra food comes from\n\n> Farmers add nitrogen and phosphorus to fields as **fertilizer and animal manure**. When it rains or snow melts, those nutrients can wash off the fields and into rivers, lakes and the ocean — and feed a bloom.\n\nThat comes from the U.S. EPA. **Warm water** makes it worse: many harmful algae grow faster when the water heats up.\n\n## 💀 Dead zones\n\nWhen a huge bloom dies, bacteria break it down and use up the oxygen in the water. The result is a **dead zone** (scientists call it *hypoxia*) where there is too little oxygen for fish to survive, causing **fish kills**.\n\nNotice the loop: in HABs 1 phytoplankton *made* oxygen. Too many of them can end up *removing* it.\n\n## 🔎 Research a real bloom\n\nChoose **one** real HAB event and fill in the table below. Two good choices close to real teams' lives:\n\n| Event | Why it is worth researching |\n|---|---|\n| **Florida red tide** (*Karenia brevis*) | Beaches closed, fish and manatee deaths, tourism losses |\n| **Finger Lakes cyanobacteria, New York** | Since 2017, blooms have affected all 11 Finger Lakes, threatening drinking water and tourism |\n\nEvery fact in your table needs a source you can link to. The documentary and articles below are a strong start.\n\n## 💵 Who pays for a bloom\n\nJudges will ask *\"who are you solving this for?\"* A bloom costs real people money — fishing, shellfish farms, tourism, water treatment. Use the **Google Scholar search** in Learn more and read just the summaries (the \"abstract\") of a couple of papers. You do not need to read whole papers.\n\n## ➡️ Next\n\nIn **HABs 3** you will find out how scientists spot a bloom before it becomes a disaster — and why a person in a boat is too slow.",
+    "videos": [
+      {
+        "videoId": "IsTogxVqf8Y",
+        "title": "BLOOM: The Toxic Threat to the Finger Lakes",
+        "source": "WCNY (the documentary's producer)",
+        "note": "An Emmy-winning documentary. Watch for the causes it names, and who is harmed: drinking water, wildlife, tourism."
+      },
+      {
+        "videoId": "CvEJHzFzIL4",
+        "title": "What Are Harmful Algal Blooms?",
+        "source": "Ohio Sea Grant College Program",
+        "note": "A clear explainer on cyanobacteria in lakes."
+      },
+      {
+        "videoId": "50w0_IwqSKs",
+        "title": "Harmful Algal Blooms and Health",
+        "source": "Centers for Disease Control and Prevention (CDC)",
+        "note": "How blooms harm people and animals — useful for the \"who does this affect\" part of your project."
+      }
+    ],
+    "readings": [
+      {
+        "kind": "article",
+        "title": "What is a harmful algal bloom?",
+        "source": "NOAA",
+        "url": "https://www.noaa.gov/what-is-harmful-algal-bloom",
+        "note": "Start here. The difference between healthy algae and toxic algae."
+      },
+      {
+        "kind": "article",
+        "title": "Harmful Algal Blooms (Red Tide)",
+        "source": "NOAA National Ocean Service",
+        "url": "https://oceanservice.noaa.gov/hazards/hab/",
+        "note": "What makes a bloom grow: sunlight, water temperature, nutrients, currents."
+      },
+      {
+        "kind": "article",
+        "title": "Nutrient Pollution",
+        "source": "U.S. Environmental Protection Agency",
+        "url": "https://www.epa.gov/nutrientpollution",
+        "note": "The \"why\" behind blooms — nitrogen and phosphorus in the water."
+      },
+      {
+        "kind": "article",
+        "title": "Sources and Solutions: Agriculture",
+        "source": "U.S. Environmental Protection Agency",
+        "url": "https://www.epa.gov/nutrientpollution/sources-and-solutions-agriculture",
+        "note": "How fertilizer and manure reach the water, and what farmers can do about it."
+      },
+      {
+        "kind": "site",
+        "title": "Bloom: The Toxic Threat to the Finger Lakes (classroom collection)",
+        "source": "PBS LearningMedia",
+        "url": "https://www.pbslearningmedia.org/collection/bloom-the-toxic-threat-to-the-finger-lakes/",
+        "note": "Shorter clips from the documentary, with teaching material."
+      },
+      {
+        "kind": "search",
+        "title": "The economic impact of Harmful Algal Blooms on coastal aquaculture",
+        "source": "Google Scholar",
+        "url": "https://scholar.google.com/scholar?q=The%20economic%20impact%20of%20Harmful%20Algal%20Blooms%20on%20coastal%20aquaculture",
+        "note": "Read the summaries only. Look for dollar figures and who loses the money."
+      }
+    ],
+    "questions": [
+      {
+        "id": "hab-event",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Research one real bloom — every fact needs a source:",
+        "columns": [
+          "What you found out",
+          "Details",
+          "Paste the link it came from"
+        ],
+        "minRows": 6,
+        "maxRows": 12
+      },
+      {
+        "id": "q1",
+        "type": "textarea",
+        "label": "Explain in your own words how fertilizer on a farm can end up causing a dead zone. Include rain, nutrients, the bloom and oxygen.",
+        "placeholder": "It starts on a farm field when …"
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "label": "Who loses money or health when a bloom happens? Name at least three groups and how each is hurt.",
+        "placeholder": "e.g. shellfish farmers, because …"
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
+        "label": "Most algae are harmless. Why does that make the problem harder to solve than just \"get rid of algae\"?",
+        "placeholder": "Think about what SpectraFloat would need to tell apart."
+      }
+    ],
+    "excludeFromIdeaMap": true
+  },
+  {
+    "id": "task-habs-3-see-the-invisible",
+    "assignmentId": "assignment-innovation-project",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "HABs 3 — How Scientists See the Invisible 🔬",
+    "category": "Innovation Project",
+    "type": "submission",
+    "workContext": "class",
+    "status": "todo",
+    "dueDate": "2026-10-06",
+    "audience": {
+      "teamNames": [
+        "AI Future 2"
+      ]
+    },
+    "shareAnswersWithTeam": true,
+    "priorLessons": [
+      "task-habs-1-invisible-forest",
+      "task-habs-2-dark-side"
+    ],
+    "description": "You know what a harmful bloom is and why it is dangerous. The hard part is catching one **early** — before the beach closes or the drinking water turns toxic. This is where your robot comes in.\n\n## 🚤 Why a boat and a jar is too slow\n\nThe old way: someone drives a boat out, scoops water into a jar, brings it back to a lab, and looks at it under a microscope. Talk about this as a team before reading on:\n\n- How often could one person do that? Once a day? Once a week?\n- How much of a whole lake or coastline can one jar tell you about?\n- A bloom can grow fast. What might happen between one sample and the next?\n\nScientists have built three smarter ways to watch the water. SpectraFloat will borrow ideas from all of them.\n\n## 🔬 1. A robot microscope that never sleeps: the Imaging FlowCytobot\n\nScientists **Rob Olson and Heidi Sosik** at Woods Hole Oceanographic Institution built the **Imaging FlowCytobot (IFCB)** — an automated underwater microscope.\n\n> It sucks in a little water, shines a **laser** at each passing cell to measure how it **glows (fluorescence)**, and takes **more than 10 pictures every second**. Software then sorts the images into kinds of plankton — and can spot the harmful ones.\n\nIt runs day and night for months at a time, sending its data back to a lab. The first one sends data through a **fiber-optic cable**; other setups send it in other ways.\n\n## 🛰️ 2. Forecasts built from space and sea: NOAA HABOFS\n\nNOAA's **Harmful Algal Bloom Operational Forecast System (HABOFS)** predicts where blooms will go — like a weather forecast, but for algae.\n\nIt does **not** rely on satellites alone. It combines:\n- **Satellite images** of ocean color, looking for areas of high chlorophyll\n- **Weather data** such as wind\n- **Water samples** collected by state and university teams\n- **Computer models** that predict where a bloom will drift over the next few days\n\n## 💡 3. The trick SpectraFloat can use: light and chlorophyll\n\nRemember **chlorophyll** from HABs 1? It has a useful habit: **shine blue light on chlorophyll and it glows red.** A sensor that measures that red glow can estimate how much phytoplankton is in the water — without anyone ever looking through a microscope. That is called **chlorophyll fluorescence**, and it is the science behind a *fluorometer*.\n\nPut the pieces together and you get the idea behind a **robotic buoy**: a floating station that measures the water all the time and sends a warning the moment something changes.\n\n## 🎥 Engineers who built cameras for a changing ocean\n\n*Chasing Coral* is not about plankton — it is about coral reefs. Watch it for the **engineering**: a team that designed, built, broke and rebuilt underwater time-lapse cameras to capture something happening too slowly for any person to watch. That is the same problem SpectraFloat solves.\n\n## ➡️ Next\n\nIn **HABs 4** you design SpectraFloat: what it measures, what it does with that, and the parts you need.",
+    "videos": [
+      {
+        "videoId": "AvigoZgYbT4",
+        "title": "Predicting Harmful Algal Blooms",
+        "source": "NOAA Ocean Service",
+        "note": "How satellites, buoys and sensors work together to predict where a bloom is heading."
+      },
+      {
+        "videoId": "kR7hUtvSP9k",
+        "title": "Operating Imaging FlowCytobots (NHABON Webinar #6)",
+        "source": "IOOS Association",
+        "note": "A technical talk for scientists. Watch the first few minutes to see the real instrument and how it is set up — you do not need the whole thing."
+      },
+      {
+        "videoId": "aGGBGcjdjXA",
+        "title": "Chasing Coral (full film)",
+        "source": "Netflix",
+        "note": "The full documentary, released free by Netflix. Focus on the parts where the team builds and tests their underwater cameras."
+      }
+    ],
+    "readings": [
+      {
+        "kind": "site",
+        "title": "U.S. National Office for Harmful Algal Blooms",
+        "source": "Woods Hole Oceanographic Institution",
+        "url": "https://hab.whoi.edu/",
+        "note": "The biology of blooms, where they happen, and the technology used to track them."
+      },
+      {
+        "kind": "article",
+        "title": "Imaging FlowCytobot (IFCB)",
+        "source": "Anderson Lab, Woods Hole Oceanographic Institution",
+        "url": "https://www2.whoi.edu/site/andersonlab/instrumentation/imaging-flowcytobot-ifcb/",
+        "note": "How the robot microscope is used to watch for harmful algae."
+      },
+      {
+        "kind": "article",
+        "title": "Imaging FlowCytobot — bloom monitoring",
+        "source": "Northeast HAB, Woods Hole Oceanographic Institution",
+        "url": "https://northeasthab.whoi.edu/bloom-monitoring/imaging-flowcytobot/",
+        "note": "Where IFCBs are deployed and what they have found."
+      },
+      {
+        "kind": "article",
+        "title": "How do we forecast harmful algal blooms?",
+        "source": "NOAA National Ocean Service",
+        "url": "https://oceanservice.noaa.gov/facts/hab-forecast.html",
+        "note": "The forecast explained simply."
+      },
+      {
+        "kind": "site",
+        "title": "Harmful Algal Bloom (HAB) Forecasting",
+        "source": "NOAA National Centers for Coastal Ocean Science",
+        "url": "https://coastalscience.noaa.gov/project/harmful-algal-bloom-hab-forecasting/",
+        "note": "The team that runs HABOFS, and the regions it covers."
+      },
+      {
+        "kind": "site",
+        "title": "Predicting Harmful Algal Blooms",
+        "source": "NOAA Ocean Today",
+        "url": "https://oceantoday.noaa.gov/predictinghabs/welcome.html",
+        "note": "The same video on NOAA's own site, if YouTube is blocked at school."
+      },
+      {
+        "kind": "film",
+        "title": "Chasing Coral",
+        "source": "Exposure Labs",
+        "url": "https://chasingcoral.com/",
+        "note": "The film's own site, with material about the camera technology."
+      },
+      {
+        "kind": "search",
+        "title": "Using Chlorophyll-a fluorescence to detect phytoplankton",
+        "source": "Google Scholar",
+        "url": "https://scholar.google.com/scholar?q=Using%20Chlorophyll-a%20fluorescence%20to%20detect%20phytoplankton",
+        "note": "Read the summaries. How light and color are used to measure microscopic life."
+      },
+      {
+        "kind": "search",
+        "title": "Real-time sensor networks for water quality monitoring",
+        "source": "Google Scholar",
+        "url": "https://scholar.google.com/scholar?q=Real-time%20sensor%20networks%20for%20water%20quality%20monitoring",
+        "note": "Read the summaries. How buoys and sensors send data over the internet."
+      }
+    ],
+    "questions": [
+      {
+        "id": "q1",
+        "type": "textarea",
+        "label": "Why is sending a person out in a boat to scoop water too slow? Give at least two reasons from your team discussion.",
+        "placeholder": "Think about how often, how much water, and how fast a bloom grows."
+      },
+      {
+        "id": "methods",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Compare the ways scientists watch for blooms:",
+        "columns": [
+          "Method",
+          "How it works",
+          "How fast it gives an answer",
+          "How much water it covers",
+          "Its biggest limitation"
+        ],
+        "minRows": 4,
+        "maxRows": 8
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "label": "Explain chlorophyll fluorescence in your own words, as if to a younger student. Why is it useful for SpectraFloat?",
+        "placeholder": "Shine blue light on …"
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
+        "label": "What engineering problem did the Chasing Coral team have to solve, and what can SpectraFloat learn from how they solved it?",
+        "placeholder": "Think about building something that works underwater, unattended, for a long time."
+      }
+    ],
+    "excludeFromIdeaMap": true
+  },
+  {
+    "id": "task-habs-4-spectrafloat",
+    "assignmentId": "assignment-innovation-project",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "HABs 4 — Engineering the SpectraFloat Prototype 🛟",
+    "category": "Innovation Project",
+    "type": "submission",
+    "workContext": "class",
+    "status": "todo",
+    "dueDate": "2026-10-13",
+    "audience": {
+      "teamNames": [
+        "AI Future 2"
+      ]
+    },
+    "shareAnswersWithTeam": true,
+    "priorLessons": [
+      "task-habs-2-dark-side",
+      "task-habs-3-see-the-invisible"
+    ],
+    "description": "You understand the problem and how scientists already tackle it. Now you decide what **your** solution does. By the end of this lesson your team has a clear plan for a tabletop SpectraFloat model.\n\n## 🛟 Think in inputs and outputs\n\nEvery robot does three things: it **senses** something (inputs), it **decides** something, and it **does** something (outputs). Get the inputs and outputs right and the building gets much easier.\n\n## 📥 Inputs — what SpectraFloat measures\n\nStart with these three, then add your own ideas:\n\n| Input | Why it matters for a bloom |\n|---|---|\n| **Water temperature** | Many harmful algae grow faster in warm water (HABs 2) |\n| **Water clarity (turbidity)** | A thick bloom makes water cloudy |\n| **Light / chlorophyll glow** | More phytoplankton means more red glow under blue light (HABs 3) |\n\n## 📤 Outputs — what SpectraFloat does about it\n\nA buoy that measures but tells no one is not a solution. Brainstorm what happens when the numbers look dangerous:\n- A **warning light** on the buoy\n- A **text message** to a farmer, a lake manager, or a water treatment plant\n- A **map or dashboard** showing readings over time\n\nFor each output, ask: **who** receives it, and **what would they do** differently because of it?\n\n## 🔧 Real sensors to look at\n\nLook at the websites for **Vernier** and **Atlas Scientific** — they make sensors students actually use.\n\n> **Heads up:** neither company sells a **chlorophyll-a fluorometer** — the sensor that measures the red glow. Vernier sells a **turbidity sensor**, and Atlas Scientific sells **temperature**, **pH**, **dissolved oxygen** and a **color sensor**. Real chlorophyll fluorometers are professional instruments that cost a lot.\n\nThat is not a dead end — it is a real engineering decision your team gets to make, and judges love hearing about it:\n- **Mock it** — show where the chlorophyll sensor would go and explain what it would do\n- **Build a simple one** — a blue LED shining into water and a sensor that watches for red light\n- **Measure what you can** — temperature and clarity, which you *can* buy, and explain what you would add with more budget\n\nWrite down which one you chose **and why**.\n\n## 🧰 Plan the parts\n\nList every part your tabletop model needs. Include things that are not electronics: something that floats, something that keeps water out, somewhere to mount the sensors.\n\n## ➡️ Next\n\nIn **HABs 5** you find a real expert who can tell you whether your design would work in the real world.",
+    "videos": [],
+    "readings": [
+      {
+        "kind": "tool",
+        "title": "Turbidity Sensor",
+        "source": "Vernier",
+        "url": "https://www.vernier.com/product/turbidity-sensor/",
+        "note": "Measures how cloudy water is, in NTU. Works in freshwater and seawater."
+      },
+      {
+        "kind": "tool",
+        "title": "Sensor shop",
+        "source": "Atlas Scientific",
+        "url": "https://atlas-scientific.com/shop/",
+        "note": "Temperature, pH, dissolved oxygen and color sensors built for projects like this."
+      },
+      {
+        "kind": "article",
+        "title": "Harmful Algal Blooms (Red Tide)",
+        "source": "NOAA National Ocean Service",
+        "url": "https://oceanservice.noaa.gov/hazards/hab/",
+        "note": "A reminder of what drives a bloom — useful for choosing which inputs matter most."
+      },
+      {
+        "kind": "search",
+        "title": "Real-time sensor networks for water quality monitoring",
+        "source": "Google Scholar",
+        "url": "https://scholar.google.com/scholar?q=Real-time%20sensor%20networks%20for%20water%20quality%20monitoring",
+        "note": "How real buoys send their readings — ideas for your outputs."
+      }
+    ],
+    "questions": [
+      {
+        "id": "inputs",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Inputs — what SpectraFloat measures:",
+        "columns": [
+          "What it senses",
+          "Sensor you would use",
+          "What reading means danger",
+          "Why it matters for a bloom"
+        ],
+        "minRows": 3,
+        "maxRows": 8
+      },
+      {
+        "id": "outputs",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Outputs — what SpectraFloat does about it:",
+        "columns": [
+          "What it does",
+          "Who receives it",
+          "What they would do differently"
+        ],
+        "minRows": 2,
+        "maxRows": 8
+      },
+      {
+        "id": "q1",
+        "type": "textarea",
+        "label": "No student sensor company sells a chlorophyll fluorometer. Which option did your team choose — mock it, build a simple one, or measure what you can — and why?",
+        "placeholder": "Judges want the reasoning, not just the choice."
+      },
+      {
+        "id": "parts",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Parts list for your tabletop model:",
+        "columns": [
+          "Part",
+          "What it is for",
+          "Do you have it?",
+          "Where to get it"
+        ],
+        "minRows": 5,
+        "maxRows": 20
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Sketch SpectraFloat and label where each sensor and output goes. Attach a photo and describe it.",
+        "placeholder": "Top, middle, underwater — where does each part sit, and why?"
+      }
+    ]
+  },
+  {
+    "id": "task-habs-5-talk-to-an-expert",
+    "assignmentId": "assignment-innovation-project",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "HABs 5 — Talk to a HAB Expert 🧑‍🔬",
+    "category": "Innovation Project",
+    "type": "submission",
+    "workContext": "class",
+    "status": "todo",
+    "dueDate": "2026-10-20",
+    "audience": {
+      "teamNames": [
+        "AI Future 2"
+      ]
+    },
+    "shareAnswersWithTeam": true,
+    "priorLessons": [
+      "task-habs-3-see-the-invisible",
+      "task-habs-4-spectrafloat"
+    ],
+    "description": "Judges love hearing that a team talked to a real expert — and an expert can tell you in five minutes what would take weeks to discover alone. This lesson gets your team ready to ask.\n\n## 🛑 Read this first\n\n> **Your coach sends every message.** Students do not email or message researchers directly. You write the questions and draft the message; your coach reviews it and reaches out on the team's behalf.\n\n## 🧑‍🔬 Who works on harmful algal blooms\n\n| Expert or group | Why they are worth asking |\n|---|---|\n| **Dr. Don Anderson** — Woods Hole Oceanographic Institution | One of the world's leading HAB researchers, and director of the U.S. National Office for Harmful Algal Blooms |\n| **Dr. Clarissa Anderson** — Southern California Coastal Ocean Observing System (SCCOOS), Scripps | Turns ocean data into bloom predictions; built California's harmful algae risk-mapping system |\n| **NOAA National Centers for Coastal Ocean Science (NCCOS)** | The part of NOAA that runs HAB forecasting |\n\n## 📍 Your best expert is probably nearby\n\nFamous researchers get a lot of email. A **graduate student or professor of marine biology or environmental engineering at a university near you** is often far more likely to say yes — and many are genuinely thrilled to spend 15 minutes on a video call with a youth robotics team.\n\nOther good places to look: a local **water treatment plant**, your state's **environmental agency**, a **lake association**, or a nearby **aquarium or nature center**.\n\n## ❓ Write questions only an expert can answer\n\nAn expert's time is precious. Do not ask things a quick search would answer.\n\n| Weak question | Strong question |\n|---|---|\n| \"What is a harmful algal bloom?\" | \"Would measuring water temperature and turbidity be enough to spot a bloom early, or is chlorophyll essential?\" |\n| \"Is our idea good?\" | \"What goes wrong when a buoy is left in the water for weeks?\" |\n| \"Can you tell us about HABs?\" | \"Who would most want to receive a warning from a device like ours?\" |\n\n## ✉️ Draft the message\n\nKeep it short. A good first message says who you are, what you are building, one or two specific questions, and a small request (a 15-minute call, or an email reply). Your coach will review it before anything is sent.\n\n## ➡️ After you hear back\n\nRecord what the expert said and what your team will change because of it. That \"we changed our design because an expert told us…\" is one of the strongest things you can say to judges.",
+    "videos": [],
+    "readings": [
+      {
+        "kind": "expert",
+        "title": "Anderson Lab — Dr. Don Anderson",
+        "source": "Woods Hole Oceanographic Institution",
+        "url": "https://www2.whoi.edu/site/andersonlab/",
+        "note": "His lab's research on harmful algae and the tools used to detect them."
+      },
+      {
+        "kind": "site",
+        "title": "U.S. National Office for Harmful Algal Blooms",
+        "source": "Woods Hole Oceanographic Institution",
+        "url": "https://hab.whoi.edu/",
+        "note": "The national office Dr. Don Anderson directs."
+      },
+      {
+        "kind": "expert",
+        "title": "A Scientist's Life: Clarissa Anderson",
+        "source": "Scripps Institution of Oceanography",
+        "url": "https://scripps.ucsd.edu/news/scientists-life-clarissa-anderson",
+        "note": "How she became an oceanographer and what her work involves."
+      },
+      {
+        "kind": "site",
+        "title": "Southern California Coastal Ocean Observing System (SCCOOS)",
+        "source": "Scripps Institution of Oceanography",
+        "url": "https://sccoos.org/",
+        "note": "The ocean-observing system Dr. Clarissa Anderson leads."
+      },
+      {
+        "kind": "site",
+        "title": "National Centers for Coastal Ocean Science",
+        "source": "NOAA",
+        "url": "https://coastalscience.noaa.gov/",
+        "note": "The NOAA office behind HAB forecasting."
+      }
+    ],
+    "questions": [
+      {
+        "id": "experts",
+        "type": "table",
+        "editableColumns": true,
+        "label": "Experts your team could ask — include at least one local option:",
+        "columns": [
+          "Name or role",
+          "Where they work",
+          "Why they are a good fit",
+          "Institution web page"
+        ],
+        "minRows": 3,
+        "maxRows": 10
+      },
+      {
+        "id": "q1",
+        "type": "textarea",
+        "label": "Your five best questions — ones only an expert could answer:",
+        "placeholder": "1. …\n2. …\n3. …\n4. …\n5. …"
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "label": "Draft the message for your coach to review and send. Say who you are, what you are building, one or two questions, and a small request.",
+        "placeholder": "Hello Dr. …, we are a FIRST LEGO League team …"
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
+        "label": "After you hear back: what did the expert say, and what will your team change because of it? (Come back and fill this in later.)",
+        "placeholder": "Leave this until you get a reply."
+      }
+    ],
+    "excludeFromIdeaMap": true
   }
 ]
