@@ -156,6 +156,18 @@
     }
     .submit-btn:hover { background: #166c44; }
     .submit-btn:disabled { opacity: 0.6; cursor: wait; }
+    .btn-primary {
+      background: #1e8e5a; color: white; border: none; border-radius: 50px;
+      padding: 10px 22px; font-size: 13.5px; font-weight: 800; cursor: pointer; font-family: inherit;
+    }
+    .btn-primary:hover { background: #166c44; }
+    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-ghost {
+      border: 1.5px solid var(--s-line-2); background: var(--s-card); color: var(--t-strong);
+      border-radius: 9px; padding: 8px 13px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit;
+    }
+    .btn-ghost:hover { border-color: #1a73e8; color: #1a73e8; }
+    .btn-ghost:disabled { opacity: 0.55; cursor: not-allowed; }
     .form-msg { margin-top: 12px; font-size: 13px; font-weight: 700; min-height: 20px; }
     .form-msg.error { color: #d93025; }
     .form-msg.success { color: #1e8e5a; }
@@ -670,6 +682,23 @@
     .fl-desc-txt { font-size:12.5px; color:var(--t-muted); margin-top:2px; }
     .fl-meta { font-size:11.5px; color:var(--t-faint); margin-top:3px; }
     .fl-del:hover { color:#d93025 !important; border-color:#d93025 !important; }
+    .visibility-row.aud-row { grid-template-columns: minmax(200px, 1fr) auto minmax(140px, 190px) 180px; row-gap: 8px; }
+    .aud-row > .aud-warn, .aud-row > .aud-picker { grid-column: 1 / -1; }
+    @media (max-width: 760px) {
+      .visibility-row.aud-row { grid-template-columns: 1fr auto; }
+      .aud-row > .visibility-row-meta, .aud-row > .visibility-row-due { grid-column: 1 / -1; }
+    }
+    .aud-tag { font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:50px;
+      background:var(--tint-blue); color:#174ea6; text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; }
+    .aud-title { font-weight:700; }
+    .aud-warn { font-size:12px; font-weight:650; color:#8a5a00; background:var(--tint-amber);
+      border:1px solid #f2d798; border-radius:8px; padding:6px 10px; margin-top:6px; }
+    .aud-picker { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+    .aud-chip { display:inline-flex; align-items:center; gap:6px; font-size:12.5px; padding:5px 11px;
+      border-radius:50px; border:1.5px solid var(--s-line-2); background:var(--s-card); color:var(--t-body); cursor:pointer; }
+    .aud-chip.is-on { border-color:#1a73e8; background:var(--tint-blue); color:#174ea6; font-weight:700; }
+    .aud-chip.is-muted { opacity:.5; cursor:not-allowed; }
+    @media (pointer: coarse) { .aud-chip { min-height:40px; padding:8px 13px; } }
 </style>
   <link rel="stylesheet" href="/assets/css/theme.css">
   <script>(function(){try{var t=localStorage.getItem("af-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
@@ -1060,6 +1089,17 @@
         </div>
         <div class="visibility-lessons hidden" id="curriculumSyncDetail"></div>
       </div>
+
+      <div class="card">
+        <h3 class="card-title">🔁 Convert old lessons</h3>
+        <p class="card-sub">Lessons made with the old "Add assignment" form were copied once per student, so students who joined later never got them and each showed up as many separate rows. Converting turns each into a single lesson for the teams that had it. Every answer, grade and draft moves with it, and a backup is saved first. Preview before converting.</p>
+        <div class="visibility-actions">
+          <button class="visibility-bulk-btn" onclick="convertLessons(true)">Preview</button>
+          <button class="submit-btn" id="convertLessonsBtn" onclick="convertLessons(false)">Convert now</button>
+          <span class="form-msg" id="convertLessonsMessage"></span>
+        </div>
+        <div class="visibility-lessons hidden" id="convertLessonsDetail"></div>
+      </div>
     </div>
     <div class="panel" id="panel-live">
       <div class="live-grid">
@@ -1114,7 +1154,10 @@
       document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === `panel-${id}`));
       if (id === 'live') loadLiveSlides();
       if (id === 'rankings') loadRankings();
-      if (id === 'visibility') { renderVisibility(); loadMaintenance(); }
+      if (id === 'visibility') {
+        renderVisibility(); loadMaintenance();
+        loadLessonAudiences().then(renderVisibilityLessons);
+      }
       if (id === 'submissions') loadSubmissions();
       if (id === 'robots') loadRobotProfiles();
       if (id === 'ideamaps') { loadIdeaMaps(); loadIdeaMapSources(); }
@@ -3222,11 +3265,112 @@
       renderVisibilityResources();
     }
 
+    // ── Lesson audiences ──────────────────────────────────────────────────
+    // A custom lesson is for chosen teams. Its checkbox changes who it is FOR,
+    // saved straight away, rather than joining the draft that "Save visibility"
+    // writes — that draft edits team settings, which is exactly what an
+    // audience must never touch.
+    let audienceByTitle = new Map();
+
+    async function loadLessonAudiences() {
+      try {
+        const r = await api('/api/fll/coach/lesson-audiences');
+        audienceByTitle = new Map(r.lessons.map(l => [l.title, l]));
+      } catch (e) {
+        audienceByTitle = new Map();
+      }
+    }
+
+    function teamLabel(id) {
+      const t = (roster?.teams || []).find(x => x.id === id);
+      return t ? (t.nickname || t.name) : id;
+    }
+
+    function audienceSummary(a) {
+      if (a.mode === 'all') return 'Everyone';
+      if (!a.teamIds.length) return 'No team yet';
+      return a.teamIds.map(teamLabel).join(', ');
+    }
+
+    function audienceRow(lesson, a, teamId) {
+      const warn = a.unmatched && a.unmatched.length
+        ? `<span class="aud-warn" title="No team has this name">⚠ Meant for “${escapeHtml(a.unmatched.join('”, “'))}” — no team by that name. Tick the right team below.</span>` : '';
+      const tid = escapeHtml(a.templateId);
+      let control;
+      if (teamId) {
+        const on = a.mode === 'all' || a.teamIds.includes(teamId);
+        control = `
+          <label class="visibility-row-toggle">
+            <input type="checkbox" ${on ? 'checked' : ''} onchange="toggleAudienceTeam('${tid}','${escapeHtml(teamId)}',this.checked,this)">
+            <span class="visibility-row-title">${escapeHtml(lesson.title)}</span>
+          </label>`;
+      } else {
+        control = `<span class="visibility-row-title aud-title">${escapeHtml(lesson.title)}</span>`;
+      }
+      const picker = teamId ? '' : `
+        <div class="aud-picker">
+          <label class="aud-chip${a.mode === 'all' ? ' is-on' : ''}">
+            <input type="checkbox" ${a.mode === 'all' ? 'checked' : ''} onchange="setAudienceEveryone('${tid}',this.checked)"> Everyone
+          </label>
+          ${(roster?.teams || []).map(t => {
+            const on = a.mode !== 'all' && a.teamIds.includes(t.id);
+            return `<label class="aud-chip${on ? ' is-on' : ''}${a.mode === 'all' ? ' is-muted' : ''}">
+              <input type="checkbox" ${on ? 'checked' : ''} ${a.mode === 'all' ? 'disabled' : ''}
+                onchange="toggleAudienceTeam('${tid}','${escapeHtml(t.id)}',this.checked,this)"> ${escapeHtml(t.nickname || t.name)}
+            </label>`;
+          }).join('')}
+        </div>`;
+      return `
+        <div class="visibility-row aud-row">
+          ${control}
+          <span class="aud-tag">Custom</span>
+          <span class="visibility-row-meta">${escapeHtml(lesson.category)} · for ${escapeHtml(audienceSummary(a))}</span>
+          <span class="visibility-row-due">
+            <span class="visibility-due-label">Due</span>
+            <input class="visibility-row-date" type="date" value="${lesson.dueDate ? escapeHtml(String(lesson.dueDate).slice(0,10)) : ''}" data-title="${escapeHtml(lesson.title)}" onchange="setLessonDueDate(this.dataset.title, this.value)">
+          </span>
+          ${warn}
+          ${picker}
+        </div>`;
+    }
+
+    async function putAudience(body, note) {
+      const message = document.getElementById('visibilityMessage');
+      try {
+        const r = await api('/api/fll/coach/lesson-audience', { method: 'PATCH', body: JSON.stringify(body) });
+        await loadLessonAudiences();
+        renderVisibilityLessons();
+        message.textContent = `✓ ${note} Saved — no need to press Save visibility.`;
+        message.className = 'form-msg success';
+        return r;
+      } catch (e) {
+        message.textContent = e.message;
+        message.className = 'form-msg error';
+        renderVisibilityLessons();      // put the checkbox back how it really is
+      }
+    }
+
+    function toggleAudienceTeam(templateId, teamId, on) {
+      const lesson = [...audienceByTitle.values()].find(l => l.templateId === templateId);
+      putAudience(on ? { templateId, addTeam: teamId } : { templateId, removeTeam: teamId },
+        `${teamLabel(teamId)} ${on ? 'can now see' : 'no longer sees'} “${lesson ? lesson.title : 'this lesson'}”.`);
+    }
+
+    function setAudienceEveryone(templateId, on) {
+      const lesson = [...audienceByTitle.values()].find(l => l.templateId === templateId);
+      putAudience(on ? { templateId, mode: 'all', teamIds: [] } : { templateId, mode: 'teams', teamIds: lesson ? lesson.teamIds : [] },
+        on ? 'Every team can now see this lesson.' : 'Now only the teams ticked can see it.');
+    }
+
     function renderVisibilityLessons() {
       if (!visibilityDraft) return;
       const hidden = new Set(visibilityDraft.hiddenAssignments);
       const lessons = filteredVisibilityLessons();
-      document.getElementById('visibilityLessons').innerHTML = lessons.length ? lessons.map(lesson => `
+      const teamId = visibilityDraft.teamId;
+      document.getElementById('visibilityLessons').innerHTML = lessons.length ? lessons.map(lesson => {
+        const a = audienceByTitle.get(lesson.title);
+        if (a) return audienceRow(lesson, a, teamId);
+        return `
         <div class="visibility-row">
           <label class="visibility-row-toggle">
             <input class="visibility-lesson-check" type="checkbox" data-title="${escapeHtml(lesson.title)}" ${hidden.has(lesson.title) ? '' : 'checked'} onchange="setVisibilityLesson(this.dataset.title,this.checked)">
@@ -3237,7 +3381,8 @@
             <span class="visibility-due-label">Due</span>
             <input class="visibility-row-date" type="date" value="${lesson.dueDate ? escapeHtml(String(lesson.dueDate).slice(0,10)) : ''}" data-title="${escapeHtml(lesson.title)}" onchange="setLessonDueDate(this.dataset.title, this.value)" title="Set the due date for this lesson (updates every team's copy)">
           </span>
-        </div>`).join('') : '<div class="empty" style="padding:20px">No lessons match this filter.</div>';
+        </div>`;
+      }).join('') : '<div class="empty" style="padding:20px">No lessons match this filter.</div>';
     }
 
     async function setLessonDueDate(title, date) {
@@ -3264,10 +3409,15 @@
     }
 
     function bulkSetLessons(visible) {
-      for (const lesson of filteredVisibilityLessons()) setVisibilityLesson(lesson.title, visible);
+      // custom lessons are decided by who they are for, not the hidden list,
+      // so bulk show/hide leaves them alone rather than appearing to change them
+      const regular = filteredVisibilityLessons().filter(l => !audienceByTitle.has(l.title));
+      for (const lesson of regular) setVisibilityLesson(lesson.title, visible);
       renderVisibilityLessons();
       const message = document.getElementById('visibilityMessage');
-      message.textContent = `${visible ? 'Showing' : 'Hiding'} ${filteredVisibilityLessons().length} filtered lesson(s). Save to apply.`;
+      const skipped = filteredVisibilityLessons().length - regular.length;
+      message.textContent = `${visible ? 'Showing' : 'Hiding'} ${regular.length} filtered lesson(s). Save to apply.`
+        + (skipped ? ` ${skipped} custom lesson(s) left as they are — change those with their own checkboxes.` : '');
       message.className = 'form-msg';
     }
 
@@ -3300,6 +3450,50 @@
         message.className = 'form-msg error';
       } finally {
         button.disabled = false;
+      }
+    }
+
+    async function convertLessons(dryRun) {
+      const btn = document.getElementById('convertLessonsBtn');
+      const msg = document.getElementById('convertLessonsMessage');
+      const detail = document.getElementById('convertLessonsDetail');
+      if (!dryRun && !confirm('Convert old lessons now? Answers, grades and drafts move with each lesson, and a backup is saved first.')) return;
+      btn.disabled = true;
+      msg.textContent = dryRun ? 'Checking…' : 'Converting…';
+      msg.className = 'form-msg';
+      try {
+        const r = await api('/api/fll/coach/convert-lessons', { method: 'POST', body: JSON.stringify({ dryRun }) });
+        const rows = r.lessons || [];
+        const doable = rows.filter(l => !l.skipped);
+        if (!rows.length) {
+          msg.textContent = 'Nothing to convert — no old-style lessons found.';
+          msg.className = 'form-msg success';
+          detail.classList.add('hidden');
+          return;
+        }
+        detail.classList.remove('hidden');
+        detail.innerHTML = rows.map(l => `
+          <div class="visibility-row">
+            <span class="visibility-row-title">${escapeHtml(l.title)}</span>
+            <span class="visibility-row-meta">${l.copies} cop${l.copies === 1 ? 'y' : 'ies'} · ${l.submissions} answer${l.submissions === 1 ? '' : 's'} · ${l.drafts} draft${l.drafts === 1 ? '' : 's'}
+              · for ${escapeHtml(l.teams.map(teamLabel).join(', ') || 'no team')}</span>
+            ${l.skipped ? `<span class="aud-warn">Not converted: ${escapeHtml(l.skipped)}</span>` : ''}
+          </div>`).join('');
+        if (dryRun) {
+          msg.textContent = `${doable.length} lesson(s) would be converted${rows.length > doable.length ? `, ${rows.length - doable.length} skipped` : ''}. Nothing has changed yet.`;
+          msg.className = 'form-msg';
+        } else {
+          msg.textContent = `✓ Converted ${r.converted} lesson(s). Backup saved as ${r.backup}.`;
+          msg.className = 'form-msg success';
+          await loadRoster();
+          await loadLessonAudiences();
+          showToast('Old lessons converted');
+        }
+      } catch (e) {
+        msg.textContent = e.message;
+        msg.className = 'form-msg error';
+      } finally {
+        btn.disabled = false;
       }
     }
 

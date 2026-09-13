@@ -1181,9 +1181,6 @@ function normalizeFllSettings(data) {
 				: []
 		};
 	}
-	// Lessons the coach has explicitly told the idea map to read. Empty means
-	// "work it out from the titles" — this exists because guessing cannot cover
-	// every lesson a coach writes.
 	// Planned-work notice. Students get a hold screen; coaches keep working, so
 	// whoever switched it on can still see what they are doing.
 	const maint = source.maintenance && typeof source.maintenance === 'object' ? source.maintenance : {};
@@ -1193,14 +1190,30 @@ function normalizeFllSettings(data) {
 		backBy: cleanMetaString(maint.backBy || '', 80),
 		startedAt: cleanMetaString(maint.startedAt || '', 40)
 	};
+	// Lessons the coach has explicitly told the idea map to read. Empty means
+	// "work it out from the titles" — this exists because guessing cannot cover
+	// every lesson a coach writes.
 	const ideaMapSources = Array.isArray(source.ideaMapSources)
 		? [...new Set(source.ideaMapSources.map((id) => cleanMetaString(id, 160)).filter(Boolean))]
 		: [];
+	// Which teams each lesson is for, keyed by lesson template id. Only lessons
+	// a coach has set appear here; the rest keep their seed audience, or none.
+	const lessonAudiences = {};
+	for (const [templateId, value] of Object.entries(source.lessonAudiences || {})) {
+		const cleanId = cleanMetaString(templateId, 160);
+		if (!cleanId || !value || typeof value !== 'object') continue;
+		lessonAudiences[cleanId] = {
+			mode: value.mode === 'all' ? 'all' : 'teams',
+			teamIds: [...new Set((Array.isArray(value.teamIds) ? value.teamIds : [])
+				.map((id) => cleanMetaString(id, 100)).filter(Boolean))]
+		};
+	}
 	return {
 		disabledAreas: [...new Set(disabledAreas)],
 		simulatorEnabled: source.simulatorEnabled !== false, // default on
 		ideaMapSources,
 		maintenance,
+		lessonAudiences,
 		hiddenAssignments,
 		hiddenResources,
 		teamSettings
@@ -4163,10 +4176,66 @@ function fllCurriculumTemplates(tasks) {
 	});
 }
 
+// ── Lesson audiences ───────────────────────────────────────────────────────
+// Which teams a lesson is for. This is a property of the LESSON, not of any
+// team's settings: hiding by title per team copies the global settings into
+// that team the first time and then stops following them, so "only AI Future
+// 2" built that way leaked onto teams with their own settings and detached the
+// chosen team from every later global change.
+//
+// A lesson with no audience is for everyone — every existing lesson, unchanged.
+// A seed lesson may declare a starting audience by team NAME, because a
+// team's id on the live disk is not known when the lesson is written. Once a
+// coach sets an audience it lives in settings, which Update lesson content never
+// touches, so the coach's choice always wins over the seed.
+function lessonTemplateId(task) {
+	return String(task?.id || '').split('--')[0];
+}
+
+function resolveLessonAudience(task, settings, teams) {
+	const stored = (settings && settings.lessonAudiences || {})[lessonTemplateId(task)];
+	if (stored) return { ...stored, from: 'coach', unmatched: [] };
+	const declared = task && task.audience;
+	if (!declared || typeof declared !== 'object') return null;
+	if (declared.mode === 'all') return { mode: 'all', teamIds: [], from: 'seed', unmatched: [] };
+	const teamList = Array.isArray(teams) ? teams : [];
+	const ids = new Set(Array.isArray(declared.teamIds) ? declared.teamIds : []);
+	const unmatched = [];
+	for (const name of (Array.isArray(declared.teamNames) ? declared.teamNames : [])) {
+		const want = slugify(name);
+		const match = teamList.find((t) =>
+			t.id === `team-${want}` || slugify(t.name) === want || slugify(t.nickname) === want);
+		if (match) ids.add(match.id); else unmatched.push(name);
+	}
+	// no team matched: nobody sees it — fails closed, never open
+	return { mode: 'teams', teamIds: [...ids], from: 'seed', unmatched };
+}
+
+function lessonAudienceAllows(task, teamId, settings, teams) {
+	const audience = resolveLessonAudience(task, settings, teams);
+	if (!audience || audience.mode === 'all') return true;
+	return Boolean(teamId) && audience.teamIds.includes(teamId);
+}
+
+// For endpoints that act on a single task: a remembered link must not walk
+// past an audience the student is outside of.
+async function studentMayUseTask(user, task) {
+	if (!user || user.role !== 'student') return true;
+	const [settings, teams] = await Promise.all([
+		readFllSettings(),
+		readJsonFile(path.join(fllHubDataDir, 'teams.json'), [])
+	]);
+	return lessonAudienceAllows(task, user.teamId, settings, teams);
+}
+
 async function ensureFllCurriculumTasksForUser(user) {
 	if (!user?.id || !user?.teamId || user.role !== 'student') return;
 	if (user.teamId === FLL_TEMPLATE_TEAM_ID) return; // never re-distribute onto the template team
-	const tasks = await readJsonFile(fllTasksFile, []);
+	const [tasks, distSettings, distTeams] = await Promise.all([
+		readJsonFile(fllTasksFile, []),
+		readFllSettings(),
+		readJsonFile(path.join(fllHubDataDir, 'teams.json'), [])
+	]);
 	if (!Array.isArray(tasks)) return;
 	const templates = fllCurriculumTemplates(tasks);
 	if (!templates.length) return;
@@ -4181,6 +4250,9 @@ async function ensureFllCurriculumTasksForUser(user) {
 		// deleted: students who already did it keep their work and their grade,
 		// and nobody new is handed a duplicate of a lesson they will also get.
 		if (template.retired) continue;
+		// outside the lesson's audience: no copy. Adding the team later hands
+		// it over on the next dashboard load, since this runs on every visit.
+		if (!lessonAudienceAllows(template, user.teamId, distSettings, distTeams)) continue;
 		const distributedId = `${template.id}--${user.id}`;
 		if (mineIds.has(distributedId) || mineTitles.has(template.title)) continue;
 		const copy = {
@@ -4219,7 +4291,10 @@ const FLL_CONTENT_FIELDS = ['title', 'description', 'questions', 'category', 'ty
 const FLL_OPTIONAL_CONTENT_FIELDS = [
 	// so retiring a lesson reaches the copies students already hold
 	'retired', 'retiredNote',
-	'videoId', 'trackerConfig', 'codeExample', 'codeExamples', 'allowPhoto', 'photoPrompt', 'allowFile'
+	'videoId', 'trackerConfig', 'codeExample', 'codeExamples', 'allowPhoto', 'photoPrompt', 'allowFile',
+	// several videos and "Learn more" cards per lesson
+	'videos', 'readings',
+	'excludeFromIdeaMap'
 ];
 
 async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
@@ -4439,7 +4514,15 @@ async function getFllStudentDashboardFor(user) {
 	const myTasks = (Array.isArray(tasks) ? tasks : [])
 		.filter((task) => task.teamId === user.teamId && task.assignedTo === user.id)
 		.filter((task) => !disabledAreas.has(taskAreaAliases[task.category] || 'innovation'))
-		.filter((task) => !hiddenTitles.has(task.title))   // coach-hidden lessons never reach students
+		// A lesson with an audience is decided by that audience alone. Applying the
+		// hidden-title list on top would mean ticking a team in and seeing nothing
+		// change, if its title happened to sit on that team's hidden list. Every
+		// other lesson is decided by the hidden list, exactly as before.
+		// A team taken out of an audience keeps its copies on disk, work and all,
+		// but stops seeing them — putting the team back restores them.
+		.filter((task) => (resolveLessonAudience(task, fllSettings, teams)
+			? lessonAudienceAllows(task, user.teamId, fllSettings, teams)
+			: !hiddenTitles.has(task.title)))   // coach-hidden lessons never reach students
 		.sort((a, b) => String(a.dueDate || '').localeCompare(String(b.dueDate || '')));
 	const codingFoundationsTask = buildFllCodingFoundationsTask(user);
 	if (!disabledAreas.has('robot-design') && !hiddenTitles.has(codingFoundationsTask.title) && !myTasks.some((task) => task.id === codingFoundationsTask.id)) {
@@ -6002,6 +6085,213 @@ app.patch('/api/fll/coach/settings', requireFllAuth, requireFllCoach, async (req
 	}
 });
 
+// Every lesson that has an audience, resolved against the teams that exist now.
+// Keyed by title as well as id, because Areas & Lessons lists lessons by title.
+app.get('/api/fll/coach/lesson-audiences', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const [tasks, settings, teams] = await Promise.all([
+			readJsonFile(fllTasksFile, []),
+			readFllSettings(),
+			readJsonFile(path.join(fllHubDataDir, 'teams.json'), [])
+		]);
+		const lessons = [];
+		for (const template of fllCurriculumTemplates(tasks)) {
+			const audience = resolveLessonAudience(template, settings, teams);
+			if (!audience) continue;
+			lessons.push({
+				templateId: template.id,
+				title: template.title,
+				mode: audience.mode,
+				teamIds: audience.teamIds,
+				from: audience.from,
+				unmatched: audience.unmatched
+			});
+		}
+		return res.json({ success: true, lessons });
+	} catch (err) {
+		console.error('FLL lesson audiences load error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading lesson audiences' });
+	}
+});
+
+// Set who a lesson is for. Either the whole audience ({ mode, teamIds }), or one
+// team in or out ({ addTeam } / { removeTeam }) for the per-team checkbox. It
+// writes only to lessonAudiences, so no team's own settings are ever created
+// or changed by it.
+app.patch('/api/fll/coach/lesson-audience', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const templateId = cleanMetaString(req.body.templateId || '', 160);
+		const [tasks, settings, teams] = await Promise.all([
+			readJsonFile(fllTasksFile, []),
+			readFllSettings(),
+			readJsonFile(path.join(fllHubDataDir, 'teams.json'), [])
+		]);
+		const template = fllCurriculumTemplates(tasks).find((t) => t.id === templateId);
+		if (!template) return res.status(404).json({ success: false, message: 'Lesson not found' });
+		const validTeamIds = new Set((Array.isArray(teams) ? teams : []).map((t) => t.id));
+
+		if (req.body.clear === true) {
+			delete settings.lessonAudiences[templateId];
+			await writeFllSettings(settings);
+			return res.json({ success: true, audience: resolveLessonAudience(template, settings, teams) });
+		}
+
+		// start from what the lesson has now, so a single toggle keeps the rest
+		const current = resolveLessonAudience(template, settings, teams) || { mode: 'all', teamIds: [] };
+		let mode = current.mode;
+		let teamIds = new Set(current.mode === 'all' ? [...validTeamIds] : current.teamIds);
+
+		if (typeof req.body.addTeam === 'string' || typeof req.body.removeTeam === 'string') {
+			const add = cleanMetaString(req.body.addTeam || '', 100);
+			const remove = cleanMetaString(req.body.removeTeam || '', 100);
+			if ((add && !validTeamIds.has(add)) || (remove && !validTeamIds.has(remove))) {
+				return res.status(400).json({ success: false, message: 'Unknown team' });
+			}
+			if (add) teamIds.add(add);
+			if (remove) teamIds.delete(remove);
+			mode = 'teams';            // a hand-picked list, even if it now covers everyone
+		} else {
+			mode = req.body.mode === 'all' ? 'all' : 'teams';
+			const wanted = (Array.isArray(req.body.teamIds) ? req.body.teamIds : [])
+				.map((id) => cleanMetaString(id, 100)).filter(Boolean);
+			const unknown = wanted.filter((id) => !validTeamIds.has(id));
+			if (unknown.length) return res.status(400).json({ success: false, message: `Unknown team: ${unknown.join(', ')}` });
+			teamIds = new Set(wanted);
+		}
+
+		settings.lessonAudiences[templateId] = { mode, teamIds: mode === 'all' ? [] : [...teamIds] };
+		await writeFllSettings(settings);
+		return res.json({ success: true, audience: resolveLessonAudience(template, settings, teams) });
+	} catch (err) {
+		console.error('FLL lesson audience save error:', err);
+		return res.status(500).json({ success: false, message: 'Server error saving who this lesson is for' });
+	}
+});
+
+// ── Convert old coach-made lessons into templates ─────────────────────────
+// The old "Add assignment" wrote one copy per student, each with its own id.
+// That split every lesson into a row per student and left later students out.
+// This folds each one into a single template with an audience, and moves every
+// submission, draft and idea-map reference across so no work is lost.
+//
+// A copy's new id is `${templateId}--${studentId}` — the same shape curriculum
+// copies use — so everything that groups lessons sees one lesson. Converted
+// tasks are re-tagged, which is what makes a second run find nothing to do.
+app.post('/api/fll/coach/convert-lessons', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const dryRun = req.body.dryRun === true;
+		const [tasks, submissions, drafts, settings] = await Promise.all([
+			readJsonFile(fllTasksFile, []),
+			readJsonFile(fllTaskSubmissionsFile, []),
+			readJsonFile(fllTaskDraftsFile, []),
+			readFllSettings()
+		]);
+		const allTasks = Array.isArray(tasks) ? tasks : [];
+		const allSubs = Array.isArray(submissions) ? submissions : [];
+		const allDrafts = Array.isArray(drafts) ? drafts : [];
+		const templateTitles = new Set(fllCurriculumTemplates(allTasks).map((t) => t.title));
+
+		const groups = new Map();
+		for (const task of allTasks) {
+			if (task.assignmentId !== 'assignment-coach-created') continue;
+			if (task.teamId === FLL_TEMPLATE_TEAM_ID) continue;
+			if (!groups.has(task.title)) groups.set(task.title, []);
+			groups.get(task.title).push(task);
+		}
+
+		const preview = [];
+		const idMap = new Map();          // old task id -> new task id
+		const duplicateCopyIds = [];      // extra copies for a student, removed
+		const newTemplates = [];
+		const audienceUpdates = {};
+		for (const [title, copies] of groups) {
+			const teamIds = [...new Set(copies.map((c) => c.teamId).filter(Boolean))];
+			const oldIds = new Set(copies.map((c) => c.id));
+			const row = {
+				title,
+				copies: copies.length,
+				teams: teamIds,
+				submissions: allSubs.filter((s) => oldIds.has(s.taskId)).length,
+				drafts: allDrafts.filter((d) => oldIds.has(d.taskId)).length
+			};
+			// a curriculum lesson already owns this title; a second template with
+			// the same title would be hidden behind it, so leave it and say why
+			if (templateTitles.has(title)) {
+				preview.push({ ...row, skipped: 'A curriculum lesson already has this title.' });
+				continue;
+			}
+			const templateId = `task-${slugify(title)}-${crypto.randomBytes(3).toString('hex')}`;
+			const first = copies[0];
+			const template = { ...first, id: templateId, teamId: FLL_TEMPLATE_TEAM_ID,
+				assignedTo: 'student-team-01-a', assignmentId: 'assignment-coach-template', status: 'todo' };
+			delete template.answers;
+			delete template.submission;
+			newTemplates.push(template);
+			const keptFor = new Map();       // student -> the copy that survives
+			for (const copy of copies) {
+				const newId = `${templateId}--${copy.assignedTo}`;
+				// a second copy for the same student still maps to the same new id,
+				// so its submission follows too instead of being orphaned
+				idMap.set(copy.id, newId);
+				if (!keptFor.has(copy.assignedTo)) keptFor.set(copy.assignedTo, copy.id);
+			}
+			duplicateCopyIds.push(...copies.filter((c) => keptFor.get(c.assignedTo) !== c.id).map((c) => c.id));
+			audienceUpdates[templateId] = { mode: 'teams', teamIds };
+			preview.push({ ...row, templateId });
+		}
+
+		const converting = preview.filter((p) => !p.skipped);
+		if (dryRun || !converting.length) {
+			return res.json({ success: true, dryRun, lessons: preview, converted: dryRun ? 0 : converting.length });
+		}
+
+		// back up everything this touches before changing any of it
+		const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+		const backupDir = path.join(fllHubDataDir, 'backups', `convert-lessons-${stamp}`);
+		await fs.mkdir(backupDir, { recursive: true });
+		await Promise.all([
+			writeJsonFile(path.join(backupDir, 'tasks.json'), allTasks),
+			writeJsonFile(path.join(backupDir, 'task-submissions.json'), allSubs),
+			writeJsonFile(path.join(backupDir, 'task-drafts.json'), allDrafts),
+			writeJsonFile(path.join(backupDir, 'fll-settings.json'), settings)
+		]);
+
+		const dropped = new Set(duplicateCopyIds);
+		const nextTasks = [];
+		for (const task of allTasks) {
+			if (dropped.has(task.id)) continue;
+			if (!idMap.has(task.id)) { nextTasks.push(task); continue; }
+			nextTasks.push({ ...task, id: idMap.get(task.id), assignmentId: 'assignment-coach-template' });
+		}
+		nextTasks.push(...newTemplates);
+
+		// work follows its lesson; submission ids are untouched because coach
+		// review, sharing and access all look a submission up by its id
+		for (const sub of allSubs) if (idMap.has(sub.taskId)) sub.taskId = idMap.get(sub.taskId);
+		for (const draft of allDrafts) if (idMap.has(draft.taskId)) draft.taskId = idMap.get(draft.taskId);
+
+		// the idea map's chosen lessons were saved as old ids
+		const newTemplateFor = new Map();
+		for (const [oldId, newId] of idMap) newTemplateFor.set(oldId, newId.split('--')[0]);
+		settings.ideaMapSources = [...new Set((settings.ideaMapSources || [])
+			.map((id) => newTemplateFor.get(id) || id))];
+		Object.assign(settings.lessonAudiences, audienceUpdates);
+
+		// audience first, then the rest — see POST /api/fll/coach/assignments
+		await writeFllSettings(settings);
+		await Promise.all([
+			writeJsonFile(fllTasksFile, nextTasks),
+			writeJsonFile(fllTaskSubmissionsFile, allSubs),
+			writeJsonFile(fllTaskDraftsFile, allDrafts)
+		]);
+		return res.json({ success: true, dryRun: false, lessons: preview, converted: converting.length,
+			backup: path.basename(backupDir) });
+	} catch (err) {
+		console.error('FLL convert lessons error:', err);
+		return res.status(500).json({ success: false, message: 'Server error converting lessons' });
+	}
+});
+
 // Push updated lesson content from the deployed repo onto the live data disk.
 // Pass { dryRun: true } to preview what would change without writing.
 app.post('/api/fll/coach/sync-curriculum', requireFllAuth, requireFllCoach, async (req, res) => {
@@ -6751,22 +7041,25 @@ app.post('/api/fll/coach/assignments', requireFllAuth, requireFllCoach, async (r
 			return res.status(400).json({ success: false, message: 'Title, FLL area, and a valid due date are required' });
 		}
 		const teamId = cleanMetaString(req.body.teamId || '', 80) || 'all';
-		const [tasks, members] = await Promise.all([
+		const [tasks, teams, settings] = await Promise.all([
 			readJsonFile(fllTasksFile, []),
-			readJsonFile(fllTeamMembersFile, [])
+			readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
+			readFllSettings()
 		]);
-		const targets = (Array.isArray(members) ? members : [])
-			.filter((member) => teamId === 'all' || member.teamId === teamId);
-		if (!targets.length) {
-			return res.status(400).json({ success: false, message: 'No students found for that team' });
+		if (teamId !== 'all' && !(Array.isArray(teams) ? teams : []).some((t) => t.id === teamId)) {
+			return res.status(400).json({ success: false, message: 'Unknown team' });
 		}
-		const baseId = `task-${slugify(title)}-${crypto.randomBytes(3).toString('hex')}`;
+		// One template, handed to students by the usual distribution — never one
+		// copy per student made right now. Copies made up front missed every
+		// student who joined afterwards, and each carried its own id, which split
+		// the lesson into as many rows as it had students.
+		const templateId = `task-${slugify(title)}-${crypto.randomBytes(3).toString('hex')}`;
 		const now = new Date().toISOString();
-		const created = targets.map((member, index) => ({
-			id: `${baseId}-${index}`,
-			assignmentId: 'assignment-coach-created',
-			teamId: member.teamId,
-			assignedTo: member.studentId,
+		tasks.push({
+			id: templateId,
+			assignmentId: 'assignment-coach-template',
+			teamId: FLL_TEMPLATE_TEAM_ID,
+			assignedTo: 'student-team-01-a',
 			title,
 			description: cleanMetaString(req.body.description || '', 4000),
 			category,
@@ -6778,10 +7071,17 @@ app.post('/api/fll/coach/assignments', requireFllAuth, requireFllCoach, async (r
 			createdBy: req.fllUser.id,
 			createdAt: now,
 			updatedAt: now
-		}));
-		tasks.push(...created);
+		});
+		// "Assign to" becomes who the lesson is for. All teams means no audience,
+		// the same as every curriculum lesson. The audience is written BEFORE the
+		// lesson: a lesson with no audience goes to everyone, so saving it first
+		// and failing on the audience would hand a one-team lesson to all teams.
+		if (teamId !== 'all') {
+			settings.lessonAudiences[templateId] = { mode: 'teams', teamIds: [teamId] };
+			await writeFllSettings(settings);
+		}
 		await writeJsonFile(fllTasksFile, tasks);
-		return res.status(201).json({ success: true, count: created.length, title });
+		return res.status(201).json({ success: true, templateId, title, audience: teamId === 'all' ? 'everyone' : teamId });
 	} catch (err) {
 		console.error('FLL coach add assignment error:', err);
 		return res.status(500).json({ success: false, message: 'Server error adding assignment' });
@@ -6829,7 +7129,17 @@ app.delete('/api/fll/coach/assignments', requireFllAuth, requireFllCoach, async 
 		if (remaining.length === tasks.length) {
 			return res.status(404).json({ success: false, message: 'Assignment not found' });
 		}
+		// Remove the lesson first, then its audience. The other order would leave
+		// the lesson with no audience if the second write failed — and a lesson
+		// with no audience goes to every team.
 		await writeJsonFile(fllTasksFile, remaining);
+		const removedTemplateIds = new Set(tasks.filter((t) => t.title === matchTitle).map(lessonTemplateId));
+		const settings = await readFllSettings();
+		let audiencesChanged = false;
+		for (const id of removedTemplateIds) {
+			if (settings.lessonAudiences[id]) { delete settings.lessonAudiences[id]; audiencesChanged = true; }
+		}
+		if (audiencesChanged) await writeFllSettings(settings);
 		return res.json({ success: true, removed: tasks.length - remaining.length });
 	} catch (err) {
 		console.error('FLL coach delete assignment error:', err);
@@ -6889,6 +7199,9 @@ app.put('/api/fll/tasks/:id/draft', requireFllAuth, requireFllStudent, async (re
 		const task = (Array.isArray(tasks) ? tasks : []).find((t) => t.id === req.params.id);
 		if (!task || task.assignedTo !== req.fllUser.id) {
 			return res.status(403).json({ success: false, message: 'You can only save your own work' });
+		}
+		if (!(await studentMayUseTask(req.fllUser, task))) {
+			return res.status(403).json({ success: false, message: 'This lesson is not assigned to your team.' });
 		}
 		const stored = await readJsonFile(fllTaskDraftsFile, []);
 		const drafts = Array.isArray(stored) ? stored : [];
@@ -7177,6 +7490,9 @@ async function seedIdeaMapForTeam(teamId) {
 				const base = baseOf(s.taskId);
 				if (laterStageIds.has(base)) return false;
 				const task = taskByBase.get(base);
+				// a research lesson's tables hold facts and sources, not ideas;
+				// such a lesson says so rather than leaving the fallback to guess
+				if (task && task.excludeFromIdeaMap === true) return false;
 				return task && task.category === 'Innovation Project';
 			});
 			if (innovation.length) { mySubs = innovation; fromFallback = true; }
@@ -7769,6 +8085,10 @@ app.get('/api/fll/tasks/:id/context', requireFllAuth, requireFllStudent, async (
 		if (!task || task.assignedTo !== req.fllUser.id) {
 			return res.status(404).json({ success: false, message: 'Assignment not found' });
 		}
+		// context shows teammates' earlier answers, so it is gated like the lesson
+		if (!(await studentMayUseTask(req.fllUser, task))) {
+			return res.status(404).json({ success: false, message: 'Assignment not found' });
+		}
 		const nameById = new Map(users.map((u) => [u.id, u.name]));
 		const baseOf = (id) => String(id).split('--')[0];
 
@@ -7961,6 +8281,9 @@ app.post('/api/fll/tasks/:id/submission', requireFllAuth, requireFllStudent, asy
 		if (!task || task.teamId !== req.fllUser.teamId || task.assignedTo !== req.fllUser.id) {
 			return res.status(403).json({ success: false, message: 'You can only submit your own assigned tasks' });
 		}
+		if (!(await studentMayUseTask(req.fllUser, task))) {
+			return res.status(403).json({ success: false, message: 'This lesson is not assigned to your team.' });
+		}
 		const answers = {};
 		for (const [questionId, answer] of Object.entries(req.body.answers || {})) {
 			answers[cleanMetaString(questionId, 120)] = cleanMetaString(answer || '', 8000);
@@ -8039,6 +8362,9 @@ app.post('/api/fll/tasks/:id/status', requireFllAuth, requireFllStudent, async (
 		}
 		if (!task || task.teamId !== req.fllUser.teamId || task.assignedTo !== req.fllUser.id) {
 			return res.status(403).json({ success: false, message: 'You can only update your own assigned tasks' });
+		}
+		if (!(await studentMayUseTask(req.fllUser, task))) {
+			return res.status(403).json({ success: false, message: 'This lesson is not assigned to your team.' });
 		}
 		task.status = status;
 		task.updatedAt = new Date().toISOString();
