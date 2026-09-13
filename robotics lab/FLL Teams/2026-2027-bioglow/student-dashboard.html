@@ -3722,6 +3722,28 @@
     .cf-go { flex:none; font-size:13px; font-weight:750; color:#1a73e8; }
     @media (max-width:560px) { .cf-go { display:none; } }
     @media (pointer: coarse) { .cf-row { min-height:56px; } }
+    .md-link { color:#1a73e8; font-weight:650; text-decoration:underline; text-underline-offset:2px; }
+    .md-link:hover { color:#174ea6; }
+    .ta-videos { margin:18px 0; }
+    .ta-videos-head, .ta-reads-head { font-size:15px; font-weight:800; color:var(--t-strong); margin-bottom:10px; }
+    .ta-vid { margin-bottom:18px; padding:14px; border-radius:14px; background:var(--s-card); border:1px solid var(--s-line-2); }
+    .ta-vid-top { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+    .ta-vid-title { font-size:14.5px; font-weight:750; color:var(--t-strong); }
+    .ta-vid-source { font-size:11.5px; font-weight:700; color:var(--t-faint); text-transform:uppercase; letter-spacing:.04em; }
+    .ta-vid-note { font-size:13px; color:var(--t-muted); line-height:1.5; margin:5px 0 10px; }
+    .ta-reads { margin:18px 0; }
+    .ta-reads-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px; }
+    .ta-read { display:flex; gap:11px; align-items:flex-start; padding:12px 13px; border-radius:12px;
+      background:var(--s-card); border:1px solid var(--s-line-2); text-decoration:none; color:inherit;
+      transition:border-color .15s, transform .15s; }
+    .ta-read:hover { border-color:#1a73e8; transform:translateY(-1px); }
+    .ta-read-ico { font-size:20px; flex:none; line-height:1.2; }
+    .ta-read-body { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+    .ta-read-title { font-size:13.5px; font-weight:750; color:var(--t-strong); line-height:1.35; }
+    .ta-read-source { font-size:11px; font-weight:700; color:var(--t-faint); text-transform:uppercase; letter-spacing:.04em; }
+    .ta-read-note { font-size:12.5px; color:var(--t-muted); line-height:1.45; margin-top:2px; }
+    .ta-read-go { flex:none; color:#1a73e8; font-weight:800; }
+    @media (pointer: coarse) { .ta-read { min-height:56px; } }
 </style>
   <link rel="stylesheet" href="/assets/css/theme.css">
   <script>(function(){try{var t=localStorage.getItem("af-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
@@ -4646,6 +4668,51 @@
         </div>
       ` : '';
 
+      // ── several videos, each with who published it and why it's here ──
+      // A lesson built around a topic needs more than one clip. Only a plain
+      // YouTube id is accepted, so nothing but a YouTube embed can be built.
+      const videoList = (Array.isArray(task.videos) ? task.videos : [])
+        .filter((v) => v && /^[A-Za-z0-9_-]{6,20}$/.test(String(v.videoId || '')));
+      const videosHtml = videoList.length ? `
+        <div class="ta-videos">
+          <div class="ta-videos-head">📺 Videos</div>
+          ${videoList.map((v) => `
+            <div class="ta-vid">
+              <div class="ta-vid-top">
+                <div class="ta-vid-title">${escapeHtml(v.title || 'Video')}</div>
+                ${v.source ? `<div class="ta-vid-source">${escapeHtml(v.source)}</div>` : ''}
+              </div>
+              ${v.note ? `<div class="ta-vid-note">${escapeHtml(v.note)}</div>` : ''}
+              <div class="ta-video-wrap">
+                <iframe src="https://www.youtube.com/embed/${escapeHtml(v.videoId)}?rel=0&modestbranding=1"
+                  allowfullscreen loading="lazy" title="${escapeHtml(v.title || task.title)}"></iframe>
+              </div>
+            </div>`).join('')}
+        </div>` : '';
+
+      // ── "Learn more": articles, tools, research searches, experts ──
+      // Most of these sites refuse to be shown inside another page, so they
+      // are cards that open in a new tab rather than embeds. http(s) only.
+      const READING_ICON = { article: '📰', tool: '🔧', search: '🔎', expert: '🧑‍🔬', site: '🌐', film: '🎬' };
+      const readingList = (Array.isArray(task.readings) ? task.readings : [])
+        .filter((r) => r && /^https?:\/\//i.test(String(r.url || '')));
+      const readingsHtml = readingList.length ? `
+        <div class="ta-reads">
+          <div class="ta-reads-head">📚 Learn more</div>
+          <div class="ta-reads-grid">
+            ${readingList.map((r) => `
+              <a class="ta-read" href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer">
+                <span class="ta-read-ico">${READING_ICON[r.kind] || '🌐'}</span>
+                <span class="ta-read-body">
+                  <span class="ta-read-title">${escapeHtml(r.title || r.url)}</span>
+                  ${r.source ? `<span class="ta-read-source">${escapeHtml(r.source)}</span>` : ''}
+                  ${r.note ? `<span class="ta-read-note">${escapeHtml(r.note)}</span>` : ''}
+                </span>
+                <span class="ta-read-go">↗</span>
+              </a>`).join('')}
+          </div>
+        </div>` : '';
+
       // ── lesson body ──
       const lessonHtml = task.description ? `
         ${retiredBanner(task)}
@@ -4810,6 +4877,8 @@
 
           ${videoHtml}
           ${lessonHtml}
+          ${videosHtml}
+          ${readingsHtml}
           ${codeHtml}
 
           ${(task.questions || []).length ? `
@@ -5377,7 +5446,13 @@
     // blockquote/table markers are matched in their escaped form (&gt;).
     function renderMarkdownish(text) {
       if (!text) return '';
+      // Links come first so bold and code never touch a URL. Only http and
+      // https match — a javascript: or data: link simply stays as text — and
+      // quotes and angle brackets are excluded from the URL, so a link can
+      // never break out of its href.
       const inline = (s) => s
+        .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)"'<>]+)\)/g,
+          '<a class="md-link" href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/`([^`]+?)`/g, '<code>$1</code>');
       const escaped = text
