@@ -701,6 +701,22 @@
       border-radius:50px; border:1.5px solid var(--s-line-2); background:var(--s-card); color:var(--t-body); cursor:pointer; }
     .aud-chip.is-on { border-color:#1a73e8; background:var(--tint-blue); color:#174ea6; font-weight:700; }
     .aud-chip.is-muted { opacity:.5; cursor:not-allowed; }
+    /* Team preview — read-only, so rows are plain text rather than controls */
+    .tp-summary { font-size:13.5px; color:var(--t-body); background:var(--s-hover);
+      border:1px solid var(--s-line-2); border-radius:10px; padding:11px 14px; margin-bottom:6px; }
+    .tp-note { display:block; color:var(--t-muted); font-size:12.5px; margin-top:4px; }
+    .tp-h { font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:.04em;
+      color:var(--t-muted); margin:16px 0 6px; }
+    .visibility-row.tp-row { display:grid; grid-template-columns:1fr auto auto auto; gap:8px 10px; align-items:center; }
+    .tp-row > .visibility-row-title { font-weight:650; }
+    .tp-row.is-off { opacity:.72; }
+    .tp-row > .tp-why { grid-column:1 / -1; font-size:12.5px; color:var(--t-muted); }
+    .tp-tag { font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:50px; white-space:nowrap;
+      background:var(--tint-amber); color:#8a5a00; text-transform:uppercase; letter-spacing:.04em; }
+    @media (max-width: 760px) {
+      .visibility-row.tp-row { grid-template-columns: 1fr auto; }
+      .tp-row > .visibility-row-meta { grid-column: 1 / -1; }
+    }
     @media (pointer: coarse) { .aud-chip { min-height:40px; padding:8px 13px; } }
 </style>
   <link rel="stylesheet" href="/assets/css/theme.css">
@@ -1063,6 +1079,19 @@
         </div>
         <div class="visibility-lessons" id="visibilityLessons"></div>
         <div class="visibility-actions"><button class="submit-btn" id="visibilitySave" onclick="saveVisibility()">Save visibility</button><button class="visibility-bulk-btn hidden" id="visibilityReset" onclick="resetTeamVisibility()">Reset team to defaults</button><span class="form-msg" id="visibilityMessage"></span></div>
+      </div>
+      <div class="visibility-card">
+        <div class="visibility-head">
+          <div>
+            <h2 class="form-title">Preview a team's lessons 👀</h2>
+            <p class="form-sub">See exactly what one team's students see, without logging in as a student. Lessons they don't get are listed too, with the reason why.</p>
+          </div>
+          <div class="visibility-team">
+            <label for="previewTeam">Preview</label>
+            <select id="previewTeam" onchange="loadTeamPreview()"><option value="">Pick a team…</option></select>
+          </div>
+        </div>
+        <div class="tp-out" id="previewOut"><div class="empty" style="padding:20px">Pick a team to see its lessons.</div></div>
       </div>
       <div class="visibility-card">
         <div class="visibility-head">
@@ -3160,6 +3189,11 @@
         teamSelect.innerHTML = '<option value="">All teams (default)</option>' + roster.teams
           .map(team => `<option value="${escapeHtml(team.id)}">${escapeHtml(team.nickname || team.name)}</option>`).join('');
       }
+      const previewSelect = document.getElementById('previewTeam');
+      if (previewSelect && previewSelect.options.length <= 1) {
+        previewSelect.innerHTML = '<option value="">Pick a team…</option>' + roster.teams
+          .map(team => `<option value="${escapeHtml(team.id)}">${escapeHtml(team.nickname || team.name)}</option>`).join('');
+      }
       const teamId = teamSelect.value;
       const source = settingsForVisibilityTeam(teamId);
       visibilityDraft = {
@@ -3363,6 +3397,7 @@
         const r = await api('/api/fll/coach/lesson-audience', { method: 'PATCH', body: JSON.stringify(body) });
         await loadLessonAudiences();
         renderVisibilityLessons();
+        refreshTeamPreview();   // the preview is now out of date
         message.textContent = `✓ ${note} Saved — no need to press Save visibility.`;
         message.className = 'form-msg success';
         return r;
@@ -3383,6 +3418,61 @@
       const lesson = [...audienceByTitle.values()].find(l => l.templateId === templateId);
       putAudience(on ? { templateId, mode: 'all', teamIds: [] } : { templateId, mode: 'teams', teamIds: lesson ? lesson.teamIds : [] },
         on ? 'Every team can now see this lesson.' : 'Now only the teams ticked can see it.');
+    }
+
+    // ── Team preview ──────────────────────────────────────────────────────
+    // The server answers with the same rules the student dashboard uses, so
+    // this is what the team really sees — not a second copy of that logic here.
+    async function loadTeamPreview() {
+      const teamId = document.getElementById('previewTeam').value;
+      const out = document.getElementById('previewOut');
+      if (!teamId) {
+        out.innerHTML = '<div class="empty" style="padding:20px">Pick a team to see its lessons.</div>';
+        return;
+      }
+      out.innerHTML = '<div class="empty" style="padding:20px">Loading…</div>';
+      try {
+        renderTeamPreview(await api(`/api/fll/coach/team-preview?teamId=${encodeURIComponent(teamId)}`));
+      } catch (err) {
+        out.innerHTML = `<div class="form-msg error" style="padding:12px">${escapeHtml(err.message || 'Could not load the preview.')}</div>`;
+      }
+    }
+
+    const PREVIEW_REASONS = {
+      hidden: 'Hidden', 'area-off': 'Area off', 'not-in-audience': 'Another team', draft: 'Draft', retired: 'Retired'
+    };
+
+    function renderTeamPreview(data) {
+      const out = document.getElementById('previewOut');
+      const visible = data.lessons.filter(l => l.visible);
+      const hidden = data.lessons.filter(l => !l.visible);
+      const row = (l) => `
+        <div class="visibility-row tp-row${l.visible ? '' : ' is-off'}">
+          <span class="visibility-row-title">${l.visible ? '✅' : '🚫'} ${escapeHtml(l.title)}</span>
+          ${l.custom ? '<span class="aud-tag">Custom</span>' : ''}
+          <span class="visibility-row-meta">${escapeHtml(l.category)}${l.dueDate ? ' · due ' + escapeHtml(String(l.dueDate).slice(0, 10)) : ''}</span>
+          ${l.visible ? '' : `<span class="tp-tag">${escapeHtml(PREVIEW_REASONS[l.reason] || 'Not shown')}</span>`}
+          <span class="tp-why">${escapeHtml(l.why)}</span>
+        </div>`;
+      const people = data.students.length
+        ? `${data.students.length} student${data.students.length === 1 ? '' : 's'}: ${data.students.map(s => escapeHtml(s.name)).join(', ')}`
+        : 'No students on this team yet — nobody sees these lessons until someone joins.';
+      out.innerHTML = `
+        <div class="tp-summary">
+          <strong>${escapeHtml(data.team.name)}</strong> sees <strong>${visible.length}</strong> lesson${visible.length === 1 ? '' : 's'}.
+          ${hidden.length ? `${hidden.length} more ${hidden.length === 1 ? 'is' : 'are'} not shown to them.` : ''}
+          <span class="tp-note">${people}</span>
+          <span class="tp-note">${data.usesOwnSettings ? 'This team has its own visibility settings.' : 'This team follows the all-team defaults.'}${
+            data.disabledAreas.length ? ` Areas switched off: ${data.disabledAreas.map(escapeHtml).join(', ')}.` : ''}</span>
+        </div>
+        <h3 class="tp-h">What they see (${visible.length})</h3>
+        ${visible.length ? visible.map(row).join('') : '<div class="empty" style="padding:16px">Nothing at all — check the areas and ticks above.</div>'}
+        <h3 class="tp-h">What they don't see (${hidden.length})</h3>
+        ${hidden.length ? hidden.map(row).join('') : '<div class="empty" style="padding:16px">Nothing is hidden from this team.</div>'}`;
+    }
+
+    function refreshTeamPreview() {
+      if (document.getElementById('previewTeam')?.value) loadTeamPreview();
     }
 
     function renderVisibilityLessons() {
@@ -3467,6 +3557,7 @@
             : `Saved — all ${total} resources visible.`;
           resourcesMsg.className = 'form-msg success';
         }
+        refreshTeamPreview();   // the preview is now out of date
         showToast('Student Hub visibility saved');
       } catch (err) {
         message.textContent = err.message;

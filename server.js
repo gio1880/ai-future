@@ -6131,6 +6131,127 @@ app.get('/api/fll/coach/lesson-audiences', requireFllAuth, requireFllCoach, asyn
 	}
 });
 
+// What one team's students actually see, worked out the same way the student
+// dashboard works it out — so a coach can check a team without logging in as a
+// student. Every lesson comes back, visible or not, each with the reason, so a
+// lesson that is missing on purpose can be told apart from one hidden by a
+// setting the coach forgot about.
+app.get('/api/fll/coach/team-preview', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const teamId = cleanMetaString(req.query.teamId || '', 120);
+		const [tasks, settings, teams, users] = await Promise.all([
+			readJsonFile(fllTasksFile, []),
+			readFllSettings(),
+			readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
+			readFllUsers()
+		]);
+		const teamList = Array.isArray(teams) ? teams : [];
+		const team = teamList.find((t) => t.id === teamId);
+		if (!team) return res.status(404).json({ success: false, message: 'Team not found' });
+
+		const teamSettings = effectiveFllSettings(settings, teamId);
+		const hiddenTitles = new Set(teamSettings.hiddenAssignments || []);
+		const disabledAreas = new Set(teamSettings.disabledAreas || []);
+		// same mapping the student dashboard uses, so the answer matches it
+		const taskAreaAliases = { 'Robot Design': 'robot-design', 'Robot Game': 'robot-game', 'Innovation Project': 'innovation', Innovation: 'innovation', 'Core Values': 'core-values', Judging: 'core-values', 'Pre-Season': 'innovation' };
+		const areaLabels = { 'robot-design': 'Robot Design', 'robot-game': 'Robot Game', innovation: 'Innovation', 'core-values': 'Core Values' };
+
+		const lessons = [];
+		for (const template of fllCurriculumTemplates(tasks)) {
+			const audience = resolveLessonAudience(template, settings, teams);
+			const area = taskAreaAliases[template.category] || 'innovation';
+			const row = {
+				templateId: template.id,
+				title: template.title,
+				category: template.category || '',
+				type: template.type || 'submission',
+				dueDate: template.dueDate || '',
+				custom: Boolean(audience),
+				audienceSummary: !audience ? 'Everyone'
+					: audience.mode === 'all' ? 'Everyone'
+					: audience.teamIds.length ? audience.teamIds.map((id) => {
+						const t = teamList.find((x) => x.id === id);
+						return t ? (t.nickname || t.name) : id;
+					}).join(', ')
+					: 'No team yet'
+			};
+			if (template.retired) {
+				// A retired lesson is never handed to anyone new, but students who
+				// already have a copy keep it (with a "replaced" banner) so their work
+				// and grade survive. So it depends on whether this team has copies.
+				const kept = (Array.isArray(tasks) ? tasks : []).some((t) => t.teamId === teamId
+					&& (String(t.id).startsWith(template.id + '--') || t.title === template.title));
+				lessons.push(kept
+					? { ...row, visible: true, reason: 'retired-kept', why: 'Retired, but this team already has it — they still see it, marked as replaced. New students will not get it.' }
+					: { ...row, visible: false, reason: 'retired', why: 'Retired — replaced by a newer lesson, and this team never had it.' });
+				continue;
+			}
+			if (disabledAreas.has(area)) {
+				lessons.push({ ...row, visible: false, reason: 'area-off', why: `The ${areaLabels[area] || area} area is switched off for this team.` });
+				continue;
+			}
+			// A lesson with an audience is decided by that audience alone, exactly
+			// as on the student dashboard — the hidden-title list never applies.
+			if (audience) {
+				if (lessonAudienceAllows(template, teamId, settings, teams)) {
+					lessons.push({ ...row, visible: true, reason: 'audience', why: `This lesson is for ${row.audienceSummary}.` });
+				} else {
+					const draft = audience.from === 'seed' && audience.mode !== 'all' && !audience.teamIds.length && (audience.draftFor || []).length;
+					lessons.push({
+						...row, visible: false,
+						reason: draft ? 'draft' : 'not-in-audience',
+						why: draft
+							? `Still a draft, written for ${(audience.draftFor || []).join(', ')}. No team sees it yet.`
+							: `This lesson is for ${row.audienceSummary} — tick this team to add it.`
+					});
+				}
+				continue;
+			}
+			if (hiddenTitles.has(template.title)) {
+				lessons.push({ ...row, visible: false, reason: 'hidden', why: 'Unticked in Displayed lessons for this team.' });
+				continue;
+			}
+			lessons.push({ ...row, visible: true, reason: 'shown', why: 'Ticked in Displayed lessons.' });
+		}
+
+		// Some lessons are built per student rather than seeded (sponsors, the
+		// robot-design trackers, the coding check), so a preview that only walked
+		// the templates would be missing lessons the team really has.
+		const previewUser = { id: 'preview', teamId, role: 'student' };
+		const builtIn = [...requiredFllTasksForUser(previewUser), buildFllCodingFoundationsTask(previewUser)];
+		for (const task of builtIn) {
+			const area = taskAreaAliases[task.category] || 'innovation';
+			const row = {
+				templateId: task.id, title: task.title, category: task.category || '', type: task.type || 'submission',
+				dueDate: task.dueDate || '', custom: false, audienceSummary: 'Everyone'
+			};
+			if (disabledAreas.has(area)) {
+				lessons.push({ ...row, visible: false, reason: 'area-off', why: `The ${areaLabels[area] || area} area is switched off for this team.` });
+			} else if (hiddenTitles.has(task.title)) {
+				lessons.push({ ...row, visible: false, reason: 'hidden', why: 'Unticked in Displayed lessons for this team.' });
+			} else {
+				lessons.push({ ...row, visible: true, reason: 'built-in', why: 'Built into the hub for every student.' });
+			}
+		}
+		lessons.sort((a, b) => String(a.dueDate).localeCompare(String(b.dueDate)) || a.title.localeCompare(b.title));
+
+		const students = (Array.isArray(users) ? users : [])
+			.filter((u) => u.role === 'student' && u.teamId === teamId && u.active !== false)
+			.map((u) => ({ id: u.id, name: u.name }));
+		return res.json({
+			success: true,
+			team: { id: team.id, name: team.nickname || team.name },
+			students,
+			usesOwnSettings: Boolean((settings.teamSettings || {})[teamId]),
+			disabledAreas: [...disabledAreas].map((a) => areaLabels[a] || a),
+			lessons
+		});
+	} catch (err) {
+		console.error('FLL team preview error:', err);
+		return res.status(500).json({ success: false, message: 'Server error building the team preview' });
+	}
+});
+
 // Set who a lesson is for. Either the whole audience ({ mode, teamIds }), or one
 // team in or out ({ addTeam } / { removeTeam }) for the per-team checkbox. It
 // writes only to lessonAudiences, so no team's own settings are ever created
