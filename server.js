@@ -4252,41 +4252,10 @@ async function ensureFllCurriculumTasksForUser(user) {
 		readJsonFile(path.join(fllHubDataDir, 'teams.json'), [])
 	]);
 	if (!Array.isArray(tasks)) return;
-	const templates = fllCurriculumTemplates(tasks);
-	if (!templates.length) return;
-	const mineIds = new Set(tasks.filter((task) => task.assignedTo === user.id).map((task) => task.id));
-	const mineTitles = new Set(
-		tasks.filter((task) => task.teamId === user.teamId && task.assignedTo === user.id).map((task) => task.title)
-	);
-	const now = new Date().toISOString();
-	let changed = false;
-	for (const template of templates) {
-		// A lesson superseded by a newer one is marked retired rather than
-		// deleted: students who already did it keep their work and their grade,
-		// and nobody new is handed a duplicate of a lesson they will also get.
-		if (template.retired) continue;
-		// outside the lesson's audience: no copy. Adding the team later hands
-		// it over on the next dashboard load, since this runs on every visit.
-		if (!lessonAudienceAllows(template, user.teamId, distSettings, distTeams)) continue;
-		const distributedId = `${template.id}--${user.id}`;
-		if (mineIds.has(distributedId) || mineTitles.has(template.title)) continue;
-		const copy = {
-			...template,
-			id: distributedId,
-			teamId: user.teamId,
-			assignedTo: user.id,
-			status: 'todo',
-			createdAt: now,
-			updatedAt: now
-		};
-		delete copy.answers;
-		delete copy.submission;
-		tasks.push(copy);
-		mineIds.add(distributedId);
-		mineTitles.add(template.title);
-		changed = true;
-	}
-	if (changed) await writeJsonFile(fllTasksFile, tasks);
+	// Same list the coach preview shows — decided in one place, written here.
+	const fresh = fllTasksToDistributeFor(user, tasks, distSettings, distTeams);
+	if (!fresh.length) return;
+	await writeJsonFile(fllTasksFile, [...tasks, ...fresh]);
 }
 
 // ── Curriculum resync (seed ➜ live disk) ─────────────────────────────────────
@@ -4498,9 +4467,63 @@ function sectionProgressFromMilestones(sections, milestones) {
 	return progress;
 }
 
-async function getFllStudentDashboardFor(user) {
-	await ensureFllSponsorsTaskForUser(user);
-	await ensureFllCurriculumTasksForUser(user);
+// The read-only twin of ensureFllSponsorsTaskForUser + ensureFllCurriculumTasksForUser.
+// Same rules, same ids, same order — but it returns the copies instead of writing
+// them to tasks.json, so a coach previewing a team never mutates anything on disk.
+// The lesson copies a student would be given, worked out but NOT written. The
+// real distribution below writes exactly these, and the coach preview shows
+// exactly these, so the two can never drift apart.
+function fllTasksToDistributeFor(user, tasks, settings, teams) {
+	const working = Array.isArray(tasks) ? [...tasks] : [];
+	const extra = [];
+	if (!user?.id || !user?.teamId || user.role !== 'student') return extra;
+	for (const task of requiredFllTasksForUser(user)) {
+		if (working.some((candidate) => candidate.id === task.id)) continue;
+		working.push(task);
+		extra.push(task);
+	}
+	if (user.teamId === FLL_TEMPLATE_TEAM_ID) return extra; // never distribute onto the template team
+	const templates = fllCurriculumTemplates(working);
+	if (!templates.length) return extra;
+	const mineIds = new Set(working.filter((task) => task.assignedTo === user.id).map((task) => task.id));
+	const mineTitles = new Set(
+		working.filter((task) => task.teamId === user.teamId && task.assignedTo === user.id).map((task) => task.title)
+	);
+	const now = new Date().toISOString();
+	for (const template of templates) {
+		// A lesson superseded by a newer one is marked retired rather than
+		// deleted: students who already did it keep their work and their grade,
+		// and nobody new is handed a duplicate of a lesson they will also get.
+		if (template.retired) continue;
+		// outside the lesson's audience: no copy. Adding the team later hands
+		// it over on the next dashboard load, since this runs on every visit.
+		if (!lessonAudienceAllows(template, user.teamId, settings, teams)) continue;
+		const distributedId = `${template.id}--${user.id}`;
+		if (mineIds.has(distributedId) || mineTitles.has(template.title)) continue;
+		const copy = {
+			...template,
+			id: distributedId,
+			teamId: user.teamId,
+			assignedTo: user.id,
+			status: 'todo',
+			createdAt: now,
+			updatedAt: now
+		};
+		delete copy.answers;
+		delete copy.submission;
+		extra.push(copy);
+		mineIds.add(distributedId);
+		mineTitles.add(template.title);
+	}
+	return extra;
+}
+
+
+async function getFllStudentDashboardFor(user, { preview = false } = {}) {
+	if (!preview) {
+		await ensureFllSponsorsTaskForUser(user);
+		await ensureFllCurriculumTasksForUser(user);
+	}
 	const [season, teams, timeline, assignments, tasks, milestones, workLogs, members, schedules, resources, sections, missionAnalysis, fllSettings] = await Promise.all([
 		readJsonFile(path.join(fllHubDataDir, 'season.json'), {}),
 		readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
@@ -4526,7 +4549,12 @@ async function getFllStudentDashboardFor(user) {
 	const teamAssignments = (Array.isArray(assignments) ? assignments : [])
 		.filter((assignment) => assignment.teamId === user.teamId)
 		.sort((a, b) => String(a.dueDate || '').localeCompare(String(b.dueDate || '')));
-	const myTasks = (Array.isArray(tasks) ? tasks : [])
+	// In preview mode the lessons this student would have been given are merged in
+	// memory; everything below is shared with the real dashboard so the two agree.
+	const allTasks = preview
+		? [...(Array.isArray(tasks) ? tasks : []), ...fllTasksToDistributeFor(user, tasks, fllSettings, teams)]
+		: tasks;
+	const myTasks = (Array.isArray(allTasks) ? allTasks : [])
 		.filter((task) => task.teamId === user.teamId && task.assignedTo === user.id)
 		.filter((task) => !disabledAreas.has(taskAreaAliases[task.category] || 'innovation'))
 		// A lesson with an audience is decided by that audience alone. Applying the
@@ -5488,6 +5516,20 @@ app.get(['/fll-hub/coach', '/fll-hub/coach/'], requireFllAuth, (req, res) => {
 	res.sendFile(path.join(fllHubDir, 'coach-dashboard.html'));
 });
 
+// The student hub page itself, opened by a coach to view a team's hub. It serves
+// the same file as /fll-hub/student; the page fills itself from the coach-only
+// team-hub-preview API, so a student can never reach either.
+// A student who lands here is sent back to their own hub rather than shown a
+// 403 blob; requireFllCoach still runs behind it, so nothing but a coach is served.
+app.get(['/fll-hub/coach/team-hub', '/fll-hub/coach/team-hub/'], requireFllAuth, (req, res, next) => {
+	if (req.fllUser && req.fllUser.role !== 'coach') {
+		return res.redirect(302, '/fll-hub/student');
+	}
+	return next();
+}, requireFllCoach, (req, res) => {
+	res.sendFile(path.join(fllHubDir, 'student-dashboard.html'));
+});
+
 app.get(['/fll-hub/coding-guide', '/fll-hub/coding-guide/'], requireFllAuth, (req, res) => {
 	res.sendFile(path.join(fllHubDir, 'coding-guide.html'));
 });
@@ -6249,6 +6291,39 @@ app.get('/api/fll/coach/team-preview', requireFllAuth, requireFllCoach, async (r
 	} catch (err) {
 		console.error('FLL team preview error:', err);
 		return res.status(500).json({ success: false, message: 'Server error building the team preview' });
+	}
+});
+
+// "View as team": the student hub exactly as one team sees it, read-only. It
+// builds the real student dashboard payload for a synthetic student on that
+// team — no session is created, req.fllUser stays the coach, and nothing is
+// written to disk.
+app.get('/api/fll/coach/team-hub-preview', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const teamId = cleanMetaString(req.query.teamId || '', 120);
+		const [teams, users] = await Promise.all([
+			readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
+			readFllUsers()
+		]);
+		const teamList = Array.isArray(teams) ? teams : [];
+		const team = teamList.find((t) => t.id === teamId);
+		if (!team) return res.status(404).json({ success: false, message: 'Team not found' });
+
+		// A real student makes the preview truthful: their submissions, grades and
+		// coach feedback show. With no students yet, a stand-in shows the lessons.
+		const realStudent = (Array.isArray(users) ? users : [])
+			.find((u) => u.role === 'student' && u.teamId === teamId && u.active !== false) || null;
+		const previewUser = realStudent || { id: `preview-${teamId}`, name: 'Preview student', role: 'student', teamId };
+		const data = await getFllStudentDashboardFor(previewUser, { preview: true });
+		data.preview = {
+			team: { id: team.id, name: team.nickname || team.name },
+			studentName: previewUser.name || 'Preview student',
+			usesRealStudent: Boolean(realStudent)
+		};
+		return res.json({ success: true, data });
+	} catch (err) {
+		console.error('FLL team hub preview error:', err);
+		return res.status(500).json({ success: false, message: 'Server error building the team hub preview' });
 	}
 });
 

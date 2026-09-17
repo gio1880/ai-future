@@ -713,9 +713,20 @@
     .tp-row > .tp-why { grid-column:1 / -1; font-size:12.5px; color:var(--t-muted); }
     .tp-tag { font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:50px; white-space:nowrap;
       background:var(--tint-amber); color:#8a5a00; text-transform:uppercase; letter-spacing:.04em; }
+    /* Opening the real hub: picker and button sit side by side, hint underneath */
+    .tp-pick { display:flex; align-items:flex-end; gap:10px; flex-wrap:wrap; }
+    .tp-pick > .visibility-team { flex:1 1 240px; }
+    .tp-pick > .visibility-bulk-btn { white-space:nowrap; }
+    .tp-open:hover:not(:disabled) { border-color:#1a73e8; color:#1a73e8; }
+    .tp-open:disabled { opacity:.5; cursor:not-allowed; border-style:dashed; }
+    .tp-hint { display:block; font-size:12px; color:var(--t-muted); margin-top:6px; max-width:340px; }
+    .tp-summary .tp-open { margin-top:10px; }
     @media (max-width: 760px) {
       .visibility-row.tp-row { grid-template-columns: 1fr auto; }
       .tp-row > .visibility-row-meta { grid-column: 1 / -1; }
+      .tp-pick { display:block; }
+      .tp-pick > .visibility-bulk-btn { width:100%; margin-top:10px; }
+      .tp-hint { max-width:none; }
     }
     @media (pointer: coarse) { .aud-chip { min-height:40px; padding:8px 13px; } }
 </style>
@@ -1086,9 +1097,15 @@
             <h2 class="form-title">Preview a team's lessons 👀</h2>
             <p class="form-sub">See exactly what one team's students see, without logging in as a student. Lessons they don't get are listed too, with the reason why.</p>
           </div>
-          <div class="visibility-team">
-            <label for="previewTeam">Preview</label>
-            <select id="previewTeam" onchange="loadTeamPreview()"><option value="">Pick a team…</option></select>
+          <div>
+            <div class="tp-pick">
+              <div class="visibility-team">
+                <label for="previewTeam">Preview</label>
+                <select id="previewTeam" onchange="loadTeamPreview()"><option value="">Pick a team…</option></select>
+              </div>
+              <button type="button" class="visibility-bulk-btn tp-open" id="previewHubBtn" disabled onclick="openTeamHub()">Open this team's hub ↗</button>
+            </div>
+            <span class="tp-hint" id="previewHubHint">Opens the real student hub in a new tab, read-only, showing exactly what this team's students see.</span>
           </div>
         </div>
         <div class="tp-out" id="previewOut"><div class="empty" style="padding:20px">Pick a team to see its lessons.</div></div>
@@ -3194,6 +3211,7 @@
         previewSelect.innerHTML = '<option value="">Pick a team…</option>' + roster.teams
           .map(team => `<option value="${escapeHtml(team.id)}">${escapeHtml(team.nickname || team.name)}</option>`).join('');
       }
+      syncTeamHubButton();
       const teamId = teamSelect.value;
       const source = settingsForVisibilityTeam(teamId);
       visibilityDraft = {
@@ -3423,9 +3441,31 @@
     // ── Team preview ──────────────────────────────────────────────────────
     // The server answers with the same rules the student dashboard uses, so
     // this is what the team really sees — not a second copy of that logic here.
+    // The coach-only read-only view of the student hub. Fixed URL contract.
+    function teamHubUrl(teamId) {
+      return `/fll-hub/coach/team-hub?teamId=${encodeURIComponent(teamId)}`;
+    }
+
+    // No team picked → nothing to open, so the button stays dead.
+    function syncTeamHubButton() {
+      const btn = document.getElementById('previewHubBtn');
+      if (!btn) return;
+      const teamId = document.getElementById('previewTeam')?.value || '';
+      btn.disabled = !teamId;
+      btn.setAttribute('aria-disabled', btn.disabled ? 'true' : 'false');
+      btn.title = teamId ? "Open this team's hub in a new tab" : 'Pick a team first';
+    }
+
+    function openTeamHub(teamId) {
+      const id = teamId || document.getElementById('previewTeam')?.value || '';
+      if (!id) return;
+      window.open(teamHubUrl(id), '_blank', 'noopener');
+    }
+
     async function loadTeamPreview() {
       const teamId = document.getElementById('previewTeam').value;
       const out = document.getElementById('previewOut');
+      syncTeamHubButton();
       if (!teamId) {
         out.innerHTML = '<div class="empty" style="padding:20px">Pick a team to see its lessons.</div>';
         return;
@@ -3464,6 +3504,10 @@
           <span class="tp-note">${people}</span>
           <span class="tp-note">${data.usesOwnSettings ? 'This team has its own visibility settings.' : 'This team follows the all-team defaults.'}${
             data.disabledAreas.length ? ` Areas switched off: ${data.disabledAreas.map(escapeHtml).join(', ')}.` : ''}</span>
+          <button type="button" class="visibility-bulk-btn tp-open"
+            onclick="openTeamHub('${escapeHtml(String(data.team.id))}')"
+            title="Open this team's hub in a new tab">Open ${escapeHtml(data.team.name)}'s hub ↗</button>
+          <span class="tp-note">Read-only — the real student hub, exactly as this team sees it.</span>
         </div>
         <h3 class="tp-h">What they see (${visible.length})</h3>
         ${visible.length ? visible.map(row).join('') : '<div class="empty" style="padding:16px">Nothing at all — check the areas and ticks above.</div>'}

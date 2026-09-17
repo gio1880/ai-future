@@ -68,6 +68,97 @@
       border-bottom: 1px solid var(--line);
     }
 
+    /* ── Coach preview banner ─────────────────────────────────────────────
+       Only ever rendered on /fll-hub/coach/team-hub. A signed-in student
+       never gets these classes, so nothing here touches the student view. */
+    .preview-bar {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      background: var(--tint-amber, #fff3e0);
+      border-bottom: 2px solid var(--amber);
+      box-shadow: var(--s-shadow, var(--shadow));
+      padding: 10px 22px;
+    }
+
+    .preview-bar-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .preview-bar-text {
+      flex: 1 1 260px;
+      min-width: 0;
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.35;
+      color: var(--t-ink, var(--ink));
+    }
+
+    .preview-bar-sub {
+      display: block;
+      margin-top: 3px;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.45;
+      color: var(--t-muted, var(--muted));
+    }
+
+    .preview-bar-back {
+      background: var(--btn-solid, #10233f);
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 9px 16px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .preview-bar-back:hover { filter: brightness(1.15); }
+
+    /* two sticky bars would fight for the top of the screen */
+    body.is-preview .appbar { position: static; }
+    /* signing out of a preview would drop the coach on the student login */
+    body.is-preview #logoutButton { display: none; }
+
+    body.is-preview [data-preview-locked] {
+      opacity: 0.55;
+      cursor: not-allowed;
+      filter: grayscale(0.35);
+    }
+
+    .preview-error {
+      max-width: 620px;
+      margin: 40px auto;
+      background: var(--s-card, var(--card));
+      border: 1px solid var(--s-line-2, var(--line));
+      border-radius: 18px;
+      box-shadow: var(--s-shadow, var(--shadow));
+      padding: 26px;
+      text-align: center;
+    }
+
+    .preview-error h1 { margin: 10px 0; font-size: 23px; color: var(--t-ink, var(--ink)); }
+    .preview-error p { font-size: 15px; line-height: 1.6; color: var(--t-muted, var(--muted)); }
+    .preview-error code {
+      font-size: 13px;
+      background: var(--s-subtle, #f1f3f4);
+      color: var(--t-body, var(--ink));
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    @media (max-width: 720px) {
+      .preview-bar { padding: 10px 14px; }
+      .preview-bar-text { flex-basis: 100%; font-size: 14.5px; }
+      .preview-bar-back { width: 100%; text-align: center; }
+    }
+
     .appbar-inner {
       height: 64px;
       max-width: 1280px;
@@ -3838,6 +3929,42 @@
 
   <script>
 
+    // ── Coach preview mode ────────────────────────────────────────────────
+    // /fll-hub/coach/team-hub?teamId=… serves this very file to a signed-in
+    // coach, so they can read the hub exactly as one team's students see it.
+    // Every branch below is inert when PREVIEW is false: a student loading
+    // /fll-hub/student gets the page unchanged.
+    const PREVIEW = window.location.pathname.indexOf('/fll-hub/coach/team-hub') === 0;
+    const PREVIEW_TEAM_ID = PREVIEW
+      ? (new URLSearchParams(window.location.search).get('teamId') || '')
+      : '';
+    const PREVIEW_BLOCK_MESSAGE = "This is a preview — students' work can't be changed from here.";
+    let previewInfo = null;
+
+    // One gate for every write on the page. About ten POST/PUT/DELETE calls
+    // live further down (answers, drafts, uploads, work logs, task status…);
+    // wrapping fetch itself means none of them can be missed now or later.
+    // Each caller gets back the {success:false, message} shape it already
+    // handles, so a blocked write surfaces as a normal, readable toast.
+    if (PREVIEW) {
+      const realFetch = window.fetch.bind(window);
+      window.fetch = function (input, init) {
+        const method = String(
+          (init && init.method) ||
+          (input && typeof input === 'object' && input.method) ||
+          'GET'
+        ).toUpperCase();
+        if (method !== 'GET' && method !== 'HEAD') {
+          try { showToast(PREVIEW_BLOCK_MESSAGE); } catch (e) {}
+          return Promise.resolve(new Response(
+            JSON.stringify({ success: false, preview: true, message: PREVIEW_BLOCK_MESSAGE }),
+            { status: 403, headers: { 'Content-Type': 'application/json' } }
+          ));
+        }
+        return realFetch(input, init);
+      };
+    }
+
     // ── Light / dark theme ──────────────────────────────────────────────
     // No stored choice = follow the device. The toggle stores an explicit
     // override on <html data-theme> and in localStorage.
@@ -4270,6 +4397,9 @@
     const WELCOME_SEEN_KEY = 'bioglow-student-welcomed-';
 
     function maybeShowWelcomeScreen(user) {
+      // In a coach preview the first-login overlay would just cover the page
+      // the coach came to read.
+      if (PREVIEW) return;
       const key = WELCOME_SEEN_KEY + (user.id || user.name);
       if (localStorage.getItem(key)) return;
 
@@ -7132,7 +7262,140 @@
       wireListeners();
     }
 
+    // ── Preview banner, error card and read-only lock ─────────────────────
+    function renderPreviewBanner() {
+      if (!PREVIEW) return;
+      document.body.classList.add('is-preview');
+
+      const teamName = (previewInfo && previewInfo.team && previewInfo.team.name)
+        || (previewInfo && previewInfo.team && previewInfo.team.id)
+        || PREVIEW_TEAM_ID
+        || 'this team';
+      const studentName = (previewInfo && previewInfo.studentName) || '';
+      let sub;
+      if (!previewInfo) {
+        sub = 'Nothing on this page can be changed.';
+      } else if (previewInfo.usesRealStudent) {
+        sub = `Real work: the answers, uploads and coach feedback below are ${escapeHtml(studentName || 'a student')}'s own.`;
+      } else {
+        sub = `Sample student${studentName ? ` “${escapeHtml(studentName)}”` : ''} — no real student work is shown, so answers and feedback here are placeholders.`;
+      }
+
+      let bar = document.getElementById('previewBar');
+      if (!bar) {
+        bar = document.createElement('div');
+        bar.className = 'preview-bar';
+        bar.id = 'previewBar';
+        bar.setAttribute('role', 'status');
+        document.body.insertBefore(bar, document.body.firstChild);
+      }
+      bar.innerHTML = `
+        <div class="preview-bar-inner">
+          <div class="preview-bar-text">
+            👀 Preview — this is what ${escapeHtml(teamName)} sees. Read-only.
+            <span class="preview-bar-sub">${sub}</span>
+          </div>
+          <a class="preview-bar-back" href="/fll-hub/coach">← Back to the coach dashboard</a>
+        </div>`;
+    }
+
+    function showPreviewError(message, detail) {
+      renderPreviewBanner();
+      app.innerHTML = `
+        <div class="preview-error">
+          <div style="font-size:40px;">🔍</div>
+          <h1>This preview could not be loaded</h1>
+          <p>${escapeHtml(message || 'The team hub preview is not available right now.')}</p>
+          ${detail ? `<p><code>${escapeHtml(detail)}</code></p>` : ''}
+          <p><a class="preview-bar-back" href="/fll-hub/coach">← Back to the coach dashboard</a></p>
+        </div>`;
+    }
+
+    // Buttons that would write something. Matched by class or by the write-ish
+    // verb their onclick starts with, so navigation (openTask, openCategory,
+    // closeTask, copyTaskCode…) keeps working inside the preview.
+    const PREVIEW_WRITE_CLASSES = [
+      'ta-submit-btn', 'ta-save-btn', 'reflection-submit', 'im-add', 'im-del',
+      'cv-add-btn', 'cv-entry-delete', 'att-add-attachment-btn', 'att-delete-btn',
+      'att-iter-delete', 'ta-table-addrow', 'ta-col-del', 'ta-col-reset',
+      'ta-photo-remove', 'ta-q-photo-remove'
+    ];
+    const PREVIEW_WRITE_ONCLICK = /\b(add|remove|delete|save|submit|request|reset|pull|quickMark|answerLive)[A-Za-z]*\(/;
+
+    function lockPreviewElement(el, hint) {
+      if (!el || el.dataset.previewLocked) return;
+      el.dataset.previewLocked = '1';
+      el.disabled = true;
+      el.setAttribute('aria-disabled', 'true');
+      el.title = hint;
+    }
+
+    function lockPreviewControls() {
+      if (!PREVIEW) return;
+      document.querySelectorAll('input, textarea, select').forEach(el => {
+        lockPreviewElement(el, 'Preview only — nothing typed here is saved.');
+      });
+      document.querySelectorAll('button').forEach(btn => {
+        if (btn.id === 'logoutButton' || btn.classList.contains('theme-toggle')) return;
+        const onclick = btn.getAttribute('onclick') || '';
+        // getAttribute, not .type: a plain <button> reports type "submit",
+        // and locking those would freeze the preview's own navigation.
+        const isWrite = btn.getAttribute('type') === 'submit'
+          || PREVIEW_WRITE_ONCLICK.test(onclick)
+          || PREVIEW_WRITE_CLASSES.some(cls => btn.classList.contains(cls));
+        if (isWrite) lockPreviewElement(btn, PREVIEW_BLOCK_MESSAGE);
+      });
+    }
+
+    // The page re-renders whole sections with innerHTML, so re-apply the lock
+    // whenever new markup lands instead of only once after the first render.
+    function watchPreviewRenders() {
+      if (!PREVIEW || !window.MutationObserver) return;
+      let queued = false;
+      const observer = new MutationObserver(() => {
+        if (queued) return;
+        queued = true;
+        // setTimeout, not requestAnimationFrame: frames are paused while the
+        // tab sits in the background, and the lock must not wait for that.
+        setTimeout(() => { queued = false; lockPreviewControls(); }, 0);
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    async function loadPreviewDashboard() {
+      renderPreviewBanner();
+      let response;
+      try {
+        response = await fetch(`/api/fll/coach/team-hub-preview?teamId=${encodeURIComponent(PREVIEW_TEAM_ID)}`);
+      } catch (err) {
+        showPreviewError(
+          'The server did not answer when we asked for this team hub.',
+          err && err.message ? err.message : ''
+        );
+        return;
+      }
+
+      let result = null;
+      try { result = await response.json(); } catch (err) { result = null; }
+
+      if (!response.ok || !result || !result.success) {
+        showPreviewError(
+          (result && result.message) || 'The team hub preview is not available right now.',
+          `${response.status}${response.statusText ? ` ${response.statusText}` : ''} · teamId: ${PREVIEW_TEAM_ID || '(missing)'}`
+        );
+        return;
+      }
+
+      previewInfo = (result.data && result.data.preview) || null;
+      renderPreviewBanner();
+      renderDashboard(result.data);
+      lockPreviewControls();
+    }
+
     async function loadDashboard() {
+      // A coach previewing a team never touches the student endpoint, and is
+      // never bounced to the student sign-in page when something goes wrong.
+      if (PREVIEW) return loadPreviewDashboard();
       try {
         const response = await fetch('/api/fll/student-dashboard');
         const result = await response.json();
@@ -7337,11 +7600,15 @@
     window.leaveLive = leaveLive;
 
     logoutButton.addEventListener('click', async () => {
+      // The button is hidden in a preview; if it is reached anyway, the coach
+      // goes back to their own dashboard instead of the student sign-in page.
+      if (PREVIEW) { window.location.href = '/fll-hub/coach'; return; }
       await fetch('/api/fll/logout', { method: 'POST' });
       window.location.href = '/fll-hub/login';
     });
 
     setInterval(pollLive, 3000);
+    watchPreviewRenders();
     loadDashboard();
     pollLive();
   </script>
