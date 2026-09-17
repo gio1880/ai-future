@@ -4164,7 +4164,7 @@
     },
     "shareAnswersWithTeam": true,
     "priorLessons": [],
-    "description": "Before your team can build anything, you need to understand the living thing your SpectraFloat is watching. It is almost invisible — and almost everything in the ocean depends on it.\n\n## 🎬 Start by watching\n\nPick **at least one** of the four videos below this lesson and watch it — you are welcome to watch them all. While you watch, look for:\n\n- one fact that surprises you\n- one question you still have\n- one way it connects to **SpectraFloat**\n\nYou will write those down in the first questions at the bottom.\n\n## 🌿 Two kinds of plankton\n\n**Plankton** are living things that drift with the water instead of swimming against it. They come in two main kinds:\n\n| | Phytoplankton | Zooplankton |\n|---|---|---|\n| **What they are** | Tiny plant-like drifters, most too small to see | Tiny animals, from specks to jellyfish |\n| **How they get energy** | Sunlight, like plants on land | By eating other plankton |\n| **Where they sit in the food web** | The very bottom | One step up |\n\nPhytoplankton contain **chlorophyll**, the same green pigment that plants use. Remember that word — in HABs 3 you will learn that scientists use chlorophyll to *find* phytoplankton, and that is exactly what SpectraFloat will do.\n\n## 💨 Why this matters to you, not just to fish\n\n> About **half of Earth's oxygen** comes from the ocean, most of it made by plankton. One tiny kind, *Prochlorococcus*, makes up to 20% of the oxygen in our whole biosphere — more than all the tropical rainforests on land combined.\n\nThat figure comes from NOAA — the link is in **Learn more** below. Every second breath you take, you can thank phytoplankton.\n\n## 🎨 Draw the food web\n\nOn paper or a whiteboard, draw a **marine food web** that starts with phytoplankton and ends with large marine mammals. Arrows point from what gets eaten to what eats it.\n\nTry to include:\n- **Phytoplankton** at the bottom\n- **Zooplankton** (like krill or copepods)\n- **Small fish** that eat zooplankton\n- **Bigger fish, turtles and seabirds**\n- **Whales** — some eat krill directly, skipping steps entirely\n\nPhotograph it and attach the picture to the first question.\n\n## 🤔 Then talk about it as a team\n\nPick one arrow near the bottom of your web and cover it with your hand. What happens to everything above it?\n\n## ➡️ Next\n\nIn **HABs 2** you will learn what happens when phytoplankton do not disappear — but grow out of control instead.",
+    "description": "Our team is investigating **plankton and harmful algal blooms (HABs)**: the tiny living things that almost all ocean life depends on, and what happens when some of them grow out of control. Our solution, **SpectraFloat**, is a sensor buoy that watches for them.\n\n## 🎬 Your mission\n\nPick **at least one** of the three videos below and watch it. You're welcome to watch all three!\n\nThen answer the three short questions at the bottom. Jot down notes while you watch.\n\n## 🤔 Wrap-up discussion\n\nWe'll talk about these together as a team:\n\n- If phytoplankton disappeared, what would happen to fish, turtles and whales?\n- What's the difference between a healthy amount of algae and a harmful bloom?\n- How could a sensor \"see\" something too small for our eyes?\n\n## ➡️ Next\n\nIn **HABs 2** you will learn what happens when phytoplankton grow out of control.",
     "videos": [
       {
         "videoId": "ulYpcQfdgbE",
@@ -4177,12 +4177,6 @@
         "title": "Feeding the Sea: Phytoplankton Fuel Ocean Life",
         "source": "NASA Earth",
         "note": "Watch for how many different kinds of phytoplankton there are, and why NASA studies them from space."
-      },
-      {
-        "videoId": "69cshaCOBX0",
-        "title": "The Floating Garden: Tiny but Mighty Phytoplankton",
-        "source": "Woods Hole Oceanographic Institution",
-        "note": "A short one. Woods Hole is the same institution that built the underwater microscope you meet in HABs 3."
       },
       {
         "videoId": "S0JXE8Gv_1k",
@@ -4209,47 +4203,22 @@
     ],
     "questions": [
       {
-        "id": "watched",
+        "id": "q1",
         "type": "text",
         "label": "Which video (or videos) did you watch?",
         "placeholder": "Microscopic Life in a Drop of Water, …"
       },
       {
-        "id": "fact",
-        "type": "textarea",
-        "label": "What is one fact from the video that surprised you?",
-        "placeholder": "I was surprised that…"
-      },
-      {
-        "id": "wonder",
-        "type": "textarea",
-        "label": "What is one question you still have?",
-        "placeholder": "I still wonder…"
-      },
-      {
-        "id": "connect",
-        "type": "textarea",
-        "label": "How does what you watched connect to SpectraFloat?",
-        "placeholder": "SpectraFloat could…"
-      },
-      {
-        "id": "q1",
-        "type": "textarea",
-        "allowAttach": true,
-        "label": "Attach a photo of your food web, then describe the path from phytoplankton to a whale in your own words:",
-        "placeholder": "Phytoplankton are eaten by … which are eaten by …"
-      },
-      {
         "id": "q2",
         "type": "textarea",
-        "label": "If phytoplankton disappeared or changed, what would happen to whales, sea turtles and fish? Follow at least two arrows.",
-        "placeholder": "Start at the bottom of your web and work up."
+        "label": "What did you learn? Write 2–3 things that stood out to you.",
+        "placeholder": "1. …\n2. …\n3. …"
       },
       {
         "id": "q3",
         "type": "textarea",
-        "label": "Phytoplankton contain chlorophyll. Why might that make them easier for a machine to find?",
-        "placeholder": "A guess is fine — you will find out the real answer in HABs 3."
+        "label": "My notes: anything else you noticed, or a question you still have.",
+        "placeholder": "I noticed… / I still wonder…"
       }
     ]
   },
@@ -4273,7 +4242,7 @@
     "priorLessons": [
       "task-habs-1-invisible-forest"
     ],
-    "description": "In HABs 1 you learned that phytoplankton keep the ocean alive. Now the twist: give them too much of what they need, and some kinds grow out of control and turn toxic.\n\n## 🌊 What a harmful algal bloom is\n\nA **harmful algal bloom (HAB)** happens when algae grow out of control and produce toxic or harmful effects. Most algae are harmless and good for the environment — **only a few kinds cause harm**. That difference matters: SpectraFloat is not trying to stop algae, it is trying to catch the dangerous blooms early.\n\nYou will hear two famous names:\n- **Red tide** — a HAB in the ocean, like the ones caused by *Karenia brevis* along Florida's coast\n- **Blue-green algae** — really **cyanobacteria**, which bloom in lakes and rivers\n\n## 🚜 Where the extra food comes from\n\n> Farmers add nitrogen and phosphorus to fields as **fertilizer and animal manure**. When it rains or snow melts, those nutrients can wash off the fields and into rivers, lakes and the ocean — and feed a bloom.\n\nThat comes from the U.S. EPA. **Warm water** makes it worse: many harmful algae grow faster when the water heats up.\n\n## 💀 Dead zones\n\nWhen a huge bloom dies, bacteria break it down and use up the oxygen in the water. The result is a **dead zone** (scientists call it *hypoxia*) where there is too little oxygen for fish to survive, causing **fish kills**.\n\nNotice the loop: in HABs 1 phytoplankton *made* oxygen. Too many of them can end up *removing* it.\n\n## 🔎 Research a real bloom\n\nChoose **one** real HAB event and fill in the table below. Two good choices close to real teams' lives:\n\n| Event | Why it is worth researching |\n|---|---|\n| **Florida red tide** (*Karenia brevis*) | Beaches closed, fish and manatee deaths, tourism losses |\n| **Finger Lakes cyanobacteria, New York** | Since 2017, blooms have affected all 11 Finger Lakes, threatening drinking water and tourism |\n\nEvery fact in your table needs a source you can link to. The documentary and articles below are a strong start.\n\n## 💵 Who pays for a bloom\n\nJudges will ask *\"who are you solving this for?\"* A bloom costs real people money — fishing, shellfish farms, tourism, water treatment. Use the **Google Scholar search** in Learn more and read just the summaries (the \"abstract\") of a couple of papers. You do not need to read whole papers.\n\n## ➡️ Next\n\nIn **HABs 3** you will find out how scientists spot a bloom before it becomes a disaster — and why a person in a boat is too slow.",
+    "description": "In HABs 1 you learned that phytoplankton keep the ocean alive. Now the twist: give them too much of what they need, and some kinds grow out of control and turn toxic.\n\n## 🔥 Warm-up: the food web\n\nBefore the bad news, map the good news from HABs 1. Phytoplankton contain **chlorophyll**, the green pigment plants use, and they sit at the very bottom of the ocean food web.\n\n### 🎨 Draw the food web\n\nOn paper or a whiteboard, draw a **marine food web** that starts with phytoplankton and ends with large marine mammals. Arrows point from what gets eaten to what eats it.\n\nTry to include:\n- **Phytoplankton** at the bottom\n- **Zooplankton** (like krill or copepods)\n- **Small fish** that eat zooplankton\n- **Bigger fish, turtles and seabirds**\n- **Whales** — some eat krill directly, skipping steps entirely\n\nPhotograph it and attach the picture to the first warm-up question.\n\n### 🤔 Then talk about it as a team\n\nPick one arrow near the bottom of your web and cover it with your hand. What happens to everything above it?\n\nAnswer the three warm-up questions at the bottom, then read on.\n\n## 🌊 What a harmful algal bloom is\n\nA **harmful algal bloom (HAB)** happens when algae grow out of control and produce toxic or harmful effects. Most algae are harmless and good for the environment — **only a few kinds cause harm**. That difference matters: SpectraFloat is not trying to stop algae, it is trying to catch the dangerous blooms early.\n\nYou will hear two famous names:\n- **Red tide** — a HAB in the ocean, like the ones caused by *Karenia brevis* along Florida's coast\n- **Blue-green algae** — really **cyanobacteria**, which bloom in lakes and rivers\n\n## 🚜 Where the extra food comes from\n\n> Farmers add nitrogen and phosphorus to fields as **fertilizer and animal manure**. When it rains or snow melts, those nutrients can wash off the fields and into rivers, lakes and the ocean — and feed a bloom.\n\nThat comes from the U.S. EPA. **Warm water** makes it worse: many harmful algae grow faster when the water heats up.\n\n## 💀 Dead zones\n\nWhen a huge bloom dies, bacteria break it down and use up the oxygen in the water. The result is a **dead zone** (scientists call it *hypoxia*) where there is too little oxygen for fish to survive, causing **fish kills**.\n\nNotice the loop: in HABs 1 phytoplankton *made* oxygen. Too many of them can end up *removing* it.\n\n## 🔎 Research a real bloom\n\nChoose **one** real HAB event and fill in the table below. Two good choices close to real teams' lives:\n\n| Event | Why it is worth researching |\n|---|---|\n| **Florida red tide** (*Karenia brevis*) | Beaches closed, fish and manatee deaths, tourism losses |\n| **Finger Lakes cyanobacteria, New York** | Since 2017, blooms have affected all 11 Finger Lakes, threatening drinking water and tourism |\n\nEvery fact in your table needs a source you can link to. The documentary and articles below are a strong start.\n\n## 💵 Who pays for a bloom\n\nJudges will ask *\"who are you solving this for?\"* A bloom costs real people money — fishing, shellfish farms, tourism, water treatment. Use the **Google Scholar search** in Learn more and read just the summaries (the \"abstract\") of a couple of papers. You do not need to read whole papers.\n\n## ➡️ Next\n\nIn **HABs 3** you will find out how scientists spot a bloom before it becomes a disaster — and why a person in a boat is too slow.",
     "videos": [
       {
         "videoId": "IsTogxVqf8Y",
@@ -4339,6 +4308,25 @@
       }
     ],
     "questions": [
+      {
+        "id": "warmup-web",
+        "type": "textarea",
+        "allowAttach": true,
+        "label": "Attach a photo of your food web, then describe the path from phytoplankton to a whale in your own words:",
+        "placeholder": "Phytoplankton are eaten by … which are eaten by …"
+      },
+      {
+        "id": "warmup-ripple",
+        "type": "textarea",
+        "label": "If phytoplankton disappeared or changed, what would happen to whales, sea turtles and fish? Follow at least two arrows.",
+        "placeholder": "Start at the bottom of your web and work up."
+      },
+      {
+        "id": "warmup-chlorophyll",
+        "type": "textarea",
+        "label": "Phytoplankton contain chlorophyll. Why might that make them easier for a machine to find?",
+        "placeholder": "A guess is fine — you will find out the real answer in HABs 3."
+      },
       {
         "id": "hab-event",
         "type": "table",
@@ -4742,7 +4730,7 @@
     },
     "shareAnswersWithTeam": false,
     "priorLessons": [],
-    "description": "Our team is investigating a big problem: **rising ocean temperatures are damaging coral reefs in the Caribbean Sea**, and the animals that depend on reefs for food and shelter are in danger.\n\nBefore we can help, we need to understand what is happening to the coral.\n\n## 🎬 Your mission\n\n1. Pick **at least one** video below and watch it. You're welcome to watch all three!\n2. While you watch, look for:\n   - one fact that surprises you\n   - one question you still have\n   - one animal that would be affected if the reef died\n3. Answer the questions at the bottom.\n\n## 🤔 Wrap-up discussion\n\nWe'll talk about these together as a team:\n\n- Why does coral lose its color when the water gets too hot?\n- Which animals depend on the reef for food or shelter?\n- If you could invent something to help, would you **measure** the heat, **protect** the coral, or **restore** it?",
+    "description": "Our team is investigating a big problem: **rising ocean temperatures are damaging coral reefs in the Caribbean Sea**, and the animals that depend on reefs for food and shelter are in danger.\n\n## 🎬 Your mission\n\nPick **at least one** of the three videos below and watch it. You're welcome to watch all three!\n\nThen answer the three short questions at the bottom. Jot down notes while you watch.\n\n## 🤔 Wrap-up discussion\n\nWe'll talk about these together as a team:\n\n- Why does coral lose its color when the water gets too hot?\n- Which animals depend on the reef for food or shelter?\n- If you could invent something to help, would you **measure** the heat, **protect** the coral, or **restore** it?",
     "videos": [
       {
         "videoId": "dcWlVN02kDQ",
@@ -4774,20 +4762,14 @@
       {
         "id": "q2",
         "type": "textarea",
-        "label": "What is one fact that surprised you?",
-        "placeholder": "I was surprised that…"
+        "label": "What did you learn? Write 2–3 things that stood out to you.",
+        "placeholder": "1. …\n2. …\n3. …"
       },
       {
         "id": "q3",
         "type": "textarea",
-        "label": "What is one question you still have about coral reefs or bleaching?",
-        "placeholder": "I still wonder…"
-      },
-      {
-        "id": "q4",
-        "type": "textarea",
-        "label": "Name one animal that would be affected if the reef died. How would it be affected?",
-        "placeholder": "If the reef died, the … would …"
+        "label": "My notes: anything else you noticed, or a question you still have.",
+        "placeholder": "I noticed… / I still wonder…"
       }
     ],
     "excludeFromIdeaMap": true
