@@ -691,6 +691,9 @@
     .aud-tag { font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:50px;
       background:var(--tint-blue); color:#174ea6; text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; }
     .aud-title { font-weight:700; }
+    .aud-tag-draft { background:var(--tint-amber); color:#8a5a00; }
+    .aud-row > .aud-draft-note { grid-column: 1 / -1; font-size:12.5px; color:var(--t-body);
+      background:var(--s-hover); border:1px dashed var(--s-line-2); border-radius:8px; padding:7px 11px; }
     .aud-warn { font-size:12px; font-weight:650; color:#8a5a00; background:var(--tint-amber);
       border:1px solid #f2d798; border-radius:8px; padding:6px 10px; margin-top:6px; }
     .aud-picker { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
@@ -3292,6 +3295,13 @@
       return a.teamIds.map(teamLabel).join(', ');
     }
 
+    // An imported lesson arrives unpublished, naming the team it was written
+    // for. The label goes away once a team is ticked, because ticking is the
+    // publish step.
+    function isDraft(a) {
+      return a.from === 'seed' && a.mode !== 'all' && !a.teamIds.length && (a.draftFor || []).length > 0;
+    }
+
     function audienceRow(lesson, a, teamId) {
       const warn = a.unmatched && a.unmatched.length
         ? `<span class="aud-warn" title="No team has this name">⚠ Meant for “${escapeHtml(a.unmatched.join('”, “'))}” — no team by that name. Tick the right team below.</span>` : '';
@@ -3320,15 +3330,28 @@
             </label>`;
           }).join('')}
         </div>`;
+      const draft = isDraft(a);
+      const draftTeams = (a.draftFor || []).join(', ');
+      const missing = a.draftForMissing || [];
+      const draftNote = !draft ? '' : `
+        <span class="aud-draft-note">
+          📝 Not visible to any student yet. Written for <strong>${escapeHtml(draftTeams)}</strong> —
+          ${missing.length
+            ? `but there is no team called “${escapeHtml(missing.join('”, “'))}” yet. Create it, or tick the team it should go to.`
+            : `tick ${escapeHtml(draftTeams)} below to publish it.`}
+        </span>`;
       return `
-        <div class="visibility-row aud-row">
+        <div class="visibility-row aud-row${draft ? ' is-draft' : ''}">
           ${control}
-          <span class="aud-tag">Custom</span>
-          <span class="visibility-row-meta">${escapeHtml(lesson.category)} · for ${escapeHtml(audienceSummary(a))}</span>
+          <span class="aud-tag${draft ? ' aud-tag-draft' : ''}">${draft ? 'Draft' : 'Custom'}</span>
+          <span class="visibility-row-meta">${escapeHtml(lesson.category)} · ${draft
+            ? `Draft — for ${escapeHtml(draftTeams)}`
+            : `for ${escapeHtml(audienceSummary(a))}`}</span>
           <span class="visibility-row-due">
             <span class="visibility-due-label">Due</span>
             <input class="visibility-row-date" type="date" value="${lesson.dueDate ? escapeHtml(String(lesson.dueDate).slice(0,10)) : ''}" data-title="${escapeHtml(lesson.title)}" onchange="setLessonDueDate(this.dataset.title, this.value)">
           </span>
+          ${draftNote}
           ${warn}
           ${picker}
         </div>`;

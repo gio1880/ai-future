@@ -4198,6 +4198,11 @@ function resolveLessonAudience(task, settings, teams) {
 	const declared = task && task.audience;
 	if (!declared || typeof declared !== 'object') return null;
 	if (declared.mode === 'all') return { mode: 'all', teamIds: [], from: 'seed', unmatched: [] };
+	// A draft names the team it is meant for without giving it to anyone.
+	// draftFor is a label only: it never grants access, so an unpublished
+	// lesson cannot reach students however the name resolves.
+	const draftFor = (Array.isArray(declared.draftFor) ? declared.draftFor : [])
+		.map((name) => String(name || '').trim()).filter(Boolean);
 	const teamList = Array.isArray(teams) ? teams : [];
 	const ids = new Set(Array.isArray(declared.teamIds) ? declared.teamIds : []);
 	const unmatched = [];
@@ -4208,7 +4213,17 @@ function resolveLessonAudience(task, settings, teams) {
 		if (match) ids.add(match.id); else unmatched.push(name);
 	}
 	// no team matched: nobody sees it — fails closed, never open
-	return { mode: 'teams', teamIds: [...ids], from: 'seed', unmatched };
+	const audience = { mode: 'teams', teamIds: [...ids], from: 'seed', unmatched };
+	if (draftFor.length) {
+		audience.draftFor = draftFor;
+		// say whether the intended team exists yet, so the coach isn't left
+		// looking for a checkbox that isn't there
+		audience.draftForMissing = draftFor.filter((name) => {
+			const want = slugify(name);
+			return !teamList.some((t) => t.id === `team-${want}` || slugify(t.name) === want || slugify(t.nickname) === want);
+		});
+	}
+	return audience;
 }
 
 function lessonAudienceAllows(task, teamId, settings, teams) {
@@ -6104,7 +6119,9 @@ app.get('/api/fll/coach/lesson-audiences', requireFllAuth, requireFllCoach, asyn
 				mode: audience.mode,
 				teamIds: audience.teamIds,
 				from: audience.from,
-				unmatched: audience.unmatched
+				unmatched: audience.unmatched,
+				draftFor: audience.draftFor || [],
+				draftForMissing: audience.draftForMissing || []
 			});
 		}
 		return res.json({ success: true, lessons });

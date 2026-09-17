@@ -4159,13 +4159,19 @@
     "dueDate": "2026-09-22",
     "audience": {
       "teamNames": [
-        "AI Future 2"
+        "AI Future 1"
       ]
     },
     "shareAnswersWithTeam": true,
     "priorLessons": [],
-    "description": "Before your team can build anything, you need to understand the living thing your SpectraFloat is watching. It is almost invisible — and almost everything in the ocean depends on it.\n\n## 🌿 Two kinds of plankton\n\n**Plankton** are living things that drift with the water instead of swimming against it. They come in two main kinds:\n\n| | Phytoplankton | Zooplankton |\n|---|---|---|\n| **What they are** | Tiny plant-like drifters, most too small to see | Tiny animals, from specks to jellyfish |\n| **How they get energy** | Sunlight, like plants on land | By eating other plankton |\n| **Where they sit in the food web** | The very bottom | One step up |\n\nPhytoplankton contain **chlorophyll**, the same green pigment that plants use. Remember that word — in HABs 3 you will learn that scientists use chlorophyll to *find* phytoplankton, and that is exactly what SpectraFloat will do.\n\n## 💨 Why this matters to you, not just to fish\n\n> About **half of Earth's oxygen** comes from the ocean, most of it made by plankton. One tiny kind, *Prochlorococcus*, makes up to 20% of the oxygen in our whole biosphere — more than all the tropical rainforests on land combined.\n\nThat figure comes from NOAA — the link is in **Learn more** below. Every second breath you take, you can thank phytoplankton.\n\n## 🎨 Draw the food web\n\nOn paper or a whiteboard, draw a **marine food web** that starts with phytoplankton and ends with large marine mammals. Arrows point from what gets eaten to what eats it.\n\nTry to include:\n- **Phytoplankton** at the bottom\n- **Zooplankton** (like krill or copepods)\n- **Small fish** that eat zooplankton\n- **Bigger fish, turtles and seabirds**\n- **Whales** — some eat krill directly, skipping steps entirely\n\nPhotograph it and attach the picture to the first question.\n\n## 🤔 Then talk about it as a team\n\nPick one arrow near the bottom of your web and cover it with your hand. What happens to everything above it?\n\n## ➡️ Next\n\nIn **HABs 2** you will learn what happens when phytoplankton do not disappear — but grow out of control instead.",
+    "description": "Before your team can build anything, you need to understand the living thing your SpectraFloat is watching. It is almost invisible — and almost everything in the ocean depends on it.\n\n## 🎬 Start by watching\n\nPick **at least one** of the four videos below this lesson and watch it — you are welcome to watch them all. While you watch, look for:\n\n- one fact that surprises you\n- one question you still have\n- one way it connects to **SpectraFloat**\n\nYou will write those down in the first questions at the bottom.\n\n## 🌿 Two kinds of plankton\n\n**Plankton** are living things that drift with the water instead of swimming against it. They come in two main kinds:\n\n| | Phytoplankton | Zooplankton |\n|---|---|---|\n| **What they are** | Tiny plant-like drifters, most too small to see | Tiny animals, from specks to jellyfish |\n| **How they get energy** | Sunlight, like plants on land | By eating other plankton |\n| **Where they sit in the food web** | The very bottom | One step up |\n\nPhytoplankton contain **chlorophyll**, the same green pigment that plants use. Remember that word — in HABs 3 you will learn that scientists use chlorophyll to *find* phytoplankton, and that is exactly what SpectraFloat will do.\n\n## 💨 Why this matters to you, not just to fish\n\n> About **half of Earth's oxygen** comes from the ocean, most of it made by plankton. One tiny kind, *Prochlorococcus*, makes up to 20% of the oxygen in our whole biosphere — more than all the tropical rainforests on land combined.\n\nThat figure comes from NOAA — the link is in **Learn more** below. Every second breath you take, you can thank phytoplankton.\n\n## 🎨 Draw the food web\n\nOn paper or a whiteboard, draw a **marine food web** that starts with phytoplankton and ends with large marine mammals. Arrows point from what gets eaten to what eats it.\n\nTry to include:\n- **Phytoplankton** at the bottom\n- **Zooplankton** (like krill or copepods)\n- **Small fish** that eat zooplankton\n- **Bigger fish, turtles and seabirds**\n- **Whales** — some eat krill directly, skipping steps entirely\n\nPhotograph it and attach the picture to the first question.\n\n## 🤔 Then talk about it as a team\n\nPick one arrow near the bottom of your web and cover it with your hand. What happens to everything above it?\n\n## ➡️ Next\n\nIn **HABs 2** you will learn what happens when phytoplankton do not disappear — but grow out of control instead.",
     "videos": [
+      {
+        "videoId": "ulYpcQfdgbE",
+        "title": "Microscopic Life in a Drop of Water!",
+        "source": "SciShow Kids",
+        "note": "About 4 minutes. A friendly first look at the tiny living things floating in a single drop of water."
+      },
       {
         "videoId": "AWfebk0_auY",
         "title": "Feeding the Sea: Phytoplankton Fuel Ocean Life",
@@ -4177,6 +4183,12 @@
         "title": "The Floating Garden: Tiny but Mighty Phytoplankton",
         "source": "Woods Hole Oceanographic Institution",
         "note": "A short one. Woods Hole is the same institution that built the underwater microscope you meet in HABs 3."
+      },
+      {
+        "videoId": "S0JXE8Gv_1k",
+        "title": "Long Story Shorts: What Causes Red Tides?",
+        "source": "Hakai Institute",
+        "note": "Under 2 minutes. What happens when plankton turns into a problem — a preview of HABs 2."
       }
     ],
     "readings": [
@@ -4196,6 +4208,30 @@
       }
     ],
     "questions": [
+      {
+        "id": "watched",
+        "type": "text",
+        "label": "Which video (or videos) did you watch?",
+        "placeholder": "Microscopic Life in a Drop of Water, …"
+      },
+      {
+        "id": "fact",
+        "type": "textarea",
+        "label": "What is one fact from the video that surprised you?",
+        "placeholder": "I was surprised that…"
+      },
+      {
+        "id": "wonder",
+        "type": "textarea",
+        "label": "What is one question you still have?",
+        "placeholder": "I still wonder…"
+      },
+      {
+        "id": "connect",
+        "type": "textarea",
+        "label": "How does what you watched connect to SpectraFloat?",
+        "placeholder": "SpectraFloat could…"
+      },
       {
         "id": "q1",
         "type": "textarea",
@@ -4230,7 +4266,7 @@
     "dueDate": "2026-09-29",
     "audience": {
       "teamNames": [
-        "AI Future 2"
+        "AI Future 1"
       ]
     },
     "shareAnswersWithTeam": true,
@@ -4350,7 +4386,7 @@
     "dueDate": "2026-10-06",
     "audience": {
       "teamNames": [
-        "AI Future 2"
+        "AI Future 1"
       ]
     },
     "shareAnswersWithTeam": true,
@@ -4494,7 +4530,7 @@
     "dueDate": "2026-10-13",
     "audience": {
       "teamNames": [
-        "AI Future 2"
+        "AI Future 1"
       ]
     },
     "shareAnswersWithTeam": true,
@@ -4604,7 +4640,7 @@
     "dueDate": "2026-10-20",
     "audience": {
       "teamNames": [
-        "AI Future 2"
+        "AI Future 1"
       ]
     },
     "shareAnswersWithTeam": true,
@@ -4683,6 +4719,75 @@
         "type": "textarea",
         "label": "After you hear back: what did the expert say, and what will your team change because of it? (Come back and fill this in later.)",
         "placeholder": "Leave this until you get a reply."
+      }
+    ],
+    "excludeFromIdeaMap": true
+  },
+  {
+    "id": "task-af2-watch-discover-coral-bleaching",
+    "assignmentId": "assignment-innovation-project",
+    "teamId": "team-01",
+    "assignedTo": "student-team-01-a",
+    "title": "Watch & Discover: Why Are Coral Reefs Turning White? 🪸",
+    "category": "Innovation Project",
+    "type": "submission",
+    "workContext": "class",
+    "status": "todo",
+    "dueDate": "2026-09-27",
+    "audience": {
+      "teamNames": [],
+      "draftFor": [
+        "AI Future 2"
+      ]
+    },
+    "shareAnswersWithTeam": false,
+    "priorLessons": [],
+    "description": "Our team is investigating a big problem: **rising ocean temperatures are damaging coral reefs in the Caribbean Sea**, and the animals that depend on reefs for food and shelter are in danger.\n\nBefore we can help, we need to understand what is happening to the coral.\n\n## 🎬 Your mission\n\n1. Pick **at least one** video below and watch it. You're welcome to watch all three!\n2. While you watch, look for:\n   - one fact that surprises you\n   - one question you still have\n   - one animal that would be affected if the reef died\n3. Answer the questions at the bottom.\n\n## 🤔 Wrap-up discussion\n\nWe'll talk about these together as a team:\n\n- Why does coral lose its color when the water gets too hot?\n- Which animals depend on the reef for food or shelter?\n- If you could invent something to help, would you **measure** the heat, **protect** the coral, or **restore** it?",
+    "videos": [
+      {
+        "videoId": "dcWlVN02kDQ",
+        "title": "Coral Bleaching 101",
+        "source": "Great Barrier Reef Marine Park Authority",
+        "note": "4 minutes. Learn what coral is, the tiny algae that live inside it, and why heat makes coral turn white."
+      },
+      {
+        "videoId": "N6CtDLt2WJI",
+        "title": "Coral scientists explain how coral bleaching happens",
+        "source": "NBC News",
+        "note": "2 minutes. Real scientists explain bleaching during the 2024 global bleaching event."
+      },
+      {
+        "videoId": "DaV669aVRLs",
+        "title": "2023 Coral Bleaching — Cheeca Rocks, Florida Keys",
+        "source": "NOAA AOML",
+        "note": "2 minutes. Real underwater footage from NOAA scientists in the Florida Keys during the 2023 ocean heat wave — the same heat that hit reefs across the Caribbean."
+      }
+    ],
+    "readings": [],
+    "questions": [
+      {
+        "id": "q1",
+        "type": "text",
+        "label": "Which video (or videos) did you watch?",
+        "placeholder": "Coral Bleaching 101, …"
+      },
+      {
+        "id": "q2",
+        "type": "textarea",
+        "label": "What is one fact that surprised you?",
+        "placeholder": "I was surprised that…"
+      },
+      {
+        "id": "q3",
+        "type": "textarea",
+        "label": "What is one question you still have about coral reefs or bleaching?",
+        "placeholder": "I still wonder…"
+      },
+      {
+        "id": "q4",
+        "type": "textarea",
+        "label": "Name one animal that would be affected if the reef died. How would it be affected?",
+        "placeholder": "If the reef died, the … would …"
       }
     ],
     "excludeFromIdeaMap": true
