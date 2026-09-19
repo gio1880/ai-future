@@ -773,7 +773,9 @@ app.post('/api/master-roster/students', requireCoachPortalAuth, async (req, res)
 		}
 		roster.students.push(student);
 		const portalLogin = assignStudentPortalLogin(student, roster);
-		await syncMasterStudentHubAccess(student, roster);
+		// one password everywhere: the portal login shown to the coach also
+		// signs in to the FLL Hub, instead of a second password nobody was shown
+		await syncMasterStudentHubAccess(student, roster, { fllPassword: portalLogin.password });
 		await writeMasterRoster(roster);
 		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
 		return res.status(201).json({ success: true, data: publicMasterRoster(roster, teams), student, portalLogin });
@@ -3139,7 +3141,13 @@ function appendRosterNote(notes, addition) {
 	return cleanMetaString(current ? `${current}\n${addition}` : addition, 600);
 }
 
-async function syncMasterStudentHubAccess(student, roster = null) {
+// opts (all optional), used when an account is being created from somewhere
+// other than the roster screen, so it still goes through this one path:
+//   fllUsername / fllPassword  — use these for a NEW FLL login instead of generated ones
+//   memberRole                 — the team role for a NEW team membership
+// and it reports back opts.createdFllLogin = { id, username, password } when it
+// created an FLL login, since the password exists nowhere else in plain text.
+async function syncMasterStudentHubAccess(student, roster = null, opts = {}) {
 	if (!student || !student.name) return student;
 	const access = new Set(inferMasterHubAccess(student));
 	const now = new Date().toISOString();
@@ -3195,8 +3203,11 @@ async function syncMasterStudentHubAccess(student, roster = null) {
 	if (access.has('fll-hub')) {
 		if (!fllAccount) {
 			const existingUsernames = new Set(fllUsers.map((account) => String(account.username || '').toLowerCase()));
-			const username = uniqueUsername(student.name, existingUsernames);
-			const password = generateStudentPassword();
+			const wantedUsername = String(opts.fllUsername || '').toLowerCase();
+			const username = wantedUsername && !existingUsernames.has(wantedUsername)
+				? wantedUsername
+				: uniqueUsername(student.name, existingUsernames);
+			const password = opts.fllPassword || generateStudentPassword();
 			fllAccount = {
 				id: `student-${slugify(student.name)}-${crypto.randomBytes(3).toString('hex')}`,
 				name: student.name,
@@ -3208,6 +3219,7 @@ async function syncMasterStudentHubAccess(student, roster = null) {
 			};
 			fllUsers.push(fllAccount);
 			student.notes = appendRosterNote(student.notes, `FLL Hub login created: ${username} / ${password}`);
+			opts.createdFllLogin = { id: fllAccount.id, username, password };
 		}
 		fllAccount.name = student.name;
 		fllAccount.teamId = requestedTeamId;
@@ -3250,7 +3262,7 @@ async function syncMasterStudentHubAccess(student, roster = null) {
 					teamId: requestedTeamId,
 					studentId: fllAccount.id,
 					displayName: student.name,
-					role: 'Team member',
+					role: cleanMetaString(opts.memberRole || '', 80) || 'Team member',
 					initials: initialsFromName(student.name)
 				});
 			}
@@ -6897,29 +6909,45 @@ app.delete('/api/fll/coach/teams/:id/rubrics/:rubricId', requireFllAuth, require
 	}
 });
 
-async function createFllStudent({ name, username, password, teamId, role }, users, members, existingUsernames) {
-	const finalUsername = username || uniqueUsername(name, existingUsernames);
-	const finalPassword = password || generateStudentPassword();
-	const id = `student-${slugify(name)}-${crypto.randomBytes(3).toString('hex')}`;
-	users.push({
-		id,
-		name,
-		username: finalUsername,
-		password_hash: hashScryptPassword(finalPassword),
-		role: 'student',
-		teamId: teamId || null,
-		active: true
-	});
-	if (teamId) {
-		members.push({
-			teamId,
-			studentId: id,
-			displayName: name,
-			role: cleanMetaString(role || '', 80) || 'Team member',
-			initials: initialsFromName(name)
-		});
-	}
-	return { id, name, username: finalUsername, password: finalPassword, teamId: teamId || null };
+// A student added from the FLL Hub is created exactly the way the master roster
+// creates one: the same roster record, the same student-portal login, and the
+// same syncMasterStudentHubAccess that makes the FLL login, team membership and
+// class enrollment. The hub used to build its own account and bolt a thinner
+// roster record on afterwards, so the two routes produced different students.
+//
+// `roster` must be normalized and already hold the team classes (call
+// ensureFllTeamClasses first); the caller writes it. The FLL login and team
+// membership files are written by syncMasterStudentHubAccess as it goes.
+// One username and one password work everywhere: the class-code login, the
+// student portal and the hub's own sign-in.
+async function createStudentThroughMasterRoster({ name, username, password, teamId, role }, roster) {
+	const student = sanitizeMasterStudentPayload({ name, hubAccess: ['fll-hub'], fllTeamId: teamId }, roster);
+	if (!student) throw new Error('Student name is required');
+	if (username) student.portalUsername = username;
+	roster.students.push(student);
+	const portalLogin = assignStudentPortalLogin(student, roster);
+	const finalPassword = password || portalLogin.password;
+	if (password) student.portalPassword_hash = hashScryptPassword(password);
+	const opts = { fllUsername: student.portalUsername, fllPassword: finalPassword, memberRole: role };
+	await syncMasterStudentHubAccess(student, roster, opts);
+	return {
+		id: student.fllUserId,
+		masterStudentId: student.id,
+		name: student.name,
+		// the name they type next to the class code
+		username: student.portalUsername,
+		password: opts.createdFllLogin ? opts.createdFllLogin.password : finalPassword,
+		teamId: teamId || null
+	};
+}
+
+// Usernames are checked against BOTH places a student signs in, so a name the
+// coach picks can't collide on one side and quietly change on the other.
+function studentUsernameTaken(username, fllUsers, roster) {
+	const wanted = String(username || '').toLowerCase();
+	if (!wanted) return false;
+	return (Array.isArray(fllUsers) ? fllUsers : []).some((u) => String(u.username || '').toLowerCase() === wanted)
+		|| roster.students.some((s) => String(s.portalUsername || '').toLowerCase() === wanted);
 }
 
 function setMasterStudentFllTeamEnrollment(student, teamId, roster) {
@@ -6948,16 +6976,11 @@ function linkFllStudentsToMasterRoster(created, normalizedRoster) {
 		let student = normalizedRoster.students.find((s) =>
 			(c.id && s.fllUserId === c.id) || String(s.portalUsername || '').toLowerCase() === uname);
 		if (!student) {
-			student = {
-				id: `master-fll-${uname}`,
-				name: c.name || uname,
-				active: true,
-				portalUsername: uname,
-				enrollments: [],
-				hubAccess: [],
-				createdAt: now,
-				updatedAt: now
-			};
+			// An FLL login with no roster record at all: give it the same record
+			// the roster itself would have made, not a thinner stand-in, so it
+			// behaves like every other student from here on.
+			student = sanitizeMasterStudentPayload({ name: c.name || uname, hubAccess: ['fll-hub'] }, normalizedRoster);
+			if (!student) continue;
 			normalizedRoster.students.push(student);
 		}
 		student.name = c.name || student.name;
@@ -7032,26 +7055,18 @@ app.post('/api/fll/coach/students', requireFllAuth, requireFllCoach, async (req,
 				message: 'Pick a team for this student. Students sign in with their team’s class code, so a student with no team cannot log in.'
 			});
 		}
-		const existingUsernames = new Set(users.map((user) => user.username.toLowerCase()));
-		if (username && existingUsernames.has(username)) {
+		// the team's class must exist on the roster before the student joins it
+		const ensured = ensureFllTeamClasses(teams, masterRoster);
+		if (username && studentUsernameTaken(username, users, ensured.roster)) {
 			return res.status(409).json({ success: false, message: 'That username is already taken' });
 		}
-		const credentials = await createFllStudent(
+		await writeJsonFile(path.join(fllHubDataDir, 'teams.json'), ensured.teams);
+		const credentials = await createStudentThroughMasterRoster(
 			{ name, username, password, teamId, role: req.body.role },
-			users, members, existingUsernames
+			ensured.roster
 		);
-		// Wire into the master roster so this student can class-code login.
-		const ensured = ensureFllTeamClasses(teams, masterRoster);
-		const linkedRoster = linkFllStudentsToMasterRoster([credentials], ensured.roster);
-		await Promise.all([
-			writeJsonFile(fllUsersFile, users),
-			writeJsonFile(fllTeamMembersFile, members),
-			writeJsonFile(path.join(fllHubDataDir, 'teams.json'), ensured.teams),
-			writeMasterRoster(linkedRoster)
-		]);
-		const teamClass = credentials.teamId
-			? linkedRoster.classes.find((c) => c.id === `fll-${credentials.teamId}`)
-			: null;
+		await writeMasterRoster(ensured.roster);
+		const teamClass = ensured.roster.classes.find((c) => c.id === `fll-${teamId}`);
 		return res.status(201).json({ success: true, student: credentials, classCode: teamClass?.classCode || null });
 	} catch (err) {
 		console.error('FLL coach add student error:', err);
@@ -7083,21 +7098,21 @@ app.post('/api/fll/coach/students/bulk', requireFllAuth, requireFllCoach, async 
 		if (teamId && !teams.some((team) => team.id === teamId)) {
 			return res.status(400).json({ success: false, message: 'Unknown team' });
 		}
-		const existingUsernames = new Set(users.map((user) => user.username.toLowerCase()));
+		// Same rule as adding one student: class-code login needs a team.
+		if (!teamId) {
+			return res.status(400).json({
+				success: false,
+				message: 'Pick a team for these students. Students sign in with their team’s class code, so a student with no team cannot log in.'
+			});
+		}
+		const ensured = ensureFllTeamClasses(teams, masterRoster);
+		await writeJsonFile(path.join(fllHubDataDir, 'teams.json'), ensured.teams);
 		const created = [];
 		for (const name of names) {
-			created.push(await createFllStudent({ name, teamId }, users, members, existingUsernames));
+			created.push(await createStudentThroughMasterRoster({ name, teamId }, ensured.roster));
 		}
-		// Wire every new student into the master roster so they can class-code login.
-		const ensured = ensureFllTeamClasses(teams, masterRoster);
-		const linkedRoster = linkFllStudentsToMasterRoster(created, ensured.roster);
-		await Promise.all([
-			writeJsonFile(fllUsersFile, users),
-			writeJsonFile(fllTeamMembersFile, members),
-			writeJsonFile(path.join(fllHubDataDir, 'teams.json'), ensured.teams),
-			writeMasterRoster(linkedRoster)
-		]);
-		const teamClass = teamId ? linkedRoster.classes.find((c) => c.id === `fll-${teamId}`) : null;
+		await writeMasterRoster(ensured.roster);
+		const teamClass = ensured.roster.classes.find((c) => c.id === `fll-${teamId}`);
 		return res.status(201).json({ success: true, students: created, classCode: teamClass?.classCode || null });
 	} catch (err) {
 		console.error('FLL coach bulk add error:', err);
