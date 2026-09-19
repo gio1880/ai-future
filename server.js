@@ -775,7 +775,10 @@ app.post('/api/master-roster/students', requireCoachPortalAuth, async (req, res)
 		const portalLogin = assignStudentPortalLogin(student, roster);
 		// one password everywhere: the portal login shown to the coach also
 		// signs in to the FLL Hub, instead of a second password nobody was shown
-		await syncMasterStudentHubAccess(student, roster, { fllPassword: portalLogin.password });
+		await syncMasterStudentHubAccess(student, roster, {
+			fllPassword: portalLogin.password,
+			campPassword: portalLogin.password
+		});
 		await writeMasterRoster(roster);
 		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
 		return res.status(201).json({ success: true, data: publicMasterRoster(roster, teams), student, portalLogin });
@@ -2380,6 +2383,19 @@ function summerDemoStudentTemplate(now = new Date().toISOString()) {
 	};
 }
 
+// Account creation used to write each new login into the student's notes as
+// "FLL Hub login created: username / password" — plain-text passwords, readable
+// by anyone who could open the roster. They are no longer written; this strips
+// the ones already there. Only lines in that exact generated form are removed,
+// never anything a coach typed.
+const ROSTER_LOGIN_NOTE = /^[^\n]*\blogin created: [^\n]*$/gim;
+
+function stripRosterLoginNotes(notes) {
+	const text = String(notes || '');
+	if (!/\blogin created: /i.test(text)) return text;
+	return text.replace(ROSTER_LOGIN_NOTE, '').replace(/\n{2,}/g, '\n').trim();
+}
+
 function normalizeMasterRoster(data) {
 	const fallback = buildDefaultMasterRoster();
 	const source = data && typeof data === 'object' ? data : {};
@@ -2390,7 +2406,11 @@ function normalizeMasterRoster(data) {
 			summerWeeks: Array.isArray(source.settings?.summerWeeks) ? source.settings.summerWeeks : fallback.settings.summerWeeks
 		},
 		classes: Array.isArray(source.classes) ? source.classes : fallback.classes,
-		students: Array.isArray(source.students) ? source.students : [],
+		students: Array.isArray(source.students)
+			? source.students.map((student) => (student && /\blogin created: /i.test(String(student.notes || ''))
+				? { ...student, notes: stripRosterLoginNotes(student.notes) }
+				: student))
+			: [],
 		// Records one-time data migrations that have already run. Without this the
 		// object rebuild here would drop the marker on every read/write.
 		migrations: (source.migrations && typeof source.migrations === 'object' && !Array.isArray(source.migrations))
@@ -2421,6 +2441,15 @@ async function initializeMasterRoster() {
 		} catch (seedErr) { /* fall back to the built-in default below */ }
 	}
 	await writeJsonFile(masterRosterFile, buildDefaultMasterRoster());
+}
+
+async function scrubRosterLoginNotes() {
+	const raw = await readJsonFile(masterRosterFile, null);
+	const students = Array.isArray(raw?.students) ? raw.students : [];
+	const affected = students.filter((student) => /\blogin created: /i.test(String(student?.notes || ''))).length;
+	if (!affected) return;
+	await writeJsonFile(masterRosterFile, normalizeMasterRoster(raw)); // normalizing strips them
+	console.log(`Removed saved login passwords from ${affected} roster note(s).`);
 }
 
 async function readMasterRoster() {
@@ -3092,16 +3121,15 @@ async function syncMasterStudentFromCampCamper(campUser) {
 	let changed = false;
 
 	if (!student) {
-		student = {
-			id: `student-${slugify(campUser.name)}-${crypto.randomBytes(3).toString('hex')}`,
+		// the same record the roster itself makes, not a hand-built copy of it
+		student = sanitizeMasterStudentPayload({
 			name: campUser.name,
-			parentName: '', email: '', phone: '', notes: '',
 			active: campUser.active !== false,
-			hubAccess: [], codeLabUserId: '', fllUserId: '', campUserId: campUser.id, fllTeamId: '',
-			enrollments: summerClass ? [{ classId: summerClass.id, weeks: [] }] : [],
-			portalUsername: '', portalPassword_hash: '',
-			createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
-		};
+			hubAccess: [],
+			campUserId: campUser.id,
+			enrollments: summerClass ? [{ classId: summerClass.id, weeks: [] }] : []
+		}, roster);
+		if (!student) return;
 		roster.students.push(student);
 		changed = true;
 	} else {
@@ -3122,16 +3150,29 @@ async function syncMasterStudentFromCampCamper(campUser) {
 	}
 }
 
-function findStudentAccount(accounts, student, idField) {
+// The stored id always wins. Matching by NAME is only a way to adopt an old
+// account made before the roster linked it, and it used to take ANY account
+// with that name — so a second child called the same thing was handed the first
+// child's login, and deleting one could delete the other's accounts. Now a name
+// match only adopts an account no other roster student already owns, and it is
+// never used without the roster to check against (or when deleting).
+function findStudentAccount(accounts, student, idField, { roster = null, allowNameMatch = true } = {}) {
 	if (!Array.isArray(accounts) || !student) return null;
 	const wantedId = student[idField];
 	if (wantedId) {
 		const byId = accounts.find((account) => account.id === wantedId);
 		if (byId) return byId;
 	}
+	if (!allowNameMatch || !Array.isArray(roster?.students)) return null;
+	const claimed = new Set(roster.students
+		.filter((other) => other !== student && other.id !== student.id)
+		.map((other) => other[idField])
+		.filter(Boolean));
 	const studentName = normalizedPersonName(student.name);
 	return accounts.find((account) =>
-		account.role === 'student' && normalizedPersonName(account.name) === studentName
+		account.role === 'student'
+		&& !claimed.has(account.id)
+		&& normalizedPersonName(account.name) === studentName
 	) || null;
 }
 
@@ -3153,7 +3194,7 @@ async function syncMasterStudentHubAccess(student, roster = null, opts = {}) {
 	const now = new Date().toISOString();
 
 	const codeLabStudents = await readCodeLabStudents();
-	let codeLabAccount = findStudentAccount(codeLabStudents, student, 'codeLabUserId');
+	let codeLabAccount = findStudentAccount(codeLabStudents, student, 'codeLabUserId', { roster });
 	if (access.has('code-lab')) {
 		if (!codeLabAccount) {
 			const existingUsernames = new Set(codeLabStudents.map((account) => String(account.username || '').toLowerCase()));
@@ -3169,7 +3210,6 @@ async function syncMasterStudentHubAccess(student, roster = null, opts = {}) {
 				created_at: now
 			};
 			codeLabStudents.push(codeLabAccount);
-			student.notes = appendRosterNote(student.notes, `Code Lab login created: ${username} / ${password}`);
 		}
 		codeLabAccount.name = student.name;
 		codeLabAccount.active = true;
@@ -3186,7 +3226,7 @@ async function syncMasterStudentHubAccess(student, roster = null, opts = {}) {
 		readJsonFile(path.join(fllHubDataDir, 'teams.json'), [])
 	]);
 	const validTeamIds = new Set((Array.isArray(teams) ? teams : []).map((team) => team.id));
-	let fllAccount = findStudentAccount(fllUsers, student, 'fllUserId');
+	let fllAccount = findStudentAccount(fllUsers, student, 'fllUserId', { roster });
 
 	// The roster may put a student ON a team; it must never silently take them
 	// off one. A team id that does not resolve — the team exists only on the
@@ -3218,7 +3258,6 @@ async function syncMasterStudentHubAccess(student, roster = null, opts = {}) {
 				active: true
 			};
 			fllUsers.push(fllAccount);
-			student.notes = appendRosterNote(student.notes, `FLL Hub login created: ${username} / ${password}`);
 			opts.createdFllLogin = { id: fllAccount.id, username, password };
 		}
 		fllAccount.name = student.name;
@@ -3278,31 +3317,38 @@ async function syncMasterStudentHubAccess(student, roster = null, opts = {}) {
 
 	// Summer Camp account — keep the camp hub in sync with roster adds/edits the same
 	// way Code Lab and FLL are. Needs the roster to know summer enrollment + class name.
-	if (roster) await syncCampAccountForRosterStudent(student, roster);
+	if (roster) await syncCampAccountForRosterStudent(student, roster, opts);
 
 	return student;
 }
 
 // Create / update / (de)activate the camper's camp account from their master-roster
 // record so the Summer Hub immediately reflects roster changes (name, class, active).
-async function syncCampAccountForRosterStudent(student, roster) {
+// opts, as for syncMasterStudentHubAccess: campUsername / campPassword for a NEW
+// camp login, and opts.createdCampLogin = { id, username, password } reported back.
+async function syncCampAccountForRosterStudent(student, roster, opts = {}) {
 	if (!student || !student.name) return;
 	const campUsers = await readCampUsers();
 	const summerClass = (Array.isArray(student.enrollments) ? student.enrollments : [])
 		.map((e) => (roster.classes || []).find((c) => c.id === e.classId))
 		.find((c) => c && c.term === 'summer');
 	const wantsCamp = !!summerClass && student.active !== false;
-	let account = findStudentAccount(campUsers, student, 'campUserId');
+	let account = findStudentAccount(campUsers, student, 'campUserId', { roster });
 	let changed = false;
 
 	if (wantsCamp) {
 		if (!account) {
 			const existingUsernames = new Set(campUsers.map((u) => String(u.username || '').toLowerCase()));
+			const wantedUsername = String(opts.campUsername || '').toLowerCase();
+			const username = wantedUsername && !existingUsernames.has(wantedUsername)
+				? wantedUsername
+				: uniqueUsername(student.name, existingUsernames);
+			const password = opts.campPassword || generateStudentPassword();
 			account = {
 				id: `camp-student-${slugify(student.name)}-${crypto.randomBytes(3).toString('hex')}`,
 				name: student.name,
-				username: uniqueUsername(student.name, existingUsernames),
-				password_hash: hashScryptPassword(generateStudentPassword()),
+				username,
+				password_hash: hashScryptPassword(password),
 				role: 'student',
 				active: true,
 				className: summerClass.name,
@@ -3310,6 +3356,7 @@ async function syncCampAccountForRosterStudent(student, roster) {
 				createdAt: new Date().toISOString()
 			};
 			campUsers.push(account);
+			opts.createdCampLogin = { id: account.id, username, password };
 			changed = true;
 		} else {
 			if (account.name !== student.name) { account.name = student.name; changed = true; }
@@ -3333,12 +3380,12 @@ async function syncCampAccountForRosterStudent(student, roster) {
 // Fully remove the Code Lab and FLL Hub accounts that were provisioned for a
 // master-roster student. Used when the student is deleted from the roster, so no
 // deactivated orphan accounts linger. Matching reuses findStudentAccount (stored
-// id first, then a same-name student fallback) — the same link the sync trusts.
+// id ONLY. A name match here could delete a different child's accounts.
 async function removeMasterStudentLinkedAccounts(student) {
 	if (!student) return;
 
 	const codeLabStudents = await readCodeLabStudents();
-	const codeLabAccount = findStudentAccount(codeLabStudents, student, 'codeLabUserId');
+	const codeLabAccount = findStudentAccount(codeLabStudents, student, 'codeLabUserId', { allowNameMatch: false });
 	if (codeLabAccount) {
 		await writeCodeLabStudents(codeLabStudents.filter((account) => account.id !== codeLabAccount.id));
 	}
@@ -3347,7 +3394,7 @@ async function removeMasterStudentLinkedAccounts(student) {
 		readFllUsers(),
 		readJsonFile(fllTeamMembersFile, [])
 	]);
-	const fllAccount = findStudentAccount(fllUsers, student, 'fllUserId');
+	const fllAccount = findStudentAccount(fllUsers, student, 'fllUserId', { allowNameMatch: false });
 	if (fllAccount) {
 		await Promise.all([
 			writeJsonFile(fllUsersFile, fllUsers.filter((account) => account.id !== fllAccount.id)),
@@ -3356,7 +3403,7 @@ async function removeMasterStudentLinkedAccounts(student) {
 	}
 
 	const campUsers = await readCampUsers();
-	const campAccount = findStudentAccount(campUsers, student, 'campUserId');
+	const campAccount = findStudentAccount(campUsers, student, 'campUserId', { allowNameMatch: false });
 	if (campAccount) {
 		await writeCampUsers(campUsers.filter((account) => account.id !== campAccount.id));
 	}
@@ -10084,30 +10131,49 @@ app.post('/api/camp/coach/students', requireCampAuth, requireCampCoach, async (r
 		const className = cleanMetaString(req.body.className || '', 80) || 'Unassigned';
 		const username = cleanMetaString(req.body.username || '', 80).toLowerCase() || null;
 		const password = typeof req.body.password === 'string' && req.body.password.length >= 6 ? req.body.password : null;
-		const users = await readCampUsers();
-		const existingUsernames = new Set(users.map((user) => user.username.toLowerCase()));
-		if (username && existingUsernames.has(username)) {
+		// A camper is created exactly the way the master roster creates a student:
+		// the roster record comes first, enrolled in the summer class, and the
+		// roster's own sync makes the camp login from it. The camp hub used to make
+		// its own login and then look for a roster student WITH THE SAME NAME, so a
+		// second child with a common name could be attached to someone else's record.
+		const [users, roster] = await Promise.all([readCampUsers(), readMasterRoster()]);
+		const summerClasses = roster.classes.filter((c) => c.term === 'summer');
+		const summerClass = summerClasses.find((c) => c.active !== false && c.name === className)
+			|| summerClasses.find((c) => c.active !== false)
+			|| summerClasses[0]
+			|| null;
+		if (!summerClass) {
+			return res.status(400).json({
+				success: false,
+				message: 'There is no summer class on the master roster yet. Add one there first, then add the camper.'
+			});
+		}
+		const taken = (wanted) => users.some((u) => String(u.username || '').toLowerCase() === wanted)
+			|| roster.students.some((s) => String(s.portalUsername || '').toLowerCase() === wanted);
+		if (username && taken(username)) {
 			return res.status(409).json({ success: false, message: 'That username is already taken' });
 		}
-		const finalUsername = username || uniqueUsername(name, existingUsernames);
-		const finalPassword = password || generateStudentPassword();
-		const id = `camper-${slugify(name)}-${crypto.randomBytes(3).toString('hex')}`;
-		users.push({
-			id,
-			name,
-			username: finalUsername,
-			password_hash: hashScryptPassword(finalPassword),
-			role: 'student',
-			className,
-			active: true,
-			// Tag as roster-managed so the summer-roster sync never auto-deactivates this
-			// coach-added camper on the next deploy/restart.
-			summerRosterSource
+		const student = sanitizeMasterStudentPayload(
+			{ name, hubAccess: [], enrollments: [{ classId: summerClass.id, weeks: [] }] },
+			roster
+		);
+		if (username) student.portalUsername = username;
+		roster.students.push(student);
+		const portalLogin = assignStudentPortalLogin(student, roster);
+		const finalPassword = password || portalLogin.password;
+		if (password) student.portalPassword_hash = hashScryptPassword(password);
+		// one username and one password: camp sign-in, class code and student portal
+		const opts = { campUsername: student.portalUsername, campPassword: finalPassword };
+		await syncMasterStudentHubAccess(student, roster, opts);
+		await writeMasterRoster(roster);
+		const created = opts.createdCampLogin;
+		if (!created) {
+			return res.status(500).json({ success: false, message: 'The camper was added to the roster, but their camp login was not created.' });
+		}
+		return res.status(201).json({
+			success: true,
+			student: { id: created.id, name: student.name, username: created.username, password: created.password, className: summerClass.name }
 		});
-		await writeJsonFile(campUsersFile, users);
-		// Reflect the new camper on the master roster too.
-		await syncMasterStudentFromCampCamper(users[users.length - 1]);
-		return res.status(201).json({ success: true, student: { id, name, username: finalUsername, password: finalPassword, className } });
 	} catch (err) {
 		console.error('Camp coach add camper error:', err);
 		return res.status(500).json({ success: false, message: 'Server error adding camper' });
@@ -10504,6 +10570,7 @@ initializeFllDataDir()
 	.then(() => applyCampContentPatches())
 	.then(() => initializeCoachDataDir())
 	.then(() => initializeMasterRoster())
+	.then(() => scrubRosterLoginNotes())
 	.then(() => syncFllTeamClasses())
 	.then(() => ensureFllSponsorsAssignments())
 	.then(() => migrateSummer2026RosterData())
