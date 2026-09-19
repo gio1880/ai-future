@@ -13,3 +13,6 @@ yarn-error.log*
 
 # Private local credential exports
 data/fll-hub/**/private-credentials*.txt
+
+# Saved login sessions (hashed tokens) — runtime state, never commit
+data/sessions/

@@ -76,7 +76,109 @@ const fllDataFileNames = [
 	'coach-rankings.json',
 	'fll-settings.json'
 ];
-const fllSessions = new Map();
+
+// ── Sessions that survive a restart ──────────────────────────────────────────
+// Sessions used to live only in memory, so every restart — every Render
+// deploy — signed everyone out on the server while their browser kept the
+// cookie and their open tab kept looking fine. The first sign was a student
+// clicking a resource: it opens in a new tab, which asks the server, which no
+// longer knew them, so it sent them to the login page.
+//
+// This is a Map that also keeps a copy on the persistent disk. Tokens are
+// stored only as SHA-256 hashes, so the file on disk can't be used as a login.
+// lastSeen is changed in place by callers after get(), so reads count as
+// changes too; those are written at most once a minute, while a new session or
+// a sign-out is written within a second.
+const SESSION_MAX_IDLE_MS = 7 * 24 * 60 * 60 * 1000;
+const sessionsDir = path.join(platformDataDir, 'sessions');
+const persistentSessionStores = [];
+
+class PersistentSessionMap extends Map {
+	constructor(name) {
+		super();
+		this.file = path.join(sessionsDir, `${name}.json`);
+		this.timer = null;
+		this.timerDue = 0;
+		this.load();
+		persistentSessionStores.push(this);
+	}
+
+	static hash(token) {
+		return crypto.createHash('sha256').update(String(token)).digest('hex');
+	}
+
+	load() {
+		try {
+			const saved = JSON.parse(require('fs').readFileSync(this.file, 'utf8'));
+			const now = Date.now();
+			for (const [key, session] of Object.entries(saved || {})) {
+				// an expired session would be refused anyway; don't carry it forward
+				if (session && now - Number(session.lastSeen || 0) <= SESSION_MAX_IDLE_MS) super.set(key, session);
+			}
+		} catch (err) {
+			// no file yet (first boot) or an unreadable one: start empty rather than
+			// refuse to boot — the worst case is one more sign-in, as before
+			if (err.code !== 'ENOENT') console.error(`Could not read ${this.file}; starting with no saved sessions:`, err.message);
+		}
+	}
+
+	get(token) {
+		const session = super.get(PersistentSessionMap.hash(token));
+		if (session) this.schedule(60 * 1000);
+		return session;
+	}
+
+	has(token) {
+		return super.has(PersistentSessionMap.hash(token));
+	}
+
+	set(token, session) {
+		super.set(PersistentSessionMap.hash(token), session);
+		this.schedule(1000);
+		return this;
+	}
+
+	delete(token) {
+		const removed = super.delete(PersistentSessionMap.hash(token));
+		if (removed) this.schedule(1000);
+		return removed;
+	}
+
+	schedule(delay) {
+		const due = Date.now() + delay;
+		if (this.timer && this.timerDue <= due) return; // an earlier save already covers it
+		clearTimeout(this.timer);
+		this.timerDue = due;
+		this.timer = setTimeout(() => this.save(), delay);
+		this.timer.unref?.();
+	}
+
+	save() {
+		clearTimeout(this.timer);
+		this.timer = null;
+		try {
+			const fsSync = require('fs');
+			fsSync.mkdirSync(sessionsDir, { recursive: true });
+			// write then rename, so a crash mid-write never leaves half a file
+			const tmp = `${this.file}.tmp`;
+			fsSync.writeFileSync(tmp, JSON.stringify(Object.fromEntries(super.entries())), { mode: 0o600 });
+			fsSync.renameSync(tmp, this.file);
+		} catch (err) {
+			console.error(`Could not save sessions to ${this.file}:`, err.message);
+		}
+	}
+}
+
+// Render stops the old server with SIGTERM when it deploys. Save anything still
+// waiting so nobody who was active in the last minute loses their session.
+for (const signal of ['SIGTERM', 'SIGINT']) {
+	process.once(signal, () => {
+		for (const store of persistentSessionStores) if (store.timer) store.save();
+		process.exit(0);
+	});
+}
+
+const fllSessions = new PersistentSessionMap('fll');
 const campHubDir = path.join(__dirname, 'robotics lab', 'Summer Camp', '2026-summer-camp');
 const campSeedDataDir = path.join(campHubDir, 'data');
 const lessonBuildingDir = path.join(__dirname, 'Lesson Building');
@@ -112,10 +214,10 @@ const campDataFileNames = [
 	'begin-lesson-responses.json',
 	'warmup-broadcast.json'
 ];
-const campSessions = new Map();
+const campSessions = new PersistentSessionMap('camp');
 const coachUsersFile = path.join(platformDataDir, 'coach-users.json');
 const coachSessionCookie = 'coach_session';
-const coachSessions = new Map();
+const coachSessions = new PersistentSessionMap('coach');
 // Shared one-time code coaches enter to claim their account and set a password.
 const coachSetupCode = process.env.COACH_SETUP_CODE || 'aifuture2026';
 const masterRosterFile = path.join(platformDataDir, 'master-roster.json');
@@ -123,7 +225,7 @@ const summerRosterSource = 'summer-2026-screenshot-grade-roster';
 const summerDemoStudentId = 'master-demo-summer-camper';
 const summerDemoCampUserId = 'camp-demo-summer-camper';
 const studentPortalCookie = 'student_session';
-const studentPortalSessions = new Map();
+const studentPortalSessions = new PersistentSessionMap('student-portal');
 const regularCoachHubs = [
 	'master-roster',
 	'summer-curriculum',
@@ -4651,6 +4753,17 @@ async function getFllStudentDashboardFor(user, { preview = false } = {}) {
 	};
 }
 
+// After signing in, send them back to the page they were opening — a resource
+// clicked from the hub opens in a new tab, and landing on the dashboard there
+// instead of the PDF they asked for felt like the click had done nothing.
+// Only hub pages are remembered, so the login page can't be made to bounce
+// someone to another site.
+function fllLoginUrlFor(req) {
+	const wanted = String(req.originalUrl || '');
+	if (req.method !== 'GET' || !/^\/fll-hub\/(?!login)[^\\\s]*$/.test(wanted)) return '/fll-hub/login';
+	return `/fll-hub/login?next=${encodeURIComponent(wanted)}`;
+}
+
 async function requireFllAuth(req, res, next) {
 	try {
 		const session = getFllSession(req);
@@ -4658,14 +4771,14 @@ async function requireFllAuth(req, res, next) {
 			if (req.path.startsWith('/api/')) {
 				return res.status(401).json({ success: false, message: 'FLL login required' });
 			}
-			return res.redirect(302, '/fll-hub/login');
+			return res.redirect(302, fllLoginUrlFor(req));
 		}
 		const users = await readFllUsers();
 		const user = users.find((candidate) => candidate.id === session.userId);
 		if (!user) {
 			fllSessions.delete(session.token);
 			clearFllSessionCookie(res);
-			return res.redirect(302, '/fll-hub/login');
+			return res.redirect(302, fllLoginUrlFor(req));
 		}
 		req.fllUser = user;
 		return next();
