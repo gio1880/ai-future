@@ -16,3 +16,13 @@ data/fll-hub/**/private-credentials*.txt
 
 # Saved login sessions (hashed tokens) — runtime state, never commit
 data/sessions/
+
+# ── Private runtime data: never commit ─────────────────────────────────────
+# The live copy lives on the Render disk (DATA_DIR=/var/data). These local
+# copies hold real students, coaches and password hashes, and the repo is
+# (or has been) public. The lesson/season SEED files stay tracked.
+/data/
+/code-lab/data/
+robotics lab/FLL Teams/2026-2027-bioglow/data/fll-users.json
+robotics lab/Summer Camp/2026-summer-camp/data/camp-users.json
+*credentials*.txt
