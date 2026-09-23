@@ -5,6 +5,10 @@ const crypto = require('crypto');
 const codeLabApp = require('./code-lab/server');
 const payments = require('./payments');
 const app = express();
+// Render puts one proxy in front of the app. Without this every visitor's
+// req.ip is the proxy's address, so the login limiter would treat the whole
+// internet as one person and lock everyone out together.
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 const metaPixelId = process.env.META_PIXEL_ID || '4538248653113103';
 const metaGraphApiVersion = process.env.META_GRAPH_API_VERSION || 'v25.0';
@@ -47,7 +51,11 @@ const fllCoachFilesFile = path.join(fllHubDataDir, 'coach-files.json');
 const fllUploadsDir = path.join(fllHubDataDir, 'uploads');
 const fllCoachRankingsFile = path.join(fllHubDataDir, 'coach-rankings.json');
 const fllSettingsFile = path.join(fllHubDataDir, 'fll-settings.json');
-const codeLabStudentsFile = path.join(__dirname, 'code-lab', 'data', 'students.json');
+// The SAME file Code Lab itself reads (code-lab/server.js resolves it as
+// DATA_DIR || code-lab/data). This used to be hardcoded to the repo folder, so
+// in production every Code Lab login the roster created went to a file Code Lab
+// never reads — the student got "not found" — and vanished on the next deploy.
+const codeLabStudentsFile = path.join(process.env.DATA_DIR || path.join(__dirname, 'code-lab', 'data'), 'students.json');
 const fllSessionCookie = 'fll_session';
 // Students start on their main dashboard after every FLL login.
 const FLL_STUDENT_LANDING = '/fll-hub/student';
@@ -331,6 +339,125 @@ const coachHubDefinitions = {
 	}
 };
 
+// ── Private files never leave the server, however the URL is spelled ─────────
+// The site serves the project folder as static files, and the old guard below
+// compared the URL TEXT against "/data/" — but the file server tidies a URL up
+// before finding the file, so "//data/x", "/%2F/data/x" and "/api/../data/x"
+// slipped past the check and still reached the real files: the roster, coach
+// password hashes, Code Lab logins. This guard tidies the path the same way
+// first, refuses any "..", and then checks where the request would really land.
+// It runs before every route, including the Code Lab proxies.
+const PRIVATE_PATH_PREFIXES = [
+	'data',                                   // live data, rosters, users, sessions
+	'code-lab/data',                          // Code Lab accounts and passwords
+	'code-lab/_platform',
+	'robotics lab/fll teams/2026-2027-bioglow/data',
+	'robotics lab/summer camp/2026-summer-camp/data',
+	'node_modules',
+	'scripts',
+	'.git',
+	'.claude'
+];
+const PRIVATE_FILE_NAMES = new Set([
+	'server.js', 'payments.js', 'code-lab/server.js',
+	'package.json', 'package-lock.json', 'render.yaml'
+]);
+
+function isPrivateRequestPath(rawPath) {
+	let decoded;
+	try {
+		decoded = decodeURIComponent(String(rawPath || ''));
+	} catch (err) {
+		return true; // a path that cannot even be decoded is not a real page
+	}
+	if (decoded.includes('\0')) return true;
+	const segments = decoded.split(/[\\/]+/);
+	if (segments.includes('..')) return true; // no walking up the tree, ever
+	const rel = segments.filter((part) => part && part !== '.').join('/').toLowerCase();
+	if (!rel) return false;
+	if (PRIVATE_FILE_NAMES.has(rel)) return true;
+	if (PRIVATE_PATH_PREFIXES.some((prefix) => rel === prefix || rel.startsWith(`${prefix}/`))) return true;
+	const base = rel.split('/').pop();
+	return base.startsWith('.env')
+		|| /credential/.test(base)
+		|| /\.(?:bak|backup|md|log)$/.test(base)
+		|| /\.bak\.json$/.test(base);
+}
+
+app.use((req, res, next) => {
+	if (isPrivateRequestPath(req.path)) return res.status(404).send('Not found');
+	return next();
+});
+
+// ── Login attempt limits ─────────────────────────────────────────────────────
+// Every sign-in route used to accept unlimited guesses (30 wrong passwords came
+// back as 30 quick 401s). This caps FAILED attempts per IP and per username
+// inside a window. A successful sign-in clears that username's count, so a
+// class of students on one school IP is limited by failures, not by use.
+// In memory on purpose: one server process, and a restart forgiving everyone
+// is an acceptable failure mode for a limiter.
+const LOGIN_WINDOW_MS = 15 * 60 * 1000;
+const LOGIN_MAX_PER_IP = 40;        // a whole classroom behind one address
+const LOGIN_MAX_PER_NAME = 8;       // one account being guessed at
+const loginFailures = new Map();    // key -> { count, resetAt }
+
+function loginFailureKeys(req, username) {
+	const ip = String(req.ip || req.socket?.remoteAddress || 'unknown');
+	const keys = [`ip:${ip}`];
+	const name = String(username || '').trim().toLowerCase();
+	if (name) keys.push(`name:${name}`);
+	return keys;
+}
+
+function loginBlocked(req, username) {
+	const now = Date.now();
+	for (const key of loginFailureKeys(req, username)) {
+		const entry = loginFailures.get(key);
+		if (!entry) continue;
+		if (entry.resetAt <= now) { loginFailures.delete(key); continue; }
+		const max = key.startsWith('ip:') ? LOGIN_MAX_PER_IP : LOGIN_MAX_PER_NAME;
+		if (entry.count >= max) return Math.ceil((entry.resetAt - now) / 60000);
+	}
+	return 0;
+}
+
+function recordLoginFailure(req, username) {
+	const now = Date.now();
+	for (const key of loginFailureKeys(req, username)) {
+		const entry = loginFailures.get(key);
+		if (!entry || entry.resetAt <= now) loginFailures.set(key, { count: 1, resetAt: now + LOGIN_WINDOW_MS });
+		else entry.count += 1;
+	}
+	if (loginFailures.size > 20000) { // never let a flood grow memory without bound
+		for (const [key, entry] of loginFailures) if (entry.resetAt <= now) loginFailures.delete(key);
+	}
+}
+
+function clearLoginFailures(username) {
+	const name = String(username || '').trim().toLowerCase();
+	if (name) loginFailures.delete(`name:${name}`);
+}
+
+// Middleware for every sign-in route: refuses while blocked, and counts the
+// attempt as a failure when the route answers 401/403/404. The username is read
+// from the body under whichever field the route uses. Must run after the body
+// parser, so it is mounted per route, not globally.
+function loginLimiter(req, res, next) {
+	const username = req.body?.username || req.body?.studentUsername || '';
+	const minutes = loginBlocked(req, username);
+	if (minutes) {
+		return res.status(429).json({
+			success: false,
+			message: `Too many sign-in attempts. Please wait ${minutes} minute${minutes === 1 ? '' : 's'} and try again.`
+		});
+	}
+	res.on('finish', () => {
+		if ([401, 403, 404].includes(res.statusCode)) recordLoginFailure(req, username);
+		else if (res.statusCode < 300) clearLoginFailures(username);
+	});
+	return next();
+}
+
 // Payments routes MUST mount before global express.json() — the Stripe webhook
 // endpoint needs the raw request body to verify the signature.
 payments.mount(app, express, { isUnifiedCoachAdmin: isCoachAdminRequest });
@@ -388,7 +515,7 @@ app.get(['/access-control', '/access-control/'], requireCoachOwner, (req, res) =
 	return res.sendFile(path.join(__dirname, 'access-control.html'));
 });
 
-app.post('/api/coach/login', async (req, res) => {
+app.post('/api/coach/login', loginLimiter, async (req, res) => {
 	try {
 		const username = cleanMetaString(req.body.username || '', 80).toLowerCase();
 		const password = typeof req.body.password === 'string' ? req.body.password : '';
@@ -439,12 +566,15 @@ function coachNeedsSetup(user) {
 // Coach onboarding: list active coaches who may set or reset their password.
 app.get('/api/coach/setup/list', async (req, res) => {
 	try {
+		// Anyone can open the setup page, so list only the coaches who can still
+		// use it — never every coach account, which handed out the usernames of
+		// accounts (the owner's included) that already have a password.
 		const users = await readCoachUsers();
 		return res.json({
 			success: true,
 			coaches: users
-				.filter((u) => u.active !== false)
-				.map((u) => ({ name: u.name, username: u.username, needsSetup: coachNeedsSetup(u) }))
+				.filter((u) => coachNeedsSetup(u))
+				.map((u) => ({ name: u.name, username: u.username, needsSetup: true }))
 		});
 	} catch (err) {
 		console.error('Coach setup list error:', err);
@@ -453,7 +583,7 @@ app.get('/api/coach/setup/list', async (req, res) => {
 });
 
 // First-time onboarding: a coach claims their account with the shared code and sets a password.
-app.post('/api/coach/setup', async (req, res) => {
+app.post('/api/coach/setup', loginLimiter, async (req, res) => {
 	try {
 		const username = cleanMetaString(req.body.username || '', 80).toLowerCase();
 		const code = String(req.body.code || '');
@@ -461,12 +591,19 @@ app.post('/api/coach/setup', async (req, res) => {
 		if (code.trim() !== coachSetupCode) {
 			return res.status(403).json({ success: false, message: 'That setup code is not correct. Ask your admin for the code.' });
 		}
-		if (password.length < 6) {
-			return res.status(400).json({ success: false, message: 'Password must be at least 6 characters.' });
+		if (password.length < 8) {
+			return res.status(400).json({ success: false, message: 'Password must be at least 8 characters.' });
 		}
 		const users = await readCoachUsers();
 		const index = users.findIndex((u) => String(u.username || '').toLowerCase() === username);
 		if (index === -1) {
+			return res.status(404).json({ success: false, message: 'Coach not found. Pick your name from the list.' });
+		}
+		// The shared code is for FIRST-time setup only. It used to reset ANY
+		// coach's password — the owner's too — so anyone holding the code could
+		// take over an account that already had one. Same answer as "not
+		// found", so this can't be used to learn which accounts exist.
+		if (!coachNeedsSetup(users[index])) {
 			return res.status(404).json({ success: false, message: 'Coach not found. Pick your name from the list.' });
 		}
 		users[index] = {
@@ -868,7 +1005,7 @@ app.get(['/student-portal', '/student-portal/'], requireStudentAuth, (req, res) 
 	return res.sendFile(path.join(__dirname, 'student-portal.html'));
 });
 
-app.post('/api/student/login', async (req, res) => {
+app.post('/api/student/login', loginLimiter, async (req, res) => {
 	try {
 		const classCode = normalizeClassCode(req.body.classCode || '');
 		const username = cleanMetaString(req.body.username || '', 80).toLowerCase();
@@ -2003,12 +2140,19 @@ async function initializeCoachDataDir() {
 		}
 	}
 
+	// A brand-new disk with no coaches at all (the seed user files are no longer
+	// shipped in the repo). The owner account used to be created with the
+	// password "change-me", readable in this public source. Now it has no
+	// password until COACH_OWNER_PASSWORD gives it one, or the owner claims it
+	// once through "First time? Set your password" with the setup code.
 	if (!seededUsers.length) {
+		const ownerPassword = process.env.COACH_OWNER_PASSWORD || '';
 		seededUsers.push({
 			id: 'coach-owner',
 			name: 'Owner Admin',
 			username: 'owner',
-			password_hash: hashScryptPassword(process.env.COACH_OWNER_PASSWORD || 'change-me'),
+			password_hash: ownerPassword ? hashScryptPassword(ownerPassword) : '',
+			needsPasswordSetup: !ownerPassword,
 			role: 'owner',
 			hubs: adminCoachHubs,
 			fllUserId: null,
@@ -2463,18 +2607,50 @@ async function writeMasterRoster(roster) {
 	});
 }
 
-function generateFllTeamClassCode(team, classes, currentClassId) {
-	const words = String(team.nickname || team.name || team.id || 'FLL').toUpperCase().match(/[A-Z0-9]+/g) || ['FLL'];
-	let base = words.length > 1 ? words.map((word) => word[0]).join('') : words[0].slice(0, 6);
-	const trailingNumber = String(team.id || '').match(/(\d+)$/)?.[1] || '';
-	if (trailingNumber && !base.endsWith(trailingNumber)) base += trailingNumber;
-	base = normalizeClassCode(base).slice(0, 10) || 'FLL';
-	const used = new Set(classes.filter((item) => item.id !== currentClassId)
+// A class code plus a username is a whole student login — there is no
+// password — so the code must not be guessable. It used to be the team's
+// initials ("HG" for History Guardians), which anyone could work out.
+// Six characters from an alphabet with no look-alikes (no 0/O, 1/I/L) are easy
+// to read off a whiteboard and type, and there are about 900 million of them.
+const CLASS_CODE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+
+function randomClassCode(classes, currentClassId) {
+	const used = new Set((Array.isArray(classes) ? classes : [])
+		.filter((item) => item.id !== currentClassId)
 		.map((item) => normalizeClassCode(item.classCode || '')).filter(Boolean));
-	if (!used.has(base)) return base;
-	let suffix = 2;
-	while (used.has(`${base.slice(0, 8)}${suffix}`)) suffix += 1;
-	return `${base.slice(0, 8)}${suffix}`;
+	for (;;) {
+		let code = '';
+		const bytes = crypto.randomBytes(6);
+		for (const byte of bytes) code += CLASS_CODE_ALPHABET[byte % CLASS_CODE_ALPHABET.length];
+		if (code !== 'DEMO' && !used.has(code)) return code;
+	}
+}
+
+function generateFllTeamClassCode(team, classes, currentClassId) {
+	return randomClassCode(classes, currentClassId);
+}
+
+// Every class code that existed before this change was guessable, and all of
+// them were published in the repo. Replace each one once. The marker makes it
+// run a single time, so codes a coach sets or sees afterwards stay put.
+// syncFllTeamClasses runs after this at boot and copies the new FLL team codes
+// onto the teams, so the Teams tab shows the same code students must type.
+async function rotateGuessableClassCodes() {
+	const roster = await readMasterRoster();
+	if (roster.migrations.randomClassCodes) return;
+	const changes = [];
+	for (const classItem of roster.classes) {
+		if (!classItem.classCode) continue;
+		const before = classItem.classCode;
+		classItem.classCode = randomClassCode(roster.classes, classItem.id);
+		changes.push(`${classItem.name || classItem.id}: ${before} → ${classItem.classCode}`);
+	}
+	roster.migrations.randomClassCodes = new Date().toISOString();
+	await writeMasterRoster(roster);
+	if (changes.length) {
+		console.log(`Replaced ${changes.length} guessable class code(s). Give students their new code:`);
+		for (const line of changes) console.log(`  ${line}`);
+	}
 }
 
 function ensureFllTeamClasses(teams, roster) {
@@ -2977,6 +3153,10 @@ async function findRosterStudentByClassCode(rawClassCode, rawUsername) {
 	const classCode = normalizeClassCode(rawClassCode || '');
 	const username = cleanMetaString(rawUsername || '', 80).toLowerCase();
 	if (!classCode || !username) return null;
+	// DEMO signs anyone in to the sample camp student, and running it also
+	// rewrote real camp accounts on an anonymous request (re-activating a
+	// deactivated camper, splitting a renamed one). Off unless switched on.
+	if (classCode === 'DEMO' && process.env.ENABLE_DEMO_LOGIN !== 'true') return null;
 	if (classCode === 'DEMO') await ensureSummerDemoStudent();
 	const roster = await ensureStudentPortalUsernames();
 	const classItem = classCode === 'DEMO'
@@ -4835,10 +5015,17 @@ async function requireFllAuth(req, res, next) {
 			return res.redirect(302, fllLoginUrlFor(req));
 		}
 		const users = await readFllUsers();
-		const user = users.find((candidate) => candidate.id === session.userId);
+		// A deactivated account must lose access at once, not whenever its
+		// session happens to expire — the session slides for 7 days with use, so
+		// a deactivated student or coach could otherwise keep working
+		// indefinitely. The camp and coach-portal gates already checked this.
+		const user = users.find((candidate) => candidate.id === session.userId && candidate.active !== false);
 		if (!user) {
 			fllSessions.delete(session.token);
 			clearFllSessionCookie(res);
+			if (req.path.startsWith('/api/')) {
+				return res.status(401).json({ success: false, message: 'FLL login required' });
+			}
 			return res.redirect(302, fllLoginUrlFor(req));
 		}
 		req.fllUser = user;
@@ -5472,7 +5659,7 @@ app.get(['/fll-hub/student', '/fll-hub/student/'], requireFllAuth, (req, res) =>
 	res.sendFile(path.join(fllHubDir, 'student-dashboard.html'));
 });
 
-app.post('/api/fll/login', async (req, res) => {
+app.post('/api/fll/login', loginLimiter, async (req, res) => {
 	try {
 		// Class-code login: students use the same class code + username as the Student Hub.
 		const classCode = normalizeClassCode(req.body.classCode || '');
@@ -8881,6 +9068,9 @@ app.get('/dev/*', (req, res, next) => {
 	req.url = `/dev/${req.params[0]}`;
 	codeLabApp(req, res, next);
 });
+// Code Lab's own sign-in is limited here, before the request is handed over.
+app.post(['/api/login', '/codelab/api/login'], loginLimiter);
+
 app.use('/codelab/api', (req, res, next) => {
 	req.url = `/api${req.url}`;
 	codeLabApp(req, res, next);
@@ -8954,7 +9144,7 @@ app.get(['/camp-hub/coach', '/camp-hub/coach/'], requireCampAuth, (req, res) => 
 	res.sendFile(path.join(campHubDir, 'coach.html'));
 });
 
-app.post('/api/camp/login', async (req, res) => {
+app.post('/api/camp/login', loginLimiter, async (req, res) => {
 	try {
 		// Class-code login: campers use the same class code + username as the Student Hub.
 		const classCode = normalizeClassCode(req.body.classCode || '');
@@ -10624,6 +10814,7 @@ initializeFllDataDir()
 	.then(() => initializeCoachDataDir())
 	.then(() => initializeMasterRoster())
 	.then(() => scrubRosterLoginNotes())
+	.then(() => rotateGuessableClassCodes())
 	.then(() => syncFllTeamClasses())
 	.then(() => ensureFllSponsorsAssignments())
 	.then(() => migrateSummer2026RosterData())

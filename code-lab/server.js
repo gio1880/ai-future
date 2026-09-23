@@ -120,13 +120,19 @@ function initializeDataFiles() {
     fs.mkdirSync(DATA_DIR, { recursive: true });
   }
 
-  // Initialize students.json with default teacher and developer
+  // Initialize students.json with a teacher and a developer account.
+  // These used to be created with fixed passwords written right here in the
+  // (public) source and printed to the log, so anyone could sign in as the
+  // teacher. Now each password comes from an environment variable, or is
+  // random if none is set — shown once, in this first-boot log only.
   if (!fs.existsSync(STUDENTS_FILE)) {
+    const teacherPassword = process.env.CODELAB_TEACHER_PASSWORD || crypto.randomBytes(12).toString('base64url');
+    const developerPassword = process.env.CODELAB_DEVELOPER_PASSWORD || crypto.randomBytes(12).toString('base64url');
     const defaultTeacher = {
       id: 'teacher-default',
       name: 'Teacher',
       username: 'teacher',
-      password_hash: hashPassword('pylearn2026'),
+      password_hash: hashPassword(teacherPassword),
       role: 'teacher',
       created_at: new Date().toISOString()
     };
@@ -135,15 +141,39 @@ function initializeDataFiles() {
       id: 'developer-default',
       name: 'Developer',
       username: 'developer',
-      password_hash: hashPassword('devreview2026'),
+      password_hash: hashPassword(developerPassword),
       role: 'developer',
       created_at: new Date().toISOString()
     };
 
     fs.writeFileSync(STUDENTS_FILE, JSON.stringify([defaultTeacher, defaultDeveloper], null, 2));
-    console.log('\n✓ Created default teacher account');
-    console.log('  Default teacher account: username=teacher, password=pylearn2026');
-    console.log('  Default developer account: username=developer, password=devreview2026\n');
+    console.log('\n✓ Created the Code Lab teacher and developer accounts');
+    if (!process.env.CODELAB_TEACHER_PASSWORD) console.log(`  teacher password (shown once, change it): ${teacherPassword}`);
+    if (!process.env.CODELAB_DEVELOPER_PASSWORD) console.log(`  developer password (shown once, change it): ${developerPassword}`);
+  }
+
+  // Accounts still on the OLD built-in passwords were created by earlier
+  // versions and those passwords are public. If a replacement is configured,
+  // swap it in; otherwise say so loudly on every boot until someone does.
+  try {
+    const accounts = JSON.parse(fs.readFileSync(STUDENTS_FILE, 'utf8'));
+    const oldDefaults = { teacher: ['pylearn2026', 'CODELAB_TEACHER_PASSWORD'], developer: ['devreview2026', 'CODELAB_DEVELOPER_PASSWORD'] };
+    let rotated = false;
+    for (const account of Array.isArray(accounts) ? accounts : []) {
+      const known = oldDefaults[String(account.username || '').toLowerCase()];
+      if (!known || !account.password_hash || !verifyPassword(known[0], account.password_hash)) continue;
+      const replacement = process.env[known[1]];
+      if (replacement) {
+        account.password_hash = hashPassword(replacement);
+        rotated = true;
+        console.log(`✓ Code Lab "${account.username}" moved off its old public default password.`);
+      } else {
+        console.warn(`⚠ SECURITY: Code Lab "${account.username}" still uses its old PUBLIC default password. Set ${known[1]} and restart, or change it in Code Lab.`);
+      }
+    }
+    if (rotated) fs.writeFileSync(STUDENTS_FILE, JSON.stringify(accounts, null, 2));
+  } catch (err) {
+    console.warn('Could not check Code Lab accounts for old default passwords:', err.message);
   }
 
   // Initialize progress.json as empty object
@@ -331,6 +361,25 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.use(express.json());
+
+// This folder is served as static files, and it also holds the accounts,
+// progress and server source. Requests are reached through the main server's
+// proxies too, where "/api/../data/students.json" used to walk straight into
+// the data folder. Refuse any "..", and anything under data/ or _platform/,
+// however the URL is spelled. (_platform is still served, behind a login, by
+// the /dev route further down.)
+app.use((req, res, next) => {
+  let decoded;
+  try { decoded = decodeURIComponent(req.path || ''); } catch (err) { return res.status(404).send('Not found'); }
+  const parts = decoded.split(/[\\/]+/);
+  if (parts.includes('..') || decoded.includes('\0')) return res.status(404).send('Not found');
+  const rel = parts.filter((p) => p && p !== '.').join('/').toLowerCase();
+  if (rel === 'data' || rel.startsWith('data/') || rel.startsWith('_platform')
+    || rel === 'server.js' || /credential|\.bak$|\.backup$|^\.env/.test(rel.split('/').pop() || '')) {
+    return res.status(404).send('Not found');
+  }
+  return next();
+});
 app.use(express.static(__dirname));
 
 // Serve FLL assessment assets (SVG diagrams)
