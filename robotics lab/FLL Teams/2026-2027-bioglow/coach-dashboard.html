@@ -217,12 +217,18 @@
     :root[data-theme="dark"] .ov-chip.wait { color: #e8b964; }
     :root[data-theme="dark"] .ov-chip.flag { color: #f2a9a2; }
     :root[data-theme="dark"] .ov-chip.done { color: #81c995; }
+    :root[data-theme="dark"] .sub-badge-redo,
+    :root[data-theme="dark"] .rv-redo,
+    :root[data-theme="dark"] .rv-redo-note strong { color: #e8b964 !important; }
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) .dash-nav-btn[aria-current="page"],
       :root:not([data-theme="light"]) .ov-time { color: #8ab4f8; }
       :root:not([data-theme="light"]) .ov-chip.wait { color: #e8b964; }
       :root:not([data-theme="light"]) .ov-chip.flag { color: #f2a9a2; }
       :root:not([data-theme="light"]) .ov-chip.done { color: #81c995; }
+      :root:not([data-theme="light"]) .sub-badge-redo,
+      :root:not([data-theme="light"]) .rv-redo,
+      :root:not([data-theme="light"]) .rv-redo-note strong { color: #e8b964 !important; }
     }
 
     .panel { display: none; }
@@ -465,6 +471,7 @@
     .sub-badge-new { background: var(--tint-amber); color: #b06000; }
     .sub-badge-done { background: var(--tint-green); color: #1e8e5a; }
     .sub-badge-stale { background: var(--tint-red); color: #d93025; }
+    .sub-badge-redo { background: var(--tint-amber); color: #b06000; }
     .rv-box { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--s-line-2); }
     .rv-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--t-muted); margin-bottom: 6px; }
     .rv-meta { font-size: 11.5px; color: var(--t-faint); margin-bottom: 8px; }
@@ -473,6 +480,13 @@
     .rv-feedback { flex: 1; min-width: 200px; border: 1.5px solid var(--s-line-2); border-radius: 10px; padding: 8px 11px; font: inherit; font-size: 13px; background: var(--s-card); color: var(--t-ink); }
     .rv-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .rv-save { padding: 8px 16px !important; font-size: 13px !important; }
+    /* Sending work back is a bigger deal than saving a comment, so the button
+       reads as a warning rather than another grey action. */
+    .rv-redo { border-color: #e8b964 !important; color: #b06000 !important; }
+    .rv-redo:hover { background: var(--tint-amber) !important; }
+    .rv-redo-note { background: var(--tint-amber); border-radius: var(--r-3); padding: 9px 12px;
+      margin-bottom: 8px; font-size: var(--fs-caption); color: var(--t-body); }
+    .rv-redo-note strong { color: #b06000; }
 
     .sub-badge-req { background: var(--tint-amber); color: #b06000; }
     .sub-badge-open { background: var(--tint-blue); color: #1a73e8; }
@@ -505,7 +519,7 @@
     .visibility-toggle input { width: 18px; height: 18px; accent-color: #1e8e5a; }
     .visibility-toolbar { display: grid; grid-template-columns: 1fr 190px auto auto; gap: 10px; align-items: end; margin-bottom: 14px; }
     .visibility-lessons { border: 1.5px solid var(--s-line); border-radius: 12px; overflow: hidden; max-height: 560px; overflow-y: auto; }
-    .visibility-row { display: grid; grid-template-columns: minmax(240px, 1fr) 150px 180px; gap: 10px; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--s-subtle); font-size: 13px; }
+    .visibility-row { display: grid; grid-template-columns: minmax(240px, 1fr) 150px 180px auto; gap: 10px; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--s-subtle); font-size: 13px; }
     .visibility-row:last-child { border-bottom: none; }
     .visibility-row-toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; min-width: 0; }
     .visibility-row input[type="checkbox"] { width: 17px; height: 17px; accent-color: #1e8e5a; flex-shrink: 0; }
@@ -515,6 +529,10 @@
     .visibility-due-label { color: var(--t-faint); font-size: 11px; font-weight: 700; }
     .visibility-row-date { border: 1.5px solid var(--s-line-2); border-radius: 8px; padding: 6px 8px; font-size: 12px; font-weight: 600; font-family: inherit; color: var(--t-ink); }
     .visibility-row-date:focus { outline: none; border-color: #1e8e5a; }
+    /* Roughly how long a lesson takes. Sits beside the due date and uses the
+       same control so the pair reads as one "when / how long" group. */
+    .visibility-row-mins { display: flex; align-items: center; gap: 6px; }
+    .visibility-row-mins-input { width: 72px; }
     .visibility-actions { display: flex; gap: 10px; align-items: center; margin-top: 14px; }
     .visibility-bulk-btn { border: 1.5px solid var(--s-line-2); background: var(--s-card); border-radius: 9px; padding: 9px 13px; font-weight: 800; cursor: pointer; }
 
@@ -731,7 +749,7 @@
       .visibility-areas { grid-template-columns: 1fr 1fr; }
       .visibility-toolbar { grid-template-columns: 1fr; }
       .visibility-row { grid-template-columns: 1fr; gap: 6px; }
-      .visibility-row-meta, .visibility-row-due { grid-column: 1; }
+      .visibility-row-meta, .visibility-row-due, .visibility-row-mins { grid-column: 1; }
       .topbar { flex-wrap: wrap; gap: 8px; padding: 12px 16px; }
       .wrap { padding: 16px 12px 50px; }
       .team-card { padding: 16px; }
@@ -844,11 +862,12 @@
     .fl-desc-txt { font-size:12.5px; color:var(--t-muted); margin-top:2px; }
     .fl-meta { font-size:11.5px; color:var(--t-faint); margin-top:3px; }
     .fl-del:hover { color:#d93025 !important; border-color:#d93025 !important; }
-    .visibility-row.aud-row { grid-template-columns: minmax(200px, 1fr) auto minmax(140px, 190px) 180px; row-gap: 8px; }
+    .visibility-row.aud-row { grid-template-columns: minmax(200px, 1fr) auto minmax(140px, 190px) 180px auto; row-gap: 8px; }
     .aud-row > .aud-warn, .aud-row > .aud-picker { grid-column: 1 / -1; }
     @media (max-width: 760px) {
       .visibility-row.aud-row { grid-template-columns: 1fr auto; }
-      .aud-row > .visibility-row-meta, .aud-row > .visibility-row-due { grid-column: 1 / -1; }
+      .aud-row > .visibility-row-meta, .aud-row > .visibility-row-due,
+      .aud-row > .visibility-row-mins { grid-column: 1 / -1; }
     }
     .aud-tag { font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:50px;
       background:var(--tint-blue); color:#174ea6; text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; }
@@ -2305,7 +2324,8 @@
                 ${photos.length ? `<span class="sub-count">📷 ${photos.length}</span>` : ''}
                 ${files ? '<span class="sub-count">📎</span>' : ''}
                 ${sub.reopenRequest && !sub.reopenRequest.declinedAt ? '<span class="sub-badge sub-badge-req">✋ Wants to redo</span>' : ''}
-                ${sub.reopened ? '<span class="sub-badge sub-badge-open">🔓 Open</span>' : ''}
+                ${sub.redo ? '<span class="sub-badge sub-badge-redo">↩ Redo asked</span>' : ''}
+                ${sub.reopened && !sub.redo ? '<span class="sub-badge sub-badge-open">🔓 Open</span>' : ''}
                 ${sub.flag ? '<span class="sub-badge sub-badge-flag">⚠️ Flagged</span>' : ''}
                 ${(sub.sharedWith || []).length ? `<span class="sub-badge sub-badge-share">👥 +${sub.sharedWith.length}</span>` : ''}
                 ${reviewBadge(sub.review)}
@@ -2570,10 +2590,16 @@
       const meta = review.reviewedAt
         ? `<div class="rv-meta">Last read by ${escapeHtml(review.reviewedBy || 'Coach')} · ${escapeHtml(formatSubmittedAt(review.reviewedAt))}${review.stale ? ' — the student has changed it since' : ''}</div>`
         : '';
+      // a redo is not a quiet reopen: say so in the panel as well as the row
+      const redoNote = sub.redo ? `
+        <div class="rv-redo-note">
+          <strong>↩ Redo asked</strong> by ${escapeHtml(sub.redo.by || 'a coach')} · ${escapeHtml(formatSubmittedAt(sub.redo.at))}
+          ${sub.redo.note ? `<br>“${escapeHtml(sub.redo.note)}”` : ''}
+        </div>` : '';
       return `
         <div class="rv-box">
           <div class="rv-title">📋 Your review</div>
-          ${meta}
+          ${meta}${redoNote}
           <div class="rv-row">
             <select class="rv-level" id="rv-level-${i}">${options}</select>
             <input class="rv-feedback" id="rv-feedback-${i}" type="text"
@@ -2584,6 +2610,8 @@
               ${review.reviewedAt && !review.stale ? 'Update review' : 'Mark as read'}
             </button>
             ${review.reviewedAt ? `<button class="visibility-bulk-btn" onclick="clearReview('${escapeHtml(sub.id)}')">Clear</button>` : ''}
+            <button class="visibility-bulk-btn rv-redo" onclick="requestRedo('${escapeHtml(sub.id)}', ${i})"
+              title="Send this back: the student is asked to do it again, and your feedback goes with it">↩ Request redo</button>
             <span class="form-msg" id="rv-msg-${i}"></span>
           </div>
         </div>`;
@@ -2700,6 +2728,51 @@
       } catch (err) {
         msg.textContent = err.message;
         msg.className = 'form-msg error';
+      }
+    }
+
+    // ── Asking for a redo ─────────────────────────────────────────────────
+    // One call: the note the coach typed becomes both the written feedback and
+    // the reason the work was sent back, so the student never gets a lesson
+    // reopened with no word about why.
+    async function requestRedo(submissionId, i) {
+      const msg = document.getElementById(`rv-msg-${i}`);
+      const box = document.getElementById(`rv-feedback-${i}`);
+      const levelBox = document.getElementById(`rv-level-${i}`);
+      let note = (box?.value || '').trim();
+      if (!note) {
+        const answer = prompt('What should they do differently? The student sees this, so keep it short and kind:');
+        if (answer === null) return;
+        note = String(answer).trim();
+        if (!note) {
+          if (msg) {
+            msg.textContent = 'Add a short note first — work sent back with no explanation just confuses them.';
+            msg.className = 'form-msg error';
+          }
+          box?.focus();
+          return;
+        }
+        if (box) box.value = note;   // leave the coach looking at what was sent
+      }
+      const warning = 'Ask for a redo?\n\n'
+        + 'The lesson reopens and the student is told to do it again, with your note:\n\n'
+        + '“' + note + '”';
+      if (!confirm(warning)) return;
+      if (msg) { msg.textContent = 'Sending…'; msg.className = 'form-msg'; }
+      try {
+        const result = await api(`/api/fll/coach/task-submissions/${encodeURIComponent(submissionId)}/access`, {
+          method: 'PATCH',
+          body: JSON.stringify({ action: 'redo', note, feedback: note, level: levelBox ? levelBox.value : '' })
+        });
+        const idx = submissionsCache.findIndex(s => s.id === submissionId);
+        if (result.submission && idx >= 0) submissionsCache[idx] = result.submission;
+        else await loadSubmissions(true);   // fall back to a full reload
+        renderSubmissions();                // also refreshes the badge and Overview
+        reopenSubmission(submissionId);
+        showToast('Redo asked — the student can work on it again ↩');
+      } catch (err) {
+        if (msg) { msg.textContent = err.message; msg.className = 'form-msg error'; }
+        else alert(err.message);
       }
     }
 
@@ -2857,6 +2930,7 @@
     function ovReviewChip(sub) {
       if (sub.flag) return '<span class="ov-chip flag">Flagged</span>';
       if (sub.review && sub.review.stale) return '<span class="ov-chip wait">Changed since read</span>';
+      if (sub.redo) return '<span class="ov-chip wait">Redo asked</span>';
       if (sub.reopenRequest && !sub.reopenRequest.declinedAt) return '<span class="ov-chip wait">Reopen asked</span>';
       if (sub.review) return `<span class="ov-chip done">${escapeHtml(OV_REVIEW_CHIPS[sub.review.level] || 'Read')}</span>`;
       return '<span class="ov-chip wait">Not read yet</span>';
@@ -3656,8 +3730,16 @@
       const byTitle = new Map();
       for (const task of (roster?.tasks || [])) {
         const title = String(task.title || '').trim();
-        if (!title || byTitle.has(title)) continue;
-        byTitle.set(title, { title, category: canonicalVisibilityCategory(task.category), dueDate: task.dueDate || '' });
+        if (!title) continue;
+        if (!byTitle.has(title)) {
+          byTitle.set(title, { title, category: canonicalVisibilityCategory(task.category), dueDate: task.dueDate || '', minutes: null });
+        }
+        // the time estimate lives on every team copy; take the first copy that
+        // has one so a lesson added to a new team later still shows it
+        const entry = byTitle.get(title);
+        if (entry.minutes == null && Number.isInteger(Number(task.minutes)) && Number(task.minutes) > 0) {
+          entry.minutes = Number(task.minutes);
+        }
       }
       return [...byTitle.values()].sort((a, b) => a.category.localeCompare(b.category) || a.dueDate.localeCompare(b.dueDate) || a.title.localeCompare(b.title));
     }
@@ -3872,6 +3954,13 @@
             <span class="visibility-due-label">Due</span>
             <input class="visibility-row-date" type="date" value="${lesson.dueDate ? escapeHtml(String(lesson.dueDate).slice(0,10)) : ''}" data-title="${escapeHtml(lesson.title)}" onchange="setLessonDueDate(this.dataset.title, this.value)">
           </span>
+          <span class="visibility-row-mins">
+            <span class="visibility-due-label">Minutes</span>
+            <input class="visibility-row-date visibility-row-mins-input" type="number" min="1" max="240" step="1" inputmode="numeric"
+              placeholder="–" value="${lesson.minutes ? escapeHtml(String(lesson.minutes)) : ''}" data-title="${escapeHtml(lesson.title)}"
+              onchange="setLessonMinutes(this.dataset.title, this.value)"
+              title="Roughly how long this lesson takes, 1–240 minutes (updates every team's copy)">
+          </span>
           ${draftNote}
           ${warn}
           ${picker}
@@ -4007,6 +4096,13 @@
             <span class="visibility-due-label">Due</span>
             <input class="visibility-row-date" type="date" value="${lesson.dueDate ? escapeHtml(String(lesson.dueDate).slice(0,10)) : ''}" data-title="${escapeHtml(lesson.title)}" onchange="setLessonDueDate(this.dataset.title, this.value)" title="Set the due date for this lesson (updates every team's copy)">
           </span>
+          <span class="visibility-row-mins">
+            <span class="visibility-due-label">Minutes</span>
+            <input class="visibility-row-date visibility-row-mins-input" type="number" min="1" max="240" step="1" inputmode="numeric"
+              placeholder="–" value="${lesson.minutes ? escapeHtml(String(lesson.minutes)) : ''}" data-title="${escapeHtml(lesson.title)}"
+              onchange="setLessonMinutes(this.dataset.title, this.value)"
+              title="Roughly how long this lesson takes, 1–240 minutes (updates every team's copy)">
+          </span>
         </div>`;
       }).join('') : '<div class="empty" style="padding:20px">No lessons match this filter.</div>';
     }
@@ -4024,6 +4120,42 @@
         message.className = 'form-msg success';
       } catch (err) {
         message.textContent = err.message || 'Could not update the due date.';
+        message.className = 'form-msg error';
+      }
+    }
+
+    // How long a lesson takes. Saved per title group exactly as the due date
+    // is, so every team's copy of the lesson agrees. Empty clears it.
+    async function setLessonMinutes(title, raw) {
+      const message = document.getElementById('visibilityMessage');
+      const text = String(raw == null ? '' : raw).trim();
+      let minutes = null;
+      if (text) {
+        const value = Number(text);
+        if (!Number.isInteger(value) || value < 1 || value > 240) {
+          // refused here rather than sent, so nothing half-saves
+          message.textContent = `“${text}” was not saved — minutes must be a whole number between 1 and 240 (leave it empty to clear).`;
+          message.className = 'form-msg error';
+          return;
+        }
+        minutes = value;
+      }
+      try {
+        const result = await api('/api/fll/coach/assignments', {
+          method: 'PATCH',
+          body: JSON.stringify({ matchTitle: title, minutes })
+        });
+        (roster.tasks || []).forEach(t => {
+          if (t.title !== title) return;
+          if (minutes === null) delete t.minutes; else t.minutes = minutes;
+        });
+        message.textContent = minutes
+          ? `✓ “${title}” is about ${minutes} minutes (${result.count} team cop${result.count === 1 ? 'y' : 'ies'}).`
+          : `✓ Time estimate cleared for “${title}” (${result.count} team cop${result.count === 1 ? 'y' : 'ies'}).`;
+        message.className = 'form-msg success';
+        refreshTeamPreview();   // students see this, so the preview must not go stale
+      } catch (err) {
+        message.textContent = err.message || 'Could not save the time estimate.';
         message.className = 'form-msg error';
       }
     }

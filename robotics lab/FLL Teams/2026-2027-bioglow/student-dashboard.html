@@ -1008,6 +1008,7 @@
     .rb-waiting { background: var(--tint-amber); color: #b06000; }
     .rb-recheck { background: var(--tint-amber); color: #b06000; }
     .rb-flag    { background: var(--tint-red);   color: #d93025; }
+    .rb-redo    { background: var(--tint-amber); color: #b06000; }
 
     .preseason-task-meta {
       display: flex;
@@ -1636,6 +1637,8 @@
     .ta-chip-due  { background: var(--tint-amber); color: #e37400; border-color: transparent; }
     .ta-chip-team { background: var(--tint-blue); color: #1a73e8; border-color: transparent; }
     .ta-chip-done { background: var(--tint-green); color: #1e8e5a; border-color: transparent; }
+    .ta-chip-time { background: var(--s-subtle); color: var(--t-muted); }
+    .ta-chip-redo { background: var(--tint-amber); color: #b06000; border-color: transparent; }
 
     .ta-sec-head {
       padding: var(--sp-6) 28px var(--sp-2);
@@ -1787,6 +1790,25 @@
     .ta-flag-note { font-size: 13.5px; font-style: italic; color: var(--t-body); margin-top: 6px; }
     .ta-flag-meta { font-size: 11.5px; color: var(--t-muted); margin-top: 6px; }
     .ta-flag-help { font-size: 12.5px; color: var(--t-body); margin-top: 8px; }
+
+    /* ── coach asked for a redo ── */
+    .ta-redo-banner {
+      display: flex; gap: var(--sp-3); align-items: flex-start;
+      background: var(--tint-amber);
+      border: 1.5px solid var(--s-line-2);
+      border-radius: var(--r-4);
+      padding: var(--sp-3) var(--sp-4);
+      margin: 0 28px var(--sp-3);
+    }
+    .ta-redo-icon { font-size: 20px; flex-shrink: 0; line-height: 1.2; }
+    .ta-redo-body { min-width: 0; }
+    .ta-redo-title { font-weight: 800; font-size: var(--fs-sm); color: var(--t-ink); }
+    .ta-redo-note {
+      font-size: var(--fs-meta); font-style: italic; color: var(--t-body);
+      margin-top: var(--sp-2); overflow-wrap: anywhere;
+    }
+    .ta-redo-meta { font-size: var(--fs-caption); color: var(--t-muted); margin-top: var(--sp-2); overflow-wrap: anywhere; }
+    .ta-redo-help { font-size: var(--fs-meta); color: var(--t-body); margin-top: var(--sp-2); }
 
     /* ── locked / reopen ── */
     .ta-reopen-row {
@@ -2911,6 +2933,7 @@
       .landing-info-row, .landing-info-row.three-col { grid-template-columns: 1fr; }
       .ta-header, .ta-lesson-body, .ta-questions-section, .ta-photo-section, .ta-submit-row, .ta-submit-hint, .ta-done-banner, .ta-sec-head, .ta-next { padding-left: 18px; padding-right: 18px; }
       .ta-empty-note { margin-left: 18px; margin-right: 18px; }
+      .ta-redo-banner { margin-left: 18px; margin-right: 18px; }
       .ta-video-section { padding: 14px 18px; }
       .ta-title { font-size: 18px; }
       .ta-submit-row { flex-direction: column; align-items: stretch; }
@@ -4958,11 +4981,24 @@
       const chips = [];
       if (typeLabel) chips.push(`<span class="ta-chip ta-chip-type">${typeLabel}</span>`);
       if (task.dueDate) chips.push(`<span class="ta-chip ta-chip-due">📅 Due ${escapeHtml(formatDate(task.dueDate))}</span>`);
+      // Roughly how long this takes, when the lesson says so.
+      const minutes = Math.round(Number(task.minutes));
+      if (Number.isFinite(minutes) && minutes > 0) {
+        chips.push(`<span class="ta-chip ta-chip-time">⏱️ About ${minutes} minute${minutes === 1 ? '' : 's'}</span>`);
+      }
       const where = { class: '📋 Work on this in class', home: '🏠 Work on this at home', lab: '🔬 Work on this in the lab' }[task.workContext];
       if (where) chips.push(`<span class="ta-chip">${where}</span>`);
       if (task.shareAnswersWithTeam === true) chips.push('<span class="ta-chip ta-chip-team">👥 Team work — your team can read your answers</span>');
       else if (task.shareAnswersWithTeam === false) chips.push('<span class="ta-chip">✏️ Your own work</span>');
-      if (submitted) chips.push('<span class="ta-chip ta-chip-done">✅ Turned in</span>');
+      // While a redo is outstanding the work IS still turned in, but telling a
+      // child "Turned in" right beside "do this one again" reads as a
+      // contradiction. The banner above says what is happening; this says what
+      // to do about it.
+      if (submitted) {
+        chips.push(redoInfo(task.id)
+          ? '<span class="ta-chip ta-chip-redo">🔁 Have another go</span>'
+          : '<span class="ta-chip ta-chip-done">✅ Turned in</span>');
+      }
       return chips.length ? `<div class="ta-chips">${chips.join('')}</div>` : '';
     }
 
@@ -5227,7 +5263,9 @@
       ` : '';
 
       // ── submit / done state ──
-      const reopenedNow = !!((latestData.submissionState || {})[taskId] || {}).reopened;
+      // A redo unlocks the lesson the same way a reopen does.
+      const redoNow = !!redoInfo(taskId);
+      const reopenedNow = !!((latestData.submissionState || {})[taskId] || {}).reopened || redoNow;
       const submitArea = (submitted && !reopenedNow) ? `
         ${integrityFlagBanner(taskId)}
         <div class="ta-done-banner">
@@ -5242,7 +5280,7 @@
         ${reopenRow(taskId)}
       ` : `
         ${integrityFlagBanner(taskId)}
-        ${reopenedNow ? reopenRow(taskId) : ''}
+        ${reopenedNow && !redoNow ? reopenRow(taskId) : ''}
         ${integrityNotice()}
         <div class="ta-submit-row">
           <button class="ta-submit-btn" onclick="submitTaskAnswers('${escapeHtml(userId)}','${escapeHtml(taskId)}')">
@@ -5273,6 +5311,8 @@
             <h1 class="ta-title">${escapeHtml(task.title)}</h1>
             ${taskMetaChips(task, submitted, typeLabel)}
           </div>
+
+          ${redoBanner(taskId)}
 
           <section class="ta-sec">
             ${taskSectionHead('📌 What to do', 'Read this first.')}
@@ -6060,7 +6100,7 @@
 
       const candidates = (data.tasks || []).filter(t => {
         const st = state[t.id] || {};
-        if (st.reopened || st.flag) return true;          // coach needs something back
+        if (st.reopened || st.redo || st.flag) return true; // coach needs something back
         if (submitted[t.id]) return false;                // already handed in
         return t.status !== 'done';
       });
@@ -6069,6 +6109,7 @@
       const score = (t) => {
         const st = state[t.id] || {};
         if (st.flag) return 0;                            // talk to your coach first
+        if (st.redo) return 1;                            // then redo what was sent back
         if (st.reopened) return 1;                        // then fix what was sent back
         const due = t.dueDate ? new Date(t.dueDate + 'T00:00:00') : null;
         if (due && due < today) return 2;                 // then overdue
@@ -6103,6 +6144,7 @@
 
       let tag = 'Start here', why = '', tone = '';
       if (st.flag)          { tag = 'Talk to your coach'; why = 'Your coach raised something about this one.'; tone = ' is-urgent'; }
+      else if (st.redo)     { tag = 'Redo asked';         why = 'Your coach asked you to try this one again.'; tone = ' is-urgent'; }
       else if (st.reopened) { tag = 'Sent back to you';   why = 'Your coach reopened this so you can change it.'; tone = ' is-urgent'; }
       else if (overdue)     { tag = 'Overdue';            why = `This was due ${Math.abs(days)} day${Math.abs(days) !== 1 ? 's' : ''} ago — start with this one.`; tone = ' is-late'; }
       else if (days === 0)  { tag = 'Due today';          why = 'This one is due today.'; tone = ' is-late'; }
@@ -6110,7 +6152,7 @@
 
       return `
         <div class="next-up${tone}" onclick="openTask('${escapeHtml(task.id)}')">
-          <div class="next-up-icon">${st.flag ? '⚠️' : st.reopened ? '🔓' : overdue ? '⏰' : '👉'}</div>
+          <div class="next-up-icon">${st.flag ? '⚠️' : st.redo ? '🔁' : st.reopened ? '🔓' : overdue ? '⏰' : '👉'}</div>
           <div class="next-up-body">
             <div class="next-up-tag">${escapeHtml(tag)}</div>
             <div class="next-up-title">${escapeHtml(task.title)}</div>
@@ -6190,12 +6232,21 @@
       if (state.flag) {
         return '<span class="row-badge rb-flag">⚠️ Coach wants to talk</span>';
       }
+      // A redo comes with the coach's feedback, so it would otherwise read as
+      // "Graded" — which tells the student nothing is left to do. Needing to
+      // act beats having been marked, so it is checked first.
+      if (state.redo) {
+        return '<span class="row-badge rb-redo">🔁 Redo asked</span>';
+      }
       if (review && !review.stale) {
         const level = REVIEW_LEVEL_LABELS[review.level];
         return `<span class="row-badge rb-graded">✅ Graded${level ? ' · ' + escapeHtml(level) : ''}</span>`;
       }
       if (review && review.stale) {
         return '<span class="row-badge rb-recheck">🔄 Coach is re-checking</span>';
+      }
+      if (state.redo) {
+        return '<span class="row-badge rb-redo">🔁 Redo asked</span>';
       }
       if (state.reopened) {
         return '<span class="row-badge rb-open">🔓 Reopened — redo it</span>';
@@ -6333,6 +6384,34 @@
             ${flag.note ? `<div class="ta-flag-note">“${escapeHtml(flag.note)}”</div>` : ''}
             <div class="ta-flag-meta">Raised by ${escapeHtml(flag.flaggedBy || 'your coach')} · ${escapeHtml(formatDate(flag.flaggedAt))}</div>
             <div class="ta-flag-help">This is not a punishment. Go through the work together, explain how you made it, and fix anything that needs a source.</div>
+          </div>
+        </div>`;
+    }
+
+    // ── Coach sent the work back to be done again ──
+    // Carries the coach's reason, so when a redo is on a lesson this is the
+    // ONE banner that explains it — the plain "reopened" note is skipped.
+    function redoInfo(taskId) {
+      const state = (latestData.submissionState || {})[taskId] || {};
+      return state.redo || null;
+    }
+
+    function redoBanner(taskId) {
+      const redo = redoInfo(taskId);
+      if (!redo) return '';
+      const who = redo.by ? escapeHtml(String(redo.by)) : '';
+      const when = redo.at ? escapeHtml(formatTimestamp(redo.at)) : '';
+      const meta = who && when ? `Asked by ${who} · ${when}`
+        : who ? `Asked by ${who}`
+        : when ? `Asked ${when}` : '';
+      return `
+        <div class="ta-redo-banner">
+          <div class="ta-redo-icon">🔁</div>
+          <div class="ta-redo-body">
+            <div class="ta-redo-title">Your coach asked you to try this one again</div>
+            ${redo.note ? `<div class="ta-redo-note">“${escapeHtml(String(redo.note))}”</div>` : ''}
+            ${meta ? `<div class="ta-redo-meta">${meta}</div>` : ''}
+            <div class="ta-redo-help">Your answers are open again. Change what you need to, then turn it in.</div>
           </div>
         </div>`;
     }

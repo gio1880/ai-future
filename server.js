@@ -4763,6 +4763,8 @@ async function getFllStudentDashboardFor(user, { preview = false } = {}) {
 		if (submission.review) myReviews[taskId] = submission.review;
 		mySubmissionState[taskId] = {
 			reopened: submission.reopened ? { at: submission.reopened.at, by: submission.reopened.by, note: submission.reopened.note || '' } : null,
+			// a redo is a reopen the student is asked to act on, not just an unlock
+			redo: submission.redo ? { at: submission.redo.at, by: submission.redo.by, note: submission.redo.note || '' } : null,
 			reopenRequest: sharedFrom ? null : (submission.reopenRequest || null),
 			flag: submission.flag ? { type: submission.flag.type, note: submission.flag.note || '', flaggedBy: submission.flag.flaggedBy, flaggedAt: submission.flag.flaggedAt } : null,
 			sharedFrom: sharedFrom || null
@@ -7420,6 +7422,22 @@ app.delete('/api/fll/coach/resources/:id', requireFllAuth, requireFllCoach, asyn
 
 // ── Coach: assignment management (creates one task per student) ───────────
 
+// Roughly how long a lesson takes, shown to students as "About 15 minutes".
+// Whole minutes 1-240; null/'' clears it. Deliberately NOT a content field:
+// like dueDate it is coach-owned once live, so "Update lesson content" must
+// never overwrite it.
+// Returns { ok, value } where value === null means clear, undefined means
+// the request did not mention minutes at all.
+function readFllLessonMinutes(raw) {
+	if (raw === undefined) return { ok: true, value: undefined };
+	if (raw === null || raw === '') return { ok: true, value: null };
+	const num = Number(raw);
+	if (!Number.isInteger(num) || num < 1 || num > 240) {
+		return { ok: false, message: 'Time estimate must be a whole number of minutes between 1 and 240, or empty to clear it' };
+	}
+	return { ok: true, value: num };
+}
+
 app.post('/api/fll/coach/assignments', requireFllAuth, requireFllCoach, async (req, res) => {
 	try {
 		const title = cleanMetaString(req.body.title || '', 160);
@@ -7428,6 +7446,8 @@ app.post('/api/fll/coach/assignments', requireFllAuth, requireFllCoach, async (r
 		if (!title || !category || !/^\d{4}-\d{2}-\d{2}$/.test(dueDate)) {
 			return res.status(400).json({ success: false, message: 'Title, FLL area, and a valid due date are required' });
 		}
+		const minutes = readFllLessonMinutes(req.body.minutes);
+		if (!minutes.ok) return res.status(400).json({ success: false, message: minutes.message });
 		const teamId = cleanMetaString(req.body.teamId || '', 80) || 'all';
 		const [tasks, teams, settings] = await Promise.all([
 			readJsonFile(fllTasksFile, []),
@@ -7456,6 +7476,7 @@ app.post('/api/fll/coach/assignments', requireFllAuth, requireFllCoach, async (r
 			status: 'todo',
 			dueDate,
 			questions: Array.isArray(req.body.questions) ? req.body.questions : [],
+			...(minutes.value ? { minutes: minutes.value } : {}),
 			createdBy: req.fllUser.id,
 			createdAt: now,
 			updatedAt: now
@@ -7488,10 +7509,17 @@ app.patch('/api/fll/coach/assignments', requireFllAuth, requireFllCoach, async (
 		if (!group.length) {
 			return res.status(404).json({ success: false, message: 'Assignment not found' });
 		}
+		const minutes = readFllLessonMinutes(req.body.minutes);
+		if (!minutes.ok) return res.status(400).json({ success: false, message: minutes.message });
 		const now = new Date().toISOString();
 		group.forEach((task) => {
 			if (typeof req.body.dueDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(req.body.dueDate)) {
 				task.dueDate = req.body.dueDate;
+			}
+			// applied to every copy of the lesson, exactly as dueDate is
+			if (minutes.value !== undefined) {
+				if (minutes.value === null) delete task.minutes;
+				else task.minutes = minutes.value;
 			}
 			if (typeof req.body.title === 'string' && req.body.title.trim()) {
 				task.title = cleanMetaString(req.body.title, 160);
@@ -8623,6 +8651,28 @@ app.patch('/api/fll/coach/task-submissions/:id/access', requireFllAuth, requireF
 				note: cleanMetaString(req.body.note || '', 500)
 			};
 			delete submission.reopenRequest;
+		} else if (action === 'redo') {
+			// A redo is a reopen plus a marker, so the student is told to do the
+			// work again rather than just finding the lesson unlocked. Both the
+			// note and (optionally) the written feedback are applied in this one
+			// call, on the same array, saved by the one write below - they can
+			// never half-apply.
+			const at = new Date().toISOString();
+			const by = req.fllUser.name || 'Coach';
+			const note = cleanMetaString(req.body.note || '', 500);
+			submission.reopened = { at, by, note };
+			submission.redo = { at, by, note };
+			delete submission.reopenRequest;
+			if (typeof req.body.feedback === 'string') {
+				// saved exactly the way PATCH /api/fll/coach/task-submissions/:id saves it
+				const level = cleanMetaString(req.body.level || '', 20).toLowerCase();
+				submission.review = {
+					reviewedAt: at,
+					reviewedBy: by,
+					level: FLL_REVIEW_LEVELS.includes(level) ? level : '',
+					feedback: cleanMetaString(req.body.feedback, 2000)
+				};
+			}
 		} else if (action === 'decline') {
 			submission.reopenRequest = {
 				...(submission.reopenRequest || {}),
@@ -8633,6 +8683,7 @@ app.patch('/api/fll/coach/task-submissions/:id/access', requireFllAuth, requireF
 		} else if (action === 'lock') {
 			delete submission.reopened;
 			delete submission.reopenRequest;
+			delete submission.redo;
 		} else if (action === 'flag') {
 			const type = cleanMetaString(req.body.flagType || '', 40);
 			if (!FLL_FLAG_TYPES.includes(type)) {
@@ -8718,7 +8769,9 @@ app.post('/api/fll/tasks/:id/submission', requireFllAuth, requireFllStudent, asy
 			if (previous.review) payload.review = { ...previous.review, stale: true };
 			// a flag is a record of what happened — it survives a resubmission
 			if (previous.flag) payload.flag = previous.flag;
-			// the reopen was for this one edit; close it again
+			// the reopen was for this one edit; close it again. `payload` is built
+			// fresh above, so `reopened`, `reopenRequest` and the `redo` marker are
+			// all dropped here: turning the work in again answers the redo request.
 			payload.resubmitCount = (previous.resubmitCount || 0) + 1;
 			submissions[existingIndex] = payload;
 		} else {
