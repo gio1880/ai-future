@@ -43,25 +43,187 @@
     .page-title { font-size: 24px; font-weight: 900; letter-spacing: -0.02em; margin: 0 0 6px; }
     .page-sub { font-size: 14px; color: var(--t-muted); margin: 0; }
 
-    .tabs {
+    /* -- Six areas down the side, the same sixteen panels inside --------
+       Sixteen buttons in one row gave a coach no sense of where they were.
+       Nothing was rewritten: every panel is untouched, they are just
+       grouped, and the old tab buttons become the second-level row. */
+    .dash {
+      display: grid;
+      grid-template-columns: 236px minmax(0, 1fr);
+      gap: var(--sp-6);
+      align-items: start;
+    }
+    .dash-nav {
+      position: sticky;
+      top: 78px;
       display: flex;
-      gap: 8px;
-      margin-bottom: 24px;
+      flex-direction: column;
+      gap: var(--sp-1);
+      background: var(--s-card);
+      border: 1.5px solid var(--s-line);
+      border-radius: var(--r-4);
+      padding: var(--sp-2);
+    }
+    .dash-nav-btn {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      border-radius: var(--r-2);
+      padding: 10px var(--sp-3);
+      font-family: inherit;
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      color: var(--t-muted);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .dash-nav-ico { font-size: var(--fs-body); line-height: 1; }
+    .dash-nav-label { flex: 1; }
+    .dash-nav-btn:hover { background: var(--s-subtle); color: var(--t-ink); }
+    .dash-nav-btn[aria-current="page"] { background: var(--tint-blue); color: #174ea6; }
+    .dash-nav-badge {
+      min-width: 20px;
+      padding: 2px 7px;
+      border-radius: var(--r-pill);
+      background: #1a73e8;
+      color: #fff;
+      font-size: var(--fs-caption);
+      font-weight: 800;
+      text-align: center;
+    }
+    .dash-nav-badge[hidden] { display: none; }
+    .dash-main { min-width: 0; }
+
+    /* second level: the original tab buttons, restyled as a sub-row */
+    .subtabs {
+      display: flex;
+      gap: var(--sp-2);
+      margin-bottom: var(--sp-6);
       flex-wrap: wrap;
     }
+    .subtabs[hidden] { display: none; }
     .tab-btn {
       background: var(--s-card);
       border: 1.5px solid var(--s-line);
-      border-radius: 50px;
-      padding: 9px 20px;
-      font-size: 14px;
+      border-radius: var(--r-pill);
+      padding: 8px 16px;
+      font-family: inherit;
+      font-size: var(--fs-meta);
       font-weight: 700;
       color: var(--t-muted);
       cursor: pointer;
       transition: all 0.15s;
     }
-    .tab-btn.active { background: #1e8e5a; border-color: #1e8e5a; color: white; }
-    .tab-btn:not(.active):hover { border-color: #1e8e5a; color: #1e8e5a; }
+    .tab-btn.active { background: var(--btn-solid); border-color: var(--btn-solid); color: white; }
+    .tab-btn:not(.active):hover { border-color: #1a73e8; color: #1a73e8; }
+
+    /* phone: the areas collapse into a wrapping row above the content */
+    @media (max-width: 900px) {
+      .dash { grid-template-columns: minmax(0, 1fr); gap: var(--sp-4); }
+      .dash-nav { position: static; flex-direction: row; flex-wrap: wrap; }
+      .dash-nav-btn { width: auto; flex: 1 1 auto; justify-content: center; padding: 9px var(--sp-3); }
+      .dash-nav-label { flex: 0 1 auto; }
+    }
+
+    /* -- Overview: what do I do today -- */
+    .ov-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--sp-4);
+      margin-bottom: var(--sp-6);
+    }
+    .ov-card {
+      background: var(--s-card);
+      border: 1.5px solid var(--s-line);
+      border-radius: var(--r-4);
+      padding: var(--card-pad);
+    }
+    .ov-stat-label {
+      font-size: var(--fs-caption); font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--t-faint);
+    }
+    .ov-stat-value {
+      font-size: var(--fs-stat); font-weight: 900; letter-spacing: -0.02em;
+      color: var(--t-ink); margin-top: var(--sp-2); line-height: 1;
+    }
+    .ov-stat-note { font-size: var(--fs-meta); color: var(--t-muted); margin-top: var(--sp-2); }
+    .ov-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--sp-4);
+    }
+    .ov-card-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--sp-3); margin-bottom: var(--sp-4);
+    }
+    .ov-card-title { font-size: var(--fs-lead); font-weight: 900; margin: 0; color: var(--t-ink); }
+    .ov-list { display: flex; flex-direction: column; gap: var(--sp-2); }
+    .ov-row {
+      display: flex; align-items: center; gap: var(--sp-3);
+      width: 100%; text-align: left;
+      background: var(--s-raised);
+      border: 1px solid var(--s-line);
+      border-radius: var(--r-3);
+      padding: var(--sp-3);
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .ov-row:hover { border-color: #1a73e8; }
+    .ov-row-main { flex: 1; min-width: 0; }
+    .ov-row-title { font-size: var(--fs-sm); font-weight: 800; color: var(--t-ink); }
+    .ov-row-meta { font-size: var(--fs-caption); color: var(--t-muted); margin-top: 2px; }
+    .ov-time {
+      font-size: var(--fs-meta); font-weight: 800; color: #174ea6;
+      background: var(--tint-blue); border-radius: var(--r-pill);
+      padding: 4px 10px; white-space: nowrap;
+    }
+    .ov-chip {
+      font-size: var(--fs-caption); font-weight: 800; border-radius: var(--r-pill);
+      padding: 3px 10px; white-space: nowrap;
+    }
+    .ov-chip.wait { background: var(--tint-amber); color: #8a5a00; }
+    .ov-chip.flag { background: var(--tint-red); color: #b3261e; }
+    .ov-chip.done { background: var(--tint-green); color: #1e8e5a; }
+    .ov-empty { font-size: var(--fs-sm); color: var(--t-muted); line-height: 1.6; }
+    .ov-empty-actions { margin-top: var(--sp-3); }
+    .ov-next {
+      background: var(--btn-solid); color: #fff;
+      border-radius: var(--r-4); padding: var(--card-pad); margin-bottom: var(--sp-6);
+    }
+    .ov-next-label {
+      font-size: var(--fs-caption); font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.05em; opacity: 0.75;
+    }
+    .ov-next-title { font-size: var(--fs-h2); font-weight: 900; margin: var(--sp-2) 0 var(--sp-1); }
+    .ov-next-meta { font-size: var(--fs-meta); opacity: 0.85; }
+    .ov-next .btn-ghost {
+      margin-top: var(--sp-4); background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.35); color: #fff;
+    }
+    .ov-next .btn-ghost:hover { background: rgba(255,255,255,0.22); border-color: #fff; color: #fff; }
+    @media (max-width: 640px) {
+      .ov-stats, .ov-grid { grid-template-columns: minmax(0, 1fr); }
+      .ov-card { padding: var(--sp-4); }
+    }
+
+    /* In the dark the pale tints become dark blocks, so the text sitting on
+       them has to lift or it disappears. Light values stay as they are. */
+    :root[data-theme="dark"] .dash-nav-btn[aria-current="page"],
+    :root[data-theme="dark"] .ov-time { color: #8ab4f8; }
+    :root[data-theme="dark"] .ov-chip.wait { color: #e8b964; }
+    :root[data-theme="dark"] .ov-chip.flag { color: #f2a9a2; }
+    :root[data-theme="dark"] .ov-chip.done { color: #81c995; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .dash-nav-btn[aria-current="page"],
+      :root:not([data-theme="light"]) .ov-time { color: #8ab4f8; }
+      :root:not([data-theme="light"]) .ov-chip.wait { color: #e8b964; }
+      :root:not([data-theme="light"]) .ov-chip.flag { color: #f2a9a2; }
+      :root:not([data-theme="light"]) .ov-chip.done { color: #81c995; }
+    }
 
     .panel { display: none; }
     .panel.active { display: block; }
@@ -554,11 +716,11 @@
 
     /* ── Wide, screen-centered calendar on large displays ── */
     @media (min-width: 1140px) {
+      /* still wider than the column it lives in, but measured from the main
+         column's left edge so it never runs under the areas sidebar */
       #panel-calendar.active {
-        width: min(1320px, calc(100vw - 48px));
+        width: calc(100vw - ((100vw - 1080px) / 2) - 260px - 24px);
         position: relative;
-        left: 50%;
-        transform: translateX(-50%);
       }
       #panel-calendar .cal-cell { min-height: 96px; }
     }
@@ -750,26 +912,55 @@
       <p class="page-sub">Manage your returning and new teams, import rosters, and generate student logins for the 2026-2027 BIOGLOW season.</p>
     </div>
 
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="teams" onclick="showTab('teams')">🏆 Teams</button>
+    <div class="dash">
+      <nav class="dash-nav" aria-label="Dashboard areas">
+        <button type="button" class="dash-nav-btn" data-area="overview" aria-current="page" onclick="showArea('overview')"><span class="dash-nav-ico" aria-hidden="true">🏠</span><span class="dash-nav-label">Overview</span></button>
+        <button type="button" class="dash-nav-btn" data-area="teams" onclick="showArea('teams')"><span class="dash-nav-ico" aria-hidden="true">👥</span><span class="dash-nav-label">Teams &amp; Students</span></button>
+        <button type="button" class="dash-nav-btn" data-area="teaching" onclick="showArea('teaching')"><span class="dash-nav-ico" aria-hidden="true">📚</span><span class="dash-nav-label">Teaching</span></button>
+        <button type="button" class="dash-nav-btn" data-area="review" onclick="showArea('review')"><span class="dash-nav-ico" aria-hidden="true">📬</span><span class="dash-nav-label">Review</span><span class="dash-nav-badge" id="reviewBadge" hidden>0</span></button>
+        <button type="button" class="dash-nav-btn" data-area="resources" onclick="showArea('resources')"><span class="dash-nav-ico" aria-hidden="true">🧰</span><span class="dash-nav-label">Resources &amp; Tools</span></button>
+        <button type="button" class="dash-nav-btn" data-area="calendar" onclick="showArea('calendar')"><span class="dash-nav-ico" aria-hidden="true">📅</span><span class="dash-nav-label">Calendar</span></button>
+      </nav>
+
+      <div class="dash-main">
+
+    <div class="subtabs" data-area="teams" hidden>
+      <button class="tab-btn" data-tab="teams" onclick="showTab('teams')">🏆 Teams</button>
+      <button class="tab-btn" data-tab="newteam" onclick="showTab('newteam')">🆕 Create Team</button>
       <button class="tab-btn" data-tab="students" onclick="showTab('students')">👥 All Students</button>
-      <button class="tab-btn" data-tab="rankings" onclick="showTab('rankings')">📊 Rankings</button>
       <button class="tab-btn" data-tab="add" onclick="showTab('add')">➕ Add Student</button>
       <button class="tab-btn" data-tab="bulk" onclick="showTab('bulk')">📥 Bulk Import</button>
-      <button class="tab-btn" data-tab="newteam" onclick="showTab('newteam')">🆕 Create Team</button>
-      <button class="tab-btn" data-tab="calendar" onclick="showTab('calendar')">📅 Calendar</button>
-      <button class="tab-btn" data-tab="curriculum" onclick="showTab('curriculum')">📚 Curriculum</button>
       <button class="tab-btn" data-tab="logins" onclick="showTab('logins')">🔑 Student Logins</button>
       <button class="tab-btn" data-tab="online" onclick="showTab('online')">🟢 Who's Online</button>
-      <button class="tab-btn" data-tab="robots" onclick="showTab('robots')">🎯 Robot Tuning</button>
-      <button class="tab-btn" data-tab="submissions" onclick="showTab('submissions')">📬 Submitted Work</button>
-      <button class="tab-btn" data-tab="ideamaps" onclick="showTab('ideamaps')">🌳 Idea Maps</button>
-      <button class="tab-btn" data-tab="files" onclick="showTab('files')">📁 Files</button>
+    </div>
+    <div class="subtabs" data-area="teaching" hidden>
+      <button class="tab-btn" data-tab="curriculum" onclick="showTab('curriculum')">📚 Curriculum</button>
       <button class="tab-btn" data-tab="visibility" onclick="showTab('visibility')">🎛️ Areas &amp; Lessons</button>
       <button class="tab-btn" data-tab="live" onclick="showTab('live')">Live Slides</button>
+      <button class="tab-btn" data-tab="ideamaps" onclick="showTab('ideamaps')">🌳 Idea Maps</button>
+    </div>
+    <div class="subtabs" data-area="review" hidden>
+      <button class="tab-btn" data-tab="submissions" onclick="showTab('submissions')">📬 Submitted Work</button>
+      <button class="tab-btn" data-tab="rankings" onclick="showTab('rankings')">📊 Rankings</button>
+    </div>
+    <div class="subtabs" data-area="resources" hidden>
+      <button class="tab-btn" data-tab="files" onclick="showTab('files')">📁 Files</button>
+      <button class="tab-btn" data-tab="robots" onclick="showTab('robots')">🎯 Robot Tuning</button>
+    </div>
+    <div class="subtabs" data-area="calendar" hidden>
+      <button class="tab-btn" data-tab="calendar" onclick="showTab('calendar')">📅 Calendar</button>
     </div>
 
-    <div class="panel active" id="panel-teams"><div id="teamsGrid" class="team-grid">Loading…</div></div>
+    <div class="panel active" id="panel-overview">
+      <div class="ov-stats" id="ovStats"></div>
+      <div id="ovNext"></div>
+      <div class="ov-grid">
+        <div class="ov-card" id="ovSessionsCard"></div>
+        <div class="ov-card" id="ovReviewCard"></div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-teams"><div id="teamsGrid" class="team-grid">Loading…</div></div>
     <div class="panel" id="panel-students"><div id="studentsWrap">Loading…</div></div>
     <div class="panel" id="panel-rankings">
       <div class="ranking-summary">
@@ -1160,6 +1351,9 @@
         </div>
       </div>
     </div>
+
+      </div>
+    </div>
   </div>
 
   <div class="toast" id="toast"></div>
@@ -1198,9 +1392,48 @@
       setTimeout(() => toast.classList.remove('show'), 2400);
     }
 
+    // -- Six areas over the same sixteen panels --------------------------
+    // The panels and their ids never changed, so showTab('files') and every
+    // other existing caller still works: it now also selects the area the
+    // panel lives in. Order inside an area is the order of its sub-row.
+    const DASH_AREAS = {
+      overview:  ['overview'],
+      teams:     ['teams', 'newteam', 'students', 'add', 'bulk', 'logins', 'online'],
+      teaching:  ['curriculum', 'visibility', 'live', 'ideamaps'],
+      review:    ['submissions', 'rankings'],
+      resources: ['files', 'robots'],
+      calendar:  ['calendar']
+    };
+    const AREA_OF_PANEL = {};
+    const areaLastPanel = {};
+    Object.keys(DASH_AREAS).forEach(area => {
+      areaLastPanel[area] = DASH_AREAS[area][0];
+      DASH_AREAS[area].forEach(panel => { AREA_OF_PANEL[panel] = area; });
+    });
+    let currentArea = 'overview';
+
+    // Picking an area opens its first panel, or the one you were last on
+    // inside it, so coming back does not throw away where you were.
+    function showArea(area) {
+      if (!DASH_AREAS[area]) return;
+      showTab(areaLastPanel[area] || DASH_AREAS[area][0]);
+    }
+
     function showTab(id) {
+      const area = AREA_OF_PANEL[id] || currentArea;
+      currentArea = area;
+      areaLastPanel[area] = id;
+      document.querySelectorAll('.dash-nav-btn').forEach(b => {
+        if (b.dataset.area === area) b.setAttribute('aria-current', 'page');
+        else b.removeAttribute('aria-current');
+      });
+      // an area with a single panel needs no second-level row
+      document.querySelectorAll('.subtabs').forEach(row => {
+        row.hidden = row.dataset.area !== area || (DASH_AREAS[row.dataset.area] || []).length < 2;
+      });
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
       document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === `panel-${id}`));
+      if (id === 'overview') renderOverview();
       if (id === 'live') loadLiveSlides();
       if (id === 'rankings') loadRankings();
       if (id === 'visibility') {
@@ -1998,6 +2231,9 @@
         ? `Showing ${rows.length} of ${submissionsCache.length} submission${submissionsCache.length !== 1 ? 's' : ''}.`
         : '';
       summary.className = 'form-msg';
+      // reviewing something changes both the sidebar count and the Overview
+      updateReviewBadge();
+      renderOverview();
 
       // when one assignment is picked, show who still owes it
       let missingHtml = '';
@@ -2506,6 +2742,239 @@
              d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
     }
 
+    // -- Overview: what do I do today ------------------------------------
+    // Every number here comes from data the dashboard already loads:
+    // the coach roster (teams, students, tasks, season) and the submissions
+    // list. Nothing is fetched that was not fetched before, and a card that
+    // cannot be derived is left out rather than filled with a guess.
+
+    const OV_WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const OV_REVIEW_CHIPS = { beginning: 'Beginning', developing: 'Developing', accomplished: 'Accomplished', exceeds: 'Exceeds' };
+
+    function ovStartOfToday() {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      return d;
+    }
+
+    // 'YYYY-MM-DD...' -> local midnight, so a due date never slides a day
+    function ovDateOnly(value) {
+      const text = String(value || '').slice(0, 10);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) return null;
+      const parts = text.split('-').map(Number);
+      return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+
+    function ovDayLabel(date) {
+      return date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+    }
+
+    // meetingDays is free text a coach typed ("Saturday 10:00 AM"), so read
+    // the weekday names and a clock time out of it instead of pretending
+    // there is a schedule table behind it.
+    function ovTeamWeekdays(team) {
+      const text = String(team && team.meetingDays || '').toLowerCase();
+      const days = [];
+      OV_WEEKDAYS.forEach((name, i) => {
+        const low = name.toLowerCase();
+        if (new RegExp('\\b(' + low + 's?|' + low.slice(0, 3) + ')\\b').test(text)) days.push(i);
+      });
+      return days;
+    }
+
+    function ovTeamTime(team) {
+      const m = String(team && team.meetingDays || '').match(/\b\d{1,2}(:\d{2})?\s*[ap]\.?m\.?/i);
+      return m ? m[0].replace(/\s+/g, ' ').toUpperCase() : '';
+    }
+
+    function ovSessionsOn(weekday) {
+      return (roster && roster.teams || []).filter(t => ovTeamWeekdays(t).includes(weekday));
+    }
+
+    function ovNextSessionDate() {
+      const today = ovStartOfToday();
+      for (let i = 1; i <= 21; i++) {
+        const d = new Date(today);
+        d.setDate(d.getDate() + i);
+        if (ovSessionsOn(d.getDay()).length) return d;
+      }
+      return null;
+    }
+
+    // the same test the Submitted Work filter uses for "needs another look"
+    function ovNeedsReview() {
+      return (submissionsCache || []).filter(s => !(s.review && !s.review.stale));
+    }
+
+    // Students the coach should look at: active students with nothing turned
+    // in at all, plus anyone whose work carries a flag. Both are read off
+    // the submissions list, not invented.
+    function ovStudentsNeedingHelp() {
+      const students = (roster && roster.students || []).filter(s => s.active !== false);
+      const subs = submissionsCache || [];
+      const hasWork = new Set(subs.map(s => s.studentId));
+      const flagged = new Set(subs.filter(s => s.flag).map(s => s.studentId));
+      const nothing = students.filter(s => !hasWork.has(s.id));
+      const flaggedStudents = students.filter(s => hasWork.has(s.id) && flagged.has(s.id));
+      return { nothing, flagged: flaggedStudents, total: nothing.length + flaggedStudents.length };
+    }
+
+    // nearest dated thing ahead of us across assignments, the season and
+    // the regions; null when the data holds nothing upcoming
+    function ovNextMilestone() {
+      const today = ovStartOfToday();
+      const items = [];
+      const seen = new Set();
+      (roster && roster.tasks || []).forEach(task => {
+        if (!task.dueDate) return;
+        // team-01 holds the lesson TEMPLATES, not a real team — its due dates
+        // are the curriculum's own, and "team-01" means nothing to a coach
+        if (task.teamId === 'team-01') return;
+        const known = (roster.teams || []).some(t => t.id === task.teamId);
+        const key = `${task.title}|${String(task.dueDate).slice(0, 10)}|${task.teamId}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        items.push({
+          date: ovDateOnly(task.dueDate),
+          title: task.title,
+          meta: known ? `Assignment due · ${teamLabel(task.teamId)}` : 'Assignment due',
+          area: 'calendar'
+        });
+      });
+      const season = (roster && roster.season) || {};
+      (season.regions || []).forEach(region => {
+        if (region.predictedQualifier) items.push({ date: ovDateOnly(region.predictedQualifier), title: 'Qualifier (predicted)', meta: region.name || '', area: 'calendar' });
+        if (region.predictedChampionship) items.push({ date: ovDateOnly(region.predictedChampionship), title: 'Championship (predicted)', meta: region.name || '', area: 'calendar' });
+      });
+      if (season.releaseDate) items.push({ date: ovDateOnly(season.releaseDate), title: `${season.name || 'Season'} game release`, meta: 'All teams', area: 'calendar' });
+      (roster && roster.teams || []).forEach(team => {
+        if (team.firstCompetition) items.push({ date: ovDateOnly(team.firstCompetition), title: 'First competition', meta: teamLabel(team.id), area: 'calendar' });
+      });
+      const upcoming = items.filter(i => i.date && i.date >= today).sort((a, b) => a.date - b.date);
+      return upcoming[0] || null;
+    }
+
+    function ovReviewChip(sub) {
+      if (sub.flag) return '<span class="ov-chip flag">Flagged</span>';
+      if (sub.review && sub.review.stale) return '<span class="ov-chip wait">Changed since read</span>';
+      if (sub.reopenRequest && !sub.reopenRequest.declinedAt) return '<span class="ov-chip wait">Reopen asked</span>';
+      if (sub.review) return `<span class="ov-chip done">${escapeHtml(OV_REVIEW_CHIPS[sub.review.level] || 'Read')}</span>`;
+      return '<span class="ov-chip wait">Not read yet</span>';
+    }
+
+    // the Review sidebar badge: how many submissions are still waiting
+    function updateReviewBadge() {
+      const badge = document.getElementById('reviewBadge');
+      if (!badge) return;
+      const count = submissionsCache ? ovNeedsReview().length : 0;
+      badge.textContent = count > 99 ? '99+' : String(count);
+      badge.hidden = count === 0;
+    }
+
+    // a session row opens the team's card in Teams & Students
+    function ovOpenTeam(teamId) {
+      showTab('teams');
+      const card = document.getElementById(`team-card-${teamId}`);
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // a waiting-for-review row opens Submitted Work
+    function ovOpenSubmission(submissionId) {
+      showTab('submissions');
+      const search = document.getElementById('subSearch');
+      const sub = (submissionsCache || []).find(s => s.id === submissionId);
+      if (search && sub) { search.value = sub.studentName || ''; renderSubmissions(); }
+    }
+
+    function renderOverview() {
+      const statsEl = document.getElementById('ovStats');
+      if (!statsEl) return;
+      if (!roster) { statsEl.innerHTML = '<div class="ov-card"><div class="ov-stat-note">Loading…</div></div>'; return; }
+
+      const today = ovStartOfToday();
+      const sessions = ovSessionsOn(today.getDay());
+      const waiting = ovNeedsReview();
+      const help = ovStudentsNeedingHelp();
+      const loaded = !!submissionsCache;
+
+      statsEl.innerHTML = `
+        <div class="ov-card">
+          <div class="ov-stat-label">Today's sessions</div>
+          <div class="ov-stat-value">${sessions.length}</div>
+          <div class="ov-stat-note">${escapeHtml(ovDayLabel(today))}</div>
+        </div>
+        <div class="ov-card">
+          <div class="ov-stat-label">Needs review</div>
+          <div class="ov-stat-value">${loaded ? waiting.length : '—'}</div>
+          <div class="ov-stat-note">${loaded
+            ? `of ${submissionsCache.length} submission${submissionsCache.length === 1 ? '' : 's'} turned in`
+            : 'Loading submitted work…'}</div>
+        </div>
+        <div class="ov-card">
+          <div class="ov-stat-label">Students needing help</div>
+          <div class="ov-stat-value">${loaded ? help.total : '—'}</div>
+          <div class="ov-stat-note">${loaded
+            ? `${help.nothing.length} with nothing turned in · ${help.flagged.length} flagged`
+            : 'Loading submitted work…'}</div>
+        </div>`;
+
+      // dark panel — only when the data actually has something ahead
+      const next = ovNextMilestone();
+      const nextEl = document.getElementById('ovNext');
+      nextEl.innerHTML = next ? `
+        <div class="ov-next">
+          <div class="ov-next-label">Next up</div>
+          <div class="ov-next-title">${escapeHtml(next.title)}</div>
+          <div class="ov-next-meta">${escapeHtml(ovDayLabel(next.date))} · ${escapeHtml(next.meta)}</div>
+          <button type="button" class="btn-ghost" onclick="showArea('calendar')">Open the calendar</button>
+        </div>` : '';
+
+      // today's sessions
+      const sessionsCard = document.getElementById('ovSessionsCard');
+      const nextSession = sessions.length ? null : ovNextSessionDate();
+      sessionsCard.innerHTML = `
+        <div class="ov-card-head"><h2 class="ov-card-title">Today's sessions</h2></div>
+        ${sessions.length ? `<div class="ov-list">${sessions.map(team => {
+          const time = ovTeamTime(team);
+          return `<button type="button" class="ov-row" onclick="ovOpenTeam('${escapeHtml(team.id)}')">
+            <span class="ov-time">${escapeHtml(time || 'Time not set')}</span>
+            <span class="ov-row-main">
+              <span class="ov-row-title">${escapeHtml(team.nickname || team.name)}</span>
+              <span class="ov-row-meta">${escapeHtml(team.room || 'Room not set')} · ${teamMembers(team.id).length} student${teamMembers(team.id).length === 1 ? '' : 's'}</span>
+            </span>
+            <span class="ov-chip wait">Open team</span>
+          </button>`;
+        }).join('')}</div>` : `
+          <div class="ov-empty">
+            No sessions today.${nextSession ? ` Next session: ${escapeHtml(ovDayLabel(nextSession))}.` : ' No meeting days are set on any team yet.'}
+            <div class="ov-empty-actions"><button type="button" class="btn-ghost" onclick="showArea('calendar')">Open the calendar</button></div>
+          </div>`}`;
+
+      // waiting for review
+      const reviewCard = document.getElementById('ovReviewCard');
+      const firstFew = waiting
+        .slice()
+        .sort((a, b) => String(b.submittedAt || '').localeCompare(String(a.submittedAt || '')))
+        .slice(0, 5);
+      reviewCard.innerHTML = `
+        <div class="ov-card-head">
+          <h2 class="ov-card-title">Waiting for review</h2>
+          ${loaded && waiting.length ? `<button type="button" class="btn-ghost" onclick="showArea('review')">See all ${waiting.length}</button>` : ''}
+        </div>
+        ${!loaded ? '<div class="ov-empty">Loading submitted work…</div>'
+          : firstFew.length ? `<div class="ov-list">${firstFew.map(sub => `
+            <button type="button" class="ov-row" onclick="ovOpenSubmission('${escapeHtml(sub.id)}')">
+              <span class="ov-row-main">
+                <span class="ov-row-title">${escapeHtml(sub.studentName || 'A student')}</span>
+                <span class="ov-row-meta">${escapeHtml(submissionLessonTitle(sub))} · ${escapeHtml(formatSubmittedAt(sub.submittedAt))}</span>
+              </span>
+              ${ovReviewChip(sub)}
+            </button>`).join('')}</div>`
+          : `<div class="ov-empty">Nothing waiting for review. Submitted work will appear here as students turn it in.
+            <div class="ov-empty-actions"><button type="button" class="btn-ghost" onclick="showArea('review')">Open Review</button></div>
+          </div>`}`;
+    }
+
     async function api(url, options = {}) {
       const response = await fetch(url, {
         headers: { 'Content-Type': 'application/json' },
@@ -2544,7 +3013,7 @@
         const members = teamMembers(team.id);
         const rubrics = Array.isArray(team.pastSeasons) ? team.pastSeasons : [];
         return `
-          <div class="team-card">
+          <div class="team-card" id="team-card-${escapeHtml(team.id)}">
             <div class="team-card-head">
               <div class="team-name">${escapeHtml(team.nickname || team.name)}</div>
               <span class="team-badge ${team.returning ? '' : 'new'}">${team.returning ? '↩ Returning' : '✦ New'}</span>
@@ -3830,7 +4299,11 @@
       window.location.href = '/fll-hub/login';
     }
 
-    loadRoster();
+    // Overview opens first and reads both the roster and the submissions,
+    // so both are loaded up front instead of waiting for a tab click.
+    loadRoster()
+      .then(() => { renderOverview(); return loadSubmissions(); })
+      .catch(() => {});
   </script>
 </body>
 </html>

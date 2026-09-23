@@ -1586,6 +1586,167 @@
       .ta-prompt-banner, .ta-context-slot { margin-left: 18px; margin-right: 18px; }
     }
 
+    /* ── lesson spine: breadcrumb, meta chips, section heads ── */
+    .ta-crumbs {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--sp-1);
+      font-size: var(--fs-caption);
+      font-weight: 700;
+      color: var(--t-muted);
+      margin-bottom: var(--sp-2);
+      min-width: 0;
+    }
+    .ta-crumb-link {
+      background: none;
+      border: none;
+      font: inherit;
+      color: #1a73e8;
+      cursor: pointer;
+      padding: 2px 0;
+      border-radius: var(--r-1);
+    }
+    .ta-crumb-link:hover { text-decoration: underline; }
+    .ta-crumb-link:focus-visible, .ta-next-row:focus-visible { outline: 2px solid #1a73e8; outline-offset: 2px; }
+    .ta-crumb-sep { color: var(--t-faint); }
+    .ta-crumb-now { color: var(--t-ink); overflow-wrap: anywhere; }
+
+    .ta-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+      margin-top: var(--sp-3);
+    }
+    .ta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: var(--fs-caption);
+      font-weight: 700;
+      border-radius: var(--r-pill);
+      padding: 5px 12px;
+      background: var(--s-subtle);
+      color: var(--t-muted);
+      border: 1px solid var(--s-line);
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+    .ta-chip-type { background: var(--tint-blue); color: #1a73e8; border-color: transparent; }
+    .ta-chip-due  { background: var(--tint-amber); color: #e37400; border-color: transparent; }
+    .ta-chip-team { background: var(--tint-blue); color: #1a73e8; border-color: transparent; }
+    .ta-chip-done { background: var(--tint-green); color: #1e8e5a; border-color: transparent; }
+
+    .ta-sec-head {
+      padding: var(--sp-6) 28px var(--sp-2);
+      border-top: 1.5px solid var(--s-subtle);
+    }
+    .ta-sec:first-of-type .ta-sec-head { border-top: none; }
+    .ta-sec-title {
+      font-size: var(--fs-lead);
+      font-weight: 900;
+      color: var(--t-ink);
+      letter-spacing: -0.01em;
+    }
+    .ta-sec-sub {
+      font-size: var(--fs-meta);
+      color: var(--t-muted);
+      margin-top: var(--sp-1);
+      line-height: 1.5;
+    }
+
+    /* short, kind line where a list would be */
+    .ta-empty-note {
+      margin: 0 28px var(--sp-6);
+      background: var(--s-raised);
+      border: 1.5px dashed var(--s-line-2);
+      border-radius: var(--r-4);
+      padding: var(--sp-4);
+      font-size: var(--fs-meta);
+      line-height: 1.6;
+      color: var(--t-muted);
+    }
+
+    /* what's next */
+    .ta-next { padding: 0 28px var(--sp-6); }
+    .ta-next-group + .ta-next-group { margin-top: var(--sp-4); }
+    .ta-next-label {
+      font-size: var(--fs-caption);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--t-faint);
+      margin-bottom: var(--sp-2);
+    }
+    .ta-next-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      width: 100%;
+      text-align: left;
+      background: var(--s-raised);
+      border: 1.5px solid var(--s-line);
+      border-radius: var(--r-4);
+      padding: var(--sp-3) var(--sp-4);
+      cursor: pointer;
+      color: var(--t-ink);
+      font-family: inherit;
+    }
+    .ta-next-row + .ta-next-row { margin-top: var(--sp-2); }
+    .ta-next-row:hover { border-color: #1a73e8; }
+    .ta-next-ico { font-size: 16px; flex-shrink: 0; }
+    .ta-next-text { flex: 1; min-width: 0; }
+    .ta-next-title {
+      display: block;
+      font-size: var(--fs-sm);
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+    .ta-next-meta {
+      display: block;
+      font-size: var(--fs-caption);
+      font-weight: 600;
+      color: var(--t-muted);
+      margin-top: 2px;
+    }
+    .ta-next-go { font-size: 18px; color: var(--t-faint); flex-shrink: 0; }
+
+    /* empty-state button, used wherever a list has nothing in it */
+    .empty-action {
+      margin-top: var(--sp-3);
+      background: var(--s-card);
+      border: 1.5px solid var(--s-line-2);
+      border-radius: var(--r-pill);
+      padding: var(--sp-2) var(--sp-4);
+      font-size: var(--fs-meta);
+      font-weight: 800;
+      color: var(--t-body);
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .empty-action:hover { border-color: #1a73e8; color: #1a73e8; }
+
+    /* empty lists elsewhere on the page */
+    .cv-value-empty {
+      margin-top: var(--sp-2);
+      font-size: var(--fs-caption);
+      line-height: 1.5;
+      color: var(--t-muted);
+    }
+    .cf-card-empty .cf-empty {
+      font-size: var(--fs-meta);
+      line-height: 1.6;
+      color: var(--t-muted);
+      padding: var(--sp-1) 0 var(--sp-1);
+    }
+    .cal-empty {
+      margin-top: var(--sp-3);
+      font-size: var(--fs-meta);
+      line-height: 1.6;
+      color: var(--t-muted);
+      text-align: center;
+    }
+
     /* ── academic integrity notice ── */
     .ta-integrity {
       border: 1.5px solid var(--s-line-2);
@@ -2748,7 +2909,8 @@
     @media (max-width: 600px) {
       .cat-grid { grid-template-columns: 1fr; }
       .landing-info-row, .landing-info-row.three-col { grid-template-columns: 1fr; }
-      .ta-header, .ta-lesson-body, .ta-questions-section, .ta-photo-section, .ta-submit-row, .ta-submit-hint, .ta-done-banner { padding-left: 18px; padding-right: 18px; }
+      .ta-header, .ta-lesson-body, .ta-questions-section, .ta-photo-section, .ta-submit-row, .ta-submit-hint, .ta-done-banner, .ta-sec-head, .ta-next { padding-left: 18px; padding-right: 18px; }
+      .ta-empty-note { margin-left: 18px; margin-right: 18px; }
       .ta-video-section { padding: 14px 18px; }
       .ta-title { font-size: 18px; }
       .ta-submit-row { flex-direction: column; align-items: stretch; }
@@ -4757,6 +4919,113 @@
       wireListeners();
     }
 
+    // ── Lesson spine: breadcrumb, meta chips, section heads, what's next ──
+    // The area card a lesson belongs to, matched the same loose way the
+    // landing page matches them (category or section, id or label).
+    function categoryForTask(task) {
+      const c = String((task && task.category) || '').toLowerCase();
+      const sec = String((task && task.section) || '').toLowerCase();
+      return CATEGORIES.find(cat =>
+        c === cat.id || c === cat.label.toLowerCase() || c.replace(/\s+/g, '-') === cat.id ||
+        sec === cat.id || sec.replace(/\s+/g, '-') === cat.id) || null;
+    }
+
+    // Home › area › this lesson. Both earlier steps use the page's own
+    // navigation, so the crumbs and the back button always agree.
+    function taskCrumbs(task) {
+      const cat = categoryForTask(task);
+      const areaLabel = cat ? cat.label : (task.category || 'Assignments');
+      const areaGo = cat ? `closeTask();openCategory('${cat.id}')` : 'closeTask();openCategory(null)';
+      return `
+        <div class="ta-back-row">
+          <nav class="ta-crumbs" aria-label="Where you are">
+            <span class="ta-crumb-link" role="button" tabindex="0"
+              onclick="closeTask();openCategory(null)"
+              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();closeTask();openCategory(null);}">🏠 Home</span>
+            <span class="ta-crumb-sep" aria-hidden="true">›</span>
+            <span class="ta-crumb-link" role="button" tabindex="0"
+              onclick="${areaGo}"
+              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();${areaGo}}">${escapeHtml(areaLabel)}</span>
+            <span class="ta-crumb-sep" aria-hidden="true">›</span>
+            <span class="ta-crumb-now" aria-current="page">${escapeHtml(task.title)}</span>
+          </nav>
+          <button class="ta-back-btn" onclick="closeTask()">← Back</button>
+        </div>`;
+    }
+
+    // One chip per thing we actually know about this lesson.
+    function taskMetaChips(task, submitted, typeLabel) {
+      const chips = [];
+      if (typeLabel) chips.push(`<span class="ta-chip ta-chip-type">${typeLabel}</span>`);
+      if (task.dueDate) chips.push(`<span class="ta-chip ta-chip-due">📅 Due ${escapeHtml(formatDate(task.dueDate))}</span>`);
+      const where = { class: '📋 Work on this in class', home: '🏠 Work on this at home', lab: '🔬 Work on this in the lab' }[task.workContext];
+      if (where) chips.push(`<span class="ta-chip">${where}</span>`);
+      if (task.shareAnswersWithTeam === true) chips.push('<span class="ta-chip ta-chip-team">👥 Team work — your team can read your answers</span>');
+      else if (task.shareAnswersWithTeam === false) chips.push('<span class="ta-chip">✏️ Your own work</span>');
+      if (submitted) chips.push('<span class="ta-chip ta-chip-done">✅ Turned in</span>');
+      return chips.length ? `<div class="ta-chips">${chips.join('')}</div>` : '';
+    }
+
+    function taskSectionHead(title, sub) {
+      return `
+        <div class="ta-sec-head">
+          <div class="ta-sec-title">${title}</div>
+          ${sub ? `<div class="ta-sec-sub">${sub}</div>` : ''}
+        </div>`;
+    }
+
+    // Lessons are copied per student as `base--studentId`, while priorLessons
+    // holds the base ids — so both sides are compared on the base.
+    function taskBaseId(id) { return String(id || '').split('--')[0]; }
+
+    // What came before this lesson, and what is due next in the same area.
+    function taskWhatsNext(data, task) {
+      const all = (data && data.tasks) || [];
+      const priors = (Array.isArray(task.priorLessons) ? task.priorLessons : [])
+        .map(pid => all.find(t => taskBaseId(t.id) === taskBaseId(pid)))
+        .filter(Boolean);
+      const cat = categoryForTask(task);
+      const sameArea = (t) => cat
+        ? categoryForTask(t) === cat
+        : String(t.category || '') === String(task.category || '');
+      const later = task.dueDate
+        ? all.filter(t => t.id !== task.id && t.dueDate && String(t.dueDate) > String(task.dueDate) && sameArea(t))
+            .sort((a, b) => String(a.dueDate).localeCompare(String(b.dueDate)))
+        : [];
+      const next = later[0] || null;
+      if (!priors.length && !next) return '';
+
+      const row = (t, ico, meta) => `
+        <div class="ta-next-row" role="button" tabindex="0"
+          onclick="openTask('${escapeHtml(t.id)}')"
+          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTask('${escapeHtml(t.id)}');}">
+          <span class="ta-next-ico" aria-hidden="true">${ico}</span>
+          <span class="ta-next-text">
+            <span class="ta-next-title">${escapeHtml(t.title)}</span>
+            ${meta ? `<span class="ta-next-meta">${meta}</span>` : ''}
+          </span>
+          <span class="ta-next-go" aria-hidden="true">›</span>
+        </div>`;
+
+      const areaLabel = cat ? cat.label : (task.category || 'this area');
+      return `
+        <section class="ta-sec">
+          ${taskSectionHead('🧭 What&rsquo;s next', 'Where this lesson sits in your work.')}
+          <div class="ta-next">
+            ${priors.length ? `
+              <div class="ta-next-group">
+                <div class="ta-next-label">You did this first</div>
+                ${priors.map(t => row(t, '↩', 'Open it again if you need to look something up')).join('')}
+              </div>` : ''}
+            ${next ? `
+              <div class="ta-next-group">
+                <div class="ta-next-label">Next in ${escapeHtml(areaLabel)}</div>
+                ${row(next, '➡', `Due ${escapeHtml(formatDate(next.dueDate))}`)}
+              </div>` : ''}
+          </div>
+        </section>`;
+    }
+
     // ── Task detail renderer ──────────────────────────────────────────────
     function renderTaskDetail(data, taskId) {
       const { user, tasks } = data;
@@ -4843,15 +5112,11 @@
           </div>
         </div>` : '';
 
-      // ── lesson body ──
-      const lessonHtml = task.description ? `
-        ${retiredBanner(task)}
-        ${innovationPromptBanner(task)}
-        <div class="ta-lesson-body">
-          ${renderMarkdownish(task.description)}
-        </div>
-        ${taskContextSlot(taskId)}
-      ` : '';
+      // ── lesson body ("What to do") ──
+      const bannersHtml = `${retiredBanner(task)}${innovationPromptBanner(task)}`;
+      const lessonBodyHtml = task.description
+        ? `<div class="ta-lesson-body">${renderMarkdownish(task.description)}</div>`
+        : `<div class="ta-empty-note">Your coach has not written the steps for this one yet. Ask them what to do in your next session — you can still answer below.</div>`;
 
       // ── example code block ──
       // A lesson can carry one snippet (codeExample) or several labelled ones
@@ -4973,7 +5238,7 @@
           </div>
         </div>
         ${sharedCreditNote(taskId)}
-        ${coachReviewBanner(taskId)}
+        ${coachReviewBanner(taskId) || '<div class="ta-empty-note">No feedback from your coach yet. When they read this, their note will show up right here.</div>'}
         ${reopenRow(taskId)}
       ` : `
         ${integrityFlagBanner(taskId)}
@@ -4990,42 +5255,51 @@
         <div class="ta-submit-hint" id="ta-submit-msg"></div>
       `;
 
+      // ── the spine: what to do → learn → respond → submit → what's next ──
+      const learnHtml = `${videoHtml}${videosHtml}${readingsHtml}${codeHtml}`;
+      const questionKind = task.type === 'video' ? 'Reflection questions'
+        : task.type === 'submission' ? 'Written response' : 'Comprehension check';
+      const hasQuestions = (task.questions || []).length > 0;
+      const responseBody = hasQuestions
+        ? `<div class="ta-questions-section"><div class="ta-questions-list">${questionsHtml}</div></div>`
+        : (photoHtml || fileHtml
+            ? ''
+            : `<div class="ta-empty-note">There is nothing to type for this one. Do the work, then press submit below so your coach knows you are done.</div>`);
+
       return `
-        <div class="ta-back-row">
-          <button class="ta-back-btn" onclick="closeTask()">← Back to Dashboard</button>
-        </div>
+        ${taskCrumbs(task)}
         <div class="ta-detail">
           <div class="ta-header">
-            <div class="ta-badges">
-              <span class="ta-badge ta-badge-type">${typeLabel}</span>
-              <span class="ta-badge ta-badge-ctx">${ctxIcon}</span>
-              ${task.dueDate ? `<span class="ta-badge ta-badge-due">📅 Due ${escapeHtml(formatDate(task.dueDate))}</span>` : ''}
-              ${submitted ? `<span class="ta-badge ta-badge-done">✅ Submitted</span>` : ''}
-            </div>
             <h1 class="ta-title">${escapeHtml(task.title)}</h1>
+            ${taskMetaChips(task, submitted, typeLabel)}
           </div>
 
-          ${videoHtml}
-          ${lessonHtml}
-          ${videosHtml}
-          ${readingsHtml}
-          ${codeHtml}
+          <section class="ta-sec">
+            ${taskSectionHead('📌 What to do', 'Read this first.')}
+            ${bannersHtml}
+            ${lessonBodyHtml}
+            ${taskContextSlot(taskId)}
+          </section>
 
-          ${(task.questions || []).length ? `
-            <div class="ta-questions-section">
-              <div class="ta-questions-title">
-                ✏️ ${task.type === 'video' ? 'Reflection Questions' : task.type === 'submission' ? 'Written Response' : 'Comprehension Check'}
-                <span class="ta-questions-sub">Answer all questions to submit</span>
-              </div>
-              <div class="ta-questions-list">
-                ${questionsHtml}
-              </div>
-            </div>
-          ` : ''}
+          ${learnHtml ? `
+            <section class="ta-sec">
+              ${taskSectionHead('🎬 Learn and watch', 'Use these before you write your answers.')}
+              ${learnHtml}
+            </section>` : ''}
 
-          ${photoHtml}
-          ${fileHtml}
-          ${submitArea}
+          <section class="ta-sec">
+            ${taskSectionHead('✏️ Your response', hasQuestions ? `${questionKind} — answer all questions to submit` : 'Show your work here.')}
+            ${responseBody}
+            ${photoHtml}
+            ${fileHtml}
+          </section>
+
+          <section class="ta-sec">
+            ${taskSectionHead('✅ Review and submit', 'Read your answers once more, then turn them in.')}
+            ${submitArea}
+          </section>
+
+          ${taskWhatsNext(data, task)}
         </div>
       `;
     }
@@ -5314,15 +5588,15 @@
                   </div>
                 `).join('')}
               </div>
-            ` : ''}
+            ` : `
+              <div class="cv-value-empty">Nothing here yet — add a shout-out above when someone shows this.</div>
+            `}
           </div>
         `;
       }).join('');
 
       return `
-        <div class="ta-back-row">
-          <button class="ta-back-btn" onclick="closeTask()">← Back to Dashboard</button>
-        </div>
+        ${taskCrumbs(task)}
         <div class="ta-detail">
           <div class="ta-header">
             <div class="ta-badges">
@@ -5540,9 +5814,7 @@
       }).join('');
 
       return `
-        <div class="ta-back-row">
-          <button class="ta-back-btn" onclick="closeTask()">← Back</button>
-        </div>
+        ${taskCrumbs(task)}
         <div class="ta-detail">
           <div class="ta-header">
             <div class="ta-badges">
@@ -6446,7 +6718,8 @@
           ${allTasks.length === 0 ? `
             <div class="preseason-empty">
               <div class="preseason-empty-icon">🎉</div>
-              No assignments yet — check back soon!
+              Nothing is due right now. New assignments land here as soon as your coach posts them.
+              <div><button type="button" class="empty-action" onclick="scrollToAreas()">Look at your FLL areas</button></div>
             </div>
           ` : `
           <div class="preseason-list">
@@ -6538,6 +6811,7 @@
         <div class="cat-grid">${cards}</div>
         ${renderBuildingInstructions(data)}
         ${renderMissionVideos(data)}
+        ${renderResourcesEmpty(data)}
         <div class="cat-grid-title">📅 Season Calendar</div>
         <div id="seasonCalendar">${renderCalendar(data)}</div>
       `;
@@ -6582,7 +6856,8 @@
       try {
         const r = await fetch('/api/fll/files');
         const j = await r.json();
-        if (!j.success || !j.files.length) { slot.innerHTML = ''; return; }
+        if (!j.success) { slot.innerHTML = ''; return; }
+        if (!j.files.length) { slot.innerHTML = renderCoachFilesEmpty(); return; }
         slot.innerHTML = renderCoachFiles(j.files);
       } catch (e) {
         slot.innerHTML = '';   // quiet on failure: this is a bonus, not the page
@@ -6605,6 +6880,14 @@
       if (['ppt','pptx','odp'].includes(ext)) return '📽️';
       if (ext === 'zip') return '🗜️';
       return '🧱';
+    }
+
+    function renderCoachFilesEmpty() {
+      return `
+        <div class="cf-card cf-card-empty">
+          <div class="cf-head">📁 Files from your coach</div>
+          <div class="cf-empty">Your coach has not shared any files yet. Anything they add — a checklist, a picture, a PDF — shows up here.</div>
+        </div>`;
     }
 
     function renderCoachFiles(files) {
@@ -6739,6 +7022,24 @@
             </div>`;
           }).join('')}
         </div>`;
+    }
+
+    // Both resource sections are empty until the season's files are out, so
+    // one line stands in for both rather than two empty headings.
+    function renderResourcesEmpty(data) {
+      const res = (data.resources || []);
+      if (res.some(r => r.category === 'Building Instructions' || r.category === 'Mission Videos')) return '';
+      return `
+        <div class="cat-grid-title">📐 Mission Models and Videos</div>
+        <div class="detail-empty">
+          No building instructions or mission videos are here yet. They appear once the BIOGLOW game files are out.
+        </div>`;
+    }
+
+    // used by the empty pre-season list to point at the area cards below it
+    function scrollToAreas() {
+      const el = document.querySelector('.cat-grid');
+      if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }
 
     function toggleVideoChannel(channel) {
@@ -7066,10 +7367,12 @@
       const monthLabel = calMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
       let cells = '';
+      let monthHasEvents = false;
       for (let i = 0; i < firstDow; i++) cells += '<div class="cal-cell empty"></div>';
       for (let d = 1; d <= daysInMonth; d++) {
         const key = `${year}-${String(month + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         const dayEvents = events[key] || [];
+        if (dayEvents.length) monthHasEvents = true;
         const chips = dayEvents.map(ev => {
           const cls = `cal-chip ${ev.type}`;
           const click = ev.taskId ? `onclick="openTask('${escapeHtml(ev.taskId)}')"` : '';
@@ -7100,6 +7403,7 @@
             ${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => `<div class="cal-dow">${d}</div>`).join('')}
           </div>
           <div class="cal-grid">${cells}</div>
+          ${monthHasEvents ? '' : `<div class="cal-empty">Nothing is planned in ${escapeHtml(monthLabel)}. Tap › to look at the months ahead.</div>`}
         </div>
       `;
     }
@@ -7192,7 +7496,10 @@
                 </div>
               </div>`;
           }).join('')}</div>`
-        : `<div class="detail-empty">No assignments in this category yet — check back after your next session.</div>`;
+        : `<div class="detail-empty">
+             Nothing has been assigned in ${escapeHtml(cat.label)} yet. Your coach adds lessons here as the season goes on.
+             <div><button type="button" class="empty-action" onclick="openCategory(null)">Back to home</button></div>
+           </div>`;
 
       return `
         <div class="detail-header" style="--cat-color:${cat.color};--cat-light:${cat.colorLight};--cat-border:${cat.colorBorder};">

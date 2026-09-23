@@ -42,6 +42,39 @@
   /* elevation — softer in light, deeper in dark */
   --s-shadow:   0 2px 4px rgba(7, 62, 119, .04), 0 10px 26px rgba(7, 62, 119, .08);
   --s-shadow-h: 0 16px 40px rgba(7, 62, 119, .18);
+
+  /* ── Shape, type and spacing scales ──────────────────────────
+     One set of steps for both hubs, so a card in the coach
+     dashboard and a card in the student hub are the same shape and
+     the same rhythm. These are theme-independent (a radius does not
+     change in the dark), so they are declared once, here.
+     Pick the nearest step instead of inventing a value.          */
+
+  /* corner radii: controls → chips → cards → panels → pills */
+  --r-1: 8px;
+  --r-2: 10px;
+  --r-3: 12px;
+  --r-4: 14px;
+  --r-pill: 999px;
+
+  /* type: caption, meta, small, body, lead, section head, page title, stat */
+  --fs-caption: 12px;
+  --fs-meta:    13px;
+  --fs-sm:      14px;
+  --fs-body:    15px;
+  --fs-lead:    17px;
+  --fs-h2:      20px;
+  --fs-h1:      30px;
+  --fs-stat:    32px;
+
+  /* spacing: the gaps between things, and the padding inside a card */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --card-pad: 24px;
 }
 
 /* Dark values, shared by the auto (device) and forced paths.
