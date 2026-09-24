@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="af-own-buttons">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -53,6 +53,8 @@
       padding: 10px 14px;
       min-height: 40px;
       cursor: pointer;
+      border-radius: var(--af-r-sm, 14px);
+      transition: transform .14s cubic-bezier(.34,1.56,.64,1), background .15s, box-shadow .15s;
     }
 
     button:hover { background: var(--green-dark); }
@@ -1132,7 +1134,7 @@
     .ta-back-btn {
       background: none;
       border: none;
-      color: #1a73e8;
+      color: #1558b0; /* 4.5:1+ on the page and on the blue tint */
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
@@ -1603,7 +1605,7 @@
       background: none;
       border: none;
       font: inherit;
-      color: #1a73e8;
+      color: #1558b0; /* 4.5:1+ on the page and on the blue tint */
       cursor: pointer;
       padding: 2px 0;
       border-radius: var(--r-1);
@@ -1897,7 +1899,7 @@
     }
     .ta-code-copy {
       background: var(--tint-blue);
-      color: #1a73e8;
+      color: #1558b0; /* 4.5:1+ on the page and on the blue tint */
       border: 1.5px solid #c5d8fb;
       border-radius: 50px;
       padding: 6px 14px;
@@ -2789,6 +2791,7 @@
 
     .cat-card {
       background: var(--s-card);
+      color: var(--t-ink);
       border: 2px solid var(--cat-border, var(--s-line-2));
       border-radius: 20px;
       padding: 28px 24px 22px;
@@ -2816,13 +2819,16 @@
     .cat-card-label {
       font-size: 20px;
       font-weight: 900;
-      color: var(--cat-color, var(--t-ink));
+      /* ink, not the area colour: gold/green titles fell under 4.5:1 on white.
+         The area colour still shows in the border, progress bar and badge. */
+      color: var(--t-ink);
       line-height: 1.2;
     }
 
     .cat-card-desc {
       font-size: 13px;
       color: var(--t-muted);
+      font-weight: 500;
       line-height: 1.55;
       flex: 1;
     }
@@ -2857,7 +2863,8 @@
 
     .cat-open-badge {
       background: var(--cat-light, var(--tint-blue));
-      color: var(--cat-color, #1a73e8);
+      /* the tint behind it is always light (inline hex), so darken the text */
+      color: color-mix(in srgb, var(--cat-color, #1a73e8) 45%, #14233B);
       border: 1px solid var(--cat-border, #c5d8fb);
       border-radius: 50px;
       padding: 2px 9px;
@@ -4020,6 +4027,16 @@
     .ta-read-note { font-size:12.5px; color:var(--t-muted); line-height:1.45; margin-top:2px; }
     .ta-read-go { flex:none; color:#1a73e8; font-weight:800; }
     @media (pointer: coarse) { .ta-read { min-height:56px; } }
+    /* Buttons no longer get the hub's forced navy fill, so these blue-text
+       controls show their own look. #1a73e8 is too dark on the dark card. */
+    :root[data-theme="dark"] .ta-code-copy,
+    :root[data-theme="dark"] .ta-back-btn,
+    :root[data-theme="dark"] .ta-crumb-link { color: #8ab4f8; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .ta-code-copy,
+      :root:not([data-theme="light"]) .ta-back-btn,
+      :root:not([data-theme="light"]) .ta-crumb-link { color: #8ab4f8; }
+    }
 </style>
   <link rel="stylesheet" href="/assets/css/theme.css">
   <script>(function(){try{var t=localStorage.getItem("af-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
@@ -4665,9 +4682,9 @@
               </div>
             </div>
           `;
-          primaryBtn = `<button class="btn-outline" onclick="reopenVideo('${escapeHtml(step.videoId)}')">▶ Watch again</button>`;
+          primaryBtn = `<button class="btn-outline" onclick="reopenVideo(this.dataset.hVideo)" data-h-video="${escapeHtml(step.videoId)}">▶ Watch again</button>`;
         } else {
-          primaryBtn = `<button class="btn-primary" id="watchBtn" onclick="openVideo('${escapeHtml(step.videoId)}')">▶ Watch teaser video</button>`;
+          primaryBtn = `<button class="btn-primary" id="watchBtn" onclick="openVideo(this.dataset.hVideo)" data-h-video="${escapeHtml(step.videoId)}">▶ Watch teaser video</button>`;
           extraContent = `
             <div class="video-expand-area" id="welcomeVideoArea">
               <div class="video-wrap">
@@ -4684,7 +4701,7 @@
                   <textarea class="reflection-textarea" id="rq-${escapeHtml(q.id)}" placeholder="${escapeHtml(q.placeholder)}" rows="3"></textarea>
                 </div>
               `).join('')}
-              <button class="reflection-submit" id="reflectionSubmitBtn" onclick="submitReflection('${escapeHtml(userId)}', '${escapeHtml(step.videoId)}')">
+              <button class="reflection-submit" id="reflectionSubmitBtn" onclick="submitReflection(this.dataset.hUser, this.dataset.hVideo)" data-h-user="${escapeHtml(userId)}" data-h-video="${escapeHtml(step.videoId)}">
                 ✅ Mark as complete
               </button>
             </div>
@@ -4693,7 +4710,7 @@
       } else if (step.primaryAction === 'link') {
         primaryBtn = `<a class="btn-primary" href="${escapeHtml(step.primaryUrl)}" target="_blank" rel="noreferrer">${escapeHtml(step.primaryText)}</a>`;
       } else if (step.primaryAction === 'task') {
-        primaryBtn = `<button class="btn-primary" onclick="quickMarkDoing('${escapeHtml(step.taskId)}')">${escapeHtml(step.primaryText)}</button>`;
+        primaryBtn = `<button class="btn-primary" onclick="quickMarkDoing(this.dataset.hTask)" data-h-task="${escapeHtml(step.taskId)}">${escapeHtml(step.primaryText)}</button>`;
       }
 
       const secondaryBtn = step.secondaryUrl
@@ -4958,7 +4975,9 @@
     function taskCrumbs(task) {
       const cat = categoryForTask(task);
       const areaLabel = cat ? cat.label : (task.category || 'Assignments');
-      const areaGo = cat ? `closeTask();openCategory('${cat.id}')` : 'closeTask();openCategory(null)';
+      // the area id travels in data-h-cat, never inside the handler text
+      const areaGo = 'closeTask();openCategory(this.dataset.hCat || null)';
+      const areaAttr = cat ? `data-h-cat="${escapeHtml(cat.id)}"` : '';
       return `
         <div class="ta-back-row">
           <nav class="ta-crumbs" aria-label="Where you are">
@@ -4967,7 +4986,7 @@
               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();closeTask();openCategory(null);}">🏠 Home</span>
             <span class="ta-crumb-sep" aria-hidden="true">›</span>
             <span class="ta-crumb-link" role="button" tabindex="0"
-              onclick="${areaGo}"
+              onclick="${areaGo}" ${areaAttr}
               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();${areaGo}}">${escapeHtml(areaLabel)}</span>
             <span class="ta-crumb-sep" aria-hidden="true">›</span>
             <span class="ta-crumb-now" aria-current="page">${escapeHtml(task.title)}</span>
@@ -5033,8 +5052,8 @@
 
       const row = (t, ico, meta) => `
         <div class="ta-next-row" role="button" tabindex="0"
-          onclick="openTask('${escapeHtml(t.id)}')"
-          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTask('${escapeHtml(t.id)}');}">
+          onclick="openTask(this.dataset.hTask)" data-h-task="${escapeHtml(t.id)}"
+          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTask(this.dataset.hTask);}">
           <span class="ta-next-ico" aria-hidden="true">${ico}</span>
           <span class="ta-next-text">
             <span class="ta-next-title">${escapeHtml(t.title)}</span>
@@ -5193,8 +5212,8 @@
             ? (linkVal ? `<a class="ta-q-link-view" href="${escapeHtml(linkVal)}" target="_blank" rel="noreferrer">🔗 ${escapeHtml(linkVal)}</a>` : '')
             : `<input class="ta-q-link" type="url" data-qid="${qid}__link" placeholder="🔗 Add a link (optional) — a website, video, or doc" value="${escapeHtml(linkVal)}">`;
           const photoPart = photoVal
-            ? `<div class="ta-q-photo-wrap"><img class="ta-q-photo" src="${photoVal}" alt="attachment for question ${i + 1}">${submitted ? '' : `<button class="ta-q-photo-remove" onclick="removeQuestionPhoto('${escapeHtml(userId)}','${escapeHtml(taskId)}','${qid}')">✕</button>`}</div>`
-            : (submitted ? '' : `<label class="ta-q-photo-btn">📷 Add a picture<input type="file" accept="image/*" style="display:none" onchange="handleQuestionPhoto(this,'${escapeHtml(userId)}','${escapeHtml(taskId)}','${qid}')"></label>`);
+            ? `<div class="ta-q-photo-wrap"><img class="ta-q-photo" src="${photoVal}" alt="attachment for question ${i + 1}">${submitted ? '' : `<button class="ta-q-photo-remove" onclick="removeQuestionPhoto(this.dataset.hUser,this.dataset.hTask,this.dataset.hQ)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}" data-h-q="${qid}">✕</button>`}</div>`
+            : (submitted ? '' : `<label class="ta-q-photo-btn">📷 Add a picture<input type="file" accept="image/*" style="display:none" onchange="handleQuestionPhoto(this,this.dataset.hUser,this.dataset.hTask,this.dataset.hQ)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}" data-h-q="${qid}"></label>`);
           if (submitted && !linkVal && !photoVal) {
             attachHtml = '';
           } else {
@@ -5227,7 +5246,7 @@
                 <div class="ta-photo-preview-wrap">
                   <img class="ta-photo-preview" src="${p}" alt="Photo ${i + 1}">
                   <span class="ta-photo-num">${i + 1}</span>
-                  ${!submitted ? `<button class="ta-photo-remove" onclick="removeTaskPhoto('${escapeHtml(userId)}','${escapeHtml(taskId)}',${i})">✕</button>` : ''}
+                  ${!submitted ? `<button class="ta-photo-remove" onclick="removeTaskPhoto(this.dataset.hUser,this.dataset.hTask,${i})" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}">✕</button>` : ''}
                 </div>
               `).join('')}
             </div>
@@ -5235,7 +5254,7 @@
           ${!submitted ? `
             <label class="ta-photo-upload-btn" for="ta-photo-input">
               📎 ${taskPhotos.length ? 'Add another photo' : 'Choose photo or file'}
-              <input type="file" id="ta-photo-input" accept="image/*" style="display:none" onchange="handleTaskPhoto(this,'${escapeHtml(userId)}','${escapeHtml(taskId)}')">
+              <input type="file" id="ta-photo-input" accept="image/*" style="display:none" onchange="handleTaskPhoto(this,this.dataset.hUser,this.dataset.hTask)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}">
             </label>
             <div class="ta-photo-hint">JPG, PNG, HEIC — add as many photos as you need to show your work</div>
           ` : ''}
@@ -5249,13 +5268,13 @@
             <div class="ta-file-row">
               <strong>${escapeHtml(file.name)}</strong>
               <span>${Math.max(1, Math.round(Number(file.size || 0) / 1024))} KB</span>
-              ${!submitted ? `<button class="ta-photo-remove" onclick="removeTaskFile('${escapeHtml(userId)}','${escapeHtml(taskId)}',${index})">✕</button>` : ''}
+              ${!submitted ? `<button class="ta-photo-remove" onclick="removeTaskFile(this.dataset.hUser,this.dataset.hTask,${index})" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}">✕</button>` : ''}
             </div>
           `).join('') : ''}
           ${!submitted ? `
             <label class="ta-photo-upload-btn" for="ta-file-input">
               📎 ${taskFiles.length ? 'Replace project file' : 'Choose project file'}
-              <input type="file" id="ta-file-input" accept="${escapeHtml(task.acceptedFileTypes || '')}" style="display:none" onchange="handleTaskFile(this,'${escapeHtml(userId)}','${escapeHtml(taskId)}')">
+              <input type="file" id="ta-file-input" accept="${escapeHtml(task.acceptedFileTypes || '')}" style="display:none" onchange="handleTaskFile(this,this.dataset.hUser,this.dataset.hTask)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}">
             </label>
             <div class="ta-photo-hint">Accepted: ${escapeHtml(task.acceptedFileTypes || 'project files')} · maximum 4 MB</div>
           ` : ''}
@@ -5283,10 +5302,10 @@
         ${reopenedNow && !redoNow ? reopenRow(taskId) : ''}
         ${integrityNotice()}
         <div class="ta-submit-row">
-          <button class="ta-submit-btn" onclick="submitTaskAnswers('${escapeHtml(userId)}','${escapeHtml(taskId)}')">
+          <button class="ta-submit-btn" onclick="submitTaskAnswers(this.dataset.hUser,this.dataset.hTask)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}">
             ✅ Submit assignment
           </button>
-          <button class="ta-save-btn" onclick="saveTaskDraft('${escapeHtml(userId)}','${escapeHtml(taskId)}')">
+          <button class="ta-save-btn" onclick="saveTaskDraft(this.dataset.hUser,this.dataset.hTask)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}">
             💾 Save draft
           </button>
         </div>
@@ -5382,7 +5401,7 @@
           <input class="ta-table-head" type="text" data-thq="${qid}" data-thcol="${cIdx}"
             value="${escapeHtml(c)}" title="Rename this column" aria-label="Column ${cIdx + 1} name">
           ${cols.length > 1 ? `<button class="ta-col-del" title="Remove this column"
-            onclick="removeTableColumn('${qid}', ${cIdx})" aria-label="Remove column ${escapeHtml(c)}">✕</button>` : ''}
+            onclick="removeTableColumn(this.dataset.hQ, ${cIdx})" data-h-q="${qid}" aria-label="Remove column ${escapeHtml(c)}">✕</button>` : ''}
         </div></th>`;
       }).join('');
 
@@ -5390,8 +5409,8 @@
         <div class="ta-col-tools">
           <span class="ta-col-hint">✏️ Tap a heading to rename it</span>
           ${cols.length < MAX_TABLE_COLS
-            ? `<button class="ta-table-addrow" onclick="addTableColumn('${qid}')">＋ Add column</button>` : ''}
-          <button class="ta-col-reset" onclick="resetTableColumns('${qid}')">↺ Reset to default</button>
+            ? `<button class="ta-table-addrow" onclick="addTableColumn(this.dataset.hQ)" data-h-q="${qid}">＋ Add column</button>` : ''}
+          <button class="ta-col-reset" onclick="resetTableColumns(this.dataset.hQ)" data-h-q="${qid}">↺ Reset to default</button>
         </div>` : '';
 
       return `
@@ -5401,7 +5420,7 @@
             <thead><tr>${headCells}</tr></thead>
             <tbody>${bodyRows.join('')}</tbody>
           </table>
-          ${!submitted && rowCount < maxRows ? `<button class="ta-table-addrow" onclick="addTableRow('${qid}')">＋ Add row</button>` : ''}
+          ${!submitted && rowCount < maxRows ? `<button class="ta-table-addrow" onclick="addTableRow(this.dataset.hQ)" data-h-q="${qid}">＋ Add row</button>` : ''}
           ${colTools}
         </div>
       `;
@@ -5432,7 +5451,7 @@
       th.className = 'ta-th-edit';
       th.innerHTML = `<div class="ta-th-inner">
         <input class="ta-table-head" type="text" data-thq="${qid}" data-thcol="${idx}" value="New column" title="Rename this column">
-        <button class="ta-col-del" title="Remove this column" onclick="removeTableColumn('${qid}', ${idx})">✕</button>
+        <button class="ta-col-del" title="Remove this column" onclick="removeTableColumn(this.dataset.hQ, ${idx})" data-h-q="${qid}">✕</button>
       </div>`;
       headRow.appendChild(th);
       wrap.querySelectorAll('tbody tr').forEach((tr, r) => {
@@ -5623,7 +5642,7 @@
                     <div class="cv-entry-text">${escapeHtml(e.text)}</div>
                     <div class="cv-entry-footer">
                       <span class="cv-entry-time">🕐 ${escapeHtml(journalTimestamp(e.createdAt))}</span>
-                      <button class="cv-entry-delete" onclick="deleteJournalEntry('${escapeHtml(userId)}','${escapeHtml(task.id)}','${escapeHtml(e.id)}')">✕</button>
+                      <button class="cv-entry-delete" onclick="deleteJournalEntry(this.dataset.hUser,this.dataset.hTask,this.dataset.hEntry)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(task.id)}" data-h-entry="${escapeHtml(e.id)}">✕</button>
                     </div>
                   </div>
                 `).join('')}
@@ -5659,8 +5678,8 @@
               </select>
               <input class="ta-answer ta-answer-text cv-add-input" type="text" id="cv-journal-text"
                 placeholder="e.g. Today I discovered that our gyro sensor has drift — now I know how to test for it!"
-                onkeydown="if(event.key==='Enter'){addJournalEntry('${escapeHtml(userId)}','${escapeHtml(task.id)}')}">
-              <button class="cv-add-btn" onclick="addJournalEntry('${escapeHtml(userId)}','${escapeHtml(task.id)}')">Add</button>
+                onkeydown="if(event.key==='Enter'){addJournalEntry(this.dataset.hUser,this.dataset.hTask)}" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(task.id)}">
+              <button class="cv-add-btn" onclick="addJournalEntry(this.dataset.hUser,this.dataset.hTask)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(task.id)}">Add</button>
             </div>
             <div class="cv-add-hint">Entries are automatically date-and-time stamped. Add as many as you want, all season long!</div>
           </div>
@@ -5818,12 +5837,12 @@
         <div class="att-card">
           <div class="att-card-head">
             <input class="att-name-input" type="text" value="${escapeHtml(att.name)}" placeholder="${escapeHtml(cfg.namePlaceholder)}"
-              onchange="updateAttachmentField('${escapeHtml(userId)}','${escapeHtml(att.id)}','name',this.value)">
+              onchange="updateAttachmentField(this.dataset.hUser,this.dataset.hAtt,'name',this.value)" data-h-user="${escapeHtml(userId)}" data-h-att="${escapeHtml(att.id)}">
             <span class="att-iter-count${target && !remaining ? ' att-iter-count-done' : ''}">${countLabel}${target && !remaining ? ' ✓' : ''}</span>
-            <button class="att-delete-btn" onclick="removeAttachment('${escapeHtml(userId)}','${escapeHtml(task.id)}','${escapeHtml(att.id)}')" title="Delete ${escapeHtml(nounLower)}">✕</button>
+            <button class="att-delete-btn" onclick="removeAttachment(this.dataset.hUser,this.dataset.hTask,this.dataset.hAtt)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(task.id)}" data-h-att="${escapeHtml(att.id)}" title="Delete ${escapeHtml(nounLower)}">✕</button>
           </div>
           <input class="att-purpose-input" type="text" value="${escapeHtml(att.purpose)}" placeholder="${escapeHtml(cfg.purposePlaceholder)}"
-            onchange="updateAttachmentField('${escapeHtml(userId)}','${escapeHtml(att.id)}','purpose',this.value)">
+            onchange="updateAttachmentField(this.dataset.hUser,this.dataset.hAtt,'purpose',this.value)" data-h-user="${escapeHtml(userId)}" data-h-att="${escapeHtml(att.id)}">
 
           ${att.iterations.length ? `
             <div class="att-iterations">
@@ -5832,10 +5851,10 @@
                   <div class="att-iter-imgwrap">
                     <img class="att-iter-img" src="${it.photo}" alt="${escapeHtml(cfg.versionLabel)}${idx + 1}">
                     <span class="att-iter-version">${escapeHtml(cfg.versionLabel)}${idx + 1}</span>
-                    <button class="att-iter-delete" onclick="removeIteration('${escapeHtml(userId)}','${escapeHtml(task.id)}','${escapeHtml(att.id)}','${escapeHtml(it.id)}')">✕</button>
+                    <button class="att-iter-delete" onclick="removeIteration(this.dataset.hUser,this.dataset.hTask,this.dataset.hAtt,this.dataset.hIter)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(task.id)}" data-h-att="${escapeHtml(att.id)}" data-h-iter="${escapeHtml(it.id)}">✕</button>
                   </div>
                   <input class="att-iter-note" type="text" value="${escapeHtml(it.note)}" placeholder="${escapeHtml(cfg.notePlaceholder)}"
-                    onchange="updateIterationNote('${escapeHtml(userId)}','${escapeHtml(att.id)}','${escapeHtml(it.id)}',this.value)">
+                    onchange="updateIterationNote(this.dataset.hUser,this.dataset.hAtt,this.dataset.hIter,this.value)" data-h-user="${escapeHtml(userId)}" data-h-att="${escapeHtml(att.id)}" data-h-iter="${escapeHtml(it.id)}">
                   <div class="att-iter-time">🕐 ${escapeHtml(journalTimestamp(it.createdAt))}</div>
                 </div>
               `).join('')}
@@ -5847,7 +5866,7 @@
           <label class="att-add-photo-btn">
             ${escapeHtml(cfg.photoLabel)}
             <input type="file" accept="image/*" style="display:none"
-              onchange="addIterationPhoto(this,'${escapeHtml(userId)}','${escapeHtml(task.id)}','${escapeHtml(att.id)}')">
+              onchange="addIterationPhoto(this,this.dataset.hUser,this.dataset.hTask,this.dataset.hAtt)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(task.id)}" data-h-att="${escapeHtml(att.id)}">
           </label>
         </div>
       `;
@@ -5874,7 +5893,7 @@
           </div>
 
           <div class="att-add-row">
-            <button class="att-add-attachment-btn" onclick="addAttachment('${escapeHtml(userId)}','${escapeHtml(task.id)}')">＋ ${escapeHtml(cfg.addLabel)}</button>
+            <button class="att-add-attachment-btn" onclick="addAttachment(this.dataset.hUser,this.dataset.hTask)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(task.id)}">＋ ${escapeHtml(cfg.addLabel)}</button>
           </div>
 
           ${specialSubmitRow(userId, task.id, 'tracker', getTaskSubmission(userId, task.id))}
@@ -6151,7 +6170,7 @@
       else if (days !== null) { tag = 'Up next';          why = `Due in ${days} day${days !== 1 ? 's' : ''}.`; }
 
       return `
-        <div class="next-up${tone}" onclick="openTask('${escapeHtml(task.id)}')">
+        <div class="next-up${tone}" onclick="openTask(this.dataset.hTask)" data-h-task="${escapeHtml(task.id)}">
           <div class="next-up-icon">${st.flag ? '⚠️' : st.redo ? '🔁' : st.reopened ? '🔓' : overdue ? '⏰' : '👉'}</div>
           <div class="next-up-body">
             <div class="next-up-tag">${escapeHtml(tag)}</div>
@@ -6432,7 +6451,7 @@
           <div class="ta-reopen-banner is-declined">
             Your coach kept this closed for now.
             ${request.declineNote ? `<div class="ta-reopen-note">“${escapeHtml(request.declineNote)}”</div>` : ''}
-            <button class="ta-save-btn" onclick="requestReopen('${escapeHtml(taskId)}')">Ask again</button>
+            <button class="ta-save-btn" onclick="requestReopen(this.dataset.hTask)" data-h-task="${escapeHtml(taskId)}">Ask again</button>
           </div>`;
       }
       if (request) {
@@ -6444,7 +6463,7 @@
       return `
         <div class="ta-reopen-row">
           <span class="ta-reopen-hint">Need to change something?</span>
-          <button class="ta-save-btn" onclick="requestReopen('${escapeHtml(taskId)}')">✋ Ask coach to reopen</button>
+          <button class="ta-save-btn" onclick="requestReopen(this.dataset.hTask)" data-h-task="${escapeHtml(taskId)}">✋ Ask coach to reopen</button>
         </div>`;
     }
 
@@ -6552,10 +6571,10 @@
         ${alreadySent}
         ${integrityNotice()}
         <div class="ta-submit-row">
-          <button class="ta-submit-btn" onclick="submitSpecialTask('${escapeHtml(userId)}','${escapeHtml(taskId)}','${kind}')">
+          <button class="ta-submit-btn" onclick="submitSpecialTask(this.dataset.hUser,this.dataset.hTask,this.dataset.hKind)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}" data-h-kind="${escapeHtml(kind)}">
             ${submittedAt ? '🔄 Send updated work' : '✅ Send to my coach'}
           </button>
-          <button class="ta-save-btn" onclick="saveSpecialDraft('${escapeHtml(userId)}','${escapeHtml(taskId)}')">
+          <button class="ta-save-btn" onclick="saveSpecialDraft(this.dataset.hUser,this.dataset.hTask)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}">
             💾 Save draft
           </button>
         </div>
@@ -6806,7 +6825,7 @@
               const dc = dueCls(task.dueDate);
               const ctx = ctxIcon[task.workContext] || '📌';
               return `
-              <div class="preseason-task" data-status="${escapeHtml(task.status)}" onclick="openTask('${escapeHtml(task.id)}')">
+              <div class="preseason-task" data-status="${escapeHtml(task.status)}" onclick="openTask(this.dataset.hTask)" data-h-task="${escapeHtml(task.id)}">
                 <div class="preseason-task-accent"></div>
                 <div class="preseason-task-body">
                   <div class="preseason-task-left">
@@ -6849,7 +6868,7 @@
         if (cat.comingSoon || areaDisabled(cat.id)) {
           const disabled = areaDisabled(cat.id);
           return `
-            <button class="cat-card cat-card-soon" onclick="openCategory('${cat.id}')" style="--cat-color:${cat.color};--cat-light:${cat.colorLight};--cat-border:${cat.colorBorder};">
+            <button class="cat-card cat-card-soon" onclick="openCategory(this.dataset.hCat)" data-h-cat="${escapeHtml(cat.id)}" style="--cat-color:${cat.color};--cat-light:${cat.colorLight};--cat-border:${cat.colorBorder};">
               <div class="cat-soon-badge">${disabled ? 'Disabled by coach' : 'Coming soon'}</div>
               <div class="cat-card-icon">${cat.icon}</div>
               <div class="cat-card-label">${escapeHtml(cat.label)}</div>
@@ -6862,7 +6881,7 @@
         }
 
         return `
-          <button class="cat-card" onclick="openCategory('${cat.id}')" style="--cat-color:${cat.color};--cat-light:${cat.colorLight};--cat-border:${cat.colorBorder};">
+          <button class="cat-card" onclick="openCategory(this.dataset.hCat)" data-h-cat="${escapeHtml(cat.id)}" style="--cat-color:${cat.color};--cat-light:${cat.colorLight};--cat-border:${cat.colorBorder};">
             <div class="cat-card-icon">${cat.icon}</div>
             <div class="cat-card-label">${escapeHtml(cat.label)}</div>
             <div class="cat-card-desc">${escapeHtml(section.focusNow || cat.desc)}</div>
@@ -7078,7 +7097,7 @@
             const open = openVideoChannel === c.channel;
             return `
             <div class="mv-channel${open ? ' is-open' : ''}">
-              <button class="mv-head" type="button" onclick="toggleVideoChannel('${escapeHtml(c.channel)}')" aria-expanded="${open}">
+              <button class="mv-head" type="button" onclick="toggleVideoChannel(this.dataset.hChannel)" data-h-channel="${escapeHtml(c.channel)}" aria-expanded="${open}">
                 <span class="mv-avatar">${c.official ? '⭐' : '▶️'}</span>
                 <span class="mv-head-text">
                   <span class="mv-name">${escapeHtml(c.channel)}${c.official ? '<span class="mv-official">Official</span>' : ''}</span>
@@ -7454,7 +7473,7 @@
         if (dayEvents.length) monthHasEvents = true;
         const chips = dayEvents.map(ev => {
           const cls = `cal-chip ${ev.type}`;
-          const click = ev.taskId ? `onclick="openTask('${escapeHtml(ev.taskId)}')"` : '';
+          const click = ev.taskId ? `onclick="openTask(this.dataset.hTask)" data-h-task="${escapeHtml(ev.taskId)}"` : '';
           return `<div class="${cls}" ${click} title="${escapeHtml(ev.label)}">${escapeHtml(ev.label)}</div>`;
         }).join('');
         cells += `
@@ -7517,7 +7536,7 @@
             <div class="coming-soon-title">${disabled ? 'Not available right now' : 'Coming soon!'}</div>
             <div class="coming-soon-text">${disabled ? `Your coach has turned off the <b>${escapeHtml(cat.label)}</b> area for your team.` : `Your coach is still building out the <b>${escapeHtml(cat.label)}</b> assignments. Check back soon.`}</div>
             <div class="coming-soon-actions">
-              ${availableCategories.map(item => `<button class="cs-btn" onclick="openCategory('${item.id}')">${item.icon} ${escapeHtml(item.label)}</button>`).join('')}
+              ${availableCategories.map(item => `<button class="cs-btn" onclick="openCategory(this.dataset.hCat)" data-h-cat="${escapeHtml(item.id)}">${item.icon} ${escapeHtml(item.label)}</button>`).join('')}
               ${simulatorEnabled() ? '<a class="cs-btn" href="/fll-hub/simulator">🕹️ Simulator</a>' : ''}
             </div>
           </div>
@@ -7552,7 +7571,7 @@
         ? `<div class="preseason-list">${sortedCatTasks.map(task => {
             const ctx = ctxIcon[task.workContext] || '📌';
             return `
-              <div class="preseason-task" data-status="${escapeHtml(task.status)}" onclick="openTask('${escapeHtml(task.id)}')">
+              <div class="preseason-task" data-status="${escapeHtml(task.status)}" onclick="openTask(this.dataset.hTask)" data-h-task="${escapeHtml(task.id)}">
                 <div class="preseason-task-accent"></div>
                 <div class="preseason-task-body">
                   <div class="preseason-task-left">

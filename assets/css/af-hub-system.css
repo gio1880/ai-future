@@ -152,26 +152,32 @@ h1, h2, h3, .hero-title, .section-title, .cat-grid-title, .console-title,
 .announce-card.coach-only { border-left: 4px solid var(--af-sun) !important; }
 
 /* ── 6. Buttons (unified: navy primary, gold CTA) ─────────────────── */
-button, .btn, .btn-primary, .ta-submit-btn, .cv-add-btn, .reflection-submit,
+/* The bare `button` selector used to paint EVERY button navy with
+   !important, so a page's own button styles (cards, arrows, a button on a
+   navy banner) could never win. A page opts out of that by putting
+   class="af-own-buttons" on <html>; it then only gets the navy pill on the
+   classes below. :where() keeps the specificity at plain `button`, so a
+   page that does not opt out (the camp hub) cascades exactly as before. */
+:where(html:not(.af-own-buttons)) button, .btn, .btn-primary, .ta-submit-btn, .cv-add-btn, .reflection-submit,
 .video-finish-btn {
   border-radius: var(--af-r-sm) !important;
   font-weight: 700;
   transition: transform .14s cubic-bezier(.34,1.56,.64,1), background .15s, box-shadow .15s !important;
 }
-button, .btn, .btn-primary, .ta-submit-btn, .cv-add-btn, .reflection-submit,
+:where(html:not(.af-own-buttons)) button, .btn, .btn-primary, .ta-submit-btn, .cv-add-btn, .reflection-submit,
 .video-finish-btn {
   background: var(--af-navy) !important;
   color: #fff !important;
 }
 @media (hover: hover) {
-  button:hover, .btn:hover, .btn-primary:hover, .ta-submit-btn:hover,
+  :where(html:not(.af-own-buttons)) button:hover, .btn:hover, .btn-primary:hover, .ta-submit-btn:hover,
   .cv-add-btn:hover, .reflection-submit:hover, .video-finish-btn:hover {
     background: var(--af-deep-navy) !important;
     transform: translateY(-2px);
     box-shadow: 0 8px 18px rgba(7,62,119,.26) !important;
   }
 }
-button:active, .btn:active, .btn-primary:active { transform: translateY(0) scale(.98) !important; }
+:where(html:not(.af-own-buttons)) button:active, .btn:active, .btn-primary:active { transform: translateY(0) scale(.98) !important; }
 .btn-outline {
   background: transparent !important; color: var(--af-navy) !important;
   border: 2px solid var(--af-navy) !important;
@@ -239,7 +245,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--af-navy) !import
 /* ── 12. Touch sizing (iPad / phone) ──────────────────────────────── */
 @media (pointer: coarse) {
   body { font-size: 16.5px; }
-  button, .btn, .btn-primary { padding: 13px 22px !important; font-size: 15px !important; min-height: 48px; }
+  :where(html:not(.af-own-buttons)) button, .btn, .btn-primary { padding: 13px 22px !important; font-size: 15px !important; min-height: 48px; }
   .tab, .af-tab, .filter-chip, .chip { min-height: 46px; }
   input[type="text"], input[type="search"], input:not([type]), select, textarea {
     font-size: 16px !important; /* stop iOS focus-zoom */ padding: 14px 15px !important; min-height: 52px;
