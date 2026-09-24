@@ -28,7 +28,7 @@
   --t-ink:   #202124;    /* headings / primary text    */
   --t-body:  #3c4043;    /* body text                  */
   --t-muted: #5f6368;    /* secondary text             */
-  --t-faint: #80868b;    /* hints, timestamps          */
+  --t-faint: #676c71;    /* hints, timestamps — ≥4.76:1 on every light surface (was #80868b, 3.3–3.7:1) */
 
   /* soft status tints (backgrounds behind coloured text) */
   --tint-blue:  #e8f1fd;
