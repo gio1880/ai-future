@@ -2046,6 +2046,21 @@
       .page { padding-inline: 14px; }
       .hero-card { padding: 24px 20px; }
     }
+
+    /* coach way back to the backend */
+    .chip[hidden], .coach-callout[hidden] { display: none; }
+    .chip.coach-back { background: var(--blue); border-color: var(--blue); color: #fff; text-decoration: none; }
+    .chip.coach-back:hover { background: #1f5ba6; }
+    .coach-callout { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+      background: var(--blue-light); border: 1.5px solid var(--blue); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 18px;
+      color: var(--ink); font-size: 14px; }
+    .coach-callout a { font-weight: 800; color: #fff; background: var(--blue); border-radius: 50px; padding: 8px 16px; text-decoration: none; white-space: nowrap; }
+    /* the Remove button sits beside the link, not inside it */
+    .resource-card-wrap { position: relative; display: flex; min-width: 0; }
+    .resource-card-wrap > .resource-card { flex: 1; }
+    .resource-card-wrap:hover .res-del, .res-del:focus-visible { opacity: 1; }
+    @media (hover: none) { .res-del { opacity: 1; } }
+    @media (pointer: coarse) { .res-del { min-height: 44px; padding: 8px 12px; } .chip.coach-back { padding: 11px 14px; } }
   </style>
   <link rel="stylesheet" href="/assets/css/fll-premium.css">
 </head>
@@ -2061,6 +2076,7 @@
         </div>
       </div>
       <div class="topbar-right">
+        <a class="chip coach-back" id="coachBackLink" href="/fll-hub/coach" hidden>← Coach Backend</a>
         <a class="chip" href="/robotics-lab">Robotics Lab</a>
         <span class="chip green" id="rolePill">FLL</span>
         <button class="btn" id="logoutButton">Sign out</button>
@@ -2273,11 +2289,11 @@
             <div class="video-embed">
               <iframe src="https://www.youtube.com/embed/${esc(task.videoId)}?rel=0" allowfullscreen loading="lazy" title="${esc(task.title)}"></iframe>
             </div>
-            ${!isDone ? `<button class="task-mark-btn" onclick="markTaskDone('${esc(userId)}','${esc(task.id)}')">✓ Mark as watched</button>` : ''}
+            ${!isDone ? `<button class="task-mark-btn" data-h-user="${esc(userId)}" data-h-task="${esc(task.id)}" onclick="markTaskDone(this.dataset.hUser,this.dataset.hTask)">✓ Mark as watched</button>` : ''}
           `;
         } else if (task.type === 'link') {
           expandContent = `
-            <a class="task-link-btn" href="${esc(task.url)}" target="_blank" rel="noreferrer" onclick="markTaskDone('${esc(userId)}','${esc(task.id)}')">
+            <a class="task-link-btn" href="${esc(task.url)}" target="_blank" rel="noreferrer" data-h-user="${esc(userId)}" data-h-task="${esc(task.id)}" onclick="markTaskDone(this.dataset.hUser,this.dataset.hTask)">
               ${esc(task.action)}
             </a>
             ${!isDone ? `<span style="display:block;font-size:12px;color:var(--muted);margin-top:8px;">Opening the link counts as completing this task ✓</span>` : ''}
@@ -2285,13 +2301,13 @@
         } else if (task.type === 'prompt') {
           expandContent = `
             <div class="task-prompt-box">${task.prompt}</div>
-            ${!isDone ? `<button class="task-mark-btn" onclick="markTaskDone('${esc(userId)}','${esc(task.id)}')">✓ I wrote my ideas — mark as done</button>` : ''}
+            ${!isDone ? `<button class="task-mark-btn" data-h-user="${esc(userId)}" data-h-task="${esc(task.id)}" onclick="markTaskDone(this.dataset.hUser,this.dataset.hTask)">✓ I wrote my ideas — mark as done</button>` : ''}
           `;
         }
 
         return `
           <div class="task-card ${isDone ? 'is-done' : ''}" id="task-${esc(task.id)}">
-            <div class="task-row" onclick="toggleTaskExpand('${esc(task.id)}')">
+            <div class="task-row" data-h-task="${esc(task.id)}" onclick="toggleTaskExpand(this.dataset.hTask)">
               <div class="task-check">✓</div>
               <div class="task-info">
                 <div class="task-title">${task.icon} ${esc(task.title)}</div>
@@ -2374,6 +2390,55 @@
         'Shared Folder': '#777', Team: '#777', Planning: '#777'
       };
       return map[cat] || 'var(--green)';
+    }
+
+    // timeline.json carries a hand-set status that went stale ("Pre-season"
+    // long after kickoff). Work the current phase out from each dateRange
+    // instead; a range that cannot be read keeps its stored status.
+    const PHASE_MONTHS = ['january','february','march','april','may','june','july','august','september','october','november','december'];
+    function parsePhaseEdge(text, fallbackYear, isEnd) {
+      const t = String(text || '').trim().toLowerCase();
+      if (t === 'now') return isEnd ? null : new Date(2000, 0, 1);
+      const m = t.match(/^([a-z]+)(?:\s+(\d{1,2}))?,?(?:\s+(\d{4}))?$/);
+      if (!m) return null;
+      const month = PHASE_MONTHS.indexOf(m[1]);
+      const year = m[3] ? Number(m[3]) : fallbackYear;
+      if (month < 0 || !year) return null;
+      if (m[2]) return new Date(year, month, Number(m[2]), isEnd ? 23 : 0, isEnd ? 59 : 0);
+      return isEnd ? new Date(year, month + 1, 0, 23, 59) : new Date(year, month, 1);
+    }
+    function phaseWindow(phase) {
+      const parts = String(phase.dateRange || '').split(/\s+[-–]\s+/);
+      const years = String(phase.dateRange || '').match(/\d{4}/g) || [];
+      const lastYear = years.length ? Number(years[years.length - 1]) : 0;
+      const firstYear = years.length ? Number(years[0]) : 0;
+      if (parts.length === 1) {
+        const start = parsePhaseEdge(parts[0], lastYear, false);
+        const end = parsePhaseEdge(parts[0], lastYear, true);
+        return start && end ? { start, end } : null;
+      }
+      // "August - September 2026": the year on the right belongs to both ends
+      const start = parsePhaseEdge(parts[0], /\d{4}/.test(parts[0]) ? firstYear : lastYear, false);
+      const end = parsePhaseEdge(parts[1], lastYear, true);
+      return start && end ? { start, end } : null;
+    }
+    function withDatedPhases(timeline, now = new Date()) {
+      const list = Array.isArray(timeline) ? timeline.map(p => ({ ...p })) : [];
+      const windows = list.map(phaseWindow);
+      if (!windows.some(Boolean)) return list;
+      // of the phases whose window holds today, the one that started last
+      let current = -1;
+      windows.forEach((w, i) => {
+        if (w && w.start <= now && now <= w.end && (current < 0 || w.start >= windows[current].start)) current = i;
+      });
+      if (current < 0) {
+        // between or after the dated phases: the next undated phase after the
+        // last one that has finished (e.g. "Event week"), else keep the data
+        const lastDone = windows.reduce((acc, w, i) => (w && w.end < now ? i : acc), -1);
+        if (lastDone >= 0 && lastDone + 1 < list.length && !windows[lastDone + 1]) current = lastDone + 1;
+      }
+      if (current < 0) return list;
+      return list.map((p, i) => ({ ...p, status: i < current ? 'done' : i === current ? 'current' : 'upcoming' }));
     }
 
     function renderHero(season, phase) {
@@ -2491,8 +2556,8 @@
           <div class="cat-label">${esc(cat)} <span class="cat-count">${items.length}</span></div>
           <div class="resource-grid">
             ${items.map(item => `
+              <div class="resource-card-wrap">
               <a class="resource-card" href="${esc(item.url)}" target="_blank" rel="noreferrer">
-                ${user.role === 'coach' && item.id ? `<button class="res-del" data-res-del="${esc(item.id)}" title="Remove resource">✕ Remove</button>` : ''}
                 <div class="resource-card-top">
                   <div class="resource-name">${typeIcon(item.type)} ${esc(item.label)}</div>
                   <span class="resource-type-badge type-${esc(item.type)}">${esc(item.type)}</span>
@@ -2500,6 +2565,8 @@
                 <p class="resource-desc">${esc(item.description)}</p>
                 <span class="resource-link">Open resource →</span>
               </a>
+              ${user.role === 'coach' && item.id ? `<button type="button" class="res-del" data-res-del="${esc(item.id)}" aria-label="Remove ${esc(item.label)} for everyone" title="Remove resource">✕ Remove</button>` : ''}
+              </div>
             `).join('')}
           </div>
         </div>
@@ -2929,8 +2996,10 @@
     }
 
     function renderFullCurriculumPage(data) {
-      const { user, season, timeline, curriculum } = data;
+      const { user, season, curriculum } = data;
+      const timeline = withDatedPhases(data.timeline);
       const phase = timeline.find(p => p.status === 'current') || timeline[0] || {};
+      document.getElementById('coachBackLink').hidden = false;
       userLine.textContent = `${user.name} - Coach curriculum`;
       rolePill.textContent = 'Coach';
       app.innerHTML = `
@@ -2939,7 +3008,7 @@
             <div class="section-title">Full Curriculum Timeline</div>
             <p class="section-sub">Complete BIOGLOW plan from pre-season through March 2027.</p>
           </div>
-          <a class="curriculum-more-link" href="/fll-hub">Back to coach hub</a>
+          <a class="curriculum-more-link" href="/fll-hub/coach">← Coach Backend</a>
         </div>
         ${renderHero(season, phase)}
         ${renderCurriculumViewControls(curriculum)}
@@ -3072,7 +3141,8 @@
     }
 
     function renderDashboard(data) {
-      const { user, season, teams, allTeams, timeline, announcements, resources, curriculum, teamMembers } = data;
+      const { user, season, teams, allTeams, announcements, resources, curriculum, teamMembers } = data;
+      const timeline = withDatedPhases(data.timeline);
       hubData = data;
       const phase = timeline.find(p => p.status === 'current') || timeline[0] || {};
       const isCoach = user.role === 'coach';
@@ -3087,7 +3157,13 @@
       rolePill.textContent = isCoach ? 'Coach' : 'Student';
 
       maybeShowWelcome(user);
+      document.getElementById('coachBackLink').hidden = !isCoach;
       app.innerHTML = `
+        ${isCoach ? `
+          <div class="coach-callout" role="note">
+            <span>This is the season overview. Teams, lessons, due dates, live slides and reviewing work are in the <strong>Coach Backend</strong>.</span>
+            <a href="/fll-hub/coach">← Coach Backend</a>
+          </div>` : ''}
         ${renderHero(season, phase)}
         ${renderFocusBanner(phase)}
         ${!isCoach ? renderStartHere(userId, phase.id) : ''}

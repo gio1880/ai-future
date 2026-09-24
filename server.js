@@ -6148,7 +6148,8 @@ app.post('/api/fll/login', loginLimiter, async (req, res) => {
 		return res.json({
 			success: true,
 			user: publicFllUser(user),
-			redirectTo: user.role === 'student' ? FLL_STUDENT_LANDING : '/fll-hub'
+			// coaches land on the Coach Backend, the one place coach work happens
+			redirectTo: user.role === 'student' ? FLL_STUDENT_LANDING : '/fll-hub/coach'
 		});
 	} catch (err) {
 		console.error('FLL login error:', err);
@@ -6277,6 +6278,14 @@ app.post('/api/fll/coach/live/slide', requireFllAuth, requireFllCoach, async (re
 		const index = Number(req.body.index);
 		if (!Number.isInteger(index) || index < 0 || index >= live.slides.length) {
 			return res.status(400).json({ success: false, message: 'Invalid slide index' });
+		}
+		// Moving to a slide only broadcasts when the class is already live, or when
+		// the coach pressed "Go live" (goLive: true). It used to switch the class
+		// live on ANY slide change, so a coach clicking "next" just after another
+		// coach stopped the class put every student back into it.
+		const goLive = req.body.goLive === true;
+		if (!live.active && !goLive) {
+			return res.status(409).json({ success: false, message: 'The class is not live. Press Go live to show this slide to students.' });
 		}
 		live.active = true;
 		live.kind = 'slides';

@@ -914,8 +914,133 @@
       .tp-pick > .visibility-bulk-btn { width:100%; margin-top:10px; }
       .tp-hint { max-width:none; }
     }
-    @media (pointer: coarse) { .aud-chip { min-height:40px; padding:8px 13px; } }
-</style>
+    @media (pointer: coarse) { .aud-chip { min-height:44px; padding:8px 13px; } }
+
+    /* ── Classes the markup used but nothing styled ── */
+    .card { background: var(--s-card); border: 1.5px solid var(--s-line); border-radius: 18px; padding: 22px; margin-bottom: 16px; }
+    .card-title { font-size: 17px; font-weight: 900; margin: 0 0 4px; color: var(--t-ink); }
+    .card-sub { font-size: 13px; color: var(--t-muted); margin: 0 0 14px; line-height: 1.55; }
+    .empty { color: var(--t-muted); font-size: 13.5px; text-align: center; }
+    .visibility-controls { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; margin: 14px 0; }
+    .visibility-controls .visibility-filter { flex: 1 1 180px; }
+    .visibility-actions { flex-wrap: wrap; }
+    .visibility-bulk-btn { color: var(--t-strong); font-family: inherit; }
+    .visibility-bulk-btn:hover:not(:disabled) { border-color: #1a73e8; color: #1a73e8; }
+    .visibility-bulk-btn:disabled, .submit-btn:disabled { opacity: .55; cursor: not-allowed; }
+    .btn-danger-outline { background: var(--s-card); color: #b3261e; border: 1.5px solid #d93025; border-radius: 50px;
+      padding: 10px 22px; font-size: 13.5px; font-weight: 800; cursor: pointer; font-family: inherit; }
+    .btn-danger-outline:hover { background: var(--tint-red); }
+    :root[data-theme="dark"] .btn-danger-outline { color: #f2a9a2; border-color: #f28b82; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn-danger-outline { color: #f2a9a2; border-color: #f28b82; } }
+
+    /* ── Live slides: preview is local, going live is explicit ── */
+    .topbar { flex-wrap: wrap; gap: 10px; }
+    .live-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: #b3261e; color: #fff;
+      border-radius: 50px; padding: 5px 6px 5px 14px; font-size: 13px; font-weight: 800; }
+    .live-bar[hidden] { display: none; }
+    .live-bar-dot { width: 9px; height: 9px; border-radius: 50%; background: #fff; animation: cdLivePulse 1.4s ease-in-out infinite; }
+    @keyframes cdLivePulse { 50% { opacity: .35; } }
+    @media (prefers-reduced-motion: reduce) { .live-bar-dot { animation: none; } }
+    .live-bar button { background: rgba(255,255,255,.16); color: #fff; border: 1.5px solid rgba(255,255,255,.65); border-radius: 50px;
+      padding: 5px 12px; font-weight: 800; font-size: 12.5px; cursor: pointer; font-family: inherit; }
+    .live-bar button.live-bar-stop { background: #fff; color: #b3261e; border-color: #fff; }
+    .live-status.preview { background: var(--tint-blue); color: #174ea6; }
+    .live-status.on { background: #b3261e; color: #fff; }
+    :root[data-theme="dark"] .live-status.preview { color: #8ab4f8; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .live-status.preview { color: #8ab4f8; } }
+    .live-controls-group { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .live-controls { justify-content: space-between; }
+    .live-side-item { font-family: inherit; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .live-side-item.active { background: var(--tint-blue); border-color: #1a73e8; color: var(--t-ink); }
+    .live-side-tag { font-size: 10.5px; font-weight: 900; color: #fff; background: #b3261e; border-radius: 50px; padding: 2px 8px; white-space: nowrap; }
+    .live-msg { margin-top: 10px; }
+
+    /* ── Areas & Lessons: unsaved changes never vanish quietly ── */
+    .vis-savebar { position: sticky; bottom: 10px; z-index: 40; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      background: var(--s-card); border: 1.5px solid var(--s-line-2); border-radius: 14px; padding: 10px 14px; margin: 0 0 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.12); }
+    .vis-savebar.is-dirty { border-color: #e8b964; }
+    .vis-savebar-count { flex: 1 1 200px; font-size: 13.5px; font-weight: 800; color: var(--t-muted); }
+    .vis-savebar.is-dirty .vis-savebar-count { color: #8a5a00; }
+    :root[data-theme="dark"] .vis-savebar.is-dirty .vis-savebar-count { color: #e8b964; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .vis-savebar.is-dirty .vis-savebar-count { color: #e8b964; } }
+    .vis-tick { font-size: 11.5px; font-weight: 800; color: var(--cd-green-text); white-space: nowrap; }
+    .vis-tick.error { color: #d93025; white-space: normal; }
+    .visibility-row-due, .visibility-row-mins { flex-wrap: wrap; }
+    .visibility-due-label { white-space: nowrap; }
+    /* iPad portrait: the date and minutes drop to a second line instead of
+       being clipped by the scrolling list */
+    @media (max-width: 900px) {
+      .visibility-row:not(.tp-row):not(.aud-row) { grid-template-columns: minmax(0, 1fr) auto; }
+      .visibility-row:not(.tp-row):not(.aud-row) > .visibility-row-due { grid-column: 1; }
+      .visibility-row.aud-row { grid-template-columns: minmax(0, 1fr) auto; }
+      .aud-row > .visibility-row-meta, .aud-row > .visibility-row-due, .aud-row > .visibility-row-mins { grid-column: 1 / -1; }
+    }
+    @media (max-width: 640px) {
+      .visibility-row:not(.tp-row):not(.aud-row) { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    /* ── Missing work grid ── */
+    .mw-wrap { overflow-x: auto; border: 1.5px solid var(--s-line); border-radius: 12px; max-height: 620px; overflow-y: auto; }
+    .mw-table { border-collapse: collapse; width: 100%; font-size: 13px; }
+    .mw-table th, .mw-table td { border-bottom: 1px solid var(--s-line); padding: 7px 10px; text-align: left; vertical-align: middle; }
+    .mw-table thead th { background: var(--s-subtle); color: var(--t-ink); font-size: 11.5px; font-weight: 800; position: sticky; top: 0; z-index: 1; white-space: nowrap; }
+    .mw-table tbody th { font-weight: 700; color: var(--t-ink); min-width: 220px; }
+    .mw-sub { display: block; font-size: 11.5px; font-weight: 600; color: var(--t-muted); }
+    .mw-cell { min-width: 70px; border: 1.5px solid var(--s-line-2); border-radius: 8px; background: var(--s-card); color: var(--t-ink);
+      font: inherit; font-weight: 800; cursor: pointer; padding: 5px 10px; }
+    .mw-cell.all-in { background: var(--tint-green); color: var(--cd-green-text); border-color: transparent; }
+    .mw-cell.some { background: var(--tint-amber); color: #8a5a00; border-color: transparent; }
+    .mw-cell.none { background: var(--tint-red); color: #b3261e; border-color: transparent; }
+    .mw-cell.is-picked { outline: 3px solid #1a73e8; outline-offset: 1px; }
+    :root[data-theme="dark"] .mw-cell.some { color: #e8b964; }
+    :root[data-theme="dark"] .mw-cell.none { color: #f2a9a2; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .mw-cell.some { color: #e8b964; }
+      :root:not([data-theme="light"]) .mw-cell.none { color: #f2a9a2; }
+    }
+    .mw-na { color: var(--t-faint); font-size: 12px; }
+    .mw-detail { margin-top: 14px; }
+    .mw-detail:empty { display: none; }
+    .mw-detail .sub-missing strong { color: var(--t-ink); }
+    .mw-check { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--t-body); padding-bottom: 9px; }
+
+    /* ── Review as a queue ── */
+    .sub-card { scroll-margin-top: 90px; }
+    .sub-card.is-current { border-color: #1a73e8; }
+    button.sub-head { width: 100%; text-align: left; background: none; border: none; font: inherit; color: inherit; }
+    button.sub-head:focus-visible, button.im-c-head:focus-visible { outline: 3px solid #1a73e8; outline-offset: -3px; }
+    .sub-head-main > span { display: block; }
+    .sub-pinned { margin: 0 0 12px; }
+    .sub-pinned .ax-request, .sub-pinned .ax-flag, .sub-pinned .rv-redo-note, .sub-pinned .ax-note { margin-bottom: 8px; }
+    .rv-field { flex: 1 1 240px; min-width: 0; }
+    .rv-field-level { flex: 0 1 220px; }
+    .rv-label { display: block; font-size: 12px; font-weight: 800; color: var(--t-strong); margin-bottom: 4px; }
+    textarea.rv-feedback { width: 100%; min-height: 76px; resize: vertical; line-height: 1.5; }
+    .rv-field-level .rv-level { width: 100%; }
+    .rv-hint { font-size: 12px; color: var(--t-muted); margin-top: 4px; }
+    .cd-dialog { border: 1.5px solid var(--s-line-2); border-radius: 16px; background: var(--s-card); color: var(--t-ink);
+      padding: 22px; width: calc(100% - 32px); max-width: 480px; }
+    .cd-dialog::backdrop { background: rgba(0,0,0,.5); }
+    .cd-fieldset { border: 1.5px solid var(--s-line); border-radius: 12px; padding: 10px 14px; margin: 0 0 12px; }
+    .cd-fieldset legend { font-size: 12px; font-weight: 800; padding: 0 4px; }
+    .cd-radio { display: flex; align-items: center; gap: 9px; font-size: 13.5px; padding: 6px 0; cursor: pointer; }
+    .cd-dialog .rv-actions { justify-content: flex-end; margin-top: 12px; }
+    button.im-c-head { display: block; width: 100%; text-align: left; background: none; border: none; font: inherit; color: inherit; }
+    .im-c-head > .im-c-title { display: flex; }
+    .im-c-head > .im-c-meta { display: block; }
+
+    /* ── iPad: fingers, not a mouse ── */
+    @media (pointer: coarse) {
+      .tab-btn, .dash-nav-btn, .btn-primary, .btn-ghost, .btn-danger, .btn-danger-outline, .visibility-bulk-btn, .submit-btn,
+      .mini-btn, .cal-view-btn, .cal-nav-btn, .cal-today-btn, .st-action-btn, .rubric-delete, .btn-logout, .theme-toggle,
+      .live-side-item, .mw-cell, .sub-head, .im-c-head, .sh-chip, .toggle-form-btn, .live-bar button, .ov-row, .fl-link,
+      .visibility-toggle, .visibility-row-toggle, .cd-radio, .mw-check { min-height: 44px; }
+      .cal-nav-btn, .rubric-delete, .theme-toggle { min-width: 44px; }
+      input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), select, textarea { min-height: 44px; }
+      .visibility-row input[type="checkbox"], .visibility-toggle input, .mw-check input { width: 22px; height: 22px; }
+    }
+  </style>
   <link rel="stylesheet" href="/assets/css/theme.css">
   <script>(function(){try{var t=localStorage.getItem("af-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
   <link rel="stylesheet" href="/assets/css/fll-premium.css">
@@ -923,6 +1048,12 @@
 <body>
   <div class="topbar">
     <div class="topbar-title">🌿 BIOGLOW <span>Coach Backend</span></div>
+    <div class="live-bar" id="liveBar" role="status" hidden>
+      <span class="live-bar-dot" aria-hidden="true"></span>
+      <span id="liveBarText">LIVE</span>
+      <button type="button" onclick="showTab('live')">Open slides</button>
+      <button type="button" class="live-bar-stop" onclick="stopLiveSlides()">■ Stop</button>
+    </div>
     <div class="topbar-right">
       <span class="topbar-user" id="userLine">Loading…</span>
       <button class="theme-toggle" type="button" onclick="toggleTheme()" title="Switch between light and dark" aria-label="Switch between light and dark"><span class="ti-dark">🌙</span><span class="ti-light">☀️</span></button>
@@ -944,6 +1075,7 @@
         <button type="button" class="dash-nav-btn" data-area="review" onclick="showArea('review')"><span class="dash-nav-ico" aria-hidden="true">📬</span><span class="dash-nav-label">Review</span><span class="dash-nav-badge" id="reviewBadge" hidden>0</span></button>
         <button type="button" class="dash-nav-btn" data-area="resources" onclick="showArea('resources')"><span class="dash-nav-ico" aria-hidden="true">🧰</span><span class="dash-nav-label">Resources &amp; Tools</span></button>
         <button type="button" class="dash-nav-btn" data-area="calendar" onclick="showArea('calendar')"><span class="dash-nav-ico" aria-hidden="true">📅</span><span class="dash-nav-label">Calendar</span></button>
+        <button type="button" class="dash-nav-btn" data-area="settings" onclick="showArea('settings')"><span class="dash-nav-ico" aria-hidden="true">⚙️</span><span class="dash-nav-label">Settings</span></button>
       </nav>
 
       <div class="dash-main">
@@ -965,11 +1097,13 @@
     </div>
     <div class="subtabs" data-area="review" hidden>
       <button class="tab-btn" data-tab="submissions" onclick="showTab('submissions')">📬 Submitted Work</button>
+      <button class="tab-btn" data-tab="missing" onclick="showTab('missing')">🧾 Missing Work</button>
       <button class="tab-btn" data-tab="rankings" onclick="showTab('rankings')">📊 Rankings</button>
     </div>
     <div class="subtabs" data-area="resources" hidden>
       <button class="tab-btn" data-tab="files" onclick="showTab('files')">📁 Files</button>
       <button class="tab-btn" data-tab="robots" onclick="showTab('robots')">🎯 Robot Tuning</button>
+      <button class="tab-btn" data-tab="resvis" onclick="showTab('resvis')">👁️ Resource Visibility</button>
     </div>
     <div class="subtabs" data-area="calendar" hidden>
       <button class="tab-btn" data-tab="calendar" onclick="showTab('calendar')">📅 Calendar</button>
@@ -1091,17 +1225,17 @@
           <button class="cal-view-btn" data-view="year" onclick="setCalView('year')">Year</button>
         </div>
         <div class="cal-toolbar-group">
-          <select class="cal-filter" id="calTeamFilter" onchange="renderCoachCalendar()">
+          <select class="cal-filter" id="calTeamFilter" aria-label="Show team" onchange="renderCoachCalendar()">
             <option value="all">All teams</option>
           </select>
-          <select class="cal-filter" id="calRegionFilter" onchange="renderCoachCalendar()">
+          <select class="cal-filter" id="calRegionFilter" aria-label="Show region" onchange="renderCoachCalendar()">
             <option value="all">All regions</option>
           </select>
         </div>
         <div class="cal-toolbar-group">
-          <button class="cal-nav-btn" onclick="calNav(-1)">‹</button>
+          <button class="cal-nav-btn" onclick="calNav(-1)" aria-label="Previous" title="Previous">‹</button>
           <button class="cal-today-btn" onclick="calToday()">Today</button>
-          <button class="cal-nav-btn" onclick="calNav(1)">›</button>
+          <button class="cal-nav-btn" onclick="calNav(1)" aria-label="Next" title="Next">›</button>
         </div>
       </div>
       <div class="cal-range-label" id="calRangeLabel"></div>
@@ -1153,14 +1287,14 @@
           </div>
         </div>
         <div class="fl-drop" id="flDrop">
-          <input type="file" id="flInput" multiple hidden onchange="queueFiles(this.files)">
+          <input type="file" id="flInput" multiple hidden aria-label="Choose files to upload" onchange="queueFiles(this.files)">
           <div class="fl-drop-icon">📁</div>
           <div class="fl-drop-main">Drop files here, or <button class="fl-link" onclick="document.getElementById('flInput').click()">choose them</button></div>
           <div class="fl-drop-sub" id="flTypes"></div>
         </div>
         <div class="fl-opts">
-          <input class="fl-desc" id="flDesc" type="text" maxlength="300" placeholder="What is this? (optional, shown to students)">
-          <select class="fl-team" id="flTeam"><option value="">Everyone</option></select>
+          <input class="fl-desc" id="flDesc" type="text" aria-label="File description, shown to students" maxlength="300" placeholder="What is this? (optional, shown to students)">
+          <select class="fl-team" id="flTeam" aria-label="Who can see the uploaded files"><option value="">Everyone</option></select>
           <button class="btn-primary" id="flGo" onclick="uploadQueued()" disabled>Upload</button>
         </div>
         <div class="form-msg" id="flMsg"></div>
@@ -1263,40 +1397,41 @@
         <div id="submissionsWrap">Loading…</div>
       </div>
     </div>
-    <div class="panel" id="panel-visibility">
-      <div class="visibility-card mnt-card">
+    <div class="panel" id="panel-missing">
+      <div class="visibility-card">
         <div class="visibility-head">
           <div>
-            <h2 class="form-title">🛠️ Pause the student hub</h2>
-            <p class="form-sub">Shows students a "we are working on it" screen instead of their hub. You and other coaches keep full access, so you can work while it is on. Turn it on before you start and off when you are done — it does not switch itself off.</p>
+            <h2 class="form-title">Missing work</h2>
+            <p class="form-sub">Every assignment each team can actually see, and how many of its active students have turned it in. Demo accounts are left out. Pick a number to see who.</p>
           </div>
-          <span class="mnt-state" id="mntState">…</span>
+          <button class="visibility-bulk-btn" onclick="loadMissingWork(true)">↻ Refresh</button>
         </div>
-        <div class="mnt-row">
-          <input class="mnt-input" id="mntMessage" type="text" maxlength="400"
-            placeholder="What students see (optional) — e.g. We are adding this week's lessons.">
-          <input class="mnt-when" id="mntBackBy" type="text" maxlength="80"
-            placeholder="Back by… e.g. in an hour">
+        <div class="visibility-controls">
+          <div class="visibility-filter">
+            <label for="mwArea">Area</label>
+            <select id="mwArea" onchange="renderMissingWork()"><option value="all">All areas</option><option value="Robot Design">Robot Design</option><option value="Robot Game">Robot Game</option><option value="Innovation Project">Innovation</option><option value="Core Values">Core Values</option></select>
+          </div>
+          <label class="mw-check"><input type="checkbox" id="mwOnlyMissing" onchange="renderMissingWork()" checked> Only assignments someone still owes</label>
         </div>
-        <div class="mnt-actions">
-          <button class="btn-primary" id="mntToggle" onclick="toggleMaintenance()">Turn on</button>
-          <button class="btn-ghost" onclick="saveMaintenanceText()">Save the message</button>
-          <span class="form-msg" id="mntMsg"></span>
-        </div>
+        <div class="form-msg" id="mwSummary"></div>
+        <div id="mwWrap">Loading…</div>
+        <div class="mw-detail" id="mwDetail" aria-live="polite"></div>
       </div>
+    </div>
 
+    <div class="panel" id="panel-visibility">
       <div class="visibility-card">
         <div class="visibility-head">
           <div>
             <h2 class="form-title">Student Hub visibility</h2>
-            <p class="form-sub">Choose what all teams see by default, or customize one team. Disabled content is enforced by the server.</p>
+            <p class="form-sub">Choose what all teams see by default, or customize one team. Disabled content is enforced by the server. Changes here wait for <strong>Save visibility</strong>; they are kept if you switch tabs.</p>
           </div>
-          <div class="visibility-team"><label for="visibilityTeam">Editing visibility for</label><select id="visibilityTeam" onchange="renderVisibility()"><option value="">All teams (default)</option></select></div>
+          <div class="visibility-team"><label for="visibilityTeam">Editing visibility for</label><select id="visibilityTeam" onchange="changeVisibilityTeam(this)"><option value="">All teams (default)</option></select></div>
         </div>
         <div class="visibility-areas" id="visibilityAreas"></div>
       </div>
       <div class="visibility-card">
-        <div class="visibility-head"><div><h2 class="form-title">Displayed lessons</h2><p class="form-sub">Checked lessons are visible. Use the filters and bulk buttons to update many lessons together.</p></div></div>
+        <div class="visibility-head"><div><h2 class="form-title">Displayed lessons</h2><p class="form-sub">Checked lessons are visible. Use the filters and bulk buttons to update many lessons together. Due dates and minutes apply to <strong>all teams</strong> and save on their own.</p></div></div>
         <div class="visibility-toolbar">
           <div class="visibility-filter"><label for="visibilitySearch">Search lessons</label><input id="visibilitySearch" type="search" placeholder="Search by title" oninput="renderVisibilityLessons()"></div>
           <div class="visibility-filter"><label for="visibilityAreaFilter">Filter by area</label><select id="visibilityAreaFilter" onchange="renderVisibilityLessons()"><option value="all">All areas</option><option value="Robot Design">Robot Design</option><option value="Robot Game">Robot Game</option><option value="Innovation Project">Innovation</option><option value="Core Values">Core Values</option></select></div>
@@ -1304,13 +1439,18 @@
           <button class="visibility-bulk-btn" onclick="bulkSetLessons(false)">Hide filtered</button>
         </div>
         <div class="visibility-lessons" id="visibilityLessons"></div>
-        <div class="visibility-actions"><button class="submit-btn" id="visibilitySave" onclick="saveVisibility()">Save visibility</button><button class="visibility-bulk-btn hidden" id="visibilityReset" onclick="resetTeamVisibility()">Reset team to defaults</button><span class="form-msg" id="visibilityMessage"></span></div>
+        <div class="visibility-actions"><button class="visibility-bulk-btn hidden" id="visibilityReset" onclick="resetTeamVisibility()">Reset team to defaults</button><span class="form-msg" id="visibilityMessage" role="status"></span></div>
+      </div>
+      <div class="vis-savebar" id="visSaveBar" role="region" aria-label="Save visibility">
+        <span class="vis-savebar-count" id="visDirtyCount" aria-live="polite">No unsaved changes</span>
+        <button class="visibility-bulk-btn" id="visibilityDiscard" onclick="discardVisibility()" disabled>Discard</button>
+        <button class="submit-btn" id="visibilitySave" onclick="saveVisibility()" disabled>Save visibility</button>
       </div>
       <div class="visibility-card">
         <div class="visibility-head">
           <div>
             <h2 class="form-title">Preview a team's lessons 👀</h2>
-            <p class="form-sub">See exactly what one team's students see, without logging in as a student. Lessons they don't get are listed too, with the reason why.</p>
+            <p class="form-sub">See exactly what one team's students see, without logging in as a student. Lessons they don't get are listed too, with the reason why. This shows what is <strong>saved</strong>, not unsaved ticks.</p>
           </div>
           <div>
             <div class="tp-pick">
@@ -1325,31 +1465,59 @@
         </div>
         <div class="tp-out" id="previewOut"><div class="empty" style="padding:20px">Pick a team to see its lessons.</div></div>
       </div>
+    </div>
+
+    <div class="panel" id="panel-resvis">
       <div class="visibility-card">
         <div class="visibility-head">
           <div>
-            <h2 class="form-title">Resources</h2>
-            <p class="form-sub">Building instructions and videos students can open. Untick one to hide it once the team no longer needs it — nothing is deleted, so you can bring it back any time.</p>
+            <h2 class="form-title">Resource visibility</h2>
+            <p class="form-sub">Building instructions and videos students can open. Untick one to hide it once the team no longer needs it — nothing is deleted, so you can bring it back any time. Saving here changes resources only, never lesson ticks.</p>
           </div>
+          <div class="visibility-team"><label for="resourcesTeam">Editing resources for</label><select id="resourcesTeam" onchange="changeResourcesTeam(this)"><option value="">All teams (default)</option></select></div>
         </div>
         <div class="visibility-controls">
           <button class="visibility-bulk-btn" onclick="bulkSetResources(true)">Show all</button>
           <button class="visibility-bulk-btn" onclick="bulkSetResources(false)">Hide all</button>
         </div>
         <div class="visibility-lessons" id="visibilityResources"></div>
-        <div class="visibility-actions">
-          <button class="submit-btn" id="resourcesSave" onclick="saveVisibility()">Save resources</button>
-          <span class="form-msg" id="resourcesMessage"></span>
+        <div class="vis-savebar" id="resSaveBar" role="region" aria-label="Save resources">
+          <span class="vis-savebar-count" id="resDirtyCount" aria-live="polite">No unsaved changes</span>
+          <span class="form-msg" id="resourcesMessage" role="status"></span>
+          <button class="submit-btn" id="resourcesSave" onclick="saveResources()" disabled>Save resources</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-settings">
+      <div class="visibility-card mnt-card">
+        <div class="visibility-head">
+          <div>
+            <h2 class="form-title">🛠️ Pause the student hub</h2>
+            <p class="form-sub">Shows students a "we are working on it" screen instead of their hub. You and other coaches keep full access, so you can work while it is on. Turn it on before you start and off when you are done — it does not switch itself off.</p>
+          </div>
+          <span class="mnt-state" id="mntState">…</span>
+        </div>
+        <div class="mnt-row">
+          <input class="mnt-input" id="mntMessage" type="text" maxlength="400" aria-label="Message students see while the hub is paused"
+            placeholder="What students see (optional) — e.g. We are adding this week's lessons.">
+          <input class="mnt-when" id="mntBackBy" type="text" maxlength="80" aria-label="Back by (shown to students)"
+            placeholder="Back by… e.g. in an hour">
+        </div>
+        <div class="mnt-actions">
+          <button class="btn-danger-outline" id="mntToggle" onclick="toggleMaintenance()">Turn on</button>
+          <button class="btn-ghost" onclick="saveMaintenanceText()">Save the message</button>
+          <span class="form-msg" id="mntMsg" role="status"></span>
         </div>
       </div>
 
       <div class="card">
         <h3 class="card-title">📥 Update lesson content</h3>
-        <p class="card-sub">Pulls the newest lesson wording, questions, and videos from the latest deployment onto the live hub. Student progress, submitted answers, and any due dates you set are kept as they are. Nothing is deleted.</p>
+        <p class="card-sub">Pulls the newest lesson wording, questions, and videos from the latest deployment onto the live hub. Student progress, submitted answers, and any due dates you set are kept as they are. Nothing is deleted. Preview first — it changes nothing.</p>
         <div class="visibility-actions">
           <button class="visibility-bulk-btn" onclick="syncCurriculum(true)">Preview changes</button>
           <button class="submit-btn" id="curriculumSyncBtn" onclick="syncCurriculum(false)">Update lessons now</button>
-          <span class="form-msg" id="curriculumSyncMessage"></span>
+          <span class="form-msg" id="curriculumSyncMessage" role="status"></span>
         </div>
         <div class="visibility-lessons hidden" id="curriculumSyncDetail"></div>
       </div>
@@ -1360,7 +1528,7 @@
         <div class="visibility-actions">
           <button class="visibility-bulk-btn" onclick="convertLessons(true)">Preview</button>
           <button class="submit-btn" id="convertLessonsBtn" onclick="convertLessons(false)">Convert now</button>
-          <span class="form-msg" id="convertLessonsMessage"></span>
+          <span class="form-msg" id="convertLessonsMessage" role="status"></span>
         </div>
         <div class="visibility-lessons hidden" id="convertLessonsDetail"></div>
       </div>
@@ -1370,7 +1538,7 @@
         <div class="live-card" id="livePreview">Loading live slides...</div>
         <div class="live-card">
           <h2 class="form-title">Slide List</h2>
-          <p class="form-sub">Students see the current slide when they join the live lesson.</p>
+          <p class="form-sub">Clicking a slide only previews it for you. Students see nothing until you press <strong>Go live</strong>.</p>
           <div class="live-side-list" id="liveSlideList"></div>
         </div>
       </div>
@@ -1380,7 +1548,26 @@
     </div>
   </div>
 
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <dialog class="cd-dialog" id="flagDialog" aria-labelledby="flagDialogTitle">
+    <form id="flagForm" onsubmit="return submitFlagDialog(event)">
+      <h2 class="form-title" id="flagDialogTitle">⚠️ Flag a concern</h2>
+      <p class="form-sub" id="flagDialogFor"></p>
+      <fieldset class="cd-fieldset">
+        <legend>What kind of concern?</legend>
+        <label class="cd-radio"><input type="radio" name="flagType" value="plagiarism" checked> Possible plagiarism (copied work)</label>
+        <label class="cd-radio"><input type="radio" name="flagType" value="academic-integrity"> Academic integrity (not their own work)</label>
+      </fieldset>
+      <label class="rv-label" for="flagNote">What did you notice?</label>
+      <textarea class="rv-feedback" id="flagNote" rows="3" maxlength="1000" placeholder="The student sees this, so keep it factual and kind."></textarea>
+      <div class="form-msg" id="flagMsg" role="status"></div>
+      <div class="rv-actions">
+        <button type="button" class="visibility-bulk-btn" onclick="closeFlagDialog()">Cancel</button>
+        <button type="submit" class="submit-btn rv-save" id="flagSubmit">Flag it</button>
+      </div>
+    </form>
+  </dialog>
 
   <script>
 
@@ -1424,9 +1611,10 @@
       overview:  ['overview'],
       teams:     ['teams', 'newteam', 'students', 'add', 'bulk', 'logins', 'online'],
       teaching:  ['curriculum', 'visibility', 'live', 'ideamaps'],
-      review:    ['submissions', 'rankings'],
-      resources: ['files', 'robots'],
-      calendar:  ['calendar']
+      review:    ['submissions', 'missing', 'rankings'],
+      resources: ['files', 'robots', 'resvis'],
+      calendar:  ['calendar'],
+      settings:  ['settings']
     };
     const AREA_OF_PANEL = {};
     const areaLastPanel = {};
@@ -1460,10 +1648,15 @@
       if (id === 'overview') renderOverview();
       if (id === 'live') loadLiveSlides();
       if (id === 'rankings') loadRankings();
+      // the draft survives tab switches: renderVisibility only builds a new
+      // one when there is none yet or the coach picked another team
       if (id === 'visibility') {
-        renderVisibility(); loadMaintenance();
+        renderVisibility();
         loadLessonAudiences().then(renderVisibilityLessons);
       }
+      if (id === 'resvis') renderResourcesPanel();
+      if (id === 'settings') loadMaintenance();
+      if (id === 'missing') loadMissingWork();
       if (id === 'submissions') loadSubmissions();
       if (id === 'robots') loadRobotProfiles();
       if (id === 'ideamaps') { loadIdeaMaps(); loadIdeaMapSources(); }
@@ -1497,7 +1690,7 @@
       state.textContent = m.on ? '● Students are held out' : '○ Students have normal access';
       state.className = 'mnt-state' + (m.on ? ' is-on' : '');
       btn.textContent = m.on ? 'Turn off — let students back in' : 'Turn on';
-      btn.className = m.on ? 'btn-danger' : 'btn-primary';
+      btn.className = m.on ? 'btn-danger' : 'btn-danger-outline';
       document.getElementById('mntMessage').value = m.message || '';
       document.getElementById('mntBackBy').value = m.backBy || '';
     }
@@ -1782,6 +1975,8 @@
     function toggleIdeaMap(teamId) {
       if (ideaMapOpen.has(teamId)) ideaMapOpen.delete(teamId); else ideaMapOpen.add(teamId);
       renderIdeaMaps();
+      const head = [...document.querySelectorAll('#ideaMapsWrap .im-c-head')].find(b => b.dataset.team === teamId);
+      if (head) head.focus({ preventScroll: true });
     }
 
     function renderIdeaMaps() {
@@ -1841,17 +2036,17 @@
 
         return `
           <div class="im-c-card">
-            <div class="im-c-head" data-team="${escapeHtml(row.teamId)}" onclick="toggleIdeaMap(this.dataset.team)">
-              <div class="im-c-title">
-                <span class="im-c-caret">${open ? '▾' : '▸'}</span>
+            <button type="button" class="im-c-head" data-team="${escapeHtml(row.teamId)}" aria-expanded="${open ? 'true' : 'false'}" onclick="toggleIdeaMap(this.dataset.team)">
+              <span class="im-c-title">
+                <span class="im-c-caret" aria-hidden="true">${open ? '▾' : '▸'}</span>
                 ${escapeHtml(row.teamName)}
                 <span class="im-c-pill ${stageClass}">${escapeHtml(stage)}</span>
-              </div>
-              <div class="im-c-meta">
+              </span>
+              <span class="im-c-meta">
                 ${row.ideaCount} idea${row.ideaCount !== 1 ? 's' : ''} · ${row.memberCount} member${row.memberCount !== 1 ? 's' : ''}
                 · ${row.updatedBy ? 'last edited by ' + escapeHtml(row.updatedBy) + ' ' + escapeHtml(imWhen(row.updatedAt)) : 'never edited by the team'}
-              </div>
-            </div>
+              </span>
+            </button>
             ${body}
           </div>`;
       }).join('');
@@ -2251,6 +2446,7 @@
         })
         .sort((a, b) => String(b.submittedAt || '').localeCompare(String(a.submittedAt || '')));
 
+      renderedSubIds = rows.map(s => s.id);
       summary.textContent = submissionsCache.length
         ? `Showing ${rows.length} of ${submissionsCache.length} submission${submissionsCache.length !== 1 ? 's' : ''}.`
         : '';
@@ -2267,6 +2463,7 @@
           .map(s => s.studentId));
         const expected = (roster?.students || [])
           .filter(st => teamId === 'all' || st.teamId === teamId)
+          .filter(st => st.active !== false && !mwIsDemo(st))
           .filter(st => !turnedIn.has(st.id));
         missingHtml = expected.length
           ? `<div class="sub-missing"><strong>${expected.length} not turned in yet:</strong> ${
@@ -2275,6 +2472,7 @@
       }
 
       if (!submissionsCache.length) {
+        renderedSubIds = [];
         wrap.innerHTML = '<div class="sub-empty">No work has been turned in yet. Submissions appear here as soon as a student presses <strong>Turn in</strong>.</div>';
         return;
       }
@@ -2317,34 +2515,34 @@
           .map(f => `<a class="sub-file" href="${escapeHtml(f.data)}" download="${escapeHtml(f.name)}">📎 ${escapeHtml(f.name)}</a>`).join('');
 
         return `
-          <div class="sub-card">
-            <div class="sub-head" onclick="toggleSubmission(${i})">
-              <div class="sub-head-main">
-                <div class="sub-student">${escapeHtml(sub.studentName || 'Student')}</div>
-                <div class="sub-lesson">${escapeHtml(submissionLessonTitle(sub))}</div>
-              </div>
-              <div class="sub-head-meta">
+          <div class="sub-card" id="sub-card-${i}" data-sub="${escapeHtml(sub.id)}" data-i="${i}">
+            <button type="button" class="sub-head" id="sub-head-${i}" aria-expanded="false" aria-controls="sub-body-${i}" data-i="${i}" onclick="toggleSubmission(Number(this.dataset.i))">
+              <span class="sub-head-main">
+                <span class="sub-student">${escapeHtml(sub.studentName || 'Student')}</span>
+                <span class="sub-lesson">${escapeHtml(submissionLessonTitle(sub))}</span>
+              </span>
+              <span class="sub-head-meta">
                 <span class="sub-team">${escapeHtml(submissionTeamName(sub))}</span>
                 <span class="sub-when">${escapeHtml(formatSubmittedAt(sub.submittedAt))}</span>
                 ${photos.length ? `<span class="sub-count">📷 ${photos.length}</span>` : ''}
                 ${files ? '<span class="sub-count">📎</span>' : ''}
                 ${sub.reopenRequest && !sub.reopenRequest.declinedAt ? '<span class="sub-badge sub-badge-req">✋ Wants to redo</span>' : ''}
-                ${sub.redo ? '<span class="sub-badge sub-badge-redo">↩ Redo asked</span>' : ''}
+                ${sub.redo ? '<span class="sub-badge sub-badge-redo">↩ Sent back</span>' : ''}
                 ${sub.reopened && !sub.redo ? '<span class="sub-badge sub-badge-open">🔓 Open</span>' : ''}
                 ${sub.flag ? '<span class="sub-badge sub-badge-flag">⚠️ Flagged</span>' : ''}
                 ${(sub.sharedWith || []).length ? `<span class="sub-badge sub-badge-share">👥 +${sub.sharedWith.length}</span>` : ''}
                 ${reviewBadge(sub.review)}
-                <span class="sub-caret" id="sub-caret-${i}">▾</span>
-              </div>
-            </div>
-            <div class="sub-body" id="sub-body-${i}">
+                <span class="sub-caret" id="sub-caret-${i}" aria-hidden="true">▾</span>
+              </span>
+            </button>
+            <div class="sub-body" id="sub-body-${i}" role="region" aria-labelledby="sub-head-${i}">
+              ${pinnedBlock(sub, i)}
               ${answers || '<div class="sub-empty-inline">No written answers.</div>'}
               ${photoHtml}
               ${files ? `<div class="sub-files">${files}</div>` : ''}
               ${importToMapRow(sub, i)}
               ${shareEditor(sub, i)}
               ${reviewEditor(sub, i)}
-              ${accessEditor(sub, i)}
             </div>
           </div>`;
       }).join('');
@@ -2588,136 +2786,196 @@
       return `<span class="sub-badge sub-badge-done">✓ Read${level ? ' · ' + escapeHtml(level) : ''}</span>`;
     }
 
+    // Requests, flags and "sent back" sit at the top of the card, above the
+    // answers, so nothing that needs a decision is below the fold.
+    function pinnedBlock(sub, i) {
+      const req = sub.reopenRequest;
+      const pending = req && !req.declinedAt;
+      const flag = sub.flag;
+      const sid = escapeHtml(sub.id);
+      const parts = [];
+      if (pending) parts.push(`
+        <div class="ax-request">
+          <div class="ax-request-title">✋ ${escapeHtml(sub.studentName)} asked to redo this</div>
+          ${req.reason ? `<div class="ax-request-reason">“${escapeHtml(req.reason)}”</div>` : ''}
+          <div class="ax-request-meta">Asked ${escapeHtml(formatSubmittedAt(req.requestedAt))}</div>
+          <div class="rv-hint">To say yes, write what to change in the feedback box below and press <strong>↩ Send back for redo</strong>.</div>
+          <button type="button" class="visibility-bulk-btn" data-sub="${sid}" data-i="${i}" onclick="declineRequest(this.dataset.sub, Number(this.dataset.i))">Decline — keep it closed</button>
+        </div>`);
+      if (flag) parts.push(`
+        <div class="ax-flag">
+          <div class="ax-flag-title">⚠️ ${escapeHtml(flag.type === 'plagiarism' ? 'Flagged: possible plagiarism' : 'Flagged: academic integrity')}</div>
+          ${flag.note ? `<div class="ax-flag-note">“${escapeHtml(flag.note)}”</div>` : ''}
+          <div class="ax-request-meta">By ${escapeHtml(flag.flaggedBy || 'Coach')} · ${escapeHtml(formatSubmittedAt(flag.flaggedAt))} · the student can see this</div>
+          <button type="button" class="visibility-bulk-btn" data-sub="${sid}" onclick="submissionAccess(this.dataset.sub, 'unflag')">Remove flag</button>
+        </div>`);
+      if (sub.redo) parts.push(`
+        <div class="rv-redo-note">
+          <strong>↩ Sent back for redo</strong> by ${escapeHtml(sub.redo.by || 'a coach')} · ${escapeHtml(formatSubmittedAt(sub.redo.at))}
+          ${sub.redo.note ? `<br>“${escapeHtml(sub.redo.note)}”` : ''}
+          <br><button type="button" class="visibility-bulk-btn" data-sub="${sid}" onclick="submissionAccess(this.dataset.sub, 'lock')">🔒 Lock again</button>
+        </div>`);
+      else if (sub.reopened) parts.push(`
+        <div class="ax-note ax-note-open">🔓 Open for edits — reopened by ${escapeHtml(sub.reopened.by || 'a coach')}. It locks again once they turn it back in.
+          <button type="button" class="visibility-bulk-btn" data-sub="${sid}" onclick="submissionAccess(this.dataset.sub, 'lock')">🔒 Lock again</button>
+        </div>`);
+      if (req && req.declinedAt) parts.push(`<div class="ax-note">You declined a redo request on ${escapeHtml(formatSubmittedAt(req.declinedAt))}.</div>`);
+      return parts.length ? `<div class="sub-pinned">${parts.join('')}</div>` : '';
+    }
+
     function reviewEditor(sub, i) {
       const review = sub.review || {};
+      const sid = escapeHtml(sub.id);
       const options = REVIEW_LEVELS.map(l =>
         `<option value="${l.id}"${review.level === l.id ? ' selected' : ''}>${escapeHtml(l.label)}</option>`).join('');
       const meta = review.reviewedAt
         ? `<div class="rv-meta">Last read by ${escapeHtml(review.reviewedBy || 'Coach')} · ${escapeHtml(formatSubmittedAt(review.reviewedAt))}${review.stale ? ' — the student has changed it since' : ''}</div>`
         : '';
-      // a redo is not a quiet reopen: say so in the panel as well as the row
-      const redoNote = sub.redo ? `
-        <div class="rv-redo-note">
-          <strong>↩ Redo asked</strong> by ${escapeHtml(sub.redo.by || 'a coach')} · ${escapeHtml(formatSubmittedAt(sub.redo.at))}
-          ${sub.redo.note ? `<br>“${escapeHtml(sub.redo.note)}”` : ''}
-        </div>` : '';
       return `
         <div class="rv-box">
           <div class="rv-title">📋 Your review</div>
-          ${meta}${redoNote}
+          ${meta}
           <div class="rv-row">
-            <select class="rv-level" id="rv-level-${i}">${options}</select>
-            <input class="rv-feedback" id="rv-feedback-${i}" type="text"
-              placeholder="Feedback for the student (optional)" value="${escapeHtml(review.feedback || '')}">
+            <div class="rv-field rv-field-level">
+              <label class="rv-label" for="rv-level-${i}">Level</label>
+              <select class="rv-level" id="rv-level-${i}">${options}</select>
+            </div>
+            <div class="rv-field">
+              <label class="rv-label" for="rv-feedback-${i}">Feedback for ${escapeHtml(sub.studentName || 'the student')}</label>
+              <textarea class="rv-feedback" id="rv-feedback-${i}" rows="3" maxlength="2000"
+                placeholder="What went well and what to change. The student sees this.">${escapeHtml(review.feedback || '')}</textarea>
+            </div>
           </div>
           <div class="rv-actions">
-            <button class="submit-btn rv-save" data-sub="${escapeHtml(sub.id)}" onclick="saveReview(this.dataset.sub, ${i})">
-              ${review.reviewedAt && !review.stale ? 'Update review' : 'Mark as read'}
-            </button>
-            ${review.reviewedAt ? `<button class="visibility-bulk-btn" data-sub="${escapeHtml(sub.id)}" onclick="clearReview(this.dataset.sub)">Clear</button>` : ''}
-            <button class="visibility-bulk-btn rv-redo" data-sub="${escapeHtml(sub.id)}" onclick="requestRedo(this.dataset.sub, ${i})"
-              title="Send this back: the student is asked to do it again, and your feedback goes with it">↩ Request redo</button>
-            <span class="form-msg" id="rv-msg-${i}"></span>
+            <button type="button" class="submit-btn rv-save" data-sub="${sid}" data-i="${i}" onclick="saveReview(this.dataset.sub, Number(this.dataset.i), true)"
+              title="Save this review and open the next submission still waiting">Save &amp; next →</button>
+            <button type="button" class="visibility-bulk-btn" data-sub="${sid}" data-i="${i}" onclick="saveReview(this.dataset.sub, Number(this.dataset.i), false)">${review.reviewedAt && !review.stale ? 'Save changes' : 'Mark as read'}</button>
+            <button type="button" class="visibility-bulk-btn rv-redo" data-sub="${sid}" data-i="${i}" onclick="requestRedo(this.dataset.sub, Number(this.dataset.i))"
+              title="Reopen it and ask the student to do it again — your feedback goes with it">↩ Send back for redo</button>
+            ${!sub.flag ? `<button type="button" class="visibility-bulk-btn ax-flag-btn" data-sub="${sid}" onclick="flagSubmission(this.dataset.sub)">⚠️ Flag a concern</button>` : ''}
+            ${review.reviewedAt ? `<button type="button" class="visibility-bulk-btn" data-sub="${sid}" onclick="clearReview(this.dataset.sub)">Clear review</button>` : ''}
+            <span class="form-msg" id="rv-msg-${i}" role="status"></span>
           </div>
         </div>`;
     }
 
-    // ── Reopening + integrity flags ───────────────────────────────────────
-    function accessEditor(sub, i) {
-      const req = sub.reopenRequest;
-      const pending = req && !req.declinedAt;
-      const flag = sub.flag;
-
-      const requestBlock = pending ? `
-        <div class="ax-request">
-          <div class="ax-request-title">✋ ${escapeHtml(sub.studentName)} asked to redo this</div>
-          ${req.reason ? `<div class="ax-request-reason">“${escapeHtml(req.reason)}”</div>` : ''}
-          <div class="ax-request-meta">Asked ${escapeHtml(formatSubmittedAt(req.requestedAt))}</div>
-        </div>` : '';
-
-      const declined = req && req.declinedAt
-        ? `<div class="ax-note">You declined this on ${escapeHtml(formatSubmittedAt(req.declinedAt))}.</div>` : '';
-
-      const openState = sub.reopened
-        ? `<div class="ax-note ax-note-open">🔓 Open for edits — reopened by ${escapeHtml(sub.reopened.by || 'a coach')}. It locks again once they turn it back in.</div>`
-        : '';
-
-      const flagBlock = flag ? `
-        <div class="ax-flag">
-          <div class="ax-flag-title">⚠️ ${escapeHtml(flag.type === 'plagiarism' ? 'Flagged: possible plagiarism' : 'Flagged: academic integrity')}</div>
-          ${flag.note ? `<div class="ax-flag-note">“${escapeHtml(flag.note)}”</div>` : ''}
-          <div class="ax-request-meta">By ${escapeHtml(flag.flaggedBy || 'Coach')} · ${escapeHtml(formatSubmittedAt(flag.flaggedAt))} · the student can see this</div>
-          <button class="visibility-bulk-btn" data-sub="${escapeHtml(sub.id)}" onclick="submissionAccess(this.dataset.sub,'unflag')">Remove flag</button>
-        </div>` : '';
-
-      return `
-        <div class="ax-box">
-          ${requestBlock}${declined}${openState}${flagBlock}
-          <div class="ax-actions">
-            ${sub.reopened
-              ? `<button class="visibility-bulk-btn" data-sub="${escapeHtml(sub.id)}" onclick="submissionAccess(this.dataset.sub,'lock')">🔒 Lock again</button>`
-              : `<button class="submit-btn rv-save" data-sub="${escapeHtml(sub.id)}" onclick="submissionAccess(this.dataset.sub,'reopen', true)">🔓 ${pending ? 'Allow redo' : 'Reopen for edits'}</button>`}
-            ${pending ? `<button class="visibility-bulk-btn" data-sub="${escapeHtml(sub.id)}" onclick="submissionAccess(this.dataset.sub,'decline', true)">Decline</button>` : ''}
-            ${!flag ? `<button class="visibility-bulk-btn ax-flag-btn" data-sub="${escapeHtml(sub.id)}" onclick="flagSubmission(this.dataset.sub)">⚠️ Flag a concern</button>` : ''}
-          </div>
-        </div>`;
+    function replaceSubmission(updated) {
+      if (!updated) return;
+      const idx = (submissionsCache || []).findIndex(s => s.id === updated.id);
+      if (idx >= 0) submissionsCache[idx] = updated;
     }
 
-    async function submissionAccess(submissionId, action, askNote) {
-      let note = '';
-      if (askNote) {
-        const prompts = {
-          reopen: 'Message for the student (optional) — e.g. what to fix:',
-          decline: 'Why are you keeping it closed? (optional)'
-        };
-        const answer = prompt(prompts[action] || 'Note (optional):');
-        if (answer === null) return;
-        note = answer;
-      }
+    function cardMessage(submissionId, text) {
+      const card = findSubCard(submissionId);
+      const msg = card ? document.getElementById(`rv-msg-${card.dataset.i}`) : null;
+      if (msg) { msg.textContent = text; msg.className = 'form-msg error'; }
+      else showToast(text);
+    }
+
+    async function submissionAccess(submissionId, action, note) {
       try {
         const result = await api(`/api/fll/coach/task-submissions/${encodeURIComponent(submissionId)}/access`, {
           method: 'PATCH',
-          body: JSON.stringify({ action, note })
+          body: JSON.stringify({ action, note: note || '' })
         });
-        const idx = submissionsCache.findIndex(s => s.id === submissionId);
-        if (idx >= 0) submissionsCache[idx] = result.submission;
+        replaceSubmission(result.submission);
         renderSubmissions();
         reopenSubmission(submissionId);
-        showToast(action === 'reopen' ? 'Reopened for the student 🔓'
-          : action === 'lock' ? 'Locked again 🔒'
+        showToast(action === 'lock' ? 'Locked again 🔒'
           : action === 'unflag' ? 'Flag removed'
+          : action === 'decline' ? 'Request declined — it stays closed'
           : 'Saved');
       } catch (err) {
-        alert(err.message);
+        cardMessage(submissionId, err.message);
       }
     }
 
-    async function flagSubmission(submissionId) {
-      const which = prompt('Flag this as:\n\n1 = Possible plagiarism (copied work)\n2 = Academic integrity (not their own work)\n\nType 1 or 2:');
-      if (which === null) return;
-      const flagType = which.trim() === '2' ? 'academic-integrity' : which.trim() === '1' ? 'plagiarism' : null;
-      if (!flagType) { alert('Please type 1 or 2.'); return; }
-      const note = prompt('What did you notice? The student will see this, so keep it factual and kind:');
-      if (note === null) return;
+    function declineRequest(submissionId, i) {
+      const note = (document.getElementById(`rv-feedback-${i}`)?.value || '').trim();
+      const ask = note
+        ? `Keep it closed? The student sees your feedback text as the reason:\n\n“${note}”`
+        : 'Keep it closed? No reason will be shown — type one in the feedback box first if you want to give one.';
+      if (!confirm(ask)) return;
+      submissionAccess(submissionId, 'decline', note);
+    }
+
+    // ── Flagging: an in-page dialog, not prompt() ─────────────────────────
+    let flagTargetId = null;
+
+    function flagSubmission(submissionId) {
+      const dialog = document.getElementById('flagDialog');
+      const sub = (submissionsCache || []).find(s => s.id === submissionId);
+      if (!dialog || !sub) return;
+      flagTargetId = submissionId;
+      document.getElementById('flagForm').reset();
+      const msg = document.getElementById('flagMsg');
+      msg.textContent = '';
+      msg.className = 'form-msg';
+      document.getElementById('flagDialogFor').textContent =
+        `${sub.studentName || 'The student'} · ${submissionLessonTitle(sub)} — they will see this flag and your note.`;
+      if (typeof dialog.showModal === 'function') dialog.showModal(); else dialog.setAttribute('open', '');
+      document.getElementById('flagNote').focus();
+    }
+
+    function closeFlagDialog() {
+      const dialog = document.getElementById('flagDialog');
+      if (dialog.open) { if (typeof dialog.close === 'function') dialog.close(); else dialog.removeAttribute('open'); }
+      const back = flagTargetId && findSubCard(flagTargetId);
+      flagTargetId = null;
+      if (back) back.querySelector('.sub-head')?.focus({ preventScroll: true });
+    }
+
+    async function submitFlagDialog(event) {
+      event.preventDefault();
+      const submissionId = flagTargetId;
+      if (!submissionId) return false;
+      const checked = document.querySelector('#flagForm input[name="flagType"]:checked');
+      const flagType = checked ? checked.value : 'plagiarism';
+      const note = document.getElementById('flagNote').value.trim();
+      const msg = document.getElementById('flagMsg');
+      const button = document.getElementById('flagSubmit');
+      if (!note) {
+        msg.textContent = 'Write a short, factual note first — the student reads it.';
+        msg.className = 'form-msg error';
+        document.getElementById('flagNote').focus();
+        return false;
+      }
+      button.disabled = true;
+      msg.textContent = 'Saving…';
+      msg.className = 'form-msg';
       try {
         const result = await api(`/api/fll/coach/task-submissions/${encodeURIComponent(submissionId)}/access`, {
           method: 'PATCH',
           body: JSON.stringify({ action: 'flag', flagType, note })
         });
-        const idx = submissionsCache.findIndex(s => s.id === submissionId);
-        if (idx >= 0) submissionsCache[idx] = result.submission;
+        replaceSubmission(result.submission);
         renderSubmissions();
         reopenSubmission(submissionId);
+        closeFlagDialog();
         showToast('Flagged — the student can see this');
       } catch (err) {
-        alert(err.message);
+        msg.textContent = err.message;
+        msg.className = 'form-msg error';
+      } finally {
+        button.disabled = false;
       }
+      return false;
     }
 
-    async function saveReview(submissionId, i) {
+    // ── Reviewing as a queue ──────────────────────────────────────────────
+    let renderedSubIds = [];
+
+    function submissionWaiting(id) {
+      const s = (submissionsCache || []).find(x => x.id === id);
+      return !!s && !(s.review && !s.review.stale);
+    }
+
+    async function saveReview(submissionId, i, goNext) {
       const msg = document.getElementById(`rv-msg-${i}`);
       const level = document.getElementById(`rv-level-${i}`).value;
       const feedback = document.getElementById(`rv-feedback-${i}`).value;
+      const order = renderedSubIds.slice();
+      const pos = order.indexOf(submissionId);
       msg.textContent = 'Saving…';
       msg.className = 'form-msg';
       try {
@@ -2725,59 +2983,61 @@
           method: 'PATCH',
           body: JSON.stringify({ level, feedback })
         });
-        const idx = submissionsCache.findIndex(s => s.id === submissionId);
-        if (idx >= 0) submissionsCache[idx] = result.submission;
+        replaceSubmission(result.submission);
         renderSubmissions();
-        reopenSubmission(submissionId);
-        showToast('Marked as read ✓');
+        if (goNext) {
+          // the next card after this one that still needs reading, wrapping round
+          const candidates = [...order.slice(pos + 1), ...order.slice(0, Math.max(pos, 0))];
+          const nextId = candidates.find(id => id !== submissionId && renderedSubIds.includes(id) && submissionWaiting(id));
+          if (nextId) {
+            openSubmissionCard(nextId, true);
+            showToast('Saved ✓ — next one');
+          } else {
+            openSubmissionCard(submissionId);
+            showToast('Saved ✓ — nothing else is waiting in this list');
+          }
+          return;
+        }
+        openSubmissionCard(submissionId);
+        showToast('Saved ✓');
       } catch (err) {
         msg.textContent = err.message;
         msg.className = 'form-msg error';
       }
     }
 
-    // ── Asking for a redo ─────────────────────────────────────────────────
-    // One call: the note the coach typed becomes both the written feedback and
-    // the reason the work was sent back, so the student never gets a lesson
-    // reopened with no word about why.
+    // ── Sending work back ─────────────────────────────────────────────────
+    // One action for "reopen", "allow redo" and "request redo": the feedback
+    // becomes the reason, so work never comes back with no word about why.
     async function requestRedo(submissionId, i) {
       const msg = document.getElementById(`rv-msg-${i}`);
       const box = document.getElementById(`rv-feedback-${i}`);
       const levelBox = document.getElementById(`rv-level-${i}`);
-      let note = (box?.value || '').trim();
+      const note = (box?.value || '').trim();
       if (!note) {
-        const answer = prompt('What should they do differently? The student sees this, so keep it short and kind:');
-        if (answer === null) return;
-        note = String(answer).trim();
-        if (!note) {
-          if (msg) {
-            msg.textContent = 'Add a short note first — work sent back with no explanation just confuses them.';
-            msg.className = 'form-msg error';
-          }
-          box?.focus();
-          return;
+        if (msg) {
+          msg.textContent = 'Write what they should change in the feedback box first — work sent back with no explanation just confuses them.';
+          msg.className = 'form-msg error';
         }
-        if (box) box.value = note;   // leave the coach looking at what was sent
+        box?.focus();
+        return;
       }
-      const warning = 'Ask for a redo?\n\n'
-        + 'The lesson reopens and the student is told to do it again, with your note:\n\n'
-        + '“' + note + '”';
-      if (!confirm(warning)) return;
+      if (!confirm('Send this back for a redo?\n\nThe lesson reopens and the student is told to do it again, with your note:\n\n“' + note + '”')) return;
       if (msg) { msg.textContent = 'Sending…'; msg.className = 'form-msg'; }
       try {
         const result = await api(`/api/fll/coach/task-submissions/${encodeURIComponent(submissionId)}/access`, {
           method: 'PATCH',
           body: JSON.stringify({ action: 'redo', note, feedback: note, level: levelBox ? levelBox.value : '' })
         });
-        const idx = submissionsCache.findIndex(s => s.id === submissionId);
-        if (result.submission && idx >= 0) submissionsCache[idx] = result.submission;
+        if (result.submission) replaceSubmission(result.submission);
         else await loadSubmissions(true);   // fall back to a full reload
         renderSubmissions();                // also refreshes the badge and Overview
         reopenSubmission(submissionId);
-        showToast('Redo asked — the student can work on it again ↩');
+        if (mwLoaded) renderMissingWork();
+        showToast('Sent back — the student can work on it again ↩');
       } catch (err) {
         if (msg) { msg.textContent = err.message; msg.className = 'form-msg error'; }
-        else alert(err.message);
+        else showToast(err.message);
       }
     }
 
@@ -2788,28 +3048,49 @@
           method: 'PATCH',
           body: JSON.stringify({ clearReview: true })
         });
-        const idx = submissionsCache.findIndex(s => s.id === submissionId);
-        if (idx >= 0) submissionsCache[idx] = result.submission;
+        replaceSubmission(result.submission);
         renderSubmissions();
         reopenSubmission(submissionId);
       } catch (err) {
-        alert(err.message);
+        cardMessage(submissionId, err.message);
       }
+    }
+
+    function findSubCard(submissionId) {
+      return [...document.querySelectorAll('#submissionsWrap .sub-card')].find(c => c.dataset.sub === submissionId) || null;
     }
 
     // keep the card the coach was working in open after a re-render
     function reopenSubmission(submissionId) {
-      const rows = [...document.querySelectorAll('.sub-card')];
-      const idx = rows.findIndex(c => c.innerHTML.includes(submissionId));
-      if (idx >= 0) toggleSubmission(idx);
+      const card = findSubCard(submissionId);
+      if (card) setSubmissionOpen(Number(card.dataset.i), true);
+    }
+
+    function openSubmissionCard(submissionId, focusFeedback) {
+      const card = findSubCard(submissionId);
+      if (!card) return false;
+      const i = Number(card.dataset.i);
+      document.querySelectorAll('#submissionsWrap .sub-card.is-current').forEach(c => c.classList.remove('is-current'));
+      card.classList.add('is-current');
+      setSubmissionOpen(i, true);
+      card.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      const target = focusFeedback ? document.getElementById(`rv-feedback-${i}`) : document.getElementById(`sub-head-${i}`);
+      if (target) target.focus({ preventScroll: true });
+      return true;
+    }
+
+    function setSubmissionOpen(i, open) {
+      const body = document.getElementById(`sub-body-${i}`);
+      if (!body) return;
+      body.classList.toggle('open', open);
+      document.getElementById(`sub-head-${i}`)?.setAttribute('aria-expanded', open ? 'true' : 'false');
+      const caret = document.getElementById(`sub-caret-${i}`);
+      if (caret) caret.textContent = open ? '▴' : '▾';
     }
 
     function toggleSubmission(i) {
       const body = document.getElementById(`sub-body-${i}`);
-      const caret = document.getElementById(`sub-caret-${i}`);
-      if (!body) return;
-      const open = body.classList.toggle('open');
-      if (caret) caret.textContent = open ? '▴' : '▾';
+      if (body) setSubmissionOpen(i, !body.classList.contains('open'));
     }
 
     function formatSubmittedAt(value) {
@@ -2957,12 +3238,18 @@
       if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    // a waiting-for-review row opens Submitted Work
+    // a waiting-for-review row opens that exact card, with every filter
+    // cleared so it cannot be hidden by one left over from earlier
     function ovOpenSubmission(submissionId) {
-      showTab('submissions');
+      ['subTeamFilter', 'subLessonFilter', 'subReadFilter'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = 'all';
+      });
       const search = document.getElementById('subSearch');
-      const sub = (submissionsCache || []).find(s => s.id === submissionId);
-      if (search && sub) { search.value = sub.studentName || ''; renderSubmissions(); }
+      if (search) search.value = '';
+      showTab('submissions');
+      renderSubmissions();
+      if (!openSubmissionCard(submissionId, false)) showToast('That submission is no longer in the list');
     }
 
     function renderOverview() {
@@ -3118,7 +3405,7 @@
               <div class="rubric-item">
                 <div class="rubric-head">
                   <span class="rubric-season">${escapeHtml(r.season)}</span>
-                  <button class="rubric-delete" data-team="${escapeHtml(team.id)}" data-rubric="${escapeHtml(r.id)}" onclick="deleteRubric(this.dataset.team,this.dataset.rubric)">✕</button>
+                  <button class="rubric-delete" data-team="${escapeHtml(team.id)}" data-rubric="${escapeHtml(r.id)}" onclick="deleteRubric(this.dataset.team,this.dataset.rubric)" aria-label="Delete rubric ${escapeHtml(r.label || r.season || '')}" title="Delete rubric">✕</button>
                 </div>
                 <div class="rubric-label">${escapeHtml(r.label)}</div>
                 ${r.notes ? `<div class="rubric-notes">${escapeHtml(r.notes)}</div>` : ''}
@@ -3128,11 +3415,11 @@
             <button class="toggle-form-btn" data-team="${escapeHtml(team.id)}" onclick="document.getElementById('rubric-form-'+this.dataset.team).classList.toggle('hidden')">＋ Add rubric</button>
             <div class="mini-form hidden" id="rubric-form-${escapeHtml(team.id)}">
               <div class="mini-form-row">
-                <input type="text" id="rubric-season-${escapeHtml(team.id)}" placeholder="Season (e.g. 2025-2026 SUBMERGED)">
-                <input type="text" id="rubric-label-${escapeHtml(team.id)}" placeholder="Label (e.g. Judging Rubric)">
+                <input type="text" id="rubric-season-${escapeHtml(team.id)}" aria-label="Season" placeholder="Season (e.g. 2025-2026 SUBMERGED)">
+                <input type="text" id="rubric-label-${escapeHtml(team.id)}" aria-label="Rubric label" placeholder="Label (e.g. Judging Rubric)">
               </div>
-              <input type="text" id="rubric-url-${escapeHtml(team.id)}" placeholder="Link to rubric file (optional)">
-              <textarea id="rubric-notes-${escapeHtml(team.id)}" rows="2" placeholder="Notes / judge feedback summary (optional)"></textarea>
+              <input type="text" id="rubric-url-${escapeHtml(team.id)}" aria-label="Link to rubric file" placeholder="Link to rubric file (optional)">
+              <textarea id="rubric-notes-${escapeHtml(team.id)}" rows="2" aria-label="Rubric notes" placeholder="Notes / judge feedback summary (optional)"></textarea>
               <div class="mini-form-row">
                 <button class="mini-btn" data-team="${escapeHtml(team.id)}" onclick="addRubric(this.dataset.team)">Save rubric</button>
               </div>
@@ -3161,7 +3448,7 @@
                   <td><strong>${escapeHtml(s.name)}</strong></td>
                   <td><code>${escapeHtml(s.username)}</code></td>
                   <td>
-                    <select data-sid="${escapeHtml(s.id)}" onchange="moveStudent(this.dataset.sid, this.value)">${teamOptions(s.teamId)}</select>
+                    <select data-sid="${escapeHtml(s.id)}" aria-label="Team for ${escapeHtml(s.name)}" onchange="moveStudent(this.dataset.sid, this.value)">${teamOptions(s.teamId)}</select>
                   </td>
                   <td><span class="st-status-pill ${s.active ? 'on' : 'off'}">${s.active ? 'Active' : 'Disabled'}</span></td>
                   <td>
@@ -3423,80 +3710,197 @@
     }
 
     // ── Live slide controls ───────────────────────────────────────────────
+    // Picking a slide in the list only PREVIEWS it for the coach. Students see
+    // a slide after an explicit Go live, and while live the top bar says so on
+    // every tab, with a Stop button. The tally is polled every 3s while live.
     let liveState = null;
+    let liveTally = { total: 0, counts: [] };
+    let livePreviewIndex = null;
+    let livePollTimer = null;
+    let liveBusy = false;
+    let liveMsg = { text: '', error: false, kind: '' };
+    let liveSignature = '';
 
-    async function loadLiveSlides() {
+    function liveSlides() { return (liveState && Array.isArray(liveState.slides)) ? liveState.slides : []; }
+    function liveIsOn() { return !!(liveState && liveState.active); }
+    function liveIndex() { return liveState ? (liveState.currentIndex || 0) : 0; }
+
+    function applyLiveResult(result, fromPoll) {
+      liveState = result.live || liveState;
+      liveTally = result.tally || { total: 0, counts: [] };
+      const count = liveSlides().length;
+      if (livePreviewIndex == null || livePreviewIndex >= count) livePreviewIndex = liveIsOn() ? liveIndex() : 0;
+      if (fromPoll && liveMsg.kind === 'poll') liveMsg = { text: '', error: false, kind: '' };
+      // a poll that changed nothing must not re-render (it would steal focus)
+      const sig = JSON.stringify([liveState && liveState.active, liveIndex(), liveTally, count, liveMsg.text]);
+      if (!fromPoll || sig !== liveSignature) renderLiveSlides();
+      liveSignature = sig;
+      renderLiveBar();
+      syncLivePolling();
+    }
+
+    async function loadLiveSlides(fromPoll) {
       try {
-        const result = await api('/api/fll/coach/live');
-        liveState = result.live;
-        renderLiveSlides(result.tally);
+        applyLiveResult(await api('/api/fll/coach/live'), !!fromPoll);
       } catch (err) {
-        document.getElementById('livePreview').innerHTML = `<div class="form-msg error">${escapeHtml(err.message)}</div>`;
+        if (fromPoll) {
+          if (liveIsOn()) setLiveMsg('Could not refresh the live answers — trying again every 3 seconds.', true, 'poll');
+          return;
+        }
+        const preview = document.getElementById('livePreview');
+        if (preview && !liveState) preview.innerHTML = `<div class="form-msg error">${escapeHtml(err.message)}</div>`;
+        else setLiveMsg(err.message, true);
       }
     }
 
-    function renderLiveSlides(tally = { total: 0, counts: [] }) {
+    function syncLivePolling() {
+      if (liveIsOn() && !livePollTimer) {
+        livePollTimer = setInterval(() => { if (!liveBusy) loadLiveSlides(true); }, 3000);
+      } else if (!liveIsOn() && livePollTimer) {
+        clearInterval(livePollTimer);
+        livePollTimer = null;
+      }
+    }
+
+    function setLiveMsg(text, isError, kind) {
+      liveMsg = { text: text || '', error: !!isError, kind: kind || '' };
+      const el = document.getElementById('liveMsg');
+      if (el) { el.textContent = liveMsg.text; el.className = 'form-msg live-msg' + (isError ? ' error' : ''); }
+      const onLiveTab = document.getElementById('panel-live')?.classList.contains('active');
+      if (text && isError && !onLiveTab && kind !== 'poll') showToast(text);
+    }
+
+    function renderLiveBar() {
+      const bar = document.getElementById('liveBar');
+      if (!bar) return;
+      const on = liveIsOn();
+      bar.hidden = !on;
+      if (!on) return;
+      const slides = liveSlides();
+      const slide = slides[liveIndex()] || {};
+      const answers = slide.type === 'question' ? ` · ${plural(liveTally.total || 0, 'answer')}` : '';
+      document.getElementById('liveBarText').textContent = `LIVE · slide ${liveIndex() + 1} of ${slides.length}${answers}`;
+    }
+
+    function renderLiveSlides() {
       const preview = document.getElementById('livePreview');
       const list = document.getElementById('liveSlideList');
-      const slides = (liveState && Array.isArray(liveState.slides)) ? liveState.slides : [];
-      const index = liveState ? liveState.currentIndex || 0 : 0;
-      const slide = slides[index] || {};
+      if (!preview || !list || !liveState) return;
+      const slides = liveSlides();
       if (!slides.length) {
         preview.innerHTML = '<div class="form-msg error">No live slides found.</div>';
         list.innerHTML = '';
         return;
       }
+      const focused = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.liveAct : '';
+      const on = liveIsOn();
+      const liveIdx = liveIndex();
+      const idx = Math.min(Math.max(livePreviewIndex || 0, 0), slides.length - 1);
+      const slide = slides[idx] || {};
+      const showingLive = on && idx === liveIdx;
+      const busy = liveBusy ? ' disabled' : '';
+      const status = showingLive
+        ? '<span class="live-status on">● Live — students see this slide</span>'
+        : on ? `<span class="live-status preview">Preview only — the class is on slide ${liveIdx + 1}</span>`
+        : '<span class="live-status preview">Preview only — nothing is live, students see nothing</span>';
       const answerRows = slide.type === 'question' ? `
         <div class="live-answers">
           ${(slide.options || []).map((option, i) => `
             <div class="live-answer-row">
               <span>${String.fromCharCode(65 + i)}. ${escapeHtml(option)}</span>
-              <span>${(tally.counts || [])[i] || 0}</span>
-            </div>
-          `).join('')}
-        </div>
-      ` : '';
+              <span>${showingLive ? ((liveTally.counts || [])[i] || 0) : ''}</span>
+            </div>`).join('')}
+          ${showingLive ? `<div class="form-sub">${plural(liveTally.total || 0, 'student')} answered · updates every 3 seconds</div>` : ''}
+        </div>` : '';
+      const prevI = Math.max(0, idx - 1);
+      const nextI = Math.min(slides.length - 1, idx + 1);
+      const controls = !on ? `
+          <div class="live-controls-group">
+            <button type="button" class="visibility-bulk-btn" data-live-act="prev" data-index="${prevI}" onclick="previewLiveSlide(Number(this.dataset.index))"${idx === 0 ? ' disabled' : ''}>‹ Previous</button>
+            <button type="button" class="visibility-bulk-btn" data-live-act="next" data-index="${nextI}" onclick="previewLiveSlide(Number(this.dataset.index))"${idx >= slides.length - 1 ? ' disabled' : ''}>Next ›</button>
+          </div>
+          <div class="live-controls-group">
+            <button type="button" class="visibility-bulk-btn" data-live-act="start" onclick="startLiveSlides()"${busy}>Go live from slide 1</button>
+            <button type="button" class="submit-btn" data-live-act="golive" data-index="${idx}" onclick="goLiveAt(Number(this.dataset.index))"${busy}>▶ Go live on slide ${idx + 1}</button>
+          </div>` : `
+          <div class="live-controls-group">
+            <button type="button" class="visibility-bulk-btn" data-live-act="back" onclick="liveStep(-1)"${liveIdx === 0 || liveBusy ? ' disabled' : ''}>‹ Class back</button>
+            <button type="button" class="${showingLive ? 'submit-btn' : 'visibility-bulk-btn'}" data-live-act="fwd" onclick="liveStep(1)"${liveIdx >= slides.length - 1 || liveBusy ? ' disabled' : ''}>Class next ›</button>
+            ${showingLive ? '' : `<button type="button" class="submit-btn" data-live-act="golive" data-index="${idx}" onclick="goLiveAt(Number(this.dataset.index))"${busy}>Show slide ${idx + 1} to the class</button>`}
+          </div>
+          <div class="live-controls-group">
+            <button type="button" class="visibility-bulk-btn" data-live-act="start" onclick="startLiveSlides()"${busy}>Restart from slide 1</button>
+            <button type="button" class="btn-danger-outline" data-live-act="stop" onclick="stopLiveSlides()"${busy}>■ Stop</button>
+          </div>`;
       preview.innerHTML = `
-        <span class="live-status ${liveState.active ? 'on' : ''}">${liveState.active ? 'Live now' : 'Stopped'}</span>
-        <div class="form-sub">Slide ${index + 1} of ${slides.length}</div>
+        ${status}
+        <div class="form-sub">Slide ${idx + 1} of ${slides.length}</div>
         <div class="live-slide-title">${escapeHtml(slide.title || 'Untitled slide')}</div>
         <div class="live-slide-body">${escapeHtml(slide.body || '')}</div>
         ${answerRows}
-        <div class="live-controls">
-          <button class="mini-btn outline" onclick="moveLiveSlide(${Math.max(0, index - 1)})">Previous</button>
-          <button class="mini-btn" onclick="startLiveSlides()">Start from beginning</button>
-          <button class="mini-btn" onclick="moveLiveSlide(${Math.min(slides.length - 1, index + 1)})">Next</button>
-          <button class="mini-btn outline" onclick="stopLiveSlides()">Stop</button>
-        </div>
-      `;
+        <div class="live-controls">${controls}</div>
+        <div class="form-msg live-msg${liveMsg.error ? ' error' : ''}" id="liveMsg" role="status">${escapeHtml(liveMsg.text)}</div>`;
       list.innerHTML = slides.map((item, i) => `
-        <button class="live-side-item ${i === index ? 'active' : ''}" onclick="moveLiveSlide(${i})">
-          ${i + 1}. ${escapeHtml(item.title || 'Untitled slide')}
-        </button>
-      `).join('');
+        <button type="button" class="live-side-item ${i === idx ? 'active' : ''}" data-live-act="pick-${i}" data-index="${i}"
+          onclick="previewLiveSlide(Number(this.dataset.index))"${i === idx ? ' aria-current="true"' : ''}>
+          <span>${i + 1}. ${escapeHtml(item.title || 'Untitled slide')}</span>
+          ${on && i === liveIdx ? '<span class="live-side-tag">LIVE</span>' : ''}
+        </button>`).join('');
+      if (focused) {
+        const again = [...document.querySelectorAll('#panel-live [data-live-act]')].find(b => b.dataset.liveAct === focused);
+        if (again && !again.disabled) again.focus({ preventScroll: true });
+      }
+    }
+
+    async function liveRequest(url, body, okText) {
+      if (liveBusy) return false;
+      liveBusy = true;
+      setLiveMsg('Sending…', false);
+      renderLiveSlides();
+      try {
+        const result = await api(url, { method: 'POST', body: JSON.stringify(body || {}) });
+        liveBusy = false;
+        liveMsg = { text: '', error: false, kind: '' };
+        applyLiveResult(result, false);
+        if (okText) showToast(okText);
+        return true;
+      } catch (err) {
+        liveBusy = false;
+        setLiveMsg(`Not sent: ${err.message || 'the server did not answer'}. The LIVE bar shows what students see.`, true);
+        renderLiveSlides();
+        loadLiveSlides(true);   // re-sync with what the server really has
+        return false;
+      }
+    }
+
+    // local only — nothing is sent
+    function previewLiveSlide(index) {
+      livePreviewIndex = index;
+      renderLiveSlides();
+    }
+
+    function goLiveAt(index) {
+      livePreviewIndex = index;
+      // goLive is ignored by today's server; see the report for the server change
+      liveRequest('/api/fll/coach/live/slide', { index, goLive: true }, `Live — students now see slide ${index + 1}`);
+    }
+
+    function liveStep(delta) {
+      if (!liveIsOn()) return;
+      const i = Math.min(liveSlides().length - 1, Math.max(0, liveIndex() + delta));
+      if (i === liveIndex()) return;
+      livePreviewIndex = i;
+      liveRequest('/api/fll/coach/live/slide', { index: i }, '');
     }
 
     async function startLiveSlides() {
-      const result = await api('/api/fll/coach/live/start', { method: 'POST', body: '{}' });
-      liveState = result.live;
-      renderLiveSlides(result.tally);
-      showToast('Live slides started');
+      if (liveIsOn() && !confirm(`The class is live on slide ${liveIndex() + 1}. Send every student back to slide 1?`)) return;
+      livePreviewIndex = 0;
+      liveRequest('/api/fll/coach/live/start', {}, 'Live from slide 1 — students see it now');
     }
 
-    async function moveLiveSlide(index) {
-      const result = await api('/api/fll/coach/live/slide', {
-        method: 'POST',
-        body: JSON.stringify({ index })
-      });
-      liveState = result.live;
-      renderLiveSlides(result.tally);
-    }
-
-    async function stopLiveSlides() {
-      const result = await api('/api/fll/coach/live/stop', { method: 'POST', body: '{}' });
-      liveState = result.live;
-      renderLiveSlides(result.tally);
-      showToast('Live slides stopped');
+    function stopLiveSlides() {
+      liveRequest('/api/fll/coach/live/stop', {}, 'Stopped — students no longer see a slide');
     }
 
     // ── Coach calendar ────────────────────────────────────────────────────
@@ -3755,42 +4159,119 @@
       return team || settings;
     }
 
-    function renderVisibility() {
-      if (!roster) return;
-      const teamSelect = document.getElementById('visibilityTeam');
-      if (teamSelect.options.length <= 1) {
-        teamSelect.innerHTML = '<option value="">All teams (default)</option>' + roster.teams
+    // The draft is only rebuilt when there is none yet or the coach picks
+    // another team, so switching tabs never throws unsaved ticks away. The
+    // baseline is what was saved, so the save bar can count the difference.
+    let visibilityBaseline = null;
+
+    function plural(n, one, many) { return `${n} ${n === 1 ? one : (many || one + 's')}`; }
+
+    function fillTeamSelect(id, firstLabel) {
+      const sel = document.getElementById(id);
+      if (sel && roster && sel.options.length <= 1) {
+        sel.innerHTML = `<option value="">${escapeHtml(firstLabel)}</option>` + roster.teams
           .map(team => `<option value="${escapeHtml(team.id)}">${escapeHtml(team.nickname || team.name)}</option>`).join('');
       }
-      const previewSelect = document.getElementById('previewTeam');
-      if (previewSelect && previewSelect.options.length <= 1) {
-        previewSelect.innerHTML = '<option value="">Pick a team…</option>' + roster.teams
-          .map(team => `<option value="${escapeHtml(team.id)}">${escapeHtml(team.nickname || team.name)}</option>`).join('');
-      }
-      syncTeamHubButton();
-      const teamId = teamSelect.value;
-      const source = settingsForVisibilityTeam(teamId);
+      return sel;
+    }
+
+    function teamUsesDefaults(teamId) {
+      return !!teamId && !(roster?.fllSettings?.teamSettings || {})[teamId];
+    }
+
+    function setDifference(a, b) {
+      const A = new Set(a || []), B = new Set(b || []);
+      let n = 0;
+      A.forEach(x => { if (!B.has(x)) n++; });
+      B.forEach(x => { if (!A.has(x)) n++; });
+      return n;
+    }
+
+    function startVisibilityDraft(teamId) {
+      const s = settingsForVisibilityTeam(teamId);
+      visibilityBaseline = {
+        teamId,
+        disabledAreas: [...(s.disabledAreas || [])],
+        simulatorEnabled: s.simulatorEnabled !== false,
+        hiddenAssignments: [...(s.hiddenAssignments || [])]
+      };
       visibilityDraft = {
         teamId,
-        disabledAreas: [...(source.disabledAreas || [])],
-        simulatorEnabled: source.simulatorEnabled !== false,
-        hiddenAssignments: [...(source.hiddenAssignments || [])],
-        hiddenResources: [...(source.hiddenResources || [])]
+        disabledAreas: [...visibilityBaseline.disabledAreas],
+        simulatorEnabled: visibilityBaseline.simulatorEnabled,
+        hiddenAssignments: [...visibilityBaseline.hiddenAssignments]
       };
+    }
+
+    function visibilityDirtyCount() {
+      if (!visibilityDraft || !visibilityBaseline) return 0;
+      return setDifference(visibilityDraft.disabledAreas, visibilityBaseline.disabledAreas)
+        + (visibilityDraft.simulatorEnabled !== visibilityBaseline.simulatorEnabled ? 1 : 0)
+        + setDifference(visibilityDraft.hiddenAssignments, visibilityBaseline.hiddenAssignments);
+    }
+
+    function draftTeamName(draft) {
+      return draft && draft.teamId ? teamLabel(draft.teamId) : 'all teams';
+    }
+
+    function updateVisibilityDirty() {
+      const bar = document.getElementById('visSaveBar');
+      if (!bar) return;
+      const n = visibilityDirtyCount();
+      bar.classList.toggle('is-dirty', n > 0);
+      document.getElementById('visDirtyCount').textContent = n
+        ? `${plural(n, 'unsaved change')} for ${draftTeamName(visibilityDraft)} — students do not see them until you save.`
+        : `No unsaved changes for ${draftTeamName(visibilityDraft)}.`;
+      document.getElementById('visibilitySave').disabled = !n;
+      document.getElementById('visibilityDiscard').disabled = !n;
+    }
+
+    function renderVisibility() {
+      if (!roster) return;
+      const teamSelect = fillTeamSelect('visibilityTeam', 'All teams (default)');
+      fillTeamSelect('previewTeam', 'Pick a team…');
+      syncTeamHubButton();
+      if (!visibilityDraft) startVisibilityDraft(teamSelect.value);
+      teamSelect.value = visibilityDraft.teamId;
+      const teamId = visibilityDraft.teamId;
       const areas = [
         ['robot-design', '🤖 Robot Design'], ['robot-game', '🎯 Robot Game'],
         ['innovation', '💡 Innovation'], ['core-values', '🤝 Core Values']
       ];
       document.getElementById('visibilityAreas').innerHTML = areas.map(([id, label]) => `
         <label class="visibility-toggle"><input type="checkbox" ${visibilityDraft.disabledAreas.includes(id) ? '' : 'checked'} data-area="${id}" onchange="setVisibilityArea(this.dataset.area,this.checked)"><span>${label}</span></label>
-      `).join('') + `<label class="visibility-toggle"><input id="visibilitySimulator" type="checkbox" ${visibilityDraft.simulatorEnabled ? 'checked' : ''} onchange="visibilityDraft.simulatorEnabled=this.checked"><span>🕹️ Simulator</span></label>`;
+      `).join('') + `<label class="visibility-toggle"><input id="visibilitySimulator" type="checkbox" ${visibilityDraft.simulatorEnabled ? 'checked' : ''} onchange="setVisibilitySimulator(this.checked)"><span>🕹️ Simulator</span></label>`;
       renderVisibilityLessons();
-      renderVisibilityResources();
       const message = document.getElementById('visibilityMessage');
-      document.getElementById('visibilityReset').classList.toggle('hidden', !teamId);
-      message.textContent = teamId && !(roster.fllSettings?.teamSettings || {})[teamId]
-        ? 'This team currently uses the all-team defaults. Saving creates a team-specific setup.' : '';
+      document.getElementById('visibilityReset').classList.toggle('hidden', !teamId || teamUsesDefaults(teamId));
+      message.textContent = teamUsesDefaults(teamId)
+        ? `${teamLabel(teamId)} follows the all-team defaults. Saving gives it its own setup, and later changes to the defaults stop reaching it until you reset it.` : '';
       message.className = 'form-msg';
+      updateVisibilityDirty();
+    }
+
+    function changeVisibilityTeam(select) {
+      const n = visibilityDirtyCount();
+      const next = select.value ? teamLabel(select.value) : 'all teams';
+      if (n && !confirm(`You have ${plural(n, 'unsaved change')} for ${draftTeamName(visibilityDraft)}.\n\nSwitch to ${next} and throw them away?`)) {
+        select.value = visibilityDraft.teamId;
+        return;
+      }
+      startVisibilityDraft(select.value);
+      renderVisibility();
+    }
+
+    function discardVisibility() {
+      if (!visibilityDraft) return;
+      const n = visibilityDirtyCount();
+      if (n && !confirm(`Throw away ${plural(n, 'unsaved change')} for ${draftTeamName(visibilityDraft)}?`)) return;
+      startVisibilityDraft(visibilityDraft.teamId);
+      renderVisibility();
+    }
+
+    function setVisibilitySimulator(on) {
+      visibilityDraft.simulatorEnabled = !!on;
+      updateVisibilityDirty();
     }
 
     // map a lesson's category to its FLL area id
@@ -3827,6 +4308,7 @@
         message.textContent = 'Area hidden (students see "Coming soon"). Click "Save visibility" to apply.';
         message.className = 'form-msg';
       }
+      updateVisibilityDirty();
     }
 
     function filteredVisibilityLessons() {
@@ -3838,12 +4320,59 @@
     }
 
     // ── Resource visibility ───────────────────────────────────────────────
-    // Same model as lessons: nothing is deleted, ids just go on a hidden list.
+    // Same model as lessons: nothing is deleted, ids go on a hidden list. It
+    // has its own draft and its own save, which sends hiddenResources ONLY —
+    // never the lesson ticks.
+    let resourcesDraft = null;
+    let resourcesBaseline = null;
+
+    function startResourcesDraft(teamId) {
+      const s = settingsForVisibilityTeam(teamId);
+      resourcesBaseline = { teamId, hidden: [...(s.hiddenResources || [])] };
+      resourcesDraft = { teamId, hidden: [...resourcesBaseline.hidden] };
+    }
+
+    function resourcesDirtyCount() {
+      return resourcesDraft && resourcesBaseline ? setDifference(resourcesDraft.hidden, resourcesBaseline.hidden) : 0;
+    }
+
+    function updateResourcesDirty() {
+      const bar = document.getElementById('resSaveBar');
+      if (!bar) return;
+      const n = resourcesDirtyCount();
+      bar.classList.toggle('is-dirty', n > 0);
+      document.getElementById('resDirtyCount').textContent = n
+        ? `${plural(n, 'unsaved change')} for ${draftTeamName(resourcesDraft)}`
+        : `No unsaved changes for ${draftTeamName(resourcesDraft)}.`;
+      document.getElementById('resourcesSave').disabled = !n;
+    }
+
+    function renderResourcesPanel() {
+      if (!roster) return;
+      const sel = fillTeamSelect('resourcesTeam', 'All teams (default)');
+      if (!resourcesDraft) startResourcesDraft(sel.value);
+      sel.value = resourcesDraft.teamId;
+      renderVisibilityResources();
+      updateResourcesDirty();
+    }
+
+    function changeResourcesTeam(select) {
+      const n = resourcesDirtyCount();
+      const next = select.value ? teamLabel(select.value) : 'all teams';
+      if (n && !confirm(`You have ${plural(n, 'unsaved change')} for ${draftTeamName(resourcesDraft)}.\n\nSwitch to ${next} and throw them away?`)) {
+        select.value = resourcesDraft.teamId;
+        return;
+      }
+      startResourcesDraft(select.value);
+      document.getElementById('resourcesMessage').textContent = '';
+      renderResourcesPanel();
+    }
+
     function renderVisibilityResources() {
-      if (!visibilityDraft) return;
+      if (!resourcesDraft) return;
       const wrap = document.getElementById('visibilityResources');
       if (!wrap) return;
-      const hidden = new Set(visibilityDraft.hiddenResources);
+      const hidden = new Set(resourcesDraft.hidden);
       const resources = [...(roster.resources || [])].sort((a, b) => {
         // featured first, then models by NUMBER so 2 comes before 10
         if (!!b.featured - !!a.featured) return !!b.featured - !!a.featured;
@@ -3865,15 +4394,51 @@
     }
 
     function setVisibilityResource(id, visible) {
-      const set = new Set(visibilityDraft.hiddenResources);
+      const set = new Set(resourcesDraft.hidden);
       if (visible) set.delete(id); else set.add(id);
-      visibilityDraft.hiddenResources = [...set];
+      resourcesDraft.hidden = [...set];
+      updateResourcesDirty();
     }
 
     function bulkSetResources(visible) {
+      if (!resourcesDraft) return;
       const ids = (roster.resources || []).map(r => r.id);
-      visibilityDraft.hiddenResources = visible ? [] : [...ids];
+      resourcesDraft.hidden = visible ? [] : [...ids];
       renderVisibilityResources();
+      updateResourcesDirty();
+    }
+
+    async function saveResources() {
+      if (!resourcesDraft || !resourcesDirtyCount()) return;
+      const teamId = resourcesDraft.teamId;
+      // Today's server stores ANY team-specific save as a full copy of the
+      // defaults, so this still detaches the team. Say so before doing it.
+      if (teamUsesDefaults(teamId) && !confirm(`${teamLabel(teamId)} follows the all-team defaults.\n\nSaving its resources gives it its own setup: later changes to the defaults (lessons and areas too) stop reaching it until you press "Reset team to defaults" in Areas & Lessons.\n\nContinue?`)) return;
+      const button = document.getElementById('resourcesSave');
+      const msg = document.getElementById('resourcesMessage');
+      button.disabled = true;
+      msg.textContent = 'Saving…';
+      msg.className = 'form-msg';
+      try {
+        const body = { hiddenResources: [...resourcesDraft.hidden] };
+        if (teamId) body.teamId = teamId;
+        const result = await api('/api/fll/coach/settings', { method: 'PATCH', body: JSON.stringify(body) });
+        roster.fllSettings = result.settings;
+        startResourcesDraft(teamId);
+        renderResourcesPanel();
+        const hiddenCount = resourcesDraft.hidden.length;
+        const total = (roster.resources || []).length;
+        msg.textContent = hiddenCount ? `✓ Saved — ${total - hiddenCount} of ${total} visible.` : `✓ Saved — all ${total} visible.`;
+        msg.className = 'form-msg success';
+        // an untouched lesson draft picks up the new saved state
+        if (visibilityDraft && !visibilityDirtyCount()) startVisibilityDraft(visibilityDraft.teamId);
+        showToast('Resources saved');
+      } catch (err) {
+        msg.textContent = err.message;
+        msg.className = 'form-msg error';
+      } finally {
+        updateResourcesDirty();
+      }
     }
 
     // ── Lesson audiences ──────────────────────────────────────────────────
@@ -3882,13 +4447,16 @@
     // writes — that draft edits team settings, which is exactly what an
     // audience must never touch.
     let audienceByTitle = new Map();
+    let audiencesFailed = false;
 
     async function loadLessonAudiences() {
       try {
         const r = await api('/api/fll/coach/lesson-audiences');
         audienceByTitle = new Map(r.lessons.map(l => [l.title, l]));
+        audiencesFailed = false;
       } catch (e) {
         audienceByTitle = new Map();
+        audiencesFailed = true;
       }
     }
 
@@ -3956,14 +4524,14 @@
             ? `Draft — for ${escapeHtml(draftTeams)}`
             : `for ${escapeHtml(audienceSummary(a))}`}</span>
           <span class="visibility-row-due">
-            <span class="visibility-due-label">Due</span>
-            <input class="visibility-row-date" type="date" value="${lesson.dueDate ? escapeHtml(String(lesson.dueDate).slice(0,10)) : ''}" data-title="${escapeHtml(lesson.title)}" onchange="setLessonDueDate(this.dataset.title, this.value)">
+            <span class="visibility-due-label">Due · all teams</span>
+            <input class="visibility-row-date" type="date" value="${lesson.dueDate ? escapeHtml(String(lesson.dueDate).slice(0,10)) : ''}" data-title="${escapeHtml(lesson.title)}" aria-label="Due date for ${escapeHtml(lesson.title)}, all teams" onchange="setLessonDueDate(this.dataset.title, this.value, this)">
           </span>
           <span class="visibility-row-mins">
-            <span class="visibility-due-label">Minutes</span>
+            <span class="visibility-due-label">Minutes · all teams</span>
             <input class="visibility-row-date visibility-row-mins-input" type="number" min="1" max="240" step="1" inputmode="numeric"
               placeholder="–" value="${lesson.minutes ? escapeHtml(String(lesson.minutes)) : ''}" data-title="${escapeHtml(lesson.title)}"
-              onchange="setLessonMinutes(this.dataset.title, this.value)"
+              aria-label="Minutes for ${escapeHtml(lesson.title)}, all teams" onchange="setLessonMinutes(this.dataset.title, this.value, this)"
               title="Roughly how long this lesson takes, 1–240 minutes (updates every team's copy)">
           </span>
           ${draftNote}
@@ -3979,6 +4547,7 @@
         await loadLessonAudiences();
         renderVisibilityLessons();
         refreshTeamPreview();   // the preview is now out of date
+        if (mwLoaded) renderMissingWork();
         message.textContent = `✓ ${note} Saved — no need to press Save visibility.`;
         message.className = 'form-msg success';
         return r;
@@ -4098,53 +4667,76 @@
           </label>
           <span class="visibility-row-meta">${escapeHtml(lesson.category)}</span>
           <span class="visibility-row-due">
-            <span class="visibility-due-label">Due</span>
-            <input class="visibility-row-date" type="date" value="${lesson.dueDate ? escapeHtml(String(lesson.dueDate).slice(0,10)) : ''}" data-title="${escapeHtml(lesson.title)}" onchange="setLessonDueDate(this.dataset.title, this.value)" title="Set the due date for this lesson (updates every team's copy)">
+            <span class="visibility-due-label">Due · all teams</span>
+            <input class="visibility-row-date" type="date" value="${lesson.dueDate ? escapeHtml(String(lesson.dueDate).slice(0,10)) : ''}" data-title="${escapeHtml(lesson.title)}" aria-label="Due date for ${escapeHtml(lesson.title)}, all teams" onchange="setLessonDueDate(this.dataset.title, this.value, this)" title="Set the due date for this lesson (updates every team's copy)">
           </span>
           <span class="visibility-row-mins">
-            <span class="visibility-due-label">Minutes</span>
+            <span class="visibility-due-label">Minutes · all teams</span>
             <input class="visibility-row-date visibility-row-mins-input" type="number" min="1" max="240" step="1" inputmode="numeric"
               placeholder="–" value="${lesson.minutes ? escapeHtml(String(lesson.minutes)) : ''}" data-title="${escapeHtml(lesson.title)}"
-              onchange="setLessonMinutes(this.dataset.title, this.value)"
+              aria-label="Minutes for ${escapeHtml(lesson.title)}, all teams" onchange="setLessonMinutes(this.dataset.title, this.value, this)"
               title="Roughly how long this lesson takes, 1–240 minutes (updates every team's copy)">
           </span>
         </div>`;
       }).join('') : '<div class="empty" style="padding:20px">No lessons match this filter.</div>';
     }
 
-    async function setLessonDueDate(title, date) {
-      const message = document.getElementById('visibilityMessage');
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
+    // The answer appears next to the input the coach just changed, not in a
+    // message at the bottom of a long list.
+    function showRowTick(input, text, isError) {
+      const host = input && input.parentNode;
+      if (!host) return;
+      let tick = host.querySelector('.vis-tick');
+      if (!tick) {
+        tick = document.createElement('span');
+        tick.setAttribute('role', 'status');
+        host.appendChild(tick);
+      }
+      tick.className = 'vis-tick' + (isError ? ' error' : '');
+      tick.textContent = text;
+    }
+
+    // everything that shows a due date: calendar, Overview "Next up", preview
+    function refreshAfterDueChange() {
+      renderCoachCalendar();
+      renderOverview();
+      refreshTeamPreview();
+    }
+
+    async function setLessonDueDate(title, date, input) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+        showRowTick(input, 'Not saved — pick a full date', true);
+        return;
+      }
+      showRowTick(input, 'Saving…');
       try {
         const result = await api('/api/fll/coach/assignments', {
           method: 'PATCH',
           body: JSON.stringify({ matchTitle: title, dueDate: date })
         });
         (roster.tasks || []).forEach(t => { if (t.title === title) t.dueDate = date; });
-        message.textContent = `✓ Due date for "${title}" set to ${date} (${result.count} team cop${result.count === 1 ? 'y' : 'ies'}).`;
-        message.className = 'form-msg success';
+        showRowTick(input, `✓ Saved · ${plural(result.count, 'team copy', 'team copies')}`);
+        refreshAfterDueChange();
       } catch (err) {
-        message.textContent = err.message || 'Could not update the due date.';
-        message.className = 'form-msg error';
+        showRowTick(input, `Not saved: ${err.message || 'could not update the due date'}`, true);
       }
     }
 
     // How long a lesson takes. Saved per title group exactly as the due date
     // is, so every team's copy of the lesson agrees. Empty clears it.
-    async function setLessonMinutes(title, raw) {
-      const message = document.getElementById('visibilityMessage');
+    async function setLessonMinutes(title, raw, input) {
       const text = String(raw == null ? '' : raw).trim();
       let minutes = null;
       if (text) {
         const value = Number(text);
         if (!Number.isInteger(value) || value < 1 || value > 240) {
           // refused here rather than sent, so nothing half-saves
-          message.textContent = `“${text}” was not saved — minutes must be a whole number between 1 and 240 (leave it empty to clear).`;
-          message.className = 'form-msg error';
+          showRowTick(input, 'Not saved — a whole number 1–240, or empty to clear', true);
           return;
         }
         minutes = value;
       }
+      showRowTick(input, 'Saving…');
       try {
         const result = await api('/api/fll/coach/assignments', {
           method: 'PATCH',
@@ -4154,14 +4746,10 @@
           if (t.title !== title) return;
           if (minutes === null) delete t.minutes; else t.minutes = minutes;
         });
-        message.textContent = minutes
-          ? `✓ “${title}” is about ${minutes} minutes (${result.count} team cop${result.count === 1 ? 'y' : 'ies'}).`
-          : `✓ Time estimate cleared for “${title}” (${result.count} team cop${result.count === 1 ? 'y' : 'ies'}).`;
-        message.className = 'form-msg success';
+        showRowTick(input, minutes ? `✓ Saved · ${plural(result.count, 'team copy', 'team copies')}` : '✓ Cleared');
         refreshTeamPreview();   // students see this, so the preview must not go stale
       } catch (err) {
-        message.textContent = err.message || 'Could not save the time estimate.';
-        message.className = 'form-msg error';
+        showRowTick(input, `Not saved: ${err.message || 'could not save the time estimate'}`, true);
       }
     }
 
@@ -4169,6 +4757,7 @@
       const hidden = new Set(visibilityDraft.hiddenAssignments);
       if (visible) hidden.delete(title); else hidden.add(title);
       visibilityDraft.hiddenAssignments = [...hidden];
+      updateVisibilityDirty();
     }
 
     function bulkSetLessons(visible) {
@@ -4182,38 +4771,43 @@
       message.textContent = `${visible ? 'Showing' : 'Hiding'} ${regular.length} filtered lesson(s). Save to apply.`
         + (skipped ? ` ${skipped} custom lesson(s) left as they are — change those with their own checkboxes.` : '');
       message.className = 'form-msg';
+      updateVisibilityDirty();
     }
 
+    // Sends areas, simulator and lesson ticks — never hiddenResources, which
+    // has its own save in Resources & Tools.
     async function saveVisibility() {
       if (!visibilityDraft) return;
+      const n = visibilityDirtyCount();
+      if (!n) return;
+      const teamId = visibilityDraft.teamId;
+      if (teamUsesDefaults(teamId) && !confirm(`${teamLabel(teamId)} follows the all-team defaults.\n\nSaving gives it its own setup, and later changes to the defaults stop reaching it until you press "Reset team to defaults".\n\nContinue?`)) return;
       const button = document.getElementById('visibilitySave');
-      const message = document.getElementById('visibilityMessage');
       button.disabled = true;
       try {
-        const result = await api('/api/fll/coach/settings', {
-          method: 'PATCH',
-          body: JSON.stringify(visibilityDraft)
-        });
+        const body = {
+          disabledAreas: [...visibilityDraft.disabledAreas],
+          simulatorEnabled: visibilityDraft.simulatorEnabled,
+          hiddenAssignments: [...visibilityDraft.hiddenAssignments]
+        };
+        if (teamId) body.teamId = teamId;
+        const result = await api('/api/fll/coach/settings', { method: 'PATCH', body: JSON.stringify(body) });
         roster.fllSettings = result.settings;
-        message.textContent = 'Visibility saved. Students on the selected team will see the update when their dashboard refreshes.';
+        startVisibilityDraft(teamId);
+        renderVisibility();
+        if (resourcesDraft && !resourcesDirtyCount()) startResourcesDraft(resourcesDraft.teamId);
+        const message = document.getElementById('visibilityMessage');
+        message.textContent = `✓ Saved ${plural(n, 'change')} for ${teamId ? teamLabel(teamId) : 'all teams'}. Students see it when their hub refreshes.`;
         message.className = 'form-msg success';
-        // the resources card has its own Save button, so echo the result there too
-        const resourcesMsg = document.getElementById('resourcesMessage');
-        if (resourcesMsg) {
-          const hiddenCount = (visibilityDraft.hiddenResources || []).length;
-          const total = (roster.resources || []).length;
-          resourcesMsg.textContent = hiddenCount
-            ? `Saved — ${total - hiddenCount} of ${total} resources visible.`
-            : `Saved — all ${total} resources visible.`;
-          resourcesMsg.className = 'form-msg success';
-        }
         refreshTeamPreview();   // the preview is now out of date
+        if (mwLoaded) renderMissingWork();
         showToast('Student Hub visibility saved');
       } catch (err) {
+        const message = document.getElementById('visibilityMessage');
         message.textContent = err.message;
         message.className = 'form-msg error';
       } finally {
-        button.disabled = false;
+        updateVisibilityDirty();
       }
     }
 
@@ -4296,7 +4890,8 @@
         }
         if (!dryRun) {
           await loadRoster();
-          if (visibilityDraft) renderVisibility();   // pick up newly synced resources
+          if (visibilityDraft) renderVisibility();   // pick up newly synced lessons
+          if (resourcesDraft) renderResourcesPanel();   // and resources
           showToast('Lesson content updated');
         }
       } catch (err) {
@@ -4308,21 +4903,181 @@
     }
 
     async function resetTeamVisibility() {
-      if (!visibilityDraft?.teamId || !confirm('Remove this team’s custom visibility and use the all-team defaults?')) return;
+      if (!visibilityDraft?.teamId) return;
+      const n = visibilityDirtyCount();
+      if (!confirm(`Remove ${teamLabel(visibilityDraft.teamId)}’s own visibility setup and use the all-team defaults again?${n ? `\n\nYour ${plural(n, 'unsaved change')} will be thrown away too.` : ''}`)) return;
+      const teamId = visibilityDraft.teamId;
       const message = document.getElementById('visibilityMessage');
       try {
         const result = await api('/api/fll/coach/settings', {
           method: 'PATCH',
-          body: JSON.stringify({ teamId: visibilityDraft.teamId, resetTeam: true })
+          body: JSON.stringify({ teamId, resetTeam: true })
         });
         roster.fllSettings = result.settings;
+        startVisibilityDraft(teamId);
         renderVisibility();
+        if (resourcesDraft && !resourcesDirtyCount()) startResourcesDraft(resourcesDraft.teamId);
         message.textContent = 'Team reset to the all-team defaults.';
         message.className = 'form-msg success';
+        refreshTeamPreview();
+        if (mwLoaded) renderMissingWork();
       } catch (err) {
         message.textContent = err.message;
         message.className = 'form-msg error';
       }
+    }
+
+    // ── Missing work ──────────────────────────────────────────────────────
+    // Assignment × team: of the active real students on a team, how many have
+    // turned in each assignment that team can actually see. Visibility uses
+    // the same rules as the team preview — area switched off, audience for
+    // custom lessons, the hidden-title list for everything else.
+    let mwLoaded = false;
+    let mwPicked = null;
+
+    function mwIsDemo(st) {
+      return st.demoAccount === true || st.teamId === 'team-demo'
+        || /(^|-)demo(-|$)/i.test(String(st.id || '')) || /^demo/i.test(String(st.username || ''));
+    }
+
+    function mwTeams() {
+      return (roster?.teams || []).filter(t => !/(^|-)demo(-|$)/i.test(String(t.id || '')));
+    }
+
+    function mwStudents(teamId) {
+      return (roster?.students || []).filter(st => st.teamId === teamId && st.active !== false && !mwIsDemo(st));
+    }
+
+    // one row per assignment title; only lessons that ask for something back
+    function mwAssignments() {
+      const byTitle = new Map();
+      for (const task of (roster?.tasks || [])) {
+        const title = String(task.title || '').trim();
+        if (!title || task.retired || !(task.questions || []).length) continue;
+        const prev = byTitle.get(title);
+        if (!prev || (task.teamId === 'team-01' && prev.teamId !== 'team-01')) {
+          byTitle.set(title, { title, category: task.category || '', teamId: task.teamId, dueDate: task.dueDate || '' });
+        }
+      }
+      return [...byTitle.values()].sort((a, b) =>
+        canonicalVisibilityCategory(a.category).localeCompare(canonicalVisibilityCategory(b.category))
+        || String(a.dueDate).localeCompare(String(b.dueDate)) || a.title.localeCompare(b.title));
+    }
+
+    function mwVisibleTo(lesson, teamId) {
+      const s = settingsForVisibilityTeam(teamId);
+      const area = areaIdForCategory(lesson.category) || 'innovation';
+      if ((s.disabledAreas || []).includes(area)) return false;
+      const a = audienceByTitle.get(lesson.title);
+      if (a) return a.mode === 'all' || (a.teamIds || []).includes(teamId);
+      return !(s.hiddenAssignments || []).includes(lesson.title);
+    }
+
+    function mwTurnedIn() {
+      const byTitle = new Map();
+      for (const sub of (submissionsCache || [])) {
+        const title = submissionLessonTitle(sub);
+        if (!byTitle.has(title)) byTitle.set(title, new Map());
+        byTitle.get(title).set(sub.studentId, sub);
+      }
+      return byTitle;
+    }
+
+    async function loadMissingWork(force) {
+      if (!roster) return;
+      if (!mwLoaded || force) {
+        document.getElementById('mwWrap').textContent = 'Loading…';
+        await Promise.all([
+          loadLessonAudiences(),
+          (force || !submissionsCache) ? loadSubmissions(true) : null
+        ]);
+        mwLoaded = true;
+      }
+      renderMissingWork();
+    }
+
+    function renderMissingWork() {
+      const wrap = document.getElementById('mwWrap');
+      const summary = document.getElementById('mwSummary');
+      if (!wrap || !roster || !mwLoaded) return;
+      if (!submissionsCache) {
+        wrap.innerHTML = '<div class="form-msg error">Submitted work could not be loaded, so nothing can be counted. Try ↻ Refresh.</div>';
+        return;
+      }
+      const area = document.getElementById('mwArea').value;
+      const onlyMissing = document.getElementById('mwOnlyMissing').checked;
+      const teams = mwTeams();
+      const turned = mwTurnedIn();
+      const studentsByTeam = new Map(teams.map(t => [t.id, mwStudents(t.id)]));
+      let owedTotal = 0;
+      const rows = [];
+      for (const lesson of mwAssignments()) {
+        if (area !== 'all' && canonicalVisibilityCategory(lesson.category) !== area) continue;
+        const got = turned.get(lesson.title) || new Map();
+        let anyVisible = false;
+        let rowOwed = 0;
+        const cells = teams.map(team => {
+          if (!mwVisibleTo(lesson, team.id)) return '<td><span class="mw-na" title="This team cannot see this assignment">not assigned</span></td>';
+          anyVisible = true;
+          const students = studentsByTeam.get(team.id) || [];
+          if (!students.length) return '<td><span class="mw-na">no students</span></td>';
+          const done = students.filter(st => got.has(st.id)).length;
+          const owed = students.length - done;
+          rowOwed += owed;
+          const cls = !owed ? 'all-in' : done ? 'some' : 'none';
+          const picked = !!mwPicked && mwPicked.title === lesson.title && mwPicked.team === team.id;
+          const label = `${lesson.title}, ${team.nickname || team.name}: ${done} of ${students.length} turned in`;
+          return `<td><button type="button" class="mw-cell ${cls}${picked ? ' is-picked' : ''}" data-title="${escapeHtml(lesson.title)}" data-team="${escapeHtml(team.id)}"
+            aria-pressed="${picked}" aria-label="${escapeHtml(label)}" onclick="mwPick(this.dataset.title,this.dataset.team)">${done}/${students.length}</button></td>`;
+        });
+        if (!anyVisible || (onlyMissing && !rowOwed)) continue;
+        owedTotal += rowOwed;
+        rows.push(`<tr><th scope="row">${escapeHtml(lesson.title)}<span class="mw-sub">${escapeHtml(canonicalVisibilityCategory(lesson.category))}${lesson.dueDate ? ' · due ' + escapeHtml(String(lesson.dueDate).slice(0, 10)) : ''}</span></th>${cells.join('')}</tr>`);
+      }
+      summary.textContent = (rows.length
+        ? `${plural(rows.length, 'assignment')} shown · ${plural(owedTotal, 'turn-in')} still missing. Numbers are turned in / active students.`
+        : '') + (audiencesFailed ? ' Lesson audiences could not be loaded, so custom lessons may be counted wrongly — try ↻ Refresh.' : '');
+      summary.className = 'form-msg' + (audiencesFailed ? ' error' : '');
+      wrap.innerHTML = rows.length ? `
+        <div class="mw-wrap"><table class="mw-table" aria-label="Turned in per assignment and team">
+          <thead><tr><th scope="col">Assignment</th>${teams.map(t => `<th scope="col">${escapeHtml(t.nickname || t.name)}</th>`).join('')}</tr></thead>
+          <tbody>${rows.join('')}</tbody>
+        </table></div>`
+        : `<div class="sub-empty">${onlyMissing ? 'Nobody owes anything here — every visible assignment is turned in.' : 'No assignment is visible to any team here.'}</div>`;
+      renderMissingDetail();
+    }
+
+    function mwPick(title, teamId) {
+      mwPicked = mwPicked && mwPicked.title === title && mwPicked.team === teamId ? null : { title, team: teamId };
+      renderMissingWork();
+    }
+
+    function renderMissingDetail() {
+      const out = document.getElementById('mwDetail');
+      if (!out) return;
+      if (!mwPicked) { out.innerHTML = ''; return; }
+      const students = mwStudents(mwPicked.team);
+      const got = mwTurnedIn().get(mwPicked.title) || new Map();
+      const done = students.filter(st => got.has(st.id));
+      const owed = students.filter(st => !got.has(st.id));
+      out.innerHTML = `
+        <div class="sub-missing${owed.length ? '' : ' sub-missing-done'}">
+          <strong>${escapeHtml(mwPicked.title)} · ${escapeHtml(teamLabel(mwPicked.team))}</strong><br>
+          ${owed.length ? `<strong>Not turned in (${owed.length}):</strong> ${owed.map(st => escapeHtml(st.name)).join(', ')}` : 'Everyone on this team has turned it in ✓'}<br>
+          ${done.length ? `<strong>Turned in (${done.length}):</strong> ${done.map(st => escapeHtml(st.name) + (got.get(st.id).redo ? ' (sent back for redo)' : '')).join(', ')}` : 'Nobody on this team has turned it in yet.'}
+          ${done.length ? `<div style="margin-top:8px"><button type="button" class="visibility-bulk-btn" data-title="${escapeHtml(mwPicked.title)}" data-team="${escapeHtml(mwPicked.team)}" onclick="mwOpenSubmissions(this.dataset.title,this.dataset.team)">Open their submissions</button></div>` : ''}
+        </div>`;
+    }
+
+    function mwOpenSubmissions(title, teamId) {
+      showTab('submissions');
+      const team = document.getElementById('subTeamFilter');
+      const lesson = document.getElementById('subLessonFilter');
+      document.getElementById('subSearch').value = '';
+      document.getElementById('subReadFilter').value = 'all';
+      team.value = [...team.options].some(o => o.value === teamId) ? teamId : 'all';
+      lesson.value = [...lesson.options].some(o => o.value === title) ? title : 'all';
+      renderSubmissions();
     }
 
     async function loadRankings() {
@@ -4397,7 +5152,7 @@
       document.getElementById('rankingBody').innerHTML = visible.map(({ student, rating }, index) => {
         const team = roster.teams.find(item => item.id === student.teamId);
         const score = rankingOverall(rating);
-        return `<tr data-student-id="${escapeHtml(student.id)}"><td class="ranking-score">${index + 1}</td><td><strong>${escapeHtml(student.name)}</strong></td><td>${escapeHtml(team?.nickname || team?.name || 'Unassigned')}</td>${rankingCategories.map(category => `<td><select class="ranking-rating" data-category="${category}">${[1,2,3,4,5].map(value => `<option value="${value}" ${Number(rating[category]) === value ? 'selected' : ''}>${value}</option>`).join('')}</select></td>`).join('')}<td class="ranking-score">${score.toFixed(1)}</td><td><span class="ranking-level">${rankingLevel(score)}</span></td><td><input class="ranking-notes" value="${escapeHtml(rating.notes || '')}" placeholder="Private coach note"></td></tr>`;
+        return `<tr data-student-id="${escapeHtml(student.id)}"><td class="ranking-score">${index + 1}</td><td><strong>${escapeHtml(student.name)}</strong></td><td>${escapeHtml(team?.nickname || team?.name || 'Unassigned')}</td>${rankingCategories.map(category => `<td><select class="ranking-rating" data-category="${category}" aria-label="${escapeHtml(rankingLabels[category] + ' for ' + student.name)}">${[1,2,3,4,5].map(value => `<option value="${value}" ${Number(rating[category]) === value ? 'selected' : ''}>${value}</option>`).join('')}</select></td>`).join('')}<td class="ranking-score">${score.toFixed(1)}</td><td><span class="ranking-level">${rankingLevel(score)}</span></td><td><input class="ranking-notes" value="${escapeHtml(rating.notes || '')}" placeholder="Private coach note" aria-label="${escapeHtml('Private coach note for ' + student.name)}"></td></tr>`;
       }).join('');
 
       document.querySelectorAll('.ranking-rating').forEach(select => select.addEventListener('change', event => {
@@ -4434,7 +5189,25 @@
     // Two sessions to end: the FLL hub one and the staff-portal one
     // (coach_session), which otherwise keeps /coach-portal open. Both are
     // tried even if one fails, then the coach lands on the login page.
+    function unsavedSummary() {
+      const bits = [];
+      const v = visibilityDirtyCount();
+      const r = resourcesDirtyCount();
+      if (v) bits.push(`${plural(v, 'lesson visibility change')} (${draftTeamName(visibilityDraft)})`);
+      if (r) bits.push(`${plural(r, 'resource change')} (${draftTeamName(resourcesDraft)})`);
+      return bits.join(' and ');
+    }
+
+    window.addEventListener('beforeunload', (event) => {
+      if (window.__signingOut || !unsavedSummary()) return;
+      event.preventDefault();
+      event.returnValue = '';
+    });
+
     async function logout() {
+      const pending = unsavedSummary();
+      if (pending && !confirm(`You have ${pending} not saved yet. Sign out and lose them?`)) return;
+      window.__signingOut = true;
       await Promise.allSettled([
         fetch('/api/fll/logout', { method: 'POST' }),
         fetch('/api/coach/logout', { method: 'POST' })
@@ -4447,6 +5220,7 @@
     loadRoster()
       .then(() => { renderOverview(); return loadSubmissions(); })
       .catch(() => {});
+    loadLiveSlides(true);
   </script>
 </body>
 </html>
