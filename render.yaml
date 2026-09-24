@@ -4,22 +4,88 @@ services:
     runtime: node
     buildCommand: npm install
     startCommand: node server.js
+    # Public, no session: 200 when the data disk is writable and the key JSON
+    # files parse, 503 otherwise (see lib/health.js).
+    healthCheckPath: /healthz
     envVars:
       - key: NODE_ENV
         value: production
       - key: SESSION_SECRET
         generateValue: true          # Render generates a secure random value once
-      - key: COACH_SETUP_CODE
-        sync: false
       - key: DATA_DIR
         value: /var/data
+      # ── Values to set in the Render dashboard (sync: false = not in this file) ──
+      # Shared code coaches enter once to set their own password at /coach-login.
+      - key: COACH_SETUP_CODE
+        sync: false
+      # Password for the owner coach account (access control, backups, admin).
+      - key: COACH_OWNER_PASSWORD
+        sync: false
+      # Sign-in for the payments admin page (unset = page locked).
+      - key: PAYMENTS_ADMIN_USER
+        sync: false
+      - key: PAYMENTS_ADMIN_PASSWORD
+        sync: false
+      # Sign-in for the parent-leads admin page (unset password = page locked).
+      - key: PARENT_LEADS_ADMIN_USER
+        sync: false
+      - key: PARENT_LEADS_ADMIN_PASSWORD
+        sync: false
+      # Sign-in for the summer-leads admin page (unset password = page locked).
+      - key: SUMMER_LEADS_ADMIN_USER
+        sync: false
+      - key: SUMMER_LEADS_ADMIN_PASSWORD
+        sync: false
+      # Code Lab built-in teacher and developer account passwords.
+      - key: CODELAB_TEACHER_PASSWORD
+        sync: false
+      - key: CODELAB_DEVELOPER_PASSWORD
+        sync: false
+      # "true" turns on the demo student login; leave unset in production.
+      - key: ENABLE_DEMO_LOGIN
+        sync: false
+      # Public site URL used in payment/email links, e.g. https://aifuture.nyc
+      - key: SITE_BASE_URL
+        sync: false
+      # Stripe secret key (sk_live_...) for checkout.
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      # Stripe webhook signing secret (whsec_...) for payment confirmations.
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      # Resend API key for sending emails.
+      - key: RESEND_API_KEY
+        sync: false
+      # Verified sender address for Resend emails.
+      - key: RESEND_FROM_EMAIL
+        sync: false
+      # Google service-account JSON for writing leads/payments to Google Sheets.
+      - key: GOOGLE_SERVICE_ACCOUNT_JSON
+        sync: false
+      # Spreadsheet id the Sheets integration writes to.
+      - key: GOOGLE_SHEETS_ID
+        sync: false
+      # Meta (Facebook) pixel id for the Conversions API.
+      - key: META_PIXEL_ID
+        sync: false
+      # Meta Conversions API access token.
+      - key: META_CONVERSIONS_API_ACCESS_TOKEN
+        sync: false
+      # Optional Meta Graph API version override.
+      - key: META_GRAPH_API_VERSION
+        sync: false
+      # Optional Meta test-event code (only while testing events).
+      - key: META_TEST_EVENT_CODE
+        sync: false
       # Optional. If unset, FLL hub data is stored at
       # /var/data/fll-hub/2026-2027-bioglow/data and seeded from the repo.
       - key: FLL_DATA_DIR
         sync: false
+      # Optional. If unset, camp hub data lives under /var/data/camp-hub/.
+      - key: CAMP_DATA_DIR
+        sync: false
       # AI Tutor (optional). When unset, the tutor panel still works but returns
-      # built-in hints instead of LLM-generated ones. Set this in the Render
-      # dashboard (sync: false keeps it out of this committed file).
+      # built-in hints instead of LLM-generated ones.
       - key: ANTHROPIC_API_KEY
         sync: false
       # Optional model override (defaults to claude-haiku-4-5-20251001)
@@ -28,4 +94,4 @@ services:
     disk:
       name: code-lab-data
       mountPath: /var/data
-      sizeGB: 1
+      sizeGB: 1   # recommendation: 5 GB once backups accumulate (owner decision — costs money)

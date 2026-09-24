@@ -386,7 +386,22 @@ app.use(express.static(__dirname));
 app.use('/fll-assets', express.static(path.join(__dirname, 'progressive fll test', 'assets')));
 
 // Session configuration
+// Sessions are kept in a file on the data disk (ids stored hashed), so a
+// restart or deploy no longer signs every Code Lab user out.
+const FileSessionStore = require('../lib/file-session-store')(session);
+const codeLabSessionStore = new FileSessionStore({
+  file: path.join(DATA_DIR, 'sessions', 'code-lab.json'),
+  defaultTtlMs: 24 * 60 * 60 * 1000
+});
+// Write anything pending when the process exits (the root server calls
+// process.exit on SIGTERM; standalone, we do it ourselves below).
+process.on('exit', () => { if (codeLabSessionStore.timer) codeLabSessionStore.flush(); });
+if (require.main === module) {
+  for (const signal of ['SIGTERM', 'SIGINT']) process.once(signal, () => process.exit(0));
+}
+
 app.use(session({
+  store: codeLabSessionStore,
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
