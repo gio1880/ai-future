@@ -4,6 +4,8 @@ const fs = require('fs/promises');
 const crypto = require('crypto');
 const codeLabApp = require('./code-lab/server');
 const payments = require('./payments');
+const { scheduleDailyBackups, listBackups, sendBackup } = require('./lib/backup');
+const { createHealthHandler } = require('./lib/health');
 const app = express();
 // Render puts one proxy in front of the app. Without this every visitor's
 // req.ip is the proxy's address, so the login limiter would treat the whole
@@ -150,6 +152,26 @@ class PersistentSessionMap extends Map {
 
 	delete(token) {
 		const removed = super.delete(PersistentSessionMap.hash(token));
+		if (removed) this.schedule(1000);
+		return removed;
+	}
+
+	// End every session one person holds in this store — after their password
+	// is reset or changed, or their account is deactivated, so a browser that
+	// was already signed in does not keep working for up to 7 more days.
+	// `field` is what the session records: 'userId' (FLL, camp, coach) or
+	// 'studentId' (student portal). `exceptToken` keeps the caller's own
+	// session, for someone changing their own password.
+	deleteForUser(id, field = 'userId', exceptToken = null) {
+		if (!id) return 0;
+		const keep = exceptToken ? PersistentSessionMap.hash(exceptToken) : null;
+		let removed = 0;
+		for (const [key, session] of super.entries()) {
+			if (key !== keep && session && session[field] === id) {
+				super.delete(key);
+				removed += 1;
+			}
+		}
 		if (removed) this.schedule(1000);
 		return removed;
 	}
@@ -365,6 +387,7 @@ const PRIVATE_PATH_PREFIXES = [
 	'robotics lab/summer camp/2026-summer-camp/data',
 	'node_modules',
 	'scripts',
+	'lib',                                    // server modules (backups, health)
 	'.git',
 	'.claude'
 ];
@@ -393,6 +416,10 @@ function isPrivateRequestPath(rawPath) {
 		|| /\.(?:bak|backup|md|log)$/.test(base)
 		|| /\.bak\.json$/.test(base);
 }
+
+// Public health check for Render (healthCheckPath). No session, no secrets —
+// just whether the data disk is writable and the key files parse.
+app.get('/healthz', createHealthHandler({ dataDir: platformDataDir, fllDataDir: fllHubDataDir }));
 
 app.use((req, res, next) => {
 	if (isPrivateRequestPath(req.path)) return res.status(404).send('Not found');
@@ -625,6 +652,8 @@ app.post('/api/coach/setup', loginLimiter, async (req, res) => {
 		await writeCoachUsers(users);
 		// Propagate the new password to the coach's camp + FLL accounts so every login works.
 		await syncCoachUserToProgramHubs(users[index]);
+		// a new password ends every session made with an old one
+		await endCoachSessionsEverywhere(users[index]);
 		const token = crypto.randomBytes(32).toString('hex');
 		coachSessions.set(token, {
 			userId: users[index].id,
@@ -664,6 +693,32 @@ app.get('/api/coach/admin/users', requireCoachOwner, async (req, res) => {
 	} catch (err) {
 		console.error('Coach admin users load error:', err);
 		return res.status(500).json({ success: false, message: 'Server error loading access control' });
+	}
+});
+
+// Data-disk backups (owner only). They sit on the same disk as the data, so they
+// guard against bad writes and mistakes, not against losing the disk — download
+// one now and then for an off-disk copy. Restoring is command-line only:
+// scripts/restore-backup.js, never over HTTP.
+const backupDir = path.join(platformDataDir, 'backups');
+app.get('/api/coach/admin/backups', requireCoachOwner, async (req, res) => {
+	try {
+		const backups = await listBackups(backupDir);
+		res.setHeader('Cache-Control', 'no-store');
+		return res.json({ success: true, backups, note: 'Backups are on the same disk as the data. Download one to keep an off-disk copy.' });
+	} catch (err) {
+		console.error('List backups failed:', err.message);
+		return res.status(500).json({ success: false, message: 'Could not list backups' });
+	}
+});
+app.get('/api/coach/admin/backups/:name', requireCoachOwner, async (req, res) => {
+	try {
+		// the name is only matched against the listing, never used as a path
+		const sent = await sendBackup(res, backupDir, req.params.name);
+		if (!sent) return res.status(404).json({ success: false, message: 'No such backup' });
+	} catch (err) {
+		console.error('Backup download failed:', err.message);
+		if (!res.headersSent) res.status(500).json({ success: false, message: 'Could not send backup' });
 	}
 });
 
@@ -741,6 +796,12 @@ app.patch('/api/coach/admin/users/:id', requireCoachOwner, async (req, res) => {
 		users[index] = updated;
 		await writeCoachUsers(users);
 		await syncCoachUserToProgramHubs(updated);
+		if (payload.password || (existing.active !== false && updated.active === false)) {
+			// new password or turned off: sign them out everywhere (but not the
+			// owner who is changing their OWN password from this screen)
+			const ownToken = updated.id === req.coachUser.id ? getCoachSession(req)?.token : null;
+			await endCoachSessionsEverywhere(updated, ownToken);
+		}
 		return res.json({ success: true, user: publicAdminCoachUser(updated), users: users.map(publicAdminCoachUser) });
 	} catch (err) {
 		console.error('Coach admin user update error:', err);
@@ -761,6 +822,7 @@ app.delete('/api/coach/admin/users/:id', requireCoachOwner, async (req, res) => 
 		users[index] = { ...users[index], active: false, updatedAt: new Date().toISOString() };
 		await writeCoachUsers(users);
 		await syncCoachUserToProgramHubs(users[index]);
+		await endCoachSessionsEverywhere(users[index]);
 		return res.json({ success: true, users: users.map(publicAdminCoachUser) });
 	} catch (err) {
 		console.error('Coach admin user deactivate error:', err);
@@ -823,7 +885,7 @@ app.post('/api/coach/open/:hubId', requireCoachPortalAuth, async (req, res, next
 	}
 });
 
-app.get(['/master-roster', '/master-roster/'], requireCoachPortalAuth, (req, res) => {
+app.get(['/master-roster', '/master-roster/'], requireMasterRosterAccess, (req, res) => {
 	return res.sendFile(path.join(__dirname, 'master-roster.html'));
 });
 
@@ -831,7 +893,7 @@ app.get(['/ftc-curriculum', '/ftc-curriculum/'], requireCoachPortalAuth, (req, r
 	return res.sendFile(path.join(__dirname, 'ftc-curriculum.html'));
 });
 
-app.get('/api/master-roster', requireCoachPortalAuth, async (req, res) => {
+app.get('/api/master-roster', requireMasterRosterAccess, async (req, res) => {
 	try {
 		const [roster, teams] = await Promise.all([
 			readMasterRoster(),
@@ -844,15 +906,18 @@ app.get('/api/master-roster', requireCoachPortalAuth, async (req, res) => {
 	}
 });
 
-app.post('/api/master-roster/classes', requireCoachPortalAuth, async (req, res) => {
+app.post('/api/master-roster/classes', requireMasterRosterAccess, async (req, res) => {
 	try {
-		const roster = await readMasterRoster();
 		const classItem = sanitizeMasterClassPayload(req.body || {});
 		if (!classItem) {
 			return res.status(400).json({ success: false, message: 'Class name is required' });
 		}
-		roster.classes.push({ ...classItem, createdAt: new Date().toISOString() });
-		await writeMasterRoster(roster);
+		const roster = await withJsonFileLock(masterRosterFile, async () => {
+			const current = await readMasterRoster();
+			current.classes.push({ ...classItem, createdAt: new Date().toISOString() });
+			await writeMasterRosterNow(current);
+			return current;
+		});
 		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
 		return res.status(201).json({ success: true, data: publicMasterRoster(roster, teams), class: classItem });
 	} catch (err) {
@@ -861,115 +926,153 @@ app.post('/api/master-roster/classes', requireCoachPortalAuth, async (req, res) 
 	}
 });
 
-app.patch('/api/master-roster/classes/:id', requireCoachPortalAuth, async (req, res) => {
+app.patch('/api/master-roster/classes/:id', requireMasterRosterAccess, async (req, res) => {
 	try {
-		const roster = await readMasterRoster();
-		const index = roster.classes.findIndex((item) => item.id === req.params.id);
-		if (index === -1) {
-			return res.status(404).json({ success: false, message: 'Class not found' });
-		}
-		const update = sanitizeMasterClassPayload(req.body || {}, roster.classes[index].id);
-		if (!update) {
-			return res.status(400).json({ success: false, message: 'Class name is required' });
-		}
-		roster.classes[index] = {
-			...roster.classes[index],
-			...update,
-			updatedAt: new Date().toISOString()
-		};
-		for (const student of roster.students) {
-			student.enrollments = normalizeMasterEnrollments(student.enrollments, roster.classes, roster.settings.summerWeeks);
-		}
-		await writeMasterRoster(roster);
+		const result = await withJsonFileLock(masterRosterFile, async () => {
+			const roster = await readMasterRoster();
+			const index = roster.classes.findIndex((item) => item.id === req.params.id);
+			if (index === -1) return { status: 404, message: 'Class not found' };
+			const update = sanitizeMasterClassPayload(req.body || {}, roster.classes[index].id);
+			if (!update) return { status: 400, message: 'Class name is required' };
+			roster.classes[index] = {
+				...roster.classes[index],
+				...update,
+				updatedAt: new Date().toISOString()
+			};
+			for (const student of roster.students) {
+				student.enrollments = normalizeMasterEnrollments(student.enrollments, roster.classes, roster.settings.summerWeeks);
+			}
+			await writeMasterRosterNow(roster);
+			return { roster, classItem: roster.classes[index] };
+		});
+		if (result.status) return res.status(result.status).json({ success: false, message: result.message });
 		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
-		return res.json({ success: true, data: publicMasterRoster(roster, teams), class: roster.classes[index] });
+		return res.json({ success: true, data: publicMasterRoster(result.roster, teams), class: result.classItem });
 	} catch (err) {
 		console.error('Master class update error:', err);
 		return res.status(500).json({ success: false, message: 'Server error updating class' });
 	}
 });
 
-app.delete('/api/master-roster/classes/:id', requireCoachPortalAuth, async (req, res) => {
+app.delete('/api/master-roster/classes/:id', requireMasterRosterAccess, async (req, res) => {
 	try {
-		const roster = await readMasterRoster();
-		const before = roster.classes.length;
-		roster.classes = roster.classes.filter((item) => item.id !== req.params.id);
-		if (roster.classes.length === before) {
-			return res.status(404).json({ success: false, message: 'Class not found' });
+		const force = req.query.force === '1' || req.body?.force === true;
+		const result = await withJsonFileLock(masterRosterFile, async () => {
+			const roster = await readMasterRoster();
+			const classItem = roster.classes.find((item) => item.id === req.params.id);
+			if (!classItem) return { status: 404, message: 'Class not found' };
+			const enrolled = roster.students.filter((student) =>
+				(Array.isArray(student.enrollments) ? student.enrollments : []).some((e) => e.classId === classItem.id));
+			const names = enrolled.map((student) => student.name);
+			// An FLL team class is how the whole team signs in (its class code).
+			// Deleting it while students are on it locks every one of them out
+			// until "Fix broken logins" makes a new class with a NEW code.
+			if (enrolled.length && String(classItem.id).startsWith('fll-')) {
+				return {
+					status: 409,
+					message: `${classItem.name} is an FLL team class with ${enrolled.length} student(s) on it (${names.join(', ')}). `
+						+ 'Deleting it would lock the whole team out of signing in. Move or remove those students from the team first.',
+					enrolled: names
+				};
+			}
+			if (enrolled.length && !force) {
+				return {
+					status: 409,
+					message: `${classItem.name} still has ${enrolled.length} enrolled student(s): ${names.join(', ')}. Confirm to unenroll them and delete it.`,
+					enrolled: names
+				};
+			}
+			roster.classes = roster.classes.filter((item) => item.id !== classItem.id);
+			const now = new Date().toISOString();
+			for (const student of enrolled) {
+				student.enrollments = student.enrollments.filter((enrollment) => enrollment.classId !== classItem.id);
+				student.updatedAt = now;
+			}
+			await writeMasterRosterNow(roster);
+			return { roster };
+		});
+		if (result.status) {
+			return res.status(result.status).json({ success: false, message: result.message, enrolled: result.enrolled || [] });
 		}
-		for (const student of roster.students) {
-			student.enrollments = (Array.isArray(student.enrollments) ? student.enrollments : [])
-				.filter((enrollment) => enrollment.classId !== req.params.id);
-			student.updatedAt = new Date().toISOString();
-		}
-		await writeMasterRoster(roster);
 		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
-		return res.json({ success: true, data: publicMasterRoster(roster, teams) });
+		return res.json({ success: true, data: publicMasterRoster(result.roster, teams) });
 	} catch (err) {
 		console.error('Master class delete error:', err);
 		return res.status(500).json({ success: false, message: 'Server error deleting class' });
 	}
 });
 
-app.post('/api/master-roster/students', requireCoachPortalAuth, async (req, res) => {
+app.post('/api/master-roster/students', requireMasterRosterAccess, async (req, res) => {
 	try {
-		const roster = await readMasterRoster();
-		const student = sanitizeMasterStudentPayload(req.body || {}, roster);
-		if (!student) {
-			return res.status(400).json({ success: false, message: 'Student name is required' });
-		}
-		roster.students.push(student);
-		const portalLogin = assignStudentPortalLogin(student, roster);
-		// one password everywhere: the portal login shown to the coach also
-		// signs in to the FLL Hub, instead of a second password nobody was shown
-		await syncMasterStudentHubAccess(student, roster, {
-			fllPassword: portalLogin.password,
-			campPassword: portalLogin.password
+		const result = await withJsonFileLock(masterRosterFile, async () => {
+			const roster = await readMasterRoster();
+			const student = sanitizeMasterStudentPayload(req.body || {}, roster);
+			if (!student) return { status: 400, message: 'Student name is required' };
+			roster.students.push(student);
+			const portalLogin = assignStudentPortalLogin(student, roster);
+			// one password everywhere: the portal login shown to the coach also
+			// signs in to the FLL Hub, instead of a second password nobody was shown
+			await syncMasterStudentHubAccess(student, roster, {
+				fllPassword: portalLogin.password,
+				campPassword: portalLogin.password
+			});
+			await writeMasterRosterNow(roster);
+			return { roster, student, portalLogin };
 		});
-		await writeMasterRoster(roster);
+		if (result.status) return res.status(result.status).json({ success: false, message: result.message });
 		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
-		return res.status(201).json({ success: true, data: publicMasterRoster(roster, teams), student, portalLogin });
+		return res.status(201).json({
+			success: true,
+			data: publicMasterRoster(result.roster, teams),
+			student: withoutPasswordHash(result.student),
+			portalLogin: result.portalLogin
+		});
 	} catch (err) {
 		console.error('Master student create error:', err);
 		return res.status(500).json({ success: false, message: 'Server error creating student' });
 	}
 });
 
-app.patch('/api/master-roster/students/:id', requireCoachPortalAuth, async (req, res) => {
+app.patch('/api/master-roster/students/:id', requireMasterRosterAccess, async (req, res) => {
 	try {
-		const roster = await readMasterRoster();
-		const index = roster.students.findIndex((item) => item.id === req.params.id);
-		if (index === -1) {
-			return res.status(404).json({ success: false, message: 'Student not found' });
-		}
-		const student = sanitizeMasterStudentPayload(req.body || {}, roster, roster.students[index]);
-		if (!student) {
-			return res.status(400).json({ success: false, message: 'Student name is required' });
-		}
-		roster.students[index] = student;
-		await syncMasterStudentHubAccess(student, roster);
-		await writeMasterRoster(roster);
+		const body = req.body || {};
+		const result = await withJsonFileLock(masterRosterFile, async () => {
+			const roster = await readMasterRoster();
+			const index = roster.students.findIndex((item) => item.id === req.params.id);
+			if (index === -1) return { status: 404, message: 'Student not found' };
+			const student = sanitizeMasterStudentPayload(body, roster, roster.students[index]);
+			if (!student) return { status: 400, message: 'Student name is required' };
+			roster.students[index] = student;
+			// deactivating (or reactivating) on the roster reaches every hub
+			// login; an explicit "remove from team" really takes them off it
+			await syncMasterStudentHubAccess(student, roster, { removeFromTeam: masterTeamRemovalRequested(body) });
+			await writeMasterRosterNow(roster);
+			return { roster, student };
+		});
+		if (result.status) return res.status(result.status).json({ success: false, message: result.message });
 		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
-		return res.json({ success: true, data: publicMasterRoster(roster, teams), student });
+		return res.json({ success: true, data: publicMasterRoster(result.roster, teams), student: withoutPasswordHash(result.student) });
 	} catch (err) {
 		console.error('Master student update error:', err);
 		return res.status(500).json({ success: false, message: 'Server error updating student' });
 	}
 });
 
-app.delete('/api/master-roster/students/:id', requireCoachPortalAuth, async (req, res) => {
+app.delete('/api/master-roster/students/:id', requireMasterRosterAccess, async (req, res) => {
 	try {
-		const roster = await readMasterRoster();
-		const removed = roster.students.find((item) => item.id === req.params.id);
-		const before = roster.students.length;
-		roster.students = roster.students.filter((item) => item.id !== req.params.id);
-		if (roster.students.length === before) {
+		const roster = await withJsonFileLock(masterRosterFile, async () => {
+			const current = await readMasterRoster();
+			const removed = current.students.find((item) => item.id === req.params.id);
+			if (!removed) return null;
+			current.students = current.students.filter((item) => item.id !== req.params.id);
+			endRosterStudentSessions(removed);
+			await removeMasterStudentLinkedAccounts(removed);
+			await writeMasterRosterNow(current);
+			return current;
+		});
+		if (!roster) {
 			return res.status(404).json({ success: false, message: 'Student not found' });
 		}
-		if (removed) {
-			await removeMasterStudentLinkedAccounts(removed);
-		}
-		await writeMasterRoster(roster);
 		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
 		return res.json({ success: true, data: publicMasterRoster(roster, teams) });
 	} catch (err) {
@@ -991,15 +1094,21 @@ function assignStudentPortalLogin(student, roster) {
 }
 
 // Coach: create or reset a student's central portal login (reveals the password once).
-app.post('/api/master-roster/students/:id/portal-login', requireCoachPortalAuth, async (req, res) => {
+app.post('/api/master-roster/students/:id/portal-login', requireMasterRosterAccess, async (req, res) => {
 	try {
-		const roster = await readMasterRoster();
-		const student = roster.students.find((s) => s.id === req.params.id);
-		if (!student) return res.status(404).json({ success: false, message: 'Student not found' });
-		const login = assignStudentPortalLogin(student, roster);
-		await writeMasterRoster(roster);
+		const result = await withJsonFileLock(masterRosterFile, async () => {
+			const roster = await readMasterRoster();
+			const student = roster.students.find((s) => s.id === req.params.id);
+			if (!student) return null;
+			const login = assignStudentPortalLogin(student, roster);
+			await writeMasterRosterNow(roster);
+			// the old password is gone, so is every portal session made with it
+			studentPortalSessions.deleteForUser(student.id, 'studentId');
+			return { roster, login };
+		});
+		if (!result) return res.status(404).json({ success: false, message: 'Student not found' });
 		const teams = await readJsonFile(path.join(fllHubDataDir, 'teams.json'), []);
-		return res.json({ success: true, login, data: publicMasterRoster(roster, teams) });
+		return res.json({ success: true, login: result.login, data: publicMasterRoster(result.roster, teams) });
 	} catch (err) {
 		console.error('Student portal login reset error:', err);
 		return res.status(500).json({ success: false, message: 'Server error setting student login' });
@@ -1042,8 +1151,7 @@ app.post('/api/student/login', loginLimiter, async (req, res) => {
 				return res.status(401).json({ success: false, message: 'Invalid username or password' });
 			}
 		}
-		student.lastStudentPortalLoginAt = new Date().toISOString();
-		await writeMasterRoster(roster);
+		await recordStudentPortalLogin(student.id);
 		if (classItem?.term === 'summer') await resolveCampAccountForStudent(student, roster);
 		const token = crypto.randomBytes(32).toString('hex');
 		studentPortalSessions.set(token, { studentId: student.id, createdAt: Date.now(), lastSeen: Date.now() });
@@ -1084,12 +1192,10 @@ app.post('/api/student/open/:hubId', requireStudentAuth, async (req, res, next) 
 
 		if (hubId === 'fll-hub') {
 			const fllUsers = await readFllUsers();
-			let fllUser = student.fllUserId ? fllUsers.find((u) => u.id === student.fllUserId) : null;
-			if (!fllUser) {
-				const wanted = normalizedPersonName(student.name);
-				fllUser = fllUsers.find((u) => u.role === 'student' && normalizedPersonName(u.name) === wanted);
-			}
-			if (!fllUser || fllUser.active === false) {
+			// stored id first; a name match only for an account no other
+			// roster student owns (two children can share a name)
+			const fllUser = findStudentAccount(fllUsers, student, 'fllUserId', { roster });
+			if (!fllUser || fllUser.role !== 'student' || fllUser.active === false) {
 				return res.status(404).json({ success: false, message: 'Your FLL account is not set up yet — ask your coach.' });
 			}
 			createFllSessionForUser(res, fllUser);
@@ -1100,6 +1206,9 @@ app.post('/api/student/open/:hubId', requireStudentAuth, async (req, res, next) 
 			const campAccount = await resolveCampAccountForStudent(student, roster);
 			if (!campAccount) {
 				return res.status(404).json({ success: false, message: 'Your camp account is not set up yet — ask your coach.' });
+			}
+			if (campAccount.active === false) {
+				return res.status(403).json({ success: false, message: 'Your camp account is turned off — ask your coach.' });
 			}
 			createCampSessionForUser(res, campAccount);
 			return res.json({ success: true, url: STUDENT_HUB_DEFS['summer-camp'].url });
@@ -2550,6 +2659,73 @@ function createCampSessionForUser(res, user) {
 	setCampSessionCookie(res, token);
 }
 
+// Sign a coach out everywhere: the coach portal, and the FLL and camp accounts
+// made for them (found the same way syncCoachUserToFllHub/CampHub find them).
+async function endCoachSessionsEverywhere(coach, exceptCoachToken = null) {
+	if (!coach) return;
+	coachSessions.deleteForUser(coach.id, 'userId', exceptCoachToken);
+	const [fllUsers, campUsers] = await Promise.all([readFllUsers(), readCampUsers()]);
+	const fllName = String(coach.username || coach.fllUsername || '').toLowerCase();
+	const campName = String(coach.username || coach.campUsername || '').toLowerCase();
+	const fllAccount = fllUsers.find((u) => (coach.fllUserId && u.id === coach.fllUserId)
+		|| (u.role === 'coach' && String(u.username || '').toLowerCase() === fllName));
+	const campAccount = campUsers.find((u) => (coach.campUserId && u.id === coach.campUserId)
+		|| (u.role === 'coach' && String(u.username || '').toLowerCase() === campName));
+	if (fllAccount) fllSessions.deleteForUser(fllAccount.id);
+	if (campAccount) campSessions.deleteForUser(campAccount.id);
+}
+
+// Sign a roster student out of the student portal, the FLL Hub and the camp
+// hub. (Code Lab keeps its own express-session store in code-lab/ and is not
+// reachable from here.)
+function endRosterStudentSessions(student) {
+	if (!student) return 0;
+	return studentPortalSessions.deleteForUser(student.id, 'studentId')
+		+ fllSessions.deleteForUser(student.fllUserId)
+		+ campSessions.deleteForUser(student.campUserId);
+}
+
+// The Master Roster holds every child's name, parent contact and class codes:
+// signing in as a coach is not enough, the coach needs the master-roster grant
+// (owners always have it).
+async function requireMasterRosterAccess(req, res, next) {
+	try {
+		const user = await getCoachUserFromSession(req);
+		if (!user) {
+			if (req.path.startsWith('/api/')) {
+				return res.status(401).json({ success: false, message: 'Coach login required' });
+			}
+			return res.redirect(302, '/coach-login');
+		}
+		if (user.role !== 'owner' && !coachHasHub(user, 'master-roster')) {
+			if (req.path.startsWith('/api/')) {
+				return res.status(403).json({ success: false, message: 'You do not have access to the Master Roster' });
+			}
+			return res.redirect(302, '/coach-portal');
+		}
+		req.coachUser = user;
+		return next();
+	} catch (err) {
+		console.error('Master roster auth error:', err);
+		return res.status(500).json({ success: false, message: 'Server error checking roster access' });
+	}
+}
+
+// "Take this student off their team" has to be said on purpose. A blank team
+// id also arrives when the team simply did not resolve, and that must keep
+// the working team (see syncMasterStudentHubAccess).
+function masterTeamRemovalRequested(body) {
+	if (!body || typeof body !== 'object') return false;
+	return body.removeFromTeam === true
+		|| (Object.prototype.hasOwnProperty.call(body, 'fllTeamId') && body.fllTeamId === null);
+}
+
+function withoutPasswordHash(student) {
+	if (!student) return student;
+	const { portalPassword_hash: _omit, ...rest } = student;
+	return rest;
+}
+
 function buildDefaultMasterRoster() {
 	const summerWeeks = [
 		{ id: 'week-1', label: 'Week 1', dates: 'July 6-11, 2026' },
@@ -2722,6 +2898,31 @@ async function writeMasterRoster(roster) {
 		...normalizeMasterRoster(roster),
 		updatedAt: new Date().toISOString()
 	});
+}
+
+// Same, for use INSIDE withJsonFileLock(masterRosterFile, ...) — writeMasterRoster
+// would queue behind that very lock and wait forever.
+async function writeMasterRosterNow(roster) {
+	await writeJsonFileNow(masterRosterFile, {
+		...normalizeMasterRoster(roster),
+		updatedAt: new Date().toISOString()
+	});
+}
+
+// Set one field on one roster student as a single locked step, so a sign-in
+// stamping a timestamp cannot write back an older roster over a coach's edit.
+async function setRosterStudentField(studentId, field, value) {
+	await withJsonFileLock(masterRosterFile, async () => {
+		const raw = await readJsonFile(masterRosterFile, null);
+		const target = Array.isArray(raw?.students) ? raw.students.find((s) => s && s.id === studentId) : null;
+		if (!target || target[field] === value) return;
+		target[field] = value;
+		await writeJsonFileNow(masterRosterFile, raw);
+	});
+}
+
+function recordStudentPortalLogin(studentId) {
+	return setRosterStudentField(studentId, 'lastStudentPortalLoginAt', new Date().toISOString());
 }
 
 // A class code plus a username is a whole student login — there is no
@@ -3193,7 +3394,7 @@ function sanitizeMasterStudentPayload(body, roster, existing = {}) {
 	const hubAccess = Array.isArray(body.hubAccess)
 		? Array.from(new Set(body.hubAccess.filter((hub) => ['code-lab', 'fll-hub'].includes(hub))))
 		: inferMasterHubAccess(existing);
-	const fllTeamId = hubAccess.includes('fll-hub')
+	const fllTeamId = hubAccess.includes('fll-hub') && !masterTeamRemovalRequested(body)
 		? cleanMetaString(body.fllTeamId ?? existing.fllTeamId ?? inferMasterFllTeamId(existing) ?? '', 120)
 		: '';
 	const enrollments = normalizeMasterEnrollments(body.enrollments ?? existing.enrollments ?? [], roster.classes, roster.settings.summerWeeks)
@@ -3209,7 +3410,12 @@ function sanitizeMasterStudentPayload(body, roster, existing = {}) {
 		email: cleanMetaString(body.email ?? existing.email ?? '', 180),
 		phone: cleanMetaString(body.phone ?? existing.phone ?? '', 80),
 		notes: cleanMetaString(body.notes ?? existing.notes ?? '', 600),
-		active: body.active !== false,
+		// a partial update (enroll, grant, remove from team) must not switch a
+		// deactivated student back on; only an explicit active: true does.
+		// New students start active.
+		active: body.active === undefined || body.active === null
+			? existing.active !== false
+			: body.active !== false,
 		hubAccess,
 		codeLabUserId: cleanMetaString(existing.codeLabUserId || body.codeLabUserId || '', 160),
 		fllUserId: cleanMetaString(existing.fllUserId || body.fllUserId || '', 160),
@@ -3352,53 +3558,48 @@ async function requireStudentAuth(req, res, next) {
 	}
 }
 
-// Find or provision the camp account linked to a roster student (by stored id, then name).
+// Find or provision the camp account linked to a roster student: stored id
+// first, and a name match only for an account no other roster student owns.
+// This runs from SIGN-IN paths, so it never switches an account back on: a
+// camper a coach turned off stays off (the caller refuses them). Being active
+// on the roster reactivates the camp login through syncCampAccountForRosterStudent.
 async function resolveCampAccountForStudent(student, roster) {
-	const campUsers = await readCampUsers();
 	const summerClass = (Array.isArray(student.enrollments) ? student.enrollments : [])
 		.map((e) => (roster.classes || []).find((c) => c.id === e.classId))
 		.find((c) => c && c.term === 'summer');
-	let account = null;
-	if (student.campUserId) account = campUsers.find((u) => u.id === student.campUserId && u.role === 'student');
-	if (!account) {
-		const wanted = normalizedPersonName(student.name);
-		account = campUsers.find((u) => u.role === 'student' && normalizedPersonName(u.name) === wanted);
-	}
-	if (account) {
-		// A student who is active in the master roster must have an ACTIVE, roster-managed
-		// camp account. Reactivate + tag so the summer-roster sync never deactivates it again
-		// (the bug: provisioned accounts lacked summerRosterSource and got auto-deactivated,
-		// which then bounced the camper back to the login page).
-		let changed = false;
-		if (account.active === false) { account.active = true; changed = true; }
-		if (account.summerRosterSource !== summerRosterSource) { account.summerRosterSource = summerRosterSource; changed = true; }
-		if (summerClass && !account.className) { account.className = summerClass.name; changed = true; }
-		if (changed) { account.updatedAt = new Date().toISOString(); await writeCampUsers(campUsers); }
-		if (student.campUserId !== account.id) {
-			const fresh = await readMasterRoster();
-			const target = fresh.students.find((s) => s.id === student.id);
-			if (target) { target.campUserId = account.id; await writeMasterRoster(fresh); }
+	const account = await withJsonFileLock(campUsersFile, async () => {
+		const campUsers = await readCampUsers();
+		let found = findStudentAccount(campUsers, student, 'campUserId', { roster });
+		if (found && found.role !== 'student') found = null;
+		if (found) {
+			// tag as roster-managed so the summer-roster sync never auto-deactivates it
+			let changed = false;
+			if (found.summerRosterSource !== summerRosterSource) { found.summerRosterSource = summerRosterSource; changed = true; }
+			if (summerClass && !found.className) { found.className = summerClass.name; changed = true; }
+			if (changed) { found.updatedAt = new Date().toISOString(); await writeJsonFileNow(campUsersFile, campUsers); }
+			return found;
 		}
-		return account;
+		if (student.active === false) return null;
+		// Provision a new camp account (tagged as roster-managed so it is never auto-deactivated).
+		const existingUsernames = new Set(campUsers.map((u) => String(u.username || '').toLowerCase()));
+		const created = {
+			id: `camp-student-${slugify(student.name)}-${crypto.randomBytes(3).toString('hex')}`,
+			name: student.name,
+			username: uniqueUsername(student.name, existingUsernames),
+			password_hash: hashScryptPassword(generateStudentPassword()),
+			role: 'student',
+			active: true,
+			className: summerClass ? summerClass.name : 'Summer Camp',
+			summerRosterSource
+		};
+		campUsers.push(created);
+		await writeJsonFileNow(campUsersFile, campUsers);
+		return created;
+	});
+	if (account && student.campUserId !== account.id) {
+		student.campUserId = account.id;
+		await setRosterStudentField(student.id, 'campUserId', account.id);
 	}
-	// Provision a new camp account (tagged as roster-managed so it is never auto-deactivated).
-	const existingUsernames = new Set(campUsers.map((u) => String(u.username || '').toLowerCase()));
-	const username = uniqueUsername(student.name, existingUsernames);
-	account = {
-		id: `camp-student-${slugify(student.name)}-${crypto.randomBytes(3).toString('hex')}`,
-		name: student.name,
-		username,
-		password_hash: hashScryptPassword(generateStudentPassword()),
-		role: 'student',
-		active: true,
-		className: summerClass ? summerClass.name : 'Summer Camp',
-		summerRosterSource
-	};
-	campUsers.push(account);
-	await writeCampUsers(campUsers);
-	const fresh = await readMasterRoster();
-	const target = fresh.students.find((s) => s.id === student.id);
-	if (target) { target.campUserId = account.id; await writeMasterRoster(fresh); }
 	return account;
 }
 
@@ -3489,10 +3690,15 @@ async function syncMasterStudentHubAccess(student, roster = null, opts = {}) {
 	if (!student || !student.name) return student;
 	const access = new Set(inferMasterHubAccess(student));
 	const now = new Date().toISOString();
+	// A student deactivated on the roster has no hub access at all: every linked
+	// login is switched off (never deleted, so their work stays attached) and
+	// comes back when the roster reactivates them.
+	const inactive = student.active === false;
+	const removingFromTeam = opts.removeFromTeam === true;
 
 	const codeLabStudents = await readCodeLabStudents();
 	let codeLabAccount = findStudentAccount(codeLabStudents, student, 'codeLabUserId', { roster });
-	if (access.has('code-lab')) {
+	if (access.has('code-lab') && !inactive) {
 		if (!codeLabAccount) {
 			const existingUsernames = new Set(codeLabStudents.map((account) => String(account.username || '').toLowerCase()));
 			const username = uniqueUsername(student.name, existingUsernames);
@@ -3532,12 +3738,20 @@ async function syncMasterStudentHubAccess(student, roster = null, opts = {}) {
 	// at all. That failed silently, so the student simply found no work.
 	// Keep whatever working team the account already has, and remember the
 	// unresolved id so creating the team later can adopt them.
-	const resolvedTeamId = validTeamIds.has(student.fllTeamId) ? student.fllTeamId : null;
-	const heldTeamId = fllAccount && validTeamIds.has(fllAccount.teamId) ? fllAccount.teamId : null;
+	// An explicit "remove from team" (opts.removeFromTeam) is the one case that
+	// does take them off: no held team, nothing pending.
+	const resolvedTeamId = !removingFromTeam && validTeamIds.has(student.fllTeamId) ? student.fllTeamId : null;
+	const heldTeamId = !removingFromTeam && fllAccount && validTeamIds.has(fllAccount.teamId) ? fllAccount.teamId : null;
 	const requestedTeamId = resolvedTeamId || heldTeamId;
-	const pendingTeamId = !resolvedTeamId ? cleanMetaString(student.fllTeamId || '', 120) : '';
+	const pendingTeamId = !resolvedTeamId && !removingFromTeam ? cleanMetaString(student.fllTeamId || '', 120) : '';
 
-	if (access.has('fll-hub')) {
+	if (inactive) {
+		// switched off, but team and membership stay so nothing is orphaned
+		if (fllAccount) {
+			fllAccount.active = false;
+			student.fllUserId = fllAccount.id;
+		}
+	} else if (access.has('fll-hub')) {
 		if (!fllAccount) {
 			const existingUsernames = new Set(fllUsers.map((account) => String(account.username || '').toLowerCase()));
 			const wantedUsername = String(opts.fllUsername || '').toLowerCase();
@@ -3586,7 +3800,7 @@ async function syncMasterStudentHubAccess(student, roster = null, opts = {}) {
 		student.fllTeamId = '';
 	}
 
-	if (fllAccount) {
+	if (fllAccount && !inactive) {
 		const existingMember = members.find((member) => member.studentId === fllAccount.id);
 		if (access.has('fll-hub') && requestedTeamId) {
 			if (existingMember) {
@@ -3618,6 +3832,8 @@ async function syncMasterStudentHubAccess(student, roster = null, opts = {}) {
 	// Summer Camp account — keep the camp hub in sync with roster adds/edits the same
 	// way Code Lab and FLL are. Needs the roster to know summer enrollment + class name.
 	if (roster) await syncCampAccountForRosterStudent(student, roster, opts);
+	// sessions already open in those hubs end now, not when they expire
+	if (inactive) endRosterStudentSessions(student);
 
 	return student;
 }
@@ -5888,15 +6104,12 @@ app.post('/api/fll/login', loginLimiter, async (req, res) => {
 				return res.status(401).json({ success: false, message: 'Check your class code and username, then try again.' });
 			}
 			const student = found.student;
-			student.lastStudentPortalLoginAt = new Date().toISOString();
-			await writeMasterRoster(found.roster);
+			await recordStudentPortalLogin(student.id);
 			const fllUsers = await readFllUsers();
-			let fllUser = student.fllUserId ? fllUsers.find((u) => u.id === student.fllUserId) : null;
-			if (!fllUser) {
-				const wanted = normalizedPersonName(student.name);
-				fllUser = fllUsers.find((u) => u.role === 'student' && normalizedPersonName(u.name) === wanted);
-			}
-			if (!fllUser || fllUser.active === false) {
+			// stored id first; a name match only for an account no other roster
+			// student owns — two children with one name must not share a login
+			const fllUser = findStudentAccount(fllUsers, student, 'fllUserId', { roster: found.roster });
+			if (!fllUser || fllUser.role !== 'student' || fllUser.active === false) {
 				return res.status(404).json({ success: false, message: 'Your FLL account is not set up yet — ask your coach.' });
 			}
 			createFllSessionForUser(res, fllUser);
@@ -7438,8 +7651,8 @@ function linkFllStudentsToMasterRoster(created, normalizedRoster) {
 			if (!student) continue;
 			normalizedRoster.students.push(student);
 		}
-		student.name = c.name || student.name;
-		student.active = true;
+		// Links only. Repair never renames a student and never switches a
+		// deactivated one back on — both are the roster's decisions.
 		student.portalUsername = uname;
 		student.fllUserId = c.id || student.fllUserId;
 		setMasterStudentFllTeamEnrollment(student, c.teamId, normalizedRoster);
@@ -7629,6 +7842,8 @@ app.patch('/api/fll/coach/students/:id', requireFllAuth, requireFllCoach, async 
 			writeJsonFile(fllUsersFile, users),
 			writeJsonFile(fllTeamMembersFile, members)
 		]);
+		// a reset password or a switched-off account signs them out now
+		if (newPassword || user.active === false) fllSessions.deleteForUser(user.id);
 		if (req.body.teamId !== undefined) {
 			const roster = normalizeMasterRoster(await readMasterRoster());
 			const masterStudent = roster.students.find((student) => student.fllUserId === user.id)
@@ -7731,46 +7946,51 @@ app.get('/api/fll/coach/login-status', requireFllAuth, requireFllCoach, async (r
 // a class and a code, and that they are enrolled in it with hub access.
 app.post('/api/fll/coach/login-status/repair', requireFllAuth, requireFllCoach, async (req, res) => {
 	try {
-		const [users, teams, masterRoster] = await Promise.all([
-			readFllUsers(),
-			readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
-			readMasterRoster()
-		]);
 		const before = await buildFllLoginStatus();
-		const ensured = ensureFllTeamClasses(teams, masterRoster);
+		// one locked step on the roster, so a coach's roster edit made while this
+		// runs is not overwritten by the copy read at the start
+		const reattached = await withJsonFileLock(masterRosterFile, async () => {
+			const [users, teams, masterRoster] = await Promise.all([
+				readFllUsers(),
+				readJsonFile(path.join(fllHubDataDir, 'teams.json'), []),
+				readMasterRoster()
+			]);
+			const ensured = ensureFllTeamClasses(teams, masterRoster);
 
-		// Students with no team were the ones this could never fix: the link
-		// pass below skips them, so a student stranded by a roster edit stayed
-		// stranded. If the roster still says which team they belong to and
-		// that team exists, put them back on it.
-		const validTeamIds = new Set((Array.isArray(ensured.teams) ? ensured.teams : []).map((t) => t.id));
-		const reattached = [];
-		for (const user of users) {
-			if (user.role !== 'student' || user.active === false || user.teamId) continue;
-			const rosterStudent = ensured.roster.students.find((st) =>
-				st.fllUserId === user.id
-				|| String(st.portalUsername || '').toLowerCase() === String(user.username || '').toLowerCase());
-			if (!rosterStudent) continue;
-			const wantedTeamId = inferMasterFllTeamId(rosterStudent);
-			if (!wantedTeamId || !validTeamIds.has(wantedTeamId)) continue;
-			user.teamId = wantedTeamId;
-			setMasterStudentFllTeamEnrollment(rosterStudent, wantedTeamId, ensured.roster);
-			await syncMasterStudentHubAccess(rosterStudent, ensured.roster);
-			reattached.push(user.name || user.username);
-		}
-		if (reattached.length) {
-			await writeJsonFile(fllUsersFile, users);
-			await realignFllStudentWork();
-		}
+			// Students with no team were the ones this could never fix: the link
+			// pass below skips them, so a student stranded by a roster edit stayed
+			// stranded. If the roster still says which team they belong to and
+			// that team exists, put them back on it.
+			const validTeamIds = new Set((Array.isArray(ensured.teams) ? ensured.teams : []).map((t) => t.id));
+			const names = [];
+			for (const user of users) {
+				if (user.role !== 'student' || user.active === false || user.teamId) continue;
+				const rosterStudent = ensured.roster.students.find((st) =>
+					st.fllUserId === user.id
+					|| String(st.portalUsername || '').toLowerCase() === String(user.username || '').toLowerCase());
+				// a student deactivated on the roster stays that way: repair fixes links only
+				if (!rosterStudent || rosterStudent.active === false) continue;
+				const wantedTeamId = inferMasterFllTeamId(rosterStudent);
+				if (!wantedTeamId || !validTeamIds.has(wantedTeamId)) continue;
+				setMasterStudentFllTeamEnrollment(rosterStudent, wantedTeamId, ensured.roster);
+				// saves the account's team + membership and moves their work along
+				await syncMasterStudentHubAccess(rosterStudent, ensured.roster);
+				names.push(user.name || user.username);
+			}
 
-		const linkable = users
-			.filter((u) => u.role === 'student' && u.active !== false && u.teamId && u.username)
-			.map((u) => ({ id: u.id, name: u.name, username: u.username, teamId: u.teamId }));
-		const linkedRoster = linkFllStudentsToMasterRoster(linkable, ensured.roster);
-		await Promise.all([
-			writeJsonFile(path.join(fllHubDataDir, 'teams.json'), ensured.teams),
-			writeMasterRoster(linkedRoster)
-		]);
+			// read back what the sync saved instead of writing this older copy
+			// over it (that used to undo anything the sync changed)
+			const current = names.length ? await readFllUsers() : users;
+			const linkable = current
+				.filter((u) => u.role === 'student' && u.active !== false && u.teamId && u.username)
+				.map((u) => ({ id: u.id, name: u.name, username: u.username, teamId: u.teamId }));
+			const linkedRoster = linkFllStudentsToMasterRoster(linkable, ensured.roster);
+			await Promise.all([
+				writeJsonFile(path.join(fllHubDataDir, 'teams.json'), ensured.teams),
+				writeMasterRosterNow(linkedRoster)
+			]);
+			return names;
+		});
 		const after = await buildFllLoginStatus();
 		return res.json({
 			success: true,
@@ -9404,11 +9624,13 @@ app.post('/api/camp/login', loginLimiter, async (req, res) => {
 			if (!found || !summerEnrolled(found.student, found.roster)) {
 				return res.status(401).json({ success: false, message: 'Check your class code and username, then try again.' });
 			}
-			found.student.lastStudentPortalLoginAt = new Date().toISOString();
-			await writeMasterRoster(found.roster);
+			await recordStudentPortalLogin(found.student.id);
 			const account = await resolveCampAccountForStudent(found.student, found.roster);
 			if (!account) {
 				return res.status(404).json({ success: false, message: 'Your camp account is not set up yet — ask your coach.' });
+			}
+			if (account.active === false) {
+				return res.status(403).json({ success: false, message: 'Your camp account is turned off — ask your coach.' });
 			}
 			createCampSessionForUser(res, account);
 			return res.json({ success: true, user: publicCampUser(account), redirectTo: '/camp-hub' });
@@ -10696,6 +10918,8 @@ app.patch('/api/camp/coach/students/:id', requireCampAuth, requireCampCoach, asy
 			user.className = cleanMetaString(req.body.className, 80) || 'Unassigned';
 		}
 		await writeJsonFile(campUsersFile, users);
+		// a reset password or a switched-off camper signs them out now
+		if (newPassword || user.active === false) campSessions.deleteForUser(user.id);
 		// Keep the master roster in sync with camper edits (name, class, active).
 		await syncMasterStudentFromCampCamper(user);
 		const response = { success: true, user: { id: user.id, name: user.name, username: user.username, active: user.active !== false, className: user.className || 'Unassigned' } };
@@ -11073,7 +11297,10 @@ initializeFllDataDir()
 	.then(() => ensureStudentPortalUsernames())
 	.then(() => logDataHealthReport())
 	.then(() => {
-		app.listen(PORT, () => console.log(`AI Future Platform running at http://localhost:${PORT}`));
+		app.listen(PORT, () => {
+			console.log(`AI Future Platform running at http://localhost:${PORT}`);
+			scheduleDailyBackups({ dataDir: platformDataDir, backupDir: path.join(platformDataDir, 'backups'), keep: 7 });
+		});
 	})
 	.catch((err) => {
 		console.error('Failed to initialize hub data:', err);

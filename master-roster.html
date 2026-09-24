@@ -176,6 +176,8 @@
     table.roster thead th.sorted .arrow { opacity: 1; color: var(--brand); }
     table.roster tbody tr:hover { background: #f8fbff; }
     table.roster tbody tr.selected { background: var(--blue-soft); }
+    table.roster tbody tr.inactive td:not(.cell-actions):not(.col-check) { opacity: 0.55; }
+    .btn.link-danger { background: transparent; border-color: transparent; color: var(--danger); text-decoration: underline; padding-left: 6px; padding-right: 6px; }
     table.roster tr:last-child td { border-bottom: 0; }
     .col-check { width: 42px; text-align: center; }
     .col-check input { width: 18px; height: 18px; accent-color: var(--brand); cursor: pointer; }
@@ -552,7 +554,9 @@
             <option value="unenroll">Remove from a class</option>
             <option value="team">Assign / change FLL team</option>
             <option value="codelab">Code Lab access</option>
-            <option value="delete">Remove students from roster</option>
+            <option value="deactivate">Deactivate students (keeps their work)</option>
+            <option value="reactivate">Reactivate students</option>
+            <option value="delete">Permanently delete students…</option>
           </select>
         </label>
         <div id="bulkClassWrap" class="field" style="display:none">
@@ -575,7 +579,7 @@
             </select>
           </label>
         </div>
-        <p id="bulkDeleteWarn" class="hint" style="display:none;color:var(--danger);font-weight:700">This permanently removes the selected students from the master roster.</p>
+        <p id="bulkDeleteWarn" class="hint" style="display:none;color:var(--danger);font-weight:700">This permanently deletes the selected students AND their FLL Hub, Code Lab and camp logins. Their work is left with no owner. Use "Deactivate students" to take them out safely.</p>
         <p class="hint" id="bulkProgress" style="display:none"></p>
       </div>
       <div class="modal-foot">
@@ -672,6 +676,14 @@
     function formatProgram(value) { return PROGRAM_LABELS[value] || value; }
     function hasHub(student, hubId) { return Array.isArray(student?.hubAccess) && student.hubAccess.includes(hubId); }
     function formatTeamName(teamId) { const team = fllTeamById(teamId); return team ? (team.nickname || team.name || team.id) : teamId; }
+    // Plain-language list of the logins a hard delete removes for this student.
+    function linkedLoginsFor(student) {
+      const items = ['their Master Roster record and class enrollments', 'their Student Hub (portal) login'];
+      if (student.fllUserId) items.push('their FLL Hub login' + (student.fllTeamId ? ` and their spot on ${formatTeamName(student.fllTeamId)}` : ''));
+      if (student.codeLabUserId) items.push('their Code Lab account');
+      if (student.campUserId) items.push('their Summer Camp login');
+      return items;
+    }
     // Enrollments excluding FLL-team-managed classes (server derives those from fllTeamId)
     function manualEnrollments(student) { return (student.enrollments || []).filter((e) => !String(e.classId || '').startsWith('fll-')); }
 
@@ -830,16 +842,19 @@
               ${rows.map((student) => {
                 const contact = [student.parentName, student.email, student.phone].filter(Boolean).map(esc).join('<br>') || '<span style="opacity:0.6">No contact info</span>';
                 return `
-                  <tr class="${state.selected.has(student.id) ? 'selected' : ''}" data-row="${esc(student.id)}">
+                  <tr class="${state.selected.has(student.id) ? 'selected' : ''} ${student.active === false ? 'inactive' : ''}" data-row="${esc(student.id)}">
                     <td class="col-check"><input type="checkbox" data-select="${esc(student.id)}" ${state.selected.has(student.id) ? 'checked' : ''}></td>
-                    <td class="cell-name">${esc(student.name)}${student.notes ? `<span class="cl-id">📝 ${esc(student.notes.slice(0, 40))}${student.notes.length > 40 ? '…' : ''}</span>` : ''}</td>
+                    <td class="cell-name">${esc(student.name)}${student.active === false ? ' <span class="pill off">Deactivated</span>' : ''}${student.notes ? `<span class="cl-id">📝 ${esc(student.notes.slice(0, 40))}${student.notes.length > 40 ? '…' : ''}</span>` : ''}</td>
                     <td class="cell-contact">${contact}</td>
                     <td>${classPills(student)}</td>
                     <td>${accessPills(student)}</td>
                     <td class="cell-actions">
-                      <button class="btn sm" type="button" title="Show / reset their one student-portal login" onclick="resetStudentLogin('${esc(student.id)}','${esc(student.name)}')">🔑 Login</button>
+                      <button class="btn sm" type="button" title="Show / reset their one student-portal login" onclick="resetStudentLogin('${esc(student.id)}')">🔑 Login</button>
                       <button class="btn sm" type="button" onclick="openStudentModal('${esc(student.id)}')">Edit</button>
-                      <button class="btn sm danger" type="button" onclick="deleteStudent('${esc(student.id)}')">✕</button>
+                      ${student.active === false
+                        ? `<button class="btn sm" type="button" title="Turn their logins back on" onclick="setStudentActive('${esc(student.id)}', true)">Reactivate</button>`
+                        : `<button class="btn sm danger" type="button" title="Turn off all their logins; their work is kept" onclick="setStudentActive('${esc(student.id)}', false)">Deactivate</button>`}
+                      <button class="btn sm link-danger" type="button" title="Permanently delete this student and all their logins" onclick="deleteStudent('${esc(student.id)}')">Delete…</button>
                     </td>
                   </tr>`;
               }).join('')}
@@ -1007,9 +1022,9 @@
     };
     window.removeFromTeam = async function removeFromTeam(studentId) {
       const student = studentById(studentId); if (!student) return;
-      if (!confirm(`Remove ${student.name} from their FLL team?`)) return;
+      if (!confirm(`Remove ${student.name} from ${formatTeamName(student.fllTeamId)}?\n\nThey will no longer be able to sign in with that team's class code until you put them on a team again. Their work is kept.`)) return;
       try {
-        const result = await api(`/api/master-roster/students/${encodeURIComponent(studentId)}`, { method: 'PATCH', body: JSON.stringify({ fllTeamId: '' }) });
+        const result = await api(`/api/master-roster/students/${encodeURIComponent(studentId)}`, { method: 'PATCH', body: JSON.stringify({ removeFromTeam: true }) });
         state.roster = result.data; renderAll();
       } catch (err) { showNotice(err.message); }
     };
@@ -1110,6 +1125,7 @@
     studentForm.addEventListener('submit', async (event) => {
       event.preventDefault();
       const id = document.getElementById('studentId').value;
+      const before = id ? studentById(id) : null;
       const payload = {
         name: document.getElementById('studentName').value,
         parentName: document.getElementById('parentName').value,
@@ -1120,6 +1136,11 @@
         fllTeamId: accessFllHub.checked ? fllTeamId.value : '',
         enrollments: collectEnrollments()
       };
+      // Choosing "No team" for a student who IS on a real team is a deliberate
+      // removal. A blank that only means "their team isn't in this list" is not.
+      if (before && accessFllHub.checked && !fllTeamId.value && before.fllTeamId && fllTeamById(before.fllTeamId)) {
+        payload.removeFromTeam = true;
+      }
       try {
         const url = id ? `/api/master-roster/students/${encodeURIComponent(id)}` : '/api/master-roster/students';
         const result = await api(url, { method: id ? 'PATCH' : 'POST', body: JSON.stringify(payload) });
@@ -1130,17 +1151,45 @@
       } catch (err) { showNotice(err.message); }
     });
 
+    // Deactivate is the normal way to take a student out: every login stops
+    // working at once, and nothing they made is lost. Reactivate undoes it.
+    window.setStudentActive = async function setStudentActive(id, active) {
+      const student = studentById(id); if (!student) return;
+      const message = active
+        ? `Reactivate ${student.name}?\n\nTheir Student Hub, FLL Hub, Code Lab and camp logins work again.`
+        : `Deactivate ${student.name}?\n\nThey are signed out and can no longer sign in to the Student Hub, FLL Hub, Code Lab or Summer Camp. `
+          + 'Their work, team and classes are kept, and you can reactivate them any time.';
+      if (!confirm(message)) return;
+      try {
+        const result = await api(`/api/master-roster/students/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify({ active }) });
+        state.roster = result.data; renderAll();
+        showNotice(`${student.name} ${active ? 'reactivated' : 'deactivated'}.`, true);
+      } catch (err) { showNotice(err.message); }
+    };
+
     window.deleteStudent = async function deleteStudent(id) {
-      const student = studentById(id);
-      if (!confirm(`Remove ${student ? student.name : 'this student'} from the roster?`)) return;
+      const student = studentById(id); if (!student) return;
+      const typed = prompt(
+        `PERMANENTLY DELETE ${student.name}?\n\nThis removes:\n- ${linkedLoginsFor(student).join('\n- ')}\n\n`
+        + 'Their lessons, answers and points stay on disk but are no longer attached to anyone. This cannot be undone. '
+        + 'To just take them out, Cancel and use Deactivate instead.\n\n'
+        + `Type the student's name (${student.name}) to delete:`
+      );
+      if (typed === null) return;
+      if (typed.trim().toLowerCase() !== String(student.name).trim().toLowerCase()) {
+        showNotice(`Not deleted: the name typed did not match "${student.name}".`);
+        return;
+      }
       try {
         const result = await api(`/api/master-roster/students/${encodeURIComponent(id)}`, { method: 'DELETE' });
         state.roster = result.data; state.selected.delete(id); renderAll();
+        showNotice(`${student.name} was deleted.`, true);
       } catch (err) { showNotice(err.message); }
     };
 
     // Show/reset a student's single Student Portal login (one login → all their hubs).
-    window.resetStudentLogin = async function resetStudentLogin(id, name) {
+    window.resetStudentLogin = async function resetStudentLogin(id) {
+      const name = studentById(id)?.name || 'this student';
       if (!confirm(`Reset ${name}'s student-portal login? Their old password (if any) stops working. You'll see the new one to give them.`)) return;
       try {
         const result = await api(`/api/master-roster/students/${encodeURIComponent(id)}/portal-login`, { method: 'POST' });
@@ -1186,10 +1235,29 @@
     });
 
     window.deleteClass = async function deleteClass(id) {
-      const classItem = classById(id);
-      if (!confirm(`Remove ${classItem ? classItem.name : 'this class'}? Students will be unenrolled from it.`)) return;
+      const classItem = classById(id); if (!classItem) return;
+      const enrolled = students().filter((s) => enrollmentFor(s, id)).map((s) => s.name).sort();
+      if (enrolled.length && String(id).startsWith('fll-')) {
+        alert(`${classItem.name} is an FLL team class and still has ${enrolled.length} student(s) on it:\n\n${enrolled.join('\n')}\n\n`
+          + 'Deleting it would lock the WHOLE TEAM out: they sign in with this class code. Move or remove those students from the team first.');
+        return;
+      }
+      let force = false;
+      if (enrolled.length) {
+        const typed = prompt(`${classItem.name} still has ${enrolled.length} enrolled student(s):\n\n${enrolled.join('\n')}\n\n`
+          + 'Deleting the class unenrolls all of them, and its class code stops working for them.\n\n'
+          + `Type the class name (${classItem.name}) to delete it:`);
+        if (typed === null) return;
+        if (typed.trim().toLowerCase() !== String(classItem.name).trim().toLowerCase()) {
+          showNotice(`Not deleted: the name typed did not match "${classItem.name}".`);
+          return;
+        }
+        force = true;
+      } else if (!confirm(`Delete ${classItem.name}? No students are enrolled in it.`)) {
+        return;
+      }
       try {
-        const result = await api(`/api/master-roster/classes/${encodeURIComponent(id)}`, { method: 'DELETE' });
+        const result = await api(`/api/master-roster/classes/${encodeURIComponent(id)}${force ? '?force=1' : ''}`, { method: 'DELETE' });
         state.roster = result.data; renderAll();
       } catch (err) { showNotice(err.message); }
     };
@@ -1238,7 +1306,22 @@
       const action = bulkAction.value;
       const progress = document.getElementById('bulkProgress');
       const applyBtn = document.getElementById('bulkApply');
-      if (action === 'delete' && !confirm(`Permanently remove ${ids.length} student${ids.length === 1 ? '' : 's'} from the roster?`)) return;
+      if (action === 'delete') {
+        const names = ids.map((id) => studentById(id)?.name).filter(Boolean).sort();
+        const typed = prompt(`PERMANENTLY DELETE these ${names.length} student${names.length === 1 ? '' : 's'}?\n\n${names.join('\n')}\n\n`
+          + 'For each one this removes their roster record, Student Hub login, FLL Hub login and team spot, Code Lab account and camp login. '
+          + 'Their work is left with no owner. This cannot be undone. To just take them out, use "Deactivate students" instead.\n\n'
+          + `Type DELETE ${names.length} to confirm:`);
+        if (typed === null) return;
+        if (typed.trim().toUpperCase() !== `DELETE ${names.length}`) {
+          showNotice('Not deleted: the confirmation text did not match.');
+          return;
+        }
+      }
+      if (action === 'deactivate') {
+        const names = ids.map((id) => studentById(id)?.name).filter(Boolean).sort();
+        if (!confirm(`Deactivate these ${names.length} student(s)?\n\n${names.join('\n')}\n\nThey are signed out of every hub. Their work is kept; you can reactivate them later.`)) return;
+      }
       applyBtn.disabled = true;
       progress.style.display = 'block';
       let done = 0, failed = 0;
@@ -1249,6 +1332,8 @@
         try {
           if (action === 'delete') {
             await api(`/api/master-roster/students/${encodeURIComponent(id)}`, { method: 'DELETE' });
+          } else if (action === 'deactivate' || action === 'reactivate') {
+            await api(`/api/master-roster/students/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify({ active: action === 'reactivate' }) });
           } else if (action === 'enroll') {
             const classItem = classById(bulkClass.value);
             const weeks = classItem?.term === 'summer'
@@ -1265,7 +1350,7 @@
               const access = Array.from(new Set([...(student.hubAccess || []), 'fll-hub']));
               await api(`/api/master-roster/students/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify({ hubAccess: access, fllTeamId: teamId }) });
             } else {
-              await api(`/api/master-roster/students/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify({ fllTeamId: '' }) });
+              await api(`/api/master-roster/students/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify({ removeFromTeam: true }) });
             }
           } else if (action === 'codelab') {
             const grant = document.getElementById('bulkCodelab').value === 'grant';
