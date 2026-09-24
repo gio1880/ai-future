@@ -182,8 +182,16 @@ class PersistentSessionMap extends Map {
 // Render stops the old server with SIGTERM when it deploys. Save anything still
 // waiting so nobody who was active in the last minute loses their session.
 for (const signal of ['SIGTERM', 'SIGINT']) {
-	process.once(signal, () => {
+	process.once(signal, async () => {
 		for (const store of persistentSessionStores) if (store.timer) store.save();
+		// let queued data-file writes land before exiting (bounded, so a stuck
+		// disk cannot hold up the deploy)
+		try {
+			const flushed = await flushPendingJsonWrites(5000);
+			if (!flushed) console.error(`${signal}: some data-file writes were still pending after 5s; exiting anyway.`);
+		} catch (err) {
+			console.error(`${signal}: error while waiting for data-file writes:`, err.message);
+		}
 		process.exit(0);
 	});
 }
@@ -1234,19 +1242,126 @@ function publicFllUser(user) {
 	};
 }
 
+// ── JSON files ──────────────────────────────────────────────────────────────
+// Every write goes to a temp file in the same directory and is then renamed
+// over the target, so a crash or a second writer can never leave half a file.
+// Writes to one path are queued one behind the other (single process, so a Map
+// of path -> promise is enough). Before replacing a file that still parses, the
+// previous version is kept as <file>.bak, and a read of a corrupt file falls
+// back to it — loudly.
+// NOTE: this stops corruption and truncation. It does NOT make two
+// read-modify-write requests safe against each other: if two requests both
+// read, change and write the same file, the second write still replaces the
+// first one's change. That needs a per-file lock around the whole update.
+const jsonWriteQueues = new Map();
+
 async function readJsonFile(filePath, fallback) {
+	let raw;
 	try {
-		const raw = await fs.readFile(filePath, 'utf8');
-		return JSON.parse(raw);
+		raw = await fs.readFile(filePath, 'utf8');
 	} catch (err) {
 		if (err.code === 'ENOENT') return fallback;
 		throw err;
 	}
+	try {
+		return JSON.parse(raw);
+	} catch (parseErr) {
+		const bakPath = `${filePath}.bak`;
+		try {
+			const value = JSON.parse(await fs.readFile(bakPath, 'utf8'));
+			console.error(`!!! DATA FILE CORRUPT: ${filePath} does not parse (${parseErr.message}). `
+				+ `Serving the last good copy from ${bakPath}. The next save will replace the corrupt file.`);
+			return value;
+		} catch (bakErr) {
+			console.error(`!!! DATA FILE CORRUPT: ${filePath} does not parse (${parseErr.message}) `
+				+ `and no usable backup at ${bakPath} (${bakErr.code || bakErr.message}).`);
+			throw parseErr;
+		}
+	}
 }
 
-async function writeJsonFile(filePath, data) {
-	await fs.mkdir(path.dirname(filePath), { recursive: true });
-	await fs.writeFile(filePath, JSON.stringify(data, null, 2));
+async function writeJsonFileNow(filePath, data) {
+	const dir = path.dirname(filePath);
+	await fs.mkdir(dir, { recursive: true });
+	const body = JSON.stringify(data, null, 2);
+	// keep the previous GOOD version; a corrupt current file must not replace
+	// a good backup
+	try {
+		const current = await fs.readFile(filePath, 'utf8');
+		JSON.parse(current);
+		await fs.writeFile(`${filePath}.bak`, current);
+	} catch (err) {
+		if (err.code !== 'ENOENT' && !(err instanceof SyntaxError)) {
+			console.error(`Could not back up ${filePath} before saving:`, err.message);
+		}
+	}
+	const tmp = path.join(dir, `.${path.basename(filePath)}.${process.pid}.${crypto.randomBytes(4).toString('hex')}.tmp`);
+	try {
+		await fs.writeFile(tmp, body);
+		await fs.rename(tmp, filePath);
+	} catch (err) {
+		await fs.unlink(tmp).catch(() => {});
+		throw err;
+	}
+}
+
+function writeJsonFile(filePath, data) {
+	const key = path.resolve(filePath);
+	const previous = jsonWriteQueues.get(key) || Promise.resolve();
+	// run after the previous write to this path, whether it worked or not
+	const run = previous.catch(() => {}).then(() => writeJsonFileNow(filePath, data));
+	const tail = run.catch(() => {});
+	jsonWriteQueues.set(key, tail);
+	tail.then(() => { if (jsonWriteQueues.get(key) === tail) jsonWriteQueues.delete(key); });
+	return run;
+}
+
+// Read, change and save a file as ONE step, queued behind every other write to
+// that path. Use it wherever many people save into the same shared file at
+// once. Before this, 38 students saving drafts together all got "saved" and
+// only 2 drafts were kept: each request read the file, added its own draft, and
+// wrote back a copy that no longer had anyone else's.
+// `mutate(current)` changes `current` in place and returns whatever the caller
+// wants back; `current` is then saved. Throwing from mutate saves nothing.
+function updateJsonFile(filePath, fallback, mutate) {
+	const key = path.resolve(filePath);
+	const previous = jsonWriteQueues.get(key) || Promise.resolve();
+	const run = previous.catch(() => {}).then(async () => {
+		const current = await readJsonFile(filePath, fallback);
+		const result = await mutate(current);
+		await writeJsonFileNow(filePath, current);
+		return result;
+	});
+	const tail = run.catch(() => {});
+	jsonWriteQueues.set(key, tail);
+	tail.then(() => { if (jsonWriteQueues.get(key) === tail) jsonWriteQueues.delete(key); });
+	return run;
+}
+
+// Run `fn` with the file to itself: nothing else reads-then-writes or writes it
+// until fn finishes. For handlers too branchy to fit updateJsonFile. Inside fn,
+// save with writeJsonFileNow — writeJsonFile would queue behind this very lock
+// and wait forever.
+function withJsonFileLock(filePath, fn) {
+	const key = path.resolve(filePath);
+	const previous = jsonWriteQueues.get(key) || Promise.resolve();
+	const run = previous.catch(() => {}).then(fn);
+	const tail = run.catch(() => {});
+	jsonWriteQueues.set(key, tail);
+	tail.then(() => { if (jsonWriteQueues.get(key) === tail) jsonWriteQueues.delete(key); });
+	return run;
+}
+
+// Resolves once every queued JSON write has finished (or after timeoutMs).
+async function flushPendingJsonWrites(timeoutMs = 5000) {
+	const pending = [...jsonWriteQueues.values()];
+	if (!pending.length) return true;
+	let timer;
+	const timedOut = new Promise((resolve) => { timer = setTimeout(() => resolve(false), timeoutMs); });
+	const done = Promise.all(pending).then(() => true);
+	const finished = await Promise.race([done, timedOut]);
+	clearTimeout(timer);
+	return finished;
 }
 
 async function fileSha256(filePath) {
@@ -3496,6 +3611,9 @@ async function syncMasterStudentHubAccess(student, roster = null, opts = {}) {
 		writeJsonFile(fllUsersFile, fllUsers),
 		writeJsonFile(fllTeamMembersFile, members)
 	]);
+	// a roster edit can move the student to another team: bring their lesson
+	// copies and turned-in work along
+	if (fllAccount) await realignFllStudentWork([fllAccount.id]);
 
 	// Summer Camp account — keep the camp hub in sync with roster adds/edits the same
 	// way Code Lab and FLL are. Needs the roster to know summer enrollment + class name.
@@ -4586,9 +4704,53 @@ async function studentMayUseTask(user, task) {
 	return lessonAudienceAllows(task, user.teamId, settings, teams);
 }
 
+// A student's lesson copies, turned-in work and drafts carry the team they were
+// on when the row was made. When the student moves team (hub edit, roster edit,
+// login repair, or anything else that rewrites fll-users.json), re-stamp those
+// rows with the student's CURRENT team so the coach sees their work under the
+// new team and teammates' context lines up. Called from every team-changing
+// path, and on every dashboard load as a safety net for any path missed.
+// Only writes when something is actually out of line.
+async function realignFllStudentWork(onlyUserIds = null) {
+	const users = await readFllUsers();
+	const want = new Map();
+	for (const u of users) {
+		if (u.role !== 'student' || !u.teamId) continue;
+		if (onlyUserIds && !onlyUserIds.includes(u.id)) continue;
+		want.set(u.id, u.teamId);
+	}
+	if (!want.size) return { tasks: 0, submissions: 0, drafts: 0 };
+	const moved = { tasks: 0, submissions: 0, drafts: 0 };
+	const sources = [
+		[fllTasksFile, 'tasks', (row) => row.assignedTo],
+		[fllTaskSubmissionsFile, 'submissions', (row) => row.studentId],
+		[fllTaskDraftsFile, 'drafts', (row) => row.studentId]
+	];
+	for (const [file, key, ownerOf] of sources) {
+		const rows = await readJsonFile(file, []);
+		if (!Array.isArray(rows)) continue;
+		let changed = 0;
+		for (const row of rows) {
+			const teamId = want.get(ownerOf(row));
+			if (!teamId || row.teamId === teamId) continue;
+			row.teamId = teamId;
+			changed += 1;
+		}
+		if (changed) {
+			await writeJsonFile(file, rows);
+			moved[key] = changed;
+		}
+	}
+	if (moved.tasks || moved.submissions || moved.drafts) {
+		console.log('FLL: moved student work to current team', JSON.stringify(moved), onlyUserIds ? onlyUserIds.join(',') : '(all)');
+	}
+	return moved;
+}
+
 async function ensureFllCurriculumTasksForUser(user) {
 	if (!user?.id || !user?.teamId || user.role !== 'student') return;
 	if (user.teamId === FLL_TEMPLATE_TEAM_ID) return; // never re-distribute onto the template team
+	await realignFllStudentWork([user.id]);
 	const [tasks, distSettings, distTeams] = await Promise.all([
 		readJsonFile(fllTasksFile, []),
 		readFllSettings(),
@@ -4624,6 +4786,17 @@ const FLL_OPTIONAL_CONTENT_FIELDS = [
 	'excludeFromIdeaMap'
 ];
 
+// What a turned-in answer is tied to: the set of questions, by id and type.
+// Adding or removing a question, or changing an existing question's id or
+// type, changes what the student has to answer. Wording, labels, placeholders,
+// order, descriptions, videos, readings, retired, priorLessons … do not.
+function fllAnswerShapeOf(questions) {
+	return (Array.isArray(questions) ? questions : [])
+		.map((q, index) => `${q && q.id != null ? q.id : '#' + index}|${(q && q.type) || ''}`)
+		.sort()
+		.join('\n');
+}
+
 async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 	const seedTasks = await readJsonFile(path.join(fllSeedDataDir, 'tasks.json'), []);
 	const liveTasks = await readJsonFile(fllTasksFile, []);
@@ -4637,7 +4810,8 @@ async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 	const updatedTitles = new Set();
 	const addedTitles = [];
 	const restoredTemplates = [];
-	const changedTaskIds = new Set();
+	const changedTaskIds = new Set();      // any content difference (content is synced)
+	const reopenTaskIds = new Set();       // only lessons whose questions changed shape
 	let updatedCount = 0;
 
 	for (const template of templates) {
@@ -4665,6 +4839,10 @@ async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 		if (!matches.length) continue;
 		for (const task of matches) {
 			let changed = false;
+			if (template.questions !== undefined
+				&& fllAnswerShapeOf(task.questions) !== fllAnswerShapeOf(template.questions)) {
+				reopenTaskIds.add(task.id);
+			}
 			for (const field of FLL_CONTENT_FIELDS) {
 				if (template[field] === undefined) continue;
 				if (JSON.stringify(task[field]) === JSON.stringify(template[field])) continue;
@@ -4722,17 +4900,19 @@ async function syncFllCurriculumFromSeed({ dryRun = false } = {}) {
 		}
 	}
 
-	// If a lesson changed and a student had already turned it in, their work
-	// answers questions that no longer exist. Reopen it automatically so they
-	// can redo it against the new version — no coach action, no manual step.
+	// If a lesson's QUESTIONS changed shape (one added or removed, or an id or
+	// type changed) and a student had already turned it in, their work no longer
+	// matches the lesson. Reopen it so they can redo it. Any other content change
+	// (wording, description, videos, readings, retired …) is synced above but
+	// reopens nothing — students are not asked to resend work for a typo fix.
 	// Trackers/journal are never locked, so they need nothing here.
 	const reopenedStudents = [];
-	if (changedTaskIds.size) {
+	if (reopenTaskIds.size) {
 		const stored = await readJsonFile(fllTaskSubmissionsFile, []);
 		const submissions = Array.isArray(stored) ? stored : [];
 		let submissionsChanged = false;
 		for (const submission of submissions) {
-			if (!changedTaskIds.has(submission.taskId)) continue;
+			if (!reopenTaskIds.has(submission.taskId)) continue;
 			if (submission.reopened) continue;              // already open
 			reopenedStudents.push(submission.studentName || submission.studentId);
 			if (dryRun) continue;
@@ -4830,7 +5010,7 @@ function fllTasksToDistributeFor(user, tasks, settings, teams) {
 	if (!templates.length) return extra;
 	const mineIds = new Set(working.filter((task) => task.assignedTo === user.id).map((task) => task.id));
 	const mineTitles = new Set(
-		working.filter((task) => task.teamId === user.teamId && task.assignedTo === user.id).map((task) => task.title)
+		working.filter((task) => task.assignedTo === user.id).map((task) => task.title)
 	);
 	const now = new Date().toISOString();
 	for (const template of templates) {
@@ -4898,7 +5078,10 @@ async function getFllStudentDashboardFor(user, { preview = false } = {}) {
 		? [...(Array.isArray(tasks) ? tasks : []), ...fllTasksToDistributeFor(user, tasks, fllSettings, teams)]
 		: tasks;
 	const myTasks = (Array.isArray(allTasks) ? allTasks : [])
-		.filter((task) => task.teamId === user.teamId && task.assignedTo === user.id)
+		// assignedTo alone identifies a student's copies. The copy's own teamId is
+		// realigned when a student changes team (realignFllStudentWork), and the
+		// audience below is decided by the student's CURRENT team either way.
+		.filter((task) => task.assignedTo === user.id)
 		.filter((task) => !disabledAreas.has(taskAreaAliases[task.category] || 'innovation'))
 		// A lesson with an audience is decided by that audience alone. Applying the
 		// hidden-title list on top would mean ticking a team in and seeing nothing
@@ -5635,6 +5818,40 @@ app.put('/api/fll/coach/maintenance', requireFllAuth, requireFllCoach, async (re
 		return res.status(500).json({ success: false, message: 'Server error saving maintenance mode' });
 	}
 });
+
+// Maintenance must hold students out of EVERYTHING that reads or writes their
+// work, not just the dashboard, so it sits in front of every /api/fll and
+// /fll-hub route. It only ever stops a signed-in STUDENT: coaches pass, and a
+// request with no session falls through to the route's own auth (which answers
+// 401 / sends them to login). Signing in and out stay open so a coach can get in.
+const FLL_MAINTENANCE_OPEN_PATHS = new Set([
+	'/api/fll/login', '/api/fll/logout', '/api/fll/session',
+	'/fll-hub/login', '/fll-hub/login/'
+]);
+async function fllStudentMaintenanceGuard(req, res, next) {
+	try {
+		const fullPath = (req.baseUrl || '') + (req.path || '');
+		if (FLL_MAINTENANCE_OPEN_PATHS.has(fullPath)) return next();
+		const session = getFllSession(req);
+		if (!session) return next();
+		const settings = await readFllSettings();
+		if (!settings.maintenance?.on) return next();
+		const users = await readFllUsers();
+		const user = users.find((u) => u.id === session.userId);
+		if (!user || user.role !== 'student') return next();
+		if (fullPath.startsWith('/api/')) {
+			return res.status(503).json({
+				success: false, maintenance: true,
+				message: settings.maintenance.message || 'The hub is being updated. Please check back shortly.'
+			});
+		}
+		return res.status(503).send(fllMaintenancePage(settings.maintenance));
+	} catch (err) {
+		console.error('FLL maintenance guard error:', err);
+		return next();                                               // never lock people out on a bug
+	}
+}
+app.use(['/api/fll', '/fll-hub'], fllStudentMaintenanceGuard);
 
 app.get(['/fll-hub/login', '/fll-hub/login/'], (req, res) => {
 	res.sendFile(path.join(fllHubDir, 'login.html'));
@@ -7421,6 +7638,8 @@ app.patch('/api/fll/coach/students/:id', requireFllAuth, requireFllCoach, async 
 				roster.updatedAt = new Date().toISOString();
 				await writeMasterRoster(roster);
 			}
+			// their lesson copies and turned-in work follow them to the new team
+			await realignFllStudentWork([user.id]);
 		}
 		return res.json({
 			success: true,
@@ -7539,7 +7758,10 @@ app.post('/api/fll/coach/login-status/repair', requireFllAuth, requireFllCoach, 
 			await syncMasterStudentHubAccess(rosterStudent, ensured.roster);
 			reattached.push(user.name || user.username);
 		}
-		if (reattached.length) await writeJsonFile(fllUsersFile, users);
+		if (reattached.length) {
+			await writeJsonFile(fllUsersFile, users);
+			await realignFllStudentWork();
+		}
 
 		const linkable = users
 			.filter((u) => u.role === 'student' && u.active !== false && u.teamId && u.username)
@@ -7769,26 +7991,30 @@ const FLL_REVIEW_LEVELS = ['beginning', 'developing', 'accomplished', 'exceeds']
 
 app.patch('/api/fll/coach/task-submissions/:id', requireFllAuth, requireFllCoach, async (req, res) => {
 	try {
-		const stored = await readJsonFile(fllTaskSubmissionsFile, []);
-		const submissions = Array.isArray(stored) ? stored : [];
-		const index = submissions.findIndex((item) => item.id === req.params.id);
-		if (index < 0) return res.status(404).json({ success: false, message: 'Submission not found' });
+		// Students turn work in to this same file at the same moment; hold it so
+		// a coach's save can't overwrite a submission that arrived meanwhile.
+		return await withJsonFileLock(fllTaskSubmissionsFile, async () => {
+			const stored = await readJsonFile(fllTaskSubmissionsFile, []);
+			const submissions = Array.isArray(stored) ? stored : [];
+			const index = submissions.findIndex((item) => item.id === req.params.id);
+			if (index < 0) return res.status(404).json({ success: false, message: 'Submission not found' });
 
-		if (req.body.clearReview === true) {
-			delete submissions[index].review;
-			await writeJsonFile(fllTaskSubmissionsFile, submissions);
+			if (req.body.clearReview === true) {
+				delete submissions[index].review;
+				await writeJsonFileNow(fllTaskSubmissionsFile, submissions);
+				return res.json({ success: true, submission: submissions[index] });
+			}
+
+			const level = cleanMetaString(req.body.level || '', 20).toLowerCase();
+			submissions[index].review = {
+				reviewedAt: new Date().toISOString(),
+				reviewedBy: req.fllUser.name || 'Coach',
+				level: FLL_REVIEW_LEVELS.includes(level) ? level : '',
+				feedback: cleanMetaString(req.body.feedback || '', 2000)
+			};
+			await writeJsonFileNow(fllTaskSubmissionsFile, submissions);
 			return res.json({ success: true, submission: submissions[index] });
-		}
-
-		const level = cleanMetaString(req.body.level || '', 20).toLowerCase();
-		submissions[index].review = {
-			reviewedAt: new Date().toISOString(),
-			reviewedBy: req.fllUser.name || 'Coach',
-			level: FLL_REVIEW_LEVELS.includes(level) ? level : '',
-			feedback: cleanMetaString(req.body.feedback || '', 2000)
-		};
-		await writeJsonFile(fllTaskSubmissionsFile, submissions);
-		return res.json({ success: true, submission: submissions[index] });
+		});
 	} catch (err) {
 		console.error('FLL submission review error:', err);
 		return res.status(500).json({ success: false, message: 'Server error saving your review' });
@@ -7808,9 +8034,6 @@ app.put('/api/fll/tasks/:id/draft', requireFllAuth, requireFllStudent, async (re
 		if (!(await studentMayUseTask(req.fllUser, task))) {
 			return res.status(403).json({ success: false, message: 'This lesson is not assigned to your team.' });
 		}
-		const stored = await readJsonFile(fllTaskDraftsFile, []);
-		const drafts = Array.isArray(stored) ? stored : [];
-
 		const answers = {};
 		for (const [questionId, answer] of Object.entries(req.body.answers || {})) {
 			answers[cleanMetaString(questionId, 120)] = cleanMetaString(answer || '', 8000);
@@ -7828,9 +8051,13 @@ app.put('/api/fll/tasks/:id/draft', requireFllAuth, requireFllStudent, async (re
 			photos,
 			savedAt: new Date().toISOString()
 		};
-		const index = drafts.findIndex((d) => d.taskId === task.id && d.studentId === req.fllUser.id);
-		if (index >= 0) drafts[index] = payload; else drafts.push(payload);
-		await writeJsonFile(fllTaskDraftsFile, drafts);
+		// Every student's draft lives in this one file, and a whole class saves at
+		// once — so the read and the write happen as one queued step.
+		await updateJsonFile(fllTaskDraftsFile, [], (stored) => {
+			if (!Array.isArray(stored)) throw new Error('drafts file is not a list');
+			const index = stored.findIndex((d) => d.taskId === task.id && d.studentId === req.fllUser.id);
+			if (index >= 0) stored[index] = payload; else stored.push(payload);
+		});
 		return res.json({ success: true, savedAt: payload.savedAt });
 	} catch (err) {
 		console.error('FLL draft save error:', err);
@@ -7840,6 +8067,12 @@ app.put('/api/fll/tasks/:id/draft', requireFllAuth, requireFllStudent, async (re
 
 app.get('/api/fll/tasks/:id/draft', requireFllAuth, requireFllStudent, async (req, res) => {
 	try {
+		// same audience rule as saving: a remembered link must not walk past it
+		const tasks = await readJsonFile(fllTasksFile, []);
+		const task = (Array.isArray(tasks) ? tasks : []).find((t) => t.id === req.params.id);
+		if (task && !(await studentMayUseTask(req.fllUser, task))) {
+			return res.status(403).json({ success: false, message: 'This lesson is not assigned to your team.' });
+		}
 		const stored = await readJsonFile(fllTaskDraftsFile, []);
 		const drafts = Array.isArray(stored) ? stored : [];
 		const draft = drafts.find((d) => d.taskId === req.params.id && d.studentId === req.fllUser.id);
@@ -8826,73 +9059,77 @@ const FLL_FLAG_TYPES = ['plagiarism', 'academic-integrity'];
 
 app.patch('/api/fll/coach/task-submissions/:id/access', requireFllAuth, requireFllCoach, async (req, res) => {
 	try {
-		const stored = await readJsonFile(fllTaskSubmissionsFile, []);
-		const submissions = Array.isArray(stored) ? stored : [];
-		const index = submissions.findIndex((item) => item.id === req.params.id);
-		if (index < 0) return res.status(404).json({ success: false, message: 'Submission not found' });
-		const submission = submissions[index];
-		const action = cleanMetaString(req.body.action || '', 30);
+		// Students turn work in to this same file at the same moment; hold it so
+		// a coach's save can't overwrite a submission that arrived meanwhile.
+		return await withJsonFileLock(fllTaskSubmissionsFile, async () => {
+			const stored = await readJsonFile(fllTaskSubmissionsFile, []);
+			const submissions = Array.isArray(stored) ? stored : [];
+			const index = submissions.findIndex((item) => item.id === req.params.id);
+			if (index < 0) return res.status(404).json({ success: false, message: 'Submission not found' });
+			const submission = submissions[index];
+			const action = cleanMetaString(req.body.action || '', 30);
 
-		if (action === 'reopen') {
-			submission.reopened = {
-				at: new Date().toISOString(),
-				by: req.fllUser.name || 'Coach',
-				note: cleanMetaString(req.body.note || '', 500)
-			};
-			delete submission.reopenRequest;
-		} else if (action === 'redo') {
-			// A redo is a reopen plus a marker, so the student is told to do the
-			// work again rather than just finding the lesson unlocked. Both the
-			// note and (optionally) the written feedback are applied in this one
-			// call, on the same array, saved by the one write below - they can
-			// never half-apply.
-			const at = new Date().toISOString();
-			const by = req.fllUser.name || 'Coach';
-			const note = cleanMetaString(req.body.note || '', 500);
-			submission.reopened = { at, by, note };
-			submission.redo = { at, by, note };
-			delete submission.reopenRequest;
-			if (typeof req.body.feedback === 'string') {
-				// saved exactly the way PATCH /api/fll/coach/task-submissions/:id saves it
-				const level = cleanMetaString(req.body.level || '', 20).toLowerCase();
-				submission.review = {
-					reviewedAt: at,
-					reviewedBy: by,
-					level: FLL_REVIEW_LEVELS.includes(level) ? level : '',
-					feedback: cleanMetaString(req.body.feedback, 2000)
+			if (action === 'reopen') {
+				submission.reopened = {
+					at: new Date().toISOString(),
+					by: req.fllUser.name || 'Coach',
+					note: cleanMetaString(req.body.note || '', 500)
 				};
+				delete submission.reopenRequest;
+			} else if (action === 'redo') {
+				// A redo is a reopen plus a marker, so the student is told to do the
+				// work again rather than just finding the lesson unlocked. Both the
+				// note and (optionally) the written feedback are applied in this one
+				// call, on the same array, saved by the one write below - they can
+				// never half-apply.
+				const at = new Date().toISOString();
+				const by = req.fllUser.name || 'Coach';
+				const note = cleanMetaString(req.body.note || '', 500);
+				submission.reopened = { at, by, note };
+				submission.redo = { at, by, note };
+				delete submission.reopenRequest;
+				if (typeof req.body.feedback === 'string') {
+					// saved exactly the way PATCH /api/fll/coach/task-submissions/:id saves it
+					const level = cleanMetaString(req.body.level || '', 20).toLowerCase();
+					submission.review = {
+						reviewedAt: at,
+						reviewedBy: by,
+						level: FLL_REVIEW_LEVELS.includes(level) ? level : '',
+						feedback: cleanMetaString(req.body.feedback, 2000)
+					};
+				}
+			} else if (action === 'decline') {
+				submission.reopenRequest = {
+					...(submission.reopenRequest || {}),
+					declinedAt: new Date().toISOString(),
+					declinedBy: req.fllUser.name || 'Coach',
+					declineNote: cleanMetaString(req.body.note || '', 500)
+				};
+			} else if (action === 'lock') {
+				delete submission.reopened;
+				delete submission.reopenRequest;
+				delete submission.redo;
+			} else if (action === 'flag') {
+				const type = cleanMetaString(req.body.flagType || '', 40);
+				if (!FLL_FLAG_TYPES.includes(type)) {
+					return res.status(400).json({ success: false, message: 'Unknown flag type' });
+				}
+				submission.flag = {
+					type,
+					note: cleanMetaString(req.body.note || '', 1000),
+					flaggedAt: new Date().toISOString(),
+					flaggedBy: req.fllUser.name || 'Coach',
+					questionId: cleanMetaString(req.body.questionId || '', 120)
+				};
+			} else if (action === 'unflag') {
+				delete submission.flag;
+			} else {
+				return res.status(400).json({ success: false, message: 'Unknown action' });
 			}
-		} else if (action === 'decline') {
-			submission.reopenRequest = {
-				...(submission.reopenRequest || {}),
-				declinedAt: new Date().toISOString(),
-				declinedBy: req.fllUser.name || 'Coach',
-				declineNote: cleanMetaString(req.body.note || '', 500)
-			};
-		} else if (action === 'lock') {
-			delete submission.reopened;
-			delete submission.reopenRequest;
-			delete submission.redo;
-		} else if (action === 'flag') {
-			const type = cleanMetaString(req.body.flagType || '', 40);
-			if (!FLL_FLAG_TYPES.includes(type)) {
-				return res.status(400).json({ success: false, message: 'Unknown flag type' });
-			}
-			submission.flag = {
-				type,
-				note: cleanMetaString(req.body.note || '', 1000),
-				flaggedAt: new Date().toISOString(),
-				flaggedBy: req.fllUser.name || 'Coach',
-				questionId: cleanMetaString(req.body.questionId || '', 120)
-			};
-		} else if (action === 'unflag') {
-			delete submission.flag;
-		} else {
-			return res.status(400).json({ success: false, message: 'Unknown action' });
-		}
 
-		await writeJsonFile(fllTaskSubmissionsFile, submissions);
-		return res.json({ success: true, submission });
+			await writeJsonFileNow(fllTaskSubmissionsFile, submissions);
+			return res.json({ success: true, submission });
+		});
 	} catch (err) {
 		console.error('FLL submission access error:', err);
 		return res.status(500).json({ success: false, message: 'Server error updating this submission' });
@@ -8901,12 +9138,9 @@ app.patch('/api/fll/coach/task-submissions/:id/access', requireFllAuth, requireF
 
 app.post('/api/fll/tasks/:id/submission', requireFllAuth, requireFllStudent, async (req, res) => {
 	try {
-		const [tasks, stored] = await Promise.all([
-			readJsonFile(fllTasksFile, []),
-			readJsonFile(fllTaskSubmissionsFile, [])
-		]);
+		const tasks = await readJsonFile(fllTasksFile, []);
 		const task = (Array.isArray(tasks) ? tasks : []).find((candidate) => candidate.id === req.params.id);
-		if (!task || task.teamId !== req.fllUser.teamId || task.assignedTo !== req.fllUser.id) {
+		if (!task || task.assignedTo !== req.fllUser.id) {   // the copy is theirs; the audience check below decides by their CURRENT team
 			return res.status(403).json({ success: false, message: 'You can only submit your own assigned tasks' });
 		}
 		if (!(await studentMayUseTask(req.fllUser, task))) {
@@ -8925,7 +9159,6 @@ app.post('/api/fll/tasks/:id/submission', requireFllAuth, requireFllStudent, asy
 			size: Math.max(0, Math.min(4 * 1024 * 1024, Number(file?.size) || 0)),
 			data: typeof file?.data === 'string' && /^data:/.test(file.data) ? file.data : ''
 		})).filter((file) => file.name && file.data);
-		const submissions = Array.isArray(stored) ? stored : [];
 		const payload = {
 			id: `submission-${req.fllUser.id}-${task.id}`,
 			taskId: task.id,
@@ -8937,37 +9170,50 @@ app.post('/api/fll/tasks/:id/submission', requireFllAuth, requireFllStudent, asy
 			files,
 			submittedAt: new Date().toISOString()
 		};
-		const existingIndex = submissions.findIndex((item) => item.taskId === task.id && item.studentId === req.fllUser.id);
 		// A turned-in assignment is locked until a coach reopens it. Enforced
 		// here, not just in the UI, so it cannot be bypassed from the console.
 		// Trackers and the journal are exempt: they are meant to grow all
 		// season (new prototype drawings, new journal entries), so needing a
 		// coach to unlock them every time would be pure friction.
 		const growsAllSeason = task.type === 'tracker' || task.type === 'journal';
-		if (existingIndex >= 0 && !submissions[existingIndex].reopened && !growsAllSeason) {
+		const ALREADY_TURNED_IN = 'already-turned-in';
+		let replaced;
+		try {
+			// One shared file for the whole class, and students turn work in at
+			// the same moment — so the lock check, the merge and the save are one
+			// queued step, or one student's submission can erase another's.
+			replaced = await updateJsonFile(fllTaskSubmissionsFile, [], (submissions) => {
+				if (!Array.isArray(submissions)) throw new Error('submissions file is not a list');
+				const existingIndex = submissions.findIndex((item) => item.taskId === task.id && item.studentId === req.fllUser.id);
+				if (existingIndex >= 0 && !submissions[existingIndex].reopened && !growsAllSeason) {
+					throw new Error(ALREADY_TURNED_IN);
+				}
+				if (existingIndex >= 0) {
+					// Re-submitting replaces the work, but the coach's note is theirs and
+					// the student should keep seeing it. Carry it over marked stale so the
+					// coach knows this was changed after they read it.
+					const previous = submissions[existingIndex];
+					if (previous.review) payload.review = { ...previous.review, stale: true };
+					// a flag is a record of what happened — it survives a resubmission
+					if (previous.flag) payload.flag = previous.flag;
+					// the reopen was for this one edit; close it again. `payload` is built
+					// fresh above, so `reopened`, `reopenRequest` and the `redo` marker are
+					// all dropped here: turning the work in again answers the redo request.
+					payload.resubmitCount = (previous.resubmitCount || 0) + 1;
+					submissions[existingIndex] = payload;
+					return true;
+				}
+				submissions.push(payload);
+				return false;
+			});
+		} catch (err) {
+			if (err.message !== ALREADY_TURNED_IN) throw err;
 			return res.status(409).json({
 				success: false,
 				message: 'This assignment has already been turned in. Ask your coach to reopen it if you need to change your answers.'
 			});
 		}
-		if (existingIndex >= 0) {
-			// Re-submitting replaces the work, but the coach's note is theirs and
-			// the student should keep seeing it. Carry it over marked stale so the
-			// coach knows this was changed after they read it.
-			const previous = submissions[existingIndex];
-			if (previous.review) payload.review = { ...previous.review, stale: true };
-			// a flag is a record of what happened — it survives a resubmission
-			if (previous.flag) payload.flag = previous.flag;
-			// the reopen was for this one edit; close it again. `payload` is built
-			// fresh above, so `reopened`, `reopenRequest` and the `redo` marker are
-			// all dropped here: turning the work in again answers the redo request.
-			payload.resubmitCount = (previous.resubmitCount || 0) + 1;
-			submissions[existingIndex] = payload;
-		} else {
-			submissions.push(payload);
-		}
-		await writeJsonFile(fllTaskSubmissionsFile, submissions);
-		return res.status(existingIndex >= 0 ? 200 : 201).json({ success: true, submission: payload });
+		return res.status(replaced ? 200 : 201).json({ success: true, submission: payload });
 	} catch (err) {
 		console.error('FLL task submission error:', err);
 		return res.status(500).json({ success: false, message: 'Server error saving assignment submission' });
@@ -8990,7 +9236,7 @@ app.post('/api/fll/tasks/:id/status', requireFllAuth, requireFllStudent, async (
 			task = buildFllCodingFoundationsTask(req.fllUser);
 			tasks.push(task);
 		}
-		if (!task || task.teamId !== req.fllUser.teamId || task.assignedTo !== req.fllUser.id) {
+		if (!task || task.assignedTo !== req.fllUser.id) {   // the copy is theirs; the audience check below decides by their CURRENT team
 			return res.status(403).json({ success: false, message: 'You can only update your own assigned tasks' });
 		}
 		if (!(await studentMayUseTask(req.fllUser, task))) {
@@ -9018,8 +9264,11 @@ app.post('/api/fll/tasks/:id/work-log', requireFllAuth, requireFllStudent, async
 			tasks.push(task);
 			await writeJsonFile(fllTasksFile, tasks);
 		}
-		if (!task || task.teamId !== req.fllUser.teamId || task.assignedTo !== req.fllUser.id) {
+		if (!task || task.assignedTo !== req.fllUser.id) {   // the copy is theirs; the audience check below decides by their CURRENT team
 			return res.status(403).json({ success: false, message: 'You can only log work for your own assigned tasks' });
+		}
+		if (!(await studentMayUseTask(req.fllUser, task))) {
+			return res.status(403).json({ success: false, message: 'This lesson is not assigned to your team.' });
 		}
 		const location = cleanMetaString(req.body.location || '', 20).toLowerCase();
 		if (!['lab', 'home', 'class'].includes(location)) {
