@@ -249,6 +249,14 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     .team-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+    /* archiving is quiet and reversible, so a plain text-style control, not a primary */
+    .team-archive-btn { margin-top: var(--sp-3); background: none; border: 1px solid var(--s-line-2); border-radius: var(--r-1);
+      color: var(--t-muted); font: inherit; font-size: var(--fs-meta); padding: 6px 12px; cursor: pointer; min-height: 36px; }
+    .team-archive-btn:hover { color: var(--t-ink); border-color: var(--t-muted); }
+    .archived-teams { grid-column: 1 / -1; background: var(--s-raised); border: 1px dashed var(--s-line-2);
+      border-radius: var(--r-4); padding: var(--sp-4) var(--card-pad); }
+    .archived-team-row { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+      flex-wrap: wrap; padding: var(--sp-2) 0; border-top: 1px solid var(--s-line); color: var(--t-body); font-size: var(--fs-sm); }
     .team-name { font-size: 18px; font-weight: 900; }
     .team-badge {
       font-size: 10px; font-weight: 800; border-radius: 50px; padding: 4px 11px;
@@ -3424,9 +3432,42 @@
                 <button class="mini-btn" data-team="${escapeHtml(team.id)}" onclick="addRubric(this.dataset.team)">Save rubric</button>
               </div>
             </div>
+            <button class="team-archive-btn" data-team="${escapeHtml(team.id)}" data-name="${escapeHtml(team.nickname || team.name)}" onclick="setTeamArchived(this.dataset.team, this.dataset.name, true)">🗄️ Archive team</button>
           </div>
         `;
-      }).join('');
+      }).join('') + renderArchivedTeams();
+    }
+
+    // Finished teams (a summer class, last season's team) are archived rather
+    // than deleted: their students' accounts and work are kept, the team stops
+    // appearing in lists, the Overview and the calendar, and its class code
+    // stops working. Un-archiving brings all of that straight back.
+    function renderArchivedTeams() {
+      const archived = roster.archivedTeams || [];
+      if (!archived.length) return '';
+      return `
+        <div class="archived-teams">
+          <div class="team-section-label">Archived teams (${archived.length})</div>
+          ${archived.map(t => `
+            <div class="archived-team-row">
+              <span><strong>${escapeHtml(t.name)}</strong> · ${t.students} student${t.students === 1 ? '' : 's'} · class code off</span>
+              <button class="mini-btn outline" data-team="${escapeHtml(t.id)}" data-name="${escapeHtml(t.name)}" onclick="setTeamArchived(this.dataset.team, this.dataset.name, false)">Un-archive</button>
+            </div>`).join('')}
+        </div>`;
+    }
+
+    async function setTeamArchived(teamId, name, archived) {
+      const question = archived
+        ? `Archive "${name}"?\n\nIt disappears from team lists, the Overview and the calendar, and its class code stops working. Its students' accounts and work are kept, and you can un-archive it any time.`
+        : `Bring "${name}" back? Its class code will work again.`;
+      if (!confirm(question)) return;
+      try {
+        await api(`/api/fll/coach/teams/${encodeURIComponent(teamId)}`, { method: 'PATCH', body: JSON.stringify({ archived }) });
+        showToast(archived ? `${name} archived` : `${name} is back`);
+        await loadRoster();
+      } catch (err) {
+        showToast(err.message || 'Could not change the team');
+      }
     }
 
     function renderStudents() {

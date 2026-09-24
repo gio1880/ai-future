@@ -2991,6 +2991,16 @@ function ensureFllTeamClasses(teams, roster) {
 			normalizedRoster.classes.push(classItem);
 			changed = true;
 		}
+		const shouldBeOpen = !fllTeamIsHidden(team);
+		if (!shouldBeOpen && classItem.active !== false) {
+			classItem.active = false;
+			classItem.inactiveBecause = 'team-hidden';
+			changed = true;
+		} else if (shouldBeOpen && classItem.inactiveBecause === 'team-hidden') {
+			classItem.active = true;
+			delete classItem.inactiveBecause;
+			changed = true;
+		}
 		const requestedCode = normalizeClassCode(classItem.classCode || team.classCode || '');
 		const codeIsUnique = requestedCode && !normalizedRoster.classes.some((item) =>
 			item.id !== classId && normalizeClassCode(item.classCode || '') === requestedCode
@@ -4839,6 +4849,16 @@ async function ensureFllSponsorsTaskForUser(user) {
 // a live server could end up with students who have NO tasks at all. This ensures
 // every student always has a copy of every curriculum lesson, self-healing that gap.
 const FLL_TEMPLATE_TEAM_ID = 'team-01';
+
+// Teams nobody should see AS a team. team-01 holds the master copy of every
+// lesson — each student's lessons are copied from it and "Update lesson
+// content" updates it — so it must never be deleted; it once picked up a
+// display name and a class code and started showing up as a real team.
+// Archived teams are finished ones (e.g. a summer class): their students'
+// accounts and work are kept, they just stop appearing and signing in by code.
+function fllTeamIsHidden(team) {
+	return !team || team.id === FLL_TEMPLATE_TEAM_ID || team.archived === true;
+}
 // Curriculum templates all live on the placeholder team `team-01`, but they are
 // spread across more than one placeholder student (student-team-01-a / -b), so
 // match on the TEAM and dedupe by title. Filtering by a single placeholder
@@ -6846,8 +6866,12 @@ app.get('/api/fll/coach/roster', requireFllAuth, requireFllCoach, async (req, re
 			readFllSettings(),
 			readJsonFile(path.join(fllHubDataDir, 'resources.json'), [])
 		]);
+		const teamList = Array.isArray(teams) ? teams : [];
+		const hiddenTeamIds = new Set(teamList.filter(fllTeamIsHidden).map((t) => t.id));
+		const archivedTeamIds = new Set(teamList.filter((t) => t.archived === true && t.id !== FLL_TEMPLATE_TEAM_ID).map((t) => t.id));
 		const students = users
 			.filter((user) => user.role === 'student' && user.demoAccount !== true)
+			.filter((user) => !hiddenTeamIds.has(user.teamId))
 			.map((user) => ({
 				id: user.id,
 				name: user.name,
@@ -6863,11 +6887,17 @@ app.get('/api/fll/coach/roster', requireFllAuth, requireFllCoach, async (req, re
 			success: true,
 			data: {
 				user: publicFllUser(req.fllUser),
-				teams: Array.isArray(teams) ? teams : [],
-				members: Array.isArray(members) ? members : [],
+				teams: teamList.filter((t) => !hiddenTeamIds.has(t.id)),
+				archivedTeams: teamList.filter((t) => archivedTeamIds.has(t.id)).map((t) => ({
+					id: t.id,
+					name: t.nickname || t.name || t.id,
+					archivedAt: t.archivedAt || '',
+					students: users.filter((u) => u.role === 'student' && u.teamId === t.id).length
+				})),
+				members: (Array.isArray(members) ? members : []).filter((m) => !hiddenTeamIds.has(m.teamId)),
 				students,
 				enrolledMasterStudents,
-				tasks: Array.isArray(tasks) ? tasks : [],
+				tasks: (Array.isArray(tasks) ? tasks : []).filter((task) => !archivedTeamIds.has(task.teamId)),
 				season,
 				fllSettings,
 				resources: Array.isArray(resources) ? resources : []
@@ -7530,7 +7560,23 @@ app.patch('/api/fll/coach/teams/:id', requireFllAuth, requireFllCoach, async (re
 		if (req.body.returning !== undefined) {
 			team.returning = Boolean(req.body.returning);
 		}
+		let archiveChanged = false;
+		if (typeof req.body.archived === 'boolean') {
+			if (team.id === FLL_TEMPLATE_TEAM_ID) {
+				return res.status(400).json({ success: false, message: 'This is the lesson template team; it is already hidden and cannot be archived.' });
+			}
+			if (Boolean(team.archived) !== req.body.archived) archiveChanged = true;
+			if (req.body.archived) {
+				team.archived = true;
+				team.archivedAt = new Date().toISOString();
+			} else {
+				delete team.archived;
+				delete team.archivedAt;
+			}
+		}
 		await writeJsonFile(teamsFile, teams);
+		// the class code opens or closes with the team
+		if (archiveChanged) await syncFllTeamClasses();
 		return res.json({ success: true, team });
 	} catch (err) {
 		console.error('FLL coach update team error:', err);
@@ -7892,6 +7938,8 @@ async function buildFllLoginStatus() {
 
 	return users
 		.filter((u) => u.role === 'student' && u.active !== false)
+		// the template team's placeholders and archived teams are not classes anyone runs
+		.filter((u) => !(u.teamId && fllTeamIsHidden(teamById.get(u.teamId))))
 		.map((user) => {
 			const team = user.teamId ? teamById.get(user.teamId) : null;
 			const classItem = user.teamId ? classByTeam.get(`fll-${user.teamId}`) : null;
@@ -9114,6 +9162,7 @@ app.get('/api/fll/coach/idea-maps', requireFllAuth, requireFllCoach, async (req,
 		const teamList = Array.isArray(teams) ? teams : [];
 		const maps = [];
 		for (const team of teamList) {
+			if (fllTeamIsHidden(team)) continue;
 			const saved = store[team.id];
 			const map = saved
 				? upgradeIdeaMap(normalizeIdeaMap(saved, team.id))
