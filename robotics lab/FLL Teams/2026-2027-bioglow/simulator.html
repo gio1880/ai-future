@@ -435,10 +435,33 @@ if hub.imu.ready():
       },
     ];
 
-    // progress + saved code
+    // progress + saved code — kept per student, because school devices are
+    // shared: one key for everybody showed the previous child's levels.
+    // The old shared key cannot be traced to anyone, so it is dropped.
     let progress = { completed: [], code: {} };
-    try { const s = JSON.parse(localStorage.getItem('bioglow-sim-levels') || 'null'); if (s) progress = { completed: [], code: {}, ...s }; } catch (e) {}
-    function saveProgress() { localStorage.setItem('bioglow-sim-levels', JSON.stringify(progress)); }
+    let progressKey = null;   // 'bioglow-sim-levels-<student id>' once known
+    try { localStorage.removeItem('bioglow-sim-levels'); } catch (e) {}
+    function saveProgress() {
+      if (!progressKey) return;
+      try { localStorage.setItem(progressKey, JSON.stringify(progress)); } catch (e) {}
+    }
+    async function loadStudentProgress() {
+      try {
+        const r = await fetch('/api/fll/session');
+        const j = await r.json();
+        const id = j && j.success && j.user && j.user.id;
+        if (!id) return;
+        progressKey = 'bioglow-sim-levels-' + id;
+        const s = JSON.parse(localStorage.getItem(progressKey) || 'null');
+        // keep anything typed in the few ms before the session answered
+        const typed = document.getElementById('editor').value;
+        progress = { completed: [], code: {}, ...(s || {}) };
+        if (typed && typed !== level().starter && !progress.code[level().id]) progress.code[level().id] = typed;
+        document.getElementById('editor').value = progress.code[level().id] || level().starter;
+        renderLevelStrip();
+        renderFileTabs();
+      } catch (e) { /* offline — this visit's progress is simply not stored */ }
+    }
 
     let levelIndex = 0;
     function level() { return LEVELS[levelIndex]; }
@@ -1225,6 +1248,7 @@ if hub.imu.ready():
     fillConfigInputs();
     fillTuneInputs();
     selectLevel(0);
+    loadStudentProgress();
     setInterval(tick, 16);
     // pull the saved / coach-published robot profile once the page is up
     loadProfileFromServer();

@@ -4037,6 +4037,113 @@
       :root:not([data-theme="light"]) .ta-back-btn,
       :root:not([data-theme="light"]) .ta-crumb-link { color: #8ab4f8; }
     }
+    /* ── Phase 3: navigation, keyboard, headings, phones ── */
+    .sr-only {
+      position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
+    /* headings that used to be divs keep their old spacing */
+    h1.welcome-name { margin-top: 0; }
+    h1.detail-header-label { margin-top: 0; line-height: 1.2; }
+    h2.preseason-title, h2.ta-sec-title { margin: 0; }
+    h2.im-tier-head, h2.cv-add-title { margin-top: 0; }
+    h1[tabindex="-1"]:focus { outline: none; }
+    h1[tabindex="-1"]:focus-visible { outline: 3px solid #1a73e8; outline-offset: 4px; border-radius: 6px; }
+
+    /* cards that became links look exactly as they did */
+    a.next-up, a.im-tile, a.im-entry, a.ta-next-row, a.cal-chip {
+      text-decoration: none; color: inherit;
+    }
+    a.cal-chip { display: block; }
+    a.next-up:focus-visible, a.im-entry:focus-visible, a.ta-next-row:focus-visible,
+    a.cal-chip:focus-visible, .cal-list-link:focus-visible, .ta-done-next:focus-visible {
+      outline: 3px solid #1a73e8; outline-offset: 2px;
+    }
+
+    /* an assignment row: the title link covers the whole row, the status
+       picker sits above it */
+    .preseason-task { position: relative; }
+    a.preseason-task-link { color: inherit; text-decoration: none; }
+    a.preseason-task-link::after { content: ''; position: absolute; inset: 0; border-radius: 14px; z-index: 0; }
+    a.preseason-task-link:focus-visible { outline: none; }
+    a.preseason-task-link:focus-visible::after { outline: 3px solid #1a73e8; outline-offset: -3px; }
+    .preseason-task-right { position: relative; z-index: 1; }
+
+    /* file pickers: hidden from sight, never from the keyboard */
+    .vh-input {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; opacity: 0;
+    }
+    .ta-q-photo-btn, .ta-photo-upload-btn, .att-add-photo-btn { position: relative; }
+    .ta-q-photo-btn:focus-within, .ta-photo-upload-btn:focus-within, .att-add-photo-btn:focus-within {
+      outline: 3px solid #1a73e8; outline-offset: 2px;
+    }
+
+    /* turned in: time, focus ring, and the Next button beside it */
+    .ta-done-banner { flex-wrap: wrap; align-items: center; }
+    .ta-done-banner:focus { outline: 3px solid #1e8e5a; outline-offset: 3px; }
+    .ta-done-main { flex: 1 1 220px; min-width: 0; }
+    .ta-done-next {
+      display: inline-flex; align-items: center; gap: 6px; min-height: 44px;
+      padding: 10px 16px; border-radius: 12px; background: #1e8e5a; color: #fff;
+      font-weight: 800; font-size: 14px; text-decoration: none; max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+    .ta-done-next:hover { background: #137333; }
+
+    /* autosave note under the submit buttons */
+    .ta-autosave { margin: 0 28px 12px; min-height: 18px; font-size: 12.5px; font-weight: 700; color: var(--t-faint); }
+    .ta-autosave.is-saved { color: #1e8e5a; }
+    .ta-autosave.is-warn { color: #b06000; }
+
+    /* code blocks are scrollable regions, so they take focus */
+    .ta-code-block:focus-visible { outline: 3px solid #1a73e8; outline-offset: 2px; }
+
+    /* breadcrumbs and small controls are comfortable to tap */
+    .ta-crumb-link { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
+    .ta-back-btn, .back-btn { min-height: 44px; }
+    .cal-nav { width: 44px; height: 44px; }
+
+    /* the month as a list (phones only) */
+    .cal-list { display: none; }
+
+    @media (max-width: 600px) {
+      .ta-q-link-view, .md-link, .preview-bar-back { display: inline-flex; align-items: center; min-height: 44px; }
+      .ta-autosave { margin: 0 16px 12px; }
+
+      /* the month as a list under the grid */
+      .cal-list { display: block; list-style: none; margin: 14px 0 0; padding: 0; border-top: 1.5px solid var(--s-line); }
+      .cal-list-item { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; padding: 8px 0; border-bottom: 1px solid var(--s-subtle); font-size: 14px; }
+      .cal-list-date { flex: 0 0 92px; font-weight: 800; font-size: 12.5px; color: var(--t-muted); }
+      .cal-list-link, .cal-list-text { flex: 1 1 160px; min-width: 0; overflow-wrap: anywhere; color: var(--t-ink); }
+      .cal-list-link { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; color: #1558b0; }
+      .cal-list-item.competition .cal-list-text { color: #d93025; font-weight: 700; }
+      .cal-list-item.done .cal-list-link { color: var(--t-muted); text-decoration: line-through; }
+      .cal-list-done { font-size: 11px; font-weight: 800; color: #1e8e5a; }
+
+      /* table questions: one card per row, each field labelled */
+      .ta-table-wrap { overflow-x: visible; border: none; }
+      .ta-table { min-width: 0; display: block; }
+      .ta-table tbody, .ta-table tr, .ta-table td { display: block; width: 100%; }
+      .ta-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+      .ta-table-wrap.is-editable .ta-table thead { position: static; width: auto; height: auto; overflow: visible; clip: auto; display: block; margin-bottom: 10px; }
+      .ta-table-wrap.is-editable .ta-table thead tr { display: flex; flex-wrap: wrap; gap: 6px; }
+      .ta-table-wrap.is-editable .ta-table th { display: block; flex: 1 1 140px; border: 1.5px solid var(--s-line); border-radius: 10px; }
+      .ta-table tbody tr {
+        border: 1.5px solid var(--s-line); border-radius: 12px; padding: 10px 12px;
+        margin-bottom: 10px; background: var(--s-raised);
+      }
+      .ta-table td, .ta-table td:last-child, .ta-table tr:last-child td { border: none; padding: 4px 0; }
+      .ta-table td::before {
+        content: attr(data-label); display: block; font-size: 11px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: .03em; color: var(--t-muted); margin-bottom: 3px;
+      }
+      .ta-table-cell { border: 1.5px solid var(--s-line) !important; border-radius: 8px; min-height: 44px; }
+    }
+    :root[data-theme="dark"] .cal-list-link { color: #8ab4f8; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .cal-list-link { color: #8ab4f8; }
+    }
 </style>
   <link rel="stylesheet" href="/assets/css/theme.css">
   <script>(function(){try{var t=localStorage.getItem("af-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
@@ -4195,7 +4302,7 @@
     const statusLabels = {
       todo: 'To do',
       doing: 'Doing',
-      blocked: 'Blocked',
+      blocked: 'Stuck',
       done: 'Done'
     };
 
@@ -4226,9 +4333,53 @@
 
     function formatDate(value) {
       if (!value) return 'No due date';
-      const date = new Date(`${value}T00:00:00`);
-      if (Number.isNaN(date.getTime())) return value;
+      // a plain YYYY-MM-DD is a local calendar day; anything longer is a
+      // timestamp (submittedAt, reviewedAt…) and is parsed as one, so the raw
+      // UTC string never reaches the page
+      const s = String(value);
+      const date = /^\d{4}-\d{2}-\d{2}$/.test(s) ? new Date(s + 'T00:00:00') : new Date(s);
+      if (Number.isNaN(date.getTime())) return '';
       return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    // "today at 8:03 PM", "yesterday at 9:10 AM", "on Sep 3 at 8:03 PM"
+    function friendlyWhen(value) {
+      const d = new Date(value);
+      if (!value || Number.isNaN(d.getTime())) return '';
+      const time = d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+      const day = new Date(d); day.setHours(0, 0, 0, 0);
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const diff = Math.round((today - day) / 86400000);
+      if (diff === 0) return 'today at ' + time;
+      if (diff === 1) return 'yesterday at ' + time;
+      const sameYear = d.getFullYear() === today.getFullYear();
+      return 'on ' + d.toLocaleDateString(undefined, sameYear
+        ? { month: 'short', day: 'numeric' }
+        : { month: 'short', day: 'numeric', year: 'numeric' }) + ' at ' + time;
+    }
+
+    // The day this student's lessons were handed to them — the earliest
+    // createdAt on their own copies. A lesson due before that could never
+    // have been done on time, so it is a place to start, not "late".
+    // Copies made by the system itself (seeded course tasks) carry a
+    // placeholder date, so they are skipped when there is anything else.
+    function studentStartDay(data) {
+      let min = null;
+      const all = (data && data.tasks) || [];
+      const byCoach = all.filter(t => !/^system/.test(String(t.createdBy || '')));
+      for (const t of (byCoach.length ? byCoach : all)) {
+        const d = t && t.createdAt ? new Date(t.createdAt) : null;
+        if (d && !Number.isNaN(d.getTime()) && (!min || d < min)) min = d;
+      }
+      if (!min) return null;
+      min = new Date(min); min.setHours(0, 0, 0, 0);
+      return min;
+    }
+    function dueBeforeStart(dueDate, data) {
+      if (!dueDate) return false;
+      const start = studentStartDay(data);
+      const due = new Date(String(dueDate).slice(0, 10) + 'T00:00:00');
+      return !!start && !Number.isNaN(due.getTime()) && due < start;
     }
 
     function formatTimestamp(value) {
@@ -4515,7 +4666,7 @@
           </div>
           <label class="checkbox-line">
             <input id="logBlocked" name="blocked" type="checkbox" />
-            I am blocked and need help.
+            I am stuck and need help.
           </label>
           <button type="submit">Turn in update</button>
         </form>
@@ -4532,7 +4683,7 @@
           <div class="meta-row">
             <span class="tag ${escapeHtml(log.location)}">${escapeHtml(log.location)}</span>
             <span class="tag">${Number(log.minutes) || 0} min</span>
-            ${log.blocked ? '<span class="tag high">Blocked</span>' : ''}
+            ${log.blocked ? '<span class="tag high">Stuck</span>' : ''}
             <span class="tag">${escapeHtml(formatTimestamp(log.createdAt))}</span>
           </div>
         </article>
@@ -4722,7 +4873,7 @@
           <div class="welcome-top">
             <div>
               <div class="welcome-greeting">${escapeHtml(timeGreeting())}</div>
-              <div class="welcome-name">${escapeHtml(firstName)} 👋</div>
+              <h1 class="welcome-name">${escapeHtml(firstName)} <span aria-hidden="true">👋</span></h1>
               <span class="welcome-phase-chip">📍 ${escapeHtml(phaseId === 'pre-season' ? 'Pre-Season · Kickoff Aug 4' : phaseLabel)}</span>
             </div>
             <div class="welcome-meta">
@@ -4931,32 +5082,121 @@
       localStorage.setItem(taskStorageKey(userId, taskId), JSON.stringify(existing));
     }
 
-    // ── Open / close task detail ──────────────────────────────────────────
-    let taskReturnCategory = null; // remember where we opened the task from
+    // ── Views live in the URL ─────────────────────────────────────────────
+    // #/area/<id>, #/task/<id> and #/idea-map; home has no hash at all. Every
+    // move inside the hub pushes a history entry, so the browser's Back button
+    // walks back through the hub instead of leaving it, and a lesson can be
+    // reloaded or bookmarked. Links in the page are real <a href="#/…">, so
+    // they work from the keyboard and open in a new tab too.
+    let renderedRouteKey = null;   // the view on screen; null before the first render
 
-    function openTask(taskId) {
-      activeTask = taskId;
-      taskReturnCategory = activeCategory;
-      activeCategory = null;
-      app.innerHTML = renderTaskDetail(latestData, taskId);
-      wireListeners();
-      // teammates' answers + what this student wrote in earlier lessons
-      loadTaskContext(taskId);
-      // and any draft they started on another device
-      loadServerDraft((latestData.user || {}).id || (latestData.user || {}).name, taskId);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    function parseRoute(hash) {
+      const raw = String(hash == null ? location.hash : hash).replace(/^#\/?/, '');
+      if (!raw) return { kind: 'home' };
+      const slash = raw.indexOf('/');
+      const kind = slash === -1 ? raw : raw.slice(0, slash);
+      let id = slash === -1 ? '' : raw.slice(slash + 1);
+      try { id = decodeURIComponent(id); } catch (e) { id = ''; }
+      if ((kind === 'task' || kind === 'area') && id) return { kind, id };
+      if (kind === 'idea-map') return { kind };
+      return { kind: 'home' };
+    }
+    function routeHash(r) {
+      if (r.kind === 'task' || r.kind === 'area') return '#/' + r.kind + '/' + encodeURIComponent(r.id);
+      if (r.kind === 'idea-map') return '#/idea-map';
+      return '';
+    }
+    function routeKey(r) { return r.kind + ':' + (r.id || ''); }
+    function hubUrl(hash) { return location.pathname + location.search + (hash || ''); }
+    function hubDepth() { return (history.state && history.state.hubDepth) || 0; }
+    function userIdOf() { const u = (latestData && latestData.user) || {}; return u.id || u.name; }
+
+    // Leaving the idea map with unsaved edits asks first.
+    function confirmLeaveView(r) {
+      if (renderedRouteKey !== 'idea-map:' || r.kind === 'idea-map' || !ideaMapDirty) return true;
+      return confirm('You have unsaved changes to the idea map. Leave without saving?');
     }
 
-    function closeTask() {
-      activeTask = null;
-      if (taskReturnCategory) {
-        activeCategory = taskReturnCategory;
-        taskReturnCategory = null;
-        app.innerHTML = renderCategoryDetail(latestData, activeCategory);
-      } else {
-        app.innerHTML = renderLanding(latestData);
+    function navigate(r) {
+      if (routeKey(r) === renderedRouteKey && routeKey(parseRoute()) === routeKey(r)) return;
+      if (!confirmLeaveView(r)) return;
+      history.pushState({ hubDepth: hubDepth() + 1 }, '', hubUrl(routeHash(r)));
+      applyRoute({ confirmed: true });
+    }
+
+    // Back inside the hub when there is somewhere to go back to; otherwise
+    // (a bookmarked lesson, say) up to the parent view.
+    function goBack(parent) {
+      if (hubDepth() > 0) history.back();
+      else navigate(parent || { kind: 'home' });
+    }
+
+    function focusViewHeading() {
+      const h = app.querySelector('h1');
+      if (!h) return;
+      h.setAttribute('tabindex', '-1');
+      try { h.focus({ preventScroll: true }); } catch (e) { h.focus(); }
+    }
+
+    function applyRoute(opts) {
+      opts = opts || {};
+      if (!latestData) return;
+      let r = parseRoute();
+      if (r.kind === 'task' && !(latestData.tasks || []).some(t => t.id === r.id)) r = { kind: 'home' };
+      if (r.kind === 'area' && !CATEGORIES.some(c => c.id === r.id)) r = { kind: 'home' };
+      // "#/", a stale lesson id or a typo is tidied to the real URL of the view shown
+      if (location.hash && routeHash(r) !== location.hash) history.replaceState(history.state, '', hubUrl(routeHash(r)));
+      const key = routeKey(r);
+      if (key === renderedRouteKey && !opts.force) return;
+      if (!opts.confirmed && renderedRouteKey !== null && !confirmLeaveView(r)) {
+        // Back was pressed on an unsaved map and the student chose to stay
+        history.pushState({ hubDepth: hubDepth() + 1 }, '', hubUrl('#/idea-map'));
+        return;
       }
+      flushAutosave();   // typing in the lesson being left is saved before its fields go
+      const first = renderedRouteKey === null;
+      renderedRouteKey = key;
+      if (r.kind !== 'idea-map') { ideaMap = null; ideaMapDirty = false; }
+      activeTask = r.kind === 'task' ? r.id : null;
+      activeCategory = r.kind === 'area' ? r.id : null;
+      if (!first) window.scrollTo(0, 0);
+      if (r.kind === 'idea-map') {
+        loadIdeaMapView().then(() => { if (!first) focusViewHeading(); });
+        return;
+      }
+      app.innerHTML = r.kind === 'task' ? renderTaskDetail(latestData, r.id)
+        : r.kind === 'area' ? renderCategoryDetail(latestData, r.id)
+        : renderLanding(latestData);
       wireListeners();
+      // student-only endpoints; a coach preview reads what it was given
+      if (r.kind === 'task' && !PREVIEW) {
+        // teammates' answers + what this student wrote in earlier lessons
+        loadTaskContext(r.id);
+        // and any draft they started on another device
+        loadServerDraft(userIdOf(), r.id);
+      }
+      if (r.kind === 'home' && !first) loadCoachFiles();
+      if (!first) focusViewHeading();
+    }
+
+    window.addEventListener('popstate', () => applyRoute());
+    window.addEventListener('hashchange', () => applyRoute());
+    // In-page links to a view go through navigate(), so every entry carries
+    // its depth. Modified clicks (new tab) are left to the browser.
+    document.addEventListener('click', (e) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = e.target && e.target.closest ? e.target.closest('a[href^="#/"]') : null;
+      if (!a || !app.contains(a)) return;
+      e.preventDefault();
+      navigate(parseRoute(a.getAttribute('href')));
+    });
+
+    function openTask(taskId) { navigate({ kind: 'task', id: taskId }); }
+
+    function closeTask() {
+      const task = ((latestData && latestData.tasks) || []).find(t => t.id === activeTask);
+      const cat = task ? categoryForTask(task) : null;
+      goBack(cat ? { kind: 'area', id: cat.id } : { kind: 'home' });
     }
 
     // ── Lesson spine: breadcrumb, meta chips, section heads, what's next ──
@@ -4975,23 +5215,17 @@
     function taskCrumbs(task) {
       const cat = categoryForTask(task);
       const areaLabel = cat ? cat.label : (task.category || 'Assignments');
-      // the area id travels in data-h-cat, never inside the handler text
-      const areaGo = 'closeTask();openCategory(this.dataset.hCat || null)';
-      const areaAttr = cat ? `data-h-cat="${escapeHtml(cat.id)}"` : '';
+      const areaHref = cat ? routeHash({ kind: 'area', id: cat.id }) : '#/';
       return `
         <div class="ta-back-row">
           <nav class="ta-crumbs" aria-label="Where you are">
-            <span class="ta-crumb-link" role="button" tabindex="0"
-              onclick="closeTask();openCategory(null)"
-              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();closeTask();openCategory(null);}">🏠 Home</span>
+            <a class="ta-crumb-link" href="#/">🏠 Home</a>
             <span class="ta-crumb-sep" aria-hidden="true">›</span>
-            <span class="ta-crumb-link" role="button" tabindex="0"
-              onclick="${areaGo}" ${areaAttr}
-              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();${areaGo}}">${escapeHtml(areaLabel)}</span>
+            <a class="ta-crumb-link" href="${escapeHtml(areaHref)}">${escapeHtml(areaLabel)}</a>
             <span class="ta-crumb-sep" aria-hidden="true">›</span>
             <span class="ta-crumb-now" aria-current="page">${escapeHtml(task.title)}</span>
           </nav>
-          <button class="ta-back-btn" onclick="closeTask()">← Back</button>
+          <button class="ta-back-btn" type="button" onclick="closeTask()">← Back</button>
         </div>`;
     }
 
@@ -5024,7 +5258,7 @@
     function taskSectionHead(title, sub) {
       return `
         <div class="ta-sec-head">
-          <div class="ta-sec-title">${title}</div>
+          <h2 class="ta-sec-title">${title}</h2>
           ${sub ? `<div class="ta-sec-sub">${sub}</div>` : ''}
         </div>`;
     }
@@ -5033,6 +5267,46 @@
     // holds the base ids — so both sides are compared on the base.
     function taskBaseId(id) { return String(id || '').split('--')[0]; }
 
+    // Lessons due after this one in the same area, soonest first.
+    function laterInArea(data, task) {
+      const all = (data && data.tasks) || [];
+      const cat = categoryForTask(task);
+      const sameArea = (t) => cat
+        ? categoryForTask(t) === cat
+        : String(t.category || '') === String(task.category || '');
+      return task.dueDate
+        ? all.filter(t => t.id !== task.id && t.dueDate && String(t.dueDate) > String(task.dueDate) && sameArea(t))
+            .sort((a, b) => String(a.dueDate).localeCompare(String(b.dueDate)))
+        : [];
+    }
+
+    // The lesson to offer once this one is turned in: the next one in the
+    // same area that is still open, else whatever the hub would pick next.
+    function nextLessonAfter(data, task) {
+      const sent = (data && data.submittedTasks) || {};
+      const inArea = laterInArea(data, task).find(t => !sent[t.id] && t.status !== 'done');
+      if (inArea) return inArea;
+      const pick = pickNextTask(data);
+      return pick && pick.id !== task.id ? pick : null;
+    }
+
+    function nextLessonButton(data, task) {
+      const next = nextLessonAfter(data, task);
+      if (!next) return '';
+      return `<a class="ta-done-next" href="${escapeHtml(routeHash({ kind: 'task', id: next.id }))}">
+          Next: ${escapeHtml(next.title)} <span aria-hidden="true">→</span></a>`;
+    }
+
+    // Brings the "turned in" card into view and hands it focus, so the
+    // student (and a screen reader) knows it worked without hunting for it.
+    function announceTurnedIn() {
+      const el = document.getElementById('ta-done');
+      if (!el) return;
+      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      el.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+      try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); }
+    }
+
     // What came before this lesson, and what is due next in the same area.
     function taskWhatsNext(data, task) {
       const all = (data && data.tasks) || [];
@@ -5040,27 +5314,18 @@
         .map(pid => all.find(t => taskBaseId(t.id) === taskBaseId(pid)))
         .filter(Boolean);
       const cat = categoryForTask(task);
-      const sameArea = (t) => cat
-        ? categoryForTask(t) === cat
-        : String(t.category || '') === String(task.category || '');
-      const later = task.dueDate
-        ? all.filter(t => t.id !== task.id && t.dueDate && String(t.dueDate) > String(task.dueDate) && sameArea(t))
-            .sort((a, b) => String(a.dueDate).localeCompare(String(b.dueDate)))
-        : [];
-      const next = later[0] || null;
+      const next = laterInArea(data, task)[0] || null;
       if (!priors.length && !next) return '';
 
       const row = (t, ico, meta) => `
-        <div class="ta-next-row" role="button" tabindex="0"
-          onclick="openTask(this.dataset.hTask)" data-h-task="${escapeHtml(t.id)}"
-          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTask(this.dataset.hTask);}">
+        <a class="ta-next-row" href="${escapeHtml(routeHash({ kind: 'task', id: t.id }))}">
           <span class="ta-next-ico" aria-hidden="true">${ico}</span>
           <span class="ta-next-text">
             <span class="ta-next-title">${escapeHtml(t.title)}</span>
             ${meta ? `<span class="ta-next-meta">${meta}</span>` : ''}
           </span>
           <span class="ta-next-go" aria-hidden="true">›</span>
-        </div>`;
+        </a>`;
 
       const areaLabel = cat ? cat.label : (task.category || 'this area');
       return `
@@ -5186,7 +5451,7 @@
             <span class="ta-code-label">🐍 ${escapeHtml(block.label || 'Example Pybricks code — copy this into VS Code')}</span>
             <button class="ta-code-copy" onclick="copyTaskCode(this)">📋 Copy code</button>
           </div>
-          <pre class="ta-code-block"><code>${escapeHtml(block.code || '')}</code></pre>
+          <pre class="ta-code-block" tabindex="0" aria-label="${escapeHtml(block.label || 'Example code')}"><code>${escapeHtml(block.code || '')}</code></pre>
         </div>
       `).join('');
 
@@ -5210,10 +5475,10 @@
           const photoVal = answers[`${q.id}__photo`] || '';
           const linkPart = submitted
             ? (linkVal ? `<a class="ta-q-link-view" href="${escapeHtml(linkVal)}" target="_blank" rel="noreferrer">🔗 ${escapeHtml(linkVal)}</a>` : '')
-            : `<input class="ta-q-link" type="url" data-qid="${qid}__link" placeholder="🔗 Add a link (optional) — a website, video, or doc" value="${escapeHtml(linkVal)}">`;
+            : `<input class="ta-q-link" type="url" data-qid="${qid}__link" aria-label="Link for question ${i + 1} (optional)" placeholder="🔗 Add a link (optional) — a website, video, or doc" value="${escapeHtml(linkVal)}">`;
           const photoPart = photoVal
-            ? `<div class="ta-q-photo-wrap"><img class="ta-q-photo" src="${photoVal}" alt="attachment for question ${i + 1}">${submitted ? '' : `<button class="ta-q-photo-remove" onclick="removeQuestionPhoto(this.dataset.hUser,this.dataset.hTask,this.dataset.hQ)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}" data-h-q="${qid}">✕</button>`}</div>`
-            : (submitted ? '' : `<label class="ta-q-photo-btn">📷 Add a picture<input type="file" accept="image/*" style="display:none" onchange="handleQuestionPhoto(this,this.dataset.hUser,this.dataset.hTask,this.dataset.hQ)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}" data-h-q="${qid}"></label>`);
+            ? `<div class="ta-q-photo-wrap"><img class="ta-q-photo" src="${photoVal}" alt="attachment for question ${i + 1}">${submitted ? '' : `<button class="ta-q-photo-remove" aria-label="Remove picture" onclick="removeQuestionPhoto(this.dataset.hUser,this.dataset.hTask,this.dataset.hQ)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}" data-h-q="${qid}">✕</button>`}</div>`
+            : (submitted ? '' : `<label class="ta-q-photo-btn">📷 Add a picture<input type="file" accept="image/*" class="vh-input" onchange="handleQuestionPhoto(this,this.dataset.hUser,this.dataset.hTask,this.dataset.hQ)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}" data-h-q="${qid}"></label>`);
           if (submitted && !linkVal && !photoVal) {
             attachHtml = '';
           } else {
@@ -5246,7 +5511,7 @@
                 <div class="ta-photo-preview-wrap">
                   <img class="ta-photo-preview" src="${p}" alt="Photo ${i + 1}">
                   <span class="ta-photo-num">${i + 1}</span>
-                  ${!submitted ? `<button class="ta-photo-remove" onclick="removeTaskPhoto(this.dataset.hUser,this.dataset.hTask,${i})" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}">✕</button>` : ''}
+                  ${!submitted ? `<button class="ta-photo-remove" aria-label="Remove photo ${i + 1}" onclick="removeTaskPhoto(this.dataset.hUser,this.dataset.hTask,${i})" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}">✕</button>` : ''}
                 </div>
               `).join('')}
             </div>
@@ -5254,7 +5519,7 @@
           ${!submitted ? `
             <label class="ta-photo-upload-btn" for="ta-photo-input">
               📎 ${taskPhotos.length ? 'Add another photo' : 'Choose photo or file'}
-              <input type="file" id="ta-photo-input" accept="image/*" style="display:none" onchange="handleTaskPhoto(this,this.dataset.hUser,this.dataset.hTask)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}">
+              <input type="file" id="ta-photo-input" accept="image/*" class="vh-input" onchange="handleTaskPhoto(this,this.dataset.hUser,this.dataset.hTask)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}">
             </label>
             <div class="ta-photo-hint">JPG, PNG, HEIC — add as many photos as you need to show your work</div>
           ` : ''}
@@ -5268,13 +5533,13 @@
             <div class="ta-file-row">
               <strong>${escapeHtml(file.name)}</strong>
               <span>${Math.max(1, Math.round(Number(file.size || 0) / 1024))} KB</span>
-              ${!submitted ? `<button class="ta-photo-remove" onclick="removeTaskFile(this.dataset.hUser,this.dataset.hTask,${index})" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}">✕</button>` : ''}
+              ${!submitted ? `<button class="ta-photo-remove" aria-label="Remove file" onclick="removeTaskFile(this.dataset.hUser,this.dataset.hTask,${index})" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}">✕</button>` : ''}
             </div>
           `).join('') : ''}
           ${!submitted ? `
             <label class="ta-photo-upload-btn" for="ta-file-input">
               📎 ${taskFiles.length ? 'Replace project file' : 'Choose project file'}
-              <input type="file" id="ta-file-input" accept="${escapeHtml(task.acceptedFileTypes || '')}" style="display:none" onchange="handleTaskFile(this,this.dataset.hUser,this.dataset.hTask)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}">
+              <input type="file" id="ta-file-input" accept="${escapeHtml(task.acceptedFileTypes || '')}" class="vh-input" onchange="handleTaskFile(this,this.dataset.hUser,this.dataset.hTask)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(taskId)}">
             </label>
             <div class="ta-photo-hint">Accepted: ${escapeHtml(task.acceptedFileTypes || 'project files')} · maximum 4 MB</div>
           ` : ''}
@@ -5287,12 +5552,13 @@
       const reopenedNow = !!((latestData.submissionState || {})[taskId] || {}).reopened || redoNow;
       const submitArea = (submitted && !reopenedNow) ? `
         ${integrityFlagBanner(taskId)}
-        <div class="ta-done-banner">
-          <div class="ta-done-icon">✅</div>
-          <div>
+        <div class="ta-done-banner" id="ta-done" role="status" tabindex="-1">
+          <div class="ta-done-icon" aria-hidden="true">✅</div>
+          <div class="ta-done-main">
             <div class="ta-done-title">Assignment submitted!</div>
-            <div class="ta-done-sub">Submitted ${escapeHtml(formatDate(submittedAt))} · Your coach can see your answers.</div>
+            <div class="ta-done-sub">Turned in ${escapeHtml(friendlyWhen(submittedAt) || formatDate(submittedAt))} · Your coach can see your answers.</div>
           </div>
+          ${nextLessonButton(data, task)}
         </div>
         ${sharedCreditNote(taskId)}
         ${coachReviewBanner(taskId) || '<div class="ta-empty-note">No feedback from your coach yet. When they read this, their note will show up right here.</div>'}
@@ -5310,6 +5576,7 @@
           </button>
         </div>
         <div class="ta-submit-hint" id="ta-submit-msg"></div>
+        ${PREVIEW ? '' : '<div class="ta-autosave" id="ta-autosave" aria-live="polite"></div>'}
       `;
 
       // ── the spine: what to do → learn → respond → submit → what's next ──
@@ -5390,7 +5657,8 @@
       for (let r = 0; r < rowCount; r++) {
         const cells = cols.map((c, cIdx) => {
           const cellVal = escapeHtml((rows[r] && rows[r][cIdx]) || '');
-          return `<td><input class="ta-table-cell" type="text" data-tq="${qid}" data-trow="${r}" data-tcol="${cIdx}" value="${cellVal}" ${submitted ? 'readonly' : ''}></td>`;
+          const name = escapeHtml(c || `Column ${cIdx + 1}`);
+          return `<td data-label="${name}"><input class="ta-table-cell" type="text" aria-label="${name} row ${r + 1}" data-tq="${qid}" data-trow="${r}" data-tcol="${cIdx}" value="${cellVal}" ${submitted ? 'readonly' : ''}></td>`;
         }).join('');
         bodyRows.push(`<tr>${cells}</tr>`);
       }
@@ -5414,7 +5682,7 @@
         </div>` : '';
 
       return `
-        <div class="ta-table-wrap" data-table-qid="${qid}" data-maxrows="${maxRows}"
+        <div class="ta-table-wrap${editable ? ' is-editable' : ''}" data-table-qid="${qid}" data-maxrows="${maxRows}"
           data-editable-cols="${editable ? '1' : ''}" data-default-cols="${escapeHtml(JSON.stringify(q.columns || []))}">
           <table class="ta-table">
             <thead><tr>${headCells}</tr></thead>
@@ -5429,15 +5697,33 @@
     // ── column editing (rename is handled by the header inputs themselves) ──
     function tableWrap(qid) { return document.querySelector(`[data-table-qid="${qid}"]`); }
 
+    // Column names as shown right now (renamed headings included).
+    function tableColNames(wrap) {
+      return [...wrap.querySelectorAll('thead th')].map((th, i) => {
+        const input = th.querySelector('.ta-table-head');
+        return ((input ? input.value : th.textContent) || '').trim() || `Column ${i + 1}`;
+      });
+    }
+
+    // Name one cell for screen readers and for the stacked phone layout.
+    function labelTableCell(cell, names) {
+      const c = Number(cell.dataset.tcol), r = Number(cell.dataset.trow);
+      const name = names[c] || `Column ${c + 1}`;
+      cell.setAttribute('aria-label', `${name} row ${r + 1}`);
+      if (cell.parentElement) cell.parentElement.dataset.label = name;
+    }
+
     function reindexTableColumns(wrap) {
       wrap.querySelectorAll('thead th').forEach((th, i) => {
         const input = th.querySelector('.ta-table-head');
-        if (input) input.dataset.thcol = String(i);
+        if (input) { input.dataset.thcol = String(i); input.setAttribute('aria-label', `Column ${i + 1} name`); }
         const del = th.querySelector('.ta-col-del');
-        if (del) del.setAttribute('onclick', `removeTableColumn('${wrap.dataset.tableQid}', ${i})`);
+        // the question id stays in data-h-q; only the index is in the handler
+        if (del) { del.dataset.hQ = wrap.dataset.tableQid; del.setAttribute('onclick', `removeTableColumn(this.dataset.hQ, ${i})`); }
       });
+      const names = tableColNames(wrap);
       wrap.querySelectorAll('tbody tr').forEach(tr => {
-        tr.querySelectorAll('.ta-table-cell').forEach((cell, i) => { cell.dataset.tcol = String(i); });
+        tr.querySelectorAll('.ta-table-cell').forEach((cell, i) => { cell.dataset.tcol = String(i); labelTableCell(cell, names); });
       });
     }
 
@@ -5450,8 +5736,8 @@
       const th = document.createElement('th');
       th.className = 'ta-th-edit';
       th.innerHTML = `<div class="ta-th-inner">
-        <input class="ta-table-head" type="text" data-thq="${qid}" data-thcol="${idx}" value="New column" title="Rename this column">
-        <button class="ta-col-del" title="Remove this column" onclick="removeTableColumn(this.dataset.hQ, ${idx})" data-h-q="${qid}">✕</button>
+        <input class="ta-table-head" type="text" data-thq="${escapeHtml(qid)}" data-thcol="${idx}" value="New column" title="Rename this column" aria-label="Column ${idx + 1} name">
+        <button class="ta-col-del" title="Remove this column" aria-label="Remove this column" onclick="removeTableColumn(this.dataset.hQ, ${idx})" data-h-q="${escapeHtml(qid)}">✕</button>
       </div>`;
       headRow.appendChild(th);
       wrap.querySelectorAll('tbody tr').forEach((tr, r) => {
@@ -5541,6 +5827,8 @@
         tr.appendChild(td);
       }
       tbody.appendChild(tr);
+      const names = tableColNames(wrap);
+      tr.querySelectorAll('.ta-table-cell').forEach(cell => labelTableCell(cell, names));
       if (tbody.querySelectorAll('tr').length >= maxRows) {
         const btn = wrap.querySelector('.ta-table-addrow');
         if (btn) btn.remove();
@@ -5642,7 +5930,7 @@
                     <div class="cv-entry-text">${escapeHtml(e.text)}</div>
                     <div class="cv-entry-footer">
                       <span class="cv-entry-time">🕐 ${escapeHtml(journalTimestamp(e.createdAt))}</span>
-                      <button class="cv-entry-delete" onclick="deleteJournalEntry(this.dataset.hUser,this.dataset.hTask,this.dataset.hEntry)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(task.id)}" data-h-entry="${escapeHtml(e.id)}">✕</button>
+                      <button class="cv-entry-delete" aria-label="Delete shout-out" onclick="deleteJournalEntry(this.dataset.hUser,this.dataset.hTask,this.dataset.hEntry)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(task.id)}" data-h-entry="${escapeHtml(e.id)}">✕</button>
                     </div>
                   </div>
                 `).join('')}
@@ -5666,17 +5954,18 @@
             <h1 class="ta-title">${escapeHtml(task.title)}</h1>
           </div>
 
+          <h2 class="sr-only">What to do</h2>
           <div class="ta-lesson-body">
             ${renderMarkdownish(task.description)}
           </div>
 
           <div class="cv-add-section">
-            <div class="cv-add-title">➕ Add a shout-out</div>
+            <h2 class="cv-add-title">➕ Add a shout-out</h2>
             <div class="cv-add-row">
-              <select class="cv-add-select" id="cv-journal-value">
+              <select class="cv-add-select" id="cv-journal-value" aria-label="Core value">
                 ${CORE_VALUES.map(cv => `<option value="${cv.id}">${cv.icon} ${cv.label}</option>`).join('')}
               </select>
-              <input class="ta-answer ta-answer-text cv-add-input" type="text" id="cv-journal-text"
+              <input class="ta-answer ta-answer-text cv-add-input" type="text" id="cv-journal-text" aria-label="Your shout-out"
                 placeholder="e.g. Today I discovered that our gyro sensor has drift — now I know how to test for it!"
                 onkeydown="if(event.key==='Enter'){addJournalEntry(this.dataset.hUser,this.dataset.hTask)}" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(task.id)}">
               <button class="cv-add-btn" onclick="addJournalEntry(this.dataset.hUser,this.dataset.hTask)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(task.id)}">Add</button>
@@ -5827,7 +6116,8 @@
       const nounLower = cfg.itemNoun.toLowerCase();
 
       const target = cfg.targetPerItem;
-      const attCards = atts.map(att => {
+      const attCards = atts.map((att, attIdx) => {
+        const itemName = att.name || `${cfg.itemNoun} ${attIdx + 1}`;
         const done = att.iterations.length;
         const remaining = target ? Math.max(0, target - done) : 0;
         const countLabel = target
@@ -5836,12 +6126,12 @@
         return `
         <div class="att-card">
           <div class="att-card-head">
-            <input class="att-name-input" type="text" value="${escapeHtml(att.name)}" placeholder="${escapeHtml(cfg.namePlaceholder)}"
+            <input class="att-name-input" type="text" aria-label="Name of ${escapeHtml(nounLower)} ${attIdx + 1}" value="${escapeHtml(att.name)}" placeholder="${escapeHtml(cfg.namePlaceholder)}"
               onchange="updateAttachmentField(this.dataset.hUser,this.dataset.hAtt,'name',this.value)" data-h-user="${escapeHtml(userId)}" data-h-att="${escapeHtml(att.id)}">
             <span class="att-iter-count${target && !remaining ? ' att-iter-count-done' : ''}">${countLabel}${target && !remaining ? ' ✓' : ''}</span>
-            <button class="att-delete-btn" onclick="removeAttachment(this.dataset.hUser,this.dataset.hTask,this.dataset.hAtt)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(task.id)}" data-h-att="${escapeHtml(att.id)}" title="Delete ${escapeHtml(nounLower)}">✕</button>
+            <button class="att-delete-btn" aria-label="Delete ${escapeHtml(itemName)}" onclick="removeAttachment(this.dataset.hUser,this.dataset.hTask,this.dataset.hAtt)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(task.id)}" data-h-att="${escapeHtml(att.id)}" title="Delete ${escapeHtml(nounLower)}">✕</button>
           </div>
-          <input class="att-purpose-input" type="text" value="${escapeHtml(att.purpose)}" placeholder="${escapeHtml(cfg.purposePlaceholder)}"
+          <input class="att-purpose-input" type="text" aria-label="What ${escapeHtml(itemName)} is for" value="${escapeHtml(att.purpose)}" placeholder="${escapeHtml(cfg.purposePlaceholder)}"
             onchange="updateAttachmentField(this.dataset.hUser,this.dataset.hAtt,'purpose',this.value)" data-h-user="${escapeHtml(userId)}" data-h-att="${escapeHtml(att.id)}">
 
           ${att.iterations.length ? `
@@ -5851,9 +6141,9 @@
                   <div class="att-iter-imgwrap">
                     <img class="att-iter-img" src="${it.photo}" alt="${escapeHtml(cfg.versionLabel)}${idx + 1}">
                     <span class="att-iter-version">${escapeHtml(cfg.versionLabel)}${idx + 1}</span>
-                    <button class="att-iter-delete" onclick="removeIteration(this.dataset.hUser,this.dataset.hTask,this.dataset.hAtt,this.dataset.hIter)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(task.id)}" data-h-att="${escapeHtml(att.id)}" data-h-iter="${escapeHtml(it.id)}">✕</button>
+                    <button class="att-iter-delete" aria-label="Delete ${escapeHtml(cfg.versionLabel)}${idx + 1} of ${escapeHtml(itemName)}" onclick="removeIteration(this.dataset.hUser,this.dataset.hTask,this.dataset.hAtt,this.dataset.hIter)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(task.id)}" data-h-att="${escapeHtml(att.id)}" data-h-iter="${escapeHtml(it.id)}">✕</button>
                   </div>
-                  <input class="att-iter-note" type="text" value="${escapeHtml(it.note)}" placeholder="${escapeHtml(cfg.notePlaceholder)}"
+                  <input class="att-iter-note" type="text" aria-label="Note for ${escapeHtml(cfg.versionLabel)}${idx + 1} of ${escapeHtml(itemName)}" value="${escapeHtml(it.note)}" placeholder="${escapeHtml(cfg.notePlaceholder)}"
                     onchange="updateIterationNote(this.dataset.hUser,this.dataset.hAtt,this.dataset.hIter,this.value)" data-h-user="${escapeHtml(userId)}" data-h-att="${escapeHtml(att.id)}" data-h-iter="${escapeHtml(it.id)}">
                   <div class="att-iter-time">🕐 ${escapeHtml(journalTimestamp(it.createdAt))}</div>
                 </div>
@@ -5865,7 +6155,7 @@
 
           <label class="att-add-photo-btn">
             ${escapeHtml(cfg.photoLabel)}
-            <input type="file" accept="image/*" style="display:none"
+            <input type="file" accept="image/*" class="vh-input"
               onchange="addIterationPhoto(this,this.dataset.hUser,this.dataset.hTask,this.dataset.hAtt)" data-h-user="${escapeHtml(userId)}" data-h-task="${escapeHtml(task.id)}" data-h-att="${escapeHtml(att.id)}">
           </label>
         </div>
@@ -5884,6 +6174,7 @@
             <h1 class="ta-title">${escapeHtml(task.title)}</h1>
           </div>
 
+          <h2 class="sr-only">What to do</h2>
           <div class="ta-lesson-body">
             ${renderMarkdownish(task.description)}
           </div>
@@ -5915,7 +6206,8 @@
         .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)"'<>]+)\)/g,
           '<a class="md-link" href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/`([^`]+?)`/g, '<code>$1</code>');
+        .replace(/`([^`]+?)`/g, '<code>$1</code>')
+        .replace(/(^|[^*\w])\*(?![\s*])([^*\n<>"]+?)(?<!\s)\*(?![*\w])/g, '$1<em>$2</em>');
       const escaped = text
         .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
@@ -6160,33 +6452,37 @@
       const due = task.dueDate ? new Date(task.dueDate + 'T00:00:00') : null;
       const overdue = due && due < today;
       const days = due ? Math.round((due - today) / 86400000) : null;
+      // due before this student's lessons even existed: nobody is "91 days late"
+      const beforeStart = overdue && dueBeforeStart(task.dueDate, data);
 
       let tag = 'Start here', why = '', tone = '';
       if (st.flag)          { tag = 'Talk to your coach'; why = 'Your coach raised something about this one.'; tone = ' is-urgent'; }
       else if (st.redo)     { tag = 'Redo asked';         why = 'Your coach asked you to try this one again.'; tone = ' is-urgent'; }
       else if (st.reopened) { tag = 'Sent back to you';   why = 'Your coach reopened this so you can change it.'; tone = ' is-urgent'; }
+      else if (beforeStart) { tag = 'Start here';         why = 'A good first lesson for you — begin with this one.'; }
       else if (overdue)     { tag = 'Overdue';            why = `This was due ${Math.abs(days)} day${Math.abs(days) !== 1 ? 's' : ''} ago — start with this one.`; tone = ' is-late'; }
       else if (days === 0)  { tag = 'Due today';          why = 'This one is due today.'; tone = ' is-late'; }
       else if (days !== null) { tag = 'Up next';          why = `Due in ${days} day${days !== 1 ? 's' : ''}.`; }
 
       return `
-        <div class="next-up${tone}" onclick="openTask(this.dataset.hTask)" data-h-task="${escapeHtml(task.id)}">
-          <div class="next-up-icon">${st.flag ? '⚠️' : st.redo ? '🔁' : st.reopened ? '🔓' : overdue ? '⏰' : '👉'}</div>
+        <a class="next-up${tone}" href="${escapeHtml(routeHash({ kind: 'task', id: task.id }))}">
+          <div class="next-up-icon" aria-hidden="true">${st.flag ? '⚠️' : st.redo ? '🔁' : st.reopened ? '🔓' : (overdue && !beforeStart) ? '⏰' : '👉'}</div>
           <div class="next-up-body">
             <div class="next-up-tag">${escapeHtml(tag)}</div>
             <div class="next-up-title">${escapeHtml(task.title)}</div>
             <div class="next-up-sub">${escapeHtml(why)}</div>
           </div>
-          <div class="next-up-go">Open →</div>
-        </div>`;
+          <div class="next-up-go" aria-hidden="true">Open →</div>
+        </a>`;
     }
 
     // ── Celebrating a good grade ──────────────────────────────────────────
     // Fires once per graded submission, the first time the student sees it.
-    const SEEN_GRADES_KEY = 'bioglow-seen-grades';
+    // per student, so one child's grades never pop up for the next
+    function seenGradesKey() { return 'bioglow-seen-grades-' + userIdOf(); }
 
     function seenGrades() {
-      try { return JSON.parse(localStorage.getItem(SEEN_GRADES_KEY) || '{}'); }
+      try { return JSON.parse(localStorage.getItem(seenGradesKey()) || '{}'); }
       catch { return {}; }
     }
 
@@ -6197,7 +6493,7 @@
         if (!review || review.stale) continue;
         if (seen[taskId] === review.reviewedAt) continue;      // already celebrated
         seen[taskId] = review.reviewedAt;
-        try { localStorage.setItem(SEEN_GRADES_KEY, JSON.stringify(seen)); } catch {}
+        try { localStorage.setItem(seenGradesKey(), JSON.stringify(seen)); } catch {}
         const task = (latestData.tasks || []).find(t => t.id === taskId);
         showGradeCelebration(task ? task.title : 'your assignment', review);
         return;   // one at a time, so it never stacks up
@@ -6542,10 +6838,13 @@
         return;
       }
       markTaskSubmitted(userId, taskId);
-      updateTaskStatus(taskId, 'done');
+      await updateTaskStatus(taskId, 'done');
       showToast('Sent to your coach ✅');
-      app.innerHTML = renderTaskDetail(latestData, taskId);
-      wireListeners();
+      if (activeTask === taskId) {
+        app.innerHTML = renderTaskDetail(latestData, taskId);
+        wireListeners();
+        announceTurnedIn();
+      }
     }
 
     // Shared submit/save row for the tracker + journal pages.
@@ -6556,11 +6855,11 @@
       // locked — the student can send updated work whenever they add to it.
       // The server exempts these types too.
       const alreadySent = submittedAt ? `
-        <div class="ta-done-banner">
-          <div class="ta-done-icon">✅</div>
-          <div>
+        <div class="ta-done-banner" id="ta-done" role="status" tabindex="-1">
+          <div class="ta-done-icon" aria-hidden="true">✅</div>
+          <div class="ta-done-main">
             <div class="ta-done-title">Sent to your coach!</div>
-            <div class="ta-done-sub">Last sent ${escapeHtml(formatDate(submittedAt))} · keep adding, then send again.</div>
+            <div class="ta-done-sub">Last sent ${escapeHtml(friendlyWhen(submittedAt) || formatDate(submittedAt))} · keep adding, then send again.</div>
           </div>
         </div>
         ${sharedCreditNote(taskId)}
@@ -6590,9 +6889,28 @@
     }
 
     // ── Save draft ────────────────────────────────────────────────────────
-    async function saveTaskDraft(userId, taskId) {
+    async function saveTaskDraft(userId, taskId, opts) {
+      const quiet = !!(opts && opts.quiet);
       const answers = collectAnswers(taskId);
       const saved = saveTaskSubmission(userId, taskId, answers, undefined);
+      if (quiet) {
+        // autosave: a small "Saved" note by the buttons, nothing else moves
+        autosaveIndicator('Saving…');
+        try {
+          const r = await fetch(`/api/fll/tasks/${encodeURIComponent(taskId)}/draft`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ answers, photos: getTaskPhotos(saved) })
+          });
+          const j = await r.json();
+          if (!r.ok || !j.success) throw new Error(j.message || 'Could not save');
+          autosaveIndicator(`✓ Saved ${new Date().toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}`, 'is-saved');
+        } catch (e) {
+          autosaveIndicator('Saved on this device only — could not reach the server', 'is-warn');
+        }
+        return;
+      }
+      cancelAutosave();
       const msg = document.getElementById('ta-submit-msg');
       if (msg) { msg.textContent = 'Saving…'; msg.className = 'ta-submit-hint'; }
       // also push it to the server so it follows the student to another device
@@ -6605,11 +6923,64 @@
         const j = await r.json();
         if (!r.ok || !j.success) throw new Error(j.message || 'Could not save');
         if (msg) { msg.textContent = '✓ Draft saved — you can carry on from any device.'; msg.className = 'ta-submit-hint success'; }
+        autosaveIndicator('');
       } catch (e) {
         if (msg) { msg.textContent = '✓ Saved on this device (could not reach the server).'; msg.className = 'ta-submit-hint'; }
       }
       if (msg) setTimeout(() => { if (msg) msg.textContent = ''; }, 3500);
     }
+
+    // ── Autosave ──────────────────────────────────────────────────────────
+    // Answers go to the server draft two seconds after the student stops
+    // typing. The listener sits on #app itself, which is never replaced, so
+    // it survives every innerHTML re-render. Never runs in a coach preview.
+    const AUTOSAVE_DELAY = 2000;
+    let autosaveTimer = null;
+    let autosaveTaskId = null;
+
+    function autosaveIndicator(text, cls) {
+      const el = document.getElementById('ta-autosave');
+      if (!el) return;
+      el.textContent = text;
+      el.className = 'ta-autosave' + (cls ? ' ' + cls : '');
+    }
+    function cancelAutosave() {
+      clearTimeout(autosaveTimer);
+      autosaveTimer = null;
+      autosaveTaskId = null;
+    }
+    function scheduleAutosave() {
+      if (PREVIEW || !activeTask) return;
+      autosaveTaskId = activeTask;
+      autosaveIndicator('Not saved yet…');
+      clearTimeout(autosaveTimer);
+      autosaveTimer = setTimeout(runAutosave, AUTOSAVE_DELAY);
+    }
+    function runAutosave() {
+      const taskId = autosaveTaskId;
+      clearTimeout(autosaveTimer);
+      autosaveTimer = null;
+      autosaveTaskId = null;
+      // only while that lesson's fields are still the ones on screen
+      if (PREVIEW || !taskId || taskId !== activeTask || !app.querySelector('.ta-detail')) return Promise.resolve();
+      return saveTaskDraft(userIdOf(), taskId, { quiet: true });
+    }
+    // Leaving the lesson or signing out saves what is pending right away.
+    function flushAutosave() {
+      return autosaveTimer ? runAutosave() : Promise.resolve();
+    }
+    app.addEventListener('input', (e) => {
+      const el = e.target;
+      if (!el || !el.matches) return;
+      if (el.matches('.ta-table-head')) {
+        const wrap = el.closest('[data-table-qid]');
+        if (wrap) reindexTableColumns(wrap);   // keep cell labels in step with a renamed column
+      }
+      if (PREVIEW || el.readOnly || el.disabled) return;
+      if (!el.closest('.ta-detail')) return;
+      if (!el.matches('[data-qid], .ta-table-cell, .ta-table-head')) return;
+      scheduleAutosave();
+    });
 
     // Pull a server draft when a lesson opens. The newer of the two copies
     // wins, so working offline then coming back online does not lose work.
@@ -6637,6 +7008,7 @@
     async function submitTaskAnswers(userId, taskId) {
       const task = latestData.tasks.find(t => t.id === taskId);
       if (!task) return;
+      cancelAutosave();
       const answers = collectAnswers(taskId);
       const questions = task.questions || [];
       const missing = questions.filter(q => !(answers[q.id] || '').trim());
@@ -6673,9 +7045,14 @@
         return;
       }
       markTaskSubmitted(userId, taskId);
-      updateTaskStatus(taskId, 'done');
-      app.innerHTML = renderTaskDetail(latestData, taskId);
-      wireListeners();
+      // reloads the dashboard, which re-renders this lesson as turned in
+      await updateTaskStatus(taskId, 'done');
+      if (activeTask === taskId) {
+        app.innerHTML = renderTaskDetail(latestData, taskId);
+        wireListeners();
+        loadTaskContext(taskId);
+        announceTurnedIn();
+      }
     }
 
     function collectAnswers(taskId) {
@@ -6701,7 +7078,7 @@
       // simulator practice progress (saved by the simulator page)
       let levelsDone = 0;
       try {
-        const saved = JSON.parse(localStorage.getItem('bioglow-sim-levels') || 'null');
+        const saved = JSON.parse(localStorage.getItem('bioglow-sim-levels-' + userIdOf()) || 'null');
         if (saved && Array.isArray(saved.completed)) levelsDone = saved.completed.filter(id => id !== 'sandbox').length;
       } catch (e) {}
       const TOTAL_LEVELS = 6;
@@ -6720,7 +7097,7 @@
           </div>
           <div class="sim-spot-progress">
             <div class="big">${levelsDone}<span style="font-size:16px;opacity:0.7">/${TOTAL_LEVELS}</span></div>
-            <div class="small">Practice levels</div>
+            <div class="small">Practice levels done</div>
           </div>
         </div>
       `;
@@ -6733,6 +7110,9 @@
       // ── My team + countdown row ──
       const days = Number(bioglowCountdown.daysUntil) || 0;
       const urgency = days <= 14 ? '#d93025' : days <= 30 ? '#f9ab00' : '#1e8e5a';
+      const releaseDay = bioglowCountdown.releaseDate ? new Date(String(bioglowCountdown.releaseDate).slice(0, 10) + 'T00:00:00') : null;
+      const todayMid = new Date(); todayMid.setHours(0, 0, 0, 0);
+      const released = days <= 0 || (!!releaseDay && !Number.isNaN(releaseDay.getTime()) && releaseDay <= todayMid);
       const memberCount = (teamMembers || []).length;
 
       // competition countdown (per team region)
@@ -6764,14 +7144,23 @@
               <div class="landing-info-sub">${memberCount} student${memberCount !== 1 ? 's' : ''} · ${escapeHtml(team ? team.meetingDays || 'TBD' : 'TBD')}${team && team.regionName ? ` · ${escapeHtml(team.regionName.split('(')[0].trim())}` : ''}</div>
             </div>
           </div>
+          ${released ? `
+          <div class="landing-info-card countdown-card" style="--urgency:#1e8e5a;">
+            <div class="landing-info-icon" aria-hidden="true">🚀</div>
+            <div>
+              <div class="landing-info-label">This season's game</div>
+              <div class="landing-info-value" style="color:#1e8e5a;">BIOGLOW is out!</div>
+              ${bioglowCountdown.releaseDate ? `<div class="landing-info-sub">Released ${escapeHtml(formatDate(bioglowCountdown.releaseDate))}</div>` : ''}
+            </div>
+          </div>` : `
           <div class="landing-info-card countdown-card" style="--urgency:${urgency};">
-            <div class="landing-info-icon">🚀</div>
+            <div class="landing-info-icon" aria-hidden="true">🚀</div>
             <div>
               <div class="landing-info-label">Game Release Countdown</div>
               <div class="landing-info-value countdown-days" style="color:${urgency};">${days} days</div>
               <div class="landing-info-sub">BIOGLOW drops ${escapeHtml(formatDate(bioglowCountdown.releaseDate))}</div>
             </div>
-          </div>
+          </div>`}
           ${compCard}
         </div>
       `;
@@ -6787,7 +7176,7 @@
       const pct = allTasks.length ? Math.round((doneCount / allTasks.length) * 100) : 0;
 
       function dueCls(dueDate) {
-        if (!dueDate) return '';
+        if (!dueDate || dueBeforeStart(dueDate, data)) return '';
         const d = new Date(dueDate); d.setHours(0,0,0,0);
         const diff = Math.round((d - today) / 86400000);
         if (diff < 0) return 'overdue';
@@ -6801,7 +7190,7 @@
         <div class="preseason-section">
           <div class="preseason-header">
             <div class="preseason-header-left">
-              <div class="preseason-title">📋 Pre-Season Assignments</div>
+              <h2 class="preseason-title">📋 Pre-Season Assignments</h2>
               ${openTasks.length > 0
                 ? `<span class="preseason-count">${openTasks.length} remaining</span>`
                 : `<span class="preseason-count done">✓ All done</span>`}
@@ -6825,12 +7214,12 @@
               const dc = dueCls(task.dueDate);
               const ctx = ctxIcon[task.workContext] || '📌';
               return `
-              <div class="preseason-task" data-status="${escapeHtml(task.status)}" onclick="openTask(this.dataset.hTask)" data-h-task="${escapeHtml(task.id)}">
+              <div class="preseason-task" data-status="${escapeHtml(task.status)}">
                 <div class="preseason-task-accent"></div>
                 <div class="preseason-task-body">
                   <div class="preseason-task-left">
                     <div class="preseason-task-row1">
-                      <div class="preseason-task-title">${escapeHtml(task.title)}</div>
+                      <a class="preseason-task-title preseason-task-link" href="${escapeHtml(routeHash({ kind: 'task', id: task.id }))}">${escapeHtml(task.title)}</a>
                       <span class="preseason-task-type-badge">${{ video:'🎬 Video', lesson:'📖 Lesson', submission:'📤 Submission', journal:'📓 Journal', tracker:'🔧 Tracker' }[task.type] || '📋 Task'}</span>
                     </div>
                     <div class="preseason-task-meta">
@@ -6840,12 +7229,12 @@
                       ${taskRowBadge(task.id)}
                     </div>
                   </div>
-                  <div class="preseason-task-right" onclick="event.stopPropagation()">
-                    <select class="preseason-status-select" data-val="${escapeHtml(task.status)}" data-task-status="${escapeHtml(task.id)}" onchange="this.dataset.val=this.value">
+                  <div class="preseason-task-right">
+                    <select class="preseason-status-select" data-val="${escapeHtml(task.status)}" data-task-status="${escapeHtml(task.id)}" aria-label="Status for ${escapeHtml(task.title)}" onchange="this.dataset.val=this.value">
                       ${Object.entries(statusLabels).map(([v,l]) => `<option value="${v}" ${task.status===v?'selected':''}>${l}</option>`).join('')}
                     </select>
                   </div>
-                  <div class="preseason-task-chevron">›</div>
+                  <div class="preseason-task-chevron" aria-hidden="true">›</div>
                 </div>
               </div>`;
             }).join('')}
@@ -6888,7 +7277,7 @@
             <div class="cat-card-footer">
               <div class="cat-progress-bar"><div class="cat-progress-fill" style="width:${progress.percent}%"></div></div>
               <div class="cat-progress-label">
-                <span>${progress.complete} / ${progress.total || '—'} checkpoints</span>
+                <span>${progress.total ? `${progress.complete} / ${progress.total} checkpoints` : ''}</span>
                 ${openCount > 0 ? `<span class="cat-open-badge">${openCount} open</span>` : '<span class="cat-open-done">✓ up to date</span>'}
               </div>
             </div>
@@ -6897,20 +7286,21 @@
       }).join('');
 
       return `
-        ${renderSimSpotlight(data)}
         ${renderWelcomeBanner(user, currentPhase, tasks, bioglowCountdown)}
+        <h2 class="sr-only">Your next step</h2>
         ${renderNextUp(data)}
         ${infoRow}
+        ${renderSimSpotlight(data)}
         ${renderIdeaMapTile(data)}
         ${renderGearTile(data)}
         <div id="coachFilesSlot"></div>
         ${preSeasonSection}
-        <div class="cat-grid-title">📂 Your FLL Areas</div>
+        <h2 class="cat-grid-title">📂 Your FLL Areas</h2>
         <div class="cat-grid">${cards}</div>
         ${renderBuildingInstructions(data)}
         ${renderMissionVideos(data)}
         ${renderResourcesEmpty(data)}
-        <div class="cat-grid-title">📅 Season Calendar</div>
+        <h2 class="cat-grid-title">📅 Season Calendar</h2>
         <div id="seasonCalendar">${renderCalendar(data)}</div>
       `;
     }
@@ -6920,15 +7310,14 @@
     function renderIdeaMapTile(data) {
       if (!data.team) return '';
       return `
-        <div class="im-tile" onclick="openIdeaMap()" role="button" tabindex="0"
-             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openIdeaMap();}">
+        <a class="im-tile" href="#/idea-map">
           <div class="im-tile-icon">🌳</div>
           <div class="im-tile-body">
             <div class="im-tile-title">Your team's idea map</div>
             <div class="im-tile-sub">Every idea your team brainstormed, the five you kept, the problem you chose, and what you are learning — yours to edit any time. Nothing to turn in.</div>
           </div>
-          <div class="im-tile-go">Open →</div>
-        </div>`;
+          <div class="im-tile-go" aria-hidden="true">Open →</div>
+        </a>`;
     }
 
     // A reference tool rather than an assignment, so it sits on the home page
@@ -7056,7 +7445,7 @@
         </a>`).join('');
 
       return `
-        <div class="cat-grid-title">📐 Mission Models: Build &amp; Set Up</div>
+        <h2 class="cat-grid-title">📐 Mission Models: Build &amp; Set Up</h2>
         <div class="bi-note">Build each model from its instructions, then use the setup video to check it is correct and in the right place on the mat.</div>
         ${featuredHtml}
         <div class="bi-grid">
@@ -7090,7 +7479,7 @@
       channels.sort((a, b) => (b.official - a.official) || a.channel.localeCompare(b.channel));
 
       return `
-        <div class="cat-grid-title">🎥 Mission Videos by Channel</div>
+        <h2 class="cat-grid-title">🎥 Mission Videos by Channel</h2>
         <div class="bi-note">Watch other people solve this year's missions. Tap a channel to open its videos.</div>
         <div class="mv-list">
           ${channels.map(c => {
@@ -7128,7 +7517,7 @@
       const res = (data.resources || []);
       if (res.some(r => r.category === 'Building Instructions' || r.category === 'Mission Videos')) return '';
       return `
-        <div class="cat-grid-title">📐 Mission Models and Videos</div>
+        <h2 class="cat-grid-title">📐 Mission Models and Videos</h2>
         <div class="detail-empty">
           No building instructions or mission videos are here yet. They appear once the BIOGLOW game files are out.
         </div>`;
@@ -7158,8 +7547,9 @@
     let ideaMapDirty = false;
     let ideaMapAdded = 0;
 
-    async function openIdeaMap() {
-      activeCategory = null; activeTask = null;
+    function openIdeaMap() { navigate({ kind: 'idea-map' }); }
+
+    async function loadIdeaMapView() {
       app.innerHTML = '<div class="im-loading">Loading your team idea map…</div>';
       try {
         const r = await fetch('/api/fll/idea-map');
@@ -7282,7 +7672,7 @@
     }
 
     function imField(value, ph, onInput) {
-      return '<textarea class="im-input" rows="2" placeholder="' + escapeHtml(ph) +
+      return '<textarea class="im-input" rows="2" aria-label="' + escapeHtml(ph) + '" placeholder="' + escapeHtml(ph) +
         '" oninput="' + onInput + '">' + escapeHtml(value || '') + '</textarea>';
     }
 
@@ -7325,7 +7715,7 @@
       const shortlist = m.shortlist.length ? m.shortlist.map((p, i) => `
         <div class="im-pick">
           ${imField(p.text, 'Idea we kept', 'updatePick(' + i + ',\'text\',this.value)')}
-          <input class="im-owner" type="text" value="${escapeHtml(p.owner || '')}" placeholder="whose idea"
+          <input class="im-owner" type="text" value="${escapeHtml(p.owner || '')}" placeholder="whose idea" aria-label="Whose idea"
             oninput="updatePick(${i},'owner',this.value)">
           <button class="im-del" onclick="removePick(${i})" aria-label="Remove">✕</button>
         </div>`).join('')
@@ -7340,7 +7730,7 @@
           </div>
 
           <div class="im-tier">
-            <div class="im-tier-head"><span class="im-tier-tag">Step 1</span> Everyone's ideas <span class="im-tier-count">${totalIdeas}</span></div>
+            <h2 class="im-tier-head"><span class="im-tier-tag">Step 1</span> Everyone's ideas <span class="im-tier-count">${totalIdeas}</span></h2>
             <div class="im-members">${memberCols}</div>
             ${step1Note}
           </div>
@@ -7348,7 +7738,7 @@
           <div class="im-arrow">↓ narrowed down to</div>
 
           <div class="im-tier">
-            <div class="im-tier-head"><span class="im-tier-tag">Step 1b</span> The team's best five <span class="im-tier-count">${m.shortlist.length}</span></div>
+            <h2 class="im-tier-head"><span class="im-tier-tag">Step 1b</span> The team's best five <span class="im-tier-count">${m.shortlist.length}</span></h2>
             <div class="im-picks">${shortlist}</div>
             ${m.shortlist.length < 8 ? '<button class="im-add" onclick="addPick()">＋ Add one</button>' : ''}
           </div>
@@ -7356,17 +7746,17 @@
           <div class="im-arrow">↓ and we chose</div>
 
           <div class="im-tier im-final">
-            <div class="im-tier-head"><span class="im-tier-tag">Step 2</span> The problem we are solving</div>
+            <h2 class="im-tier-head"><span class="im-tier-tag">Step 2</span> The problem we are solving</h2>
             ${imField(m.chosen.text, 'The one problem your team picked', 'updateChosen(\'text\',this.value)')}
             ${imField(m.chosen.note, 'Why this one? (optional)', 'updateChosen(\'note\',this.value)')}
           </div>
 
           <div class="im-tier">
-            <div class="im-tier-head"><span class="im-tier-tag">Ideas</span> Solutions we thought of <span class="im-tier-count">${(m.solutions || []).length}</span></div>
+            <h2 class="im-tier-head"><span class="im-tier-tag">Ideas</span> Solutions we thought of <span class="im-tier-count">${(m.solutions || []).length}</span></h2>
             ${(m.solutions || []).length ? m.solutions.map((sol, i) => `
               <div class="im-pick">
                 ${imField(sol.text, 'A solution idea', 'updateSolution(' + i + ',\'text\',this.value)')}
-                <input class="im-owner" type="text" value="${escapeHtml(sol.owner || '')}" placeholder="whose idea"
+                <input class="im-owner" type="text" value="${escapeHtml(sol.owner || '')}" placeholder="whose idea" aria-label="Whose idea"
                   oninput="updateSolution(${i},'owner',this.value)">
                 <button class="im-del" onclick="removeSolution(${i})" aria-label="Remove">✕</button>
               </div>`).join('')
@@ -7375,17 +7765,17 @@
           </div>
 
           <div class="im-tier">
-            <div class="im-tier-head"><span class="im-tier-tag">Who</span> Who we are solving this for</div>
+            <h2 class="im-tier-head"><span class="im-tier-tag">Who</span> Who we are solving this for</h2>
             ${imField(m.audience.text, 'Who has this problem? Be specific — "kids at Lincoln Park" beats "people"', 'updateAudience(\'text\',this.value)')}
             ${imField(m.audience.note, 'How do you know it is a real problem for them? (optional)', 'updateAudience(\'note\',this.value)')}
           </div>
 
           <div class="im-tier">
-            <div class="im-tier-head"><span class="im-tier-tag">Research</span> What we found out <span class="im-tier-count">${m.research.length}</span></div>
+            <h2 class="im-tier-head"><span class="im-tier-tag">Research</span> What we found out <span class="im-tier-count">${m.research.length}</span></h2>
             ${m.research.length ? m.research.map((r, i) => `
               <div class="im-pick">
                 ${imField(r.text, 'Something you learned', 'updateResearch(' + i + ',\'text\',this.value)')}
-                <input class="im-owner" type="text" value="${escapeHtml(r.source || '')}" placeholder="where from"
+                <input class="im-owner" type="text" value="${escapeHtml(r.source || '')}" placeholder="where from" aria-label="Where you found this"
                   oninput="updateResearch(${i},'source',this.value)">
                 <button class="im-del" onclick="removeResearch(${i})" aria-label="Remove">✕</button>
               </div>`).join('')
@@ -7427,12 +7817,8 @@
     function removeResearch(i) { ideaMap.research.splice(i, 1); imTouch(); showIdeaMap(); }
     function addResearch() { ideaMap.research.push({ id: 'new-' + Date.now(), text: '', source: '' }); imTouch(); showIdeaMap(); }
 
-    function closeIdeaMap() {
-      if (ideaMapDirty && !confirm('You have unsaved changes to the idea map. Leave without saving?')) return;
-      ideaMap = null; ideaMapDirty = false;
-      app.innerHTML = renderLanding(latestData);
-      wireListeners();
-    }
+    // The unsaved-changes question is asked by the router on the way out.
+    function closeIdeaMap() { goBack({ kind: 'home' }); }
 
     async function saveIdeaMap() {
       const msg = document.getElementById('im-msg');
@@ -7466,15 +7852,18 @@
 
       let cells = '';
       let monthHasEvents = false;
+      const monthItems = [];
       for (let i = 0; i < firstDow; i++) cells += '<div class="cal-cell empty"></div>';
       for (let d = 1; d <= daysInMonth; d++) {
         const key = `${year}-${String(month + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         const dayEvents = events[key] || [];
         if (dayEvents.length) monthHasEvents = true;
+        dayEvents.forEach(ev => monthItems.push({ d, ev }));
         const chips = dayEvents.map(ev => {
           const cls = `cal-chip ${ev.type}`;
-          const click = ev.taskId ? `onclick="openTask(this.dataset.hTask)" data-h-task="${escapeHtml(ev.taskId)}"` : '';
-          return `<div class="${cls}" ${click} title="${escapeHtml(ev.label)}">${escapeHtml(ev.label)}</div>`;
+          return ev.taskId
+            ? `<a class="${cls}" href="${escapeHtml(routeHash({ kind: 'task', id: ev.taskId }))}" title="${escapeHtml(ev.label)}">${escapeHtml(ev.label)}</a>`
+            : `<div class="${cls}" title="${escapeHtml(ev.label)}">${escapeHtml(ev.label)}</div>`;
         }).join('');
         cells += `
           <div class="cal-cell ${key === todayKey ? 'today' : ''} ${dayEvents.length ? 'has-events' : ''}">
@@ -7487,9 +7876,9 @@
       return `
         <div class="cal-card">
           <div class="cal-header">
-            <button class="cal-nav" onclick="changeCalMonth(-1)">‹</button>
-            <div class="cal-month-label">${escapeHtml(monthLabel)}</div>
-            <button class="cal-nav" onclick="changeCalMonth(1)">›</button>
+            <button class="cal-nav" type="button" onclick="changeCalMonth(-1)" aria-label="Previous month">‹</button>
+            <div class="cal-month-label" aria-live="polite">${escapeHtml(monthLabel)}</div>
+            <button class="cal-nav" type="button" onclick="changeCalMonth(1)" aria-label="Next month">›</button>
           </div>
           <div class="cal-legend">
             <span class="cal-legend-item"><span class="cal-dot due"></span>Assignment due</span>
@@ -7501,6 +7890,17 @@
             ${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => `<div class="cal-dow">${d}</div>`).join('')}
           </div>
           <div class="cal-grid">${cells}</div>
+          ${monthItems.length ? `
+          <ul class="cal-list" aria-label="Dates in ${escapeHtml(monthLabel)}">
+            ${monthItems.map(({ d, ev }) => `
+              <li class="cal-list-item ${ev.type}">
+                <span class="cal-list-date">${escapeHtml(new Date(year, month, d).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }))}</span>
+                ${ev.taskId
+                  ? `<a class="cal-list-link" href="${escapeHtml(routeHash({ kind: 'task', id: ev.taskId }))}">${escapeHtml(ev.label)}</a>`
+                  : `<span class="cal-list-text">${escapeHtml(ev.label)}</span>`}
+                ${ev.type === 'done' ? '<span class="cal-list-done">Done</span>' : ''}
+              </li>`).join('')}
+          </ul>` : ''}
           ${monthHasEvents ? '' : `<div class="cal-empty">Nothing is planned in ${escapeHtml(monthLabel)}. Tap › to look at the months ahead.</div>`}
         </div>
       `;
@@ -7524,10 +7924,10 @@
         const availableCategories = CATEGORIES.filter(item => item.id !== cat.id && !item.comingSoon && !areaDisabled(item.id)).slice(0, 2);
         return `
           <div class="detail-header" style="--cat-color:${cat.color};--cat-light:${cat.colorLight};--cat-border:${cat.colorBorder};">
-            <button class="back-btn" onclick="openCategory(null)">← Back</button>
-            <div class="detail-header-icon">${cat.icon}</div>
+            <button class="back-btn" type="button" onclick="goBack({ kind: 'home' })">← Back</button>
+            <div class="detail-header-icon" aria-hidden="true">${cat.icon}</div>
             <div>
-              <div class="detail-header-label">${escapeHtml(cat.label)}</div>
+              <h1 class="detail-header-label">${escapeHtml(cat.label)}</h1>
               <div class="detail-header-desc">${escapeHtml(cat.desc)}</div>
             </div>
           </div>
@@ -7558,25 +7958,25 @@
       const sortedCatTasks = catTasks.slice().sort((a,b) => String(a.dueDate||'').localeCompare(String(b.dueDate||'')));
       const ctxIcon = { lab:'🔬', home:'🏠', class:'📋' };
       const ideaMapCard = categoryId === 'innovation' ? `
-        <div class="im-entry" onclick="openIdeaMap()">
+        <a class="im-entry" href="#/idea-map">
           <span class="im-entry-icon">🌳</span>
           <span class="im-entry-body">
             <span class="im-entry-title">Your team's idea map</span>
             <span class="im-entry-sub">See every idea your team brainstormed, the five you kept, and the one you chose — and edit any of it.</span>
           </span>
-          <span class="im-entry-go">Open →</span>
-        </div>` : '';
+          <span class="im-entry-go" aria-hidden="true">Open →</span>
+        </a>` : '';
 
       const taskCards = sortedCatTasks.length
         ? `<div class="preseason-list">${sortedCatTasks.map(task => {
             const ctx = ctxIcon[task.workContext] || '📌';
             return `
-              <div class="preseason-task" data-status="${escapeHtml(task.status)}" onclick="openTask(this.dataset.hTask)" data-h-task="${escapeHtml(task.id)}">
+              <div class="preseason-task" data-status="${escapeHtml(task.status)}">
                 <div class="preseason-task-accent"></div>
                 <div class="preseason-task-body">
                   <div class="preseason-task-left">
                     <div class="preseason-task-row1">
-                      <div class="preseason-task-title">${escapeHtml(task.title)}</div>
+                      <a class="preseason-task-title preseason-task-link" href="${escapeHtml(routeHash({ kind: 'task', id: task.id }))}">${escapeHtml(task.title)}</a>
                       <span class="preseason-task-type-badge">${{ video:'🎬 Video', lesson:'📖 Lesson', submission:'📤 Submission', journal:'📓 Journal', tracker:'🔧 Tracker' }[task.type] || '📋 Task'}</span>
                     </div>
                     <div class="preseason-task-meta">
@@ -7585,12 +7985,12 @@
                       ${taskRowBadge(task.id)}
                     </div>
                   </div>
-                  <div class="preseason-task-right" onclick="event.stopPropagation()">
-                    <select class="preseason-status-select" data-val="${escapeHtml(task.status)}" data-task-status="${escapeHtml(task.id)}" onchange="this.dataset.val=this.value">
+                  <div class="preseason-task-right">
+                    <select class="preseason-status-select" data-val="${escapeHtml(task.status)}" data-task-status="${escapeHtml(task.id)}" aria-label="Status for ${escapeHtml(task.title)}" onchange="this.dataset.val=this.value">
                       ${Object.entries(statusLabels).map(([v,l]) => `<option value="${v}" ${task.status===v?'selected':''}>${l}</option>`).join('')}
                     </select>
                   </div>
-                  <div class="preseason-task-chevron">›</div>
+                  <div class="preseason-task-chevron" aria-hidden="true">›</div>
                 </div>
               </div>`;
           }).join('')}</div>`
@@ -7601,10 +8001,10 @@
 
       return `
         <div class="detail-header" style="--cat-color:${cat.color};--cat-light:${cat.colorLight};--cat-border:${cat.colorBorder};">
-          <button class="back-btn" onclick="openCategory(null)">← Back</button>
-          <div class="detail-header-icon">${cat.icon}</div>
+          <button class="back-btn" type="button" onclick="goBack({ kind: 'home' })">← Back</button>
+          <div class="detail-header-icon" aria-hidden="true">${cat.icon}</div>
           <div>
-            <div class="detail-header-label">${escapeHtml(cat.label)}</div>
+            <h1 class="detail-header-label">${escapeHtml(cat.label)}</h1>
             <div class="detail-header-desc">${escapeHtml(cat.desc)}</div>
           </div>
           <div class="detail-header-counts">
@@ -7614,25 +8014,18 @@
         </div>
 
         ${ideaMapCard}
-        <div class="cat-grid-title">📋 Pre-Season Assignments — ${escapeHtml(cat.label)}</div>
+        <h2 class="cat-grid-title">📋 Pre-Season Assignments — ${escapeHtml(cat.label)}</h2>
         <div class="detail-task-list">${taskCards}</div>
 
         <div class="detail-log-section">
-          <div class="detail-log-title">📝 Log your work</div>
+          <h2 class="detail-log-title">📝 Log your work</h2>
           ${renderWorkLogForm(catTasks.length ? catTasks : tasks)}
         </div>
       `;
     }
 
     function openCategory(id) {
-      activeCategory = id;
-      if (latestData) {
-        app.innerHTML = id
-          ? renderCategoryDetail(latestData, id)
-          : renderLanding(latestData);
-        wireListeners();
-        if (!id) window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      navigate(id ? { kind: 'area', id } : { kind: 'home' });
     }
 
     function wireListeners() {
@@ -7658,13 +8051,18 @@
       setTimeout(checkForNewGrades, 900);   // after the page settles
       setTimeout(loadCoachFiles, 0);        // fills its slot once the page is up
 
-      app.innerHTML = activeTask
-        ? renderTaskDetail(data, activeTask)
-        : activeCategory
-          ? renderCategoryDetail(data, activeCategory)
-          : renderLanding(data);
-
-      wireListeners();
+      if (renderedRouteKey === null) {
+        applyRoute();                 // first render: the view named in the URL
+      } else if (renderedRouteKey !== 'idea-map:') {
+        // fresh data for the view already on screen (the idea map keeps its
+        // own copy and unsaved edits, so it is left alone)
+        app.innerHTML = activeTask
+          ? renderTaskDetail(data, activeTask)
+          : activeCategory
+            ? renderCategoryDetail(data, activeCategory)
+            : renderLanding(data);
+        wireListeners();
+      }
     }
 
     // ── Preview banner, error card and read-only lock ─────────────────────
@@ -8008,9 +8406,34 @@
       // The button is hidden in a preview; if it is reached anyway, the coach
       // goes back to their own dashboard instead of the student sign-in page.
       if (PREVIEW) { window.location.href = '/fll-hub/coach'; return; }
-      await fetch('/api/fll/logout', { method: 'POST' });
+      logoutButton.disabled = true;
+      try { await flushAutosave(); } catch (e) {}   // nothing typed is lost
+      try { await fetch('/api/fll/logout', { method: 'POST' }); } catch (e) {}
+      clearStudentStorage();
       window.location.href = '/fll-hub/login';
     });
+
+    // Shared school devices: the next child must not see this one's answers,
+    // photos, grade pop-ups or simulator progress. Everything here is a copy
+    // of something the server keeps (answers autosave as a server draft), or
+    // is only a device-side nicety. Core Values journal and iteration tracker
+    // entries are NOT cleared: they live only on this device until sent.
+    const STUDENT_STORAGE_PREFIXES = [
+      'bioglow-task-submission-',
+      'bioglow-video-reflection-',
+      'bioglow-seen-grades',
+      'bioglow-sim-levels',
+      'bioglow-sim-config'
+    ];
+    function clearStudentStorage() {
+      try {
+        // list first, then remove: key order can shift while removing
+        const keys = [];
+        for (let i = 0; i < localStorage.length; i++) keys.push(localStorage.key(i));
+        keys.filter(k => k && STUDENT_STORAGE_PREFIXES.some(p => k.indexOf(p) === 0))
+          .forEach(k => localStorage.removeItem(k));
+      } catch (e) {}
+    }
 
     setInterval(pollLive, 3000);
     watchPreviewRenders();
