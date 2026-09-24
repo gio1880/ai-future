@@ -20,13 +20,15 @@ const summerInquiryFile = path.join(platformDataDir, 'summer-inquiries.json');
 const summerInquiryDir = path.dirname(summerInquiryFile);
 const activeVisitorWindowMs = 2 * 60 * 1000;
 const summerAdminUser = process.env.SUMMER_LEADS_ADMIN_USER || 'admin';
-const summerAdminPassword = process.env.SUMMER_LEADS_ADMIN_PASSWORD || 'change-me';
+// No built-in fallback: the old 'change-me' was readable in this public source,
+// so an unset variable opened the leads pages to anyone. Unset now means locked.
+const summerAdminPassword = process.env.SUMMER_LEADS_ADMIN_PASSWORD || '';
 const summerTrafficFile = path.join(platformDataDir, 'summer-traffic.json');
 const summerTrafficDir = path.dirname(summerTrafficFile);
 const parentInquiryFile = path.join(platformDataDir, 'parent-inquiries.json');
 const parentInquiryDir = path.dirname(parentInquiryFile);
 const parentAdminUser = process.env.PARENT_LEADS_ADMIN_USER || 'admin';
-const parentAdminPassword = process.env.PARENT_LEADS_ADMIN_PASSWORD || 'change-me';
+const parentAdminPassword = process.env.PARENT_LEADS_ADMIN_PASSWORD || '';
 const fllHubDir = path.join(__dirname, 'robotics lab', 'FLL Teams', '2026-2027-bioglow');
 const fllSeedDataDir = path.join(fllHubDir, 'data');
 const fllHubDataDir = process.env.FLL_DATA_DIR || path.join(platformDataDir, 'fll-hub', '2026-2027-bioglow', 'data');
@@ -5251,12 +5253,12 @@ function requireSummerAdmin(req, res, next) {
 	}
 
 	const headerPassword = typeof req.headers['x-admin-password'] === 'string' ? req.headers['x-admin-password'] : '';
-	if (headerPassword && headerPassword === summerAdminPassword) {
+	if (summerAdminPassword && headerPassword && headerPassword === summerAdminPassword) {
 		return next();
 	}
 
 	const credentials = getBasicAuthCredentials(req);
-	const isAuthorized = credentials && credentials.username === summerAdminUser && credentials.password === summerAdminPassword;
+	const isAuthorized = Boolean(summerAdminPassword) && credentials && credentials.username === summerAdminUser && credentials.password === summerAdminPassword;
 	if (isAuthorized) {
 		return next();
 	}
@@ -5271,12 +5273,12 @@ function requireParentAdmin(req, res, next) {
 	}
 
 	const headerPassword = typeof req.headers['x-admin-password'] === 'string' ? req.headers['x-admin-password'] : '';
-	if (headerPassword && headerPassword === parentAdminPassword) {
+	if (parentAdminPassword && headerPassword && headerPassword === parentAdminPassword) {
 		return next();
 	}
 
 	const credentials = getBasicAuthCredentials(req);
-	const isAuthorized = credentials && credentials.username === parentAdminUser && credentials.password === parentAdminPassword;
+	const isAuthorized = Boolean(parentAdminPassword) && credentials && credentials.username === parentAdminUser && credentials.password === parentAdminPassword;
 	if (isAuthorized) {
 		return next();
 	}

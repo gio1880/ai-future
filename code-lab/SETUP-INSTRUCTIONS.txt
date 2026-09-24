@@ -38,7 +38,7 @@ STEP 3: Log Into the Admin Panel
 1. Open your browser and go to: http://localhost:3000/admin
 2. Log in with:
    Username: teacher
-   Password: pylearn2026
+   Password: set by CODELAB_TEACHER_PASSWORD (or shown once in the first-boot log)
 
 -----------------------------------------------------
 STEP 4: Add Your Students
@@ -93,8 +93,8 @@ In the admin panel (http://localhost:3000/admin), you can:
    DEFAULT ACCOUNTS
 =====================================================
 
-Teacher:    username=teacher     password=pylearn2026
-Developer:  username=developer   password=devreview2026
+Teacher:    username=teacher     password=from CODELAB_TEACHER_PASSWORD
+Developer:  username=developer   password=from CODELAB_DEVELOPER_PASSWORD
 
 The developer account is for reviewing lessons. When
 logged in as developer:

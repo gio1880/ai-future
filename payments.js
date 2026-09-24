@@ -29,7 +29,7 @@
  *   GOOGLE_SHEETS_ID
  *   GOOGLE_SERVICE_ACCOUNT_JSON (stringified JSON service-account credentials)
  *   PAYMENTS_ADMIN_USER         (default: "admin")
- *   PAYMENTS_ADMIN_PASSWORD     (default: "change-me")
+ *   PAYMENTS_ADMIN_PASSWORD     (required — no default; unset means the admin page is locked)
  *   SITE_BASE_URL               (default: request host; used for success/cancel URLs)
  *   META_PIXEL_ID
  *   META_CONVERSIONS_API_ACCESS_TOKEN
@@ -48,7 +48,9 @@ const PAYMENTS_FILE = path.join(PAYMENTS_DATA_DIR, 'payments.json');
 const PAYMENTS_DIR = path.dirname(PAYMENTS_FILE);
 
 const ADMIN_USER = process.env.PAYMENTS_ADMIN_USER || 'admin';
-const ADMIN_PASSWORD = process.env.PAYMENTS_ADMIN_PASSWORD || 'change-me';
+// No built-in fallback: 'change-me' was public, so an unset variable opened
+// payment records to anyone. Unset now means locked.
+const ADMIN_PASSWORD = process.env.PAYMENTS_ADMIN_PASSWORD || '';
 const META_PIXEL_ID = process.env.META_PIXEL_ID || '4538248653113103';
 const META_GRAPH_API_VERSION = process.env.META_GRAPH_API_VERSION || 'v25.0';
 
@@ -139,7 +141,7 @@ function basicAuth(req, res, next) {
       if (idx !== -1) {
         const user = decoded.slice(0, idx);
         const pass = decoded.slice(idx + 1);
-        if (user === ADMIN_USER && pass === ADMIN_PASSWORD) return next();
+        if (ADMIN_PASSWORD && user === ADMIN_USER && pass === ADMIN_PASSWORD) return next();
       }
     } catch (_) {}
   }
