@@ -1048,6 +1048,66 @@
       input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), select, textarea { min-height: 44px; }
       .visibility-row input[type="checkbox"], .visibility-toggle input, .mw-check input { width: 22px; height: 22px; }
     }
+    /* -- View switcher: My classes / a location / All (display only) -- */
+    .page-view { font-size: var(--fs-sm); font-weight: 800; color: var(--t-ink); margin: var(--sp-2) 0 0; }
+    .vw-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-4); }
+    .vw-seg { display: inline-flex; flex-wrap: wrap; gap: var(--sp-1); background: var(--s-card);
+      border: 1.5px solid var(--s-line); border-radius: var(--r-pill); padding: var(--sp-1); }
+    .vw-btn { border: 0; background: none; font: inherit; font-size: var(--fs-meta); font-weight: 700; color: var(--t-muted);
+      padding: 6px 14px; border-radius: var(--r-pill); cursor: pointer; }
+    .vw-btn[aria-pressed="true"] { background: var(--btn-solid); color: #fff; }
+    .vw-btn:not([aria-pressed="true"]):hover { color: #1a73e8; }
+    .vw-note { flex: 1 1 280px; display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); font-size: var(--fs-sm);
+      color: var(--t-body); background: var(--tint-amber); border-radius: var(--r-3); padding: var(--sp-2) var(--sp-3); }
+    .vw-note[hidden] { display: none; }
+    /* classes panel */
+    .cls-panel { margin-bottom: var(--sp-6); }
+    .cls-day { font-size: var(--fs-caption); font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+      color: var(--t-faint); margin: var(--sp-4) 0 var(--sp-2); }
+    .cls-panel .ov-card-head + .cls-day { margin-top: 0; }
+    .cls-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--sp-3); }
+    .cls-card { background: var(--s-raised); border: 1px solid var(--s-line); border-radius: var(--r-3); padding: var(--sp-4);
+      display: flex; flex-direction: column; gap: var(--sp-3); min-width: 0; }
+    .cls-card.is-today { border-color: #1a73e8; }
+    .cls-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-3); }
+    .cls-name { font-size: var(--fs-body); font-weight: 900; color: var(--t-ink); }
+    .cls-meta { font-size: var(--fs-caption); color: var(--t-muted); margin-top: 2px; }
+    .cls-stats, .cls-actions { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+    .cls-stats:empty { display: none; }
+    .cls-notes { font-size: var(--fs-caption); color: var(--t-body); }
+    .cls-card .member-chip { padding: 5px 12px; }
+    .member-chip.is-owing { box-shadow: inset 0 0 0 1.5px #d93025; }
+    .cls-dot { width: 8px; height: 8px; border-radius: 50%; background: #1e8e3e; flex: none; }
+    .cls-focus { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); font-size: var(--fs-sm); color: var(--t-body);
+      background: var(--tint-blue); border-radius: var(--r-3); padding: var(--sp-2) var(--sp-3); margin-bottom: var(--sp-3); }
+    .cls-teamfields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--sp-2); margin-bottom: 14px; }
+    .cls-field > span { display: block; font-size: var(--fs-caption); font-weight: 800; color: var(--t-muted); margin-bottom: 2px; }
+    .cls-field select { width: 100%; padding: 6px 8px; border: 1.5px solid var(--s-line-2); border-radius: var(--r-2);
+      background: var(--s-card); color: var(--t-ink); font: inherit; font-size: var(--fs-meta); }
+    /* schedule editor */
+    .sch-dialog { max-width: 720px; max-height: calc(100vh - 32px); overflow: auto; }
+    .sch-row { display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-2) 0; border-bottom: 1px solid var(--s-line); }
+    .sch-row > div { flex: 1; min-width: 0; }
+    .sch-row .ov-row-meta { display: block; }
+    .sch-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 var(--sp-2); }
+    .sch-checks { display: flex; flex-wrap: wrap; gap: 0 var(--sp-4); }
+    .sch-search { width: 100%; padding: 8px 10px; border: 1.5px solid var(--s-line-2); border-radius: var(--r-2);
+      background: var(--s-card); color: var(--t-ink); font: inherit; }
+    .sch-students { max-height: 260px; overflow: auto; border: 1px solid var(--s-line); border-radius: var(--r-2);
+      padding: var(--sp-1) var(--sp-3); margin-top: var(--sp-2); }
+    .sch-group[hidden], .sch-st[hidden] { display: none; }
+    .sch-group-name { font-size: var(--fs-caption); font-weight: 800; color: var(--t-faint); text-transform: uppercase; margin-top: var(--sp-2); }
+    .sch-whole { text-transform: none; color: var(--cd-green-text); }
+    .sch-st:has(input:disabled) { opacity: 0.55; }
+    @media (max-width: 640px) {
+      .cls-grid, .cls-teamfields { grid-template-columns: minmax(0, 1fr); }
+      .sch-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+      .sch-row { flex-wrap: wrap; }
+      .sch-row > div { flex-basis: 100%; }
+      .vw-seg { display: flex; width: 100%; }
+      .vw-btn { flex: 1 1 auto; padding: 6px 10px; }
+    }
+    @media (pointer: coarse) { .vw-btn { min-height: 44px; } }
   </style>
   <link rel="stylesheet" href="/assets/css/theme.css">
   <script>(function(){try{var t=localStorage.getItem("af-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
@@ -1073,6 +1133,7 @@
     <div class="page-head">
       <h1 class="page-title">Team &amp; Roster Management</h1>
       <p class="page-sub">Manage your returning and new teams, import rosters, and generate student logins for the 2026-2027 BIOGLOW season.</p>
+      <p class="page-view" id="viewSummary" aria-live="polite"></p>
     </div>
 
     <div class="dash">
@@ -1087,6 +1148,10 @@
       </nav>
 
       <div class="dash-main">
+    <div class="vw-bar">
+      <div class="vw-seg" id="viewButtons" role="group" aria-label="Whose classes to show"></div>
+      <div class="vw-note" id="viewNote" role="status" hidden></div>
+    </div>
 
     <div class="subtabs" data-area="teams" hidden>
       <button class="tab-btn" data-tab="teams" onclick="showTab('teams')">🏆 Teams</button>
@@ -1118,6 +1183,7 @@
     </div>
 
     <div class="panel active" id="panel-overview">
+      <div id="ovClasses"></div>
       <div class="ov-stats" id="ovStats"></div>
       <div id="ovNext"></div>
       <div class="ov-grid">
@@ -1401,6 +1467,7 @@
           </div>
           <button class="visibility-bulk-btn" onclick="loadSubmissions(true)">↻ Refresh</button>
         </div>
+        <div id="subClassChip"></div>
         <div id="submissionsSummary" class="form-msg"></div>
         <div id="submissionsWrap">Loading…</div>
       </div>
@@ -1421,6 +1488,7 @@
           </div>
           <label class="mw-check"><input type="checkbox" id="mwOnlyMissing" onchange="renderMissingWork()" checked> Only assignments someone still owes</label>
         </div>
+        <div id="mwClassChip"></div>
         <div class="form-msg" id="mwSummary"></div>
         <div id="mwWrap">Loading…</div>
         <div class="mw-detail" id="mwDetail" aria-live="polite"></div>
@@ -1577,6 +1645,10 @@
     </form>
   </dialog>
 
+  <dialog class="cd-dialog sch-dialog" id="scheduleDialog" aria-labelledby="schTitle">
+    <div id="schBody"></div>
+  </dialog>
+
   <script>
 
     // ── Light / dark theme ──────────────────────────────────────────────
@@ -1672,6 +1744,7 @@
       if (id === 'logins') loadLoginStatus();
       // only poll while the tab is actually being looked at
       if (id === 'online') startOnlinePolling(); else stopOnlinePolling();
+      renderViewBar();
     }
 
 
@@ -1989,8 +2062,8 @@
 
     function renderIdeaMaps() {
       const wrap = document.getElementById('ideaMapsWrap');
-      const maps = ideaMapsCache || [];
-      if (!maps.length) { wrap.innerHTML = '<div class="empty-note">No teams yet.</div>'; return; }
+      const maps = (ideaMapsCache || []).filter(row => teamInView(row.teamId));
+      if (!maps.length) { wrap.innerHTML = `<div class="empty-note">${(ideaMapsCache || []).length ? 'No teams in this view. Switch to All to see every map.' : 'No teams yet.'}</div>`; return; }
 
       wrap.innerHTML = maps.map((row) => {
         const open = ideaMapOpen.has(row.teamId);
@@ -2083,13 +2156,16 @@
       const summary = document.getElementById('loginSummary');
       const q = (document.getElementById('loginSearch').value || '').trim().toLowerCase();
 
-      const rows = loginStatusCache.students.filter(s =>
+      const inView = loginStatusCache.students.filter(s => studentInView(s.id));
+      const rows = inView.filter(s =>
         !q || s.name.toLowerCase().includes(q) || String(s.username).toLowerCase().includes(q));
+      const ready = inView.filter(s => s.ready).length;
+      const broken = inView.length - ready;
 
-      summary.textContent = loginStatusCache.brokenCount
-        ? `${loginStatusCache.readyCount} students can log in · ${loginStatusCache.brokenCount} cannot`
-        : `All ${loginStatusCache.readyCount} students can log in ✓`;
-      summary.className = loginStatusCache.brokenCount ? 'form-msg error' : 'form-msg success';
+      summary.textContent = broken
+        ? `${ready} students can log in · ${broken} cannot`
+        : `All ${ready} students in this view can log in ✓`;
+      summary.className = broken ? 'form-msg error' : 'form-msg success';
 
       if (!rows.length) { wrap.innerHTML = '<div class="sub-empty">No students match.</div>'; return; }
 
@@ -2286,8 +2362,11 @@
     }
 
     function renderOnline(data) {
-      document.getElementById('onlineNum').textContent = data.onlineCount;
-      document.getElementById('idleNum').textContent = data.idleCount;
+      onlineCache = data;
+      onlineFetchedAt = Date.now();
+      data = { ...data, students: (data.students || []).filter(s => studentInView(s.id)) };
+      document.getElementById('onlineNum').textContent = data.students.filter(s => s.status === 'online').length;
+      document.getElementById('idleNum').textContent = data.students.filter(s => s.status !== 'online').length;
       document.getElementById('onlineUpdated').textContent =
         'Updated ' + new Date(data.checkedAt).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit', second: '2-digit' });
 
@@ -2302,7 +2381,7 @@
 
       const wrap = document.getElementById('onlineWrap');
       if (!data.students.length) {
-        wrap.innerHTML = '<div class="sub-empty">No students in the hub right now.</div>';
+        wrap.innerHTML = `<div class="sub-empty">No students${viewScope.all ? '' : ' in this view'} in the hub right now.</div>`;
         return;
       }
 
@@ -2424,12 +2503,16 @@
     function buildSubmissionFilters() {
       const teamSel = document.getElementById('subTeamFilter');
       const lessonSel = document.getElementById('subLessonFilter');
-      const teams = [...new Set(submissionsCache.map(s => s.teamId))];
-      const lessons = [...new Set(submissionsCache.map(submissionLessonTitle))].sort();
+      const keepTeam = teamSel.value, keepLesson = lessonSel.value;
+      const scoped = submissionsCache.filter(s => studentInView(s.studentId));
+      const teams = [...new Set(scoped.map(s => s.teamId))];
+      const lessons = [...new Set(scoped.map(submissionLessonTitle))].sort();
       teamSel.innerHTML = '<option value="all">All teams</option>' +
         teams.map(id => `<option value="${escapeHtml(id)}">${escapeHtml(submissionTeamName({ teamId: id }))}</option>`).join('');
       lessonSel.innerHTML = '<option value="all">All assignments</option>' +
         lessons.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+      teamSel.value = teams.includes(keepTeam) ? keepTeam : 'all';
+      lessonSel.value = lessons.includes(keepLesson) ? keepLesson : 'all';
     }
 
     function renderSubmissions() {
@@ -2441,7 +2524,8 @@
       const search = (document.getElementById('subSearch').value || '').trim().toLowerCase();
 
       const readState = document.getElementById('subReadFilter').value;
-      const rows = submissionsCache
+      const scoped = submissionsCache.filter(s => studentInView(s.studentId) && inFocus(s.studentId));
+      const rows = scoped
         .filter(s => teamId === 'all' || s.teamId === teamId)
         .filter(s => lesson === 'all' || submissionLessonTitle(s) === lesson)
         .filter(s => !search || String(s.studentName || '').toLowerCase().includes(search))
@@ -2456,7 +2540,7 @@
 
       renderedSubIds = rows.map(s => s.id);
       summary.textContent = submissionsCache.length
-        ? `Showing ${rows.length} of ${submissionsCache.length} submission${submissionsCache.length !== 1 ? 's' : ''}.`
+        ? `Showing ${rows.length} of ${scoped.length} submission${scoped.length !== 1 ? 's' : ''}${viewScope.all && !focusClass ? '' : ' in this view'}.`
         : '';
       summary.className = 'form-msg';
       // reviewing something changes both the sidebar count and the Overview
@@ -2471,6 +2555,7 @@
           .map(s => s.studentId));
         const expected = (roster?.students || [])
           .filter(st => teamId === 'all' || st.teamId === teamId)
+          .filter(st => studentInView(st.id) && inFocus(st.id))
           .filter(st => st.active !== false && !mwIsDemo(st))
           .filter(st => !turnedIn.has(st.id));
         missingHtml = expected.length
@@ -3154,8 +3239,15 @@
       return m ? m[0].replace(/\s+/g, ' ').toUpperCase() : '';
     }
 
+    // Once this view has classes on the schedule, a session is a class;
+    // until then it is a team whose free-text meetingDays names the day.
+    function ovUsesClasses() { return viewScope.classes.length > 0; }
     function ovSessionsOn(weekday) {
-      return (roster && roster.teams || []).filter(t => ovTeamWeekdays(t).includes(weekday));
+      if (ovUsesClasses()) {
+        return viewScope.classes.filter(c => c.day === DAY_KEYS[weekday])
+          .sort((a, b) => String(a.start || '').localeCompare(String(b.start || '')));
+      }
+      return (roster && roster.teams || []).filter(t => teamInView(t.id) && ovTeamWeekdays(t).includes(weekday));
     }
 
     function ovNextSessionDate() {
@@ -3170,14 +3262,14 @@
 
     // the same test the Submitted Work filter uses for "needs another look"
     function ovNeedsReview() {
-      return (submissionsCache || []).filter(s => !(s.review && !s.review.stale));
+      return (submissionsCache || []).filter(s => studentInView(s.studentId) && !(s.review && !s.review.stale));
     }
 
     // Students the coach should look at: active students with nothing turned
     // in at all, plus anyone whose work carries a flag. Both are read off
     // the submissions list, not invented.
     function ovStudentsNeedingHelp() {
-      const students = (roster && roster.students || []).filter(s => s.active !== false);
+      const students = (roster && roster.students || []).filter(s => s.active !== false && studentInView(s.id));
       const subs = submissionsCache || [];
       const hasWork = new Set(subs.map(s => s.studentId));
       const flagged = new Set(subs.filter(s => s.flag).map(s => s.studentId));
@@ -3197,6 +3289,7 @@
         // team-01 holds the lesson TEMPLATES, not a real team — its due dates
         // are the curriculum's own, and "team-01" means nothing to a coach
         if (task.teamId === 'team-01') return;
+        if (!teamInView(task.teamId)) return;
         const known = (roster.teams || []).some(t => t.id === task.teamId);
         const key = `${task.title}|${String(task.dueDate).slice(0, 10)}|${task.teamId}`;
         if (seen.has(key)) return;
@@ -3214,7 +3307,7 @@
         if (region.predictedChampionship) items.push({ date: ovDateOnly(region.predictedChampionship), title: 'Championship (predicted)', meta: region.name || '', area: 'calendar' });
       });
       if (season.releaseDate) items.push({ date: ovDateOnly(season.releaseDate), title: `${season.name || 'Season'} game release`, meta: 'All teams', area: 'calendar' });
-      (roster && roster.teams || []).forEach(team => {
+      (roster && roster.teams || []).filter(team => teamInView(team.id)).forEach(team => {
         if (team.firstCompetition) items.push({ date: ovDateOnly(team.firstCompetition), title: 'First competition', meta: teamLabel(team.id), area: 'calendar' });
       });
       const upcoming = items.filter(i => i.date && i.date >= today).sort((a, b) => a.date - b.date);
@@ -3264,6 +3357,10 @@
       const statsEl = document.getElementById('ovStats');
       if (!statsEl) return;
       if (!roster) { statsEl.innerHTML = '<div class="ov-card"><div class="ov-stat-note">Loading…</div></div>'; return; }
+      renderMyClasses();
+      if (currentArea === 'overview') refreshOnlineForOverview();
+      // "missing this week" needs to know who each custom lesson is for
+      if (!ovAudiencesAsked) { ovAudiencesAsked = true; loadLessonAudiences().then(renderMyClasses); }
 
       const today = ovStartOfToday();
       const sessions = ovSessionsOn(today.getDay());
@@ -3308,7 +3405,17 @@
       const nextSession = sessions.length ? null : ovNextSessionDate();
       sessionsCard.innerHTML = `
         <div class="ov-card-head"><h2 class="ov-card-title">Today's sessions</h2></div>
-        ${sessions.length ? `<div class="ov-list">${sessions.map(team => {
+        ${sessions.length && ovUsesClasses() ? `<div class="ov-list">${sessions.map(c => {
+          const n = classStudentIds(c).size;
+          return `<button type="button" class="ov-row" data-cls="${escapeHtml(c.id)}" onclick="ovOpenClass(this.dataset.cls)">
+            <span class="ov-time">${escapeHtml(fmtClock(c.start) || 'Time not set')}</span>
+            <span class="ov-row-main">
+              <span class="ov-row-title">${escapeHtml(c.name || 'Class')}</span>
+              <span class="ov-row-meta">${escapeHtml([locationLabel(c.location), plural(n, 'student')].filter(Boolean).join(' · '))}</span>
+            </span>
+            <span class="ov-chip wait">See class</span>
+          </button>`;
+        }).join('')}</div>` : sessions.length ? `<div class="ov-list">${sessions.map(team => {
           const time = ovTeamTime(team);
           return `<button type="button" class="ov-row" data-team="${escapeHtml(team.id)}" onclick="ovOpenTeam(this.dataset.team)">
             <span class="ov-time">${escapeHtml(time || 'Time not set')}</span>
@@ -3320,7 +3427,7 @@
           </button>`;
         }).join('')}</div>` : `
           <div class="ov-empty">
-            No sessions today.${nextSession ? ` Next session: ${escapeHtml(ovDayLabel(nextSession))}.` : ' No meeting days are set on any team yet.'}
+            No sessions today.${nextSession ? ` Next session: ${escapeHtml(ovDayLabel(nextSession))}.` : ovUsesClasses() ? '' : ' No meeting days are set on any team in this view yet.'}
             <div class="ov-empty-actions"><button type="button" class="btn-ghost" onclick="showArea('calendar')">Open the calendar</button></div>
           </div>`}`;
 
@@ -3349,6 +3456,492 @@
           </div>`}`;
     }
 
+    // ── Views: My classes · a location · All ──────────────────────────────
+    // A VIEW, not access control: it only decides which teams and students
+    // the lists show, and nothing saved ever changes because of it. Anyone
+    // can switch to All. classes / coaches / me may be missing on an older
+    // server, so every read treats a missing field as empty.
+    const VIEW_LOCATIONS = [['queens', 'Queens'], ['hartsdale', 'Hartsdale'], ['brooklyn', 'Brooklyn']];
+    const DAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+    let currentView = 'mine';
+    let viewLoaded = false;
+    let viewScope = { all: true, empty: false, classes: [], teamIds: new Set(), studentIds: new Set() };
+    let focusClass = null;          // one class's students, picked from its card
+    let onlineCache = null;         // last /live-students answer, shared with the class cards
+    let onlineFetchedAt = 0;
+    let ovAudiencesAsked = false;
+
+    function rosterClasses() { return Array.isArray(roster?.classes) ? roster.classes.filter(c => c && c.id) : []; }
+    function rosterCoaches() { return Array.isArray(roster?.coaches) ? roster.coaches.filter(c => c && c.username) : []; }
+    function rosterMe() {
+      const me = roster?.me || {};
+      return { username: me.username || roster?.user?.username || '', name: me.name || roster?.user?.name || '', isOwner: !!me.isOwner };
+    }
+    // the coach picker never comes up empty: an older server sends no list
+    function coachChoices() {
+      const list = rosterCoaches();
+      const me = rosterMe();
+      return list.length ? list.slice() : (me.username ? [{ username: me.username, name: me.name || me.username }] : []);
+    }
+    function locationLabel(id) { const l = VIEW_LOCATIONS.find(x => x[0] === id); return l ? l[1] : ''; }
+    function coachName(username) { const c = coachChoices().find(x => x.username === username); return c ? (c.name || c.username) : username; }
+    function dayName(key) { const i = DAY_KEYS.indexOf(key); return i < 0 ? '' : OV_WEEKDAYS[i]; }
+    function fmtClock(hhmm) {
+      const m = /^(\d{1,2}):(\d{2})$/.exec(String(hhmm || ''));
+      if (!m) return '';
+      const h = Number(m[1]);
+      return `${h % 12 || 12}:${m[2]} ${h >= 12 ? 'PM' : 'AM'}`;
+    }
+    function classTime(c) {
+      const a = fmtClock(c.start), b = fmtClock(c.end);
+      return a && b ? `${a} – ${b}` : a;
+    }
+    function classById(id) { return rosterClasses().find(c => c.id === id) || null; }
+
+    // a class's students: active students on its whole teams plus the ones
+    // added one by one, each counted once
+    function classStudentIds(c) {
+      const teams = new Set(Array.isArray(c.teamIds) ? c.teamIds : []);
+      const extra = new Set(Array.isArray(c.studentIds) ? c.studentIds : []);
+      return new Set((roster?.students || [])
+        .filter(s => s.active !== false && (teams.has(s.teamId) || extra.has(s.id))).map(s => s.id));
+    }
+    function classStudents(c) {
+      const ids = classStudentIds(c);
+      return (roster?.students || []).filter(s => ids.has(s.id));
+    }
+
+    function viewStorageKey() { return 'cd-view:' + (rosterMe().username || 'coach'); }
+    function loadSavedView() {
+      let saved = '';
+      try { saved = localStorage.getItem(viewStorageKey()) || ''; } catch (e) { /* private mode */ }
+      currentView = ['mine', 'all', ...VIEW_LOCATIONS.map(l => l[0])].includes(saved) ? saved : 'mine';
+    }
+
+    // computed once per render; every list below asks teamInView / studentInView
+    function computeScope() {
+      const classes = rosterClasses();
+      const teams = roster?.teams || [];
+      const students = roster?.students || [];
+      if (currentView === 'all') {
+        viewScope = { all: true, empty: false, classes, teamIds: new Set(teams.map(t => t.id)), studentIds: new Set(students.map(s => s.id)) };
+        return;
+      }
+      let picked, coreTeams;
+      if (currentView === 'mine') {
+        const me = rosterMe().username;
+        picked = me ? classes.filter(c => (c.coaches || []).includes(me)) : [];
+        coreTeams = me ? teams.filter(t => t.leadCoach === me) : [];
+      } else {
+        picked = classes.filter(c => c.location === currentView);
+        coreTeams = teams.filter(t => t.location === currentView);
+      }
+      const teamIds = new Set(coreTeams.map(t => t.id));
+      picked.forEach(c => (c.teamIds || []).forEach(id => teamIds.add(id)));
+      const studentIds = new Set();
+      students.forEach(s => { if (teamIds.has(s.teamId)) studentIds.add(s.id); });
+      picked.forEach(c => classStudentIds(c).forEach(id => studentIds.add(id)));
+      // a mixed class brings each team it draws from into the team lists
+      students.forEach(s => { if (studentIds.has(s.id) && s.teamId) teamIds.add(s.teamId); });
+      viewScope = { all: false, empty: !picked.length && !coreTeams.length, classes: picked, teamIds, studentIds };
+    }
+
+    function teamInView(teamId) { return viewScope.all || viewScope.teamIds.has(teamId); }
+    function studentInView(studentId) { return viewScope.all || viewScope.studentIds.has(studentId); }
+    // pickers keep the team already chosen in them even when it is out of view
+    function viewTeams(keepId) { return (roster?.teams || []).filter(t => teamInView(t.id) || (keepId && t.id === keepId)); }
+    function viewLabel() {
+      if (currentView === 'mine') return 'My classes';
+      if (currentView === 'all') return 'All locations';
+      return locationLabel(currentView);
+    }
+
+    function renderViewBar() {
+      const seg = document.getElementById('viewButtons');
+      if (!seg || !roster) return;
+      const views = [['mine', 'My classes'], ...VIEW_LOCATIONS, ['all', 'All']];
+      seg.innerHTML = views.map(([id, label]) =>
+        `<button type="button" class="vw-btn" data-view="${id}" aria-pressed="${id === currentView}" onclick="setView(this.dataset.view)">${label}</button>`).join('');
+      const active = (roster.students || []).filter(s => s.active !== false && studentInView(s.id)).length;
+      document.getElementById('viewSummary').textContent =
+        `${viewLabel()} · ${plural(viewScope.classes.length, 'class', 'classes')} · ${plural(active, 'student')}`;
+      // the Overview shows its own copy of this note in the classes panel
+      const note = document.getElementById('viewNote');
+      const showNote = currentView === 'mine' && viewScope.empty && currentArea !== 'overview';
+      note.hidden = !showNote;
+      note.innerHTML = showNote ? `<span>No classes are set up for you yet.</span>
+        <button type="button" class="btn-ghost" onclick="setView('all')">Show all</button>
+        <button type="button" class="btn-ghost" onclick="openSchedule()">Set up the schedule</button>` : '';
+    }
+
+    function setView(view) {
+      currentView = view;
+      try { localStorage.setItem(viewStorageKey(), view); } catch (e) { /* private mode */ }
+      focusClass = null;
+      applyView();
+    }
+
+    // every list of teams or students, redrawn from what is already loaded
+    function applyView() {
+      if (!roster) return;
+      computeScope();
+      renderViewBar();
+      renderTeams();
+      renderStudents();
+      fillTeamSelects();
+      fillCalendarFilters();
+      renderCoachCalendar();
+      ['visibilityTeam', 'previewTeam'].forEach(id => {
+        const sel = document.getElementById(id);
+        if (sel && sel.options.length > 1) fillTeamSelect(id, id === 'previewTeam' ? 'Pick a team…' : 'All teams (default)');
+      });
+      syncTeamHubButton();
+      renderOverview();
+      if (loginStatusCache) renderLoginStatus();
+      if (onlineCache) renderOnline(onlineCache);
+      if (submissionsCache) { buildSubmissionFilters(); renderSubmissions(); }
+      renderFocusChips();
+      if (mwLoaded) renderMissingWork();
+      if (ideaMapsCache) renderIdeaMaps();
+    }
+
+    // ── One class's students in Submitted / Missing Work ──
+    function openClassIn(tab, classId) {
+      const c = classById(classId);
+      if (!c) return;
+      focusClass = { id: c.id, name: c.name || 'Class', studentIds: classStudentIds(c) };
+      if (tab === 'submissions') {
+        ['subTeamFilter', 'subLessonFilter', 'subReadFilter'].forEach(id => { const el = document.getElementById(id); if (el) el.value = 'all'; });
+        document.getElementById('subSearch').value = '';
+      }
+      showTab(tab);
+      renderFocusChips();
+      if (tab === 'submissions') renderSubmissions(); else renderMissingWork();
+    }
+    function clearClassFocus() {
+      focusClass = null;
+      renderFocusChips();
+      if (submissionsCache) renderSubmissions();
+      renderMissingWork();
+    }
+    function inFocus(studentId) { return !focusClass || focusClass.studentIds.has(studentId); }
+    function renderFocusChips() {
+      ['subClassChip', 'mwClassChip'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.innerHTML = focusClass ? `<div class="cls-focus"><span>Showing only <strong>${escapeHtml(focusClass.name)}</strong> · ${plural(focusClass.studentIds.size, 'student')}</span>
+          <button type="button" class="btn-ghost" onclick="clearClassFocus()">Show the whole view</button></div>` : '';
+      });
+    }
+
+    // ── The classes panel, first thing on the Overview ──
+    function ovTodayKey() { return DAY_KEYS[new Date().getDay()]; }
+
+    function weekStartEnd() {
+      const start = ovStartOfToday();
+      start.setDate(start.getDate() - start.getDay());
+      const end = new Date(start);
+      end.setDate(end.getDate() + 7);
+      return [start, end];
+    }
+    // students owing at least one assignment due this week (Sun–Sat)
+    function missingThisWeek(students) {
+      const [start, end] = weekStartEnd();
+      const due = mwAssignments().filter(l => { const d = ovDateOnly(l.dueDate); return d && d >= start && d < end; });
+      if (!due.length || !submissionsCache) return { due: due.length, missing: [] };
+      const turned = mwTurnedIn();
+      const missing = students.filter(st => !mwIsDemo(st) && due.some(l =>
+        mwVisibleTo(l, st.teamId) && !(turned.get(l.title) || new Map()).has(st.id)));
+      return { due: due.length, missing };
+    }
+
+    // the class cards show who is on now; one fetch at most every 30s, and
+    // only while the Overview is being looked at (the online tab polls itself)
+    function refreshOnlineForOverview() {
+      if (Date.now() - onlineFetchedAt < 30000) return;
+      onlineFetchedAt = Date.now();
+      api('/api/fll/coach/live-students')
+        .then(r => { onlineCache = r; if (currentArea === 'overview') renderMyClasses(); })
+        .catch(() => {});
+    }
+
+    function renderMyClasses() {
+      const el = document.getElementById('ovClasses');
+      if (!el || !roster) return;
+      const title = currentView === 'mine' ? 'My classes' : currentView === 'all' ? 'All classes' : `${locationLabel(currentView)} classes`;
+      const head = `<div class="ov-card-head"><h2 class="ov-card-title">${escapeHtml(title)}</h2>
+        <button type="button" class="btn-ghost" onclick="openSchedule()">Edit schedule</button></div>`;
+      const classes = viewScope.classes;
+      if (!classes.length) {
+        const body = currentView === 'mine'
+          ? `<div class="ov-empty">${viewScope.empty ? 'No classes are set up for you yet.' : 'You lead a team, but none of your classes are on the schedule yet.'}
+              Put your classes on the schedule and this becomes your home page, or look at everything for now.
+              <div class="ov-empty-actions cls-actions">
+                <button type="button" class="btn-ghost" onclick="setView('all')">Show all</button>
+                <button type="button" class="btn-primary" onclick="openSchedule()">Set up the schedule</button>
+              </div></div>`
+          : `<div class="ov-empty">No classes are on the schedule${currentView === 'all' ? '' : ' in ' + escapeHtml(locationLabel(currentView))} yet.
+              <div class="ov-empty-actions"><button type="button" class="btn-primary" onclick="openSchedule()">Add a class</button></div></div>`;
+        el.innerHTML = `<div class="ov-card cls-panel">${head}${body}</div>`;
+        return;
+      }
+      const waiting = new Map();
+      ovNeedsReview().forEach(s => waiting.set(s.studentId, (waiting.get(s.studentId) || 0) + 1));
+      const online = new Map(((onlineCache && onlineCache.students) || []).map(s => [s.id, s.status]));
+      const todayIdx = new Date().getDay();
+      const order = [...Array(7).keys()].map(i => DAY_KEYS[(todayIdx + i) % 7]);
+      const byStart = (a, b) => String(a.start || '').localeCompare(String(b.start || ''));
+      const groups = order.map(day => [day, classes.filter(c => c.day === day).sort(byStart)]).filter(g => g[1].length);
+      const noDay = classes.filter(c => !DAY_KEYS.includes(c.day));
+      if (noDay.length) groups.push(['', noDay]);
+
+      const card = c => {
+        const students = classStudents(c).filter(s => !mwIsDemo(s));
+        const reviewN = students.reduce((n, s) => n + (waiting.get(s.id) || 0), 0);
+        const miss = missingThisWeek(students);
+        const onNow = students.filter(s => online.get(s.id) === 'online');
+        const teamSet = new Set(students.map(s => s.teamId).filter(Boolean));
+        (c.teamIds || []).forEach(id => teamSet.add(id));
+        const oneTeam = teamSet.size === 1 ? [...teamSet][0] : '';
+        const meta = [dayName(c.day) && `${dayName(c.day)} ${classTime(c)}`.trim(), locationLabel(c.location),
+          (c.coaches || []).length ? 'Coach ' + (c.coaches || []).map(coachName).join(', ') : ''].filter(Boolean).join(' · ');
+        const reviewChip = !submissionsCache ? '' : `<span class="ov-chip ${reviewN ? 'wait' : 'done'}">${reviewN ? plural(reviewN, 'piece') + ' waiting for review' : 'Nothing to review'}</span>`;
+        const missChip = !submissionsCache || !miss.due ? '' : `<span class="ov-chip ${miss.missing.length ? 'flag' : 'done'}">${miss.missing.length ? plural(miss.missing.length, 'student') + ' missing this week' : "This week's work is in"}</span>`;
+        const onChip = onlineCache ? `<span class="ov-chip ${onNow.length ? 'done' : 'wait'}">${onNow.length} online now</span>` : '';
+        const missingIds = new Set(miss.missing.map(s => s.id));
+        return `
+          <div class="cls-card${c.day === ovTodayKey() ? ' is-today' : ''}" data-cls="${escapeHtml(c.id)}">
+            <div class="cls-head">
+              <div><div class="cls-name">${escapeHtml(c.name || 'Class')}</div><div class="cls-meta">${escapeHtml(meta || 'No day or time set')}</div></div>
+              <span class="ov-time">${plural(students.length, 'student')}</span>
+            </div>
+            <div class="cls-stats">${reviewChip}${missChip}${onChip}</div>
+            ${students.length ? `<div class="member-chiprow">${students.map(s => `<span class="member-chip${online.get(s.id) === 'online' ? ' is-online' : ''}${missingIds.has(s.id) ? ' is-owing' : ''}" title="${escapeHtml([teamLabel(s.teamId), online.get(s.id) === 'online' ? 'online now' : '', missingIds.has(s.id) ? "owes this week's work" : ''].filter(Boolean).join(' · '))}">${online.get(s.id) === 'online' ? '<span class="cls-dot" aria-label="online"></span>' : ''}${escapeHtml(s.name)}</span>`).join('')}</div>`
+              : '<div class="no-members">No students in this class yet.</div>'}
+            ${c.notes ? `<div class="cls-notes">${escapeHtml(c.notes)}</div>` : ''}
+            <div class="cls-actions">
+              ${oneTeam ? `<button type="button" class="visibility-bulk-btn" data-team="${escapeHtml(oneTeam)}" onclick="openTeamHub(this.dataset.team)">Team hub ↗</button>` : ''}
+              <button type="button" class="visibility-bulk-btn" data-cls="${escapeHtml(c.id)}" onclick="openClassIn('submissions', this.dataset.cls)">Submitted work</button>
+              <button type="button" class="visibility-bulk-btn" data-cls="${escapeHtml(c.id)}" onclick="openClassIn('missing', this.dataset.cls)">Missing work</button>
+            </div>
+          </div>`;
+      };
+      el.innerHTML = `<div class="ov-card cls-panel">${head}${groups.map(([day, list]) => `
+        <div class="cls-day">${day ? (day === ovTodayKey() ? 'Today · ' : '') + escapeHtml(dayName(day)) : 'No day set'}</div>
+        <div class="cls-grid">${list.map(card).join('')}</div>`).join('')}</div>`;
+    }
+
+    function ovOpenClass(classId) {
+      const target = [...document.querySelectorAll('#ovClasses .cls-card')].find(el => el.dataset.cls === classId);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // ── Team location and lead coach, edited on the team card ──
+    function teamMetaSelects(team) {
+      const loc = team.location || '';
+      const lead = team.leadCoach || '';
+      const coaches = coachChoices();
+      if (lead && !coaches.some(c => c.username === lead)) coaches.push({ username: lead, name: lead });
+      const tid = escapeHtml(team.id);
+      return `<div class="cls-teamfields">
+        <label class="cls-field"><span>Location</span><select data-team="${tid}" data-field="location" onchange="setTeamMeta(this)">
+          <option value="">Not set</option>${VIEW_LOCATIONS.map(([id, label]) => `<option value="${id}"${id === loc ? ' selected' : ''}>${label}</option>`).join('')}
+        </select></label>
+        <label class="cls-field"><span>Lead coach</span><select data-team="${tid}" data-field="leadCoach" onchange="setTeamMeta(this)">
+          <option value="">Nobody yet</option>${coaches.map(c => `<option value="${escapeHtml(c.username)}"${c.username === lead ? ' selected' : ''}>${escapeHtml(c.name || c.username)}</option>`).join('')}
+        </select></label>
+      </div>`;
+    }
+
+    async function setTeamMeta(select) {
+      const team = (roster.teams || []).find(t => t.id === select.dataset.team);
+      const field = select.dataset.field;
+      if (!team || !['location', 'leadCoach'].includes(field)) return;
+      const before = team[field] || '';
+      const value = select.value;
+      select.disabled = true;
+      try {
+        const r = await api(`/api/fll/coach/teams/${encodeURIComponent(team.id)}`, { method: 'PATCH', body: JSON.stringify({ [field]: value }) });
+        // an older server answers success but ignores the field: say so
+        const kept = r.team ? (r.team[field] || '') : null;
+        if (kept !== value) throw new Error('The server did not keep that change — it needs the latest server update.');
+        team[field] = kept;
+        showToast(`${team.nickname || team.name}: ${field === 'location' ? (locationLabel(kept) || 'no location') : (kept ? 'led by ' + coachName(kept) : 'no lead coach')}`);
+        applyView();
+      } catch (err) {
+        select.value = before;
+        select.disabled = false;
+        showToast(err.message || 'Could not save');
+      }
+    }
+
+    // ── Schedule editor ──
+    let schEditing = null;       // class id being edited, '' for a new one
+
+    // the classes routes may not be deployed yet; an HTML 404 is not JSON
+    async function classApi(url, options) {
+      try { return await api(url, options); }
+      catch (e) {
+        if (e instanceof SyntaxError) throw new Error('This server does not have the class schedule yet — it needs the latest server update.');
+        throw e;
+      }
+    }
+
+    async function refreshClasses() {
+      const r = await classApi('/api/fll/coach/classes');
+      roster.classes = Array.isArray(r.classes) ? r.classes : [];
+      applyView();
+    }
+
+    function openSchedule() {
+      const dlg = document.getElementById('scheduleDialog');
+      renderScheduleList('');
+      if (!dlg.open) dlg.showModal();
+    }
+    function closeSchedule() { document.getElementById('scheduleDialog').close(); }
+
+    function scheduleMsg(text, isError) {
+      const el = document.getElementById('schMsg');
+      if (!el) return;
+      el.textContent = text || '';
+      el.className = 'form-msg' + (text ? (isError ? ' error' : ' success') : '');
+    }
+
+    function renderScheduleList(message, isError) {
+      schEditing = null;
+      const dayRank = c => { const i = DAY_KEYS.indexOf(c.day); return i < 0 ? 9 : (i + 6) % 7; };   // Monday first
+      const classes = rosterClasses().slice().sort((a, b) =>
+        dayRank(a) - dayRank(b) || String(a.start || '').localeCompare(String(b.start || '')));
+      document.getElementById('schBody').innerHTML = `
+        <h2 class="form-title" id="schTitle">Class schedule</h2>
+        <p class="form-sub">Every class at every location. A class can take whole teams, single students from other teams, or both.</p>
+        ${classes.length ? `<div class="sch-list">${classes.map(c => `
+          <div class="sch-row">
+            <div><strong>${escapeHtml(c.name || 'Class')}</strong>
+              <span class="ov-row-meta">${escapeHtml([dayName(c.day) && `${dayName(c.day)} ${classTime(c)}`.trim(), locationLabel(c.location), plural(classStudentIds(c).size, 'student')].filter(Boolean).join(' · '))}</span></div>
+            <button type="button" class="btn-ghost" data-cls="${escapeHtml(c.id)}" onclick="schEdit(this.dataset.cls)">Edit</button>
+            <button type="button" class="btn-danger-outline" data-cls="${escapeHtml(c.id)}" onclick="schDelete(this.dataset.cls)">Delete</button>
+          </div>`).join('')}</div>` : '<div class="ov-empty">No classes yet. Add the first one.</div>'}
+        <div class="form-msg" id="schMsg" role="status"></div>
+        <div class="rv-actions">
+          <button type="button" class="visibility-bulk-btn" onclick="closeSchedule()">Close</button>
+          <button type="button" class="btn-primary" onclick="schEdit('')">Add a class</button>
+        </div>`;
+      scheduleMsg(message, isError);
+    }
+
+    function schEdit(classId) {
+      const c = classId ? classById(classId) : null;
+      schEditing = c ? c.id : '';
+      const me = rosterMe().username;
+      const v = c || { name: '', location: VIEW_LOCATIONS.some(l => l[0] === currentView) ? currentView : '', day: ovTodayKey(), start: '', end: '', coaches: me ? [me] : [], teamIds: [], studentIds: [], notes: '' };
+      const coaches = coachChoices();
+      (v.coaches || []).forEach(u => { if (!coaches.some(x => x.username === u)) coaches.push({ username: u, name: u }); });
+      const teams = roster.teams || [];
+      const onTeams = new Set(v.teamIds || []);
+      const picked = new Set(v.studentIds || []);
+      const groups = [...teams.map(t => [t.id, t.nickname || t.name]), ['', 'No team']]
+        .map(([id, name]) => [id, name, (roster.students || []).filter(s => (s.teamId || '') === id && s.active !== false)])
+        .filter(g => g[2].length);
+      document.getElementById('schBody').innerHTML = `
+        <form onsubmit="return schSave(event)" novalidate>
+          <h2 class="form-title" id="schTitle">${c ? 'Edit class' : 'New class'}</h2>
+          <div class="field"><label for="schName">Class name</label><input id="schName" type="text" maxlength="80" value="${escapeHtml(v.name || '')}" placeholder="e.g. Friday advanced"></div>
+          <div class="sch-grid">
+            <div class="field"><label for="schLocation">Location</label><select id="schLocation"><option value="">Not set</option>${VIEW_LOCATIONS.map(([id, label]) => `<option value="${id}"${id === v.location ? ' selected' : ''}>${label}</option>`).join('')}</select></div>
+            <div class="field"><label for="schDay">Day</label><select id="schDay">${DAY_KEYS.map(d => `<option value="${d}"${d === v.day ? ' selected' : ''}>${dayName(d)}</option>`).join('')}</select></div>
+            <div class="field"><label for="schStart">Starts</label><input id="schStart" type="time" value="${escapeHtml(v.start || '')}"></div>
+            <div class="field"><label for="schEnd">Ends</label><input id="schEnd" type="time" value="${escapeHtml(v.end || '')}"></div>
+          </div>
+          <fieldset class="cd-fieldset"><legend>Coaches</legend><div class="sch-checks">
+            ${coaches.map(x => `<label class="cd-radio"><input type="checkbox" name="schCoach" value="${escapeHtml(x.username)}"${(v.coaches || []).includes(x.username) ? ' checked' : ''}> ${escapeHtml(x.name || x.username)}</label>`).join('') || '<span class="ov-empty">No coaches listed.</span>'}
+          </div></fieldset>
+          <fieldset class="cd-fieldset"><legend>Whole teams</legend><div class="sch-checks">
+            ${teams.map(t => `<label class="cd-radio"><input type="checkbox" name="schTeam" value="${escapeHtml(t.id)}"${onTeams.has(t.id) ? ' checked' : ''} onchange="schSyncTeams()"> ${escapeHtml(t.nickname || t.name)}</label>`).join('') || '<span class="ov-empty">No teams yet.</span>'}
+          </div></fieldset>
+          <fieldset class="cd-fieldset"><legend>Individual students (for a mixed class)</legend>
+            <input id="schSearch" type="search" class="sch-search" placeholder="Find a student" aria-label="Find a student" oninput="schFilterStudents()">
+            <div class="sch-students">${groups.map(([id, name, list]) => `
+              <div class="sch-group" data-team="${escapeHtml(id)}">
+                <div class="sch-group-name">${escapeHtml(name)} <span class="sch-whole" hidden>· whole team is in this class</span></div>
+                ${list.map(s => `<label class="cd-radio sch-st" data-name="${escapeHtml(String(s.name || '').toLowerCase())}"><input type="checkbox" name="schStudent" value="${escapeHtml(s.id)}"${picked.has(s.id) ? ' checked' : ''}> ${escapeHtml(s.name)}</label>`).join('')}
+              </div>`).join('') || '<div class="ov-empty">No active students.</div>'}</div>
+          </fieldset>
+          <div class="field"><label for="schNotes">Notes</label><textarea id="schNotes" rows="2" maxlength="500">${escapeHtml(v.notes || '')}</textarea></div>
+          <div class="form-msg" id="schMsg" role="status"></div>
+          <div class="rv-actions">
+            <button type="button" class="visibility-bulk-btn" onclick="renderScheduleList('')">Back</button>
+            <button type="submit" class="btn-primary" id="schSaveBtn">Save class</button>
+          </div>
+        </form>`;
+      schSyncTeams();
+      document.getElementById('schName').focus();
+    }
+
+    // a student on a ticked whole team is already in; their own box would only confuse
+    function schSyncTeams() {
+      const on = new Set([...document.querySelectorAll('input[name="schTeam"]:checked')].map(i => i.value));
+      document.querySelectorAll('.sch-group').forEach(g => {
+        const whole = !!g.dataset.team && on.has(g.dataset.team);
+        g.querySelector('.sch-whole').hidden = !whole;
+        g.querySelectorAll('input[name="schStudent"]').forEach(i => { i.disabled = whole; });
+      });
+    }
+
+    function schFilterStudents() {
+      const q = document.getElementById('schSearch').value.trim().toLowerCase();
+      document.querySelectorAll('.sch-group').forEach(g => {
+        let any = false;
+        g.querySelectorAll('.sch-st').forEach(l => { const hit = !q || l.dataset.name.includes(q); l.hidden = !hit; any = any || hit; });
+        g.hidden = !any;
+      });
+    }
+
+    async function schSave(event) {
+      event.preventDefault();
+      const values = name => [...document.querySelectorAll(`input[name="${name}"]:checked:not(:disabled)`)].map(i => i.value);
+      const body = {
+        name: document.getElementById('schName').value.trim(),
+        location: document.getElementById('schLocation').value,
+        day: document.getElementById('schDay').value,
+        start: document.getElementById('schStart').value,
+        end: document.getElementById('schEnd').value,
+        coaches: values('schCoach'),
+        teamIds: values('schTeam'),
+        studentIds: values('schStudent'),
+        notes: document.getElementById('schNotes').value.trim()
+      };
+      if (!body.name) { scheduleMsg('Give the class a name.', true); document.getElementById('schName').focus(); return false; }
+      if (body.start && body.end && body.end <= body.start) { scheduleMsg('The class has to end after it starts.', true); return false; }
+      const btn = document.getElementById('schSaveBtn');
+      btn.disabled = true;
+      scheduleMsg('Saving…');
+      try {
+        const editing = schEditing;
+        await classApi(editing ? `/api/fll/coach/classes/${encodeURIComponent(editing)}` : '/api/fll/coach/classes',
+          { method: editing ? 'PATCH' : 'POST', body: JSON.stringify(body) });
+        await refreshClasses();
+        renderScheduleList(`${body.name} saved.`);
+      } catch (err) {
+        btn.disabled = false;
+        scheduleMsg(err.message || 'Could not save the class.', true);
+      }
+      return false;
+    }
+
+    async function schDelete(classId) {
+      const c = classById(classId);
+      if (!c) return;
+      if (!confirm(`Delete the class "${c.name || 'Class'}"?\n\nOnly the schedule entry goes. Its students, teams and their work are not touched.`)) return;
+      try {
+        await classApi(`/api/fll/coach/classes/${encodeURIComponent(c.id)}`, { method: 'DELETE' });
+        await refreshClasses();
+        renderScheduleList(`${c.name || 'Class'} deleted.`);
+      } catch (err) {
+        scheduleMsg(err.message || 'Could not delete the class.', true);
+      }
+    }
+
     async function api(url, options = {}) {
       const response = await fetch(url, {
         headers: { 'Content-Type': 'application/json' },
@@ -3360,20 +3953,19 @@
     }
 
     async function loadRoster() {
+      let result;
       try {
-        const result = await api('/api/fll/coach/roster');
-        roster = result.data;
-        document.getElementById('userLine').textContent = `${roster.user.name} · Coach`;
-        renderTeams();
-        renderStudents();
-        fillTeamSelects();
-        fillMasterStudentSelect();
-        fillCalendarFilters();
-        fillRankingControls();
-        renderCoachCalendar();
+        result = await api('/api/fll/coach/roster');
       } catch (err) {
         window.location.href = '/fll-hub/login';
+        return;
       }
+      roster = result.data;
+      document.getElementById('userLine').textContent = `${roster.user.name} · Coach`;
+      if (!viewLoaded) { loadSavedView(); viewLoaded = true; }
+      applyView();
+      fillMasterStudentSelect();
+      fillRankingControls();
     }
 
     function teamMembers(teamId) {
@@ -3383,7 +3975,8 @@
 
     function renderTeams() {
       const grid = document.getElementById('teamsGrid');
-      grid.innerHTML = roster.teams.map(team => {
+      const teams = roster.teams.filter(t => teamInView(t.id));
+      grid.innerHTML = (teams.length ? '' : '<div class="empty-note">No teams in this view. Switch to All to see every team.</div>') + teams.map(team => {
         const members = teamMembers(team.id);
         const rubrics = Array.isArray(team.pastSeasons) ? team.pastSeasons : [];
         return `
@@ -3395,6 +3988,7 @@
             <div class="team-meta">${escapeHtml(team.meetingDays || 'No schedule yet')} · ${escapeHtml(team.room || '')}</div>
 
             <div class="team-meta"><strong>Class code:</strong> ${escapeHtml(team.classCode || 'Generating...')}</div>
+            ${teamMetaSelects(team)}
 
             <div class="team-section-label">Members (${members.length})</div>
             ${members.length ? `
@@ -3476,6 +4070,11 @@
         wrap.innerHTML = '<div class="form-card">No students yet — add some from the Add Student or Bulk Import tabs.</div>';
         return;
       }
+      const students = roster.students.filter(s => studentInView(s.id));
+      if (!students.length) {
+        wrap.innerHTML = '<div class="form-card">No students in this view. Switch to All to see everyone.</div>';
+        return;
+      }
       const teamOptions = id => `<option value="">— No team —</option>` +
         roster.teams.map(t => `<option value="${escapeHtml(t.id)}" ${t.id === id ? 'selected' : ''}>${escapeHtml(t.nickname || t.name)}</option>`).join('');
 
@@ -3484,7 +4083,7 @@
           <table class="students-table">
             <thead><tr><th>Name</th><th>Username</th><th>Team</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody>
-              ${roster.students.map(s => `
+              ${students.map(s => `
                 <tr class="${s.active ? '' : 'st-inactive'}">
                   <td><strong>${escapeHtml(s.name)}</strong></td>
                   <td><code>${escapeHtml(s.username)}</code></td>
@@ -3509,7 +4108,7 @@
         const select = document.getElementById(id);
         const current = select.value;
         select.innerHTML = '<option value="">— No team yet —</option>' +
-          roster.teams.map(t => `<option value="${escapeHtml(t.id)}">${escapeHtml(t.nickname || t.name)}</option>`).join('');
+          viewTeams(current).map(t => `<option value="${escapeHtml(t.id)}">${escapeHtml(t.nickname || t.name)}</option>`).join('');
         select.value = current;
       });
     }
@@ -3990,7 +4589,7 @@
       };
 
       const visibleTeams = roster.teams.filter(t =>
-        (teamFilter === 'all' || t.id === teamFilter) &&
+        (teamFilter === 'all' ? teamInView(t.id) : t.id === teamFilter) &&
         (regionFilter === 'all' || t.region === regionFilter)
       );
       const visibleTeamIds = new Set(visibleTeams.map(t => t.id));
@@ -4143,8 +4742,8 @@
       const teamSelect = document.getElementById('calTeamFilter');
       const regionSelect = document.getElementById('calRegionFilter');
       const keepTeam = teamSelect.value, keepRegion = regionSelect.value;
-      teamSelect.innerHTML = '<option value="all">All teams</option>' +
-        roster.teams.map(t => `<option value="${escapeHtml(t.id)}">${escapeHtml(t.nickname || t.name)}</option>`).join('');
+      teamSelect.innerHTML = '<option value="all">All teams in view</option>' +
+        viewTeams(keepTeam === 'all' ? '' : keepTeam).map(t => `<option value="${escapeHtml(t.id)}">${escapeHtml(t.nickname || t.name)}</option>`).join('');
       const regions = (roster.season && roster.season.regions) || [];
       regionSelect.innerHTML = '<option value="all">All regions</option>' +
         regions.map(r => `<option value="${escapeHtml(r.id)}">${escapeHtml(r.name)}</option>`).join('');
@@ -4209,9 +4808,12 @@
 
     function fillTeamSelect(id, firstLabel) {
       const sel = document.getElementById(id);
-      if (sel && roster && sel.options.length <= 1) {
-        sel.innerHTML = `<option value="">${escapeHtml(firstLabel)}</option>` + roster.teams
+      if (sel && roster) {
+        // rebuilt for the current view; whatever is picked stays picked
+        const keep = sel.value;
+        sel.innerHTML = `<option value="">${escapeHtml(firstLabel)}</option>` + viewTeams(keep)
           .map(team => `<option value="${escapeHtml(team.id)}">${escapeHtml(team.nickname || team.name)}</option>`).join('');
+        sel.value = keep;
       }
       return sel;
     }
@@ -4982,11 +5584,14 @@
     }
 
     function mwTeams() {
-      return (roster?.teams || []).filter(t => !/(^|-)demo(-|$)/i.test(String(t.id || '')));
+      return (roster?.teams || []).filter(t => !/(^|-)demo(-|$)/i.test(String(t.id || '')))
+        .filter(t => teamInView(t.id))
+        .filter(t => !focusClass || (roster?.students || []).some(st => st.teamId === t.id && focusClass.studentIds.has(st.id)));
     }
 
     function mwStudents(teamId) {
-      return (roster?.students || []).filter(st => st.teamId === teamId && st.active !== false && !mwIsDemo(st));
+      return (roster?.students || []).filter(st => st.teamId === teamId && st.active !== false && !mwIsDemo(st)
+        && studentInView(st.id) && inFocus(st.id));
     }
 
     // one row per assignment title; only lessons that ask for something back

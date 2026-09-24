@@ -42,6 +42,9 @@ const fllWorkLogsFile = path.join(fllHubDataDir, 'work-logs.json');
 const fllTaskSubmissionsFile = path.join(fllHubDataDir, 'task-submissions.json');
 const fllTeamMembersFile = path.join(fllHubDataDir, 'team-members.json');
 const fllTeamSchedulesFile = path.join(fllHubDataDir, 'team-schedules.json');
+// Classes are separate from teams: one class can mix students from several
+// teams, and one student can attend more than one class.
+const fllClassScheduleFile = path.join(fllHubDataDir, 'class-schedule.json');
 const fllSeasonSectionsFile = path.join(fllHubDataDir, 'season-sections.json');
 const fllMissionAnalysisFile = path.join(fllHubDataDir, 'mission-analysis.json');
 const fllLiveLessonFile = path.join(fllHubDataDir, 'live-lesson.json');
@@ -72,6 +75,7 @@ const fllDataFileNames = [
 	'task-submissions.json',
 	'team-members.json',
 	'team-schedules.json',
+	'class-schedule.json',
 	'season-sections.json',
 	'mission-analysis.json',
 	'season.json',
@@ -1532,6 +1536,7 @@ async function buildDataHealthReport() {
 		'idea-maps.json': 'runtime-student-work',
 		'coach-files.json': 'runtime-student-work',
 		'fll-settings.json': 'runtime-coach-configuration',
+		'class-schedule.json': 'runtime-coach-configuration',
 		'coach-rankings.json': 'runtime-coach-assessment'
 	};
 	const campClassifications = {
@@ -4408,7 +4413,8 @@ function buildNextClassInfo(schedule) {
 	const timeZone = schedule.timezone || 'America/New_York';
 	const now = new Date();
 	const todayWeekday = getWeekdayInTimeZone(now, timeZone);
-	let daysUntil = (schedule.weekday - todayWeekday + 7) % 7;
+	// a caller that already knows today's class is over passes daysUntil (7)
+	let daysUntil = Number.isInteger(schedule.daysUntil) ? schedule.daysUntil : (schedule.weekday - todayWeekday + 7) % 7;
 	const statusText = daysUntil === 0
 		? 'Class today'
 		: daysUntil === 1
@@ -4431,6 +4437,154 @@ function buildNextClassInfo(schedule) {
 		timezone: timeZone,
 		weekdayName: schedule.weekdayName || ''
 	};
+}
+
+// ── Class schedule (class-schedule.json) ─────────────────────────────────────
+const FLL_LOCATIONS = ['queens', 'hartsdale', 'brooklyn'];
+const FLL_CLASS_DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+const FLL_CLASS_TIMEZONE = 'America/New_York';
+
+async function readFllClassSchedule() {
+	const classes = await readJsonFile(fllClassScheduleFile, []);
+	return Array.isArray(classes) ? classes : [];
+}
+
+function sortFllClasses(classes) {
+	return [...classes].sort((a, b) => (FLL_CLASS_DAYS.indexOf(a.day) - FLL_CLASS_DAYS.indexOf(b.day))
+		|| String(a.start || '').localeCompare(String(b.start || ''))
+		|| String(a.name || '').localeCompare(String(b.name || '')));
+}
+
+function activeFllCoaches(users) {
+	return (Array.isArray(users) ? users : []).filter((u) => u.role === 'coach' && u.active !== false && u.username);
+}
+
+// A class's students: every active student on its (visible) teams plus its
+// named students. A team archived later drops out; the class keeps its others.
+function fllClassIncludesStudent(classItem, user, teams) {
+	if (!classItem || !user || user.role !== 'student') return false;
+	if ((classItem.studentIds || []).includes(user.id)) return true;
+	if (user.active === false || !user.teamId || !(classItem.teamIds || []).includes(user.teamId)) return false;
+	const team = (Array.isArray(teams) ? teams : []).find((t) => t.id === user.teamId);
+	return !fllTeamIsHidden(team);
+}
+
+function fllTimeToMinutes(value) {
+	const match = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(String(value || ''));
+	return match ? Number(match[1]) * 60 + Number(match[2]) : null;
+}
+
+function fllTimeLabel(value) {
+	const minutes = fllTimeToMinutes(value);
+	if (minutes === null) return '';
+	const h = Math.floor(minutes / 60);
+	return `${h % 12 || 12}:${String(minutes % 60).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`;
+}
+
+// The soonest upcoming of the student's classes, as buildNextClassInfo input,
+// or null when the student is in no class. A class already over today counts
+// as next week's.
+function fllNextScheduledClassFor(user, classes, teams) {
+	const mine = (Array.isArray(classes) ? classes : []).filter((c) => fllClassIncludesStudent(c, user, teams));
+	if (!mine.length) return null;
+	const now = new Date();
+	const todayWeekday = getWeekdayInTimeZone(now, FLL_CLASS_TIMEZONE);
+	const parts = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: FLL_CLASS_TIMEZONE }).formatToParts(now);
+	const part = (type) => Number(parts.find((p) => p.type === type)?.value || 0);
+	const nowMinutes = part('hour') * 60 + part('minute');
+	let best = null;
+	mine.forEach((c) => {
+		const dayIndex = FLL_CLASS_DAYS.indexOf(c.day);
+		const startMinutes = fllTimeToMinutes(c.start);
+		if (dayIndex < 0 || startMinutes === null) return;
+		const endMinutes = fllTimeToMinutes(c.end) ?? startMinutes;
+		const weekday = (dayIndex + 1) % 7; // mon..sun -> 1..6, 0
+		let daysUntil = (weekday - todayWeekday + 7) % 7;
+		if (daysUntil === 0 && endMinutes <= nowMinutes) daysUntil = 7;
+		const rank = daysUntil * 1440 + startMinutes;
+		if (!best || rank < best.rank) best = { rank, c, weekday, daysUntil };
+	});
+	if (!best) return null;
+	const { c } = best;
+	const location = String(c.location || '').replace(/\b\w/g, (ch) => ch.toUpperCase());
+	return {
+		weekday: best.weekday,
+		daysUntil: best.daysUntil,
+		startTime: fllTimeLabel(c.start),
+		endTime: fllTimeLabel(c.end),
+		room: [c.name, location].filter(Boolean).join(' - '),
+		timezone: FLL_CLASS_TIMEZONE,
+		weekdayName: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][best.weekday]
+	};
+}
+
+// Validates a create (existing = null) or a partial update. Returns { error }
+// or { value } holding the whole cleaned class (without id/timestamps).
+function validateFllClassInput(body, existing, { teams, users }) {
+	const src = body && typeof body === 'object' ? body : {};
+	const next = existing
+		? { ...existing }
+		: { name: '', location: '', day: '', start: '', end: '', coaches: [], teamIds: [], studentIds: [], notes: '' };
+	const has = (key) => src[key] !== undefined;
+	if (has('name') || !existing) {
+		const name = typeof src.name === 'string' ? src.name.trim() : '';
+		if (!name || name.length > 80) return { error: 'Class name is required (1-80 characters).' };
+		next.name = cleanMetaString(name, 80);
+	}
+	if (has('location')) {
+		if (typeof src.location !== 'string' || (src.location !== '' && !FLL_LOCATIONS.includes(src.location))) {
+			return { error: `Location must be one of: ${FLL_LOCATIONS.join(', ')} (or empty).` };
+		}
+		next.location = src.location;
+	}
+	if (has('day') || !existing) {
+		if (!FLL_CLASS_DAYS.includes(src.day)) return { error: `Day must be one of: ${FLL_CLASS_DAYS.join(', ')}.` };
+		next.day = src.day;
+	}
+	for (const key of ['start', 'end']) {
+		if (has(key) || !existing) {
+			if (fllTimeToMinutes(src[key]) === null) return { error: `${key === 'start' ? 'Start' : 'End'} time must be HH:MM in 24-hour time (e.g. 16:30).` };
+			next[key] = src[key];
+		}
+	}
+	if (fllTimeToMinutes(next.end) <= fllTimeToMinutes(next.start)) return { error: 'End time must be after the start time.' };
+	const idList = (key) => {
+		if (!Array.isArray(src[key]) || src[key].some((v) => typeof v !== 'string')) return { error: `${key} must be a list of text ids.` };
+		return { list: [...new Set(src[key].map((v) => v.trim()).filter(Boolean))] };
+	};
+	if (has('coaches')) {
+		const r = idList('coaches');
+		if (r.error) return r;
+		const known = new Set(activeFllCoaches(users).map((u) => String(u.username).toLowerCase()));
+		const list = [...new Set(r.list.map((u) => u.toLowerCase()))];
+		const bad = list.filter((u) => !known.has(u));
+		if (bad.length) return { error: `Not an active FLL coach: ${bad.join(', ')}` };
+		next.coaches = list;
+	}
+	if (has('teamIds')) {
+		const r = idList('teamIds');
+		if (r.error) return r;
+		const teamList = Array.isArray(teams) ? teams : [];
+		const bad = r.list.filter((id) => fllTeamIsHidden(teamList.find((t) => t.id === id)));
+		if (bad.length) return { error: `Unknown, archived or template team: ${bad.join(', ')}` };
+		next.teamIds = r.list;
+	}
+	if (has('studentIds')) {
+		const r = idList('studentIds');
+		if (r.error) return r;
+		const studentIds = new Set((Array.isArray(users) ? users : []).filter((u) => u.role === 'student').map((u) => u.id));
+		const bad = r.list.filter((id) => !studentIds.has(id));
+		if (bad.length) return { error: `Unknown student id: ${bad.join(', ')}` };
+		next.studentIds = r.list;
+	}
+	if (has('notes')) {
+		if (typeof src.notes !== 'string') return { error: 'Notes must be text.' };
+		next.notes = cleanMetaString(src.notes, 1000);
+	}
+	if (!(next.teamIds || []).length && !(next.studentIds || []).length) {
+		return { error: 'A class needs at least one team or one student.' };
+	}
+	return { value: next };
 }
 
 function buildBioglowCountdown(releaseDate) {
@@ -5298,13 +5452,15 @@ async function getFllStudentDashboardFor(user, { preview = false } = {}) {
 		readJsonFile(fllMissionAnalysisFile, []),
 		readFllSettings()
 	]);
+	const classSchedule = await readFllClassSchedule();
 	const studentSettings = effectiveFllSettings(fllSettings, user.teamId);
 	const hiddenTitles = new Set(studentSettings.hiddenAssignments || []);
 	const disabledAreas = new Set(studentSettings.disabledAreas || []);
 	const taskAreaAliases = { 'Robot Design': 'robot-design', 'Robot Game': 'robot-game', 'Innovation Project': 'innovation', Innovation: 'innovation', 'Core Values': 'core-values', Judging: 'core-values', 'Pre-Season': 'innovation' };
 	const team = (Array.isArray(teams) ? teams : []).find((candidate) => candidate.id === user.teamId) || null;
 	const teamSchedule = (Array.isArray(schedules) ? schedules : []).find((schedule) => schedule.teamId === user.teamId) || null;
-	const nextClass = buildNextClassInfo(teamSchedule);
+	// a scheduled class wins; otherwise the team's own schedule, as before
+	const nextClass = buildNextClassInfo(fllNextScheduledClassFor(user, classSchedule, teams) || teamSchedule);
 	const teamAssignments = (Array.isArray(assignments) ? assignments : [])
 		.filter((assignment) => assignment.teamId === user.teamId)
 		.sort((a, b) => String(a.dueDate || '').localeCompare(String(b.dueDate || '')));
@@ -6866,6 +7022,9 @@ app.get('/api/fll/coach/roster', requireFllAuth, requireFllCoach, async (req, re
 			readFllSettings(),
 			readJsonFile(path.join(fllHubDataDir, 'resources.json'), [])
 		]);
+		const [classes, coachUsers] = await Promise.all([readFllClassSchedule(), readCoachUsers()]);
+		const myUsername = String(req.fllUser.username || '').toLowerCase();
+		const myCoachRecord = coachUsers.find((u) => String(u.username || '').toLowerCase() === myUsername);
 		const teamList = Array.isArray(teams) ? teams : [];
 		const hiddenTeamIds = new Set(teamList.filter(fllTeamIsHidden).map((t) => t.id));
 		const archivedTeamIds = new Set(teamList.filter((t) => t.archived === true && t.id !== FLL_TEMPLATE_TEAM_ID).map((t) => t.id));
@@ -6900,7 +7059,10 @@ app.get('/api/fll/coach/roster', requireFllAuth, requireFllCoach, async (req, re
 				tasks: (Array.isArray(tasks) ? tasks : []).filter((task) => !archivedTeamIds.has(task.teamId)),
 				season,
 				fllSettings,
-				resources: Array.isArray(resources) ? resources : []
+				resources: Array.isArray(resources) ? resources : [],
+				classes: sortFllClasses(classes),
+				coaches: activeFllCoaches(users).map((u) => ({ username: u.username, name: u.name || u.username })),
+				me: { username: req.fllUser.username || '', name: req.fllUser.name || '', isOwner: myCoachRecord?.role === 'owner' }
 			}
 		});
 	} catch (err) {
@@ -7539,6 +7701,20 @@ app.patch('/api/fll/coach/teams/:id', requireFllAuth, requireFllCoach, async (re
 		if (!team) {
 			return res.status(404).json({ success: false, message: 'Team not found' });
 		}
+		if (req.body.location !== undefined
+			&& (typeof req.body.location !== 'string' || (req.body.location !== '' && !FLL_LOCATIONS.includes(req.body.location)))) {
+			return res.status(400).json({ success: false, message: `Location must be one of: ${FLL_LOCATIONS.join(', ')} (or empty).` });
+		}
+		let leadCoach;
+		if (req.body.leadCoach !== undefined) {
+			leadCoach = typeof req.body.leadCoach === 'string' ? req.body.leadCoach.trim().toLowerCase() : null;
+			const coaches = activeFllCoaches(await readFllUsers());
+			if (leadCoach === null || (leadCoach && !coaches.some((u) => String(u.username).toLowerCase() === leadCoach))) {
+				return res.status(400).json({ success: false, message: 'Lead coach must be an active FLL coach username (or empty).' });
+			}
+		}
+		if (req.body.location !== undefined) team.location = req.body.location;
+		if (leadCoach !== undefined) team.leadCoach = leadCoach;
 		const stringFields = ['name', 'nickname', 'meetingDays', 'coach', 'room', 'currentFocus', 'nextDeliverable', 'status', 'region'];
 		// keep regionName/firstCompetition in sync when region changes
 		if (typeof req.body.region === 'string') {
@@ -7581,6 +7757,68 @@ app.patch('/api/fll/coach/teams/:id', requireFllAuth, requireFllCoach, async (re
 	} catch (err) {
 		console.error('FLL coach update team error:', err);
 		return res.status(500).json({ success: false, message: 'Server error updating team' });
+	}
+});
+
+// ── Class schedule (coach only) ──────────────────────────────────────────────
+app.get('/api/fll/coach/classes', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		return res.json({ success: true, classes: sortFllClasses(await readFllClassSchedule()) });
+	} catch (err) {
+		console.error('FLL classes load error:', err);
+		return res.status(500).json({ success: false, message: 'Server error loading classes' });
+	}
+});
+
+app.post('/api/fll/coach/classes', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const [teams, users] = await Promise.all([readJsonFile(path.join(fllHubDataDir, 'teams.json'), []), readFllUsers()]);
+		const checked = validateFllClassInput(req.body, null, { teams, users });
+		if (checked.error) return res.status(400).json({ success: false, message: checked.error });
+		const now = new Date().toISOString();
+		const created = { id: `class-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`, ...checked.value, createdAt: now, updatedAt: now };
+		await updateJsonFile(fllClassScheduleFile, [], (classes) => { classes.push(created); });
+		return res.status(201).json({ success: true, class: created });
+	} catch (err) {
+		console.error('FLL class create error:', err);
+		return res.status(500).json({ success: false, message: 'Server error creating class' });
+	}
+});
+
+app.patch('/api/fll/coach/classes/:id', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const [teams, users] = await Promise.all([readJsonFile(path.join(fllHubDataDir, 'teams.json'), []), readFllUsers()]);
+		const result = await withJsonFileLock(fllClassScheduleFile, async () => {
+			const classes = await readFllClassSchedule();
+			const index = classes.findIndex((c) => c.id === req.params.id);
+			if (index < 0) return { status: 404, body: { success: false, message: 'Class not found' } };
+			const checked = validateFllClassInput(req.body, classes[index], { teams, users });
+			if (checked.error) return { status: 400, body: { success: false, message: checked.error } };
+			classes[index] = { ...checked.value, id: classes[index].id, createdAt: classes[index].createdAt, updatedAt: new Date().toISOString() };
+			await writeJsonFileNow(fllClassScheduleFile, classes);
+			return { status: 200, body: { success: true, class: classes[index] } };
+		});
+		return res.status(result.status).json(result.body);
+	} catch (err) {
+		console.error('FLL class update error:', err);
+		return res.status(500).json({ success: false, message: 'Server error updating class' });
+	}
+});
+
+app.delete('/api/fll/coach/classes/:id', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const removed = await withJsonFileLock(fllClassScheduleFile, async () => {
+			const classes = await readFllClassSchedule();
+			const remaining = classes.filter((c) => c.id !== req.params.id);
+			if (remaining.length === classes.length) return false;
+			await writeJsonFileNow(fllClassScheduleFile, remaining);
+			return true;
+		});
+		if (!removed) return res.status(404).json({ success: false, message: 'Class not found' });
+		return res.json({ success: true });
+	} catch (err) {
+		console.error('FLL class delete error:', err);
+		return res.status(500).json({ success: false, message: 'Server error deleting class' });
 	}
 });
 
