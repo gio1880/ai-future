@@ -414,6 +414,10 @@
     }
     .lg-problem { font-size: 12px; color: #d93025; margin-top: 5px; font-weight: 700; }
     .lg-status { font-size: 11.5px; font-weight: 800; white-space: nowrap; color: var(--cd-green-text); }
+    .lg-actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-1); }
+    .lg-link { background: none; border: 0; padding: 4px 0; font: inherit; font-size: var(--fs-meta); color: var(--t-muted);
+      text-decoration: underline; cursor: pointer; min-height: 32px; }
+    .lg-link:hover { color: var(--t-ink); }
     .lg-row.is-broken .lg-status { color: #d93025; }
 
     /* ── Robot tuning profiles ── */
@@ -2187,10 +2191,32 @@
                   types <code>${escapeHtml(s.classCode || '—')}</code> + <code>${escapeHtml(s.username)}</code>
                 </div>
                 ${s.ready ? '' : `<div class="lg-problem">⚠️ ${escapeHtml(s.problem)}</div>`}
+                <div class="lg-actions">
+                  <button type="button" class="lg-link" data-id="${escapeHtml(s.id)}" data-name="${escapeHtml(s.name)}" data-username="${escapeHtml(s.username)}" onclick="changeStudentUsername(this.dataset.id, this.dataset.name, this.dataset.username)">Change username</button>
+                  ${s.teamId ? `<a class="lg-link" target="_blank" rel="noopener" href="/fll-hub/coach/team-hub?teamId=${encodeURIComponent(s.teamId)}&studentId=${encodeURIComponent(s.id)}">View their hub ↗</a>` : ''}
+                </div>
               </div>
               <span class="lg-status">${s.ready ? '✓ Can log in' : 'Cannot log in'}</span>
             </div>`).join('')}
         </div>`).join('');
+    }
+
+    // A name typed wrong when the student was created ("Hwjiun" for "Hwijun")
+    // leaves a username the child never guesses; this fixes the one they type.
+    async function changeStudentUsername(id, name, current) {
+      const msg = document.getElementById('loginMessage');
+      const next = prompt(`New username for ${name}\n(what they type next to the class code; letters and numbers only)`, current);
+      if (next === null) return;
+      const wanted = next.trim().toLowerCase();
+      if (!wanted || wanted === String(current).toLowerCase()) return;
+      try {
+        await api(`/api/fll/coach/students/${encodeURIComponent(id)}/username`, { method: 'PATCH', body: JSON.stringify({ username: wanted }) });
+        if (msg) { msg.textContent = `✓ ${name} now signs in with "${wanted}".`; msg.className = 'form-msg success'; }
+        showToast(`${name}: username is now ${wanted}`);
+        await loadLoginStatus(true);
+      } catch (err) {
+        if (msg) { msg.textContent = err.message || 'Could not change the username.'; msg.className = 'form-msg error'; }
+      }
     }
 
     async function repairLogins() {

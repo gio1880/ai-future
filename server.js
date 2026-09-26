@@ -7305,8 +7305,17 @@ app.get('/api/fll/coach/team-hub-preview', requireFllAuth, requireFllCoach, asyn
 
 		// A real student makes the preview truthful: their submissions, grades and
 		// coach feedback show. With no students yet, a stand-in shows the lessons.
-		const realStudent = (Array.isArray(users) ? users : [])
-			.find((u) => u.role === 'student' && u.teamId === teamId && u.active !== false) || null;
+		// ?studentId= views one particular student's hub ("my hub won't load"
+		// reports need THAT child's data, not the first on the team). Still
+		// read-only, and only a student actually on this team.
+		const studentList = (Array.isArray(users) ? users : []);
+		const wantedId = cleanMetaString(req.query.studentId || '', 160);
+		if (wantedId && !studentList.some((u) => u.id === wantedId && u.role === 'student' && u.teamId === teamId)) {
+			return res.status(404).json({ success: false, message: 'That student is not on this team' });
+		}
+		const realStudent = (wantedId
+			? studentList.find((u) => u.id === wantedId)
+			: studentList.find((u) => u.role === 'student' && u.teamId === teamId && u.active !== false)) || null;
 		const previewUser = realStudent || { id: `preview-${teamId}`, name: 'Preview student', role: 'student', teamId };
 		const data = await getFllStudentDashboardFor(previewUser, { preview: true });
 		data.preview = {
@@ -8078,6 +8087,51 @@ app.post('/api/fll/coach/students/bulk', requireFllAuth, requireFllCoach, async 
 	} catch (err) {
 		console.error('FLL coach bulk add error:', err);
 		return res.status(500).json({ success: false, message: 'Server error bulk adding students' });
+	}
+});
+
+// Change the username a student types to sign in. Usernames are made from the
+// name, so a name typed wrong at creation ("Hwjiun" for "Hwijun") leaves a
+// username the child will never guess — and fixing the NAME later doesn't fix
+// it. This updates the hub login and the roster's class-code username together,
+// so the class code plus the new username works everywhere at once.
+app.patch('/api/fll/coach/students/:id/username', requireFllAuth, requireFllCoach, async (req, res) => {
+	try {
+		const wanted = String(req.body.username || '').trim().toLowerCase();
+		if (!/^[a-z0-9]{2,40}$/.test(wanted)) {
+			return res.status(400).json({ success: false, message: 'Usernames are 2–40 lowercase letters or numbers, no spaces.' });
+		}
+		const result = await withJsonFileLock(fllUsersFile, async () => {
+			const users = await readFllUsers();
+			const user = users.find((u) => u.id === req.params.id && u.role === 'student');
+			if (!user) return { status: 404, message: 'Student not found' };
+			if (String(user.username || '').toLowerCase() === wanted) return { status: 200, user, unchanged: true };
+			const roster = await readMasterRoster();
+			const rosterStudent = roster.students.find((s) => s.fllUserId === user.id) || null;
+			const takenInHub = users.some((u) => u.id !== user.id && String(u.username || '').toLowerCase() === wanted);
+			const takenOnRoster = roster.students.some((s) => s !== rosterStudent && String(s.portalUsername || '').toLowerCase() === wanted);
+			if (takenInHub || takenOnRoster) return { status: 409, message: `"${wanted}" is already someone else's username.` };
+			const before = user.username;
+			user.username = wanted;
+			await writeJsonFileNow(fllUsersFile, users);
+			if (rosterStudent) {
+				rosterStudent.portalUsername = wanted;
+				rosterStudent.updatedAt = new Date().toISOString();
+				await writeMasterRoster(roster);
+			}
+			console.log(`Username changed by ${req.fllUser.username}: ${before} -> ${wanted}`);
+			return { status: 200, user, rosterUpdated: Boolean(rosterStudent) };
+		});
+		if (result.status !== 200) return res.status(result.status).json({ success: false, message: result.message });
+		return res.json({
+			success: true,
+			student: { id: result.user.id, name: result.user.name, username: result.user.username },
+			rosterUpdated: Boolean(result.rosterUpdated),
+			unchanged: Boolean(result.unchanged)
+		});
+	} catch (err) {
+		console.error('FLL username change error:', err);
+		return res.status(500).json({ success: false, message: 'Server error changing the username' });
 	}
 });
 

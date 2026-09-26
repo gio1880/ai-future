@@ -4247,6 +4247,10 @@
     const PREVIEW_TEAM_ID = PREVIEW
       ? (new URLSearchParams(window.location.search).get('teamId') || '')
       : '';
+    // optional: preview one particular student's hub instead of the team's first
+    const PREVIEW_STUDENT_ID = PREVIEW
+      ? (new URLSearchParams(window.location.search).get('studentId') || '')
+      : '';
     const PREVIEW_BLOCK_MESSAGE = "This is a preview — students' work can't be changed from here.";
     let previewInfo = null;
 
@@ -8169,7 +8173,8 @@
       renderPreviewBanner();
       let response;
       try {
-        response = await fetch(`/api/fll/coach/team-hub-preview?teamId=${encodeURIComponent(PREVIEW_TEAM_ID)}`);
+        response = await fetch(`/api/fll/coach/team-hub-preview?teamId=${encodeURIComponent(PREVIEW_TEAM_ID)}`
+          + (PREVIEW_STUDENT_ID ? `&studentId=${encodeURIComponent(PREVIEW_STUDENT_ID)}` : ''));
       } catch (err) {
         showPreviewError(
           'The server did not answer when we asked for this team hub.',
